@@ -27,11 +27,11 @@ jobs:
         CXX: g++-${{ matrix.gcc }}
       run: bazel build ...
 
-    #- name: debug tests
-    #  env:
-    #    CC: gcc-${{ matrix.gcc }}
-    #    CXX: g++-${{ matrix.gcc }}
-    #  run: bazel test ...
+    - name: debug tests
+      env:
+        CC: gcc-${{ matrix.gcc }}
+        CXX: g++-${{ matrix.gcc }}
+      run: bazel test ...
 
     - name: optimized build
       env:
@@ -39,8 +39,8 @@ jobs:
         CXX: g++-${{ matrix.gcc }}
       run: bazel build -c opt ...
 
-    #- name: optimized tests
-    #  env:
-    #    CC: gcc-${{ matrix.gcc }}
-    #    CXX: g++-${{ matrix.gcc }}
-    #  run: bazel test -c opt ...
+    - name: optimized tests
+      env:
+        CC: gcc-${{ matrix.gcc }}
+        CXX: g++-${{ matrix.gcc }}
+      run: bazel test -c opt ...
