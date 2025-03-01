@@ -30,3 +30,25 @@
 *.exe
 *.out
 *.app
+
+# Build artifacts
+bazel-bin/
+bazel-genfiles/
+bazel-pbrt_proto/
+bazel-pbrt_proto-cpp/
+bazel-out/
+bazel-testlogs/
+
+# Build artifacts as files
+bazel-bin
+bazel-genfiles
+bazel-pbrt_proto
+bazel-pbrt_proto-cpp
+bazel-out
+bazel-testlogs
+
+# Bazel lockfile
+MODULE.bazel.lock
+
+# VS Code
+.vscode/

@@ -1,0 +1,46 @@
+name: Unit Tests
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04]
+        include:
+          - runs-on: ubuntu-24.04
+            compiler: gcc
+            gcc: 14
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: debug build
+      env:
+        CC: gcc-${{ matrix.gcc }}
+        CXX: g++-${{ matrix.gcc }}
+      run: bazel build ...
+
+    #- name: debug tests
+    #  env:
+    #    CC: gcc-${{ matrix.gcc }}
+    #    CXX: g++-${{ matrix.gcc }}
+    #  run: bazel test ...
+
+    - name: optimized build
+      env:
+        CC: gcc-${{ matrix.gcc }}
+        CXX: g++-${{ matrix.gcc }}
+      run: bazel build -c opt ...
+
+    #- name: optimized tests
+    #  env:
+    #    CC: gcc-${{ matrix.gcc }}
+    #    CXX: g++-${{ matrix.gcc }}
+    #  run: bazel test -c opt ...
