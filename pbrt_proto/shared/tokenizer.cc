@@ -1,70 +1,11 @@
 #include "pbrt_proto/shared/tokenizer.h"
 
-#include <cassert>
-#include <expected>
-#include <filesystem>
 #include <istream>
 #include <optional>
-#include <string_view>
-#include <system_error>
+#include <string>
 
-namespace {
-
-enum class ErrorCode {
-  MIN_VALUE = 1,
-  ILLEGAL_ESCAPE_CHARACTER = 1,
-  UNEXPECTED_END_OF_LINE = 2,
-  UNTERMINATED_STRING = 3,
-  MAX_VALUE = 3,
-};
-
-static class ErrorCategory final : public std::error_category {
-  const char* name() const noexcept override;
-  std::string message(int condition) const override;
-  std::error_condition default_error_condition(
-      int value) const noexcept override;
-} kErrorCategory;
-
-const char* ErrorCategory::name() const noexcept {
-  return "pbrt_proto::Tokenizer";
-}
-
-std::string ErrorCategory::message(int condition) const {
-  ErrorCode error_code{condition};
-  switch (error_code) {
-    case ErrorCode::ILLEGAL_ESCAPE_CHARACTER:
-      return "Illegal escape character";
-    case ErrorCode::UNEXPECTED_END_OF_LINE:
-      return "New line found before end of quoted string";
-    case ErrorCode::UNTERMINATED_STRING:
-      return "Unterminated quoted string";
-  };
-
-  return "Unknown Error";
-}
-
-std::error_condition ErrorCategory::default_error_condition(
-    int value) const noexcept {
-  if (value < static_cast<int>(ErrorCode::MIN_VALUE) ||
-      value > static_cast<int>(ErrorCode::MAX_VALUE)) {
-    return std::error_condition(value, *this);
-  }
-
-  return std::make_error_condition(std::errc::invalid_argument);
-}
-
-std::error_code make_error_code(ErrorCode code) {
-  return std::error_code(static_cast<int>(code), kErrorCategory);
-}
-
-}  // namespace
-
-namespace std {
-
-template <>
-struct is_error_code_enum<ErrorCode> : true_type {};
-
-}  // namespace std
+#include "absl/base/nullability.h"
+#include "absl/status/statusor.h"
 
 namespace pbrt_proto {
 
@@ -88,11 +29,11 @@ Tokenizer& Tokenizer::operator=(Tokenizer&& moved_from) noexcept {
   return *this;
 }
 
-std::expected<bool, std::error_code> Tokenizer::ParseNext(std::string& output) {
+absl::StatusOr<bool> Tokenizer::ParseNext(std::string& output) {
   output.clear();
 
   if (!stream_) {
-    return std::unexpected(std::io_errc::stream);
+    return absl::FailedPreconditionError("Bad Stream");
   }
 
   for (int read = stream_->get(); read != EOF; read = stream_->get()) {
@@ -122,7 +63,8 @@ std::expected<bool, std::error_code> Tokenizer::ParseNext(std::string& output) {
         ch = static_cast<char>(read);
 
         if (ch == '\n') {
-          return std::unexpected(ErrorCode::UNEXPECTED_END_OF_LINE);
+          return absl::InvalidArgumentError(
+              "New line found before end of quoted string");
         }
 
         if (just_escaped) {
@@ -152,7 +94,7 @@ std::expected<bool, std::error_code> Tokenizer::ParseNext(std::string& output) {
               ch = '"';
               break;
             default:
-              return std::unexpected(ErrorCode::ILLEGAL_ESCAPE_CHARACTER);
+              return absl::InvalidArgumentError("Illegal escape character");
           }
           just_escaped = false;
         } else if (ch == '\\') {
@@ -170,7 +112,7 @@ std::expected<bool, std::error_code> Tokenizer::ParseNext(std::string& output) {
       }
 
       if (!found_end) {
-        return std::unexpected(ErrorCode::UNTERMINATED_STRING);
+        return absl::InvalidArgumentError("Unterminated quoted string");
       }
 
       return true;
@@ -201,50 +143,48 @@ std::expected<bool, std::error_code> Tokenizer::ParseNext(std::string& output) {
   return false;
 }
 
-std::expected<std::optional<std::string_view>, std::error_code>
-Tokenizer::Peek() {
+absl::StatusOr<absl::Nullable<const std::string*>> Tokenizer::Peek() {
   if (peeked_valid_) {
     if (*peeked_valid_) {
-      return peeked_;
+      return &peeked_;
     } else {
-      return std::nullopt;
+      return nullptr;
     }
   }
 
-  std::expected<bool, std::error_code> found = ParseNext(peeked_);
-  if (!found.has_value()) {
-    return std::unexpected(found.error());
+  absl::StatusOr<bool> found = ParseNext(peeked_);
+  if (!found.ok()) {
+    return found.status();
   }
 
   if (*found) {
     peeked_valid_ = *found;
-    return peeked_;
+    return &peeked_;
   }
 
-  return std::nullopt;
+  return nullptr;
 }
 
-std::expected<std::optional<std::string_view>, std::error_code>
-Tokenizer::Next() {
+absl::StatusOr<absl::Nullable<const std::string*>> Tokenizer::Next() {
   std::optional<bool> next_valid;
   if (peeked_valid_) {
     std::swap(next_, peeked_);
     next_valid = *peeked_valid_;
     peeked_valid_ = std::nullopt;
   } else {
-    std::expected<bool, std::error_code> found = ParseNext(next_);
-    if (!found.has_value()) {
-      return std::unexpected(found.error());
+    absl::StatusOr<bool> found = ParseNext(next_);
+    if (!found.ok()) {
+      return found.status();
     }
 
     next_valid = *found;
   }
 
   if (*next_valid) {
-    return next_;
+    return &next_;
   }
 
-  return std::nullopt;
+  return nullptr;
 }
 
 }  // namespace pbrt_proto

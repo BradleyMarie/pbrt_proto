@@ -1,12 +1,12 @@
 #ifndef _PBRT_PROTO_SHARED_TOKENIZER_
 #define _PBRT_PROTO_SHARED_TOKENIZER_
 
-#include <expected>
-#include <filesystem>
 #include <istream>
 #include <optional>
-#include <string_view>
-#include <system_error>
+#include <string>
+
+#include "absl/base/nullability.h"
+#include "absl/status/statusor.h"
 
 namespace pbrt_proto {
 
@@ -20,11 +20,11 @@ class Tokenizer {
   Tokenizer(const Tokenizer&) = delete;
   Tokenizer& operator=(const Tokenizer&) = delete;
 
-  std::expected<std::optional<std::string_view>, std::error_code> Peek();
-  std::expected<std::optional<std::string_view>, std::error_code> Next();
+  absl::StatusOr<absl::Nullable<const std::string*>> Peek();
+  absl::StatusOr<absl::Nullable<const std::string*>> Next();
 
  private:
-  std::expected<bool, std::error_code> ParseNext(std::string& output);
+  absl::StatusOr<bool> ParseNext(std::string& output);
 
   std::istream* stream_;
   std::string next_;
@@ -34,4 +34,4 @@ class Tokenizer {
 
 }  // namespace pbrt_proto
 
-#endif  // _IRIS_FRONTEND_TOKENIZER_
+#endif  // _PBRT_PROTO_SHARED_TOKENIZER_

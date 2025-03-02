@@ -5,8 +5,13 @@ package pbrt_proto.v3;
 option features.field_presence = IMPLICIT;
 
 message ActiveTransform {
-  bool start_time = 1 [features.field_presence = LEGACY_REQUIRED];
-  bool end_time = 2 [features.field_presence = LEGACY_REQUIRED];
+  enum ActiveTransformation {
+    ALL = 0;
+    START_TIME = 1;
+    END_TIME = 2;
+  };
+
+  ActiveTransformation active = 1 [features.field_presence = LEGACY_REQUIRED];
 }
 
 message ConcatTransform {
@@ -41,7 +46,7 @@ message Identity {
 }
 
 message Include {
-    string file_path = 1 [features.field_presence = LEGACY_REQUIRED];
+    string path = 1 [features.field_presence = LEGACY_REQUIRED];
 }
 
 message LookAt {
