@@ -4,7 +4,7 @@ package(default_visibility = ["//pbrt_proto:__subpackages__"])
 
 cc_library(
     name = "parser",
-    #srcs = ["parser.cc"],
+    srcs = ["parser.cc"],
     hdrs = ["parser.h"],
     deps = [
         ":tokenizer",
@@ -13,6 +13,16 @@ cc_library(
         "@abseil-cpp//absl/status:status",
         "@abseil-cpp//absl/strings",
         "@abseil-cpp//absl/strings:string_view",
+    ],
+)
+
+cc_test(
+    name = "parser_test",
+    srcs = ["parser_test.cc"],
+    deps = [
+        ":parser",
+        "@abseil-cpp//absl/status:status_matchers",
+        "@googletest//:gtest_main",
     ],
 )
 
