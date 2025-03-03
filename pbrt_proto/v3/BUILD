@@ -1,17 +1,8 @@
-load("@rules_cc//cc:defs.bzl", "cc_library", "cc_proto_library")
-load("@rules_proto//proto:defs.bzl", "proto_library")
+load("@protobuf//bazel:cc_proto_library.bzl", "cc_proto_library")
+load("@protobuf//bazel:proto_library.bzl", "proto_library")
+load("@rules_cc//cc:defs.bzl", "cc_library")
 
 package(default_visibility = ["//visibility:public"])
-
-proto_library(
-    name = "pbrt_proto",
-    srcs = ["pbrt.proto"],
-)
-
-cc_proto_library(
-    name = "pbrt_cc_proto",
-    deps = [":pbrt_proto"],
-)
 
 cc_library(
     name = "convert",
@@ -23,4 +14,26 @@ cc_library(
         "@abseil-cpp//absl/status:status",
         "@abseil-cpp//absl/strings:string_view",
     ],
+)
+
+cc_test(
+    name = "convert_test",
+    srcs = ["convert_test.cc"],
+    deps = [
+        ":convert",
+        ":pbrt_cc_proto",
+        "//pbrt_proto/testing:proto_matchers",
+        "@abseil-cpp//absl/status:status_matchers",
+        "@googletest//:gtest_main",
+    ],
+)
+
+proto_library(
+    name = "pbrt_proto",
+    srcs = ["pbrt.proto"],
+)
+
+cc_proto_library(
+    name = "pbrt_cc_proto",
+    deps = [":pbrt_proto"],
 )

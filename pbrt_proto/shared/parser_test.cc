@@ -71,6 +71,28 @@ TEST(Parser, UnknownDirective) {
               StatusIs(absl::StatusCode::kUnimplemented, "Abc"));
 }
 
+TEST(Parser, UnparsableNumber) {
+  std::stringstream stream("ConcatTransform 1a");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Invalid parameter to directive ConcatTransform: '1a'"));
+}
+
+TEST(Parser, MissingQuotedString) {
+  std::stringstream stream("CoordSysTransform");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Missing parameter to directive CoordSysTransform"));
+}
+
+TEST(Parser, NotQuotedString) {
+  std::stringstream stream("CoordSysTransform 1");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(absl::StatusCode::kInvalidArgument,
+               "Invalid parameter to directive CoordSysTransform: '1'"));
+}
+
 TEST(ActiveTransform, MissingParameter) {
   std::stringstream stream("ActiveTransform");
   EXPECT_THAT(MockParser().ReadFrom(stream),
@@ -118,14 +140,6 @@ TEST(ActiveTransform, Fails) {
               StatusIs(absl::StatusCode::kUnknown, ""));
 }
 
-TEST(ConcatTransform, MissingParameter) {
-  std::stringstream stream("ConcatTransform");
-  EXPECT_THAT(
-      MockParser().ReadFrom(stream),
-      StatusIs(absl::StatusCode::kInvalidArgument,
-               "Directive ConcatTransform requires exactly 16 parameters"));
-}
-
 TEST(ConcatTransform, MissingParameters) {
   std::stringstream stream(
       "ConcatTransform 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15");
@@ -133,13 +147,6 @@ TEST(ConcatTransform, MissingParameters) {
       MockParser().ReadFrom(stream),
       StatusIs(absl::StatusCode::kInvalidArgument,
                "Directive ConcatTransform requires exactly 16 parameters"));
-}
-
-TEST(ConcatTransform, Unparsable) {
-  std::stringstream stream("ConcatTransform 1a");
-  EXPECT_THAT(MockParser().ReadFrom(stream),
-              StatusIs(absl::StatusCode::kInvalidArgument,
-                       "Invalid parameter to directive ConcatTransform: '1a'"));
 }
 
 TEST(ConcatTransform, Succeeds) {
@@ -161,6 +168,307 @@ TEST(ConcatTransform, Fails) {
                           1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0,
                           11.0, 12.0, 13.0, 14.0, 15.0, 16.0)))
       .WillOnce(Return(absl::UnknownError("")));
+  EXPECT_THAT(parser.ReadFrom(stream),
+              StatusIs(absl::StatusCode::kUnknown, ""));
+}
+
+TEST(CoordinateSystem, Invalid) {
+  std::stringstream stream("CoordinateSystem a");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Invalid parameter to directive CoordinateSystem: 'a'"));
+}
+
+TEST(CoordinateSystem, Succeeds) {
+  std::stringstream stream("CoordinateSystem \"a\"");
+  MockParser parser;
+  EXPECT_CALL(parser, CoordinateSystem("a")).WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(CoordinateSystem, Fails) {
+  std::stringstream stream("CoordinateSystem \"a\"");
+  MockParser parser;
+  EXPECT_CALL(parser, CoordinateSystem("a"))
+      .WillOnce(Return(absl::UnknownError("")));
+  EXPECT_THAT(parser.ReadFrom(stream),
+              StatusIs(absl::StatusCode::kUnknown, ""));
+}
+
+TEST(CoordSysTransform, Invalid) {
+  std::stringstream stream("CoordSysTransform a");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(absl::StatusCode::kInvalidArgument,
+               "Invalid parameter to directive CoordSysTransform: 'a'"));
+}
+
+TEST(CoordSysTransform, Succeeds) {
+  std::stringstream stream("CoordSysTransform \"a\"");
+  MockParser parser;
+  EXPECT_CALL(parser, CoordSysTransform("a"))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(CoordSysTransform, Fails) {
+  std::stringstream stream("CoordSysTransform \"a\"");
+  MockParser parser;
+  EXPECT_CALL(parser, CoordSysTransform("a"))
+      .WillOnce(Return(absl::UnknownError("")));
+  EXPECT_THAT(parser.ReadFrom(stream),
+              StatusIs(absl::StatusCode::kUnknown, ""));
+}
+
+TEST(Identity, Succeeds) {
+  std::stringstream stream("Identity");
+  MockParser parser;
+  EXPECT_CALL(parser, Identity()).WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Identity, Fails) {
+  std::stringstream stream("Identity");
+  MockParser parser;
+  EXPECT_CALL(parser, Identity()).WillOnce(Return(absl::UnknownError("")));
+  EXPECT_THAT(parser.ReadFrom(stream),
+              StatusIs(absl::StatusCode::kUnknown, ""));
+}
+
+TEST(Include, Invalid) {
+  std::stringstream stream("Include a");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Invalid parameter to directive Include: 'a'"));
+}
+
+TEST(Include, Succeeds) {
+  std::stringstream stream("Include \"a\"");
+  MockParser parser;
+  EXPECT_CALL(parser, Include("a")).WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Include, Fails) {
+  std::stringstream stream("Include \"a\"");
+  MockParser parser;
+  EXPECT_CALL(parser, Include("a")).WillOnce(Return(absl::UnknownError("")));
+  EXPECT_THAT(parser.ReadFrom(stream),
+              StatusIs(absl::StatusCode::kUnknown, ""));
+}
+
+TEST(Import, Invalid) {
+  std::stringstream stream("Import a");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Invalid parameter to directive Import: 'a'"));
+}
+
+TEST(Import, Succeeds) {
+  std::stringstream stream("Import \"a\"");
+  MockParser parser;
+  EXPECT_CALL(parser, Import("a")).WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Import, Fails) {
+  std::stringstream stream("Import \"a\"");
+  MockParser parser;
+  EXPECT_CALL(parser, Import("a")).WillOnce(Return(absl::UnknownError("")));
+  EXPECT_THAT(parser.ReadFrom(stream),
+              StatusIs(absl::StatusCode::kUnknown, ""));
+}
+
+TEST(LookAt, MissingParameters) {
+  std::stringstream stream("LookAt 1 2 3 4 5 6 7 8");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Directive LookAt requires exactly 9 parameters"));
+}
+
+TEST(LookAt, Succeeds) {
+  std::stringstream stream("LookAt 1 2 3 4 5 6 7 8 9");
+  MockParser parser;
+  EXPECT_CALL(parser, LookAt(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(LookAt, Fails) {
+  std::stringstream stream("LookAt 1 2 3 4 5 6 7 8 9");
+  MockParser parser;
+  EXPECT_CALL(parser, LookAt(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0))
+      .WillOnce(Return(absl::UnknownError("")));
+  EXPECT_THAT(parser.ReadFrom(stream),
+              StatusIs(absl::StatusCode::kUnknown, ""));
+}
+
+TEST(ReverseOrientation, Succeeds) {
+  std::stringstream stream("ReverseOrientation");
+  MockParser parser;
+  EXPECT_CALL(parser, ReverseOrientation()).WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(ReverseOrientation, Fails) {
+  std::stringstream stream("ReverseOrientation");
+  MockParser parser;
+  EXPECT_CALL(parser, ReverseOrientation())
+      .WillOnce(Return(absl::UnknownError("")));
+  EXPECT_THAT(parser.ReadFrom(stream),
+              StatusIs(absl::StatusCode::kUnknown, ""));
+}
+
+TEST(Rotate, MissingParameters) {
+  std::stringstream stream("Rotate 1 2 3");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Directive Rotate requires exactly 4 parameters"));
+}
+
+TEST(Rotate, Succeeds) {
+  std::stringstream stream("Rotate 1 2 3 4");
+  MockParser parser;
+  EXPECT_CALL(parser, Rotate(1.0, 2.0, 3.0, 4.0))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Rotate, Fails) {
+  std::stringstream stream("Rotate 1 2 3 4");
+  MockParser parser;
+  EXPECT_CALL(parser, Rotate(1.0, 2.0, 3.0, 4.0))
+      .WillOnce(Return(absl::UnknownError("")));
+  EXPECT_THAT(parser.ReadFrom(stream),
+              StatusIs(absl::StatusCode::kUnknown, ""));
+}
+
+TEST(Scale, MissingParameters) {
+  std::stringstream stream("Scale 1 2");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Directive Scale requires exactly 3 parameters"));
+}
+
+TEST(Scale, Succeeds) {
+  std::stringstream stream("Scale 1 2 3");
+  MockParser parser;
+  EXPECT_CALL(parser, Scale(1.0, 2.0, 3.0)).WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Scale, Fails) {
+  std::stringstream stream("Scale 1 2 3");
+  MockParser parser;
+  EXPECT_CALL(parser, Scale(1.0, 2.0, 3.0))
+      .WillOnce(Return(absl::UnknownError("")));
+  EXPECT_THAT(parser.ReadFrom(stream),
+              StatusIs(absl::StatusCode::kUnknown, ""));
+}
+
+TEST(Transform, MissingParameters) {
+  std::stringstream stream("Transform 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Directive Transform requires exactly 16 parameters"));
+}
+
+TEST(Transform, Succeeds) {
+  std::stringstream stream("Transform 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16");
+  MockParser parser;
+  EXPECT_CALL(parser,
+              Transform(ElementsAre(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0,
+                                    10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0)))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Transform, Fails) {
+  std::stringstream stream("Transform 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16");
+  MockParser parser;
+  EXPECT_CALL(parser,
+              Transform(ElementsAre(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0,
+                                    10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0)))
+      .WillOnce(Return(absl::UnknownError("")));
+  EXPECT_THAT(parser.ReadFrom(stream),
+              StatusIs(absl::StatusCode::kUnknown, ""));
+}
+
+TEST(TransformTimes, MissingParameters) {
+  std::stringstream stream("TransformTimes 1");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(absl::StatusCode::kInvalidArgument,
+               "Directive TransformTimes requires exactly 2 parameters"));
+}
+
+TEST(TransformTimes, Succeeds) {
+  std::stringstream stream("TransformTimes 1 2");
+  MockParser parser;
+  EXPECT_CALL(parser, TransformTimes(1.0, 2.0))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(TransformTimes, Fails) {
+  std::stringstream stream("TransformTimes 1 2");
+  MockParser parser;
+  EXPECT_CALL(parser, TransformTimes(1.0, 2.0))
+      .WillOnce(Return(absl::UnknownError("")));
+  EXPECT_THAT(parser.ReadFrom(stream),
+              StatusIs(absl::StatusCode::kUnknown, ""));
+}
+
+TEST(Translate, MissingParameters) {
+  std::stringstream stream("Translate 1 2");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Directive Translate requires exactly 3 parameters"));
+}
+
+TEST(Translate, Succeeds) {
+  std::stringstream stream("Translate 1 2 3");
+  MockParser parser;
+  EXPECT_CALL(parser, Translate(1.0, 2.0, 3.0))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Translate, Fails) {
+  std::stringstream stream("Translate 1 2 3");
+  MockParser parser;
+  EXPECT_CALL(parser, Translate(1.0, 2.0, 3.0))
+      .WillOnce(Return(absl::UnknownError("")));
+  EXPECT_THAT(parser.ReadFrom(stream),
+              StatusIs(absl::StatusCode::kUnknown, ""));
+}
+
+TEST(WorldBegin, Succeeds) {
+  std::stringstream stream("WorldBegin");
+  MockParser parser;
+  EXPECT_CALL(parser, WorldBegin()).WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(WorldBegin, Fails) {
+  std::stringstream stream("WorldBegin");
+  MockParser parser;
+  EXPECT_CALL(parser, WorldBegin()).WillOnce(Return(absl::UnknownError("")));
+  EXPECT_THAT(parser.ReadFrom(stream),
+              StatusIs(absl::StatusCode::kUnknown, ""));
+}
+
+TEST(WorldEnd, Succeeds) {
+  std::stringstream stream("WorldEnd");
+  MockParser parser;
+  EXPECT_CALL(parser, WorldEnd()).WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(WorldEnd, Fails) {
+  std::stringstream stream("WorldEnd");
+  MockParser parser;
+  EXPECT_CALL(parser, WorldEnd()).WillOnce(Return(absl::UnknownError("")));
   EXPECT_THAT(parser.ReadFrom(stream),
               StatusIs(absl::StatusCode::kUnknown, ""));
 }
