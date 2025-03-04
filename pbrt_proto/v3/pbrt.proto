@@ -4,6 +4,33 @@ package pbrt_proto.v3;
 
 option features.field_presence = IMPLICIT;
 
+message Accelerator {
+  message Bvh {
+    enum SplitMethod {
+      SAH = 0;
+      MIDDLE = 1;
+      EQUAL = 2;
+      HLBVH = 3;
+    }
+
+    uint32 maxnodeprims = 1 [default = 4, features.field_presence = EXPLICIT];
+    SplitMethod splitmethod = 2;
+  }
+
+  message KdTree {
+    int32 intersectcost = 1 [default = 80, features.field_presence = EXPLICIT];
+    int32 traversalcost = 2 [default = 1, features.field_presence = EXPLICIT];
+    double emptybonus = 3 [default = 0.2, features.field_presence = EXPLICIT];
+    uint32 maxprims = 4 [default = 1, features.field_presence = EXPLICIT];
+    int32 maxdepth = 5 [default = -1, features.field_presence = EXPLICIT];
+  }
+
+  oneof accelerator_type {
+    Bvh bvh = 1;
+    KdTree kdtree = 2;
+  }
+}
+
 message ActiveTransform {
   enum ActiveTransformation {
     ALL = 0;
@@ -15,127 +42,128 @@ message ActiveTransform {
 }
 
 message ConcatTransform {
-    double m00 = 1 [features.field_presence = LEGACY_REQUIRED];
-    double m01 = 2 [features.field_presence = LEGACY_REQUIRED];
-    double m02 = 3 [features.field_presence = LEGACY_REQUIRED];
-    double m03 = 4 [features.field_presence = LEGACY_REQUIRED];
-    double m10 = 5 [features.field_presence = LEGACY_REQUIRED];
-    double m11 = 6 [features.field_presence = LEGACY_REQUIRED];
-    double m12 = 7 [features.field_presence = LEGACY_REQUIRED];
-    double m13 = 8 [features.field_presence = LEGACY_REQUIRED];
-    double m20 = 9 [features.field_presence = LEGACY_REQUIRED];
-    double m21 = 10 [features.field_presence = LEGACY_REQUIRED];
-    double m22 = 11 [features.field_presence = LEGACY_REQUIRED];
-    double m23 = 12 [features.field_presence = LEGACY_REQUIRED];
-    double m30 = 13 [features.field_presence = LEGACY_REQUIRED];
-    double m31 = 14 [features.field_presence = LEGACY_REQUIRED];
-    double m32 = 15 [features.field_presence = LEGACY_REQUIRED];
-    double m33 = 16 [features.field_presence = LEGACY_REQUIRED];
+  double m00 = 1 [features.field_presence = LEGACY_REQUIRED];
+  double m01 = 2 [features.field_presence = LEGACY_REQUIRED];
+  double m02 = 3 [features.field_presence = LEGACY_REQUIRED];
+  double m03 = 4 [features.field_presence = LEGACY_REQUIRED];
+  double m10 = 5 [features.field_presence = LEGACY_REQUIRED];
+  double m11 = 6 [features.field_presence = LEGACY_REQUIRED];
+  double m12 = 7 [features.field_presence = LEGACY_REQUIRED];
+  double m13 = 8 [features.field_presence = LEGACY_REQUIRED];
+  double m20 = 9 [features.field_presence = LEGACY_REQUIRED];
+  double m21 = 10 [features.field_presence = LEGACY_REQUIRED];
+  double m22 = 11 [features.field_presence = LEGACY_REQUIRED];
+  double m23 = 12 [features.field_presence = LEGACY_REQUIRED];
+  double m30 = 13 [features.field_presence = LEGACY_REQUIRED];
+  double m31 = 14 [features.field_presence = LEGACY_REQUIRED];
+  double m32 = 15 [features.field_presence = LEGACY_REQUIRED];
+  double m33 = 16 [features.field_presence = LEGACY_REQUIRED];
 }
 
 message CoordinateSystem {
-    string name = 1 [features.field_presence = LEGACY_REQUIRED];
+  string name = 1 [features.field_presence = LEGACY_REQUIRED];
 }
 
 message CoordSysTransform {
-    string name = 1 [features.field_presence = LEGACY_REQUIRED];
+  string name = 1 [features.field_presence = LEGACY_REQUIRED];
 }
 
 message Identity {
-    // Empty Message
+  // Empty Message
 }
 
 message Include {
-    string path = 1 [features.field_presence = LEGACY_REQUIRED];
+  string path = 1 [features.field_presence = LEGACY_REQUIRED];
 }
 
 message LookAt {
-    double eye_x = 1 [features.field_presence = LEGACY_REQUIRED];
-    double eye_y = 2 [features.field_presence = LEGACY_REQUIRED];
-    double eye_z = 3 [features.field_presence = LEGACY_REQUIRED];
-    double look_x = 4 [features.field_presence = LEGACY_REQUIRED];
-    double look_y = 5 [features.field_presence = LEGACY_REQUIRED];
-    double look_z = 6 [features.field_presence = LEGACY_REQUIRED];
-    double up_x = 7 [features.field_presence = LEGACY_REQUIRED];
-    double up_y = 8 [features.field_presence = LEGACY_REQUIRED];
-    double up_z = 9 [features.field_presence = LEGACY_REQUIRED];
+  double eye_x = 1 [features.field_presence = LEGACY_REQUIRED];
+  double eye_y = 2 [features.field_presence = LEGACY_REQUIRED];
+  double eye_z = 3 [features.field_presence = LEGACY_REQUIRED];
+  double look_x = 4 [features.field_presence = LEGACY_REQUIRED];
+  double look_y = 5 [features.field_presence = LEGACY_REQUIRED];
+  double look_z = 6 [features.field_presence = LEGACY_REQUIRED];
+  double up_x = 7 [features.field_presence = LEGACY_REQUIRED];
+  double up_y = 8 [features.field_presence = LEGACY_REQUIRED];
+  double up_z = 9 [features.field_presence = LEGACY_REQUIRED];
 }
 
 message ReverseOrientation {
-    // Empty Message
+  // Empty Message
 }
 
 message Rotate {
-    double angle = 1 [features.field_presence = LEGACY_REQUIRED];
-    double x = 2 [features.field_presence = LEGACY_REQUIRED];
-    double y = 3 [features.field_presence = LEGACY_REQUIRED];
-    double z = 4 [features.field_presence = LEGACY_REQUIRED];
+  double angle = 1 [features.field_presence = LEGACY_REQUIRED];
+  double x = 2 [features.field_presence = LEGACY_REQUIRED];
+  double y = 3 [features.field_presence = LEGACY_REQUIRED];
+  double z = 4 [features.field_presence = LEGACY_REQUIRED];
 }
 
 message Scale {
-    double x = 1 [features.field_presence = LEGACY_REQUIRED];
-    double y = 2 [features.field_presence = LEGACY_REQUIRED];
-    double z = 3 [features.field_presence = LEGACY_REQUIRED];
+  double x = 1 [features.field_presence = LEGACY_REQUIRED];
+  double y = 2 [features.field_presence = LEGACY_REQUIRED];
+  double z = 3 [features.field_presence = LEGACY_REQUIRED];
 }
 
 message Transform {
-    double m00 = 1 [features.field_presence = LEGACY_REQUIRED];
-    double m01 = 2 [features.field_presence = LEGACY_REQUIRED];
-    double m02 = 3 [features.field_presence = LEGACY_REQUIRED];
-    double m03 = 4 [features.field_presence = LEGACY_REQUIRED];
-    double m10 = 5 [features.field_presence = LEGACY_REQUIRED];
-    double m11 = 6 [features.field_presence = LEGACY_REQUIRED];
-    double m12 = 7 [features.field_presence = LEGACY_REQUIRED];
-    double m13 = 8 [features.field_presence = LEGACY_REQUIRED];
-    double m20 = 9 [features.field_presence = LEGACY_REQUIRED];
-    double m21 = 10 [features.field_presence = LEGACY_REQUIRED];
-    double m22 = 11 [features.field_presence = LEGACY_REQUIRED];
-    double m23 = 12 [features.field_presence = LEGACY_REQUIRED];
-    double m30 = 13 [features.field_presence = LEGACY_REQUIRED];
-    double m31 = 14 [features.field_presence = LEGACY_REQUIRED];
-    double m32 = 15 [features.field_presence = LEGACY_REQUIRED];
-    double m33 = 16 [features.field_presence = LEGACY_REQUIRED];
+  double m00 = 1 [features.field_presence = LEGACY_REQUIRED];
+  double m01 = 2 [features.field_presence = LEGACY_REQUIRED];
+  double m02 = 3 [features.field_presence = LEGACY_REQUIRED];
+  double m03 = 4 [features.field_presence = LEGACY_REQUIRED];
+  double m10 = 5 [features.field_presence = LEGACY_REQUIRED];
+  double m11 = 6 [features.field_presence = LEGACY_REQUIRED];
+  double m12 = 7 [features.field_presence = LEGACY_REQUIRED];
+  double m13 = 8 [features.field_presence = LEGACY_REQUIRED];
+  double m20 = 9 [features.field_presence = LEGACY_REQUIRED];
+  double m21 = 10 [features.field_presence = LEGACY_REQUIRED];
+  double m22 = 11 [features.field_presence = LEGACY_REQUIRED];
+  double m23 = 12 [features.field_presence = LEGACY_REQUIRED];
+  double m30 = 13 [features.field_presence = LEGACY_REQUIRED];
+  double m31 = 14 [features.field_presence = LEGACY_REQUIRED];
+  double m32 = 15 [features.field_presence = LEGACY_REQUIRED];
+  double m33 = 16 [features.field_presence = LEGACY_REQUIRED];
 }
 
 message TransformTimes {
-    double start_time = 1 [features.field_presence = LEGACY_REQUIRED];
-    double end_time = 2 [features.field_presence = LEGACY_REQUIRED];
+  double start_time = 1 [features.field_presence = LEGACY_REQUIRED];
+  double end_time = 2 [features.field_presence = LEGACY_REQUIRED];
 }
 
 message Translate {
-    double x = 1 [features.field_presence = LEGACY_REQUIRED];
-    double y = 2 [features.field_presence = LEGACY_REQUIRED];
-    double z = 3 [features.field_presence = LEGACY_REQUIRED];
+  double x = 1 [features.field_presence = LEGACY_REQUIRED];
+  double y = 2 [features.field_presence = LEGACY_REQUIRED];
+  double z = 3 [features.field_presence = LEGACY_REQUIRED];
 }
 
 message WorldBegin {
-    // Empty Message
+  // Empty Message
 }
 
 message WorldEnd {
-    // Empty Message
+  // Empty Message
 }
 
 message Directive {
   oneof directive_type {
-    ActiveTransform active_transform = 1;
-    ConcatTransform concat_transform = 2;
-    CoordinateSystem coordinate_system = 3;
-    CoordSysTransform coord_sys_transform = 4;
-    Identity identity = 5;
-    Include include = 6;
-    LookAt look_at = 7;
-    ReverseOrientation reverse_orientation = 8;
-    Rotate rotate = 9;
-    Scale scale = 10;
-    Transform transform = 11;
-    TransformTimes transform_times = 12;
-    Translate translate = 13;
-    WorldBegin world_begin = 14;
-    WorldEnd world_end = 15;
+    Accelerator accelerator = 1;
+    ActiveTransform active_transform = 2;
+    ConcatTransform concat_transform = 3;
+    CoordinateSystem coordinate_system = 4;
+    CoordSysTransform coord_sys_transform = 5;
+    Identity identity = 6;
+    Include include = 7;
+    LookAt look_at = 8;
+    ReverseOrientation reverse_orientation = 9;
+    Rotate rotate = 10;
+    Scale scale = 11;
+    Transform transform = 12;
+    TransformTimes transform_times = 13;
+    Translate translate = 14;
+    WorldBegin world_begin = 15;
+    WorldEnd world_end = 16;
   }
 }
 
-message ScenePart {
+message PbrtProto {
   repeated Directive directives = 1;
 }

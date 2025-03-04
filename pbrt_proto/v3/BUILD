@@ -28,6 +28,15 @@ cc_test(
     ],
 )
 
+cc_library(
+    name = "defaults",
+    srcs = ["defaults.cc"],
+    hdrs = ["defaults.h"],
+    deps = [
+        ":pbrt_cc_proto",
+    ],
+)
+
 proto_library(
     name = "pbrt_proto",
     srcs = ["pbrt.proto"],

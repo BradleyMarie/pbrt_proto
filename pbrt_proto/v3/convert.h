@@ -8,7 +8,7 @@
 
 namespace pbrt_proto::v3 {
 
-absl::StatusOr<ScenePart> Convert(std::istream& input);
+absl::StatusOr<PbrtProto> Convert(std::istream& input);
 
 }  // namespace pbrt_proto::v3
 

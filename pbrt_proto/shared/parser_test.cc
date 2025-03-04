@@ -13,10 +13,81 @@ namespace {
 using ::absl_testing::IsOk;
 using ::absl_testing::StatusIs;
 using ::testing::ElementsAre;
+using ::testing::FieldsAre;
+using ::testing::Pair;
 using ::testing::Return;
+using ::testing::VariantWith;
+
+static const absl::flat_hash_map<absl::string_view, ParameterType>
+    parameter_type_names = {
+        {
+            "blackbody1",
+            ParameterType::BLACKBODY_V1,
+        },
+        {
+            "blackbody2",
+            ParameterType::BLACKBODY_V2,
+        },
+        {
+            "bool",
+            ParameterType::BOOL,
+        },
+        {
+            "float",
+            ParameterType::FLOAT,
+        },
+        {
+            "integer",
+            ParameterType::INTEGER,
+        },
+        {
+            "normal3",
+            ParameterType::NORMAL3,
+        },
+        {
+            "point2",
+            ParameterType::POINT2,
+        },
+        {
+            "point3",
+            ParameterType::POINT3,
+        },
+        {
+            "rgb",
+            ParameterType::RGB,
+        },
+        {
+            "spectrum",
+            ParameterType::SPECTRUM,
+        },
+        {"string", ParameterType::STRING},
+        {"texture", ParameterType::STRING},
+        {
+            "vector2",
+            ParameterType::VECTOR2,
+        },
+        {
+            "vector3",
+            ParameterType::VECTOR3,
+        },
+        {
+            "xyz",
+            ParameterType::XYZ,
+        },
+        {
+            "zzz",
+            ParameterType::FLOAT,
+        },
+};
 
 class MockParser final : public Parser {
  public:
+  MockParser() : Parser(parameter_type_names) {}
+
+  MOCK_METHOD(absl::Status, Accelerator,
+              (absl::string_view,
+               (absl::flat_hash_map<absl::string_view, Parameter>&)),
+              (override));
   MOCK_METHOD(absl::Status, ActiveTransform, (ActiveTransformation),
               (override));
   MOCK_METHOD(absl::Status, ConcatTransform, ((const std::array<double, 16>&)),
@@ -91,6 +162,37 @@ TEST(Parser, NotQuotedString) {
       MockParser().ReadFrom(stream),
       StatusIs(absl::StatusCode::kInvalidArgument,
                "Invalid parameter to directive CoordSysTransform: '1'"));
+}
+
+TEST(Parser, Blackbody1) {
+  std::stringstream stream("Accelerator \"typename\" \"blackbody1 aaa\" [1 2]");
+  MockParser parser;
+
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(Pair(
+              "aaa", FieldsAre(ParameterType::BLACKBODY_V1, "blackbody1",
+                               VariantWith<absl::Span<std::array<double, 2>>>(
+                                   ElementsAre(ElementsAre(1.0, 2.0))))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Parser, Blackbody2) {
+  std::stringstream stream("Accelerator \"typename\" \"blackbody2 aaa\"[1] ");
+  MockParser parser;
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(Pair(
+              "aaa",
+              FieldsAre(ParameterType::BLACKBODY_V2, "blackbody2",
+                        VariantWith<absl::Span<double>>(ElementsAre(1.0)))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
 }
 
 TEST(ActiveTransform, MissingParameter) {

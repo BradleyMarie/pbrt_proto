@@ -7,11 +7,82 @@
 namespace pbrt_proto::v3 {
 namespace {
 
+static const absl::flat_hash_map<absl::string_view, ParameterType>
+    parameter_type_names = {
+        {
+            "blackbody",
+            ParameterType::BLACKBODY_V1,
+        },
+        {
+            "bool",
+            ParameterType::BOOL,
+        },
+        {
+            "float",
+            ParameterType::FLOAT,
+        },
+        {
+            "integer",
+            ParameterType::INTEGER,
+        },
+        {
+            "normal",
+            ParameterType::NORMAL3,
+        },
+        {
+            "normal3",
+            ParameterType::NORMAL3,
+        },
+        {
+            "point",
+            ParameterType::POINT3,
+        },
+        {
+            "point2",
+            ParameterType::POINT2,
+        },
+        {
+            "point3",
+            ParameterType::POINT3,
+        },
+        {
+            "rgb",
+            ParameterType::RGB,
+        },
+        {
+            "spectrum",
+            ParameterType::SPECTRUM,
+        },
+        {"string", ParameterType::STRING},
+        {"texture", ParameterType::STRING},
+        {
+            "vector",
+            ParameterType::VECTOR3,
+        },
+        {
+            "vector2",
+            ParameterType::VECTOR2,
+        },
+        {
+            "vector3",
+            ParameterType::VECTOR3,
+        },
+        {
+            "xyz",
+            ParameterType::XYZ,
+        },
+};
+
 class ParserV3 final : public Parser {
  public:
-  ParserV3(ScenePart& output) noexcept : output_(output) {}
+  ParserV3(PbrtProto& output) noexcept
+      : Parser(parameter_type_names), output_(output) {}
 
  private:
+  absl::Status Accelerator(
+      absl::string_view accelerator_type,
+      absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
+
   absl::Status ActiveTransform(ActiveTransformation active) override;
 
   absl::Status ConcatTransform(double m00, double m01, double m02, double m03,
@@ -54,8 +125,14 @@ class ParserV3 final : public Parser {
 
   absl::Status WorldEnd() override;
 
-  ScenePart& output_;
+  PbrtProto& output_;
 };
+
+absl::Status ParserV3::Accelerator(
+    absl::string_view accelerator_type,
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
+  return absl::UnimplementedError("Accelerator");
+}
 
 absl::Status ParserV3::ActiveTransform(ActiveTransformation active) {
   auto* active_transform = output_.add_directives()->mutable_active_transform();
@@ -214,8 +291,8 @@ absl::Status ParserV3::WorldEnd() {
 
 }  // namespace
 
-absl::StatusOr<ScenePart> Convert(std::istream& input) {
-  ScenePart output;
+absl::StatusOr<PbrtProto> Convert(std::istream& input) {
+  PbrtProto output;
   if (absl::Status error = ParserV3(output).ReadFrom(input); !error.ok()) {
     return error;
   }

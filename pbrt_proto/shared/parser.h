@@ -1,12 +1,47 @@
 #ifndef _PBRT_PROTO_SHARED_PARSER_
 #define _PBRT_PROTO_SHARED_PARSER_
 
+#include <array>
+#include <cstdint>
 #include <istream>
+#include <variant>
 
+#include "absl/container/flat_hash_map.h"
 #include "absl/status/status.h"
 #include "absl/strings/string_view.h"
+#include "absl/types/span.h"
 
 namespace pbrt_proto {
+
+enum class ParameterType {
+  BLACKBODY_V1,  // float2
+  BLACKBODY_V2,  // float
+  BOOL,          // bool
+  FLOAT,         // float
+  INTEGER,       // integer
+  NORMAL3,       // float3
+  POINT2,        // float2
+  POINT3,        // float3
+  RGB,           // float3
+  SPECTRUM,      // float2 or string
+  STRING,        // string
+  TEXTURE,       // string
+  VECTOR2,       // float2
+  VECTOR3,       // float3
+  XYZ,           // float3
+};
+
+using ParameterValues =
+    std::variant<absl::Span<std::array<double, 3>>,
+                 absl::Span<std::array<double, 2>>, absl::Span<double>,
+                 absl::Span<int32_t>, absl::Span<absl::string_view>,
+                 absl::Span<bool>>;
+
+struct Parameter {
+  ParameterType type;
+  absl::string_view type_name;
+  ParameterValues values;
+};
 
 enum class ActiveTransformation {
   ALL,
@@ -18,7 +53,16 @@ class Parser {
  public:
   absl::Status ReadFrom(std::istream& stream);
 
+ protected:
+  Parser(const absl::flat_hash_map<absl::string_view, ParameterType>&
+             parameter_type_names)
+      : parameter_type_names_(parameter_type_names) {}
+
  private:
+  virtual absl::Status Accelerator(
+      absl::string_view accelerator_type,
+      absl::flat_hash_map<absl::string_view, Parameter>& parameters) = 0;
+
   virtual absl::Status ActiveTransform(ActiveTransformation active) = 0;
 
   virtual absl::Status ConcatTransform(double m00, double m01, double m02,
@@ -61,6 +105,9 @@ class Parser {
   virtual absl::Status WorldBegin() = 0;
 
   virtual absl::Status WorldEnd() = 0;
+
+  const absl::flat_hash_map<absl::string_view, ParameterType>&
+      parameter_type_names_;
 };
 
 }  // namespace pbrt_proto

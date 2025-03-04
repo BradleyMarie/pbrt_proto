@@ -13,6 +13,7 @@ cc_library(
         "@abseil-cpp//absl/status:status",
         "@abseil-cpp//absl/strings",
         "@abseil-cpp//absl/strings:string_view",
+        "@abseil-cpp//absl/types:span",
     ],
 )
 
