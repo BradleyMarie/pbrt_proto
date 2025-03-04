@@ -1,5 +1,7 @@
 #include "pbrt_proto/v3/convert.h"
 
+#include <variant>
+
 #include "absl/status/status.h"
 #include "absl/strings/string_view.h"
 #include "pbrt_proto/shared/parser.h"
@@ -131,7 +133,142 @@ class ParserV3 final : public Parser {
 absl::Status ParserV3::Accelerator(
     absl::string_view accelerator_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
-  return absl::UnimplementedError("Accelerator");
+  if (accelerator_type == "bvh") {
+    auto& bvh = *output_.add_directives()->mutable_accelerator()->mutable_bvh();
+
+    if (std::optional<Parameter> maxnodeprims =
+            RemoveParameter(parameters, "maxnodeprims");
+        maxnodeprims.has_value()) {
+      if (maxnodeprims->type != ParameterType::INTEGER) {
+        return absl::InvalidArgumentError("");
+      }
+
+      const absl::Span<int32_t>& values =
+          *std::get_if<absl::Span<int32_t>>(&maxnodeprims->values);
+      if (values.size() != 1) {
+        return absl::InvalidArgumentError("");
+      }
+
+      bvh.set_maxnodeprims(values[0]);
+    }
+
+    if (std::optional<Parameter> splitmethod =
+            RemoveParameter(parameters, "splitmethod");
+        splitmethod.has_value()) {
+      if (splitmethod->type != ParameterType::STRING) {
+        return absl::InvalidArgumentError("");
+      }
+
+      const absl::Span<absl::string_view>& values =
+          *std::get_if<absl::Span<absl::string_view>>(&splitmethod->values);
+      if (values.size() != 1) {
+        return absl::InvalidArgumentError("");
+      }
+
+      if (values[0] == "sah") {
+        bvh.set_splitmethod(Accelerator::Bvh::SAH);
+      } else if (values[0] == "middle") {
+        bvh.set_splitmethod(Accelerator::Bvh::MIDDLE);
+      } else if (values[0] == "equal") {
+        bvh.set_splitmethod(Accelerator::Bvh::EQUAL);
+      } else if (values[0] == "hlbvh") {
+        bvh.set_splitmethod(Accelerator::Bvh::HLBVH);
+      } else {
+        return absl::InvalidArgumentError("TODO");
+      }
+    }
+  } else if (accelerator_type == "kdtree") {
+    auto& kdtree =
+        *output_.add_directives()->mutable_accelerator()->mutable_kdtree();
+
+    if (std::optional<Parameter> intersectcost =
+            RemoveParameter(parameters, "intersectcost");
+        intersectcost.has_value()) {
+      if (intersectcost->type != ParameterType::INTEGER) {
+        return absl::InvalidArgumentError("");
+      }
+
+      const absl::Span<int32_t>& values =
+          *std::get_if<absl::Span<int32_t>>(&intersectcost->values);
+      if (values.size() != 1) {
+        return absl::InvalidArgumentError("");
+      }
+
+      kdtree.set_intersectcost(values[0]);
+    }
+
+    if (std::optional<Parameter> traversalcost =
+            RemoveParameter(parameters, "traversalcost");
+        traversalcost.has_value()) {
+      if (traversalcost->type != ParameterType::INTEGER) {
+        return absl::InvalidArgumentError("");
+      }
+
+      const absl::Span<int32_t>& values =
+          *std::get_if<absl::Span<int32_t>>(&traversalcost->values);
+      if (values.size() != 1) {
+        return absl::InvalidArgumentError("");
+      }
+
+      kdtree.set_traversalcost(values[0]);
+    }
+
+    if (std::optional<Parameter> emptybonus =
+            RemoveParameter(parameters, "emptybonus");
+        emptybonus.has_value()) {
+      if (emptybonus->type != ParameterType::FLOAT) {
+        return absl::InvalidArgumentError("");
+      }
+
+      const absl::Span<double>& values =
+          *std::get_if<absl::Span<double>>(&emptybonus->values);
+      if (values.size() != 1) {
+        return absl::InvalidArgumentError("");
+      }
+
+      kdtree.set_emptybonus(values[0]);
+    }
+
+    if (std::optional<Parameter> maxprims =
+            RemoveParameter(parameters, "maxprims");
+        maxprims.has_value()) {
+      if (maxprims->type != ParameterType::INTEGER) {
+        return absl::InvalidArgumentError("");
+      }
+
+      const absl::Span<int32_t>& values =
+          *std::get_if<absl::Span<int32_t>>(&maxprims->values);
+      if (values.size() != 1) {
+        return absl::InvalidArgumentError("");
+      }
+
+      kdtree.set_maxprims(values[0]);
+    }
+
+    if (std::optional<Parameter> maxdepth =
+            RemoveParameter(parameters, "maxdepth");
+        maxdepth.has_value()) {
+      if (maxdepth->type != ParameterType::INTEGER) {
+        return absl::InvalidArgumentError("");
+      }
+
+      const absl::Span<int32_t>& values =
+          *std::get_if<absl::Span<int32_t>>(&maxdepth->values);
+      if (values.size() != 1) {
+        return absl::InvalidArgumentError("");
+      }
+
+      kdtree.set_maxdepth(values[0]);
+    }
+  } else {
+    return absl::InvalidArgumentError("");
+  }
+
+  if (!parameters.empty()) {
+    return absl::InvalidArgumentError("");
+  }
+
+  return absl::OkStatus();
 }
 
 absl::Status ParserV3::ActiveTransform(ActiveTransformation active) {

@@ -5,22 +5,23 @@ package pbrt_proto.v3;
 message Accelerator {
   message Bvh {
     enum SplitMethod {
+      option features.enum_type = CLOSED;
       SAH = 0;
       MIDDLE = 1;
       EQUAL = 2;
       HLBVH = 3;
     }
 
-    int32 maxnodeprims = 1 [default = 4, features.field_presence = EXPLICIT];
-    SplitMethod splitmethod = 2 [features.field_presence = IMPLICIT];
+    int32 maxnodeprims = 1 [default = 4];
+    SplitMethod splitmethod = 2;
   }
 
   message KdTree {
-    int32 intersectcost = 1 [default = 80, features.field_presence = EXPLICIT];
-    int32 traversalcost = 2 [default = 1, features.field_presence = EXPLICIT];
-    double emptybonus = 3 [default = 0.2, features.field_presence = EXPLICIT];
-    int32 maxprims = 4 [default = 1, features.field_presence = EXPLICIT];
-    int32 maxdepth = 5 [default = -1, features.field_presence = EXPLICIT];
+    int32 intersectcost = 1 [default = 80];
+    int32 traversalcost = 2 [default = 1];
+    double emptybonus = 3 [default = 0.2];
+    int32 maxprims = 4 [default = 1];
+    int32 maxdepth = 5 [default = -1];
   }
 
   oneof accelerator_type {
@@ -31,6 +32,7 @@ message Accelerator {
 
 message ActiveTransform {
   enum ActiveTransformation {
+    option features.enum_type = CLOSED;
     ALL = 0;
     START_TIME = 1;
     END_TIME = 2;

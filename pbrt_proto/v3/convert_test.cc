@@ -26,6 +26,81 @@ TEST(Convert, Empty) {
   EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto("")));
 }
 
+TEST(Convert, AcceleratorBvhSAH) {
+  std::stringstream stream(
+      "Accelerator \"bvh\" \"integer maxnodeprims\" 5 \"string splitmethod\" "
+      "\"sah\"");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(
+          R"pb(directives {
+                 accelerator { bvh { maxnodeprims: 5 splitmethod: SAH } }
+               })pb")));
+}
+
+TEST(Convert, AcceleratorBvhMiddle) {
+  std::stringstream stream(
+      "Accelerator \"bvh\" \"integer maxnodeprims\" 5 \"string splitmethod\" "
+      "\"middle\"");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(
+          R"pb(directives {
+                 accelerator { bvh { maxnodeprims: 5 splitmethod: MIDDLE } }
+               })pb")));
+}
+
+TEST(Convert, AcceleratorBvhEqual) {
+  std::stringstream stream(
+      "Accelerator \"bvh\" \"integer maxnodeprims\" 5 \"string splitmethod\" "
+      "\"equal\"");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(
+          R"pb(directives {
+                 accelerator { bvh { maxnodeprims: 5 splitmethod: EQUAL } }
+               })pb")));
+}
+
+TEST(Convert, AcceleratorBvhHlbvh) {
+  std::stringstream stream(
+      "Accelerator \"bvh\" \"integer maxnodeprims\" 5 \"string splitmethod\" "
+      "\"hlbvh\"");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(
+          R"pb(directives {
+                 accelerator { bvh { maxnodeprims: 5 splitmethod: HLBVH } }
+               })pb")));
+}
+
+TEST(Convert, AcceleratorBvhBad) {
+  std::stringstream stream(
+      "Accelerator \"bvh\" \"integer maxnodeprims\" 5 \"string splitmethod\" "
+      "\"invalud\"");
+  EXPECT_THAT(Convert(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument, "TODO"));
+}
+
+TEST(Convert, AcceleratorKdTree) {
+  std::stringstream stream(
+      "Accelerator \"kdtree\" \"integer intersectcost\" 1 \"integer "
+      "traversalcost\" 2 \"float emptybonus\" 3 \"integer maxprims\" 4 "
+      "\"integer maxdepth\" 5");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives {
+                                              accelerator {
+                                                kdtree {
+                                                  intersectcost: 1
+                                                  traversalcost: 2
+                                                  emptybonus: 3
+                                                  maxprims: 4
+                                                  maxdepth: 5
+                                                }
+                                              }
+                                            })pb")));
+}
+
 TEST(Convert, ActiveTransformAll) {
   std::stringstream stream("ActiveTransform All");
   EXPECT_THAT(Convert(stream),
@@ -35,16 +110,20 @@ TEST(Convert, ActiveTransformAll) {
 
 TEST(Convert, ActiveTransformStart) {
   std::stringstream stream("ActiveTransform StartTime");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(
-                  "directives { active_transform { active: START_TIME } }")));
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(R"pb(directives {
+                                      active_transform { active: START_TIME }
+                                    })pb")));
 }
 
 TEST(Convert, ActiveTransformEnd) {
   std::stringstream stream("ActiveTransform EndTime");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(
-                  "directives { active_transform { active: END_TIME } }")));
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(R"pb(directives {
+                                      active_transform { active: END_TIME }
+                                    })pb")));
 }
 
 TEST(Convert, ConcatTransform) {

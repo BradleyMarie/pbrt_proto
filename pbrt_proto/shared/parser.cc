@@ -845,4 +845,18 @@ absl::Status Parser::ReadFrom(std::istream& stream) {
   return absl::OkStatus();
 }
 
+std::optional<Parameter> RemoveParameter(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view parameter_name) {
+  auto iter = parameters.find(parameter_name);
+  if (iter == parameters.end()) {
+    return std::nullopt;
+  }
+
+  Parameter result = iter->second;
+  parameters.erase(iter);
+
+  return result;
+}
+
 }  // namespace pbrt_proto

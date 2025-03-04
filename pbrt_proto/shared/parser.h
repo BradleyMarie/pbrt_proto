@@ -110,6 +110,10 @@ class Parser {
       parameter_type_names_;
 };
 
+std::optional<Parameter> RemoveParameter(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view parameter_name);
+
 }  // namespace pbrt_proto
 
 #endif  // _PBRT_PROTO_SHARED_PARSER_
