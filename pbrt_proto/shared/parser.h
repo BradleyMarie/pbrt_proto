@@ -4,6 +4,7 @@
 #include <array>
 #include <cstdint>
 #include <istream>
+#include <optional>
 #include <variant>
 
 #include "absl/container/flat_hash_map.h"
@@ -110,7 +111,15 @@ class Parser {
       parameter_type_names_;
 };
 
-std::optional<Parameter> RemoveParameter(
+std::optional<double> TryRemoveFloat(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view parameter_name);
+
+std::optional<int32_t> TryRemoveInteger(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view parameter_name);
+
+std::optional<absl::string_view> TryRemoveString(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     absl::string_view parameter_name);
 

@@ -26,6 +26,13 @@ TEST(Convert, Empty) {
   EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto("")));
 }
 
+TEST(Convert, AcceleratorBvhEmpty) {
+  std::stringstream stream("Accelerator \"bvh\"");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(
+                  EqualsProto(R"pb(directives { accelerator { bvh {} } })pb")));
+}
+
 TEST(Convert, AcceleratorBvhSAH) {
   std::stringstream stream(
       "Accelerator \"bvh\" \"integer maxnodeprims\" 5 \"string splitmethod\" "
@@ -77,9 +84,20 @@ TEST(Convert, AcceleratorBvhHlbvh) {
 TEST(Convert, AcceleratorBvhBad) {
   std::stringstream stream(
       "Accelerator \"bvh\" \"integer maxnodeprims\" 5 \"string splitmethod\" "
-      "\"invalud\"");
+      "\"invalid\"");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(R"pb(directives {
+                                      accelerator { bvh { maxnodeprims: 5 } }
+                                    })pb")));
+}
+
+TEST(Convert, AcceleratorKdTreeEmpty) {
+  std::stringstream stream("Accelerator \"kdtree\"");
   EXPECT_THAT(Convert(stream),
-              StatusIs(absl::StatusCode::kInvalidArgument, "TODO"));
+              IsOkAndHolds(EqualsProto(R"pb(directives {
+                                              accelerator { kdtree {} }
+                                            })pb")));
 }
 
 TEST(Convert, AcceleratorKdTree) {

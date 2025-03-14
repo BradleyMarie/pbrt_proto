@@ -682,6 +682,31 @@ absl::StatusOr<absl::string_view> ReadParameters(
   return *type_name;
 }
 
+template <ParameterType type, typename T>
+absl::Status TryRemoveValue(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view parameter_name, std::optional<T>& value) {
+  auto iter = parameters.find(parameter_name);
+  if (iter == parameters.end()) {
+    return absl::OkStatus();
+  }
+
+  if (iter->second.type != type) {
+    return absl::OkStatus();
+  }
+
+  const absl::Span<T>& values =
+      *std::get_if<absl::Span<T>>(&iter->second.values);
+  if (values.size() != 1) {
+    return absl::InvalidArgumentError("TODO");
+  }
+
+  value = values[0];
+  parameters.erase(iter);
+
+  return absl::OkStatus();
+}
+
 }  // namespace
 
 absl::Status Parser::ReadFrom(std::istream& stream) {
@@ -845,17 +870,30 @@ absl::Status Parser::ReadFrom(std::istream& stream) {
   return absl::OkStatus();
 }
 
-std::optional<Parameter> RemoveParameter(
+std::optional<double> TryRemoveFloat(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     absl::string_view parameter_name) {
-  auto iter = parameters.find(parameter_name);
-  if (iter == parameters.end()) {
-    return std::nullopt;
-  }
+  std::optional<double> result;
+  TryRemoveValue<ParameterType::FLOAT>(parameters, parameter_name, result)
+      .IgnoreError();
+  return result;
+}
 
-  Parameter result = iter->second;
-  parameters.erase(iter);
+std::optional<int32_t> TryRemoveInteger(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view parameter_name) {
+  std::optional<int32_t> result;
+  TryRemoveValue<ParameterType::INTEGER>(parameters, parameter_name, result)
+      .IgnoreError();
+  return result;
+}
 
+std::optional<absl::string_view> TryRemoveString(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view parameter_name) {
+  std::optional<absl::string_view> result;
+  TryRemoveValue<ParameterType::STRING>(parameters, parameter_name, result)
+      .IgnoreError();
   return result;
 }
 

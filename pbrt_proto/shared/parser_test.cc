@@ -12,8 +12,13 @@ namespace {
 
 using ::absl_testing::IsOk;
 using ::absl_testing::StatusIs;
+using ::testing::Contains;
 using ::testing::ElementsAre;
+using ::testing::Eq;
 using ::testing::FieldsAre;
+using ::testing::Key;
+using ::testing::Not;
+using ::testing::Optional;
 using ::testing::Pair;
 using ::testing::Return;
 using ::testing::VariantWith;
@@ -573,6 +578,123 @@ TEST(WorldEnd, Fails) {
   EXPECT_CALL(parser, WorldEnd()).WillOnce(Return(absl::UnknownError("")));
   EXPECT_THAT(parser.ReadFrom(stream),
               StatusIs(absl::StatusCode::kUnknown, ""));
+}
+
+TEST(TryRemoveFloat, WrongType) {
+  std::vector<double> values;
+  Parameter parameter{.type = ParameterType::BLACKBODY_V1,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  EXPECT_THAT(TryRemoveFloat(parameters, "name"), Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name")));
+}
+
+TEST(TryRemoveFloat, WrongName) {
+  std::vector<double> values;
+  Parameter parameter{.type = ParameterType::FLOAT,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name1", parameter}};
+
+  EXPECT_THAT(TryRemoveFloat(parameters, "name2"), Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name1")));
+}
+
+TEST(TryRemoveFloat, Found) {
+  std::vector<double> values = {1.0};
+  Parameter parameter{.type = ParameterType::FLOAT,
+                      .type_name = "aaa",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  EXPECT_THAT(TryRemoveFloat(parameters, "name"), Optional(1.0));
+  EXPECT_THAT(parameters, Not(Contains(Key("name1"))));
+}
+
+TEST(TryRemoveInteger, WrongType) {
+  std::vector<int32_t> values;
+  Parameter parameter{.type = ParameterType::BLACKBODY_V1,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  EXPECT_THAT(TryRemoveInteger(parameters, "name"), Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name")));
+}
+
+TEST(TryRemoveInteger, WrongName) {
+  std::vector<int32_t> values;
+  Parameter parameter{.type = ParameterType::INTEGER,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name1", parameter}};
+
+  EXPECT_THAT(TryRemoveInteger(parameters, "name2"), Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name1")));
+}
+
+TEST(TryRemoveInteger, Found) {
+  std::vector<int32_t> values = {1};
+  Parameter parameter{.type = ParameterType::INTEGER,
+                      .type_name = "aaa",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  EXPECT_THAT(TryRemoveInteger(parameters, "name"), Optional(1));
+  EXPECT_THAT(parameters, Not(Contains(Key("name1"))));
+}
+
+TEST(TryRemoveString, WrongType) {
+  std::vector<absl::string_view> values;
+  Parameter parameter{.type = ParameterType::BLACKBODY_V1,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  EXPECT_THAT(TryRemoveString(parameters, "name"), Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name")));
+}
+
+TEST(TryRemoveString, WrongName) {
+  std::vector<absl::string_view> values;
+  Parameter parameter{.type = ParameterType::STRING,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name1", parameter}};
+
+  EXPECT_THAT(TryRemoveString(parameters, "name2"), Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name1")));
+}
+
+TEST(TryRemoveString, Found) {
+  std::vector<absl::string_view> values = {"abc"};
+  Parameter parameter{.type = ParameterType::STRING,
+                      .type_name = "aaa",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  EXPECT_THAT(TryRemoveString(parameters, "name"), Optional(Eq("abc")));
+  EXPECT_THAT(parameters, Not(Contains(Key("name1"))));
 }
 
 }  // namespace

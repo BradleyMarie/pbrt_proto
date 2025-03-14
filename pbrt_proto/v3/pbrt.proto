@@ -33,9 +33,9 @@ message Accelerator {
 message ActiveTransform {
   enum ActiveTransformation {
     option features.enum_type = CLOSED;
-    ALL = 0;
-    START_TIME = 1;
-    END_TIME = 2;
+    ALL = 1;
+    START_TIME = 2;
+    END_TIME = 3;
   };
 
   ActiveTransformation active = 1 [features.field_presence = LEGACY_REQUIRED];

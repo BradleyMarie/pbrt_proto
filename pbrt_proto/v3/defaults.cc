@@ -21,4 +21,19 @@ const PbrtProto& GetDefaults() {
   return defaults;
 }
 
+void Canonicalize(PbrtProto& proto) {
+  for (Directive& directive : *proto.mutable_directives()) {
+    switch (directive.directive_type_case()) {
+      case Directive::kAccelerator:
+        if (directive.accelerator().accelerator_type_case() ==
+            Accelerator::ACCELERATOR_TYPE_NOT_SET) {
+          directive.mutable_accelerator()->mutable_bvh();
+        }
+        break;
+      default:
+        break;
+    }
+  }
+}
+
 }  // namespace pbrt_proto::v3

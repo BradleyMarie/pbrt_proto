@@ -6,6 +6,7 @@
 namespace pbrt_proto::v3 {
 
 const PbrtProto& GetDefaults();
+void Canonicalize(PbrtProto& proto);
 
 }  // namespace pbrt_proto::v3
 
