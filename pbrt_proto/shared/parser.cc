@@ -161,11 +161,11 @@ absl::Status ParseValue(absl::string_view directive, absl::string_view type,
   }
 
   if (!*next) {
-    return absl::InvalidArgumentError("TODO");
+    return absl::InvalidArgumentError("TODO_A");
   }
 
   if (!absl::SimpleAtod(**next, &out)) {
-    return absl::InvalidArgumentError("TODO");
+    return absl::InvalidArgumentError("TODO_B");
   }
 
   return absl::OkStatus();
@@ -222,11 +222,11 @@ absl::Status ParseValue(absl::string_view directive, absl::string_view type,
   }
 
   if (!*next) {
-    return absl::InvalidArgumentError("TODO");
+    return absl::InvalidArgumentError("TODO_C");
   }
 
   if (!absl::SimpleAtoi(**next, &out)) {
-    return absl::InvalidArgumentError("TODO");
+    return absl::InvalidArgumentError("TODO_D");
   }
 
   return absl::OkStatus();
@@ -241,7 +241,7 @@ absl::Status ParseValue(absl::string_view directive, absl::string_view type,
   }
 
   if (!*next) {
-    return absl::InvalidArgumentError("TODO");
+    return absl::InvalidArgumentError("TODO_E");
   }
 
   if (**next == "\"true\"") {
@@ -254,7 +254,7 @@ absl::Status ParseValue(absl::string_view directive, absl::string_view type,
     return absl::OkStatus();
   }
 
-  return absl::InvalidArgumentError("TODO");
+  return absl::InvalidArgumentError("TODO_F");
 }
 
 absl::Status ParseValue(absl::string_view directive, absl::string_view type,
@@ -266,11 +266,11 @@ absl::Status ParseValue(absl::string_view directive, absl::string_view type,
   }
 
   if (!*next) {
-    return absl::InvalidArgumentError("TODO");
+    return absl::InvalidArgumentError("TODO_G");
   }
 
   if ((**next)[0] != '"') {
-    return absl::InvalidArgumentError("TODO");
+    return absl::InvalidArgumentError("TODO_H");
   }
 
   out = storage.Add(**next);
@@ -299,7 +299,7 @@ absl::Status ParseParameterListImpl(absl::string_view directive,
         break;
       }
 
-      return absl::InvalidArgumentError("TODO");
+      return absl::InvalidArgumentError("TODO_I");
     }
 
     if (**next == "]") {
@@ -308,7 +308,7 @@ absl::Status ParseParameterListImpl(absl::string_view directive,
         break;
       }
 
-      return absl::InvalidArgumentError("TODO");
+      return absl::InvalidArgumentError("TODO_J");
     }
 
     T value;
@@ -340,18 +340,18 @@ absl::Status ParseParameterList(absl::string_view directive,
   }
 
   if (!*next) {
-    return absl::InvalidArgumentError("TODO");
+    return absl::InvalidArgumentError("TODO_K");
   }
 
   bool loop;
-  if ((**next != "[")) {
-    if (must_loop) {
-      return absl::InvalidArgumentError("TODO");
-    }
-    loop = false;
-  } else {
+  if ((**next == "[")) {
     tokenizer.Next().IgnoreError();
     loop = true;
+  } else {
+    if (must_loop) {
+      return absl::InvalidArgumentError("TODO_L");
+    }
+    loop = false;
   }
 
   return ParseParameterListImpl(directive, type, storage, tokenizer, output,
@@ -369,16 +369,11 @@ absl::Status ParseSpectrumParameter(absl::string_view directive,
   }
 
   if (!*next) {
-    return absl::InvalidArgumentError("TODO");
+    return absl::InvalidArgumentError("TODO_M");
   }
 
   bool loop;
-  if ((**next != "[")) {
-    if ((**next)[0] != '"') {
-      return absl::InvalidArgumentError("TODO");
-    }
-    loop = false;
-  } else {
+  if ((**next == "[")) {
     tokenizer.Next().IgnoreError();
 
     next = tokenizer.Peek();
@@ -387,19 +382,28 @@ absl::Status ParseSpectrumParameter(absl::string_view directive,
     }
 
     if (!*next) {
-      return absl::InvalidArgumentError("TODO");
+      return absl::InvalidArgumentError("TODO_N");
     }
 
     loop = true;
+  } else {
+    if ((**next)[0] != '"') {
+      return absl::InvalidArgumentError("TODO_O");
+    }
+    loop = false;
   }
 
   absl::Status status;
-  if ((**next)[0] != '"') {
+  if ((**next)[0] == '"') {
+    auto& output_storage = storage.NextString();
     status = ParseParameterListImpl(directive, type, storage, tokenizer,
-                                    storage.NextString(), loop);
+                                    output_storage, loop);
+    output = absl::MakeSpan(output_storage);
   } else {
+    auto& output_storage = storage.NextFloat2();
     status = ParseParameterListImpl(directive, type, storage, tokenizer,
-                                    storage.NextFloat2(), loop);
+                                    output_storage, loop);
+    output = absl::MakeSpan(output_storage);
   }
 
   return status;
@@ -471,7 +475,7 @@ absl::StatusOr<absl::string_view> ReadTypeName(absl::string_view directive,
   }
 
   if ((**next)[0] != '"') {
-    return absl::InvalidArgumentError("TODO");
+    return absl::InvalidArgumentError("TODO_P");
   }
 
   absl::string_view type_name = **next;
@@ -698,7 +702,7 @@ absl::Status TryRemoveValue(
   const absl::Span<T>& values =
       *std::get_if<absl::Span<T>>(&iter->second.values);
   if (values.size() != 1) {
-    return absl::InvalidArgumentError("TODO");
+    return absl::InvalidArgumentError("TODO_Q");
   }
 
   value = values[0];

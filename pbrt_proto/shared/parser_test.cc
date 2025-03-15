@@ -1,6 +1,7 @@
 #include "pbrt_proto/shared/parser.h"
 
 #include <array>
+#include <cstdint>
 #include <sstream>
 
 #include "absl/status/status_matchers.h"
@@ -66,7 +67,7 @@ static const absl::flat_hash_map<absl::string_view, ParameterType>
             ParameterType::SPECTRUM,
         },
         {"string", ParameterType::STRING},
-        {"texture", ParameterType::STRING},
+        {"texture", ParameterType::TEXTURE},
         {
             "vector2",
             ParameterType::VECTOR2,
@@ -169,6 +170,19 @@ TEST(Parser, NotQuotedString) {
                "Invalid parameter to directive CoordSysTransform: '1'"));
 }
 
+TEST(Parser, Alias) {
+  std::stringstream stream("Accelerator \"typename\" \"zzz aaa\" [1.0]");
+  MockParser parser;
+  EXPECT_CALL(parser,
+              Accelerator("typename",
+                          ElementsAre(Pair(
+                              "aaa", FieldsAre(ParameterType::FLOAT, "zzz",
+                                               VariantWith<absl::Span<double>>(
+                                                   ElementsAre(1)))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
 TEST(Parser, Blackbody1) {
   std::stringstream stream("Accelerator \"typename\" \"blackbody1 aaa\" [1 2]");
   MockParser parser;
@@ -186,7 +200,7 @@ TEST(Parser, Blackbody1) {
 }
 
 TEST(Parser, Blackbody2) {
-  std::stringstream stream("Accelerator \"typename\" \"blackbody2 aaa\"[1] ");
+  std::stringstream stream("Accelerator \"typename\" \"blackbody2 aaa\" [1]");
   MockParser parser;
   EXPECT_CALL(
       parser,
@@ -196,6 +210,223 @@ TEST(Parser, Blackbody2) {
               "aaa",
               FieldsAre(ParameterType::BLACKBODY_V2, "blackbody2",
                         VariantWith<absl::Span<double>>(ElementsAre(1.0)))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Parser, Bool) {
+  std::stringstream stream(
+      "Accelerator \"typename\" \"bool aaa\" [\"true\" \"false\"]");
+  MockParser parser;
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(Pair("aaa", FieldsAre(ParameterType::BOOL, "bool",
+                                            VariantWith<absl::Span<bool>>(
+                                                ElementsAre(true, false)))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Parser, Float) {
+  std::stringstream stream("Accelerator \"typename\" \"float aaa\" [1.0]");
+  MockParser parser;
+  EXPECT_CALL(parser,
+              Accelerator("typename",
+                          ElementsAre(Pair(
+                              "aaa", FieldsAre(ParameterType::FLOAT, "float",
+                                               VariantWith<absl::Span<double>>(
+                                                   ElementsAre(1)))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Parser, Integer) {
+  std::stringstream stream("Accelerator \"typename\" \"integer aaa\" [1]");
+  MockParser parser;
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(Pair("aaa", FieldsAre(ParameterType::INTEGER, "integer",
+                                            VariantWith<absl::Span<int32_t>>(
+                                                ElementsAre(1.0)))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Parser, Normal) {
+  std::stringstream stream(
+      "Accelerator \"typename\" \"normal3 aaa\" [1.0 2.0 3.0]");
+  MockParser parser;
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(Pair(
+              "aaa", FieldsAre(ParameterType::NORMAL3, "normal3",
+                               VariantWith<absl::Span<std::array<double, 3>>>(
+                                   ElementsAre(ElementsAre(1.0, 2.0, 3.0))))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Parser, Point2) {
+  std::stringstream stream("Accelerator \"typename\" \"point2 aaa\" [1.0 2.0]");
+  MockParser parser;
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(Pair(
+              "aaa", FieldsAre(ParameterType::POINT2, "point2",
+                               VariantWith<absl::Span<std::array<double, 2>>>(
+                                   ElementsAre(ElementsAre(1.0, 2.0))))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Parser, Point3) {
+  std::stringstream stream(
+      "Accelerator \"typename\" \"point3 aaa\" [1.0 2.0 3.0]");
+  MockParser parser;
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(Pair(
+              "aaa", FieldsAre(ParameterType::POINT3, "point3",
+                               VariantWith<absl::Span<std::array<double, 3>>>(
+                                   ElementsAre(ElementsAre(1.0, 2.0, 3.0))))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Parser, Rgb) {
+  std::stringstream stream(
+      "Accelerator \"typename\" \"rgb aaa\" [1.0 2.0 3.0]");
+  MockParser parser;
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(Pair(
+              "aaa", FieldsAre(ParameterType::RGB, "rgb",
+                               VariantWith<absl::Span<std::array<double, 3>>>(
+                                   ElementsAre(ElementsAre(1.0, 2.0, 3.0))))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Parser, SpectrumSamples) {
+  std::stringstream stream(
+      "Accelerator \"typename\" \"spectrum aaa\" [1.0 2.0]");
+  MockParser parser;
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(Pair(
+              "aaa", FieldsAre(ParameterType::SPECTRUM, "spectrum",
+                               VariantWith<absl::Span<std::array<double, 2>>>(
+                                   ElementsAre(ElementsAre(1.0, 2.0))))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Parser, SpectrumByPath) {
+  std::stringstream stream(
+      "Accelerator \"typename\" \"spectrum aaa\" [\"abcdefg\"]");
+  MockParser parser;
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(
+              Pair("aaa", FieldsAre(ParameterType::SPECTRUM, "spectrum",
+                                    VariantWith<absl::Span<absl::string_view>>(
+                                        ElementsAre("abcdefg")))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Parser, String) {
+  std::stringstream stream(
+      "Accelerator \"typename\" \"string aaa\" [\"abcdefg\"]");
+  MockParser parser;
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(
+              Pair("aaa", FieldsAre(ParameterType::STRING, "string",
+                                    VariantWith<absl::Span<absl::string_view>>(
+                                        ElementsAre("abcdefg")))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Parser, Texture) {
+  std::stringstream stream(
+      "Accelerator \"typename\" \"texture aaa\" [\"abcdefg\"]");
+  MockParser parser;
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(
+              Pair("aaa", FieldsAre(ParameterType::TEXTURE, "texture",
+                                    VariantWith<absl::Span<absl::string_view>>(
+                                        ElementsAre("abcdefg")))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Parser, Vector2) {
+  std::stringstream stream(
+      "Accelerator \"typename\" \"vector2 aaa\" [1.0 2.0]");
+  MockParser parser;
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(Pair(
+              "aaa", FieldsAre(ParameterType::VECTOR2, "vector2",
+                               VariantWith<absl::Span<std::array<double, 2>>>(
+                                   ElementsAre(ElementsAre(1.0, 2.0))))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Parser, Vector3) {
+  std::stringstream stream(
+      "Accelerator \"typename\" \"vector3 aaa\" [1.0 2.0 3.0]");
+  MockParser parser;
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(Pair(
+              "aaa", FieldsAre(ParameterType::VECTOR3, "vector3",
+                               VariantWith<absl::Span<std::array<double, 3>>>(
+                                   ElementsAre(ElementsAre(1.0, 2.0, 3.0))))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Parser, Xyz) {
+  std::stringstream stream(
+      "Accelerator \"typename\" \"xyz aaa\" [1.0 2.0 3.0]");
+  MockParser parser;
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(Pair(
+              "aaa", FieldsAre(ParameterType::XYZ, "xyz",
+                               VariantWith<absl::Span<std::array<double, 3>>>(
+                                   ElementsAre(ElementsAre(1.0, 2.0, 3.0))))))))
       .WillOnce(Return(absl::OkStatus()));
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
 }
