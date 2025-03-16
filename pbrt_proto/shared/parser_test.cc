@@ -17,6 +17,7 @@ using ::testing::Contains;
 using ::testing::ElementsAre;
 using ::testing::Eq;
 using ::testing::FieldsAre;
+using ::testing::IsEmpty;
 using ::testing::Key;
 using ::testing::Not;
 using ::testing::Optional;
@@ -168,6 +169,273 @@ TEST(Parser, NotQuotedString) {
       MockParser().ReadFrom(stream),
       StatusIs(absl::StatusCode::kInvalidArgument,
                "Invalid parameter to directive CoordSysTransform: '1'"));
+}
+
+TEST(Parser, MissingTypeParameter) {
+  std::stringstream stream("Accelerator");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Missing type parameter to directive Accelerator"));
+}
+
+TEST(Parser, TypeParameterNotQuoted) {
+  std::stringstream stream("Accelerator abc");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(absl::StatusCode::kInvalidArgument,
+               "Unquoted type parameter to directive Accelerator: 'abc'"));
+}
+
+TEST(Parser, ParameterTooFewTokens) {
+  std::stringstream stream("Accelerator \"aaa\" \"abc\"");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(
+          absl::StatusCode::kInvalidArgument,
+          "Invalid parameter declaration for directive Accelerator: \"abc\""));
+}
+
+TEST(Parser, ParameterTooManyTokens) {
+  std::stringstream stream("Accelerator \"aaa\" \"abc abc abc\"");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Invalid parameter declaration for directive "
+                       "Accelerator: \"abc abc abc\""));
+}
+
+TEST(Parser, ParameterTypeUnrecognized) {
+  std::stringstream stream("Accelerator \"aaa\" \"abc abc\"");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(absl::StatusCode::kInvalidArgument,
+               "Invalid parameter type for directive Accelerator: 'abc'"));
+}
+
+TEST(Parser, EndsWithNoParameters) {
+  std::stringstream stream("Accelerator \"aaa\"");
+  MockParser parser;
+  EXPECT_CALL(parser, Accelerator("aaa", IsEmpty()))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Parser, ContinuesAfterNoParameters) {
+  std::stringstream stream("Accelerator \"aaa\" WorldBegin");
+  MockParser parser;
+  EXPECT_CALL(parser, Accelerator("aaa", IsEmpty()))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_CALL(parser, WorldBegin()).WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Parser, SingularValue) {
+  std::stringstream stream("Accelerator \"typename\" \"float aaa\" 1.0");
+  MockParser parser;
+  EXPECT_CALL(parser,
+              Accelerator("typename",
+                          ElementsAre(Pair(
+                              "aaa", FieldsAre(ParameterType::FLOAT, "float",
+                                               VariantWith<absl::Span<double>>(
+                                                   ElementsAre(1)))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Parser, MissingLoopEnding) {
+  std::stringstream stream("Accelerator \"typename\" \"float aaa\" [ 1.0");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Unterminated array in directive Accelerator for float "
+                       "parameter: 'aaa'"));
+}
+
+TEST(Parser, MissingFloat) {
+  std::stringstream stream("Accelerator \"typename\" \"float aaa\"");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Missing value for Accelerator float parameter: 'aaa'"));
+}
+
+TEST(Parser, InvalidFloat) {
+  std::stringstream stream("Accelerator \"typename\" \"float aaa\" 1.f");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(
+          absl::StatusCode::kInvalidArgument,
+          "Failed to parse float value for Accelerator parameter aaa: '1.f'"));
+}
+
+TEST(Parser, MissingFloat2) {
+  std::stringstream stream("Accelerator \"typename\" \"point2 aaa\"");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(absl::StatusCode::kInvalidArgument,
+               "Missing value for Accelerator point2 parameter: 'aaa'"));
+}
+
+TEST(Parser, MissingFirstFloat2) {
+  std::stringstream stream("Accelerator \"typename\" \"point2 aaa\"");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(absl::StatusCode::kInvalidArgument,
+               "Missing value for Accelerator point2 parameter: 'aaa'"));
+}
+
+TEST(Parser, MissingSecondFloat2) {
+  std::stringstream stream("Accelerator \"typename\" \"point2 aaa\" [1.0");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(absl::StatusCode::kInvalidArgument,
+               "Missing value for Accelerator point2 parameter: 'aaa'"));
+}
+
+// TODO: Make this compatible with all PBRT versions
+TEST(Parser, MissingSecondFloat2Terminated) {
+  std::stringstream stream("Accelerator \"typename\" \"point2 aaa\" [1.0]");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(absl::StatusCode::kInvalidArgument,
+               "Missing value for Accelerator point2 parameter: 'aaa'"));
+}
+
+// TODO: Make this compatible with all PBRT versions
+TEST(Parser, UnboundFloat2MissingOne) {
+  std::stringstream stream("Accelerator \"typename\" \"point2 aaa\" 1.0");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(absl::StatusCode::kInvalidArgument,
+               "Missing value for Accelerator point2 parameter: 'aaa'"));
+}
+
+TEST(Parser, UnboundFloat2) {
+  std::stringstream stream("Accelerator \"typename\" \"point2 aaa\" 1.0 2.0");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(absl::StatusCode::kInvalidArgument,
+               "Missing value for Accelerator point2 parameter: 'aaa'"));
+}
+
+TEST(Parser, MissingFloat3) {
+  std::stringstream stream("Accelerator \"typename\" \"point3 aaa\"");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(absl::StatusCode::kInvalidArgument,
+               "Missing value for Accelerator point3 parameter: 'aaa'"));
+}
+
+TEST(Parser, MissingFirstFloat3) {
+  std::stringstream stream("Accelerator \"typename\" \"point3 aaa\"");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(absl::StatusCode::kInvalidArgument,
+               "Missing value for Accelerator point3 parameter: 'aaa'"));
+}
+
+TEST(Parser, MissingSecondFloat3) {
+  std::stringstream stream("Accelerator \"typename\" \"point3 aaa\" [1.0");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(absl::StatusCode::kInvalidArgument,
+               "Missing value for Accelerator point3 parameter: 'aaa'"));
+}
+
+// TODO: Make this compatible with all PBRT versions
+TEST(Parser, MissingSecondFloat3Terminated) {
+  std::stringstream stream("Accelerator \"typename\" \"point3 aaa\" [1.0]");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(absl::StatusCode::kInvalidArgument,
+               "Missing value for Accelerator point3 parameter: 'aaa'"));
+}
+
+TEST(Parser, MissingThirdFloat3) {
+  std::stringstream stream("Accelerator \"typename\" \"point3 aaa\" [1.0 2.0");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(absl::StatusCode::kInvalidArgument,
+               "Missing value for Accelerator point3 parameter: 'aaa'"));
+}
+
+// TODO: Make this compatible with all PBRT versions
+TEST(Parser, MissingThirdFloat3Terminated) {
+  std::stringstream stream("Accelerator \"typename\" \"point3 aaa\" [1.0 2.0]");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(absl::StatusCode::kInvalidArgument,
+               "Missing value for Accelerator point3 parameter: 'aaa'"));
+}
+
+// TODO: Make this compatible with all PBRT versions
+TEST(Parser, UnboundFloat3MissingTwo) {
+  std::stringstream stream("Accelerator \"typename\" \"point3 aaa\" 1.0");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(absl::StatusCode::kInvalidArgument,
+               "Missing value for Accelerator point3 parameter: 'aaa'"));
+}
+
+TEST(Parser, UnboundFloat3MissingOne) {
+  std::stringstream stream("Accelerator \"typename\" \"point3 aaa\" 1.0 2.0");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(absl::StatusCode::kInvalidArgument,
+               "Missing value for Accelerator point3 parameter: 'aaa'"));
+}
+
+TEST(Parser, UnboundFloat3) {
+  std::stringstream stream(
+      "Accelerator \"typename\" \"point3 aaa\" 1.0 2.0 3.0");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(absl::StatusCode::kInvalidArgument,
+               "Missing value for Accelerator point3 parameter: 'aaa'"));
+}
+
+TEST(Parser, MissingInteger) {
+  std::stringstream stream("Accelerator \"typename\" \"integer aaa\"");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(absl::StatusCode::kInvalidArgument,
+               "Missing value for Accelerator integer parameter: 'aaa'"));
+}
+
+TEST(Parser, InvalidInteger) {
+  std::stringstream stream("Accelerator \"typename\" \"integer aaa\" 1.0");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Failed to parse integer value for Accelerator "
+                       "parameter aaa: '1.0'"));
+}
+
+TEST(Parser, MissingString) {
+  std::stringstream stream("Accelerator \"typename\" \"string aaa\"");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(absl::StatusCode::kInvalidArgument,
+               "Missing value for Accelerator string parameter: 'aaa'"));
+}
+
+TEST(Parser, InvalidString) {
+  std::stringstream stream("Accelerator \"typename\" \"string aaa\" 1");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(absl::StatusCode::kInvalidArgument,
+               "Unquoted string value for Accelerator parameter aaa: '1'"));
+}
+
+TEST(Parser, MissingBool) {
+  std::stringstream stream("Accelerator \"typename\" \"bool aaa\"");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Missing value for Accelerator bool parameter: 'aaa'"));
+}
+
+TEST(Parser, InvalidBool) {
+  std::stringstream stream("Accelerator \"typename\" \"bool aaa\" \"1\"");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Failed to parse bool value for Accelerator "
+                       "parameter aaa: \"1\""));
 }
 
 TEST(Parser, Alias) {
