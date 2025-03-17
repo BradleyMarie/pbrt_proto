@@ -587,6 +587,45 @@ TEST(Parser, Rgb) {
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
 }
 
+TEST(Parser, SpectrumMissing) {
+  std::stringstream stream("Accelerator \"typename\" \"spectrum aaa\"");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(absl::StatusCode::kInvalidArgument,
+               "Missing value for Accelerator spectrum parameter: 'aaa'"));
+}
+
+TEST(Parser, SpectrumUnterminatedArray) {
+  std::stringstream stream("Accelerator \"typename\" \"spectrum aaa\" [");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Unterminated array in directive Accelerator for "
+                       "spectrum parameter: 'aaa'"));
+}
+
+TEST(Parser, SpectrumSingularFloat) {
+  std::stringstream stream("Accelerator \"typename\" \"spectrum aaa\" 1.0");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Non-array spectrum value for Accelerator parameter aaa "
+                       "was not a string: '1.0'"));
+}
+
+TEST(Parser, SpectrumEmptyArray) {
+  std::stringstream stream("Accelerator \"typename\" \"spectrum aaa\" []");
+  MockParser parser;
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(Pair(
+              "aaa", FieldsAre(ParameterType::SPECTRUM, "spectrum",
+                               VariantWith<absl::Span<std::array<double, 2>>>(
+                                   IsEmpty()))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
 TEST(Parser, SpectrumSamples) {
   std::stringstream stream(
       "Accelerator \"typename\" \"spectrum aaa\" [1.0 2.0]");
@@ -599,6 +638,22 @@ TEST(Parser, SpectrumSamples) {
               "aaa", FieldsAre(ParameterType::SPECTRUM, "spectrum",
                                VariantWith<absl::Span<std::array<double, 2>>>(
                                    ElementsAre(ElementsAre(1.0, 2.0))))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Parser, SpectrumBySingularPath) {
+  std::stringstream stream(
+      "Accelerator \"typename\" \"spectrum aaa\" \"abcdefg\"");
+  MockParser parser;
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(
+              Pair("aaa", FieldsAre(ParameterType::SPECTRUM, "spectrum",
+                                    VariantWith<absl::Span<absl::string_view>>(
+                                        ElementsAre("abcdefg")))))))
       .WillOnce(Return(absl::OkStatus()));
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
 }

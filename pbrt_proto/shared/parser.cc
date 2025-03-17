@@ -159,6 +159,14 @@ absl::Status MissingValueError(absl::string_view directive,
       "Missing value for ", directive, " ", type, " parameter: '", name, "'"));
 }
 
+absl::Status UnterminatedArrayError(absl::string_view directive,
+                                    absl::string_view type,
+                                    absl::string_view name) {
+  return absl::InvalidArgumentError(
+      absl::StrCat("Unterminated array in directive ", directive, " for ", type,
+                   " parameter: '", name, "'"));
+}
+
 absl::Status InvalidTokenError(absl::string_view directive,
                                absl::string_view type, absl::string_view name,
                                absl::string_view token) {
@@ -343,9 +351,7 @@ absl::Status ParseParameterListImpl(
         break;
       }
 
-      return absl::InvalidArgumentError(
-          absl::StrCat("Unterminated array in directive ", directive, " for ",
-                       type, " parameter: '", name, "'"));
+      return UnterminatedArrayError(directive, type, name);
     }
 
     if (loop && **next == "]") {
@@ -410,7 +416,7 @@ absl::Status ParseSpectrumParameter(
   }
 
   if (!*next) {
-    return absl::InvalidArgumentError("TODO_M");
+    return MissingValueError(directive, type, name);
   }
 
   bool loop;
@@ -423,13 +429,16 @@ absl::Status ParseSpectrumParameter(
     }
 
     if (!*next) {
-      return absl::InvalidArgumentError("TODO_N");
+      return UnterminatedArrayError(directive, type, name);
     }
 
     loop = true;
   } else {
     if ((**next)[0] != '"') {
-      return absl::InvalidArgumentError("TODO_O");
+      // TODO: Make this compatible with all PBRT versions
+      return absl::InvalidArgumentError(absl::StrCat(
+          "Non-array ", type, " value for ", directive, " parameter ", name,
+          " was not a string: '", **next, "'"));
     }
     loop = false;
   }
