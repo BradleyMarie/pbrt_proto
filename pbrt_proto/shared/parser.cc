@@ -829,6 +829,10 @@ absl::Status Parser::ReadFrom(std::istream& stream) {
       }
 
       status = ActiveTransform(transformation);
+    } else if (**next == "AttributeBegin") {
+      status = AttributeBegin();
+    } else if (**next == "AttributeEnd") {
+      status = AttributeEnd();
     } else if (**next == "ConcatTransform") {
       auto values =
           ReadFloatParameters("ConcatTransform", storage, tokenizer, 16);
@@ -907,6 +911,10 @@ absl::Status Parser::ReadFrom(std::istream& stream) {
                     (*values)[4], (*values)[5], (*values)[6], (*values)[7],
                     (*values)[8], (*values)[9], (*values)[10], (*values)[11],
                     (*values)[12], (*values)[13], (*values)[14], (*values)[15]);
+    } else if (**next == "TransformBegin") {
+      status = TransformBegin();
+    } else if (**next == "TransformEnd") {
+      status = TransformEnd();
     } else if (**next == "TransformTimes") {
       auto values =
           ReadFloatParameters("TransformTimes", storage, tokenizer, 2);

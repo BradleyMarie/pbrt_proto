@@ -66,6 +66,10 @@ class Parser {
 
   virtual absl::Status ActiveTransform(ActiveTransformation active) = 0;
 
+  virtual absl::Status AttributeBegin() = 0;
+
+  virtual absl::Status AttributeEnd() = 0;
+
   virtual absl::Status ConcatTransform(double m00, double m01, double m02,
                                        double m03, double m10, double m11,
                                        double m12, double m13, double m20,
@@ -98,6 +102,10 @@ class Parser {
                                  double m20, double m21, double m22, double m23,
                                  double m30, double m31, double m32,
                                  double m33) = 0;
+
+  virtual absl::Status TransformBegin() = 0;
+
+  virtual absl::Status TransformEnd() = 0;
 
   virtual absl::Status TransformTimes(double start_time, double end_time) = 0;
 

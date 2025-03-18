@@ -97,6 +97,8 @@ class MockParser final : public Parser {
               (override));
   MOCK_METHOD(absl::Status, ActiveTransform, (ActiveTransformation),
               (override));
+  MOCK_METHOD(absl::Status, AttributeBegin, (), (override));
+  MOCK_METHOD(absl::Status, AttributeEnd, (), (override));
   MOCK_METHOD(absl::Status, ConcatTransform, ((const std::array<double, 16>&)),
               ());
   MOCK_METHOD(absl::Status, CoordinateSystem, (absl::string_view), (override));
@@ -113,6 +115,8 @@ class MockParser final : public Parser {
               (override));
   MOCK_METHOD(absl::Status, Scale, (double, double, double), (override));
   MOCK_METHOD(absl::Status, Transform, ((const std::array<double, 16>&)), ());
+  MOCK_METHOD(absl::Status, TransformBegin, (), (override));
+  MOCK_METHOD(absl::Status, TransformEnd, (), (override));
   MOCK_METHOD(absl::Status, TransformTimes, (double, double), (override));
   MOCK_METHOD(absl::Status, Translate, (double x, double y, double z),
               (override));
@@ -451,6 +455,31 @@ TEST(Parser, Alias) {
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
 }
 
+TEST(Parser, Blackbody1Empty) {
+  std::stringstream stream("Accelerator \"typename\" \"blackbody1 aaa\" []");
+  MockParser parser;
+
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(Pair(
+              "aaa", FieldsAre(ParameterType::BLACKBODY_V1, "blackbody1",
+                               VariantWith<absl::Span<std::array<double, 2>>>(
+                                   IsEmpty()))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+// TODO: Make this compatible with all PBRT versions
+TEST(Parser, Blackbody1Incomplete) {
+  std::stringstream stream("Accelerator \"typename\" \"blackbody1 aaa\" [1.0]");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(absl::StatusCode::kInvalidArgument,
+               "Missing value for Accelerator blackbody1 parameter: 'aaa'"));
+}
+
 TEST(Parser, Blackbody1) {
   std::stringstream stream("Accelerator \"typename\" \"blackbody1 aaa\" [1 2]");
   MockParser parser;
@@ -467,8 +496,40 @@ TEST(Parser, Blackbody1) {
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
 }
 
+TEST(Parser, Blackbody1Multiple) {
+  std::stringstream stream(
+      "Accelerator \"typename\" \"blackbody1 aaa\" [1 2 3 4]");
+  MockParser parser;
+
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(Pair(
+              "aaa", FieldsAre(ParameterType::BLACKBODY_V1, "blackbody1",
+                               VariantWith<absl::Span<std::array<double, 2>>>(
+                                   ElementsAre(ElementsAre(1.0, 2.0),
+                                               ElementsAre(3.0, 4.0))))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Parser, Blackbody2Empty) {
+  std::stringstream stream("Accelerator \"typename\" \"blackbody2 aaa\" []");
+  MockParser parser;
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(Pair(
+              "aaa", FieldsAre(ParameterType::BLACKBODY_V2, "blackbody2",
+                               VariantWith<absl::Span<double>>(IsEmpty()))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
 TEST(Parser, Blackbody2) {
-  std::stringstream stream("Accelerator \"typename\" \"blackbody2 aaa\" [1]");
+  std::stringstream stream("Accelerator \"typename\" \"blackbody2 aaa\" 1");
   MockParser parser;
   EXPECT_CALL(
       parser,
@@ -482,7 +543,48 @@ TEST(Parser, Blackbody2) {
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
 }
 
+TEST(Parser, Blackbody2Multiple) {
+  std::stringstream stream("Accelerator \"typename\" \"blackbody2 aaa\" [1 2]");
+  MockParser parser;
+  EXPECT_CALL(parser,
+              Accelerator("typename",
+                          ElementsAre(Pair(
+                              "aaa", FieldsAre(ParameterType::BLACKBODY_V2,
+                                               "blackbody2",
+                                               VariantWith<absl::Span<double>>(
+                                                   ElementsAre(1.0, 2.0)))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Parser, BoolEmpty) {
+  std::stringstream stream("Accelerator \"typename\" \"bool aaa\" []");
+  MockParser parser;
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(Pair(
+              "aaa", FieldsAre(ParameterType::BOOL, "bool",
+                               VariantWith<absl::Span<bool>>(IsEmpty()))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
 TEST(Parser, Bool) {
+  std::stringstream stream("Accelerator \"typename\" \"bool aaa\" \"true\"");
+  MockParser parser;
+  EXPECT_CALL(parser,
+              Accelerator("typename",
+                          ElementsAre(Pair(
+                              "aaa", FieldsAre(ParameterType::BOOL, "bool",
+                                               VariantWith<absl::Span<bool>>(
+                                                   ElementsAre(true)))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Parser, BoolMultiple) {
   std::stringstream stream(
       "Accelerator \"typename\" \"bool aaa\" [\"true\" \"false\"]");
   MockParser parser;
@@ -497,6 +599,20 @@ TEST(Parser, Bool) {
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
 }
 
+TEST(Parser, FloatEmpty) {
+  std::stringstream stream("Accelerator \"typename\" \"float aaa\" []");
+  MockParser parser;
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(Pair(
+              "aaa", FieldsAre(ParameterType::FLOAT, "float",
+                               VariantWith<absl::Span<double>>(IsEmpty()))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
 TEST(Parser, Float) {
   std::stringstream stream("Accelerator \"typename\" \"float aaa\" [1.0]");
   MockParser parser;
@@ -506,6 +622,33 @@ TEST(Parser, Float) {
                               "aaa", FieldsAre(ParameterType::FLOAT, "float",
                                                VariantWith<absl::Span<double>>(
                                                    ElementsAre(1)))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Parser, FloatMultiple) {
+  std::stringstream stream("Accelerator \"typename\" \"float aaa\" [1.0 2.0]");
+  MockParser parser;
+  EXPECT_CALL(parser,
+              Accelerator("typename",
+                          ElementsAre(Pair(
+                              "aaa", FieldsAre(ParameterType::FLOAT, "float",
+                                               VariantWith<absl::Span<double>>(
+                                                   ElementsAre(1.0, 2.0)))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Parser, IntegerEmpty) {
+  std::stringstream stream("Accelerator \"typename\" \"integer aaa\" []");
+  MockParser parser;
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(Pair(
+              "aaa", FieldsAre(ParameterType::INTEGER, "integer",
+                               VariantWith<absl::Span<int32_t>>(IsEmpty()))))))
       .WillOnce(Return(absl::OkStatus()));
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
 }
@@ -524,6 +667,54 @@ TEST(Parser, Integer) {
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
 }
 
+TEST(Parser, IntegerMultiple) {
+  std::stringstream stream("Accelerator \"typename\" \"integer aaa\" [1 2]");
+  MockParser parser;
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(Pair("aaa", FieldsAre(ParameterType::INTEGER, "integer",
+                                            VariantWith<absl::Span<int32_t>>(
+                                                ElementsAre(1, 2)))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Parser, NormalEmpty) {
+  std::stringstream stream("Accelerator \"typename\" \"normal3 aaa\" []");
+  MockParser parser;
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(Pair(
+              "aaa", FieldsAre(ParameterType::NORMAL3, "normal3",
+                               VariantWith<absl::Span<std::array<double, 3>>>(
+                                   IsEmpty()))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+// TODO: Make this compatible with all PBRT versions
+TEST(Parser, NormalIncompleteMissingTwo) {
+  std::stringstream stream("Accelerator \"typename\" \"normal3 aaa\" 1.0");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(absl::StatusCode::kInvalidArgument,
+               "Missing value for Accelerator normal3 parameter: 'aaa'"));
+}
+
+// TODO: Make this compatible with all PBRT versions
+TEST(Parser, NormalIncompleteMissingOne) {
+  std::stringstream stream(
+      "Accelerator \"typename\" \"normal3 aaa\" [1.0 2.0]");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(absl::StatusCode::kInvalidArgument,
+               "Missing value for Accelerator normal3 parameter: 'aaa'"));
+}
+
 TEST(Parser, Normal) {
   std::stringstream stream(
       "Accelerator \"typename\" \"normal3 aaa\" [1.0 2.0 3.0]");
@@ -540,6 +731,57 @@ TEST(Parser, Normal) {
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
 }
 
+// TODO: Make this compatible with all PBRT versions
+TEST(Parser, NormalFirstCompleteSecondIncomplete) {
+  std::stringstream stream(
+      "Accelerator \"typename\" \"normal3 aaa\" [1.0 2.0 3.0 4.0]");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(absl::StatusCode::kInvalidArgument,
+               "Missing value for Accelerator normal3 parameter: 'aaa'"));
+}
+
+TEST(Parser, NormalMultiple) {
+  std::stringstream stream(
+      "Accelerator \"typename\" \"normal3 aaa\" [1.0 2.0 3.0 4.0 5.0 6.0]");
+  MockParser parser;
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(Pair(
+              "aaa", FieldsAre(ParameterType::NORMAL3, "normal3",
+                               VariantWith<absl::Span<std::array<double, 3>>>(
+                                   ElementsAre(ElementsAre(1.0, 2.0, 3.0),
+                                               ElementsAre(4.0, 5.0, 6.0))))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Parser, Point2Empty) {
+  std::stringstream stream("Accelerator \"typename\" \"point2 aaa\" []");
+  MockParser parser;
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(Pair(
+              "aaa", FieldsAre(ParameterType::POINT2, "point2",
+                               VariantWith<absl::Span<std::array<double, 2>>>(
+                                   IsEmpty()))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+// TODO: Make this compatible with all PBRT versions
+TEST(Parser, Point2Incomplete) {
+  std::stringstream stream("Accelerator \"typename\" \"point2 aaa\" 1.0");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(absl::StatusCode::kInvalidArgument,
+               "Missing value for Accelerator point2 parameter: 'aaa'"));
+}
+
 TEST(Parser, Point2) {
   std::stringstream stream("Accelerator \"typename\" \"point2 aaa\" [1.0 2.0]");
   MockParser parser;
@@ -553,6 +795,49 @@ TEST(Parser, Point2) {
                                    ElementsAre(ElementsAre(1.0, 2.0))))))))
       .WillOnce(Return(absl::OkStatus()));
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+// TODO: Make this compatible with all PBRT versions
+TEST(Parser, Point2FirstCompleteSecondIncomplete) {
+  std::stringstream stream(
+      "Accelerator \"typename\" \"point2 aaa\" [1.0 2.0 3.0]");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(absl::StatusCode::kInvalidArgument,
+               "Missing value for Accelerator point2 parameter: 'aaa'"));
+}
+
+TEST(Parser, Point3Empty) {
+  std::stringstream stream("Accelerator \"typename\" \"point3 aaa\" []");
+  MockParser parser;
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(Pair(
+              "aaa", FieldsAre(ParameterType::POINT3, "point3",
+                               VariantWith<absl::Span<std::array<double, 3>>>(
+                                   IsEmpty()))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+// TODO: Make this compatible with all PBRT versions
+TEST(Parser, Point3IncompleteMissingTwo) {
+  std::stringstream stream("Accelerator \"typename\" \"point3 aaa\" 1.0");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(absl::StatusCode::kInvalidArgument,
+               "Missing value for Accelerator point3 parameter: 'aaa'"));
+}
+
+// TODO: Make this compatible with all PBRT versions
+TEST(Parser, Point3IncompleteMissingOne) {
+  std::stringstream stream("Accelerator \"typename\" \"point3 aaa\" [1.0 2.0]");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(absl::StatusCode::kInvalidArgument,
+               "Missing value for Accelerator point3 parameter: 'aaa'"));
 }
 
 TEST(Parser, Point3) {
@@ -571,6 +856,63 @@ TEST(Parser, Point3) {
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
 }
 
+// TODO: Make this compatible with all PBRT versions
+TEST(Parser, Point3FirstCompleteSecondIncomplete) {
+  std::stringstream stream(
+      "Accelerator \"typename\" \"point3 aaa\" [1.0 2.0 3.0 4.0]");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(absl::StatusCode::kInvalidArgument,
+               "Missing value for Accelerator point3 parameter: 'aaa'"));
+}
+
+TEST(Parser, Point3Multiple) {
+  std::stringstream stream(
+      "Accelerator \"typename\" \"point3 aaa\" [1.0 2.0 3.0 4.0 5.0 6.0]");
+  MockParser parser;
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(Pair(
+              "aaa", FieldsAre(ParameterType::POINT3, "point3",
+                               VariantWith<absl::Span<std::array<double, 3>>>(
+                                   ElementsAre(ElementsAre(1.0, 2.0, 3.0),
+                                               ElementsAre(4.0, 5.0, 6.0))))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+TEST(Parser, RgbEmpty) {
+  std::stringstream stream("Accelerator \"typename\" \"rgb aaa\" []");
+  MockParser parser;
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(Pair(
+              "aaa", FieldsAre(ParameterType::RGB, "rgb",
+                               VariantWith<absl::Span<std::array<double, 3>>>(
+                                   IsEmpty()))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+// TODO: Make this compatible with all PBRT versions
+TEST(Parser, RgbIncompleteMissingTwo) {
+  std::stringstream stream("Accelerator \"typename\" \"rgb aaa\" 1.0");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Missing value for Accelerator rgb parameter: 'aaa'"));
+}
+
+// TODO: Make this compatible with all PBRT versions
+TEST(Parser, RgbIncompleteMissingOne) {
+  std::stringstream stream("Accelerator \"typename\" \"rgb aaa\" [1.0 2.0]");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Missing value for Accelerator rgb parameter: 'aaa'"));
+}
+
 TEST(Parser, Rgb) {
   std::stringstream stream(
       "Accelerator \"typename\" \"rgb aaa\" [1.0 2.0 3.0]");
@@ -583,6 +925,32 @@ TEST(Parser, Rgb) {
               "aaa", FieldsAre(ParameterType::RGB, "rgb",
                                VariantWith<absl::Span<std::array<double, 3>>>(
                                    ElementsAre(ElementsAre(1.0, 2.0, 3.0))))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+// TODO: Make this compatible with all PBRT versions
+TEST(Parser, RgbFirstCompleteSecondIncomplete) {
+  std::stringstream stream(
+      "Accelerator \"typename\" \"rgb aaa\" [1.0 2.0 3.0 4.0]");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Missing value for Accelerator rgb parameter: 'aaa'"));
+}
+
+TEST(Parser, RgbMultiple) {
+  std::stringstream stream(
+      "Accelerator \"typename\" \"rgb aaa\" [1.0 2.0 3.0 4.0 5.0 6.0]");
+  MockParser parser;
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(Pair(
+              "aaa", FieldsAre(ParameterType::RGB, "rgb",
+                               VariantWith<absl::Span<std::array<double, 3>>>(
+                                   ElementsAre(ElementsAre(1.0, 2.0, 3.0),
+                                               ElementsAre(4.0, 5.0, 6.0))))))))
       .WillOnce(Return(absl::OkStatus()));
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
 }
@@ -626,6 +994,14 @@ TEST(Parser, SpectrumEmptyArray) {
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
 }
 
+TEST(Parser, SpectrumSamplesIncomplete) {
+  std::stringstream stream("Accelerator \"typename\" \"spectrum aaa\" [1.0]");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(absl::StatusCode::kInvalidArgument,
+               "Missing value for Accelerator spectrum parameter: 'aaa'"));
+}
+
 TEST(Parser, SpectrumSamples) {
   std::stringstream stream(
       "Accelerator \"typename\" \"spectrum aaa\" [1.0 2.0]");
@@ -638,6 +1014,33 @@ TEST(Parser, SpectrumSamples) {
               "aaa", FieldsAre(ParameterType::SPECTRUM, "spectrum",
                                VariantWith<absl::Span<std::array<double, 2>>>(
                                    ElementsAre(ElementsAre(1.0, 2.0))))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+// TODO: Make this compatible with all PBRT versions
+TEST(Parser, SpectrumSamplesFirstCompleteSecondIncomplete) {
+  std::stringstream stream(
+      "Accelerator \"typename\" \"spectrum aaa\" [1.0 2.0 3.0]");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(absl::StatusCode::kInvalidArgument,
+               "Missing value for Accelerator spectrum parameter: 'aaa'"));
+}
+
+TEST(Parser, SpectrumSamplesMultiple) {
+  std::stringstream stream(
+      "Accelerator \"typename\" \"spectrum aaa\" [1.0 2.0 3.0 4.0]");
+  MockParser parser;
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(Pair(
+              "aaa", FieldsAre(ParameterType::SPECTRUM, "spectrum",
+                               VariantWith<absl::Span<std::array<double, 2>>>(
+                                   ElementsAre(ElementsAre(1.0, 2.0),
+                                               ElementsAre(3.0, 4.0))))))))
       .WillOnce(Return(absl::OkStatus()));
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
 }
@@ -674,9 +1077,40 @@ TEST(Parser, SpectrumByPath) {
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
 }
 
+TEST(Parser, SpectrumByPathMultiple) {
+  std::stringstream stream(
+      "Accelerator \"typename\" \"spectrum aaa\" [\"abc\" \"defg\"]");
+  MockParser parser;
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(
+              Pair("aaa", FieldsAre(ParameterType::SPECTRUM, "spectrum",
+                                    VariantWith<absl::Span<absl::string_view>>(
+                                        ElementsAre("abc", "defg")))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Parser, StringEmpty) {
+  std::stringstream stream("Accelerator \"typename\" \"string aaa\" []");
+  MockParser parser;
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(
+              Pair("aaa", FieldsAre(ParameterType::STRING, "string",
+                                    VariantWith<absl::Span<absl::string_view>>(
+                                        IsEmpty()))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
 TEST(Parser, String) {
   std::stringstream stream(
-      "Accelerator \"typename\" \"string aaa\" [\"abcdefg\"]");
+      "Accelerator \"typename\" \"string aaa\" \"abcdefg\"");
   MockParser parser;
   EXPECT_CALL(
       parser,
@@ -690,9 +1124,40 @@ TEST(Parser, String) {
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
 }
 
+TEST(Parser, StringMultiple) {
+  std::stringstream stream(
+      "Accelerator \"typename\" \"string aaa\" [\"abc\" \"defg\"]");
+  MockParser parser;
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(
+              Pair("aaa", FieldsAre(ParameterType::STRING, "string",
+                                    VariantWith<absl::Span<absl::string_view>>(
+                                        ElementsAre("abc", "defg")))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Parser, TextureEmpty) {
+  std::stringstream stream("Accelerator \"typename\" \"texture aaa\" []");
+  MockParser parser;
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(
+              Pair("aaa", FieldsAre(ParameterType::TEXTURE, "texture",
+                                    VariantWith<absl::Span<absl::string_view>>(
+                                        IsEmpty()))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
 TEST(Parser, Texture) {
   std::stringstream stream(
-      "Accelerator \"typename\" \"texture aaa\" [\"abcdefg\"]");
+      "Accelerator \"typename\" \"texture aaa\" \"abcdefg\"");
   MockParser parser;
   EXPECT_CALL(
       parser,
@@ -704,6 +1169,46 @@ TEST(Parser, Texture) {
                                         ElementsAre("abcdefg")))))))
       .WillOnce(Return(absl::OkStatus()));
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Parser, TextureMultiple) {
+  std::stringstream stream(
+      "Accelerator \"typename\" \"texture aaa\" [\"abc\" \"defg\"]");
+  MockParser parser;
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(
+              Pair("aaa", FieldsAre(ParameterType::TEXTURE, "texture",
+                                    VariantWith<absl::Span<absl::string_view>>(
+                                        ElementsAre("abc", "defg")))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Parser, Vector2Empty) {
+  std::stringstream stream("Accelerator \"typename\" \"vector2 aaa\" []");
+  MockParser parser;
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(Pair(
+              "aaa", FieldsAre(ParameterType::VECTOR2, "vector2",
+                               VariantWith<absl::Span<std::array<double, 2>>>(
+                                   IsEmpty()))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+// TODO: Make this compatible with all PBRT versions
+TEST(Parser, Vector2Incomplete) {
+  std::stringstream stream("Accelerator \"typename\" \"vector2 aaa\" 1.0");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(absl::StatusCode::kInvalidArgument,
+               "Missing value for Accelerator vector2 parameter: 'aaa'"));
 }
 
 TEST(Parser, Vector2) {
@@ -722,6 +1227,50 @@ TEST(Parser, Vector2) {
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
 }
 
+// TODO: Make this compatible with all PBRT versions
+TEST(Parser, Vector2FirstCompleteSecondIncomplete) {
+  std::stringstream stream(
+      "Accelerator \"typename\" \"vector2 aaa\" [1.0 2.0 3.0]");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(absl::StatusCode::kInvalidArgument,
+               "Missing value for Accelerator vector2 parameter: 'aaa'"));
+}
+
+TEST(Parser, Vector3Empty) {
+  std::stringstream stream("Accelerator \"typename\" \"vector3 aaa\" []");
+  MockParser parser;
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(Pair(
+              "aaa", FieldsAre(ParameterType::VECTOR3, "vector3",
+                               VariantWith<absl::Span<std::array<double, 3>>>(
+                                   IsEmpty()))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+// TODO: Make this compatible with all PBRT versions
+TEST(Parser, Vector3IncompleteMissingTwo) {
+  std::stringstream stream("Accelerator \"typename\" \"vector3 aaa\" 1.0");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(absl::StatusCode::kInvalidArgument,
+               "Missing value for Accelerator vector3 parameter: 'aaa'"));
+}
+
+// TODO: Make this compatible with all PBRT versions
+TEST(Parser, Vector3IncompleteMissingOne) {
+  std::stringstream stream(
+      "Accelerator \"typename\" \"vector3 aaa\" [1.0 2.0]");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(absl::StatusCode::kInvalidArgument,
+               "Missing value for Accelerator vector3 parameter: 'aaa'"));
+}
+
 TEST(Parser, Vector3) {
   std::stringstream stream(
       "Accelerator \"typename\" \"vector3 aaa\" [1.0 2.0 3.0]");
@@ -738,6 +1287,64 @@ TEST(Parser, Vector3) {
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
 }
 
+// TODO: Make this compatible with all PBRT versions
+TEST(Parser, Vector3FirstCompleteSecondIncomplete) {
+  std::stringstream stream(
+      "Accelerator \"typename\" \"vector3 aaa\" [1.0 2.0 3.0 4.0]");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(absl::StatusCode::kInvalidArgument,
+               "Missing value for Accelerator vector3 parameter: 'aaa'"));
+}
+
+TEST(Parser, Vector3Multiple) {
+  std::stringstream stream(
+      "Accelerator \"typename\" \"vector3 aaa\" [1.0 2.0 3.0 4.0 5.0 6.0]");
+  MockParser parser;
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(Pair(
+              "aaa", FieldsAre(ParameterType::VECTOR3, "vector3",
+                               VariantWith<absl::Span<std::array<double, 3>>>(
+                                   ElementsAre(ElementsAre(1.0, 2.0, 3.0),
+                                               ElementsAre(4.0, 5.0, 6.0))))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Parser, XyzEmpty) {
+  std::stringstream stream("Accelerator \"typename\" \"xyz aaa\" []");
+  MockParser parser;
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(Pair(
+              "aaa", FieldsAre(ParameterType::XYZ, "xyz",
+                               VariantWith<absl::Span<std::array<double, 3>>>(
+                                   IsEmpty()))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+// TODO: Make this compatible with all PBRT versions
+TEST(Parser, XyzIncompleteMissingTwo) {
+  std::stringstream stream("Accelerator \"typename\" \"xyz aaa\" 1.0");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Missing value for Accelerator xyz parameter: 'aaa'"));
+}
+
+// TODO: Make this compatible with all PBRT versions
+TEST(Parser, XyzIncompleteMissingOne) {
+  std::stringstream stream("Accelerator \"typename\" \"xyz aaa\" [1.0 2.0]");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Missing value for Accelerator xyz parameter: 'aaa'"));
+}
+
 TEST(Parser, Xyz) {
   std::stringstream stream(
       "Accelerator \"typename\" \"xyz aaa\" [1.0 2.0 3.0]");
@@ -750,6 +1357,32 @@ TEST(Parser, Xyz) {
               "aaa", FieldsAre(ParameterType::XYZ, "xyz",
                                VariantWith<absl::Span<std::array<double, 3>>>(
                                    ElementsAre(ElementsAre(1.0, 2.0, 3.0))))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+// TODO: Make this compatible with all PBRT versions
+TEST(Parser, XyzFirstCompleteSecondIncomplete) {
+  std::stringstream stream(
+      "Accelerator \"typename\" \"xyz aaa\" [1.0 2.0 3.0 4.0]");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Missing value for Accelerator xyz parameter: 'aaa'"));
+}
+
+TEST(Parser, XyzMultiple) {
+  std::stringstream stream(
+      "Accelerator \"typename\" \"xyz aaa\" [1.0 2.0 3.0 4.0 5.0 6.0]");
+  MockParser parser;
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(Pair(
+              "aaa", FieldsAre(ParameterType::XYZ, "xyz",
+                               VariantWith<absl::Span<std::array<double, 3>>>(
+                                   ElementsAre(ElementsAre(1.0, 2.0, 3.0),
+                                               ElementsAre(4.0, 5.0, 6.0))))))))
       .WillOnce(Return(absl::OkStatus()));
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
 }
@@ -797,6 +1430,37 @@ TEST(ActiveTransform, Fails) {
   MockParser parser;
   EXPECT_CALL(parser, ActiveTransform(ActiveTransformation::ALL))
       .WillOnce(Return(absl::UnknownError("")));
+  EXPECT_THAT(parser.ReadFrom(stream),
+              StatusIs(absl::StatusCode::kUnknown, ""));
+}
+
+TEST(AttributeBegin, Succeeds) {
+  std::stringstream stream("AttributeBegin");
+  MockParser parser;
+  EXPECT_CALL(parser, AttributeBegin()).WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(AttributeBegin, Fails) {
+  std::stringstream stream("AttributeBegin");
+  MockParser parser;
+  EXPECT_CALL(parser, AttributeBegin())
+      .WillOnce(Return(absl::UnknownError("")));
+  EXPECT_THAT(parser.ReadFrom(stream),
+              StatusIs(absl::StatusCode::kUnknown, ""));
+}
+
+TEST(AttributeEnd, Succeeds) {
+  std::stringstream stream("AttributeEnd");
+  MockParser parser;
+  EXPECT_CALL(parser, AttributeEnd()).WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(AttributeEnd, Fails) {
+  std::stringstream stream("AttributeEnd");
+  MockParser parser;
+  EXPECT_CALL(parser, AttributeEnd()).WillOnce(Return(absl::UnknownError("")));
   EXPECT_THAT(parser.ReadFrom(stream),
               StatusIs(absl::StatusCode::kUnknown, ""));
 }
@@ -1051,6 +1715,37 @@ TEST(Transform, Fails) {
               Transform(ElementsAre(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0,
                                     10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0)))
       .WillOnce(Return(absl::UnknownError("")));
+  EXPECT_THAT(parser.ReadFrom(stream),
+              StatusIs(absl::StatusCode::kUnknown, ""));
+}
+
+TEST(TransformBegin, Succeeds) {
+  std::stringstream stream("TransformBegin");
+  MockParser parser;
+  EXPECT_CALL(parser, TransformBegin()).WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(TransformBegin, Fails) {
+  std::stringstream stream("TransformBegin");
+  MockParser parser;
+  EXPECT_CALL(parser, TransformBegin())
+      .WillOnce(Return(absl::UnknownError("")));
+  EXPECT_THAT(parser.ReadFrom(stream),
+              StatusIs(absl::StatusCode::kUnknown, ""));
+}
+
+TEST(TransformEnd, Succeeds) {
+  std::stringstream stream("TransformEnd");
+  MockParser parser;
+  EXPECT_CALL(parser, TransformEnd()).WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(TransformEnd, Fails) {
+  std::stringstream stream("TransformEnd");
+  MockParser parser;
+  EXPECT_CALL(parser, TransformEnd()).WillOnce(Return(absl::UnknownError("")));
   EXPECT_THAT(parser.ReadFrom(stream),
               StatusIs(absl::StatusCode::kUnknown, ""));
 }

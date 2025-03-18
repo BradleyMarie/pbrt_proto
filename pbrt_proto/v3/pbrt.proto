@@ -41,6 +41,14 @@ message ActiveTransform {
   ActiveTransformation active = 1 [features.field_presence = LEGACY_REQUIRED];
 }
 
+message AttributeBegin {
+  // Empty Message
+}
+
+message AttributeEnd {
+  // Empty Message
+}
+
 message ConcatTransform {
   double m00 = 1 [features.field_presence = LEGACY_REQUIRED];
   double m01 = 2 [features.field_presence = LEGACY_REQUIRED];
@@ -124,6 +132,14 @@ message Transform {
   double m33 = 16 [features.field_presence = LEGACY_REQUIRED];
 }
 
+message TransformBegin {
+  // Empty Message
+}
+
+message TransformEnd {
+  // Empty Message
+}
+
 message TransformTimes {
   double start_time = 1 [features.field_presence = LEGACY_REQUIRED];
   double end_time = 2 [features.field_presence = LEGACY_REQUIRED];
@@ -147,20 +163,24 @@ message Directive {
   oneof directive_type {
     Accelerator accelerator = 1;
     ActiveTransform active_transform = 2;
-    ConcatTransform concat_transform = 3;
-    CoordinateSystem coordinate_system = 4;
-    CoordSysTransform coord_sys_transform = 5;
-    Identity identity = 6;
-    Include include = 7;
-    LookAt look_at = 8;
-    ReverseOrientation reverse_orientation = 9;
-    Rotate rotate = 10;
-    Scale scale = 11;
-    Transform transform = 12;
-    TransformTimes transform_times = 13;
-    Translate translate = 14;
-    WorldBegin world_begin = 15;
-    WorldEnd world_end = 16;
+    AttributeBegin attribute_begin = 3;
+    AttributeEnd attribute_end = 4;
+    ConcatTransform concat_transform = 5;
+    CoordinateSystem coordinate_system = 6;
+    CoordSysTransform coord_sys_transform = 7;
+    Identity identity = 8;
+    Include include = 9;
+    LookAt look_at = 10;
+    ReverseOrientation reverse_orientation = 11;
+    Rotate rotate = 12;
+    Scale scale = 13;
+    Transform transform = 14;
+    TransformBegin transform_begin = 15;
+    TransformEnd transform_end = 16;
+    TransformTimes transform_times = 17;
+    Translate translate = 18;
+    WorldBegin world_begin = 19;
+    WorldEnd world_end = 20;
   }
 }
 

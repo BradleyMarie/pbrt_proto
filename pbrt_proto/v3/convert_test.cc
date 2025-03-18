@@ -144,6 +144,20 @@ TEST(Convert, ActiveTransformEnd) {
                                     })pb")));
 }
 
+TEST(Convert, AttributeBegin) {
+  std::stringstream stream("AttributeBegin");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(R"pb(directives { attribute_begin {} })pb")));
+}
+
+TEST(Convert, AttributeEnd) {
+  std::stringstream stream("AttributeEnd");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(R"pb(directives {
+                                                               attribute_end {}
+                                                             })pb")));
+}
+
 TEST(Convert, ConcatTransform) {
   std::stringstream stream(
       "ConcatTransform 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16");
@@ -277,6 +291,20 @@ TEST(Convert, TransformTimes) {
                   R"pb(directives {
                          transform_times { start_time: 1 end_time: 2 }
                        })pb")));
+}
+
+TEST(Convert, TransformBegin) {
+  std::stringstream stream("TransformBegin");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(R"pb(directives { transform_begin {} })pb")));
+}
+
+TEST(Convert, TransformEnd) {
+  std::stringstream stream("TransformEnd");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(R"pb(directives {
+                                                               transform_end {}
+                                                             })pb")));
 }
 
 TEST(Convert, Translate) {

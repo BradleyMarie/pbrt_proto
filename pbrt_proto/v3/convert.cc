@@ -87,6 +87,10 @@ class ParserV3 final : public Parser {
 
   absl::Status ActiveTransform(ActiveTransformation active) override;
 
+  absl::Status AttributeBegin() override;
+
+  absl::Status AttributeEnd() override;
+
   absl::Status ConcatTransform(double m00, double m01, double m02, double m03,
                                double m10, double m11, double m12, double m13,
                                double m20, double m21, double m22, double m23,
@@ -120,6 +124,10 @@ class ParserV3 final : public Parser {
                          double m33) override;
 
   absl::Status TransformTimes(double start_time, double end_time) override;
+
+  absl::Status TransformBegin() override;
+
+  absl::Status TransformEnd() override;
 
   absl::Status Translate(double x, double y, double z) override;
 
@@ -206,6 +214,16 @@ absl::Status ParserV3::ActiveTransform(ActiveTransformation active) {
       active_transform->set_active(ActiveTransform::END_TIME);
       break;
   }
+  return absl::OkStatus();
+}
+
+absl::Status ParserV3::AttributeBegin() {
+  output_.add_directives()->mutable_attribute_begin();
+  return absl::OkStatus();
+}
+
+absl::Status ParserV3::AttributeEnd() {
+  output_.add_directives()->mutable_attribute_end();
   return absl::OkStatus();
 }
 
@@ -327,6 +345,16 @@ absl::Status ParserV3::TransformTimes(double start_time, double end_time) {
   auto* transform_times = output_.add_directives()->mutable_transform_times();
   transform_times->set_start_time(start_time);
   transform_times->set_end_time(end_time);
+  return absl::OkStatus();
+}
+
+absl::Status ParserV3::TransformBegin() {
+  output_.add_directives()->mutable_transform_begin();
+  return absl::OkStatus();
+}
+
+absl::Status ParserV3::TransformEnd() {
+  output_.add_directives()->mutable_transform_end();
   return absl::OkStatus();
 }
 
