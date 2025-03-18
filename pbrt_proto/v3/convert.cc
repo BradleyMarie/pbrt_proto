@@ -101,6 +101,10 @@ class ParserV3 final : public Parser {
 
   absl::Status CoordSysTransform(absl::string_view name) override;
 
+  absl::Status Film(
+      absl::string_view film_type,
+      absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
+
   absl::Status Identity() override;
 
   absl::Status Include(absl::string_view path) override;
@@ -141,8 +145,10 @@ class ParserV3 final : public Parser {
 absl::Status ParserV3::Accelerator(
     absl::string_view accelerator_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
+  auto& accelerator = *output_.add_directives()->mutable_accelerator();
+
   if (accelerator_type == "bvh") {
-    auto& bvh = *output_.add_directives()->mutable_accelerator()->mutable_bvh();
+    auto& bvh = *accelerator.mutable_bvh();
 
     if (std::optional<int32_t> maxnodeprims =
             TryRemoveInteger(parameters, "maxnodeprims");
@@ -164,8 +170,7 @@ absl::Status ParserV3::Accelerator(
       }
     }
   } else if (accelerator_type == "kdtree") {
-    auto& kdtree =
-        *output_.add_directives()->mutable_accelerator()->mutable_kdtree();
+    auto& kdtree = *accelerator.mutable_kdtree();
 
     if (std::optional<double> emptybonus =
             TryRemoveFloat(parameters, "emptybonus");
@@ -260,6 +265,64 @@ absl::Status ParserV3::CoordinateSystem(absl::string_view name) {
 
 absl::Status ParserV3::CoordSysTransform(absl::string_view name) {
   output_.add_directives()->mutable_coord_sys_transform()->set_name(name);
+  return absl::OkStatus();
+}
+
+absl::Status ParserV3::Film(
+    absl::string_view film_type,
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
+  auto& film = *output_.add_directives()->mutable_film();
+
+  if (film_type == "image") {
+    auto& image = *film.mutable_image();
+
+    if (std::optional<int32_t> xresolution =
+            TryRemoveInteger(parameters, "xresolution");
+        xresolution.has_value()) {
+      image.set_xresolution(*xresolution);
+    }
+
+    if (std::optional<int32_t> yresolution =
+            TryRemoveInteger(parameters, "yresolution");
+        yresolution.has_value()) {
+      image.set_yresolution(*yresolution);
+    }
+
+    std::optional<absl::Span<double>> cropwindow;
+    if (absl::Status status =
+            TryRemoveFloats(parameters, "cropwindow", 4, cropwindow);
+        !status.ok()) {
+      return status;
+    } else if (cropwindow.has_value()) {
+      image.mutable_cropwindow()->set_x_min((*cropwindow)[0]);
+      image.mutable_cropwindow()->set_x_max((*cropwindow)[1]);
+      image.mutable_cropwindow()->set_y_min((*cropwindow)[2]);
+      image.mutable_cropwindow()->set_y_max((*cropwindow)[3]);
+    }
+
+    if (std::optional<double> scale = TryRemoveFloat(parameters, "scale");
+        scale.has_value()) {
+      image.set_scale(*scale);
+    }
+
+    if (std::optional<double> maxsampleluminance =
+            TryRemoveFloat(parameters, "maxsampleluminance");
+        maxsampleluminance.has_value()) {
+      image.set_maxsampleluminance(*maxsampleluminance);
+    }
+
+    if (std::optional<double> diagonal = TryRemoveFloat(parameters, "diagonal");
+        diagonal.has_value()) {
+      image.set_diagonal(*diagonal);
+    }
+
+    if (std::optional<absl::string_view> filename =
+            TryRemoveString(parameters, "filename");
+        filename.has_value()) {
+      image.set_filename(*filename);
+    }
+  }
+
   return absl::OkStatus();
 }
 

@@ -26,6 +26,13 @@ TEST(Convert, Empty) {
   EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto("")));
 }
 
+TEST(Convert, AcceleratorUnknown) {
+  std::stringstream stream("Accelerator \"unknown\"");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(R"pb(directives {
+                                                               accelerator {}
+                                                             })pb")));
+}
+
 TEST(Convert, AcceleratorBvhEmpty) {
   std::stringstream stream("Accelerator \"bvh\"");
   EXPECT_THAT(Convert(stream),
@@ -198,6 +205,45 @@ TEST(Convert, CoordSysTransform) {
               IsOkAndHolds(EqualsProto(R"pb(directives {
                                               coord_sys_transform { name: "a" }
                                             })pb")));
+}
+
+TEST(Convert, FilmUnknown) {
+  std::stringstream stream("Film \"unknown\"");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives { film {} })pb")));
+}
+
+TEST(Convert, FilmImageBadCropWindow) {
+  std::stringstream stream("Film \"image\" \"float cropwindow\" [1 2 3]");
+  EXPECT_THAT(
+      Convert(stream),
+      StatusIs(
+          absl::StatusCode::kInvalidArgument,
+          "Invalid number of values for Film float parameter: 'cropwindow'"));
+}
+
+TEST(Convert, FilmImage) {
+  std::stringstream stream(
+      "Film \"image\" \"integer xresolution\" 200 \"integer yresolution\" 300 "
+      "\"float cropwindow\" [1 2 3 4] \"float scale\" 2.0 \"float "
+      "maxsampleluminance\" 3.0 \"float diagonal\" 4.0 \"string filename\" "
+      "\"out.png\"");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(
+          R"pb(directives {
+                 film {
+                   image {
+                     xresolution: 200
+                     yresolution: 300
+                     cropwindow { x_min: 1.0 x_max: 2.0 y_min: 3.0 y_max: 4.0 }
+                     scale: 2.0
+                     maxsampleluminance: 3.0
+                     diagonal: 4.0
+                     filename: "out.png"
+                   }
+                 }
+               })pb")));
 }
 
 TEST(Convert, Identity) {

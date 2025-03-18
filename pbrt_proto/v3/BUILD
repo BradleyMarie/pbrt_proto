@@ -37,6 +37,19 @@ cc_library(
     ],
 )
 
+cc_test(
+    name = "defaults_test",
+    srcs = ["defaults_test.cc"],
+    deps = [
+        ":defaults",
+        ":pbrt_cc_proto",
+        "//pbrt_proto/testing:proto_matchers",
+        "@abseil-cpp//absl/status:status_matchers",
+        "@abseil-cpp//absl/strings:string_view",
+        "@googletest//:gtest_main",
+    ],
+)
+
 proto_library(
     name = "pbrt_proto",
     srcs = ["pbrt.proto"],

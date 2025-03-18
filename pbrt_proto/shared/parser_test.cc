@@ -103,6 +103,10 @@ class MockParser final : public Parser {
               ());
   MOCK_METHOD(absl::Status, CoordinateSystem, (absl::string_view), (override));
   MOCK_METHOD(absl::Status, CoordSysTransform, (absl::string_view), (override));
+  MOCK_METHOD(absl::Status, Film,
+              (absl::string_view,
+               (absl::flat_hash_map<absl::string_view, Parameter>&)),
+              (override));
   MOCK_METHOD(absl::Status, Identity, (), ());
   MOCK_METHOD(absl::Status, Include, (absl::string_view), (override));
   MOCK_METHOD(absl::Status, Import, (absl::string_view), (override));
@@ -235,12 +239,14 @@ TEST(Parser, ContinuesAfterNoParameters) {
 TEST(Parser, SingularValue) {
   std::stringstream stream("Accelerator \"typename\" \"float aaa\" 1.0");
   MockParser parser;
-  EXPECT_CALL(parser,
-              Accelerator("typename",
-                          ElementsAre(Pair(
-                              "aaa", FieldsAre(ParameterType::FLOAT, "float",
-                                               VariantWith<absl::Span<double>>(
-                                                   ElementsAre(1)))))))
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(Pair(
+              "aaa",
+              FieldsAre("Accelerator", ParameterType::FLOAT, "float",
+                        VariantWith<absl::Span<double>>(ElementsAre(1)))))))
       .WillOnce(Return(absl::OkStatus()));
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
 }
@@ -445,12 +451,14 @@ TEST(Parser, InvalidBool) {
 TEST(Parser, Alias) {
   std::stringstream stream("Accelerator \"typename\" \"zzz aaa\" [1.0]");
   MockParser parser;
-  EXPECT_CALL(parser,
-              Accelerator("typename",
-                          ElementsAre(Pair(
-                              "aaa", FieldsAre(ParameterType::FLOAT, "zzz",
-                                               VariantWith<absl::Span<double>>(
-                                                   ElementsAre(1)))))))
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(Pair(
+              "aaa",
+              FieldsAre("Accelerator", ParameterType::FLOAT, "zzz",
+                        VariantWith<absl::Span<double>>(ElementsAre(1)))))))
       .WillOnce(Return(absl::OkStatus()));
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
 }
@@ -464,9 +472,10 @@ TEST(Parser, Blackbody1Empty) {
       Accelerator(
           "typename",
           ElementsAre(Pair(
-              "aaa", FieldsAre(ParameterType::BLACKBODY_V1, "blackbody1",
-                               VariantWith<absl::Span<std::array<double, 2>>>(
-                                   IsEmpty()))))))
+              "aaa",
+              FieldsAre(
+                  "Accelerator", ParameterType::BLACKBODY_V1, "blackbody1",
+                  VariantWith<absl::Span<std::array<double, 2>>>(IsEmpty()))))))
       .WillOnce(Return(absl::OkStatus()));
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
 }
@@ -489,7 +498,8 @@ TEST(Parser, Blackbody1) {
       Accelerator(
           "typename",
           ElementsAre(Pair(
-              "aaa", FieldsAre(ParameterType::BLACKBODY_V1, "blackbody1",
+              "aaa", FieldsAre("Accelerator", ParameterType::BLACKBODY_V1,
+                               "blackbody1",
                                VariantWith<absl::Span<std::array<double, 2>>>(
                                    ElementsAre(ElementsAre(1.0, 2.0))))))))
       .WillOnce(Return(absl::OkStatus()));
@@ -506,10 +516,11 @@ TEST(Parser, Blackbody1Multiple) {
       Accelerator(
           "typename",
           ElementsAre(Pair(
-              "aaa", FieldsAre(ParameterType::BLACKBODY_V1, "blackbody1",
-                               VariantWith<absl::Span<std::array<double, 2>>>(
-                                   ElementsAre(ElementsAre(1.0, 2.0),
-                                               ElementsAre(3.0, 4.0))))))))
+              "aaa",
+              FieldsAre(
+                  "Accelerator", ParameterType::BLACKBODY_V1, "blackbody1",
+                  VariantWith<absl::Span<std::array<double, 2>>>(ElementsAre(
+                      ElementsAre(1.0, 2.0), ElementsAre(3.0, 4.0))))))))
       .WillOnce(Return(absl::OkStatus()));
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
 }
@@ -522,7 +533,8 @@ TEST(Parser, Blackbody2Empty) {
       Accelerator(
           "typename",
           ElementsAre(Pair(
-              "aaa", FieldsAre(ParameterType::BLACKBODY_V2, "blackbody2",
+              "aaa", FieldsAre("Accelerator", ParameterType::BLACKBODY_V2,
+                               "blackbody2",
                                VariantWith<absl::Span<double>>(IsEmpty()))))))
       .WillOnce(Return(absl::OkStatus()));
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
@@ -537,7 +549,8 @@ TEST(Parser, Blackbody2) {
           "typename",
           ElementsAre(Pair(
               "aaa",
-              FieldsAre(ParameterType::BLACKBODY_V2, "blackbody2",
+              FieldsAre("Accelerator", ParameterType::BLACKBODY_V2,
+                        "blackbody2",
                         VariantWith<absl::Span<double>>(ElementsAre(1.0)))))))
       .WillOnce(Return(absl::OkStatus()));
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
@@ -546,13 +559,15 @@ TEST(Parser, Blackbody2) {
 TEST(Parser, Blackbody2Multiple) {
   std::stringstream stream("Accelerator \"typename\" \"blackbody2 aaa\" [1 2]");
   MockParser parser;
-  EXPECT_CALL(parser,
-              Accelerator("typename",
-                          ElementsAre(Pair(
-                              "aaa", FieldsAre(ParameterType::BLACKBODY_V2,
-                                               "blackbody2",
-                                               VariantWith<absl::Span<double>>(
-                                                   ElementsAre(1.0, 2.0)))))))
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(Pair(
+              "aaa",
+              FieldsAre(
+                  "Accelerator", ParameterType::BLACKBODY_V2, "blackbody2",
+                  VariantWith<absl::Span<double>>(ElementsAre(1.0, 2.0)))))))
       .WillOnce(Return(absl::OkStatus()));
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
 }
@@ -565,7 +580,7 @@ TEST(Parser, BoolEmpty) {
       Accelerator(
           "typename",
           ElementsAre(Pair(
-              "aaa", FieldsAre(ParameterType::BOOL, "bool",
+              "aaa", FieldsAre("Accelerator", ParameterType::BOOL, "bool",
                                VariantWith<absl::Span<bool>>(IsEmpty()))))))
       .WillOnce(Return(absl::OkStatus()));
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
@@ -574,12 +589,14 @@ TEST(Parser, BoolEmpty) {
 TEST(Parser, Bool) {
   std::stringstream stream("Accelerator \"typename\" \"bool aaa\" \"true\"");
   MockParser parser;
-  EXPECT_CALL(parser,
-              Accelerator("typename",
-                          ElementsAre(Pair(
-                              "aaa", FieldsAre(ParameterType::BOOL, "bool",
-                                               VariantWith<absl::Span<bool>>(
-                                                   ElementsAre(true)))))))
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(Pair(
+              "aaa",
+              FieldsAre("Accelerator", ParameterType::BOOL, "bool",
+                        VariantWith<absl::Span<bool>>(ElementsAre(true)))))))
       .WillOnce(Return(absl::OkStatus()));
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
 }
@@ -592,9 +609,10 @@ TEST(Parser, BoolMultiple) {
       parser,
       Accelerator(
           "typename",
-          ElementsAre(Pair("aaa", FieldsAre(ParameterType::BOOL, "bool",
-                                            VariantWith<absl::Span<bool>>(
-                                                ElementsAre(true, false)))))))
+          ElementsAre(
+              Pair("aaa", FieldsAre("Accelerator", ParameterType::BOOL, "bool",
+                                    VariantWith<absl::Span<bool>>(
+                                        ElementsAre(true, false)))))))
       .WillOnce(Return(absl::OkStatus()));
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
 }
@@ -607,7 +625,7 @@ TEST(Parser, FloatEmpty) {
       Accelerator(
           "typename",
           ElementsAre(Pair(
-              "aaa", FieldsAre(ParameterType::FLOAT, "float",
+              "aaa", FieldsAre("Accelerator", ParameterType::FLOAT, "float",
                                VariantWith<absl::Span<double>>(IsEmpty()))))))
       .WillOnce(Return(absl::OkStatus()));
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
@@ -616,12 +634,14 @@ TEST(Parser, FloatEmpty) {
 TEST(Parser, Float) {
   std::stringstream stream("Accelerator \"typename\" \"float aaa\" [1.0]");
   MockParser parser;
-  EXPECT_CALL(parser,
-              Accelerator("typename",
-                          ElementsAre(Pair(
-                              "aaa", FieldsAre(ParameterType::FLOAT, "float",
-                                               VariantWith<absl::Span<double>>(
-                                                   ElementsAre(1)))))))
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(Pair(
+              "aaa",
+              FieldsAre("Accelerator", ParameterType::FLOAT, "float",
+                        VariantWith<absl::Span<double>>(ElementsAre(1)))))))
       .WillOnce(Return(absl::OkStatus()));
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
 }
@@ -632,7 +652,8 @@ TEST(Parser, FloatMultiple) {
   EXPECT_CALL(parser,
               Accelerator("typename",
                           ElementsAre(Pair(
-                              "aaa", FieldsAre(ParameterType::FLOAT, "float",
+                              "aaa", FieldsAre("Accelerator",
+                                               ParameterType::FLOAT, "float",
                                                VariantWith<absl::Span<double>>(
                                                    ElementsAre(1.0, 2.0)))))))
       .WillOnce(Return(absl::OkStatus()));
@@ -647,7 +668,7 @@ TEST(Parser, IntegerEmpty) {
       Accelerator(
           "typename",
           ElementsAre(Pair(
-              "aaa", FieldsAre(ParameterType::INTEGER, "integer",
+              "aaa", FieldsAre("Accelerator", ParameterType::INTEGER, "integer",
                                VariantWith<absl::Span<int32_t>>(IsEmpty()))))))
       .WillOnce(Return(absl::OkStatus()));
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
@@ -660,9 +681,10 @@ TEST(Parser, Integer) {
       parser,
       Accelerator(
           "typename",
-          ElementsAre(Pair("aaa", FieldsAre(ParameterType::INTEGER, "integer",
-                                            VariantWith<absl::Span<int32_t>>(
-                                                ElementsAre(1.0)))))))
+          ElementsAre(Pair(
+              "aaa",
+              FieldsAre("Accelerator", ParameterType::INTEGER, "integer",
+                        VariantWith<absl::Span<int32_t>>(ElementsAre(1.0)))))))
       .WillOnce(Return(absl::OkStatus()));
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
 }
@@ -674,9 +696,10 @@ TEST(Parser, IntegerMultiple) {
       parser,
       Accelerator(
           "typename",
-          ElementsAre(Pair("aaa", FieldsAre(ParameterType::INTEGER, "integer",
-                                            VariantWith<absl::Span<int32_t>>(
-                                                ElementsAre(1, 2)))))))
+          ElementsAre(Pair(
+              "aaa",
+              FieldsAre("Accelerator", ParameterType::INTEGER, "integer",
+                        VariantWith<absl::Span<int32_t>>(ElementsAre(1, 2)))))))
       .WillOnce(Return(absl::OkStatus()));
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
 }
@@ -689,7 +712,7 @@ TEST(Parser, NormalEmpty) {
       Accelerator(
           "typename",
           ElementsAre(Pair(
-              "aaa", FieldsAre(ParameterType::NORMAL3, "normal3",
+              "aaa", FieldsAre("Accelerator", ParameterType::NORMAL3, "normal3",
                                VariantWith<absl::Span<std::array<double, 3>>>(
                                    IsEmpty()))))))
       .WillOnce(Return(absl::OkStatus()));
@@ -724,7 +747,7 @@ TEST(Parser, Normal) {
       Accelerator(
           "typename",
           ElementsAre(Pair(
-              "aaa", FieldsAre(ParameterType::NORMAL3, "normal3",
+              "aaa", FieldsAre("Accelerator", ParameterType::NORMAL3, "normal3",
                                VariantWith<absl::Span<std::array<double, 3>>>(
                                    ElementsAre(ElementsAre(1.0, 2.0, 3.0))))))))
       .WillOnce(Return(absl::OkStatus()));
@@ -750,7 +773,7 @@ TEST(Parser, NormalMultiple) {
       Accelerator(
           "typename",
           ElementsAre(Pair(
-              "aaa", FieldsAre(ParameterType::NORMAL3, "normal3",
+              "aaa", FieldsAre("Accelerator", ParameterType::NORMAL3, "normal3",
                                VariantWith<absl::Span<std::array<double, 3>>>(
                                    ElementsAre(ElementsAre(1.0, 2.0, 3.0),
                                                ElementsAre(4.0, 5.0, 6.0))))))))
@@ -766,7 +789,7 @@ TEST(Parser, Point2Empty) {
       Accelerator(
           "typename",
           ElementsAre(Pair(
-              "aaa", FieldsAre(ParameterType::POINT2, "point2",
+              "aaa", FieldsAre("Accelerator", ParameterType::POINT2, "point2",
                                VariantWith<absl::Span<std::array<double, 2>>>(
                                    IsEmpty()))))))
       .WillOnce(Return(absl::OkStatus()));
@@ -790,7 +813,7 @@ TEST(Parser, Point2) {
       Accelerator(
           "typename",
           ElementsAre(Pair(
-              "aaa", FieldsAre(ParameterType::POINT2, "point2",
+              "aaa", FieldsAre("Accelerator", ParameterType::POINT2, "point2",
                                VariantWith<absl::Span<std::array<double, 2>>>(
                                    ElementsAre(ElementsAre(1.0, 2.0))))))))
       .WillOnce(Return(absl::OkStatus()));
@@ -815,7 +838,7 @@ TEST(Parser, Point3Empty) {
       Accelerator(
           "typename",
           ElementsAre(Pair(
-              "aaa", FieldsAre(ParameterType::POINT3, "point3",
+              "aaa", FieldsAre("Accelerator", ParameterType::POINT3, "point3",
                                VariantWith<absl::Span<std::array<double, 3>>>(
                                    IsEmpty()))))))
       .WillOnce(Return(absl::OkStatus()));
@@ -849,7 +872,7 @@ TEST(Parser, Point3) {
       Accelerator(
           "typename",
           ElementsAre(Pair(
-              "aaa", FieldsAre(ParameterType::POINT3, "point3",
+              "aaa", FieldsAre("Accelerator", ParameterType::POINT3, "point3",
                                VariantWith<absl::Span<std::array<double, 3>>>(
                                    ElementsAre(ElementsAre(1.0, 2.0, 3.0))))))))
       .WillOnce(Return(absl::OkStatus()));
@@ -875,7 +898,7 @@ TEST(Parser, Point3Multiple) {
       Accelerator(
           "typename",
           ElementsAre(Pair(
-              "aaa", FieldsAre(ParameterType::POINT3, "point3",
+              "aaa", FieldsAre("Accelerator", ParameterType::POINT3, "point3",
                                VariantWith<absl::Span<std::array<double, 3>>>(
                                    ElementsAre(ElementsAre(1.0, 2.0, 3.0),
                                                ElementsAre(4.0, 5.0, 6.0))))))))
@@ -890,7 +913,7 @@ TEST(Parser, RgbEmpty) {
       Accelerator(
           "typename",
           ElementsAre(Pair(
-              "aaa", FieldsAre(ParameterType::RGB, "rgb",
+              "aaa", FieldsAre("Accelerator", ParameterType::RGB, "rgb",
                                VariantWith<absl::Span<std::array<double, 3>>>(
                                    IsEmpty()))))))
       .WillOnce(Return(absl::OkStatus()));
@@ -922,7 +945,7 @@ TEST(Parser, Rgb) {
       Accelerator(
           "typename",
           ElementsAre(Pair(
-              "aaa", FieldsAre(ParameterType::RGB, "rgb",
+              "aaa", FieldsAre("Accelerator", ParameterType::RGB, "rgb",
                                VariantWith<absl::Span<std::array<double, 3>>>(
                                    ElementsAre(ElementsAre(1.0, 2.0, 3.0))))))))
       .WillOnce(Return(absl::OkStatus()));
@@ -947,7 +970,7 @@ TEST(Parser, RgbMultiple) {
       Accelerator(
           "typename",
           ElementsAre(Pair(
-              "aaa", FieldsAre(ParameterType::RGB, "rgb",
+              "aaa", FieldsAre("Accelerator", ParameterType::RGB, "rgb",
                                VariantWith<absl::Span<std::array<double, 3>>>(
                                    ElementsAre(ElementsAre(1.0, 2.0, 3.0),
                                                ElementsAre(4.0, 5.0, 6.0))))))))
@@ -987,9 +1010,10 @@ TEST(Parser, SpectrumEmptyArray) {
       Accelerator(
           "typename",
           ElementsAre(Pair(
-              "aaa", FieldsAre(ParameterType::SPECTRUM, "spectrum",
-                               VariantWith<absl::Span<std::array<double, 2>>>(
-                                   IsEmpty()))))))
+              "aaa",
+              FieldsAre(
+                  "Accelerator", ParameterType::SPECTRUM, "spectrum",
+                  VariantWith<absl::Span<std::array<double, 2>>>(IsEmpty()))))))
       .WillOnce(Return(absl::OkStatus()));
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
 }
@@ -1010,10 +1034,11 @@ TEST(Parser, SpectrumSamples) {
       parser,
       Accelerator(
           "typename",
-          ElementsAre(Pair(
-              "aaa", FieldsAre(ParameterType::SPECTRUM, "spectrum",
-                               VariantWith<absl::Span<std::array<double, 2>>>(
-                                   ElementsAre(ElementsAre(1.0, 2.0))))))))
+          ElementsAre(
+              Pair("aaa",
+                   FieldsAre("Accelerator", ParameterType::SPECTRUM, "spectrum",
+                             VariantWith<absl::Span<std::array<double, 2>>>(
+                                 ElementsAre(ElementsAre(1.0, 2.0))))))))
       .WillOnce(Return(absl::OkStatus()));
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
 }
@@ -1037,10 +1062,11 @@ TEST(Parser, SpectrumSamplesMultiple) {
       Accelerator(
           "typename",
           ElementsAre(Pair(
-              "aaa", FieldsAre(ParameterType::SPECTRUM, "spectrum",
-                               VariantWith<absl::Span<std::array<double, 2>>>(
-                                   ElementsAre(ElementsAre(1.0, 2.0),
-                                               ElementsAre(3.0, 4.0))))))))
+              "aaa",
+              FieldsAre(
+                  "Accelerator", ParameterType::SPECTRUM, "spectrum",
+                  VariantWith<absl::Span<std::array<double, 2>>>(ElementsAre(
+                      ElementsAre(1.0, 2.0), ElementsAre(3.0, 4.0))))))))
       .WillOnce(Return(absl::OkStatus()));
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
 }
@@ -1054,9 +1080,10 @@ TEST(Parser, SpectrumBySingularPath) {
       Accelerator(
           "typename",
           ElementsAre(
-              Pair("aaa", FieldsAre(ParameterType::SPECTRUM, "spectrum",
-                                    VariantWith<absl::Span<absl::string_view>>(
-                                        ElementsAre("abcdefg")))))))
+              Pair("aaa",
+                   FieldsAre("Accelerator", ParameterType::SPECTRUM, "spectrum",
+                             VariantWith<absl::Span<absl::string_view>>(
+                                 ElementsAre("abcdefg")))))))
       .WillOnce(Return(absl::OkStatus()));
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
 }
@@ -1070,9 +1097,10 @@ TEST(Parser, SpectrumByPath) {
       Accelerator(
           "typename",
           ElementsAre(
-              Pair("aaa", FieldsAre(ParameterType::SPECTRUM, "spectrum",
-                                    VariantWith<absl::Span<absl::string_view>>(
-                                        ElementsAre("abcdefg")))))))
+              Pair("aaa",
+                   FieldsAre("Accelerator", ParameterType::SPECTRUM, "spectrum",
+                             VariantWith<absl::Span<absl::string_view>>(
+                                 ElementsAre("abcdefg")))))))
       .WillOnce(Return(absl::OkStatus()));
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
 }
@@ -1086,9 +1114,10 @@ TEST(Parser, SpectrumByPathMultiple) {
       Accelerator(
           "typename",
           ElementsAre(
-              Pair("aaa", FieldsAre(ParameterType::SPECTRUM, "spectrum",
-                                    VariantWith<absl::Span<absl::string_view>>(
-                                        ElementsAre("abc", "defg")))))))
+              Pair("aaa",
+                   FieldsAre("Accelerator", ParameterType::SPECTRUM, "spectrum",
+                             VariantWith<absl::Span<absl::string_view>>(
+                                 ElementsAre("abc", "defg")))))))
       .WillOnce(Return(absl::OkStatus()));
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
 }
@@ -1100,10 +1129,10 @@ TEST(Parser, StringEmpty) {
       parser,
       Accelerator(
           "typename",
-          ElementsAre(
-              Pair("aaa", FieldsAre(ParameterType::STRING, "string",
-                                    VariantWith<absl::Span<absl::string_view>>(
-                                        IsEmpty()))))))
+          ElementsAre(Pair(
+              "aaa", FieldsAre("Accelerator", ParameterType::STRING, "string",
+                               VariantWith<absl::Span<absl::string_view>>(
+                                   IsEmpty()))))))
       .WillOnce(Return(absl::OkStatus()));
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
 }
@@ -1116,10 +1145,10 @@ TEST(Parser, String) {
       parser,
       Accelerator(
           "typename",
-          ElementsAre(
-              Pair("aaa", FieldsAre(ParameterType::STRING, "string",
-                                    VariantWith<absl::Span<absl::string_view>>(
-                                        ElementsAre("abcdefg")))))))
+          ElementsAre(Pair(
+              "aaa", FieldsAre("Accelerator", ParameterType::STRING, "string",
+                               VariantWith<absl::Span<absl::string_view>>(
+                                   ElementsAre("abcdefg")))))))
       .WillOnce(Return(absl::OkStatus()));
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
 }
@@ -1132,10 +1161,10 @@ TEST(Parser, StringMultiple) {
       parser,
       Accelerator(
           "typename",
-          ElementsAre(
-              Pair("aaa", FieldsAre(ParameterType::STRING, "string",
-                                    VariantWith<absl::Span<absl::string_view>>(
-                                        ElementsAre("abc", "defg")))))))
+          ElementsAre(Pair(
+              "aaa", FieldsAre("Accelerator", ParameterType::STRING, "string",
+                               VariantWith<absl::Span<absl::string_view>>(
+                                   ElementsAre("abc", "defg")))))))
       .WillOnce(Return(absl::OkStatus()));
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
 }
@@ -1147,10 +1176,10 @@ TEST(Parser, TextureEmpty) {
       parser,
       Accelerator(
           "typename",
-          ElementsAre(
-              Pair("aaa", FieldsAre(ParameterType::TEXTURE, "texture",
-                                    VariantWith<absl::Span<absl::string_view>>(
-                                        IsEmpty()))))))
+          ElementsAre(Pair(
+              "aaa", FieldsAre("Accelerator", ParameterType::TEXTURE, "texture",
+                               VariantWith<absl::Span<absl::string_view>>(
+                                   IsEmpty()))))))
       .WillOnce(Return(absl::OkStatus()));
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
 }
@@ -1163,10 +1192,10 @@ TEST(Parser, Texture) {
       parser,
       Accelerator(
           "typename",
-          ElementsAre(
-              Pair("aaa", FieldsAre(ParameterType::TEXTURE, "texture",
-                                    VariantWith<absl::Span<absl::string_view>>(
-                                        ElementsAre("abcdefg")))))))
+          ElementsAre(Pair(
+              "aaa", FieldsAre("Accelerator", ParameterType::TEXTURE, "texture",
+                               VariantWith<absl::Span<absl::string_view>>(
+                                   ElementsAre("abcdefg")))))))
       .WillOnce(Return(absl::OkStatus()));
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
 }
@@ -1179,10 +1208,10 @@ TEST(Parser, TextureMultiple) {
       parser,
       Accelerator(
           "typename",
-          ElementsAre(
-              Pair("aaa", FieldsAre(ParameterType::TEXTURE, "texture",
-                                    VariantWith<absl::Span<absl::string_view>>(
-                                        ElementsAre("abc", "defg")))))))
+          ElementsAre(Pair(
+              "aaa", FieldsAre("Accelerator", ParameterType::TEXTURE, "texture",
+                               VariantWith<absl::Span<absl::string_view>>(
+                                   ElementsAre("abc", "defg")))))))
       .WillOnce(Return(absl::OkStatus()));
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
 }
@@ -1195,7 +1224,7 @@ TEST(Parser, Vector2Empty) {
       Accelerator(
           "typename",
           ElementsAre(Pair(
-              "aaa", FieldsAre(ParameterType::VECTOR2, "vector2",
+              "aaa", FieldsAre("Accelerator", ParameterType::VECTOR2, "vector2",
                                VariantWith<absl::Span<std::array<double, 2>>>(
                                    IsEmpty()))))))
       .WillOnce(Return(absl::OkStatus()));
@@ -1220,7 +1249,7 @@ TEST(Parser, Vector2) {
       Accelerator(
           "typename",
           ElementsAre(Pair(
-              "aaa", FieldsAre(ParameterType::VECTOR2, "vector2",
+              "aaa", FieldsAre("Accelerator", ParameterType::VECTOR2, "vector2",
                                VariantWith<absl::Span<std::array<double, 2>>>(
                                    ElementsAre(ElementsAre(1.0, 2.0))))))))
       .WillOnce(Return(absl::OkStatus()));
@@ -1245,7 +1274,7 @@ TEST(Parser, Vector3Empty) {
       Accelerator(
           "typename",
           ElementsAre(Pair(
-              "aaa", FieldsAre(ParameterType::VECTOR3, "vector3",
+              "aaa", FieldsAre("Accelerator", ParameterType::VECTOR3, "vector3",
                                VariantWith<absl::Span<std::array<double, 3>>>(
                                    IsEmpty()))))))
       .WillOnce(Return(absl::OkStatus()));
@@ -1280,7 +1309,7 @@ TEST(Parser, Vector3) {
       Accelerator(
           "typename",
           ElementsAre(Pair(
-              "aaa", FieldsAre(ParameterType::VECTOR3, "vector3",
+              "aaa", FieldsAre("Accelerator", ParameterType::VECTOR3, "vector3",
                                VariantWith<absl::Span<std::array<double, 3>>>(
                                    ElementsAre(ElementsAre(1.0, 2.0, 3.0))))))))
       .WillOnce(Return(absl::OkStatus()));
@@ -1306,7 +1335,7 @@ TEST(Parser, Vector3Multiple) {
       Accelerator(
           "typename",
           ElementsAre(Pair(
-              "aaa", FieldsAre(ParameterType::VECTOR3, "vector3",
+              "aaa", FieldsAre("Accelerator", ParameterType::VECTOR3, "vector3",
                                VariantWith<absl::Span<std::array<double, 3>>>(
                                    ElementsAre(ElementsAre(1.0, 2.0, 3.0),
                                                ElementsAre(4.0, 5.0, 6.0))))))))
@@ -1322,7 +1351,7 @@ TEST(Parser, XyzEmpty) {
       Accelerator(
           "typename",
           ElementsAre(Pair(
-              "aaa", FieldsAre(ParameterType::XYZ, "xyz",
+              "aaa", FieldsAre("Accelerator", ParameterType::XYZ, "xyz",
                                VariantWith<absl::Span<std::array<double, 3>>>(
                                    IsEmpty()))))))
       .WillOnce(Return(absl::OkStatus()));
@@ -1354,7 +1383,7 @@ TEST(Parser, Xyz) {
       Accelerator(
           "typename",
           ElementsAre(Pair(
-              "aaa", FieldsAre(ParameterType::XYZ, "xyz",
+              "aaa", FieldsAre("Accelerator", ParameterType::XYZ, "xyz",
                                VariantWith<absl::Span<std::array<double, 3>>>(
                                    ElementsAre(ElementsAre(1.0, 2.0, 3.0))))))))
       .WillOnce(Return(absl::OkStatus()));
@@ -1379,12 +1408,36 @@ TEST(Parser, XyzMultiple) {
       Accelerator(
           "typename",
           ElementsAre(Pair(
-              "aaa", FieldsAre(ParameterType::XYZ, "xyz",
+              "aaa", FieldsAre("Accelerator", ParameterType::XYZ, "xyz",
                                VariantWith<absl::Span<std::array<double, 3>>>(
                                    ElementsAre(ElementsAre(1.0, 2.0, 3.0),
                                                ElementsAre(4.0, 5.0, 6.0))))))))
       .WillOnce(Return(absl::OkStatus()));
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Accelerator, Succeeds) {
+  std::stringstream stream("Accelerator \"abc\"");
+  MockParser parser;
+  EXPECT_CALL(parser, Accelerator("abc", IsEmpty()))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Accelerator, MissingType) {
+  std::stringstream stream("Accelerator");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Missing type parameter to directive Accelerator"));
+}
+
+TEST(Accelerator, Fails) {
+  std::stringstream stream("Accelerator \"abc\"");
+  MockParser parser;
+  EXPECT_CALL(parser, Accelerator("abc", IsEmpty()))
+      .WillOnce(Return(absl::UnknownError("")));
+  EXPECT_THAT(parser.ReadFrom(stream),
+              StatusIs(absl::StatusCode::kUnknown, ""));
 }
 
 TEST(ActiveTransform, MissingParameter) {
@@ -1540,6 +1593,30 @@ TEST(CoordSysTransform, Fails) {
   std::stringstream stream("CoordSysTransform \"a\"");
   MockParser parser;
   EXPECT_CALL(parser, CoordSysTransform("a"))
+      .WillOnce(Return(absl::UnknownError("")));
+  EXPECT_THAT(parser.ReadFrom(stream),
+              StatusIs(absl::StatusCode::kUnknown, ""));
+}
+
+TEST(Film, Succeeds) {
+  std::stringstream stream("Film \"abc\"");
+  MockParser parser;
+  EXPECT_CALL(parser, Film("abc", IsEmpty()))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Film, MissingType) {
+  std::stringstream stream("Film");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Missing type parameter to directive Film"));
+}
+
+TEST(Film, Fails) {
+  std::stringstream stream("Film \"abc\"");
+  MockParser parser;
+  EXPECT_CALL(parser, Film("abc", IsEmpty()))
       .WillOnce(Return(absl::UnknownError("")));
   EXPECT_THAT(parser.ReadFrom(stream),
               StatusIs(absl::StatusCode::kUnknown, ""));
@@ -1829,9 +1906,78 @@ TEST(WorldEnd, Fails) {
               StatusIs(absl::StatusCode::kUnknown, ""));
 }
 
+TEST(TryRemoveFloats, WrongType) {
+  std::vector<double> values;
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::BLACKBODY_V1,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  std::optional<absl::Span<double>> removed_values;
+  EXPECT_THAT(TryRemoveFloats(parameters, "name", 4, removed_values), IsOk());
+  EXPECT_THAT(removed_values, Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name")));
+}
+
+TEST(TryRemoveFloats, WrongName) {
+  std::vector<double> values;
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::FLOAT,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name1", parameter}};
+
+  std::optional<absl::Span<double>> removed_values;
+  EXPECT_THAT(TryRemoveFloats(parameters, "name2", 4, removed_values), IsOk());
+  EXPECT_THAT(removed_values, Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name1")));
+}
+
+TEST(TryRemoveFloats, WrongCount) {
+  std::vector<double> values = {1.0};
+  Parameter parameter{.directive = "Accelerator",
+                      .type = ParameterType::FLOAT,
+                      .type_name = "float",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  std::optional<absl::Span<double>> removed_values;
+  EXPECT_THAT(
+      TryRemoveFloats(parameters, "name", 4, removed_values),
+      StatusIs(
+          absl::StatusCode::kInvalidArgument,
+          "Invalid number of values for Accelerator float parameter: 'name'"));
+  EXPECT_THAT(removed_values, Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name")));
+}
+
+TEST(TryRemoveFloats, Found) {
+  std::vector<double> values = {1.0, 2.0, 3.0, 4.0};
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::FLOAT,
+                      .type_name = "aaa",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  std::optional<absl::Span<double>> removed_values;
+  EXPECT_THAT(TryRemoveFloats(parameters, "name", 4, removed_values), IsOk());
+  EXPECT_THAT(removed_values, Optional(ElementsAre(1.0, 2.0, 3.0, 4.0)));
+  EXPECT_THAT(parameters, Not(Contains(Key("name"))));
+}
+
 TEST(TryRemoveFloat, WrongType) {
   std::vector<double> values;
-  Parameter parameter{.type = ParameterType::BLACKBODY_V1,
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::BLACKBODY_V1,
                       .type_name = "",
                       .values = absl::MakeSpan(values)};
 
@@ -1844,7 +1990,8 @@ TEST(TryRemoveFloat, WrongType) {
 
 TEST(TryRemoveFloat, WrongName) {
   std::vector<double> values;
-  Parameter parameter{.type = ParameterType::FLOAT,
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::FLOAT,
                       .type_name = "",
                       .values = absl::MakeSpan(values)};
 
@@ -1857,7 +2004,8 @@ TEST(TryRemoveFloat, WrongName) {
 
 TEST(TryRemoveFloat, Found) {
   std::vector<double> values = {1.0};
-  Parameter parameter{.type = ParameterType::FLOAT,
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::FLOAT,
                       .type_name = "aaa",
                       .values = absl::MakeSpan(values)};
 
@@ -1870,7 +2018,8 @@ TEST(TryRemoveFloat, Found) {
 
 TEST(TryRemoveInteger, WrongType) {
   std::vector<int32_t> values;
-  Parameter parameter{.type = ParameterType::BLACKBODY_V1,
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::BLACKBODY_V1,
                       .type_name = "",
                       .values = absl::MakeSpan(values)};
 
@@ -1883,7 +2032,8 @@ TEST(TryRemoveInteger, WrongType) {
 
 TEST(TryRemoveInteger, WrongName) {
   std::vector<int32_t> values;
-  Parameter parameter{.type = ParameterType::INTEGER,
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::INTEGER,
                       .type_name = "",
                       .values = absl::MakeSpan(values)};
 
@@ -1896,7 +2046,8 @@ TEST(TryRemoveInteger, WrongName) {
 
 TEST(TryRemoveInteger, Found) {
   std::vector<int32_t> values = {1};
-  Parameter parameter{.type = ParameterType::INTEGER,
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::INTEGER,
                       .type_name = "aaa",
                       .values = absl::MakeSpan(values)};
 
@@ -1909,7 +2060,8 @@ TEST(TryRemoveInteger, Found) {
 
 TEST(TryRemoveString, WrongType) {
   std::vector<absl::string_view> values;
-  Parameter parameter{.type = ParameterType::BLACKBODY_V1,
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::BLACKBODY_V1,
                       .type_name = "",
                       .values = absl::MakeSpan(values)};
 
@@ -1922,7 +2074,8 @@ TEST(TryRemoveString, WrongType) {
 
 TEST(TryRemoveString, WrongName) {
   std::vector<absl::string_view> values;
-  Parameter parameter{.type = ParameterType::STRING,
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::STRING,
                       .type_name = "",
                       .values = absl::MakeSpan(values)};
 
@@ -1935,7 +2088,8 @@ TEST(TryRemoveString, WrongName) {
 
 TEST(TryRemoveString, Found) {
   std::vector<absl::string_view> values = {"abc"};
-  Parameter parameter{.type = ParameterType::STRING,
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::STRING,
                       .type_name = "aaa",
                       .values = absl::MakeSpan(values)};
 

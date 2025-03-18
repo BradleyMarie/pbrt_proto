@@ -159,6 +159,14 @@ absl::Status MissingValueError(absl::string_view directive,
       "Missing value for ", directive, " ", type, " parameter: '", name, "'"));
 }
 
+absl::Status InvalidValueCountError(absl::string_view directive,
+                                    absl::string_view type,
+                                    absl::string_view name) {
+  return absl::InvalidArgumentError(
+      absl::StrCat("Invalid number of values for ", directive, " ", type,
+                   " parameter: '", name, "'"));
+}
+
 absl::Status UnterminatedArrayError(absl::string_view directive,
                                     absl::string_view type,
                                     absl::string_view name) {
@@ -745,12 +753,40 @@ absl::StatusOr<absl::string_view> ReadParameters(
     }
 
     Parameter& parameter = parameters[std::get<2>(**parameter_type_and_name)];
+    parameter.directive = directive;
     parameter.type = std::get<0>(**parameter_type_and_name);
     parameter.type_name = std::get<1>(**parameter_type_and_name);
     parameter.values = std::move(values);
   }
 
   return *type_name;
+}
+
+template <ParameterType type, typename T>
+absl::Status TryRemoveValues(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view parameter_name, std::optional<size_t> required_size,
+    std::optional<absl::Span<T>>& value) {
+  auto iter = parameters.find(parameter_name);
+  if (iter == parameters.end()) {
+    return absl::OkStatus();
+  }
+
+  if (iter->second.type != type) {
+    return absl::OkStatus();
+  }
+
+  const absl::Span<T>& values =
+      *std::get_if<absl::Span<T>>(&iter->second.values);
+  if (required_size.has_value() && values.size() != *required_size) {
+    return InvalidValueCountError(iter->second.directive,
+                                  iter->second.type_name, parameter_name);
+  }
+
+  value = values;
+  parameters.erase(iter);
+
+  return absl::OkStatus();
 }
 
 template <ParameterType type, typename T>
@@ -859,6 +895,14 @@ absl::Status Parser::ReadFrom(std::istream& stream) {
       }
 
       status = CoordSysTransform(*name);
+    } else if (**next == "Film") {
+      absl::StatusOr<absl::string_view> type_name = ReadParameters(
+          "Film", parameter_type_names_, storage, tokenizer, parameters);
+      if (!type_name.ok()) {
+        return type_name.status();
+      }
+
+      status = Film(*type_name, parameters);
     } else if (**next == "Identity") {
       status = Identity();
     } else if (**next == "Include") {
@@ -947,6 +991,14 @@ absl::Status Parser::ReadFrom(std::istream& stream) {
   }
 
   return absl::OkStatus();
+}
+
+absl::Status TryRemoveFloats(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view parameter_name, size_t required_size,
+    std::optional<absl::Span<double>>& result) {
+  return TryRemoveValues<ParameterType::FLOAT>(parameters, parameter_name,
+                                               required_size, result);
 }
 
 std::optional<double> TryRemoveFloat(

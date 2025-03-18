@@ -76,6 +76,29 @@ message CoordSysTransform {
   string name = 1 [features.field_presence = LEGACY_REQUIRED];
 }
 
+message Film {
+  message Image {
+    message CropWindow {
+      double x_min = 1 [default = 0.0];
+      double x_max = 2 [default = 1.0];
+      double y_min = 3 [default = 0.0];
+      double y_max = 4 [default = 1.0];
+    };
+
+    int32 xresolution = 1 [default = 640];
+    int32 yresolution = 2  [default = 480];
+    CropWindow cropwindow = 3;
+    double scale = 4  [default = 1.0];
+    double maxsampleluminance = 5 [default = inf];
+    double diagonal = 6 [default = 35.0];
+    string filename = 7 [default = "pbrt.exr"];
+  }
+
+  oneof film_type {
+    Image image = 1;
+  }
+}
+
 message Identity {
   // Empty Message
 }
@@ -168,19 +191,20 @@ message Directive {
     ConcatTransform concat_transform = 5;
     CoordinateSystem coordinate_system = 6;
     CoordSysTransform coord_sys_transform = 7;
-    Identity identity = 8;
-    Include include = 9;
-    LookAt look_at = 10;
-    ReverseOrientation reverse_orientation = 11;
-    Rotate rotate = 12;
-    Scale scale = 13;
-    Transform transform = 14;
-    TransformBegin transform_begin = 15;
-    TransformEnd transform_end = 16;
-    TransformTimes transform_times = 17;
-    Translate translate = 18;
-    WorldBegin world_begin = 19;
-    WorldEnd world_end = 20;
+    Film film = 8;
+    Identity identity = 9;
+    Include include = 10;
+    LookAt look_at = 11;
+    ReverseOrientation reverse_orientation = 12;
+    Rotate rotate = 13;
+    Scale scale = 14;
+    Transform transform = 15;
+    TransformBegin transform_begin = 16;
+    TransformEnd transform_end = 17;
+    TransformTimes transform_times = 18;
+    Translate translate = 19;
+    WorldBegin world_begin = 20;
+    WorldEnd world_end = 21;
   }
 }
 

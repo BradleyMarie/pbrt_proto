@@ -39,6 +39,7 @@ using ParameterValues =
                  absl::Span<bool>>;
 
 struct Parameter {
+  absl::string_view directive;
   ParameterType type;
   absl::string_view type_name;
   ParameterValues values;
@@ -81,6 +82,10 @@ class Parser {
 
   virtual absl::Status CoordSysTransform(absl::string_view name) = 0;
 
+  virtual absl::Status Film(
+      absl::string_view film_type,
+      absl::flat_hash_map<absl::string_view, Parameter>& parameters) = 0;
+
   virtual absl::Status Identity() = 0;
 
   virtual absl::Status Include(absl::string_view path) = 0;
@@ -118,6 +123,11 @@ class Parser {
   const absl::flat_hash_map<absl::string_view, ParameterType>&
       parameter_type_names_;
 };
+
+absl::Status TryRemoveFloats(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view parameter_name, size_t required_size,
+    std::optional<absl::Span<double>>& result);
 
 std::optional<double> TryRemoveFloat(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
