@@ -14,6 +14,9 @@ PbrtProto BuildDefaults() {
   // Film
   defaults.add_directives()->mutable_film()->mutable_image();
 
+  // Sampler
+  defaults.add_directives()->mutable_sampler()->mutable_halton();
+
   return defaults;
 }
 

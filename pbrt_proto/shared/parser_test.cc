@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <sstream>
 
+#include "absl/container/inlined_vector.h"
 #include "absl/status/status_matchers.h"
 #include "googlemock/include/gmock/gmock.h"
 #include "googletest/include/gtest/gtest.h"
@@ -116,6 +117,10 @@ class MockParser final : public Parser {
               (override));
   MOCK_METHOD(absl::Status, ReverseOrientation, (), (override));
   MOCK_METHOD(absl::Status, Rotate, (double, double, double, double),
+              (override));
+  MOCK_METHOD(absl::Status, Sampler,
+              (absl::string_view,
+               (absl::flat_hash_map<absl::string_view, Parameter>&)),
               (override));
   MOCK_METHOD(absl::Status, Scale, (double, double, double), (override));
   MOCK_METHOD(absl::Status, Transform, ((const std::array<double, 16>&)), ());
@@ -1745,6 +1750,30 @@ TEST(Rotate, Fails) {
               StatusIs(absl::StatusCode::kUnknown, ""));
 }
 
+TEST(Sampler, Succeeds) {
+  std::stringstream stream("Sampler \"abc\"");
+  MockParser parser;
+  EXPECT_CALL(parser, Sampler("abc", IsEmpty()))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Sampler, MissingType) {
+  std::stringstream stream("Sampler");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Missing type parameter to directive Sampler"));
+}
+
+TEST(Sampler, Fails) {
+  std::stringstream stream("Sampler \"abc\"");
+  MockParser parser;
+  EXPECT_CALL(parser, Sampler("abc", IsEmpty()))
+      .WillOnce(Return(absl::UnknownError("")));
+  EXPECT_THAT(parser.ReadFrom(stream),
+              StatusIs(absl::StatusCode::kUnknown, ""));
+}
+
 TEST(Scale, MissingParameters) {
   std::stringstream stream("Scale 1 2");
   EXPECT_THAT(MockParser().ReadFrom(stream),
@@ -1972,6 +2001,48 @@ TEST(TryRemoveFloats, Found) {
   EXPECT_THAT(TryRemoveFloats(parameters, "name", 4, removed_values), IsOk());
   EXPECT_THAT(removed_values, Optional(ElementsAre(1.0, 2.0, 3.0, 4.0)));
   EXPECT_THAT(parameters, Not(Contains(Key("name"))));
+}
+
+TEST(TryRemoveBool, WrongType) {
+  absl::InlinedVector<bool, 1> values;
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::BLACKBODY_V1,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  EXPECT_THAT(TryRemoveBool(parameters, "name"), Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name")));
+}
+
+TEST(TryRemoveBool, WrongName) {
+  absl::InlinedVector<bool, 1> values;
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::BOOL,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name1", parameter}};
+
+  EXPECT_THAT(TryRemoveBool(parameters, "name2"), Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name1")));
+}
+
+TEST(TryRemoveBool, Found) {
+  absl::InlinedVector<bool, 1> values = {true};
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::BOOL,
+                      .type_name = "aaa",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  EXPECT_THAT(TryRemoveBool(parameters, "name"), Optional(true));
+  EXPECT_THAT(parameters, Not(Contains(Key("name1"))));
 }
 
 TEST(TryRemoveFloat, WrongType) {

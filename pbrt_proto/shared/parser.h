@@ -100,6 +100,10 @@ class Parser {
 
   virtual absl::Status Rotate(double angle, double x, double y, double z) = 0;
 
+  virtual absl::Status Sampler(
+      absl::string_view accelerator_type,
+      absl::flat_hash_map<absl::string_view, Parameter>& parameters) = 0;
+
   virtual absl::Status Scale(double x, double y, double z) = 0;
 
   virtual absl::Status Transform(double m00, double m01, double m02, double m03,
@@ -128,6 +132,10 @@ absl::Status TryRemoveFloats(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     absl::string_view parameter_name, size_t required_size,
     std::optional<absl::Span<double>>& result);
+
+std::optional<bool> TryRemoveBool(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view parameter_name);
 
 std::optional<double> TryRemoveFloat(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,

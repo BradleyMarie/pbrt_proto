@@ -306,6 +306,93 @@ TEST(Convert, Scale) {
                                             })pb")));
 }
 
+TEST(Convert, SamplerUnknown) {
+  std::stringstream stream("Sampler \"unknown\"");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives { sampler {} })pb")));
+}
+
+TEST(Convert, SamplerHalton) {
+  std::stringstream stream(
+      "Sampler \"halton\" \"integer pixelsamples\" 2 \"bool "
+      "samplepixelcenter\" \"true\"");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(
+          R"pb(directives {
+                 sampler { halton { pixelsamples: 2 samplepixelcenter: true } }
+               })pb")));
+}
+
+TEST(Convert, SamplerMaxMinDist) {
+  std::stringstream stream(
+      "Sampler \"maxmindist\" \"integer pixelsamples\" 2 \"integer "
+      "dimensions\" 3");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(
+          R"pb(directives {
+                 sampler { maxmindist { pixelsamples: 2 dimensions: 3 } }
+               })pb")));
+}
+
+TEST(Convert, SamplerRandom) {
+  std::stringstream stream("Sampler \"random\" \"integer pixelsamples\" 2");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
+                                   R"pb(directives {
+                                          sampler { random { pixelsamples: 2 } }
+                                        })pb")));
+}
+
+TEST(Convert, SamplerSobol) {
+  std::stringstream stream("Sampler \"sobol\" \"integer pixelsamples\" 2");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
+                                   R"pb(directives {
+                                          sampler { sobol { pixelsamples: 2 } }
+                                        })pb")));
+}
+
+TEST(Convert, SamplerStratified) {
+  std::stringstream stream(
+      "Sampler \"stratified\" \"bool jitter\" \"false\" \"integer xsamples\" 3 "
+      "\"integer ysamples\" 5 \"integer dimensions\" 7");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
+                                   R"pb(directives {
+                                          sampler {
+                                            stratified {
+                                              jitter: false
+                                              xsamples: 3
+                                              ysamples: 5
+                                              dimensions: 7
+                                            }
+                                          }
+                                        })pb")));
+}
+
+TEST(Convert, SamplerZeroTwoSequence) {
+  std::stringstream stream(
+      "Sampler \"02sequence\" \"integer pixelsamples\" 2 \"integer "
+      "dimensions\" 3");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(
+          R"pb(directives {
+                 sampler { zerotwosequence { pixelsamples: 2 dimensions: 3 } }
+               })pb")));
+}
+
+TEST(Convert, SamplerLowDiscrepancy) {
+  std::stringstream stream(
+      "Sampler \"lowdiscrepancy\" \"integer pixelsamples\" 2 \"integer "
+      "dimensions\" 3");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(
+          R"pb(directives {
+                 sampler { zerotwosequence { pixelsamples: 2 dimensions: 3 } }
+               })pb")));
+}
+
 TEST(Convert, Transform) {
   std::stringstream stream("Transform 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16");
   EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(R"pb(directives {

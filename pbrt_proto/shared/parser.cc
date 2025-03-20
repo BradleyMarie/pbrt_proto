@@ -1,6 +1,7 @@
 #include "pbrt_proto/shared/parser.h"
 
 #include <cassert>
+#include <iostream>
 #include <istream>
 #include <memory>
 #include <string>
@@ -937,6 +938,14 @@ absl::Status Parser::ReadFrom(std::istream& stream) {
       }
 
       status = Rotate((*values)[0], (*values)[1], (*values)[2], (*values)[3]);
+    } else if (**next == "Sampler") {
+      absl::StatusOr<absl::string_view> type_name = ReadParameters(
+          "Sampler", parameter_type_names_, storage, tokenizer, parameters);
+      if (!type_name.ok()) {
+        return type_name.status();
+      }
+
+      status = Sampler(*type_name, parameters);
     } else if (**next == "Scale") {
       auto values = ReadFloatParameters("Scale", storage, tokenizer, 3);
       if (!values.ok()) {
@@ -986,6 +995,12 @@ absl::Status Parser::ReadFrom(std::istream& stream) {
       return status;
     }
 
+    for (const auto& [name, parameter] : parameters) {
+      std::cerr << "Unused " << parameter.directive << " "
+                << parameter.type_name << " parameter: '" << name << "'"
+                << std::endl;
+    }
+
     parameters.clear();
     storage.Clear();
   }
@@ -999,6 +1014,15 @@ absl::Status TryRemoveFloats(
     std::optional<absl::Span<double>>& result) {
   return TryRemoveValues<ParameterType::FLOAT>(parameters, parameter_name,
                                                required_size, result);
+}
+
+std::optional<bool> TryRemoveBool(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view parameter_name) {
+  std::optional<bool> result;
+  TryRemoveValue<ParameterType::BOOL>(parameters, parameter_name, result)
+      .IgnoreError();
+  return result;
 }
 
 std::optional<double> TryRemoveFloat(

@@ -119,6 +119,10 @@ class ParserV3 final : public Parser {
 
   absl::Status Rotate(double angle, double x, double y, double z) override;
 
+  absl::Status Sampler(
+      absl::string_view sampler_type,
+      absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
+
   absl::Status Scale(double x, double y, double z) override;
 
   absl::Status Transform(double m00, double m01, double m02, double m03,
@@ -376,6 +380,99 @@ absl::Status ParserV3::Scale(double x, double y, double z) {
   scale->set_x(x);
   scale->set_y(y);
   scale->set_z(z);
+  return absl::OkStatus();
+}
+
+absl::Status ParserV3::Sampler(
+    absl::string_view sampler_type,
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
+  auto& sampler = *output_.add_directives()->mutable_sampler();
+
+  if (sampler_type == "halton") {
+    auto& halton = *sampler.mutable_halton();
+
+    if (std::optional<int32_t> pixelsamples =
+            TryRemoveInteger(parameters, "pixelsamples");
+        pixelsamples.has_value()) {
+      halton.set_pixelsamples(*pixelsamples);
+    }
+
+    if (std::optional<bool> samplepixelcenter =
+            TryRemoveBool(parameters, "samplepixelcenter");
+        samplepixelcenter.has_value()) {
+      halton.set_samplepixelcenter(*samplepixelcenter);
+    }
+  } else if (sampler_type == "maxmindist") {
+    auto& maxmindist = *sampler.mutable_maxmindist();
+
+    if (std::optional<int32_t> pixelsamples =
+            TryRemoveInteger(parameters, "pixelsamples");
+        pixelsamples.has_value()) {
+      maxmindist.set_pixelsamples(*pixelsamples);
+    }
+
+    if (std::optional<int32_t> dimensions =
+            TryRemoveInteger(parameters, "dimensions");
+        dimensions.has_value()) {
+      maxmindist.set_dimensions(*dimensions);
+    }
+  } else if (sampler_type == "random") {
+    auto& random = *sampler.mutable_random();
+
+    if (std::optional<int32_t> pixelsamples =
+            TryRemoveInteger(parameters, "pixelsamples");
+        pixelsamples.has_value()) {
+      random.set_pixelsamples(*pixelsamples);
+    }
+  } else if (sampler_type == "sobol") {
+    auto& sobol = *sampler.mutable_sobol();
+
+    if (std::optional<int32_t> pixelsamples =
+            TryRemoveInteger(parameters, "pixelsamples");
+        pixelsamples.has_value()) {
+      sobol.set_pixelsamples(*pixelsamples);
+    }
+  } else if (sampler_type == "stratified") {
+    auto& stratified = *sampler.mutable_stratified();
+
+    if (std::optional<bool> jitter = TryRemoveBool(parameters, "jitter");
+        jitter.has_value()) {
+      stratified.set_jitter(*jitter);
+    }
+
+    if (std::optional<int32_t> xsamples =
+            TryRemoveInteger(parameters, "xsamples");
+        xsamples.has_value()) {
+      stratified.set_xsamples(*xsamples);
+    }
+
+    if (std::optional<int32_t> ysamples =
+            TryRemoveInteger(parameters, "ysamples");
+        ysamples.has_value()) {
+      stratified.set_ysamples(*ysamples);
+    }
+
+    if (std::optional<int32_t> dimensions =
+            TryRemoveInteger(parameters, "dimensions");
+        dimensions.has_value()) {
+      stratified.set_dimensions(*dimensions);
+    }
+  } else if (sampler_type == "02sequence" || sampler_type == "lowdiscrepancy") {
+    auto& zerotwosequence = *sampler.mutable_zerotwosequence();
+
+    if (std::optional<int32_t> pixelsamples =
+            TryRemoveInteger(parameters, "pixelsamples");
+        pixelsamples.has_value()) {
+      zerotwosequence.set_pixelsamples(*pixelsamples);
+    }
+
+    if (std::optional<int32_t> dimensions =
+            TryRemoveInteger(parameters, "dimensions");
+        dimensions.has_value()) {
+      zerotwosequence.set_dimensions(*dimensions);
+    }
+  }
+
   return absl::OkStatus();
 }
 

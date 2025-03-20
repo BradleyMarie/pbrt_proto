@@ -19,7 +19,7 @@ message Accelerator {
   message KdTree {
     int32 intersectcost = 1 [default = 80];
     int32 traversalcost = 2 [default = 1];
-    double emptybonus = 3 [default = 0.2];
+    double emptybonus = 3 [default = 0.5];
     int32 maxprims = 4 [default = 1];
     int32 maxdepth = 5 [default = -1];
   }
@@ -85,8 +85,8 @@ message Film {
       double y_max = 4 [default = 1.0];
     };
 
-    int32 xresolution = 1 [default = 640];
-    int32 yresolution = 2  [default = 480];
+    int32 xresolution = 1 [default = 1280];
+    int32 yresolution = 2  [default = 720];
     CropWindow cropwindow = 3;
     double scale = 4  [default = 1.0];
     double maxsampleluminance = 5 [default = inf];
@@ -128,6 +128,47 @@ message Rotate {
   double x = 2 [features.field_presence = LEGACY_REQUIRED];
   double y = 3 [features.field_presence = LEGACY_REQUIRED];
   double z = 4 [features.field_presence = LEGACY_REQUIRED];
+}
+
+message Sampler {
+  message Halton {
+    int32 pixelsamples = 1 [default = 16];
+    bool samplepixelcenter = 2 [default = false];
+  }
+
+  message MaxMinDist {
+    int32 pixelsamples = 1 [default = 16];
+    int32 dimensions = 2 [default = 4];
+  }
+
+  message Random {
+    int32 pixelsamples = 1 [default = 4];
+  }
+
+  message Sobol {
+    int32 pixelsamples = 1 [default = 16];
+  }
+
+  message Stratified {
+    bool jitter = 1 [default = true];
+    int32 xsamples = 2 [default = 4];
+    int32 ysamples = 3 [default = 4];
+    int32 dimensions = 4 [default = 4];
+  }
+
+  message ZeroTwoSequence {
+    int32 pixelsamples = 1 [default = 16];
+    int32 dimensions = 2 [default = 4];
+  }
+
+  oneof sampler_type {
+    Halton halton = 1;
+    MaxMinDist maxmindist = 2;
+    Random random = 3;
+    Sobol sobol = 4;
+    Stratified stratified = 5;
+    ZeroTwoSequence zerotwosequence = 6;
+  }
 }
 
 message Scale {
@@ -197,14 +238,15 @@ message Directive {
     LookAt look_at = 11;
     ReverseOrientation reverse_orientation = 12;
     Rotate rotate = 13;
-    Scale scale = 14;
-    Transform transform = 15;
-    TransformBegin transform_begin = 16;
-    TransformEnd transform_end = 17;
-    TransformTimes transform_times = 18;
-    Translate translate = 19;
-    WorldBegin world_begin = 20;
-    WorldEnd world_end = 21;
+    Sampler sampler = 14;
+    Scale scale = 15;
+    Transform transform = 16;
+    TransformBegin transform_begin = 17;
+    TransformEnd transform_end = 18;
+    TransformTimes transform_times = 19;
+    Translate translate = 20;
+    WorldBegin world_begin = 21;
+    WorldEnd world_end = 22;
   }
 }
 

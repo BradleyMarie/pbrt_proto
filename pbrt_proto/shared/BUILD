@@ -22,6 +22,7 @@ cc_test(
     srcs = ["parser_test.cc"],
     deps = [
         ":parser",
+        "@abseil-cpp//absl/container:inlined_vector",
         "@abseil-cpp//absl/status:status_matchers",
         "@googletest//:gtest_main",
     ],
