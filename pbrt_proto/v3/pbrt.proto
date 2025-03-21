@@ -146,6 +146,102 @@ message Include {
   string path = 1 [features.field_presence = LEGACY_REQUIRED];
 }
 
+message Integrator {
+  enum LightSampleStrategy {
+    option features.enum_type = CLOSED;
+    SPATIAL = 0;
+    POWER = 1;
+    UNIFORM = 2;
+  }
+
+  message PixelBounds {
+    int32 x_min = 1 [default = 0];
+    int32 x_max = 2 [features.field_presence = EXPLICIT];
+    int32 y_min = 3 [default = 0];
+    int32 y_max = 4 [features.field_presence = EXPLICIT];
+  }
+
+  message AmbientOcclusion {
+    bool cossample = 1 [default = true];
+    int32 nsamples = 2 [default = 64];
+    PixelBounds pixelbounds = 3;
+  }
+
+  message Bdpt {
+    int32 maxdepth = 1 [default = 5];
+    bool visualizestrategies = 2 [default = false];
+    bool visualizeweights = 3 [default = false];
+    LightSampleStrategy lightsamplestrategy = 4 [default = POWER];
+    PixelBounds pixelbounds = 5;
+  }
+
+  message DirectLighting {
+    enum Strategy {
+      option features.enum_type = CLOSED;
+      ALL = 0;
+      ONE = 1;
+    }
+
+    int32 maxdepth = 1 [default = 5];
+    Strategy strategy = 2;
+    PixelBounds pixelbounds = 3;
+  }
+
+  message Mlt {
+    int32 maxdepth = 1 [default = 5];
+    int32 bootstrapsamples = 2 [default = 100000];
+    int32 chains = 3 [default = 1000];
+    int32 mutationsperpixel = 4 [default = 100];
+    double largestepprobability = 5 [default = 0.3];
+    double sigma = 6 [default = 0.01];
+  }
+
+  message Path {
+    int32 maxdepth = 1 [default = 5];
+    double rrthreshold = 2 [default = 1.0];
+    LightSampleStrategy lightsamplestrategy = 3 [default = SPATIAL];
+    PixelBounds pixelbounds = 4;
+  }
+
+  message Sppm {
+    int32 maxdepth = 1 [default = 5];
+    int32 numiterations = 2 [default = 64];
+    int32 photonsperiteration = 3 [default = -1];
+    int32 imagewritefrequency = 4 [default = -2147483648];
+    double radius = 5 [default = 1.0];
+  }
+
+  message VolPath {
+    int32 maxdepth = 1 [default = 5];
+    double rrthreshold = 2 [default = 1.0];
+    LightSampleStrategy lightsamplestrategy = 3 [default = SPATIAL];
+    PixelBounds pixelbounds = 4;
+  }
+
+  message Whitted {
+    message PixelBounds {
+      int32 x_min = 1 [default = 0];
+      int32 x_max = 2 [features.field_presence = EXPLICIT];
+      int32 y_min = 3 [default = 0];
+      int32 y_max = 4 [features.field_presence = EXPLICIT];
+    }
+
+    int32 maxdepth = 1 [default = 5];
+    PixelBounds pixelbounds = 2;
+  }
+
+  oneof integrator_type {
+    AmbientOcclusion ambientocclusion = 1;
+    Bdpt bdpt = 2;
+    DirectLighting directlighting = 3;
+    Mlt mlt = 4;
+    Path path = 5;
+    Sppm sppm = 6;
+    VolPath volpath = 7;
+    Whitted whitted = 8;
+  }
+}
+
 message LookAt {
   double eye_x = 1 [features.field_presence = LEGACY_REQUIRED];
   double eye_y = 2 [features.field_presence = LEGACY_REQUIRED];
@@ -275,18 +371,19 @@ message Directive {
     Filter filter = 9;
     Identity identity = 10;
     Include include = 11;
-    LookAt look_at = 12;
-    ReverseOrientation reverse_orientation = 13;
-    Rotate rotate = 14;
-    Sampler sampler = 15;
-    Scale scale = 16;
-    Transform transform = 17;
-    TransformBegin transform_begin = 18;
-    TransformEnd transform_end = 19;
-    TransformTimes transform_times = 20;
-    Translate translate = 21;
-    WorldBegin world_begin = 22;
-    WorldEnd world_end = 23;
+    Integrator integrator = 12;
+    LookAt look_at = 13;
+    ReverseOrientation reverse_orientation = 14;
+    Rotate rotate = 15;
+    Sampler sampler = 16;
+    Scale scale = 17;
+    Transform transform = 18;
+    TransformBegin transform_begin = 19;
+    TransformEnd transform_end = 20;
+    TransformTimes transform_times = 21;
+    Translate translate = 22;
+    WorldBegin world_begin = 23;
+    WorldEnd world_end = 24;
   }
 }
 

@@ -921,6 +921,14 @@ absl::Status Parser::ReadFrom(std::istream& stream) {
       }
 
       status = Include(*name);
+    } else if (**next == "Integrator") {
+      absl::StatusOr<absl::string_view> type_name = ReadParameters(
+          "Integrator", parameter_type_names_, storage, tokenizer, parameters);
+      if (!type_name.ok()) {
+        return type_name.status();
+      }
+
+      status = Integrator(*type_name, parameters);
     } else if (**next == "Import") {
       auto name = ReadQuotedString("Import", tokenizer);
       if (!name.ok()) {
@@ -1022,6 +1030,14 @@ absl::Status TryRemoveFloats(
     std::optional<absl::Span<double>>& result) {
   return TryRemoveValues<ParameterType::FLOAT>(parameters, parameter_name,
                                                required_size, result);
+}
+
+absl::Status TryRemoveIntegers(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view parameter_name, size_t required_size,
+    std::optional<absl::Span<int32_t>>& result) {
+  return TryRemoveValues<ParameterType::INTEGER>(parameters, parameter_name,
+                                                 required_size, result);
 }
 
 std::optional<bool> TryRemoveBool(

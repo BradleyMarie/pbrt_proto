@@ -17,6 +17,9 @@ PbrtProto BuildDefaults() {
   // Filter
   defaults.add_directives()->mutable_filter()->mutable_box();
 
+  // Integrator
+  defaults.add_directives()->mutable_integrator()->mutable_path();
+
   // Sampler
   defaults.add_directives()->mutable_sampler()->mutable_halton();
 

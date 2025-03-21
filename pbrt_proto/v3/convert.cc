@@ -9,6 +9,16 @@
 namespace pbrt_proto::v3 {
 namespace {
 
+Integrator::LightSampleStrategy ParseLightSampleStrategy(
+    absl::string_view lightsamplestrategy) {
+  if (lightsamplestrategy == "power") {
+    return Integrator::POWER;
+  } else if (lightsamplestrategy == "uniform") {
+    return Integrator::UNIFORM;
+  }
+  return Integrator::SPATIAL;
+}
+
 static const absl::flat_hash_map<absl::string_view, ParameterType>
     parameter_type_names = {
         {
@@ -112,6 +122,10 @@ class ParserV3 final : public Parser {
   absl::Status Identity() override;
 
   absl::Status Include(absl::string_view path) override;
+
+  absl::Status Integrator(
+      absl::string_view integrator_type,
+      absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
 
   absl::Status Import(absl::string_view path) override;
 
@@ -431,6 +445,251 @@ absl::Status ParserV3::Identity() {
 
 absl::Status ParserV3::Include(absl::string_view path) {
   output_.add_directives()->mutable_include()->set_path(path);
+  return absl::OkStatus();
+}
+
+absl::Status ParserV3::Integrator(
+    absl::string_view integrator_type,
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
+  auto& integrator = *output_.add_directives()->mutable_integrator();
+
+  if (integrator_type == "ambientocclusion") {
+    auto& ambientocclusion = *integrator.mutable_ambientocclusion();
+
+    if (std::optional<bool> cossample = TryRemoveBool(parameters, "cossample");
+        cossample.has_value()) {
+      ambientocclusion.set_cossample(*cossample);
+    }
+
+    if (std::optional<int32_t> nsamples =
+            TryRemoveInteger(parameters, "nsamples");
+        nsamples.has_value()) {
+      ambientocclusion.set_nsamples(*nsamples);
+    }
+
+    std::optional<absl::Span<int32_t>> pixelbounds;
+    if (absl::Status status =
+            TryRemoveIntegers(parameters, "pixelbounds", 4, pixelbounds);
+        status.ok() && pixelbounds.has_value()) {
+      ambientocclusion.mutable_pixelbounds()->set_x_min((*pixelbounds)[0]);
+      ambientocclusion.mutable_pixelbounds()->set_x_max((*pixelbounds)[1]);
+      ambientocclusion.mutable_pixelbounds()->set_y_min((*pixelbounds)[2]);
+      ambientocclusion.mutable_pixelbounds()->set_y_max((*pixelbounds)[3]);
+    }
+  } else if (integrator_type == "bdpt") {
+    auto& bdpt = *integrator.mutable_bdpt();
+
+    if (std::optional<int32_t> maxdepth =
+            TryRemoveInteger(parameters, "maxdepth");
+        maxdepth.has_value()) {
+      bdpt.set_maxdepth(*maxdepth);
+    }
+
+    if (std::optional<bool> visualizestrategies =
+            TryRemoveBool(parameters, "visualizestrategies");
+        visualizestrategies.has_value()) {
+      bdpt.set_visualizestrategies(*visualizestrategies);
+    }
+
+    if (std::optional<bool> visualizeweights =
+            TryRemoveBool(parameters, "visualizeweights");
+        visualizeweights.has_value()) {
+      bdpt.set_visualizeweights(*visualizeweights);
+    }
+
+    if (std::optional<absl::string_view> lightsamplestrategy =
+            TryRemoveString(parameters, "lightsamplestrategy");
+        lightsamplestrategy.has_value()) {
+      bdpt.set_lightsamplestrategy(
+          ParseLightSampleStrategy(*lightsamplestrategy));
+    }
+
+    std::optional<absl::Span<int32_t>> pixelbounds;
+    if (absl::Status status =
+            TryRemoveIntegers(parameters, "pixelbounds", 4, pixelbounds);
+        status.ok() && pixelbounds.has_value()) {
+      bdpt.mutable_pixelbounds()->set_x_min((*pixelbounds)[0]);
+      bdpt.mutable_pixelbounds()->set_x_max((*pixelbounds)[1]);
+      bdpt.mutable_pixelbounds()->set_y_min((*pixelbounds)[2]);
+      bdpt.mutable_pixelbounds()->set_y_max((*pixelbounds)[3]);
+    }
+  } else if (integrator_type == "directlighting") {
+    auto& directlighting = *integrator.mutable_directlighting();
+
+    if (std::optional<int32_t> maxdepth =
+            TryRemoveInteger(parameters, "maxdepth");
+        maxdepth.has_value()) {
+      directlighting.set_maxdepth(*maxdepth);
+    }
+
+    if (std::optional<absl::string_view> strategy =
+            TryRemoveString(parameters, "strategy");
+        strategy.has_value()) {
+      if (*strategy == "one") {
+        directlighting.set_strategy(Integrator::DirectLighting::ONE);
+      } else {
+        directlighting.set_strategy(Integrator::DirectLighting::ALL);
+      }
+    }
+
+    std::optional<absl::Span<int32_t>> pixelbounds;
+    if (absl::Status status =
+            TryRemoveIntegers(parameters, "pixelbounds", 4, pixelbounds);
+        status.ok() && pixelbounds.has_value()) {
+      directlighting.mutable_pixelbounds()->set_x_min((*pixelbounds)[0]);
+      directlighting.mutable_pixelbounds()->set_x_max((*pixelbounds)[1]);
+      directlighting.mutable_pixelbounds()->set_y_min((*pixelbounds)[2]);
+      directlighting.mutable_pixelbounds()->set_y_max((*pixelbounds)[3]);
+    }
+  } else if (integrator_type == "mlt") {
+    auto& mlt = *integrator.mutable_mlt();
+
+    if (std::optional<int32_t> maxdepth =
+            TryRemoveInteger(parameters, "maxdepth");
+        maxdepth.has_value()) {
+      mlt.set_maxdepth(*maxdepth);
+    }
+
+    if (std::optional<int32_t> bootstrapsamples =
+            TryRemoveInteger(parameters, "bootstrapsamples");
+        bootstrapsamples.has_value()) {
+      mlt.set_bootstrapsamples(*bootstrapsamples);
+    }
+
+    if (std::optional<int32_t> chains = TryRemoveInteger(parameters, "chains");
+        chains.has_value()) {
+      mlt.set_chains(*chains);
+    }
+
+    if (std::optional<int32_t> mutationsperpixel =
+            TryRemoveInteger(parameters, "mutationsperpixel");
+        mutationsperpixel.has_value()) {
+      mlt.set_mutationsperpixel(*mutationsperpixel);
+    }
+
+    if (std::optional<double> largestepprobability =
+            TryRemoveFloat(parameters, "largestepprobability");
+        largestepprobability.has_value()) {
+      mlt.set_largestepprobability(*largestepprobability);
+    }
+
+    if (std::optional<double> sigma = TryRemoveFloat(parameters, "sigma");
+        sigma.has_value()) {
+      mlt.set_sigma(*sigma);
+    }
+  } else if (integrator_type == "path") {
+    auto& path = *integrator.mutable_path();
+
+    if (std::optional<int32_t> maxdepth =
+            TryRemoveInteger(parameters, "maxdepth");
+        maxdepth.has_value()) {
+      path.set_maxdepth(*maxdepth);
+    }
+
+    if (std::optional<double> rrthreshold =
+            TryRemoveFloat(parameters, "rrthreshold");
+        rrthreshold.has_value()) {
+      path.set_rrthreshold(*rrthreshold);
+    }
+
+    if (std::optional<absl::string_view> lightsamplestrategy =
+            TryRemoveString(parameters, "lightsamplestrategy");
+        lightsamplestrategy.has_value()) {
+      path.set_lightsamplestrategy(
+          ParseLightSampleStrategy(*lightsamplestrategy));
+    }
+
+    std::optional<absl::Span<int32_t>> pixelbounds;
+    if (absl::Status status =
+            TryRemoveIntegers(parameters, "pixelbounds", 4, pixelbounds);
+        status.ok() && pixelbounds.has_value()) {
+      path.mutable_pixelbounds()->set_x_min((*pixelbounds)[0]);
+      path.mutable_pixelbounds()->set_x_max((*pixelbounds)[1]);
+      path.mutable_pixelbounds()->set_y_min((*pixelbounds)[2]);
+      path.mutable_pixelbounds()->set_y_max((*pixelbounds)[3]);
+    }
+  } else if (integrator_type == "sppm") {
+    auto& sppm = *integrator.mutable_sppm();
+
+    if (std::optional<int32_t> maxdepth =
+            TryRemoveInteger(parameters, "maxdepth");
+        maxdepth.has_value()) {
+      sppm.set_maxdepth(*maxdepth);
+    }
+
+    if (std::optional<int32_t> numiterations =
+            TryRemoveInteger(parameters, "numiterations");
+        numiterations.has_value()) {
+      sppm.set_numiterations(*numiterations);
+    }
+
+    if (std::optional<int32_t> photonsperiteration =
+            TryRemoveInteger(parameters, "photonsperiteration");
+        photonsperiteration.has_value()) {
+      sppm.set_photonsperiteration(*photonsperiteration);
+    }
+
+    if (std::optional<int32_t> imagewritefrequency =
+            TryRemoveInteger(parameters, "imagewritefrequency");
+        imagewritefrequency.has_value()) {
+      sppm.set_imagewritefrequency(*imagewritefrequency);
+    }
+
+    if (std::optional<double> radius = TryRemoveFloat(parameters, "radius");
+        radius.has_value()) {
+      sppm.set_radius(*radius);
+    }
+  } else if (integrator_type == "volpath") {
+    auto& volpath = *integrator.mutable_volpath();
+
+    if (std::optional<int32_t> maxdepth =
+            TryRemoveInteger(parameters, "maxdepth");
+        maxdepth.has_value()) {
+      volpath.set_maxdepth(*maxdepth);
+    }
+
+    if (std::optional<double> rrthreshold =
+            TryRemoveFloat(parameters, "rrthreshold");
+        rrthreshold.has_value()) {
+      volpath.set_rrthreshold(*rrthreshold);
+    }
+
+    if (std::optional<absl::string_view> lightsamplestrategy =
+            TryRemoveString(parameters, "lightsamplestrategy");
+        lightsamplestrategy.has_value()) {
+      volpath.set_lightsamplestrategy(
+          ParseLightSampleStrategy(*lightsamplestrategy));
+    }
+
+    std::optional<absl::Span<int32_t>> pixelbounds;
+    if (absl::Status status =
+            TryRemoveIntegers(parameters, "pixelbounds", 4, pixelbounds);
+        status.ok() && pixelbounds.has_value()) {
+      volpath.mutable_pixelbounds()->set_x_min((*pixelbounds)[0]);
+      volpath.mutable_pixelbounds()->set_x_max((*pixelbounds)[1]);
+      volpath.mutable_pixelbounds()->set_y_min((*pixelbounds)[2]);
+      volpath.mutable_pixelbounds()->set_y_max((*pixelbounds)[3]);
+    }
+  } else if (integrator_type == "whitted") {
+    auto& whitted = *integrator.mutable_whitted();
+
+    if (std::optional<int32_t> maxdepth =
+            TryRemoveInteger(parameters, "maxdepth");
+        maxdepth.has_value()) {
+      whitted.set_maxdepth(*maxdepth);
+    }
+
+    std::optional<absl::Span<int32_t>> pixelbounds;
+    if (absl::Status status =
+            TryRemoveIntegers(parameters, "pixelbounds", 4, pixelbounds);
+        status.ok() && pixelbounds.has_value()) {
+      whitted.mutable_pixelbounds()->set_x_min((*pixelbounds)[0]);
+      whitted.mutable_pixelbounds()->set_x_max((*pixelbounds)[1]);
+      whitted.mutable_pixelbounds()->set_y_min((*pixelbounds)[2]);
+      whitted.mutable_pixelbounds()->set_y_max((*pixelbounds)[3]);
+    }
+  }
+
   return absl::OkStatus();
 }
 

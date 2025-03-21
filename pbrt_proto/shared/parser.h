@@ -94,6 +94,10 @@ class Parser {
 
   virtual absl::Status Include(absl::string_view path) = 0;
 
+  virtual absl::Status Integrator(
+      absl::string_view integrator_type,
+      absl::flat_hash_map<absl::string_view, Parameter>& parameters) = 0;
+
   virtual absl::Status Import(absl::string_view path) = 0;
 
   virtual absl::Status LookAt(double eye_x, double eye_y, double eye_z,
@@ -136,6 +140,11 @@ absl::Status TryRemoveFloats(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     absl::string_view parameter_name, size_t required_size,
     std::optional<absl::Span<double>>& result);
+
+absl::Status TryRemoveIntegers(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view parameter_name, size_t required_size,
+    std::optional<absl::Span<int32_t>>& result);
 
 std::optional<bool> TryRemoveBool(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,

@@ -114,6 +114,10 @@ class MockParser final : public Parser {
               (override));
   MOCK_METHOD(absl::Status, Identity, (), ());
   MOCK_METHOD(absl::Status, Include, (absl::string_view), (override));
+  MOCK_METHOD(absl::Status, Integrator,
+              (absl::string_view,
+               (absl::flat_hash_map<absl::string_view, Parameter>&)),
+              (override));
   MOCK_METHOD(absl::Status, Import, (absl::string_view), (override));
   MOCK_METHOD(absl::Status, LookAt,
               (double, double, double, double, double, double, double, double,
@@ -1692,6 +1696,30 @@ TEST(Include, Fails) {
               StatusIs(absl::StatusCode::kUnknown, ""));
 }
 
+TEST(Integrator, Succeeds) {
+  std::stringstream stream("Integrator \"abc\"");
+  MockParser parser;
+  EXPECT_CALL(parser, Integrator("abc", IsEmpty()))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Integrator, MissingType) {
+  std::stringstream stream("Integrator");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Missing type parameter to directive Integrator"));
+}
+
+TEST(Integrator, Fails) {
+  std::stringstream stream("Integrator \"abc\"");
+  MockParser parser;
+  EXPECT_CALL(parser, Integrator("abc", IsEmpty()))
+      .WillOnce(Return(absl::UnknownError("")));
+  EXPECT_THAT(parser.ReadFrom(stream),
+              StatusIs(absl::StatusCode::kUnknown, ""));
+}
+
 TEST(Import, Invalid) {
   std::stringstream stream("Import a");
   EXPECT_THAT(MockParser().ReadFrom(stream),
@@ -2028,6 +2056,74 @@ TEST(TryRemoveFloats, Found) {
   std::optional<absl::Span<double>> removed_values;
   EXPECT_THAT(TryRemoveFloats(parameters, "name", 4, removed_values), IsOk());
   EXPECT_THAT(removed_values, Optional(ElementsAre(1.0, 2.0, 3.0, 4.0)));
+  EXPECT_THAT(parameters, Not(Contains(Key("name"))));
+}
+
+TEST(TryRemoveIntegers, WrongType) {
+  std::vector<int32_t> values;
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::BLACKBODY_V1,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  std::optional<absl::Span<int32_t>> removed_values;
+  EXPECT_THAT(TryRemoveIntegers(parameters, "name", 4, removed_values), IsOk());
+  EXPECT_THAT(removed_values, Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name")));
+}
+
+TEST(TryRemoveIntegers, WrongName) {
+  std::vector<int32_t> values;
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::INTEGER,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name1", parameter}};
+
+  std::optional<absl::Span<int32_t>> removed_values;
+  EXPECT_THAT(TryRemoveIntegers(parameters, "name2", 4, removed_values),
+              IsOk());
+  EXPECT_THAT(removed_values, Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name1")));
+}
+
+TEST(TryRemoveIntegers, WrongCount) {
+  std::vector<int32_t> values = {1};
+  Parameter parameter{.directive = "Accelerator",
+                      .type = ParameterType::INTEGER,
+                      .type_name = "integer",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  std::optional<absl::Span<int32_t>> removed_values;
+  EXPECT_THAT(TryRemoveIntegers(parameters, "name", 4, removed_values),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Invalid number of values for Accelerator integer "
+                       "parameter: 'name'"));
+  EXPECT_THAT(removed_values, Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name")));
+}
+
+TEST(TryRemoveIntegers, Found) {
+  std::vector<int32_t> values = {1, 2, 3, 4};
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::INTEGER,
+                      .type_name = "aaa",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  std::optional<absl::Span<int32_t>> removed_values;
+  EXPECT_THAT(TryRemoveIntegers(parameters, "name", 4, removed_values), IsOk());
+  EXPECT_THAT(removed_values, Optional(ElementsAre(1, 2, 3, 4)));
   EXPECT_THAT(parameters, Not(Contains(Key("name"))));
 }
 
