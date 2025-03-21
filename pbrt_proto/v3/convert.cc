@@ -105,6 +105,10 @@ class ParserV3 final : public Parser {
       absl::string_view film_type,
       absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
 
+  absl::Status Filter(
+      absl::string_view filter_type,
+      absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
+
   absl::Status Identity() override;
 
   absl::Status Include(absl::string_view path) override;
@@ -324,6 +328,96 @@ absl::Status ParserV3::Film(
             TryRemoveString(parameters, "filename");
         filename.has_value()) {
       image.set_filename(*filename);
+    }
+  }
+
+  return absl::OkStatus();
+}
+
+absl::Status ParserV3::Filter(
+    absl::string_view filter_type,
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
+  auto& filter = *output_.add_directives()->mutable_filter();
+
+  if (filter_type == "box") {
+    auto& box = *filter.mutable_box();
+
+    if (std::optional<double> xwidth = TryRemoveFloat(parameters, "xwidth");
+        xwidth.has_value()) {
+      box.set_xwidth(*xwidth);
+    }
+
+    if (std::optional<double> ywidth = TryRemoveFloat(parameters, "ywidth");
+        ywidth.has_value()) {
+      box.set_ywidth(*ywidth);
+    }
+  } else if (filter_type == "gaussian") {
+    auto& gaussian = *filter.mutable_gaussian();
+
+    if (std::optional<double> xwidth = TryRemoveFloat(parameters, "xwidth");
+        xwidth.has_value()) {
+      gaussian.set_xwidth(*xwidth);
+    }
+
+    if (std::optional<double> ywidth = TryRemoveFloat(parameters, "ywidth");
+        ywidth.has_value()) {
+      gaussian.set_ywidth(*ywidth);
+    }
+
+    if (std::optional<double> alpha = TryRemoveFloat(parameters, "alpha");
+        alpha.has_value()) {
+      gaussian.set_alpha(*alpha);
+    }
+  } else if (filter_type == "mitchell") {
+    auto& mitchell = *filter.mutable_mitchell();
+
+    if (std::optional<double> xwidth = TryRemoveFloat(parameters, "xwidth");
+        xwidth.has_value()) {
+      mitchell.set_xwidth(*xwidth);
+    }
+
+    if (std::optional<double> ywidth = TryRemoveFloat(parameters, "ywidth");
+        ywidth.has_value()) {
+      mitchell.set_ywidth(*ywidth);
+    }
+
+    if (std::optional<double> B = TryRemoveFloat(parameters, "B");
+        B.has_value()) {
+      mitchell.set_b(*B);
+    }
+
+    if (std::optional<double> C = TryRemoveFloat(parameters, "C");
+        C.has_value()) {
+      mitchell.set_c(*C);
+    }
+  } else if (filter_type == "sinc") {
+    auto& sinc = *filter.mutable_sinc();
+
+    if (std::optional<double> xwidth = TryRemoveFloat(parameters, "xwidth");
+        xwidth.has_value()) {
+      sinc.set_xwidth(*xwidth);
+    }
+
+    if (std::optional<double> ywidth = TryRemoveFloat(parameters, "ywidth");
+        ywidth.has_value()) {
+      sinc.set_ywidth(*ywidth);
+    }
+
+    if (std::optional<double> tau = TryRemoveFloat(parameters, "tau");
+        tau.has_value()) {
+      sinc.set_tau(*tau);
+    }
+  } else if (filter_type == "triangle") {
+    auto& triangle = *filter.mutable_triangle();
+
+    if (std::optional<double> xwidth = TryRemoveFloat(parameters, "xwidth");
+        xwidth.has_value()) {
+      triangle.set_xwidth(*xwidth);
+    }
+
+    if (std::optional<double> ywidth = TryRemoveFloat(parameters, "ywidth");
+        ywidth.has_value()) {
+      triangle.set_ywidth(*ywidth);
     }
   }
 

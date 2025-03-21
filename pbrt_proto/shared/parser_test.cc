@@ -108,6 +108,10 @@ class MockParser final : public Parser {
               (absl::string_view,
                (absl::flat_hash_map<absl::string_view, Parameter>&)),
               (override));
+  MOCK_METHOD(absl::Status, Filter,
+              (absl::string_view,
+               (absl::flat_hash_map<absl::string_view, Parameter>&)),
+              (override));
   MOCK_METHOD(absl::Status, Identity, (), ());
   MOCK_METHOD(absl::Status, Include, (absl::string_view), (override));
   MOCK_METHOD(absl::Status, Import, (absl::string_view), (override));
@@ -1622,6 +1626,30 @@ TEST(Film, Fails) {
   std::stringstream stream("Film \"abc\"");
   MockParser parser;
   EXPECT_CALL(parser, Film("abc", IsEmpty()))
+      .WillOnce(Return(absl::UnknownError("")));
+  EXPECT_THAT(parser.ReadFrom(stream),
+              StatusIs(absl::StatusCode::kUnknown, ""));
+}
+
+TEST(Filter, Succeeds) {
+  std::stringstream stream("Filter \"abc\"");
+  MockParser parser;
+  EXPECT_CALL(parser, Filter("abc", IsEmpty()))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Filter, MissingType) {
+  std::stringstream stream("Filter");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Missing type parameter to directive Filter"));
+}
+
+TEST(Filter, Fails) {
+  std::stringstream stream("Filter \"abc\"");
+  MockParser parser;
+  EXPECT_CALL(parser, Filter("abc", IsEmpty()))
       .WillOnce(Return(absl::UnknownError("")));
   EXPECT_THAT(parser.ReadFrom(stream),
               StatusIs(absl::StatusCode::kUnknown, ""));

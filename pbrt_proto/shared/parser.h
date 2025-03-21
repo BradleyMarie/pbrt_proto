@@ -86,6 +86,10 @@ class Parser {
       absl::string_view film_type,
       absl::flat_hash_map<absl::string_view, Parameter>& parameters) = 0;
 
+  virtual absl::Status Filter(
+      absl::string_view filter_type,
+      absl::flat_hash_map<absl::string_view, Parameter>& parameters) = 0;
+
   virtual absl::Status Identity() = 0;
 
   virtual absl::Status Include(absl::string_view path) = 0;

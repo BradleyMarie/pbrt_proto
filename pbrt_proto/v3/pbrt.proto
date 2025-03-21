@@ -99,6 +99,45 @@ message Film {
   }
 }
 
+message Filter {
+  message Box {
+    double xwidth = 1 [default = 0.5];
+    double ywidth = 2 [default = 0.5];
+  }
+
+  message Gaussian {
+    double xwidth = 1 [default = 2.0];
+    double ywidth = 2 [default = 2.0];
+    double alpha = 3 [default = 2.0];
+  }
+
+  message Mitchell {
+    double xwidth = 1 [default = 0.5];
+    double ywidth = 2 [default = 0.5];
+    double B = 3 [default = 0.333333333333333333];
+    double C = 4 [default = 0.333333333333333333];
+  }
+
+  message Sinc {
+    double xwidth = 1 [default = 4.0];
+    double ywidth = 2 [default = 4.0];
+    double tau = 3 [default = 3.0];
+  }
+
+  message Triangle {
+    double xwidth = 1 [default = 2.0];
+    double ywidth = 2 [default = 2.0];
+  }
+
+  oneof filter_type {
+    Box box = 1;
+    Gaussian gaussian = 2;
+    Mitchell mitchell = 3;
+    Sinc sinc = 4;
+    Triangle triangle = 5;
+  }
+}
+
 message Identity {
   // Empty Message
 }
@@ -233,20 +272,21 @@ message Directive {
     CoordinateSystem coordinate_system = 6;
     CoordSysTransform coord_sys_transform = 7;
     Film film = 8;
-    Identity identity = 9;
-    Include include = 10;
-    LookAt look_at = 11;
-    ReverseOrientation reverse_orientation = 12;
-    Rotate rotate = 13;
-    Sampler sampler = 14;
-    Scale scale = 15;
-    Transform transform = 16;
-    TransformBegin transform_begin = 17;
-    TransformEnd transform_end = 18;
-    TransformTimes transform_times = 19;
-    Translate translate = 20;
-    WorldBegin world_begin = 21;
-    WorldEnd world_end = 22;
+    Filter filter = 9;
+    Identity identity = 10;
+    Include include = 11;
+    LookAt look_at = 12;
+    ReverseOrientation reverse_orientation = 13;
+    Rotate rotate = 14;
+    Sampler sampler = 15;
+    Scale scale = 16;
+    Transform transform = 17;
+    TransformBegin transform_begin = 18;
+    TransformEnd transform_end = 19;
+    TransformTimes transform_times = 20;
+    Translate translate = 21;
+    WorldBegin world_begin = 22;
+    WorldEnd world_end = 23;
   }
 }
 
