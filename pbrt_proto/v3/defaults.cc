@@ -11,6 +11,9 @@ PbrtProto BuildDefaults() {
   // Accelerator
   defaults.add_directives()->mutable_accelerator()->mutable_bvh();
 
+  // Camera
+  defaults.add_directives()->mutable_camera()->mutable_perspective();
+
   // Film
   defaults.add_directives()->mutable_film()->mutable_image();
 

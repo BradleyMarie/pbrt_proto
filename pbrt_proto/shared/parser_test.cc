@@ -100,6 +100,10 @@ class MockParser final : public Parser {
               (override));
   MOCK_METHOD(absl::Status, AttributeBegin, (), (override));
   MOCK_METHOD(absl::Status, AttributeEnd, (), (override));
+  MOCK_METHOD(absl::Status, Camera,
+              (absl::string_view,
+               (absl::flat_hash_map<absl::string_view, Parameter>&)),
+              (override));
   MOCK_METHOD(absl::Status, ConcatTransform, ((const std::array<double, 16>&)),
               ());
   MOCK_METHOD(absl::Status, CoordinateSystem, (absl::string_view), (override));
@@ -1527,6 +1531,30 @@ TEST(AttributeEnd, Fails) {
   std::stringstream stream("AttributeEnd");
   MockParser parser;
   EXPECT_CALL(parser, AttributeEnd()).WillOnce(Return(absl::UnknownError("")));
+  EXPECT_THAT(parser.ReadFrom(stream),
+              StatusIs(absl::StatusCode::kUnknown, ""));
+}
+
+TEST(Camera, Succeeds) {
+  std::stringstream stream("Camera \"abc\"");
+  MockParser parser;
+  EXPECT_CALL(parser, Camera("abc", IsEmpty()))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Camera, MissingType) {
+  std::stringstream stream("Camera");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Missing type parameter to directive Camera"));
+}
+
+TEST(Camera, Fails) {
+  std::stringstream stream("Camera \"abc\"");
+  MockParser parser;
+  EXPECT_CALL(parser, Camera("abc", IsEmpty()))
+      .WillOnce(Return(absl::UnknownError("")));
   EXPECT_THAT(parser.ReadFrom(stream),
               StatusIs(absl::StatusCode::kUnknown, ""));
 }

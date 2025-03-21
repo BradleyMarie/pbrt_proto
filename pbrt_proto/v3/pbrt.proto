@@ -49,6 +49,56 @@ message AttributeEnd {
   // Empty Message
 }
 
+message Camera {
+  message ScreenWindow {
+    double x_min = 1;
+    double x_max = 2;
+    double y_min = 3;
+    double y_max = 4;
+  }
+
+  message Environment {
+    double shutteropen = 1 [default = 0.0];
+    double shutterclose = 2 [default = 1.0];
+  }
+
+  message Orthographic {
+    double lensradius = 1 [default = 0.0];
+    double focaldistance = 2 [default = 1e6];
+    double frameaspectratio = 3 [features.field_presence = EXPLICIT];
+    ScreenWindow screenwindow = 4  [features.field_presence = EXPLICIT];
+    double shutteropen = 5 [default = 0.0];
+    double shutterclose = 6 [default = 1.0];
+  }
+
+  message Perspective {
+    double lensradius = 1 [default = 0.0];
+    double focaldistance = 2 [default = 1e6];
+    double frameaspectratio = 3 [features.field_presence = EXPLICIT];
+    ScreenWindow screenwindow = 4 [features.field_presence = EXPLICIT];
+    double fov = 5 [default = 90.0];
+    double halffov = 6 [features.field_presence = EXPLICIT];
+    double shutteropen = 7 [default = 0.0];
+    double shutterclose = 8 [default = 1.0];
+  }
+
+  message Realistic {
+    string lensfile = 1;
+    double aperturediameter = 2 [default = 1.0];
+    double focaldistance = 3 [default = 10.0];
+    bool simpleweighting = 4 [default = true];
+    double shutteropen = 5 [default = 0.0];
+    double shutterclose = 6 [default = 1.0];
+  }
+
+  oneof camera_type {
+    Environment environment = 1;
+    Orthographic orthographic = 2;
+    Perspective perspective = 3;
+    Realistic realistic = 4;
+  }
+}
+
 message ConcatTransform {
   double m00 = 1 [features.field_presence = LEGACY_REQUIRED];
   double m01 = 2 [features.field_presence = LEGACY_REQUIRED];
@@ -364,26 +414,27 @@ message Directive {
     ActiveTransform active_transform = 2;
     AttributeBegin attribute_begin = 3;
     AttributeEnd attribute_end = 4;
-    ConcatTransform concat_transform = 5;
-    CoordinateSystem coordinate_system = 6;
-    CoordSysTransform coord_sys_transform = 7;
-    Film film = 8;
-    Filter filter = 9;
-    Identity identity = 10;
-    Include include = 11;
-    Integrator integrator = 12;
-    LookAt look_at = 13;
-    ReverseOrientation reverse_orientation = 14;
-    Rotate rotate = 15;
-    Sampler sampler = 16;
-    Scale scale = 17;
-    Transform transform = 18;
-    TransformBegin transform_begin = 19;
-    TransformEnd transform_end = 20;
-    TransformTimes transform_times = 21;
-    Translate translate = 22;
-    WorldBegin world_begin = 23;
-    WorldEnd world_end = 24;
+    Camera camera = 5;
+    ConcatTransform concat_transform = 6;
+    CoordinateSystem coordinate_system = 7;
+    CoordSysTransform coord_sys_transform = 8;
+    Film film = 9;
+    Filter filter = 10;
+    Identity identity = 11;
+    Include include = 12;
+    Integrator integrator = 13;
+    LookAt look_at = 14;
+    ReverseOrientation reverse_orientation = 15;
+    Rotate rotate = 16;
+    Sampler sampler = 17;
+    Scale scale = 18;
+    Transform transform = 19;
+    TransformBegin transform_begin = 20;
+    TransformEnd transform_end = 21;
+    TransformTimes transform_times = 22;
+    Translate translate = 23;
+    WorldBegin world_begin = 24;
+    WorldEnd world_end = 25;
   }
 }
 

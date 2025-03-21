@@ -870,6 +870,14 @@ absl::Status Parser::ReadFrom(std::istream& stream) {
       status = AttributeBegin();
     } else if (**next == "AttributeEnd") {
       status = AttributeEnd();
+    } else if (**next == "Camera") {
+      absl::StatusOr<absl::string_view> type_name = ReadParameters(
+          "Camera", parameter_type_names_, storage, tokenizer, parameters);
+      if (!type_name.ok()) {
+        return type_name.status();
+      }
+
+      status = Camera(*type_name, parameters);
     } else if (**next == "ConcatTransform") {
       auto values =
           ReadFloatParameters("ConcatTransform", storage, tokenizer, 16);

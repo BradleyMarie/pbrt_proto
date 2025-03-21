@@ -165,6 +165,135 @@ TEST(Convert, AttributeEnd) {
                                                              })pb")));
 }
 
+TEST(Convert, CameraUnknown) {
+  std::stringstream stream("Camera \"unknown\"");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives { camera {} })pb")));
+}
+
+TEST(Convert, CameraEnvironment) {
+  std::stringstream stream(
+      "Camera \"environment\" \"float shutteropen\" 1.0 \"float shutterclose\" "
+      "2.0");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(
+          R"pb(directives {
+                 camera { environment { shutteropen: 1.0 shutterclose: 2.0 } }
+               })pb")));
+}
+
+TEST(Convert, CameraOrthographic) {
+  std::stringstream stream(
+      "Camera \"orthographic\" \"float lensradius\" 3.0 \"float "
+      "frameaspectratio\" 4.0 \"float screenwindow\" [1.0 2.0 3.0 4.0]  "
+      "\"float shutteropen\" 1.0 \"float shutterclose\" 2.0");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives {
+                                              camera {
+                                                orthographic {
+                                                  lensradius: 3.0
+                                                  frameaspectratio: 4.0
+                                                  screenwindow {
+                                                    x_min: 1.0
+                                                    x_max: 2.0
+                                                    y_min: 3.0
+                                                    y_max: 4.0
+                                                  }
+                                                  shutteropen: 1.0
+                                                  shutterclose: 2.0
+                                                }
+                                              }
+                                            })pb")));
+}
+
+TEST(Convert, CameraOrthographicBadWindow) {
+  std::stringstream stream(
+      "Camera \"orthographic\" \"float lensradius\" 3.0 \"float "
+      "frameaspectratio\" 4.0 \"float screenwindow\" [1.0 2.0 3.0]  "
+      "\"float shutteropen\" 1.0 \"float shutterclose\" 2.0");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives {
+                                              camera {
+                                                orthographic {
+                                                  lensradius: 3.0
+                                                  frameaspectratio: 4.0
+                                                  shutteropen: 1.0
+                                                  shutterclose: 2.0
+                                                }
+                                              }
+                                            })pb")));
+}
+
+TEST(Convert, CameraPerspective) {
+  std::stringstream stream(
+      "Camera \"perspective\" \"float lensradius\" 3.0 \"float "
+      "frameaspectratio\" 4.0 \"float screenwindow\" [1.0 2.0 3.0 4.0] \"float "
+      "fov\" 60.0 \"float halffov\" 30.0 \"float shutteropen\" 1.0 \"float "
+      "shutterclose\" 2.0");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives {
+                                              camera {
+                                                perspective {
+                                                  lensradius: 3.0
+                                                  frameaspectratio: 4.0
+                                                  screenwindow {
+                                                    x_min: 1.0
+                                                    x_max: 2.0
+                                                    y_min: 3.0
+                                                    y_max: 4.0
+                                                  }
+                                                  fov: 60
+                                                  halffov: 30
+                                                  shutteropen: 1.0
+                                                  shutterclose: 2.0
+                                                }
+                                              }
+                                            })pb")));
+}
+
+TEST(Convert, CameraPerspectiveBadWindow) {
+  std::stringstream stream(
+      "Camera \"perspective\" \"float lensradius\" 3.0 \"float "
+      "frameaspectratio\" 4.0 \"float screenwindow\" [1.0 2.0 3.0] \"float "
+      "fov\" 60.0 \"float halffov\" 30.0 \"float shutteropen\" 1.0 \"float "
+      "shutterclose\" 2.0");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives {
+                                              camera {
+                                                perspective {
+                                                  lensradius: 3.0
+                                                  frameaspectratio: 4.0
+                                                  fov: 60
+                                                  halffov: 30
+                                                  shutteropen: 1.0
+                                                  shutterclose: 2.0
+                                                }
+                                              }
+                                            })pb")));
+}
+
+TEST(Convert, CameraRealistic) {
+  std::stringstream stream(
+      "Camera \"realistic\" \"string lensfile\" \"lens.file\" \"float "
+      "aperturediameter\" 4.0 \"float focaldistance\" 2.0 \"bool "
+      "simpleweighting\" \"false\" \"float shutteropen\" 1.0 \"float "
+      "shutterclose\" 2.0");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives {
+                                              camera {
+                                                realistic {
+                                                  lensfile: "lens.file"
+                                                  aperturediameter: 4.0
+                                                  focaldistance: 2.0
+                                                  simpleweighting: false
+                                                  shutteropen: 1.0
+                                                  shutterclose: 2.0
+                                                }
+                                              }
+                                            })pb")));
+}
+
 TEST(Convert, ConcatTransform) {
   std::stringstream stream(
       "ConcatTransform 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16");

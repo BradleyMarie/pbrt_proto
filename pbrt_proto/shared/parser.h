@@ -71,6 +71,10 @@ class Parser {
 
   virtual absl::Status AttributeEnd() = 0;
 
+  virtual absl::Status Camera(
+      absl::string_view camera_type,
+      absl::flat_hash_map<absl::string_view, Parameter>& parameters) = 0;
+
   virtual absl::Status ConcatTransform(double m00, double m01, double m02,
                                        double m03, double m10, double m11,
                                        double m12, double m13, double m20,
