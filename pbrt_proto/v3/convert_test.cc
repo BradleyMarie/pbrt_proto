@@ -603,6 +603,18 @@ TEST(Convert, IntegratorDirectLightingUnknown) {
                        })pb")));
 }
 
+TEST(Convert, IntegratorDirectLightingBadPixelBounds) {
+  std::stringstream stream(
+      "Integrator \"directlighting\" \"integer maxdepth\" 1 \"string "
+      "strategy\" \"all\" \"integer pixelbounds\" [1 2 3]");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(
+          R"pb(directives {
+                 integrator { directlighting { maxdepth: 1 strategy: ALL } }
+               })pb")));
+}
+
 TEST(Convert, IntegratorMlt) {
   std::stringstream stream(
       "Integrator \"mlt\" \"integer maxdepth\" 1 \"integer bootstrapsamples\" "
@@ -640,6 +652,23 @@ TEST(Convert, IntegratorPath) {
                            }
                          }
                        })pb")));
+}
+
+TEST(Convert, IntegratorPathBadPixelBounds) {
+  std::stringstream stream(
+      "Integrator \"path\" \"integer maxdepth\" 1 \"float rrthreshold\" 2.0 "
+      "\"string lightsamplestrategy\" \"uniform\" \"integer pixelbounds\" [1 2 "
+      "3]");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
+                                   R"pb(directives {
+                                          integrator {
+                                            path {
+                                              maxdepth: 1
+                                              rrthreshold: 2.0
+                                              lightsamplestrategy: UNIFORM
+                                            }
+                                          }
+                                        })pb")));
 }
 
 TEST(Convert, IntegratorPathUnknown) {
@@ -699,6 +728,23 @@ TEST(Convert, IntegratorVolPath) {
                        })pb")));
 }
 
+TEST(Convert, IntegratorVolPathBadPixelBounds) {
+  std::stringstream stream(
+      "Integrator \"volpath\" \"integer maxdepth\" 1 \"float rrthreshold\" 2.0 "
+      "\"string lightsamplestrategy\" \"uniform\" \"integer pixelbounds\" [1 2 "
+      "3]");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
+                                   R"pb(directives {
+                                          integrator {
+                                            volpath {
+                                              maxdepth: 1
+                                              rrthreshold: 2.0
+                                              lightsamplestrategy: UNIFORM
+                                            }
+                                          }
+                                        })pb")));
+}
+
 TEST(Convert, IntegratorVolPathUnknown) {
   std::stringstream stream(
       "Integrator \"volpath\" \"integer maxdepth\" 1 \"float rrthreshold\" 2.0 "
@@ -732,6 +778,16 @@ TEST(Convert, IntegratorWhitted) {
                            }
                          }
                        })pb")));
+}
+
+TEST(Convert, IntegratorWhittedBadPixelBounds) {
+  std::stringstream stream(
+      "Integrator \"whitted\" \"integer maxdepth\" 1 \"integer pixelbounds\" "
+      "[1 2 3]");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
+                                   R"pb(directives {
+                                          integrator { whitted { maxdepth: 1 } }
+                                        })pb")));
 }
 
 TEST(Convert, Import) {
