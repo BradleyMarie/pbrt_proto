@@ -66,10 +66,10 @@ absl::string_view ParameterStorage::Add(absl::string_view to_add) {
   }
 
   auto& result = chars_[chars_size_++];
-  chars_.back().clear();
+  result.clear();
 
   for (char c : to_add) {
-    chars_.back().emplace_back(c);
+    result.emplace_back(c);
   }
 
   return absl::string_view(result.data(), result.size());
@@ -1028,7 +1028,8 @@ absl::Status Parser::ReadFrom(std::istream& stream) {
     } else if (**next == "WorldEnd") {
       status = WorldEnd();
     } else {
-      return absl::UnimplementedError(**next);
+      return absl::InvalidArgumentError(
+          absl::StrCat("Unrecognized directive: '", **next, "'"));
     }
 
     if (!status.ok()) {
