@@ -185,6 +185,14 @@ absl::Status InvalidTokenError(absl::string_view directive,
                    " parameter ", name, ": ", wrapper, token, wrapper));
 }
 
+absl::Status InvalidParameterCount(absl::string_view directive,
+                                   size_t num_parameters, bool is_array) {
+  absl::string_view array_modifier = (is_array) ? "an array of " : "";
+  return absl::InvalidArgumentError(
+      absl::StrCat("Directive ", directive, " requires ", array_modifier,
+                   "exactly ", num_parameters, " parameters"));
+}
+
 absl::Status CheckForNextValue(Tokenizer& tokenizer,
                                absl::string_view directive,
                                absl::string_view type, absl::string_view name) {
@@ -494,7 +502,22 @@ absl::StatusOr<absl::string_view> ReadQuotedString(absl::string_view directive,
 
 absl::StatusOr<absl::InlinedVector<double, 16>> ReadFloatParameters(
     absl::string_view directive, ParameterStorage& storage,
-    Tokenizer& tokenizer, size_t num_to_read) {
+    Tokenizer& tokenizer, size_t num_to_read, bool is_array) {
+  if (is_array) {
+    absl::StatusOr<const std::string*> next = tokenizer.Next();
+    if (!next.ok()) {
+      return next.status();
+    }
+
+    if (!*next) {
+      return InvalidParameterCount(directive, num_to_read, is_array);
+    }
+
+    if (**next != "[") {
+      return InvalidParameterCount(directive, num_to_read, is_array);
+    }
+  }
+
   absl::InlinedVector<double, 16> results;
   for (size_t i = 0; i < num_to_read; i++) {
     absl::StatusOr<const std::string*> next = tokenizer.Next();
@@ -502,10 +525,8 @@ absl::StatusOr<absl::InlinedVector<double, 16>> ReadFloatParameters(
       return next.status();
     }
 
-    if (!*next) {
-      return absl::InvalidArgumentError(
-          absl::StrCat("Directive ", directive, " requires exactly ",
-                       num_to_read, " parameters"));
+    if (!*next || (is_array && **next == "]")) {
+      return InvalidParameterCount(directive, num_to_read, is_array);
     }
 
     double value;
@@ -515,6 +536,21 @@ absl::StatusOr<absl::InlinedVector<double, 16>> ReadFloatParameters(
     }
 
     results.push_back(value);
+  }
+
+  if (is_array) {
+    absl::StatusOr<const std::string*> next = tokenizer.Next();
+    if (!next.ok()) {
+      return next.status();
+    }
+
+    if (!*next) {
+      return InvalidParameterCount(directive, num_to_read, is_array);
+    }
+
+    if (**next != "]") {
+      return InvalidParameterCount(directive, num_to_read, is_array);
+    }
   }
 
   return results;
@@ -880,7 +916,7 @@ absl::Status Parser::ReadFrom(std::istream& stream) {
       status = Camera(*type_name, parameters);
     } else if (**next == "ConcatTransform") {
       auto values =
-          ReadFloatParameters("ConcatTransform", storage, tokenizer, 16);
+          ReadFloatParameters("ConcatTransform", storage, tokenizer, 16, true);
       if (!values.ok()) {
         return values.status();
       }
@@ -945,7 +981,7 @@ absl::Status Parser::ReadFrom(std::istream& stream) {
 
       status = Import(*name);
     } else if (**next == "LookAt") {
-      auto values = ReadFloatParameters("LookAt", storage, tokenizer, 9);
+      auto values = ReadFloatParameters("LookAt", storage, tokenizer, 9, false);
       if (!values.ok()) {
         return values.status();
       }
@@ -972,7 +1008,7 @@ absl::Status Parser::ReadFrom(std::istream& stream) {
     } else if (**next == "ReverseOrientation") {
       status = ReverseOrientation();
     } else if (**next == "Rotate") {
-      auto values = ReadFloatParameters("Rotate", storage, tokenizer, 4);
+      auto values = ReadFloatParameters("Rotate", storage, tokenizer, 4, false);
       if (!values.ok()) {
         return values.status();
       }
@@ -987,14 +1023,15 @@ absl::Status Parser::ReadFrom(std::istream& stream) {
 
       status = Sampler(*type_name, parameters);
     } else if (**next == "Scale") {
-      auto values = ReadFloatParameters("Scale", storage, tokenizer, 3);
+      auto values = ReadFloatParameters("Scale", storage, tokenizer, 3, false);
       if (!values.ok()) {
         return values.status();
       }
 
       status = Scale((*values)[0], (*values)[1], (*values)[2]);
     } else if (**next == "Transform") {
-      auto values = ReadFloatParameters("Transform", storage, tokenizer, 16);
+      auto values =
+          ReadFloatParameters("Transform", storage, tokenizer, 16, true);
       if (!values.ok()) {
         return values.status();
       }
@@ -1010,14 +1047,15 @@ absl::Status Parser::ReadFrom(std::istream& stream) {
       status = TransformEnd();
     } else if (**next == "TransformTimes") {
       auto values =
-          ReadFloatParameters("TransformTimes", storage, tokenizer, 2);
+          ReadFloatParameters("TransformTimes", storage, tokenizer, 2, false);
       if (!values.ok()) {
         return values.status();
       }
 
       status = TransformTimes((*values)[0], (*values)[1]);
     } else if (**next == "Translate") {
-      auto values = ReadFloatParameters("Translate", storage, tokenizer, 3);
+      auto values =
+          ReadFloatParameters("Translate", storage, tokenizer, 3, false);
       if (!values.ok()) {
         return values.status();
       }

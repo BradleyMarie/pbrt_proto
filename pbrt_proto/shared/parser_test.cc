@@ -179,10 +179,56 @@ TEST(Parser, UnknownDirective) {
 }
 
 TEST(Parser, UnparsableNumber) {
-  std::stringstream stream("ConcatTransform 1a");
+  std::stringstream stream("Translate 1a");
   EXPECT_THAT(MockParser().ReadFrom(stream),
               StatusIs(absl::StatusCode::kInvalidArgument,
-                       "Invalid parameter to directive ConcatTransform: '1a'"));
+                       "Invalid parameter to directive Translate: '1a'"));
+}
+
+TEST(Parser, NoArray) {
+  std::stringstream stream("Transform");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(
+          absl::StatusCode::kInvalidArgument,
+          "Directive Transform requires an array of exactly 16 parameters"));
+}
+
+TEST(Parser, NoArrayStart) {
+  std::stringstream stream("Transform 1");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(
+          absl::StatusCode::kInvalidArgument,
+          "Directive Transform requires an array of exactly 16 parameters"));
+}
+
+TEST(Parser, TooFewArrayParamters) {
+  std::stringstream stream("Transform [1]");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(
+          absl::StatusCode::kInvalidArgument,
+          "Directive Transform requires an array of exactly 16 parameters"));
+}
+
+TEST(Parser, NoArrayEnding) {
+  std::stringstream stream("Transform [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(
+          absl::StatusCode::kInvalidArgument,
+          "Directive Transform requires an array of exactly 16 parameters"));
+}
+
+TEST(Parser, TooManyArrayParameters) {
+  std::stringstream stream(
+      "Transform [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17]");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(
+          absl::StatusCode::kInvalidArgument,
+          "Directive Transform requires an array of exactly 16 parameters"));
 }
 
 TEST(Parser, MissingQuotedString) {
@@ -1565,16 +1611,16 @@ TEST(Camera, Fails) {
 
 TEST(ConcatTransform, MissingParameters) {
   std::stringstream stream(
-      "ConcatTransform 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15");
-  EXPECT_THAT(
-      MockParser().ReadFrom(stream),
-      StatusIs(absl::StatusCode::kInvalidArgument,
-               "Directive ConcatTransform requires exactly 16 parameters"));
+      "ConcatTransform [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15]");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Directive ConcatTransform requires an array of exactly "
+                       "16 parameters"));
 }
 
 TEST(ConcatTransform, Succeeds) {
   std::stringstream stream(
-      "ConcatTransform 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16");
+      "ConcatTransform [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16]");
   MockParser parser;
   EXPECT_CALL(parser, ConcatTransform(ElementsAre(
                           1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0,
@@ -1585,7 +1631,7 @@ TEST(ConcatTransform, Succeeds) {
 
 TEST(ConcatTransform, Fails) {
   std::stringstream stream(
-      "ConcatTransform 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16");
+      "ConcatTransform [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16]");
   MockParser parser;
   EXPECT_CALL(parser, ConcatTransform(ElementsAre(
                           1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0,
@@ -1947,14 +1993,17 @@ TEST(Scale, Fails) {
 }
 
 TEST(Transform, MissingParameters) {
-  std::stringstream stream("Transform 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15");
-  EXPECT_THAT(MockParser().ReadFrom(stream),
-              StatusIs(absl::StatusCode::kInvalidArgument,
-                       "Directive Transform requires exactly 16 parameters"));
+  std::stringstream stream("Transform [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15]");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(
+          absl::StatusCode::kInvalidArgument,
+          "Directive Transform requires an array of exactly 16 parameters"));
 }
 
 TEST(Transform, Succeeds) {
-  std::stringstream stream("Transform 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16");
+  std::stringstream stream(
+      "Transform [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16]");
   MockParser parser;
   EXPECT_CALL(parser,
               Transform(ElementsAre(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0,
@@ -1964,7 +2013,8 @@ TEST(Transform, Succeeds) {
 }
 
 TEST(Transform, Fails) {
-  std::stringstream stream("Transform 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16");
+  std::stringstream stream(
+      "Transform [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16]");
   MockParser parser;
   EXPECT_CALL(parser,
               Transform(ElementsAre(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0,

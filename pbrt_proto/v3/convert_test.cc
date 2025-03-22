@@ -296,7 +296,7 @@ TEST(Convert, CameraRealistic) {
 
 TEST(Convert, ConcatTransform) {
   std::stringstream stream(
-      "ConcatTransform 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16");
+      "ConcatTransform [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16]");
   EXPECT_THAT(Convert(stream),
               IsOkAndHolds(EqualsProto(R"pb(directives {
                                               concat_transform {
@@ -947,7 +947,8 @@ TEST(Convert, SamplerLowDiscrepancy) {
 }
 
 TEST(Convert, Transform) {
-  std::stringstream stream("Transform 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16");
+  std::stringstream stream(
+      "Transform [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16]");
   EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(R"pb(directives {
                                                                transform {
                                                                  m00: 1
