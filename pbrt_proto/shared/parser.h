@@ -108,6 +108,12 @@ class Parser {
                               double look_x, double look_y, double look_z,
                               double up_x, double up_y, double up_z) = 0;
 
+  virtual absl::Status ObjectBegin(absl::string_view name) = 0;
+
+  virtual absl::Status ObjectEnd() = 0;
+
+  virtual absl::Status ObjectInstance(absl::string_view name) = 0;
+
   virtual absl::Status ReverseOrientation() = 0;
 
   virtual absl::Status Rotate(double angle, double x, double y, double z) = 0;

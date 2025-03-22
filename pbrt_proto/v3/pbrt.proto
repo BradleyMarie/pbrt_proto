@@ -304,6 +304,18 @@ message LookAt {
   double up_z = 9 [features.field_presence = LEGACY_REQUIRED];
 }
 
+message ObjectBegin {
+  string name = 1;
+}
+
+message ObjectEnd {
+  // Empty Message
+}
+
+message ObjectInstance {
+  string name = 1;
+}
+
 message ReverseOrientation {
   // Empty Message
 }
@@ -424,17 +436,20 @@ message Directive {
     Include include = 12;
     Integrator integrator = 13;
     LookAt look_at = 14;
-    ReverseOrientation reverse_orientation = 15;
-    Rotate rotate = 16;
-    Sampler sampler = 17;
-    Scale scale = 18;
-    Transform transform = 19;
-    TransformBegin transform_begin = 20;
-    TransformEnd transform_end = 21;
-    TransformTimes transform_times = 22;
-    Translate translate = 23;
-    WorldBegin world_begin = 24;
-    WorldEnd world_end = 25;
+    ObjectBegin object_begin = 15;
+    ObjectBegin object_end = 16;
+    ObjectBegin object_instance = 17;
+    ReverseOrientation reverse_orientation = 18;
+    Rotate rotate = 19;
+    Sampler sampler = 20;
+    Scale scale = 21;
+    Transform transform = 22;
+    TransformBegin transform_begin = 23;
+    TransformEnd transform_end = 24;
+    TransformTimes transform_times = 25;
+    Translate translate = 26;
+    WorldBegin world_begin = 27;
+    WorldEnd world_end = 28;
   }
 }
 

@@ -137,6 +137,12 @@ class ParserV3 final : public Parser {
                       double look_y, double look_z, double up_x, double up_y,
                       double up_z) override;
 
+  absl::Status ObjectBegin(absl::string_view path) override;
+
+  absl::Status ObjectEnd() override;
+
+  absl::Status ObjectInstance(absl::string_view path) override;
+
   absl::Status ReverseOrientation() override;
 
   absl::Status Rotate(double angle, double x, double y, double z) override;
@@ -873,6 +879,21 @@ absl::Status ParserV3::LookAt(double eye_x, double eye_y, double eye_z,
   look_at.set_up_x(up_x);
   look_at.set_up_y(up_y);
   look_at.set_up_z(up_z);
+  return absl::OkStatus();
+}
+
+absl::Status ParserV3::ObjectBegin(absl::string_view name) {
+  output_.add_directives()->mutable_object_begin()->set_name(name);
+  return absl::OkStatus();
+}
+
+absl::Status ParserV3::ObjectEnd() {
+  output_.add_directives()->mutable_object_end();
+  return absl::OkStatus();
+}
+
+absl::Status ParserV3::ObjectInstance(absl::string_view name) {
+  output_.add_directives()->mutable_object_instance()->set_name(name);
   return absl::OkStatus();
 }
 

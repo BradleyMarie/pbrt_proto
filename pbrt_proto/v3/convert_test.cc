@@ -814,6 +814,28 @@ TEST(Convert, LookAt) {
                                                              })pb")));
 }
 
+TEST(Convert, ObjectBegin) {
+  std::stringstream stream("ObjectBegin \"a\"");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives {
+                                              object_begin { name: "a" }
+                                            })pb")));
+}
+
+TEST(Convert, ObjectEnd) {
+  std::stringstream stream("ObjectEnd");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives { object_end {} })pb")));
+}
+
+TEST(Convert, ObjectInstance) {
+  std::stringstream stream("ObjectInstance \"a\"");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives {
+                                              object_instance { name: "a" }
+                                            })pb")));
+}
+
 TEST(Convert, ReverseOrientation) {
   std::stringstream stream("ReverseOrientation");
   EXPECT_THAT(Convert(stream),

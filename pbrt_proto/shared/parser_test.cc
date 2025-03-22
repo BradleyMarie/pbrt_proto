@@ -127,6 +127,9 @@ class MockParser final : public Parser {
               (double, double, double, double, double, double, double, double,
                double),
               (override));
+  MOCK_METHOD(absl::Status, ObjectBegin, (absl::string_view), (override));
+  MOCK_METHOD(absl::Status, ObjectEnd, (), (override));
+  MOCK_METHOD(absl::Status, ObjectInstance, (absl::string_view), (override));
   MOCK_METHOD(absl::Status, ReverseOrientation, (), (override));
   MOCK_METHOD(absl::Status, Rotate, (double, double, double, double),
               (override));
@@ -1789,6 +1792,67 @@ TEST(LookAt, Fails) {
   std::stringstream stream("LookAt 1 2 3 4 5 6 7 8 9");
   MockParser parser;
   EXPECT_CALL(parser, LookAt(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0))
+      .WillOnce(Return(absl::UnknownError("")));
+  EXPECT_THAT(parser.ReadFrom(stream),
+              StatusIs(absl::StatusCode::kUnknown, ""));
+}
+
+TEST(ObjectBegin, Invalid) {
+  std::stringstream stream("ObjectBegin a");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Invalid parameter to directive ObjectBegin: 'a'"));
+}
+
+TEST(ObjectBegin, Succeeds) {
+  std::stringstream stream("ObjectBegin \"a\"");
+  MockParser parser;
+  EXPECT_CALL(parser, ObjectBegin("a")).WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(ObjectBegin, Fails) {
+  std::stringstream stream("ObjectBegin \"a\"");
+  MockParser parser;
+  EXPECT_CALL(parser, ObjectBegin("a"))
+      .WillOnce(Return(absl::UnknownError("")));
+  EXPECT_THAT(parser.ReadFrom(stream),
+              StatusIs(absl::StatusCode::kUnknown, ""));
+}
+
+TEST(ObjectEnd, Succeeds) {
+  std::stringstream stream("ObjectEnd");
+  MockParser parser;
+  EXPECT_CALL(parser, ObjectEnd()).WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(ObjectEnd, Fails) {
+  std::stringstream stream("ObjectEnd");
+  MockParser parser;
+  EXPECT_CALL(parser, ObjectEnd()).WillOnce(Return(absl::UnknownError("")));
+  EXPECT_THAT(parser.ReadFrom(stream),
+              StatusIs(absl::StatusCode::kUnknown, ""));
+}
+
+TEST(ObjectInstance, Invalid) {
+  std::stringstream stream("ObjectInstance a");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Invalid parameter to directive ObjectInstance: 'a'"));
+}
+
+TEST(ObjectInstance, Succeeds) {
+  std::stringstream stream("ObjectInstance \"a\"");
+  MockParser parser;
+  EXPECT_CALL(parser, ObjectInstance("a")).WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(ObjectInstance, Fails) {
+  std::stringstream stream("ObjectInstance \"a\"");
+  MockParser parser;
+  EXPECT_CALL(parser, ObjectInstance("a"))
       .WillOnce(Return(absl::UnknownError("")));
   EXPECT_THAT(parser.ReadFrom(stream),
               StatusIs(absl::StatusCode::kUnknown, ""));

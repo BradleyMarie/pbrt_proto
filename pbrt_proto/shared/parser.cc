@@ -953,6 +953,22 @@ absl::Status Parser::ReadFrom(std::istream& stream) {
       status = LookAt((*values)[0], (*values)[1], (*values)[2], (*values)[3],
                       (*values)[4], (*values)[5], (*values)[6], (*values)[7],
                       (*values)[8]);
+    } else if (**next == "ObjectBegin") {
+      auto name = ReadQuotedString("ObjectBegin", tokenizer);
+      if (!name.ok()) {
+        return name.status();
+      }
+
+      status = ObjectBegin(*name);
+    } else if (**next == "ObjectEnd") {
+      status = ObjectEnd();
+    } else if (**next == "ObjectInstance") {
+      auto name = ReadQuotedString("ObjectInstance", tokenizer);
+      if (!name.ok()) {
+        return name.status();
+      }
+
+      status = ObjectInstance(*name);
     } else if (**next == "ReverseOrientation") {
       status = ReverseOrientation();
     } else if (**next == "Rotate") {
