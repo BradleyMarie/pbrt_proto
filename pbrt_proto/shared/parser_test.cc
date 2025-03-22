@@ -174,7 +174,8 @@ TEST(Parser, Empty) {
 TEST(Parser, UnknownDirective) {
   std::stringstream stream("Abc");
   EXPECT_THAT(MockParser().ReadFrom(stream),
-              StatusIs(absl::StatusCode::kUnimplemented, "Abc"));
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Unrecognized directive: 'Abc'"));
 }
 
 TEST(Parser, UnparsableNumber) {

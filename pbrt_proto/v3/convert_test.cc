@@ -17,8 +17,8 @@ using ::google::protobuf::EqualsProto;
 
 TEST(Convert, Error) {
   std::stringstream stream("Abc");
-  EXPECT_THAT(Convert(stream),
-              StatusIs(absl::StatusCode::kUnimplemented, "Abc"));
+  EXPECT_THAT(Convert(stream), StatusIs(absl::StatusCode::kInvalidArgument,
+                                        "Unrecognized directive: 'Abc'"));
 }
 
 TEST(Convert, Empty) {
