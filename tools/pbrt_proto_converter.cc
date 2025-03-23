@@ -14,10 +14,11 @@
 #include "pbrt_proto/v3/convert.h"
 #include "pbrt_proto/v3/pbrt.pb.h"
 
-ABSL_FLAG(
-    bool, recursive, false,
-    "If true, recursively converts PBRT files that are included or imported. "
-    "If not set, encountering these directives will cause conversion to fail.");
+ABSL_FLAG(bool, recursive, false,
+          "If true, recursively converts PBRT files that are included or "
+          "imported and the files the directives will be updated to reference "
+          "the converted files. If not set, encountering these directives will "
+          "not be traversed and will be left as-is.");
 
 ABSL_FLAG(bool, textproto, false,
           "If true, output a text proto instead of a binary proto");
@@ -42,15 +43,8 @@ pbrt_proto::v3::PbrtProto ConvertFile(
   }
 
   for (auto& directive : *to_v3->mutable_directives()) {
-    if (!directive.has_include()) {
+    if (!directive.has_include() || !absl::GetFlag(FLAGS_recursive)) {
       continue;
-    }
-
-    if (!absl::GetFlag(FLAGS_recursive)) {
-      std::cerr << "ERROR: Encountered Include directive but --recursive flag "
-                   "was not set"
-                << file << std::endl;
-      exit(EXIT_FAILURE);
     }
 
     std::filesystem::path included_path(directive.include().path());
