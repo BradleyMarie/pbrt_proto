@@ -2,6 +2,78 @@ edition = "2023";
 
 package pbrt_proto.v3;
 
+enum AntialiasingMode {
+  option features.enum_type = CLOSED;
+  CLOSEDFORM = 0;
+  NONE = 1;
+}
+
+message BlackbodySpectrum {
+  double temperature = 1 [features.field_presence = LEGACY_REQUIRED];
+  double scale = 2 [features.field_presence = LEGACY_REQUIRED];
+}
+
+enum ImageWrapping {
+  option features.enum_type = CLOSED;
+  REPEAT = 0;
+  BLACK = 1;
+  CLAMP = 2;
+}
+
+enum Mapping2D {
+  option features.enum_type = CLOSED;
+  UV = 0;
+  SPHERICAL = 1;
+  CYLINDRICAL = 2;
+  PLANAR = 3;
+}
+
+message RgbSpectrum {
+  double r = 1 [features.field_presence = LEGACY_REQUIRED];
+  double g = 2 [features.field_presence = LEGACY_REQUIRED];
+  double b = 3 [features.field_presence = LEGACY_REQUIRED];
+}
+
+message SampledSpectrum {
+  message Sample {
+    double wavelength = 1 [features.field_presence = LEGACY_REQUIRED];
+    double intensity = 2 [features.field_presence = LEGACY_REQUIRED];
+  }
+
+  repeated Sample samples = 1;
+}
+
+message XyzSpectrum {
+  double x = 1 [features.field_presence = LEGACY_REQUIRED];
+  double y = 2 [features.field_presence = LEGACY_REQUIRED];
+  double z = 3 [features.field_presence = LEGACY_REQUIRED];
+}
+
+message Vector {
+  double x = 1 [features.field_presence = LEGACY_REQUIRED];
+  double y = 2 [features.field_presence = LEGACY_REQUIRED];
+  double z = 3 [features.field_presence = LEGACY_REQUIRED];
+}
+
+message FloatTextureParameter {
+  oneof float_texture_parameter_type {
+    double value = 1;
+    string float_texture_name = 2;
+  }
+}
+
+message SpectrumTextureParameter {
+  oneof spectrum_texture_parameter_type {
+    double uniform_spectrum = 1;
+    BlackbodySpectrum blackbody_spectrum = 2;
+    RgbSpectrum rgb_spectrum = 3;
+    XyzSpectrum xyz_spectrum = 4;
+    SampledSpectrum sampled_spectrum = 5;
+    string sampled_spectrum_filename = 6;
+    string spectrum_texture_name = 7;
+  }
+}
+
 message Accelerator {
   message Bvh {
     enum SplitMethod {
@@ -188,6 +260,127 @@ message Filter {
   }
 }
 
+message FloatTexture {
+  string name = 1 [features.field_presence = LEGACY_REQUIRED];
+
+  message Bilerp {
+    FloatTextureParameter v00 = 1;
+    FloatTextureParameter v01 = 2;
+    FloatTextureParameter v10 = 3;
+    FloatTextureParameter v11 = 4;
+    Mapping2D mapping = 5 [default = UV];
+    double uscale = 6 [default = 1.0];
+    double vscale = 7 [default = 1.0];
+    double udelta = 8 [default = 0.0];
+    double vdelta = 9 [default = 0.0];
+    Vector v1 = 10 [features.field_presence = EXPLICIT];
+    Vector v2 = 11 [features.field_presence = EXPLICIT];
+  }
+
+  message Checkerboard2D {
+    FloatTextureParameter tex1 = 1;
+    FloatTextureParameter tex2 = 2;
+    AntialiasingMode aamode = 3 [default = CLOSEDFORM];
+    Mapping2D mapping = 4 [default = UV];
+    double uscale = 5 [default = 1.0];
+    double vscale = 6 [default = 1.0];
+    double udelta = 7 [default = 0.0];
+    double vdelta = 8 [default = 0.0];
+    Vector v1 = 9 [features.field_presence = EXPLICIT];
+    Vector v2 = 10 [features.field_presence = EXPLICIT];
+  }
+
+  message Checkerboard3D {
+    FloatTextureParameter tex1 = 1;
+    FloatTextureParameter tex2 = 2;
+  }
+
+  message Constant {
+    FloatTextureParameter value = 1;
+  }
+
+  message Dots {
+    FloatTextureParameter inside = 1;
+    FloatTextureParameter outside = 2;
+    Mapping2D mapping = 3 [default = UV];
+    double uscale = 4 [default = 1.0];
+    double vscale = 5 [default = 1.0];
+    double udelta = 6 [default = 0.0];
+    double vdelta = 7 [default = 0.0];
+    Vector v1 = 8 [features.field_presence = EXPLICIT];
+    Vector v2 = 9 [features.field_presence = EXPLICIT];
+  }
+
+  message FBm {
+    int32 octaves = 1 [default = 8];
+    double roughness = 2 [default = 0.5];
+  }
+
+  message ImageMap {
+    string filename = 1 [default = ""];
+    ImageWrapping wrap = 2 [default = REPEAT];
+    double maxanisotropy = 3 [default = 8.0];
+    bool trilinear = 4 [default = false];
+    double scale = 5 [default = 1.0];
+    bool gamma = 6 [features.field_presence = EXPLICIT];
+    Mapping2D mapping = 7 [default = UV];
+    double uscale = 8 [default = 1.0];
+    double vscale = 9 [default = 1.0];
+    double udelta = 10 [default = 0.0];
+    double vdelta = 11 [default = 0.0];
+    Vector v1 = 12 [features.field_presence = EXPLICIT];
+    Vector v2 = 13 [features.field_presence = EXPLICIT];
+  }
+
+  message Marble {
+    int32 octaves = 1 [default = 8];
+    double roughness = 2 [default = 0.5];
+    double scale = 3 [default = 1.0];
+    double variation = 4 [default = 0.2];
+  }
+
+  message Mix {
+    FloatTextureParameter tex1 = 1;
+    FloatTextureParameter tex2 = 2;
+    FloatTextureParameter amount = 3;
+  }
+
+  message Ptex {
+    string filename = 1 [default = ""];
+    double gamma = 2 [default = 2.2];
+  }
+
+  message Scale {
+    FloatTextureParameter tex1 = 1;
+    FloatTextureParameter tex2 = 2;
+  }
+
+  message Windy {
+    // Empty Message
+  }
+
+  message Wrinkled {
+    int32 octaves = 1 [default = 8];
+    double roughness = 2 [default = 0.5];
+  }
+
+  oneof float_texture_type {
+    Bilerp bilerp = 2;
+    Checkerboard2D checkerboard2d = 3;
+    Checkerboard3D checkerboard3d = 4;
+    Constant constant = 5;
+    Dots dots = 6;
+    FBm fbm = 7;
+    ImageMap imagemap = 8;
+    Marble marble = 9;
+    Mix mix = 10;
+    Ptex ptex = 11;
+    Scale scale = 12;
+    Windy windy = 13;
+    Wrinkled wrinkled = 14;
+  }
+}
+
 message Identity {
   // Empty Message
 }
@@ -305,7 +498,7 @@ message LookAt {
 }
 
 message ObjectBegin {
-  string name = 1;
+  string name = 1 [features.field_presence = LEGACY_REQUIRED];
 }
 
 message ObjectEnd {
@@ -313,7 +506,7 @@ message ObjectEnd {
 }
 
 message ObjectInstance {
-  string name = 1;
+  string name = 1 [features.field_presence = LEGACY_REQUIRED];
 }
 
 message ReverseOrientation {
@@ -374,6 +567,137 @@ message Scale {
   double z = 3 [features.field_presence = LEGACY_REQUIRED];
 }
 
+message SpectrumTexture {
+  string name = 1 [features.field_presence = LEGACY_REQUIRED];
+
+  message Bilerp {
+    SpectrumTextureParameter v00 = 1;
+    SpectrumTextureParameter v01 = 2;
+    SpectrumTextureParameter v10 = 3;
+    SpectrumTextureParameter v11 = 4;
+    Mapping2D mapping = 5 [default = UV];
+    double uscale = 6 [default = 1.0];
+    double vscale = 7 [default = 1.0];
+    double udelta = 8 [default = 0.0];
+    double vdelta = 9 [default = 0.0];
+    Vector v1 = 10 [features.field_presence = EXPLICIT];
+    Vector v2 = 11 [features.field_presence = EXPLICIT];
+  }
+
+  message Checkerboard2D {
+    SpectrumTextureParameter tex1 = 1;
+    SpectrumTextureParameter tex2 = 2;
+    AntialiasingMode aamode = 3 [default = CLOSEDFORM];
+    Mapping2D mapping = 4 [default = UV];
+    double uscale = 5 [default = 1.0];
+    double vscale = 6 [default = 1.0];
+    double udelta = 7 [default = 0.0];
+    double vdelta = 8 [default = 0.0];
+    Vector v1 = 9 [features.field_presence = EXPLICIT];
+    Vector v2 = 10 [features.field_presence = EXPLICIT];
+  }
+
+  message Checkerboard3D {
+    SpectrumTextureParameter tex1 = 1;
+    SpectrumTextureParameter tex2 = 2;
+  }
+
+  message Constant {
+    SpectrumTextureParameter value = 1;
+  }
+
+  message Dots {
+    SpectrumTextureParameter inside = 1;
+    SpectrumTextureParameter outside = 2;
+    Mapping2D mapping = 3 [default = UV];
+    double uscale = 4 [default = 1.0];
+    double vscale = 5 [default = 1.0];
+    double udelta = 6 [default = 0.0];
+    double vdelta = 7 [default = 0.0];
+    Vector v1 = 8 [features.field_presence = EXPLICIT];
+    Vector v2 = 9 [features.field_presence = EXPLICIT];
+  }
+
+  message FBm {
+    int32 octaves = 1 [default = 8];
+    double roughness = 2 [default = 0.5];
+  }
+
+  message ImageMap {
+    string filename = 1 [default = ""];
+    ImageWrapping wrap = 2 [default = REPEAT];
+    double maxanisotropy = 3 [default = 8.0];
+    bool trilinear = 4 [default = false];
+    double scale = 5 [default = 1.0];
+    bool gamma = 6 [features.field_presence = EXPLICIT];
+    Mapping2D mapping = 7 [default = UV];
+    double uscale = 8 [default = 1.0];
+    double vscale = 9 [default = 1.0];
+    double udelta = 10 [default = 0.0];
+    double vdelta = 11 [default = 0.0];
+    Vector v1 = 12 [features.field_presence = EXPLICIT];
+    Vector v2 = 13 [features.field_presence = EXPLICIT];
+  }
+
+  message Marble {
+    int32 octaves = 1 [default = 8];
+    double roughness = 2 [default = 0.5];
+    double scale = 3 [default = 1.0];
+    double variation = 4 [default = 0.2];
+  }
+
+  message Mix {
+    SpectrumTextureParameter tex1 = 1;
+    SpectrumTextureParameter tex2 = 2;
+    FloatTextureParameter amount = 3;
+  }
+
+  message Ptex {
+    string filename = 1 [default = ""];
+    double gamma = 2 [default = 2.2];
+  }
+
+  message Scale {
+    SpectrumTextureParameter tex1 = 1;
+    SpectrumTextureParameter tex2 = 2;
+  }
+
+  message Uv {
+    Mapping2D mapping = 1 [default = UV];
+    double uscale = 2 [default = 1.0];
+    double vscale = 3 [default = 1.0];
+    double udelta = 4 [default = 0.0];
+    double vdelta = 5 [default = 0.0];
+    Vector v1 = 6 [features.field_presence = EXPLICIT];
+    Vector v2 = 7 [features.field_presence = EXPLICIT];
+  }
+
+  message Windy {
+    // Empty Message
+  }
+
+  message Wrinkled {
+    int32 octaves = 1 [default = 8];
+    double roughness = 2 [default = 0.5];
+  }
+
+  oneof spectrum_texture_type {
+    Bilerp bilerp = 2;
+    Checkerboard2D checkerboard2d = 3;
+    Checkerboard3D checkerboard3d = 4;
+    Constant constant = 5;
+    Dots dots = 6;
+    FBm fbm = 7;
+    ImageMap imagemap = 8;
+    Marble marble = 9;
+    Mix mix = 10;
+    Ptex ptex = 11;
+    Scale scale = 12;
+    Windy windy = 13;
+    Wrinkled wrinkled = 14;
+  }
+}
+
 message Transform {
   double m00 = 1 [features.field_presence = LEGACY_REQUIRED];
   double m01 = 2 [features.field_presence = LEGACY_REQUIRED];
@@ -432,24 +756,26 @@ message Directive {
     CoordSysTransform coord_sys_transform = 8;
     Film film = 9;
     Filter filter = 10;
-    Identity identity = 11;
-    Include include = 12;
-    Integrator integrator = 13;
-    LookAt look_at = 14;
-    ObjectBegin object_begin = 15;
-    ObjectBegin object_end = 16;
-    ObjectBegin object_instance = 17;
-    ReverseOrientation reverse_orientation = 18;
-    Rotate rotate = 19;
-    Sampler sampler = 20;
-    Scale scale = 21;
-    Transform transform = 22;
-    TransformBegin transform_begin = 23;
-    TransformEnd transform_end = 24;
-    TransformTimes transform_times = 25;
-    Translate translate = 26;
-    WorldBegin world_begin = 27;
-    WorldEnd world_end = 28;
+    FloatTexture float_texture = 11;
+    Identity identity = 12;
+    Include include = 13;
+    Integrator integrator = 14;
+    LookAt look_at = 15;
+    ObjectBegin object_begin = 16;
+    ObjectEnd object_end = 17;
+    ObjectInstance object_instance = 18;
+    ReverseOrientation reverse_orientation = 19;
+    Rotate rotate = 20;
+    Sampler sampler = 21;
+    Scale scale = 22;
+    SpectrumTexture spectrum_texture = 23;
+    Transform transform = 24;
+    TransformBegin transform_begin = 25;
+    TransformEnd transform_end = 26;
+    TransformTimes transform_times = 27;
+    Translate translate = 28;
+    WorldBegin world_begin = 29;
+    WorldEnd world_end = 30;
   }
 }
 
