@@ -116,6 +116,10 @@ class MockParser final : public Parser {
               (absl::string_view,
                (absl::flat_hash_map<absl::string_view, Parameter>&)),
               (override));
+  MOCK_METHOD(absl::Status, FloatTexture,
+              (absl::string_view, absl::string_view,
+               (absl::flat_hash_map<absl::string_view, Parameter>&)),
+              (override));
   MOCK_METHOD(absl::Status, Identity, (), ());
   MOCK_METHOD(absl::Status, Include, (absl::string_view), (override));
   MOCK_METHOD(absl::Status, Integrator,
@@ -138,6 +142,10 @@ class MockParser final : public Parser {
                (absl::flat_hash_map<absl::string_view, Parameter>&)),
               (override));
   MOCK_METHOD(absl::Status, Scale, (double, double, double), (override));
+  MOCK_METHOD(absl::Status, SpectrumTexture,
+              (absl::string_view, absl::string_view,
+               (absl::flat_hash_map<absl::string_view, Parameter>&)),
+              (override));
   MOCK_METHOD(absl::Status, Transform, ((const std::array<double, 16>&)), ());
   MOCK_METHOD(absl::Status, TransformBegin, (), (override));
   MOCK_METHOD(absl::Status, TransformEnd, (), (override));
@@ -1992,6 +2000,67 @@ TEST(Scale, Fails) {
               StatusIs(absl::StatusCode::kUnknown, ""));
 }
 
+TEST(Texture, MissingAllParameters) {
+  std::stringstream stream("Texture");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Missing parameter to directive Texture"));
+}
+
+TEST(Texture, MissingTextureType) {
+  std::stringstream stream("Texture \"abc\"");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Missing parameter to directive Texture"));
+}
+
+TEST(Texture, MissingType) {
+  std::stringstream stream("Texture \"abc\" \"float\"");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Missing type parameter to directive Texture"));
+}
+
+TEST(Texture, UnrecognizedTextureType) {
+  std::stringstream stream("Texture \"abc\" \"def\" \"type\"");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Unrecgonized Texture type: \"def\""));
+}
+
+TEST(Texture, FloatSucceeds) {
+  std::stringstream stream("Texture \"name\" \"float\" \"abc\"");
+  MockParser parser;
+  EXPECT_CALL(parser, FloatTexture("name", "abc", IsEmpty()))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Texture, ColorSucceeds) {
+  std::stringstream stream("Texture \"name\" \"color\" \"abc\"");
+  MockParser parser;
+  EXPECT_CALL(parser, SpectrumTexture("name", "abc", IsEmpty()))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Texture, SpectrumSucceeds) {
+  std::stringstream stream("Texture \"name\" \"spectrum\" \"abc\"");
+  MockParser parser;
+  EXPECT_CALL(parser, SpectrumTexture("name", "abc", IsEmpty()))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Texture, Fails) {
+  std::stringstream stream("Texture \"name\" \"float\" \"type\"");
+  MockParser parser;
+  EXPECT_CALL(parser, FloatTexture("name", "type", IsEmpty()))
+      .WillOnce(Return(absl::UnknownError("")));
+  EXPECT_THAT(parser.ReadFrom(stream),
+              StatusIs(absl::StatusCode::kUnknown, ""));
+}
+
 TEST(Transform, MissingParameters) {
   std::stringstream stream("Transform [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15]");
   EXPECT_THAT(
@@ -2435,6 +2504,48 @@ TEST(TryRemoveString, Found) {
       {"name", parameter}};
 
   EXPECT_THAT(TryRemoveString(parameters, "name"), Optional(Eq("abc")));
+  EXPECT_THAT(parameters, Not(Contains(Key("name1"))));
+}
+
+TEST(TryRemoveTexture, WrongType) {
+  std::vector<absl::string_view> values;
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::BLACKBODY_V1,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  EXPECT_THAT(TryRemoveTexture(parameters, "name"), Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name")));
+}
+
+TEST(TryRemoveTexture, WrongName) {
+  std::vector<absl::string_view> values;
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::TEXTURE,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name1", parameter}};
+
+  EXPECT_THAT(TryRemoveTexture(parameters, "name2"), Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name1")));
+}
+
+TEST(TryRemoveTexture, Found) {
+  std::vector<absl::string_view> values = {"abc"};
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::TEXTURE,
+                      .type_name = "aaa",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  EXPECT_THAT(TryRemoveTexture(parameters, "name"), Optional(Eq("abc")));
   EXPECT_THAT(parameters, Not(Contains(Key("name1"))));
 }
 

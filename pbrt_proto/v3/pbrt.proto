@@ -57,7 +57,7 @@ message Vector {
 
 message FloatTextureParameter {
   oneof float_texture_parameter_type {
-    double value = 1;
+    double float_value = 1;
     string float_texture_name = 2;
   }
 }

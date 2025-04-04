@@ -44,6 +44,7 @@ cc_test(
         ":defaults",
         ":pbrt_cc_proto",
         "//pbrt_proto/testing:proto_matchers",
+        "@abseil-cpp//absl/functional:function_ref",
         "@abseil-cpp//absl/status:status_matchers",
         "@abseil-cpp//absl/strings:string_view",
         "@googletest//:gtest_main",

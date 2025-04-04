@@ -1029,6 +1029,38 @@ absl::Status Parser::ReadFrom(std::istream& stream) {
       }
 
       status = Scale((*values)[0], (*values)[1], (*values)[2]);
+    } else if (**next == "Texture") {
+      auto name = ReadQuotedString("Texture", tokenizer);
+      if (!name.ok()) {
+        return name.status();
+      }
+
+      absl::string_view texture_name = storage.Add(*name);
+
+      auto type = ReadQuotedString("Texture", tokenizer);
+      if (!type.ok()) {
+        return type.status();
+      }
+
+      absl::Status (Parser::*impl)(
+          absl::string_view, absl::string_view,
+          absl::flat_hash_map<absl::string_view, Parameter>&);
+      if (*type == "color" || *type == "spectrum") {
+        impl = &Parser::SpectrumTexture;
+      } else if (*type == "float") {
+        impl = &Parser::FloatTexture;
+      } else {
+        return absl::InvalidArgumentError(
+            absl::StrCat("Unrecgonized Texture type: \"", *type, "\""));
+      }
+
+      absl::StatusOr<absl::string_view> type_name = ReadParameters(
+          "Texture", parameter_type_names_, storage, tokenizer, parameters);
+      if (!type_name.ok()) {
+        return type_name.status();
+      }
+
+      status = (this->*impl)(texture_name, *type_name, parameters);
     } else if (**next == "Transform") {
       auto values =
           ReadFloatParameters("Transform", storage, tokenizer, 16, true);
@@ -1135,6 +1167,15 @@ std::optional<absl::string_view> TryRemoveString(
     absl::string_view parameter_name) {
   std::optional<absl::string_view> result;
   TryRemoveValue<ParameterType::STRING>(parameters, parameter_name, result)
+      .IgnoreError();
+  return result;
+}
+
+std::optional<absl::string_view> TryRemoveTexture(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view parameter_name) {
+  std::optional<absl::string_view> result;
+  TryRemoveValue<ParameterType::TEXTURE>(parameters, parameter_name, result)
       .IgnoreError();
   return result;
 }

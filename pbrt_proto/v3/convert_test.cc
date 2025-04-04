@@ -26,6 +26,54 @@ TEST(Convert, Empty) {
   EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto("")));
 }
 
+TEST(Convert, TryRemoveFloatTextureNoMatch) {
+  std::stringstream stream(
+      "Texture \"name\" \"float\" \"constant\" \"integer e\" 1");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(R"pb(directives {
+                                                               float_texture {
+                                                                 name: "name"
+                                                                 constant {}
+                                                               }
+                                                             })pb")));
+}
+
+TEST(Convert, TryRemoveFloatTextureFindsFloat) {
+  std::stringstream stream(
+      "Texture \"name\" \"float\" \"constant\" \"float value\" 1.0");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(
+                  R"pb(directives {
+                         float_texture {
+                           name: "name"
+                           constant { value { float_value: 1.0 } }
+                         }
+                       })pb")));
+}
+
+TEST(Convert, TryRemoveFloatTextureFindsTexture) {
+  std::stringstream stream(
+      "Texture \"name\" \"float\" \"constant\" \"texture value\" \"value\"");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(
+                  R"pb(directives {
+                         float_texture {
+                           name: "name"
+                           constant { value { float_texture_name: "value" } }
+                         }
+                       })pb")));
+}
+
+TEST(Convert, TryRemoveFloatTextureFindsIgnoresOther) {
+  std::stringstream stream(
+      "Texture \"name\" \"float\" \"constant\" \"integer value\" 1");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(R"pb(directives {
+                                                               float_texture {
+                                                                 name: "name"
+                                                                 constant {}
+                                                               }
+                                                             })pb")));
+}
+
 TEST(Convert, AcceleratorUnknown) {
   std::stringstream stream("Accelerator \"unknown\"");
   EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(R"pb(directives {
@@ -434,6 +482,60 @@ TEST(Convert, FilterTriangle) {
                   R"pb(directives {
                          filter { triangle { xwidth: 1.0 ywidth: 3.0 } }
                        })pb")));
+}
+
+TEST(Convert, FloatTextureUnknown) {
+  std::stringstream stream("Texture \"name\" \"float\" \"unknown\"");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives {
+                                              float_texture { name: "name" }
+                                            })pb")));
+}
+
+TEST(Convert, FloatTextureConstant) {
+  std::stringstream stream(
+      "Texture \"name\" \"float\" \"constant\" \"float value\" 1.0");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(
+                  R"pb(directives {
+                         float_texture {
+                           name: "name"
+                           constant { value { float_value: 1.0 } }
+                         }
+                       })pb")));
+}
+
+TEST(Convert, FloatTextureMix) {
+  std::stringstream stream(
+      "Texture \"name\" \"float\" \"mix\" \"float tex1\" 1.0 \"float tex2\" "
+      "2.0 \"float amount\" 3.0");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
+                                   R"pb(directives {
+                                          float_texture {
+                                            name: "name"
+                                            mix {
+                                              tex1 { float_value: 1.0 }
+                                              tex2 { float_value: 2.0 }
+                                              amount { float_value: 3.0 }
+                                            }
+                                          }
+                                        })pb")));
+}
+
+TEST(Convert, FloatTextureScale) {
+  std::stringstream stream(
+      "Texture \"name\" \"float\" \"scale\" \"float tex1\" 1.0 \"float tex2\" "
+      "2.0");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
+                                   R"pb(directives {
+                                          float_texture {
+                                            name: "name"
+                                            scale {
+                                              tex1 { float_value: 1.0 }
+                                              tex2 { float_value: 2.0 }
+                                            }
+                                          }
+                                        })pb")));
 }
 
 TEST(Convert, Identity) {

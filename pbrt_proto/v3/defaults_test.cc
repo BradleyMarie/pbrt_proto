@@ -50,6 +50,64 @@ TEST(Canonicalize, Filter) {
               EqualsProto(R"pb(directives { filter {} })pb"));
 }
 
+// Unset FloatTexture are left unset
+TEST(Canonicalize, FloatTexture) {
+  EXPECT_THAT(MakeCanonical(R"pb(directives { float_texture { name: "" } })pb"),
+              EqualsProto(R"pb(directives { float_texture { name: "" } })pb"));
+}
+
+TEST(Canonicalize, FloatTextureConstant) {
+  EXPECT_THAT(MakeCanonical(R"pb(directives {
+                                   float_texture {
+                                     name: ""
+                                     constant {}
+                                   }
+                                 })pb"),
+              EqualsProto(R"pb(directives {
+                                 float_texture {
+                                   name: ""
+                                   constant { value { float_value: 1.0 } }
+                                 }
+                               })pb"));
+}
+
+TEST(Canonicalize, FloatTextureMix) {
+  EXPECT_THAT(MakeCanonical(R"pb(directives {
+                                   float_texture {
+                                     name: ""
+                                     mix {}
+                                   }
+                                 })pb"),
+              EqualsProto(R"pb(directives {
+                                 float_texture {
+                                   name: ""
+                                   mix {
+                                     tex1 { float_value: 0.0 }
+                                     tex2 { float_value: 1.0 }
+                                     amount { float_value: 0.5 }
+                                   }
+                                 }
+                               })pb"));
+}
+
+TEST(Canonicalize, FloatTextureScale) {
+  EXPECT_THAT(MakeCanonical(R"pb(directives {
+                                   float_texture {
+                                     name: ""
+                                     scale {}
+                                   }
+                                 })pb"),
+              EqualsProto(R"pb(directives {
+                                 float_texture {
+                                   name: ""
+                                   scale {
+                                     tex1 { float_value: 1.0 }
+                                     tex2 { float_value: 1.0 }
+                                   }
+                                 }
+                               })pb"));
+}
+
 // Unset Integrator are left unset and should eventually cause a black image to
 // be rendered
 // https://github.com/mmp/pbrt-v3/blob/13d871faae88233b327d04cda24022b8bb0093ee/src/core/api.cpp#L1619

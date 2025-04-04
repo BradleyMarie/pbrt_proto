@@ -94,6 +94,11 @@ class Parser {
       absl::string_view filter_type,
       absl::flat_hash_map<absl::string_view, Parameter>& parameters) = 0;
 
+  virtual absl::Status FloatTexture(
+      absl::string_view float_texture_name,
+      absl::string_view float_texture_type,
+      absl::flat_hash_map<absl::string_view, Parameter>& parameters) = 0;
+
   virtual absl::Status Identity() = 0;
 
   virtual absl::Status Include(absl::string_view path) = 0;
@@ -123,6 +128,11 @@ class Parser {
       absl::flat_hash_map<absl::string_view, Parameter>& parameters) = 0;
 
   virtual absl::Status Scale(double x, double y, double z) = 0;
+
+  virtual absl::Status SpectrumTexture(
+      absl::string_view spectrum_texture_name,
+      absl::string_view spectrum_texture_type,
+      absl::flat_hash_map<absl::string_view, Parameter>& parameters) = 0;
 
   virtual absl::Status Transform(double m00, double m01, double m02, double m03,
                                  double m10, double m11, double m12, double m13,
@@ -169,6 +179,10 @@ std::optional<int32_t> TryRemoveInteger(
     absl::string_view parameter_name);
 
 std::optional<absl::string_view> TryRemoveString(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view parameter_name);
+
+std::optional<absl::string_view> TryRemoveTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     absl::string_view parameter_name);
 

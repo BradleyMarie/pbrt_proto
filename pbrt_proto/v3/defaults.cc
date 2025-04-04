@@ -29,6 +29,14 @@ PbrtProto BuildDefaults() {
   return defaults;
 }
 
+void SetFloatTextureParameterDefault(FloatTextureParameter& parameter,
+                                     double default_value) {
+  if (parameter.float_texture_parameter_type_case() ==
+      FloatTextureParameter::FLOAT_TEXTURE_PARAMETER_TYPE_NOT_SET) {
+    parameter.set_float_value(default_value);
+  }
+}
+
 }  // namespace
 
 const PbrtProto& GetDefaults() {
@@ -44,6 +52,64 @@ void Canonicalize(PbrtProto& proto) {
             Accelerator::ACCELERATOR_TYPE_NOT_SET) {
           directive.mutable_accelerator()->mutable_bvh();
         }
+        break;
+      case Directive::kFloatTexture:
+        switch (directive.float_texture().float_texture_type_case()) {
+          case FloatTexture::kBilerp:
+            break;
+          case FloatTexture::kConstant:
+            SetFloatTextureParameterDefault(*directive.mutable_float_texture()
+                                                 ->mutable_constant()
+                                                 ->mutable_value(),
+                                            1.0);
+            break;
+          case FloatTexture::kCheckerboard2D:
+            break;
+          case FloatTexture::kCheckerboard3D:
+            break;
+          case FloatTexture::kDots:
+            break;
+          case FloatTexture::kFbm:
+            break;
+          case FloatTexture::kImagemap:
+            break;
+          case FloatTexture::kMarble:
+            break;
+          case FloatTexture::kMix:
+            SetFloatTextureParameterDefault(*directive.mutable_float_texture()
+                                                 ->mutable_mix()
+                                                 ->mutable_tex1(),
+                                            0.0);
+            SetFloatTextureParameterDefault(*directive.mutable_float_texture()
+                                                 ->mutable_mix()
+                                                 ->mutable_tex2(),
+                                            1.0);
+            SetFloatTextureParameterDefault(*directive.mutable_float_texture()
+                                                 ->mutable_mix()
+                                                 ->mutable_amount(),
+                                            0.5);
+            break;
+          case FloatTexture::kPtex:
+            break;
+          case FloatTexture::kScale:
+            SetFloatTextureParameterDefault(*directive.mutable_float_texture()
+                                                 ->mutable_scale()
+                                                 ->mutable_tex1(),
+                                            1.0);
+            SetFloatTextureParameterDefault(*directive.mutable_float_texture()
+                                                 ->mutable_scale()
+                                                 ->mutable_tex2(),
+                                            1.0);
+            break;
+          case FloatTexture::kWindy:
+            break;
+          case FloatTexture::kWrinkled:
+            break;
+          case FloatTexture::FLOAT_TEXTURE_TYPE_NOT_SET:
+            break;
+        }
+        break;
+      case Directive::kSpectrumTexture:
         break;
       default:
         break;

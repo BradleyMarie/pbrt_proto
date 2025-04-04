@@ -1,7 +1,9 @@
 #include "pbrt_proto/v3/convert.h"
 
+#include <functional>
 #include <variant>
 
+#include "absl/functional/function_ref.h"
 #include "absl/status/status.h"
 #include "absl/strings/string_view.h"
 #include "pbrt_proto/shared/parser.h"
@@ -17,6 +19,22 @@ Integrator::LightSampleStrategy ParseLightSampleStrategy(
     return Integrator::UNIFORM;
   }
   return Integrator::SPATIAL;
+}
+
+absl::Status TryRemoveFloatTexture(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view parameter_name,
+    absl::FunctionRef<FloatTextureParameter*()> get_output) {
+  if (std::optional<double> value = TryRemoveFloat(parameters, parameter_name);
+      value) {
+    get_output()->set_float_value(*value);
+  } else if (std::optional<absl::string_view> texture_name =
+                 TryRemoveTexture(parameters, parameter_name);
+             texture_name) {
+    get_output()->set_float_texture_name(*texture_name);
+  }
+
+  return absl::OkStatus();
 }
 
 static const absl::flat_hash_map<absl::string_view, ParameterType>
@@ -66,7 +84,7 @@ static const absl::flat_hash_map<absl::string_view, ParameterType>
             ParameterType::SPECTRUM,
         },
         {"string", ParameterType::STRING},
-        {"texture", ParameterType::STRING},
+        {"texture", ParameterType::TEXTURE},
         {
             "vector",
             ParameterType::VECTOR3,
@@ -123,6 +141,11 @@ class ParserV3 final : public Parser {
       absl::string_view filter_type,
       absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
 
+  absl::Status FloatTexture(
+      absl::string_view float_texture_name,
+      absl::string_view float_texture_type,
+      absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
+
   absl::Status Identity() override;
 
   absl::Status Include(absl::string_view path) override;
@@ -152,6 +175,11 @@ class ParserV3 final : public Parser {
       absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
 
   absl::Status Scale(double x, double y, double z) override;
+
+  absl::Status SpectrumTexture(
+      absl::string_view spectrum_texture_name,
+      absl::string_view spectrum_texture_type,
+      absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
 
   absl::Status Transform(double m00, double m01, double m02, double m03,
                          double m10, double m11, double m12, double m13,
@@ -233,6 +261,9 @@ absl::Status ParserV3::Accelerator(
         traversalcost.has_value()) {
       kdtree.set_traversalcost(*traversalcost);
     }
+  } else {
+    std::cerr << "Unrecognized Accelerator type: \"" << accelerator_type << "\""
+              << std::endl;
   }
 
   return absl::OkStatus();
@@ -416,6 +447,9 @@ absl::Status ParserV3::Camera(
         shutterclose.has_value()) {
       realistic.set_shutterclose(*shutterclose);
     }
+  } else {
+    std::cerr << "Unrecognized Camera type: \"" << camera_type << "\""
+              << std::endl;
   }
 
   return absl::OkStatus();
@@ -511,6 +545,8 @@ absl::Status ParserV3::Film(
         filename.has_value()) {
       image.set_filename(*filename);
     }
+  } else {
+    std::cerr << "Unrecognized Film type: \"" << film_type << "\"" << std::endl;
   }
 
   return absl::OkStatus();
@@ -601,6 +637,82 @@ absl::Status ParserV3::Filter(
         ywidth.has_value()) {
       triangle.set_ywidth(*ywidth);
     }
+  } else {
+    std::cerr << "Unrecognized Filter type: \"" << filter_type << "\""
+              << std::endl;
+  }
+
+  return absl::OkStatus();
+}
+
+absl::Status ParserV3::FloatTexture(
+    absl::string_view float_texture_name, absl::string_view float_texture_type,
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
+  auto& float_texture = *output_.add_directives()->mutable_float_texture();
+
+  float_texture.set_name(float_texture_name);
+
+  if (float_texture_type == "bilerp") {
+  } else if (float_texture_type == "checkerboard") {
+  } else if (float_texture_type == "constant") {
+    auto& constant = *float_texture.mutable_constant();
+
+    if (absl::Status status = TryRemoveFloatTexture(
+            parameters, "value",
+            std::bind(&FloatTexture::Constant::mutable_value, &constant));
+        !status.ok()) {
+      return status;
+    }
+  } else if (float_texture_type == "dots") {
+  } else if (float_texture_type == "fbm") {
+  } else if (float_texture_type == "imagemap") {
+  } else if (float_texture_type == "marble") {
+  } else if (float_texture_type == "mix") {
+    auto& mix = *float_texture.mutable_mix();
+
+    if (absl::Status status = TryRemoveFloatTexture(
+            parameters, "tex1",
+            std::bind(&FloatTexture::Mix::mutable_tex1, &mix));
+        !status.ok()) {
+      return status;
+    }
+
+    if (absl::Status status = TryRemoveFloatTexture(
+            parameters, "tex2",
+            std::bind(&FloatTexture::Mix::mutable_tex2, &mix));
+        !status.ok()) {
+      return status;
+    }
+
+    if (absl::Status status = TryRemoveFloatTexture(
+            parameters, "amount",
+            std::bind(&FloatTexture::Mix::mutable_amount, &mix));
+        !status.ok()) {
+      return status;
+    }
+  } else if (float_texture_type == "scale") {
+    auto& scale = *float_texture.mutable_scale();
+
+    if (absl::Status status = TryRemoveFloatTexture(
+            parameters, "tex1",
+            std::bind(&FloatTexture::Scale::mutable_tex1, &scale));
+        !status.ok()) {
+      return status;
+    }
+
+    if (absl::Status status = TryRemoveFloatTexture(
+            parameters, "tex2",
+            std::bind(&FloatTexture::Scale::mutable_tex2, &scale));
+        !status.ok()) {
+      return status;
+    }
+  } else if (float_texture_type == "uv") {
+  } else if (float_texture_type == "windy") {
+    float_texture.mutable_windy();
+  } else if (float_texture_type == "wrinkled") {
+  } else {
+    std::cerr << "Unrecognized Texture type: \"" << float_texture_type << "\""
+              << std::endl;
   }
 
   return absl::OkStatus();
@@ -856,6 +968,9 @@ absl::Status ParserV3::Integrator(
       whitted.mutable_pixelbounds()->set_y_min((*pixelbounds)[2]);
       whitted.mutable_pixelbounds()->set_y_max((*pixelbounds)[3]);
     }
+  } else {
+    std::cerr << "Unrecognized Integrator type: \"" << integrator_type << "\""
+              << std::endl;
   }
 
   return absl::OkStatus();
@@ -1007,8 +1122,18 @@ absl::Status ParserV3::Sampler(
         dimensions.has_value()) {
       zerotwosequence.set_dimensions(*dimensions);
     }
+  } else {
+    std::cerr << "Unrecognized Sampler type: \"" << sampler_type << "\""
+              << std::endl;
   }
 
+  return absl::OkStatus();
+}
+
+absl::Status ParserV3::SpectrumTexture(
+    absl::string_view spectrum_texture_name,
+    absl::string_view spectrum_texture_type,
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
   return absl::OkStatus();
 }
 
