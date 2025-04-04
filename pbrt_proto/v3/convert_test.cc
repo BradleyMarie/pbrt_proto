@@ -538,6 +538,17 @@ TEST(Convert, FloatTextureScale) {
                                         })pb")));
 }
 
+TEST(Convert, FloatTextureWindy) {
+  std::stringstream stream("Texture \"name\" \"float\" \"windy\"");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
+                                   R"pb(directives {
+                                          float_texture {
+                                            name: "name"
+                                            windy {}
+                                          }
+                                        })pb")));
+}
+
 TEST(Convert, Identity) {
   std::stringstream stream("Identity");
   EXPECT_THAT(Convert(stream),
