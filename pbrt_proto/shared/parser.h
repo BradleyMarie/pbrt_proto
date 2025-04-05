@@ -161,10 +161,19 @@ absl::Status TryRemoveFloats(
     absl::string_view parameter_name, size_t required_size,
     std::optional<absl::Span<double>>& result);
 
+absl::Status TryRemoveSpectralSamples(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view parameter_name,
+    std::optional<absl::Span<std::array<double, 2>>>& result);
+
 absl::Status TryRemoveIntegers(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     absl::string_view parameter_name, size_t required_size,
     std::optional<absl::Span<int32_t>>& result);
+
+std::optional<std::array<double, 2>> TryRemoveBlackbodyV1(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view parameter_name);
 
 std::optional<bool> TryRemoveBool(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
@@ -182,11 +191,23 @@ std::optional<absl::string_view> TryRemoveString(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     absl::string_view parameter_name);
 
+std::optional<std::array<double, 3>> TryRemoveRgb(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view parameter_name);
+
+std::optional<absl::string_view> TryRemoveSpectrumFilename(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view parameter_name);
+
 std::optional<absl::string_view> TryRemoveTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     absl::string_view parameter_name);
 
 std::optional<std::array<double, 3>> TryRemoveVector3(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view parameter_name);
+
+std::optional<std::array<double, 3>> TryRemoveXyz(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     absl::string_view parameter_name);
 
