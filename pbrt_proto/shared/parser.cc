@@ -842,6 +842,7 @@ absl::Status TryRemoveValue(
   const absl::Span<T>& values =
       *std::get_if<absl::Span<T>>(&iter->second.values);
   if (values.size() != 1) {
+    // This error value is currently not exposed
     return absl::InvalidArgumentError("TODO_Q");
   }
 
@@ -1176,6 +1177,15 @@ std::optional<absl::string_view> TryRemoveTexture(
     absl::string_view parameter_name) {
   std::optional<absl::string_view> result;
   TryRemoveValue<ParameterType::TEXTURE>(parameters, parameter_name, result)
+      .IgnoreError();
+  return result;
+}
+
+std::optional<std::array<double, 3>> TryRemoveVector3(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view parameter_name) {
+  std::optional<std::array<double, 3>> result;
+  TryRemoveValue<ParameterType::VECTOR3>(parameters, parameter_name, result)
       .IgnoreError();
   return result;
 }

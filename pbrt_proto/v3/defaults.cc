@@ -37,6 +37,26 @@ void SetFloatTextureParameterDefault(FloatTextureParameter& parameter,
   }
 }
 
+template <typename T>
+void SetDefaultV1(T& message) {
+  if (!message.has_v1()) {
+    auto& v1 = *message.mutable_v1();
+    v1.set_x(1.0);
+    v1.set_y(0.0);
+    v1.set_z(0.0);
+  }
+}
+
+template <typename T>
+void SetDefaultV2(T& message) {
+  if (!message.has_v2()) {
+    auto& v2 = *message.mutable_v2();
+    v2.set_x(0.0);
+    v2.set_y(1.0);
+    v2.set_z(0.0);
+  }
+}
+
 }  // namespace
 
 const PbrtProto& GetDefaults() {
@@ -56,6 +76,24 @@ void Canonicalize(PbrtProto& proto) {
       case Directive::kFloatTexture:
         switch (directive.float_texture().float_texture_type_case()) {
           case FloatTexture::kBilerp:
+            SetFloatTextureParameterDefault(*directive.mutable_float_texture()
+                                                 ->mutable_bilerp()
+                                                 ->mutable_v00(),
+                                            0.0);
+            SetFloatTextureParameterDefault(*directive.mutable_float_texture()
+                                                 ->mutable_bilerp()
+                                                 ->mutable_v01(),
+                                            1.0);
+            SetFloatTextureParameterDefault(*directive.mutable_float_texture()
+                                                 ->mutable_bilerp()
+                                                 ->mutable_v10(),
+                                            0.0);
+            SetFloatTextureParameterDefault(*directive.mutable_float_texture()
+                                                 ->mutable_bilerp()
+                                                 ->mutable_v11(),
+                                            1.0);
+            SetDefaultV1(*directive.mutable_float_texture()->mutable_bilerp());
+            SetDefaultV2(*directive.mutable_float_texture()->mutable_bilerp());
             break;
           case FloatTexture::kConstant:
             SetFloatTextureParameterDefault(*directive.mutable_float_texture()
@@ -64,18 +102,56 @@ void Canonicalize(PbrtProto& proto) {
                                             1.0);
             break;
           case FloatTexture::kCheckerboard2D:
+            SetFloatTextureParameterDefault(*directive.mutable_float_texture()
+                                                 ->mutable_checkerboard2d()
+                                                 ->mutable_tex1(),
+                                            1.0);
+            SetFloatTextureParameterDefault(*directive.mutable_float_texture()
+                                                 ->mutable_checkerboard2d()
+                                                 ->mutable_tex2(),
+                                            0.0);
+            SetDefaultV1(
+                *directive.mutable_float_texture()->mutable_checkerboard2d());
+            SetDefaultV2(
+                *directive.mutable_float_texture()->mutable_checkerboard2d());
             break;
           case FloatTexture::kCheckerboard3D:
+            SetFloatTextureParameterDefault(*directive.mutable_float_texture()
+                                                 ->mutable_checkerboard3d()
+                                                 ->mutable_tex1(),
+                                            1.0);
+            SetFloatTextureParameterDefault(*directive.mutable_float_texture()
+                                                 ->mutable_checkerboard3d()
+                                                 ->mutable_tex2(),
+                                            0.0);
             break;
           case FloatTexture::kDots:
+            SetFloatTextureParameterDefault(*directive.mutable_float_texture()
+                                                 ->mutable_dots()
+                                                 ->mutable_inside(),
+                                            1.0);
+            SetFloatTextureParameterDefault(*directive.mutable_float_texture()
+                                                 ->mutable_dots()
+                                                 ->mutable_outside(),
+                                            0.0);
+            SetDefaultV1(*directive.mutable_float_texture()->mutable_dots());
+            SetDefaultV2(*directive.mutable_float_texture()->mutable_dots());
             break;
           case FloatTexture::kFbm:
             break;
           case FloatTexture::kImagemap:
+            SetDefaultV1(
+                *directive.mutable_float_texture()->mutable_imagemap());
+            SetDefaultV2(
+                *directive.mutable_float_texture()->mutable_imagemap());
             break;
           case FloatTexture::kMarble:
             break;
           case FloatTexture::kMix:
+            SetFloatTextureParameterDefault(*directive.mutable_float_texture()
+                                                 ->mutable_mix()
+                                                 ->mutable_amount(),
+                                            0.5);
             SetFloatTextureParameterDefault(*directive.mutable_float_texture()
                                                  ->mutable_mix()
                                                  ->mutable_tex1(),
@@ -84,10 +160,6 @@ void Canonicalize(PbrtProto& proto) {
                                                  ->mutable_mix()
                                                  ->mutable_tex2(),
                                             1.0);
-            SetFloatTextureParameterDefault(*directive.mutable_float_texture()
-                                                 ->mutable_mix()
-                                                 ->mutable_amount(),
-                                            0.5);
             break;
           case FloatTexture::kPtex:
             break;

@@ -21,7 +21,39 @@ Integrator::LightSampleStrategy ParseLightSampleStrategy(
   return Integrator::SPATIAL;
 }
 
-absl::Status TryRemoveFloatTexture(
+std::optional<ImageWrapping> TryRemoveImageWrapping(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
+  if (std::optional<absl::string_view> wrap =
+          TryRemoveString(parameters, "wrap");
+      wrap) {
+    if (*wrap == "black") {
+      return ImageWrapping::BLACK;
+    } else if (*wrap == "clamp") {
+      return ImageWrapping::CLAMP;
+    } else if (*wrap == "repeat") {
+      return ImageWrapping::REPEAT;
+    }
+  }
+
+  return std::nullopt;
+}
+
+std::optional<AntialiasingMode> TryRemoveAntialiasingMode(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
+  if (std::optional<absl::string_view> aamode =
+          TryRemoveString(parameters, "aamode");
+      aamode) {
+    if (*aamode == "closedform") {
+      return AntialiasingMode::CLOSEDFORM;
+    } else if (*aamode == "none") {
+      return AntialiasingMode::NONE;
+    }
+  }
+
+  return std::nullopt;
+}
+
+void TryRemoveFloatTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     absl::string_view parameter_name,
     absl::FunctionRef<FloatTextureParameter*()> get_output) {
@@ -33,8 +65,60 @@ absl::Status TryRemoveFloatTexture(
              texture_name) {
     get_output()->set_float_texture_name(*texture_name);
   }
+}
 
-  return absl::OkStatus();
+template <typename T>
+void TryRemoveUVParameters(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters, T& output) {
+  if (std::optional<absl::string_view> mapping =
+          TryRemoveString(parameters, "mapping");
+      mapping) {
+    if (*mapping == "uv") {
+      output.set_mapping(Mapping2D::UV);
+    } else if (*mapping == "spherical") {
+      output.set_mapping(Mapping2D::SPHERICAL);
+    } else if (*mapping == "cylindrical") {
+      output.set_mapping(Mapping2D::CYLINDRICAL);
+    } else if (*mapping == "planar") {
+      output.set_mapping(Mapping2D::PLANAR);
+    }
+  }
+
+  if (std::optional<double> uscale = TryRemoveFloat(parameters, "uscale");
+      uscale) {
+    output.set_uscale(*uscale);
+  }
+
+  if (std::optional<double> vscale = TryRemoveFloat(parameters, "vscale");
+      vscale) {
+    output.set_vscale(*vscale);
+  }
+
+  if (std::optional<double> udelta = TryRemoveFloat(parameters, "udelta");
+      udelta) {
+    output.set_udelta(*udelta);
+  }
+
+  if (std::optional<double> vdelta = TryRemoveFloat(parameters, "vdelta");
+      vdelta) {
+    output.set_vdelta(*vdelta);
+  }
+
+  if (std::optional<std::array<double, 3>> v1 =
+          TryRemoveVector3(parameters, "v1");
+      v1) {
+    output.mutable_v1()->set_x((*v1)[0]);
+    output.mutable_v1()->set_y((*v1)[1]);
+    output.mutable_v1()->set_z((*v1)[2]);
+  }
+
+  if (std::optional<std::array<double, 3>> v2 =
+          TryRemoveVector3(parameters, "v2");
+      v2) {
+    output.mutable_v2()->set_x((*v2)[0]);
+    output.mutable_v2()->set_y((*v2)[1]);
+    output.mutable_v2()->set_z((*v2)[2]);
+  }
 }
 
 static const absl::flat_hash_map<absl::string_view, ParameterType>
@@ -653,63 +737,190 @@ absl::Status ParserV3::FloatTexture(
   float_texture.set_name(float_texture_name);
 
   if (float_texture_type == "bilerp") {
+    auto& bilerp = *float_texture.mutable_bilerp();
+
+    TryRemoveFloatTexture(
+        parameters, "v00",
+        std::bind(&FloatTexture::Bilerp::mutable_v00, &bilerp));
+    TryRemoveFloatTexture(
+        parameters, "v01",
+        std::bind(&FloatTexture::Bilerp::mutable_v01, &bilerp));
+    TryRemoveFloatTexture(
+        parameters, "v10",
+        std::bind(&FloatTexture::Bilerp::mutable_v10, &bilerp));
+    TryRemoveFloatTexture(
+        parameters, "v11",
+        std::bind(&FloatTexture::Bilerp::mutable_v11, &bilerp));
+    TryRemoveUVParameters(parameters, bilerp);
   } else if (float_texture_type == "checkerboard") {
+    int32_t dimensions = TryRemoveInteger(parameters, "dimensions").value_or(2);
+    if (dimensions == 2) {
+      auto& checkerboard = *float_texture.mutable_checkerboard2d();
+
+      if (std::optional<AntialiasingMode> aamode =
+              TryRemoveAntialiasingMode(parameters);
+          aamode) {
+        checkerboard.set_aamode(*aamode);
+      }
+
+      TryRemoveFloatTexture(
+          parameters, "tex1",
+          std::bind(&FloatTexture::Checkerboard2D::mutable_tex1,
+                    &checkerboard));
+      TryRemoveFloatTexture(
+          parameters, "tex2",
+          std::bind(&FloatTexture::Checkerboard2D::mutable_tex2,
+                    &checkerboard));
+      TryRemoveUVParameters(parameters, checkerboard);
+    } else {
+      auto& checkerboard = *float_texture.mutable_checkerboard3d();
+
+      TryRemoveFloatTexture(
+          parameters, "tex1",
+          std::bind(&FloatTexture::Checkerboard3D::mutable_tex1,
+                    &checkerboard));
+      TryRemoveFloatTexture(
+          parameters, "tex2",
+          std::bind(&FloatTexture::Checkerboard3D::mutable_tex2,
+                    &checkerboard));
+    }
   } else if (float_texture_type == "constant") {
     auto& constant = *float_texture.mutable_constant();
 
-    if (absl::Status status = TryRemoveFloatTexture(
-            parameters, "value",
-            std::bind(&FloatTexture::Constant::mutable_value, &constant));
-        !status.ok()) {
-      return status;
-    }
+    TryRemoveFloatTexture(
+        parameters, "value",
+        std::bind(&FloatTexture::Constant::mutable_value, &constant));
   } else if (float_texture_type == "dots") {
+    auto& dots = *float_texture.mutable_dots();
+
+    TryRemoveFloatTexture(
+        parameters, "inside",
+        std::bind(&FloatTexture::Dots::mutable_inside, &dots));
+    TryRemoveFloatTexture(
+        parameters, "outside",
+        std::bind(&FloatTexture::Dots::mutable_outside, &dots));
+    TryRemoveUVParameters(parameters, dots);
   } else if (float_texture_type == "fbm") {
+    auto& fbm = *float_texture.mutable_fbm();
+
+    if (std::optional<int32_t> octaves =
+            TryRemoveInteger(parameters, "octaves");
+        octaves) {
+      fbm.set_octaves(*octaves);
+    }
+
+    if (std::optional<double> roughness =
+            TryRemoveFloat(parameters, "roughness");
+        roughness) {
+      fbm.set_roughness(*roughness);
+    }
   } else if (float_texture_type == "imagemap") {
+    auto& imagemap = *float_texture.mutable_imagemap();
+
+    if (std::optional<bool> gamma = TryRemoveBool(parameters, "gamma"); gamma) {
+      imagemap.set_gamma(*gamma);
+    }
+
+    if (std::optional<absl::string_view> filename =
+            TryRemoveString(parameters, "filename");
+        filename) {
+      imagemap.set_filename(*filename);
+    }
+
+    if (std::optional<double> maxanisotropy =
+            TryRemoveFloat(parameters, "maxanisotropy");
+        maxanisotropy) {
+      imagemap.set_maxanisotropy(*maxanisotropy);
+    }
+
+    if (std::optional<double> scale = TryRemoveFloat(parameters, "scale");
+        scale) {
+      imagemap.set_scale(*scale);
+    }
+
+    if (std::optional<bool> trilinear = TryRemoveBool(parameters, "trilinear");
+        trilinear) {
+      imagemap.set_trilinear(*trilinear);
+    }
+
+    if (std::optional<ImageWrapping> wrap = TryRemoveImageWrapping(parameters);
+        wrap) {
+      imagemap.set_wrap(*wrap);
+    }
+
+    TryRemoveUVParameters(parameters, imagemap);
   } else if (float_texture_type == "marble") {
+    auto& marble = *float_texture.mutable_marble();
+
+    if (std::optional<int32_t> octaves =
+            TryRemoveInteger(parameters, "octaves");
+        octaves) {
+      marble.set_octaves(*octaves);
+    }
+
+    if (std::optional<double> roughness =
+            TryRemoveFloat(parameters, "roughness");
+        roughness) {
+      marble.set_roughness(*roughness);
+    }
+
+    if (std::optional<double> scale = TryRemoveFloat(parameters, "scale");
+        scale) {
+      marble.set_scale(*scale);
+    }
+
+    if (std::optional<double> variation =
+            TryRemoveFloat(parameters, "variation");
+        variation) {
+      marble.set_variation(*variation);
+    }
   } else if (float_texture_type == "mix") {
     auto& mix = *float_texture.mutable_mix();
 
-    if (absl::Status status = TryRemoveFloatTexture(
-            parameters, "tex1",
-            std::bind(&FloatTexture::Mix::mutable_tex1, &mix));
-        !status.ok()) {
-      return status;
+    TryRemoveFloatTexture(parameters, "amount",
+                          std::bind(&FloatTexture::Mix::mutable_amount, &mix));
+    TryRemoveFloatTexture(parameters, "tex1",
+                          std::bind(&FloatTexture::Mix::mutable_tex1, &mix));
+    TryRemoveFloatTexture(parameters, "tex2",
+                          std::bind(&FloatTexture::Mix::mutable_tex2, &mix));
+  } else if (float_texture_type == "ptex") {
+    auto& ptex = *float_texture.mutable_ptex();
+
+    if (std::optional<absl::string_view> filename =
+            TryRemoveString(parameters, "filename");
+        filename) {
+      ptex.set_filename(*filename);
     }
 
-    if (absl::Status status = TryRemoveFloatTexture(
-            parameters, "tex2",
-            std::bind(&FloatTexture::Mix::mutable_tex2, &mix));
-        !status.ok()) {
-      return status;
-    }
-
-    if (absl::Status status = TryRemoveFloatTexture(
-            parameters, "amount",
-            std::bind(&FloatTexture::Mix::mutable_amount, &mix));
-        !status.ok()) {
-      return status;
+    if (std::optional<double> gamma = TryRemoveFloat(parameters, "gamma");
+        gamma) {
+      ptex.set_gamma(*gamma);
     }
   } else if (float_texture_type == "scale") {
     auto& scale = *float_texture.mutable_scale();
 
-    if (absl::Status status = TryRemoveFloatTexture(
-            parameters, "tex1",
-            std::bind(&FloatTexture::Scale::mutable_tex1, &scale));
-        !status.ok()) {
-      return status;
-    }
-
-    if (absl::Status status = TryRemoveFloatTexture(
-            parameters, "tex2",
-            std::bind(&FloatTexture::Scale::mutable_tex2, &scale));
-        !status.ok()) {
-      return status;
-    }
-  } else if (float_texture_type == "uv") {
+    TryRemoveFloatTexture(
+        parameters, "tex1",
+        std::bind(&FloatTexture::Scale::mutable_tex1, &scale));
+    TryRemoveFloatTexture(
+        parameters, "tex2",
+        std::bind(&FloatTexture::Scale::mutable_tex2, &scale));
   } else if (float_texture_type == "windy") {
     float_texture.mutable_windy();
   } else if (float_texture_type == "wrinkled") {
+    auto& wrinkled = *float_texture.mutable_wrinkled();
+
+    if (std::optional<int32_t> octaves =
+            TryRemoveInteger(parameters, "octaves");
+        octaves) {
+      wrinkled.set_octaves(*octaves);
+    }
+
+    if (std::optional<double> roughness =
+            TryRemoveFloat(parameters, "roughness");
+        roughness) {
+      wrinkled.set_roughness(*roughness);
+    }
   } else {
     std::cerr << "Unrecognized Texture type: \"" << float_texture_type << "\""
               << std::endl;

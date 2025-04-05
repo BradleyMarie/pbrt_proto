@@ -56,6 +56,66 @@ TEST(Canonicalize, FloatTexture) {
               EqualsProto(R"pb(directives { float_texture { name: "" } })pb"));
 }
 
+TEST(Canonicalize, FloatTextureBilerp) {
+  EXPECT_THAT(MakeCanonical(R"pb(directives {
+                                   float_texture {
+                                     name: ""
+                                     bilerp {}
+                                   }
+                                 })pb"),
+              EqualsProto(R"pb(directives {
+                                 float_texture {
+                                   name: ""
+                                   bilerp {
+                                     v00 { float_value: 0.0 }
+                                     v01 { float_value: 1.0 }
+                                     v10 { float_value: 0.0 }
+                                     v11 { float_value: 1.0 }
+                                     v1 { x: 1.0 y: 0.0 z: 0.0 }
+                                     v2 { x: 0.0 y: 1.0 z: 0.0 }
+                                   }
+                                 }
+                               })pb"));
+}
+
+TEST(Canonicalize, FloatTextureCheckerboard2D) {
+  EXPECT_THAT(MakeCanonical(R"pb(directives {
+                                   float_texture {
+                                     name: ""
+                                     checkerboard2d {}
+                                   }
+                                 })pb"),
+              EqualsProto(R"pb(directives {
+                                 float_texture {
+                                   name: ""
+                                   checkerboard2d {
+                                     tex1 { float_value: 1.0 }
+                                     tex2 { float_value: 0.0 }
+                                     v1 { x: 1.0 y: 0.0 z: 0.0 }
+                                     v2 { x: 0.0 y: 1.0 z: 0.0 }
+                                   }
+                                 }
+                               })pb"));
+}
+
+TEST(Canonicalize, FloatTextureCheckerboard3D) {
+  EXPECT_THAT(MakeCanonical(R"pb(directives {
+                                   float_texture {
+                                     name: ""
+                                     checkerboard3d {}
+                                   }
+                                 })pb"),
+              EqualsProto(R"pb(directives {
+                                 float_texture {
+                                   name: ""
+                                   checkerboard3d {
+                                     tex1 { float_value: 1.0 }
+                                     tex2 { float_value: 0.0 }
+                                   }
+                                 }
+                               })pb"));
+}
+
 TEST(Canonicalize, FloatTextureConstant) {
   EXPECT_THAT(MakeCanonical(R"pb(directives {
                                    float_texture {
@@ -67,6 +127,44 @@ TEST(Canonicalize, FloatTextureConstant) {
                                  float_texture {
                                    name: ""
                                    constant { value { float_value: 1.0 } }
+                                 }
+                               })pb"));
+}
+
+TEST(Canonicalize, FloatTextureDots) {
+  EXPECT_THAT(MakeCanonical(R"pb(directives {
+                                   float_texture {
+                                     name: ""
+                                     dots {}
+                                   }
+                                 })pb"),
+              EqualsProto(R"pb(directives {
+                                 float_texture {
+                                   name: ""
+                                   dots {
+                                     inside { float_value: 1.0 }
+                                     outside { float_value: 0.0 }
+                                     v1 { x: 1.0 y: 0.0 z: 0.0 }
+                                     v2 { x: 0.0 y: 1.0 z: 0.0 }
+                                   }
+                                 }
+                               })pb"));
+}
+
+TEST(Canonicalize, FloatTextureImagemap) {
+  EXPECT_THAT(MakeCanonical(R"pb(directives {
+                                   float_texture {
+                                     name: ""
+                                     imagemap {}
+                                   }
+                                 })pb"),
+              EqualsProto(R"pb(directives {
+                                 float_texture {
+                                   name: ""
+                                   imagemap {
+                                     v1 { x: 1.0 y: 0.0 z: 0.0 }
+                                     v2 { x: 0.0 y: 1.0 z: 0.0 }
+                                   }
                                  }
                                })pb"));
 }

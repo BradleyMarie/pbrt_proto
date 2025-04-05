@@ -492,6 +492,141 @@ TEST(Convert, FloatTextureUnknown) {
                                             })pb")));
 }
 
+TEST(Convert, FloatTextureBilerp) {
+  std::stringstream stream(
+      "Texture \"name\" \"float\" \"bilerp\" \"float v00\" 1.0 \"float v01\" "
+      "2.0 \"float v10\" 3.0 \"float v11\" 4.0 \"string mapping\" \"uv\" "
+      "\"float uscale\" 5.0 \"float vscale\" 6.0 \"float udelta\" 7.0 \"float "
+      "vdelta\" 8.0 \"vector v1\" [1.0 2 3.0] \"vector v2\" [4.0 5.0 6.0]");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
+                                   R"pb(directives {
+                                          float_texture {
+                                            name: "name"
+                                            bilerp {
+                                              v00 { float_value: 1.0 }
+                                              v01 { float_value: 2.0 }
+                                              v10 { float_value: 3.0 }
+                                              v11 { float_value: 4.0 }
+                                              mapping: UV
+                                              uscale: 5.0
+                                              vscale: 6.0
+                                              udelta: 7.0
+                                              vdelta: 8.0
+                                              v1 { x: 1.0 y: 2.0 z: 3.0 }
+                                              v2 { x: 4.0 y: 5.0 z: 6.0 }
+                                            }
+                                          }
+                                        })pb")));
+}
+
+TEST(Convert, FloatTextureCheckerboard2DNone) {
+  std::stringstream stream(
+      "Texture \"name\" \"float\" \"checkerboard\" \"integer dimensions\" 2 "
+      "\"float tex1\" 1.0 \"float tex2\" 2.0 \"string aamode\" \"none\" "
+      "\"string mapping\" \"uv\" \"float uscale\" 5.0 \"float vscale\" 6.0 "
+      "\"float udelta\" 7.0 \"float vdelta\" 8.0 \"vector v1\" [1.0 2 3.0] "
+      "\"vector v2\" [4.0 5.0 6.0]");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
+                                   R"pb(directives {
+                                          float_texture {
+                                            name: "name"
+                                            checkerboard2d {
+                                              tex1 { float_value: 1.0 }
+                                              tex2 { float_value: 2.0 }
+                                              aamode: NONE
+                                              mapping: UV
+                                              uscale: 5.0
+                                              vscale: 6.0
+                                              udelta: 7.0
+                                              vdelta: 8.0
+                                              v1 { x: 1.0 y: 2.0 z: 3.0 }
+                                              v2 { x: 4.0 y: 5.0 z: 6.0 }
+                                            }
+                                          }
+                                        })pb")));
+}
+
+TEST(Convert, FloatTextureCheckerboard2DClosedForm) {
+  std::stringstream stream(
+      "Texture \"name\" \"float\" \"checkerboard\" \"integer dimensions\" 2 "
+      "\"float tex1\" 1.0 \"float tex2\" 2.0 \"string aamode\" \"closedform\" "
+      "\"string mapping\" \"uv\" \"float uscale\" 5.0 \"float vscale\" 6.0 "
+      "\"float udelta\" 7.0 \"float vdelta\" 8.0 \"vector v1\" [1.0 2 3.0] "
+      "\"vector v2\" [4.0 5.0 6.0]");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
+                                   R"pb(directives {
+                                          float_texture {
+                                            name: "name"
+                                            checkerboard2d {
+                                              tex1 { float_value: 1.0 }
+                                              tex2 { float_value: 2.0 }
+                                              aamode: CLOSEDFORM
+                                              mapping: UV
+                                              uscale: 5.0
+                                              vscale: 6.0
+                                              udelta: 7.0
+                                              vdelta: 8.0
+                                              v1 { x: 1.0 y: 2.0 z: 3.0 }
+                                              v2 { x: 4.0 y: 5.0 z: 6.0 }
+                                            }
+                                          }
+                                        })pb")));
+}
+
+TEST(Convert, FloatTextureCheckerboard3D) {
+  std::stringstream stream(
+      "Texture \"name\" \"float\" \"checkerboard\" \"integer dimensions\" 3 "
+      "\"float tex1\" 1.0 \"float tex2\" 2.0");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
+                                   R"pb(directives {
+                                          float_texture {
+                                            name: "name"
+                                            checkerboard3d {
+                                              tex1 { float_value: 1.0 }
+                                              tex2 { float_value: 2.0 }
+                                            }
+                                          }
+                                        })pb")));
+}
+
+TEST(Convert, FloatTextureCheckerboardDots) {
+  std::stringstream stream(
+      "Texture \"name\" \"float\" \"dots\" \"float inside\" 1.0 \"float "
+      "outside\" 2.0 \"string mapping\" \"uv\" \"float uscale\" 5.0 \"float "
+      "vscale\" 6.0 \"float udelta\" 7.0 \"float vdelta\" 8.0 \"vector v1\" "
+      "[1.0 2 3.0] \"vector v2\" [4.0 5.0 6.0]");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
+                                   R"pb(directives {
+                                          float_texture {
+                                            name: "name"
+                                            dots {
+                                              inside { float_value: 1.0 }
+                                              outside { float_value: 2.0 }
+                                              mapping: UV
+                                              uscale: 5.0
+                                              vscale: 6.0
+                                              udelta: 7.0
+                                              vdelta: 8.0
+                                              v1 { x: 1.0 y: 2.0 z: 3.0 }
+                                              v2 { x: 4.0 y: 5.0 z: 6.0 }
+                                            }
+                                          }
+                                        })pb")));
+}
+
+TEST(Convert, FloatTextureFbm) {
+  std::stringstream stream(
+      "Texture \"name\" \"float\" \"fbm\" \"integer octaves\" 1 \"float "
+      "roughness\" 2.0");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
+                                   R"pb(directives {
+                                          float_texture {
+                                            name: "name"
+                                            fbm { octaves: 1 roughness: 2.0 }
+                                          }
+                                        })pb")));
+}
+
 TEST(Convert, FloatTextureConstant) {
   std::stringstream stream(
       "Texture \"name\" \"float\" \"constant\" \"float value\" 1.0");
@@ -503,6 +638,117 @@ TEST(Convert, FloatTextureConstant) {
                            constant { value { float_value: 1.0 } }
                          }
                        })pb")));
+}
+
+TEST(Convert, FloatTextureImageMapBlack) {
+  std::stringstream stream(
+      "Texture \"name\" \"float\" \"imagemap\" \"string filename\" \"a\" "
+      "\"string wrap\" \"black\" \"float maxanisotropy\" 1.0 \"bool "
+      "trilinear\" \"true\" \"float scale\" 2.0 \"bool gamma\" \"true\" "
+      "\"string mapping\" \"uv\" \"float uscale\" 5.0 \"float vscale\" 6.0 "
+      "\"float udelta\" 7.0 \"float vdelta\" 8.0 \"vector v1\" [1.0 2 3.0] "
+      "\"vector v2\" [4.0 5.0 6.0]");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
+                                   R"pb(directives {
+                                          float_texture {
+                                            name: "name"
+                                            imagemap {
+                                              filename: "a"
+                                              wrap: BLACK
+                                              maxanisotropy: 1.0
+                                              trilinear: true
+                                              scale: 2.0
+                                              gamma: true
+                                              mapping: UV
+                                              uscale: 5.0
+                                              vscale: 6.0
+                                              udelta: 7.0
+                                              vdelta: 8.0
+                                              v1 { x: 1.0 y: 2.0 z: 3.0 }
+                                              v2 { x: 4.0 y: 5.0 z: 6.0 }
+                                            }
+                                          }
+                                        })pb")));
+}
+
+TEST(Convert, FloatTextureImageMapClamp) {
+  std::stringstream stream(
+      "Texture \"name\" \"float\" \"imagemap\" \"string filename\" \"a\" "
+      "\"string wrap\" \"clamp\" \"float maxanisotropy\" 1.0 \"bool "
+      "trilinear\" \"true\" \"float scale\" 2.0 \"bool gamma\" \"true\" "
+      "\"string mapping\" \"uv\" \"float uscale\" 5.0 \"float vscale\" 6.0 "
+      "\"float udelta\" 7.0 \"float vdelta\" 8.0 \"vector v1\" [1.0 2 3.0] "
+      "\"vector v2\" [4.0 5.0 6.0]");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
+                                   R"pb(directives {
+                                          float_texture {
+                                            name: "name"
+                                            imagemap {
+                                              filename: "a"
+                                              wrap: CLAMP
+                                              maxanisotropy: 1.0
+                                              trilinear: true
+                                              scale: 2.0
+                                              gamma: true
+                                              mapping: UV
+                                              uscale: 5.0
+                                              vscale: 6.0
+                                              udelta: 7.0
+                                              vdelta: 8.0
+                                              v1 { x: 1.0 y: 2.0 z: 3.0 }
+                                              v2 { x: 4.0 y: 5.0 z: 6.0 }
+                                            }
+                                          }
+                                        })pb")));
+}
+
+TEST(Convert, FloatTextureImageMapRepeat) {
+  std::stringstream stream(
+      "Texture \"name\" \"float\" \"imagemap\" \"string filename\" \"a\" "
+      "\"string wrap\" \"repeat\" \"float maxanisotropy\" 1.0 \"bool "
+      "trilinear\" \"true\" \"float scale\" 2.0 \"bool gamma\" \"true\" "
+      "\"string mapping\" \"uv\" \"float uscale\" 5.0 \"float vscale\" 6.0 "
+      "\"float udelta\" 7.0 \"float vdelta\" 8.0 \"vector v1\" [1.0 2 3.0] "
+      "\"vector v2\" [4.0 5.0 6.0]");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
+                                   R"pb(directives {
+                                          float_texture {
+                                            name: "name"
+                                            imagemap {
+                                              filename: "a"
+                                              wrap: REPEAT
+                                              maxanisotropy: 1.0
+                                              trilinear: true
+                                              scale: 2.0
+                                              gamma: true
+                                              mapping: UV
+                                              uscale: 5.0
+                                              vscale: 6.0
+                                              udelta: 7.0
+                                              vdelta: 8.0
+                                              v1 { x: 1.0 y: 2.0 z: 3.0 }
+                                              v2 { x: 4.0 y: 5.0 z: 6.0 }
+                                            }
+                                          }
+                                        })pb")));
+}
+
+TEST(Convert, FloatTextureMarble) {
+  std::stringstream stream(
+      "Texture \"name\" \"float\" \"marble\" \"integer octaves\" 1 \"float "
+      "roughness\" 2.0 \"float scale\" 3.0 \"float variation\" 4.0");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
+                                   R"pb(directives {
+                                          float_texture {
+                                            name: "name"
+                                            marble {
+                                              octaves: 1
+                                              roughness: 2.0
+                                              scale: 3.0
+                                              variation: 4.0
+                                            }
+                                          }
+                                        })pb")));
 }
 
 TEST(Convert, FloatTextureMix) {
@@ -518,6 +764,19 @@ TEST(Convert, FloatTextureMix) {
                                               tex2 { float_value: 2.0 }
                                               amount { float_value: 3.0 }
                                             }
+                                          }
+                                        })pb")));
+}
+
+TEST(Convert, FloatTexturePtex) {
+  std::stringstream stream(
+      "Texture \"name\" \"float\" \"ptex\" \"string filename\" \"a\" \"float "
+      "gamma\" 2.0");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
+                                   R"pb(directives {
+                                          float_texture {
+                                            name: "name"
+                                            ptex { filename: "a" gamma: 2.0 }
                                           }
                                         })pb")));
 }
@@ -547,6 +806,20 @@ TEST(Convert, FloatTextureWindy) {
                                             windy {}
                                           }
                                         })pb")));
+}
+
+TEST(Convert, FloatTextureWrinkled) {
+  std::stringstream stream(
+      "Texture \"name\" \"float\" \"wrinkled\" \"integer octaves\" 1 \"float "
+      "roughness\" 2.0");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(
+                  R"pb(directives {
+                         float_texture {
+                           name: "name"
+                           wrinkled { octaves: 1 roughness: 2.0 }
+                         }
+                       })pb")));
 }
 
 TEST(Convert, Identity) {

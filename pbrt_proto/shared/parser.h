@@ -186,6 +186,10 @@ std::optional<absl::string_view> TryRemoveTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     absl::string_view parameter_name);
 
+std::optional<std::array<double, 3>> TryRemoveVector3(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view parameter_name);
+
 }  // namespace pbrt_proto
 
 #endif  // _PBRT_PROTO_SHARED_PARSER_

@@ -2549,5 +2549,48 @@ TEST(TryRemoveTexture, Found) {
   EXPECT_THAT(parameters, Not(Contains(Key("name1"))));
 }
 
+TEST(TryRemoveVector3, WrongType) {
+  std::vector<std::array<double, 3>> values;
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::BLACKBODY_V1,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  EXPECT_THAT(TryRemoveVector3(parameters, "name"), Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name")));
+}
+
+TEST(TryRemoveVector3, WrongName) {
+  std::vector<std::array<double, 3>> values;
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::VECTOR3,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name1", parameter}};
+
+  EXPECT_THAT(TryRemoveVector3(parameters, "name2"), Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name1")));
+}
+
+TEST(TryRemoveVector3, Found) {
+  std::vector<std::array<double, 3>> values = {{1.0, 2.0, 3.0}};
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::VECTOR3,
+                      .type_name = "aaa",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  EXPECT_THAT(TryRemoveVector3(parameters, "name"),
+              Optional(ElementsAre(1.0, 2.0, 3.0)));
+  EXPECT_THAT(parameters, Not(Contains(Key("name1"))));
+}
+
 }  // namespace
 }  // namespace pbrt_proto
