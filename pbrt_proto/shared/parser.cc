@@ -911,6 +911,15 @@ absl::Status Parser::ReadFrom(std::istream& stream) {
       }
 
       status = ActiveTransform(transformation);
+    } else if (**next == "AreaLightSource") {
+      absl::StatusOr<absl::string_view> type_name =
+          ReadParameters("AreaLightSource", parameter_type_names_, storage,
+                         tokenizer, parameters);
+      if (!type_name.ok()) {
+        return type_name.status();
+      }
+
+      status = AreaLightSource(*type_name, parameters);
     } else if (**next == "AttributeBegin") {
       status = AttributeBegin();
     } else if (**next == "AttributeEnd") {

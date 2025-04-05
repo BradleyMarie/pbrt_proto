@@ -67,6 +67,10 @@ class Parser {
 
   virtual absl::Status ActiveTransform(ActiveTransformation active) = 0;
 
+  virtual absl::Status AreaLightSource(
+      absl::string_view area_light_source_type,
+      absl::flat_hash_map<absl::string_view, Parameter>& parameters) = 0;
+
   virtual absl::Status AttributeBegin() = 0;
 
   virtual absl::Status AttributeEnd() = 0;

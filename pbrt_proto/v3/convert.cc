@@ -55,6 +55,42 @@ std::optional<AntialiasingMode> TryRemoveAntialiasingMode(
   return std::nullopt;
 }
 
+void TryRemoveSpectrum(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view parameter_name,
+    absl::FunctionRef<Spectrum*()> get_output) {
+  if (std::optional<std::array<double, 2>> value =
+          TryRemoveBlackbodyV1(parameters, parameter_name);
+      value) {
+    get_output()->mutable_blackbody_spectrum()->set_temperature((*value)[0]);
+    get_output()->mutable_blackbody_spectrum()->set_scale((*value)[1]);
+  } else if (std::optional<std::array<double, 3>> value =
+                 TryRemoveRgb(parameters, parameter_name);
+             value) {
+    get_output()->mutable_rgb_spectrum()->set_r((*value)[0]);
+    get_output()->mutable_rgb_spectrum()->set_g((*value)[1]);
+    get_output()->mutable_rgb_spectrum()->set_b((*value)[2]);
+  } else if (std::optional<std::array<double, 3>> value =
+                 TryRemoveXyz(parameters, parameter_name);
+             value) {
+    get_output()->mutable_xyz_spectrum()->set_x((*value)[0]);
+    get_output()->mutable_xyz_spectrum()->set_y((*value)[1]);
+    get_output()->mutable_xyz_spectrum()->set_z((*value)[2]);
+  } else if (std::optional<absl::Span<std::array<double, 2>>> values =
+                 TryRemoveSpectralSamples(parameters, parameter_name);
+             values) {
+    for (const auto [wavelength, intensity] : *values) {
+      auto& sample = *get_output()->mutable_sampled_spectrum()->add_samples();
+      sample.set_wavelength(wavelength);
+      sample.set_intensity(intensity);
+    }
+  } else if (std::optional<absl::string_view> value =
+                 TryRemoveSpectrumFilename(parameters, parameter_name);
+             value) {
+    get_output()->set_sampled_spectrum_filename(*value);
+  }
+}
+
 void TryRemoveFloatTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     absl::string_view parameter_name,
@@ -241,6 +277,10 @@ class ParserV3 final : public Parser {
 
   absl::Status ActiveTransform(ActiveTransformation active) override;
 
+  absl::Status AreaLightSource(
+      absl::string_view area_light_source_type,
+      absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
+
   absl::Status AttributeBegin() override;
 
   absl::Status AttributeEnd() override;
@@ -409,6 +449,34 @@ absl::Status ParserV3::ActiveTransform(ActiveTransformation active) {
       active_transform.set_active(ActiveTransform::END_TIME);
       break;
   }
+  return absl::OkStatus();
+}
+
+absl::Status ParserV3::AreaLightSource(
+    absl::string_view area_light_source_type,
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
+  auto& area_light_source =
+      *output_.add_directives()->mutable_area_light_source();
+
+  if (area_light_source_type == "diffuse") {
+    auto& diffuse = *area_light_source.mutable_diffuse();
+
+    TryRemoveSpectrum(
+        parameters, "L",
+        std::bind(&AreaLightSource::Diffuse::mutable_l, &diffuse));
+
+    if (std::optional<int32_t> samples =
+            TryRemoveInteger(parameters, "samples");
+        samples) {
+      diffuse.set_samples(*samples);
+    }
+
+    if (std::optional<bool> twosided = TryRemoveBool(parameters, "twosided");
+        twosided) {
+      diffuse.set_twosided(*twosided);
+    }
+  }
+
   return absl::OkStatus();
 }
 

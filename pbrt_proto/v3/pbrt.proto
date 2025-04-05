@@ -55,6 +55,16 @@ message Vector {
   double z = 3 [features.field_presence = LEGACY_REQUIRED];
 }
 
+message Spectrum {
+  oneof spectrum_type {
+    BlackbodySpectrum blackbody_spectrum = 1;
+    RgbSpectrum rgb_spectrum = 2;
+    XyzSpectrum xyz_spectrum = 3;
+    SampledSpectrum sampled_spectrum = 4;
+    string sampled_spectrum_filename = 5;
+  }
+}
+
 message FloatTextureParameter {
   oneof float_texture_parameter_type {
     double float_value = 1;
@@ -111,6 +121,18 @@ message ActiveTransform {
   };
 
   ActiveTransformation active = 1 [features.field_presence = LEGACY_REQUIRED];
+}
+
+message AreaLightSource {
+  message Diffuse {
+    Spectrum L = 1 [features.field_presence = EXPLICIT];
+    bool twosided = 2 [default = false];
+    int32 samples = 3 [default = 1];
+  }
+
+  oneof area_light_source_type {
+    Diffuse diffuse = 1;
+  }
 }
 
 message AttributeBegin {
@@ -749,34 +771,35 @@ message Directive {
   oneof directive_type {
     Accelerator accelerator = 1;
     ActiveTransform active_transform = 2;
-    AttributeBegin attribute_begin = 3;
-    AttributeEnd attribute_end = 4;
-    Camera camera = 5;
-    ConcatTransform concat_transform = 6;
-    CoordinateSystem coordinate_system = 7;
-    CoordSysTransform coord_sys_transform = 8;
-    Film film = 9;
-    Filter filter = 10;
-    FloatTexture float_texture = 11;
-    Identity identity = 12;
-    Include include = 13;
-    Integrator integrator = 14;
-    LookAt look_at = 15;
-    ObjectBegin object_begin = 16;
-    ObjectEnd object_end = 17;
-    ObjectInstance object_instance = 18;
-    ReverseOrientation reverse_orientation = 19;
-    Rotate rotate = 20;
-    Sampler sampler = 21;
-    Scale scale = 22;
-    SpectrumTexture spectrum_texture = 23;
-    Transform transform = 24;
-    TransformBegin transform_begin = 25;
-    TransformEnd transform_end = 26;
-    TransformTimes transform_times = 27;
-    Translate translate = 28;
-    WorldBegin world_begin = 29;
-    WorldEnd world_end = 30;
+    AreaLightSource area_light_source = 3;
+    AttributeBegin attribute_begin = 4;
+    AttributeEnd attribute_end = 5;
+    Camera camera = 6;
+    ConcatTransform concat_transform = 7;
+    CoordinateSystem coordinate_system = 8;
+    CoordSysTransform coord_sys_transform = 9;
+    Film film = 10;
+    Filter filter = 11;
+    FloatTexture float_texture = 12;
+    Identity identity = 13;
+    Include include = 14;
+    Integrator integrator = 15;
+    LookAt look_at = 16;
+    ObjectBegin object_begin = 17;
+    ObjectEnd object_end = 18;
+    ObjectInstance object_instance = 19;
+    ReverseOrientation reverse_orientation = 20;
+    Rotate rotate = 21;
+    Sampler sampler = 22;
+    Scale scale = 23;
+    SpectrumTexture spectrum_texture = 24;
+    Transform transform = 25;
+    TransformBegin transform_begin = 26;
+    TransformEnd transform_end = 27;
+    TransformTimes transform_times = 28;
+    Translate translate = 29;
+    WorldBegin world_begin = 30;
+    WorldEnd world_end = 31;
   }
 }
 

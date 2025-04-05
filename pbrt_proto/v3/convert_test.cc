@@ -26,6 +26,86 @@ TEST(Convert, Empty) {
   EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto("")));
 }
 
+TEST(Convert, TryRemoveSpectrumNoMatch) {
+  std::stringstream stream("AreaLightSource \"diffuse\" \"integer L\" 1");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives {
+                                              area_light_source { diffuse {} }
+                                            })pb")));
+}
+
+TEST(Convert, TryRemoveSpectrumFindsBlackbody) {
+  std::stringstream stream(
+      "AreaLightSource \"diffuse\" \"blackbody L\" [1.0 2.0]");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(
+          R"pb(directives {
+                 area_light_source {
+                   diffuse {
+                     L { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
+                   }
+                 }
+               })pb")));
+}
+
+TEST(Convert, TryRemoveSpectrumFindsRgb) {
+  std::stringstream stream(
+      "AreaLightSource \"diffuse\" \"rgb L\" [1.0 2.0 3.0]");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(
+          R"pb(directives {
+                 area_light_source {
+                   diffuse { L { rgb_spectrum { r: 1.0 g: 2.0 b: 3.0 } } }
+                 }
+               })pb")));
+}
+
+TEST(Convert, TryRemoveSpectrumFindsSamples) {
+  std::stringstream stream(
+      "AreaLightSource \"diffuse\" \"spectrum L\" [1.0 2.0 3.0 4.0]");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(
+                  R"pb(directives {
+                         area_light_source {
+                           diffuse {
+                             L {
+                               sampled_spectrum {
+                                 samples { wavelength: 1.0 intensity: 2.0 }
+                                 samples { wavelength: 3.0 intensity: 4.0 }
+                               }
+                             }
+                           }
+                         }
+                       })pb")));
+}
+
+TEST(Convert, TryRemoveSpectrumFindsFilename) {
+  std::stringstream stream(
+      "AreaLightSource \"diffuse\" \"spectrum L\" \"value\"");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(
+                  R"pb(directives {
+                         area_light_source {
+                           diffuse { L { sampled_spectrum_filename: "value" } }
+                         }
+                       })pb")));
+}
+
+TEST(Convert, TryRemoveSpectrumFindsXyz) {
+  std::stringstream stream(
+      "AreaLightSource \"diffuse\" \"xyz L\" [1.0 2.0 3.0]");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(
+          R"pb(directives {
+                 area_light_source {
+                   diffuse { L { xyz_spectrum { x: 1.0 y: 2.0 z: 3.0 } } }
+                 }
+               })pb")));
+}
+
 TEST(Convert, TryRemoveFloatTextureNoMatch) {
   std::stringstream stream(
       "Texture \"name\" \"float\" \"constant\" \"integer e\" 1");
@@ -305,6 +385,24 @@ TEST(Convert, ActiveTransformEnd) {
       IsOkAndHolds(EqualsProto(R"pb(directives {
                                       active_transform { active: END_TIME }
                                     })pb")));
+}
+
+TEST(Convert, AreaLightSourceDiffuse) {
+  std::stringstream stream(
+      "AreaLightSource \"diffuse\" \"blackbody L\" [1.0 2.0] \"bool twosided\" "
+      "\"true\" \"integer samples\" 2");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(
+          R"pb(directives {
+                 area_light_source {
+                   diffuse {
+                     L { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
+                     twosided: true
+                     samples: 2
+                   }
+                 }
+               })pb")));
 }
 
 TEST(Convert, AttributeBegin) {

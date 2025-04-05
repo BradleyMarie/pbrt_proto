@@ -98,6 +98,10 @@ class MockParser final : public Parser {
               (override));
   MOCK_METHOD(absl::Status, ActiveTransform, (ActiveTransformation),
               (override));
+  MOCK_METHOD(absl::Status, AreaLightSource,
+              (absl::string_view,
+               (absl::flat_hash_map<absl::string_view, Parameter>&)),
+              (override));
   MOCK_METHOD(absl::Status, AttributeBegin, (), (override));
   MOCK_METHOD(absl::Status, AttributeEnd, (), (override));
   MOCK_METHOD(absl::Status, Camera,
@@ -1557,6 +1561,30 @@ TEST(ActiveTransform, Fails) {
   std::stringstream stream("ActiveTransform All");
   MockParser parser;
   EXPECT_CALL(parser, ActiveTransform(ActiveTransformation::ALL))
+      .WillOnce(Return(absl::UnknownError("")));
+  EXPECT_THAT(parser.ReadFrom(stream),
+              StatusIs(absl::StatusCode::kUnknown, ""));
+}
+
+TEST(AreaLightSource, Succeeds) {
+  std::stringstream stream("AreaLightSource \"abc\"");
+  MockParser parser;
+  EXPECT_CALL(parser, AreaLightSource("abc", IsEmpty()))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(AreaLightSource, MissingType) {
+  std::stringstream stream("AreaLightSource");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Missing type parameter to directive AreaLightSource"));
+}
+
+TEST(AreaLightSource, Fails) {
+  std::stringstream stream("AreaLightSource \"abc\"");
+  MockParser parser;
+  EXPECT_CALL(parser, AreaLightSource("abc", IsEmpty()))
       .WillOnce(Return(absl::UnknownError("")));
   EXPECT_THAT(parser.ReadFrom(stream),
               StatusIs(absl::StatusCode::kUnknown, ""));
