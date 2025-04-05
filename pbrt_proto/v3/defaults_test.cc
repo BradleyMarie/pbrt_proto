@@ -29,6 +29,23 @@ TEST(Canonicalize, Accelerator) {
               EqualsProto(R"pb(directives { accelerator { bvh {} } })pb"));
 }
 
+// Unset AreaLightSource are left unset
+TEST(Canonicalize, AreaLightSource) {
+  EXPECT_THAT(MakeCanonical(R"pb(directives { area_light_source {} })pb"),
+              EqualsProto(R"pb(directives { area_light_source {} })pb"));
+}
+
+TEST(Canonicalize, AreaLightSourceDiffuse) {
+  EXPECT_THAT(
+      MakeCanonical(R"pb(directives { area_light_source { diffuse {} } })pb"),
+      EqualsProto(
+          R"pb(directives {
+                 area_light_source {
+                   diffuse { L { rgb_spectrum { r: 1.0 g: 1.0 b: 1.0 } } }
+                 }
+               })pb"));
+}
+
 // Unset Film are left unset and should eventually cause rendering to fail
 // https://github.com/mmp/pbrt-v3/blob/13d871faae88233b327d04cda24022b8bb0093ee/src/core/api.cpp#L1664
 TEST(Canonicalize, Camera) {

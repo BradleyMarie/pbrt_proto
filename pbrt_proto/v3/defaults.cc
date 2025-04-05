@@ -65,6 +65,12 @@ void SetDefaultV2(T& message) {
   }
 }
 
+void SetWhiteRgbSpectrum(Spectrum& spectrum) {
+  spectrum.mutable_rgb_spectrum()->set_r(1.0);
+  spectrum.mutable_rgb_spectrum()->set_g(1.0);
+  spectrum.mutable_rgb_spectrum()->set_b(1.0);
+}
+
 }  // namespace
 
 const PbrtProto& GetDefaults() {
@@ -79,6 +85,16 @@ void Canonicalize(PbrtProto& proto) {
         if (directive.accelerator().accelerator_type_case() ==
             Accelerator::ACCELERATOR_TYPE_NOT_SET) {
           directive.mutable_accelerator()->mutable_bvh();
+        }
+        break;
+      case Directive::kAreaLightSource:
+        if (directive.area_light_source().area_light_source_type_case() ==
+            AreaLightSource::kDiffuse) {
+          if (!directive.area_light_source().diffuse().has_l()) {
+            SetWhiteRgbSpectrum(*directive.mutable_area_light_source()
+                                     ->mutable_diffuse()
+                                     ->mutable_l());
+          }
         }
         break;
       case Directive::kFloatTexture:
