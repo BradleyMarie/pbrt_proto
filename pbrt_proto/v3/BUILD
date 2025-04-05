@@ -13,6 +13,7 @@ cc_library(
         "//pbrt_proto/shared:parser",
         "@abseil-cpp//absl/status:status",
         "@abseil-cpp//absl/strings:string_view",
+        "@abseil-cpp//absl/types:span",
     ],
 )
 

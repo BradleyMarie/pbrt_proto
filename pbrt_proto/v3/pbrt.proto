@@ -693,8 +693,9 @@ message SpectrumTexture {
     Mix mix = 10;
     Ptex ptex = 11;
     Scale scale = 12;
-    Windy windy = 13;
-    Wrinkled wrinkled = 14;
+    Uv uv = 13;
+    Windy windy = 14;
+    Wrinkled wrinkled = 15;
   }
 }
 

@@ -63,6 +63,114 @@ TEST(Convert, TryRemoveFloatTextureFindsTexture) {
                        })pb")));
 }
 
+TEST(Convert, TryRemoveSpectrumTextureNoMatch) {
+  std::stringstream stream(
+      "Texture \"name\" \"spectrum\" \"constant\" \"integer e\" 1");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives {
+                                              spectrum_texture {
+                                                name: "name"
+                                                constant {}
+                                              }
+                                            })pb")));
+}
+
+TEST(Convert, TryRemoveSpectrumTextureFindsBlackbody) {
+  std::stringstream stream(
+      "Texture \"name\" \"spectrum\" \"constant\" \"blackbody value\" [1.0 "
+      "2.0]");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(
+          R"pb(directives {
+                 spectrum_texture {
+                   name: "name"
+                   constant {
+                     value {
+                       blackbody_spectrum { temperature: 1.0 scale: 2.0 }
+                     }
+                   }
+                 }
+               })pb")));
+}
+
+TEST(Convert, TryRemoveSpectrumTextureFindsRgb) {
+  std::stringstream stream(
+      "Texture \"name\" \"spectrum\" \"constant\" \"rgb value\" [1.0 2.0 3.0]");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(
+          R"pb(directives {
+                 spectrum_texture {
+                   name: "name"
+                   constant { value { rgb_spectrum { r: 1.0 g: 2.0 b: 3.0 } } }
+                 }
+               })pb")));
+}
+
+TEST(Convert, TryRemoveSpectrumTextureFindsSamples) {
+  std::stringstream stream(
+      "Texture \"name\" \"spectrum\" \"constant\" \"spectrum value\" [1.0 2.0 "
+      "3.0 4.0]");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(
+                  R"pb(directives {
+                         spectrum_texture {
+                           name: "name"
+                           constant {
+                             value {
+                               sampled_spectrum {
+                                 samples { wavelength: 1.0 intensity: 2.0 }
+                                 samples { wavelength: 3.0 intensity: 4.0 }
+                               }
+                             }
+                           }
+                         }
+                       })pb")));
+}
+
+TEST(Convert, TryRemoveSpectrumTextureFindsFilename) {
+  std::stringstream stream(
+      "Texture \"name\" \"spectrum\" \"constant\" \"spectrum value\" "
+      "\"value\"");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(
+          R"pb(directives {
+                 spectrum_texture {
+                   name: "name"
+                   constant { value { sampled_spectrum_filename: "value" } }
+                 }
+               })pb")));
+}
+
+TEST(Convert, TryRemoveSpectrumTextureFindsTexture) {
+  std::stringstream stream(
+      "Texture \"name\" \"spectrum\" \"constant\" \"texture value\" \"value\"");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(
+                  R"pb(directives {
+                         spectrum_texture {
+                           name: "name"
+                           constant { value { spectrum_texture_name: "value" } }
+                         }
+                       })pb")));
+}
+
+TEST(Convert, TryRemoveSpectrumTextureFindsXyz) {
+  std::stringstream stream(
+      "Texture \"name\" \"spectrum\" \"constant\" \"xyz value\" [1.0 2.0 3.0]");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(
+          R"pb(directives {
+                 spectrum_texture {
+                   name: "name"
+                   constant { value { xyz_spectrum { x: 1.0 y: 2.0 z: 3.0 } } }
+                 }
+               })pb")));
+}
+
 TEST(Convert, TryRemoveFloatTextureFindsIgnoresOther) {
   std::stringstream stream(
       "Texture \"name\" \"float\" \"constant\" \"integer value\" 1");
@@ -1237,14 +1345,6 @@ TEST(Convert, Rotate) {
                                             })pb")));
 }
 
-TEST(Convert, Scale) {
-  std::stringstream stream("Scale 1 2 3");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives {
-                                              scale { x: 1 y: 2 z: 3 }
-                                            })pb")));
-}
-
 TEST(Convert, SamplerUnknown) {
   std::stringstream stream("Sampler \"unknown\"");
   EXPECT_THAT(Convert(stream),
@@ -1330,6 +1430,377 @@ TEST(Convert, SamplerLowDiscrepancy) {
           R"pb(directives {
                  sampler { zerotwosequence { pixelsamples: 2 dimensions: 3 } }
                })pb")));
+}
+
+TEST(Convert, Scale) {
+  std::stringstream stream("Scale 1 2 3");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives {
+                                              scale { x: 1 y: 2 z: 3 }
+                                            })pb")));
+}
+
+TEST(Convert, SpectrumTextureUnknown) {
+  std::stringstream stream("Texture \"name\" \"spectrum\" \"unknown\"");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives {
+                                              spectrum_texture { name: "name" }
+                                            })pb")));
+}
+
+TEST(Convert, SpectrumTextureBilerp) {
+  std::stringstream stream(
+      "Texture \"name\" \"spectrum\" \"bilerp\" \"blackbody v00\" [1.0 2.0] "
+      "\"blackbody v01\" [3.0 4.0] \"blackbody v10\" [5.0 6.0] \"blackbody "
+      "v11\" [7.0 8.0] \"string mapping\" \"uv\" \"float uscale\" 5.0 \"float "
+      "vscale\" 6.0 \"float udelta\" 7.0 \"float vdelta\" 8.0 \"vector v1\" "
+      "[1.0 2 3.0] \"vector v2\" [4.0 5.0 6.0]");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(
+          R"pb(directives {
+                 spectrum_texture {
+                   name: "name"
+                   bilerp {
+                     v00 { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
+                     v01 { blackbody_spectrum { temperature: 3.0 scale: 4.0 } }
+                     v10 { blackbody_spectrum { temperature: 5.0 scale: 6.0 } }
+                     v11 { blackbody_spectrum { temperature: 7.0 scale: 8.0 } }
+                     mapping: UV
+                     uscale: 5.0
+                     vscale: 6.0
+                     udelta: 7.0
+                     vdelta: 8.0
+                     v1 { x: 1.0 y: 2.0 z: 3.0 }
+                     v2 { x: 4.0 y: 5.0 z: 6.0 }
+                   }
+                 }
+               })pb")));
+}
+
+TEST(Convert, SpectrumTextureCheckerboard2DNone) {
+  std::stringstream stream(
+      "Texture \"name\" \"spectrum\" \"checkerboard\" \"integer dimensions\" 2 "
+      "\"blackbody tex1\" [1.0 2.0] \"blackbody tex2\" [3.0 4.0] \"string "
+      "aamode\" \"none\" \"string mapping\" \"uv\" \"float uscale\" 5.0 "
+      "\"float vscale\" 6.0 \"float udelta\" 7.0 \"float vdelta\" 8.0 \"vector "
+      "v1\" [1.0 2 3.0] \"vector v2\" [4.0 5.0 6.0]");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(
+          R"pb(directives {
+                 spectrum_texture {
+                   name: "name"
+                   checkerboard2d {
+                     tex1 { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
+                     tex2 { blackbody_spectrum { temperature: 3.0 scale: 4.0 } }
+                     aamode: NONE
+                     mapping: UV
+                     uscale: 5.0
+                     vscale: 6.0
+                     udelta: 7.0
+                     vdelta: 8.0
+                     v1 { x: 1.0 y: 2.0 z: 3.0 }
+                     v2 { x: 4.0 y: 5.0 z: 6.0 }
+                   }
+                 }
+               })pb")));
+}
+
+TEST(Convert, SpectrumTextureCheckerboard2DClosedForm) {
+  std::stringstream stream(
+      "Texture \"name\" \"spectrum\" \"checkerboard\" \"integer dimensions\" 2 "
+      "\"blackbody tex1\" [1.0 2.0] \"blackbody tex2\" [3.0 4.0] \"string "
+      "aamode\" \"closedform\" \"string mapping\" \"uv\" \"float uscale\" 5.0 "
+      "\"float vscale\" 6.0 \"float udelta\" 7.0 \"float vdelta\" 8.0 \"vector "
+      "v1\" [1.0 2 3.0] \"vector v2\" [4.0 5.0 6.0]");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(
+          R"pb(directives {
+                 spectrum_texture {
+                   name: "name"
+                   checkerboard2d {
+                     tex1 { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
+                     tex2 { blackbody_spectrum { temperature: 3.0 scale: 4.0 } }
+                     aamode: CLOSEDFORM
+                     mapping: UV
+                     uscale: 5.0
+                     vscale: 6.0
+                     udelta: 7.0
+                     vdelta: 8.0
+                     v1 { x: 1.0 y: 2.0 z: 3.0 }
+                     v2 { x: 4.0 y: 5.0 z: 6.0 }
+                   }
+                 }
+               })pb")));
+}
+
+TEST(Convert, SpectrumTextureCheckerboard3D) {
+  std::stringstream stream(
+      "Texture \"name\" \"spectrum\" \"checkerboard\" \"integer dimensions\" 3 "
+      "\"blackbody tex1\" [1.0 2.0] \"blackbody tex2\" [3.0 4.0]");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(
+          R"pb(directives {
+                 spectrum_texture {
+                   name: "name"
+                   checkerboard3d {
+                     tex1 { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
+                     tex2 { blackbody_spectrum { temperature: 3.0 scale: 4.0 } }
+                   }
+                 }
+               })pb")));
+}
+
+TEST(Convert, SpectrumTextureCheckerboardDots) {
+  std::stringstream stream(
+      "Texture \"name\" \"spectrum\" \"dots\" \"blackbody inside\" [1.0 2.0] "
+      "\"blackbody outside\" [3.0 4.0] \"string mapping\" \"uv\" \"float "
+      "uscale\" 5.0 \"float vscale\" 6.0 \"float udelta\" 7.0 \"float vdelta\" "
+      "8.0 \"vector v1\" [1.0 2 3.0] \"vector v2\" [4.0 5.0 6.0]");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(
+          R"pb(directives {
+                 spectrum_texture {
+                   name: "name"
+                   dots {
+                     inside {
+                       blackbody_spectrum { temperature: 1.0 scale: 2.0 }
+                     }
+                     outside {
+                       blackbody_spectrum { temperature: 3.0 scale: 4.0 }
+                     }
+                     mapping: UV
+                     uscale: 5.0
+                     vscale: 6.0
+                     udelta: 7.0
+                     vdelta: 8.0
+                     v1 { x: 1.0 y: 2.0 z: 3.0 }
+                     v2 { x: 4.0 y: 5.0 z: 6.0 }
+                   }
+                 }
+               })pb")));
+}
+
+TEST(Convert, SpectrumTextureFbm) {
+  std::stringstream stream(
+      "Texture \"name\" \"spectrum\" \"fbm\" \"integer octaves\" 1 \"float "
+      "roughness\" 2.0");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
+                                   R"pb(directives {
+                                          spectrum_texture {
+                                            name: "name"
+                                            fbm { octaves: 1 roughness: 2.0 }
+                                          }
+                                        })pb")));
+}
+
+TEST(Convert, SpectrumTextureConstant) {
+  std::stringstream stream(
+      "Texture \"name\" \"spectrum\" \"constant\" \"blackbody value\" [1.0 "
+      "2.0]");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(
+          R"pb(directives {
+                 spectrum_texture {
+                   name: "name"
+                   constant {
+                     value {
+                       blackbody_spectrum { temperature: 1.0 scale: 2.0 }
+                     }
+                   }
+                 }
+               })pb")));
+}
+
+TEST(Convert, SpectrumTextureMarble) {
+  std::stringstream stream(
+      "Texture \"name\" \"spectrum\" \"marble\" \"integer octaves\" 1 \"float "
+      "roughness\" 2.0 \"float scale\" 3.0 \"float variation\" 4.0");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
+                                   R"pb(directives {
+                                          spectrum_texture {
+                                            name: "name"
+                                            marble {
+                                              octaves: 1
+                                              roughness: 2.0
+                                              scale: 3.0
+                                              variation: 4.0
+                                            }
+                                          }
+                                        })pb")));
+}
+
+TEST(Convert, SpectrumTextureImageMapBlack) {
+  std::stringstream stream(
+      "Texture \"name\" \"spectrum\" \"imagemap\" \"string filename\" \"a\" "
+      "\"string wrap\" \"black\" \"float maxanisotropy\" 1.0 \"bool "
+      "trilinear\" \"true\" \"float scale\" 2.0 \"bool gamma\" \"true\" "
+      "\"string mapping\" \"uv\" \"float uscale\" 5.0 \"float vscale\" 6.0 "
+      "\"float udelta\" 7.0 \"float vdelta\" 8.0 \"vector v1\" [1.0 2 3.0] "
+      "\"vector v2\" [4.0 5.0 6.0]");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
+                                   R"pb(directives {
+                                          spectrum_texture {
+                                            name: "name"
+                                            imagemap {
+                                              filename: "a"
+                                              wrap: BLACK
+                                              maxanisotropy: 1.0
+                                              trilinear: true
+                                              scale: 2.0
+                                              gamma: true
+                                              mapping: UV
+                                              uscale: 5.0
+                                              vscale: 6.0
+                                              udelta: 7.0
+                                              vdelta: 8.0
+                                              v1 { x: 1.0 y: 2.0 z: 3.0 }
+                                              v2 { x: 4.0 y: 5.0 z: 6.0 }
+                                            }
+                                          }
+                                        })pb")));
+}
+
+TEST(Convert, SpectrumTextureImageMapClamp) {
+  std::stringstream stream(
+      "Texture \"name\" \"spectrum\" \"imagemap\" \"string filename\" \"a\" "
+      "\"string wrap\" \"clamp\" \"float maxanisotropy\" 1.0 \"bool "
+      "trilinear\" \"true\" \"float scale\" 2.0 \"bool gamma\" \"true\" "
+      "\"string mapping\" \"uv\" \"float uscale\" 5.0 \"float vscale\" 6.0 "
+      "\"float udelta\" 7.0 \"float vdelta\" 8.0 \"vector v1\" [1.0 2 3.0] "
+      "\"vector v2\" [4.0 5.0 6.0]");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
+                                   R"pb(directives {
+                                          spectrum_texture {
+                                            name: "name"
+                                            imagemap {
+                                              filename: "a"
+                                              wrap: CLAMP
+                                              maxanisotropy: 1.0
+                                              trilinear: true
+                                              scale: 2.0
+                                              gamma: true
+                                              mapping: UV
+                                              uscale: 5.0
+                                              vscale: 6.0
+                                              udelta: 7.0
+                                              vdelta: 8.0
+                                              v1 { x: 1.0 y: 2.0 z: 3.0 }
+                                              v2 { x: 4.0 y: 5.0 z: 6.0 }
+                                            }
+                                          }
+                                        })pb")));
+}
+
+TEST(Convert, SpectrumTextureImageMapRepeat) {
+  std::stringstream stream(
+      "Texture \"name\" \"spectrum\" \"imagemap\" \"string filename\" \"a\" "
+      "\"string wrap\" \"repeat\" \"float maxanisotropy\" 1.0 \"bool "
+      "trilinear\" \"true\" \"float scale\" 2.0 \"bool gamma\" \"true\" "
+      "\"string mapping\" \"uv\" \"float uscale\" 5.0 \"float vscale\" 6.0 "
+      "\"float udelta\" 7.0 \"float vdelta\" 8.0 \"vector v1\" [1.0 2 3.0] "
+      "\"vector v2\" [4.0 5.0 6.0]");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
+                                   R"pb(directives {
+                                          spectrum_texture {
+                                            name: "name"
+                                            imagemap {
+                                              filename: "a"
+                                              wrap: REPEAT
+                                              maxanisotropy: 1.0
+                                              trilinear: true
+                                              scale: 2.0
+                                              gamma: true
+                                              mapping: UV
+                                              uscale: 5.0
+                                              vscale: 6.0
+                                              udelta: 7.0
+                                              vdelta: 8.0
+                                              v1 { x: 1.0 y: 2.0 z: 3.0 }
+                                              v2 { x: 4.0 y: 5.0 z: 6.0 }
+                                            }
+                                          }
+                                        })pb")));
+}
+
+TEST(Convert, SpectrumTextureMix) {
+  std::stringstream stream(
+      "Texture \"name\" \"spectrum\" \"mix\" \"blackbody tex1\" [1.0 2.0] "
+      "\"blackbody tex2\" [3.0 4.0] \"float amount\" 5.0");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(
+          R"pb(directives {
+                 spectrum_texture {
+                   name: "name"
+                   mix {
+                     tex1 { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
+                     tex2 { blackbody_spectrum { temperature: 3.0 scale: 4.0 } }
+                     amount { float_value: 5.0 }
+                   }
+                 }
+               })pb")));
+}
+
+TEST(Convert, SpectrumTexturePtex) {
+  std::stringstream stream(
+      "Texture \"name\" \"spectrum\" \"ptex\" \"string filename\" \"a\" "
+      "\"float gamma\" 2.0");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
+                                   R"pb(directives {
+                                          spectrum_texture {
+                                            name: "name"
+                                            ptex { filename: "a" gamma: 2.0 }
+                                          }
+                                        })pb")));
+}
+
+TEST(Convert, SpectrumTextureScale) {
+  std::stringstream stream(
+      "Texture \"name\" \"spectrum\" \"scale\" \"blackbody tex1\" [1.0 2.0] "
+      "\"blackbody tex2\" [3.0 4.0]");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(
+          R"pb(directives {
+                 spectrum_texture {
+                   name: "name"
+                   scale {
+                     tex1 { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
+                     tex2 { blackbody_spectrum { temperature: 3.0 scale: 4.0 } }
+                   }
+                 }
+               })pb")));
+}
+
+TEST(Convert, SpectrumTextureWindy) {
+  std::stringstream stream("Texture \"name\" \"spectrum\" \"windy\"");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
+                                   R"pb(directives {
+                                          spectrum_texture {
+                                            name: "name"
+                                            windy {}
+                                          }
+                                        })pb")));
+}
+
+TEST(Convert, SpectrumTextureWrinkled) {
+  std::stringstream stream(
+      "Texture \"name\" \"spectrum\" \"wrinkled\" \"integer octaves\" 1 "
+      "\"float roughness\" 2.0");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(
+                  R"pb(directives {
+                         spectrum_texture {
+                           name: "name"
+                           wrinkled { octaves: 1 roughness: 2.0 }
+                         }
+                       })pb")));
 }
 
 TEST(Convert, Transform) {

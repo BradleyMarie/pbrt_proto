@@ -1,11 +1,13 @@
 #include "pbrt_proto/v3/convert.h"
 
+#include <array>
 #include <functional>
 #include <variant>
 
 #include "absl/functional/function_ref.h"
 #include "absl/status/status.h"
 #include "absl/strings/string_view.h"
+#include "absl/types/span.h"
 #include "pbrt_proto/shared/parser.h"
 
 namespace pbrt_proto::v3 {
@@ -64,6 +66,46 @@ void TryRemoveFloatTexture(
                  TryRemoveTexture(parameters, parameter_name);
              texture_name) {
     get_output()->set_float_texture_name(*texture_name);
+  }
+}
+
+void TryRemoveSpectrumTexture(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view parameter_name,
+    absl::FunctionRef<SpectrumTextureParameter*()> get_output) {
+  if (std::optional<std::array<double, 2>> value =
+          TryRemoveBlackbodyV1(parameters, parameter_name);
+      value) {
+    get_output()->mutable_blackbody_spectrum()->set_temperature((*value)[0]);
+    get_output()->mutable_blackbody_spectrum()->set_scale((*value)[1]);
+  } else if (std::optional<std::array<double, 3>> value =
+                 TryRemoveRgb(parameters, parameter_name);
+             value) {
+    get_output()->mutable_rgb_spectrum()->set_r((*value)[0]);
+    get_output()->mutable_rgb_spectrum()->set_g((*value)[1]);
+    get_output()->mutable_rgb_spectrum()->set_b((*value)[2]);
+  } else if (std::optional<std::array<double, 3>> value =
+                 TryRemoveXyz(parameters, parameter_name);
+             value) {
+    get_output()->mutable_xyz_spectrum()->set_x((*value)[0]);
+    get_output()->mutable_xyz_spectrum()->set_y((*value)[1]);
+    get_output()->mutable_xyz_spectrum()->set_z((*value)[2]);
+  } else if (std::optional<absl::Span<std::array<double, 2>>> values =
+                 TryRemoveSpectralSamples(parameters, parameter_name);
+             values) {
+    for (const auto [wavelength, intensity] : *values) {
+      auto& sample = *get_output()->mutable_sampled_spectrum()->add_samples();
+      sample.set_wavelength(wavelength);
+      sample.set_intensity(intensity);
+    }
+  } else if (std::optional<absl::string_view> value =
+                 TryRemoveSpectrumFilename(parameters, parameter_name);
+             value) {
+    get_output()->set_sampled_spectrum_filename(*value);
+  } else if (std::optional<absl::string_view> value =
+                 TryRemoveTexture(parameters, parameter_name);
+             value) {
+    get_output()->set_spectrum_texture_name(*value);
   }
 }
 
@@ -1345,6 +1387,207 @@ absl::Status ParserV3::SpectrumTexture(
     absl::string_view spectrum_texture_name,
     absl::string_view spectrum_texture_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
+  auto& spectrum_texture =
+      *output_.add_directives()->mutable_spectrum_texture();
+
+  spectrum_texture.set_name(spectrum_texture_name);
+
+  if (spectrum_texture_type == "bilerp") {
+    auto& bilerp = *spectrum_texture.mutable_bilerp();
+
+    TryRemoveSpectrumTexture(
+        parameters, "v00",
+        std::bind(&SpectrumTexture::Bilerp::mutable_v00, &bilerp));
+    TryRemoveSpectrumTexture(
+        parameters, "v01",
+        std::bind(&SpectrumTexture::Bilerp::mutable_v01, &bilerp));
+    TryRemoveSpectrumTexture(
+        parameters, "v10",
+        std::bind(&SpectrumTexture::Bilerp::mutable_v10, &bilerp));
+    TryRemoveSpectrumTexture(
+        parameters, "v11",
+        std::bind(&SpectrumTexture::Bilerp::mutable_v11, &bilerp));
+    TryRemoveUVParameters(parameters, bilerp);
+  } else if (spectrum_texture_type == "checkerboard") {
+    int32_t dimensions = TryRemoveInteger(parameters, "dimensions").value_or(2);
+    if (dimensions == 2) {
+      auto& checkerboard = *spectrum_texture.mutable_checkerboard2d();
+
+      if (std::optional<AntialiasingMode> aamode =
+              TryRemoveAntialiasingMode(parameters);
+          aamode) {
+        checkerboard.set_aamode(*aamode);
+      }
+
+      TryRemoveSpectrumTexture(
+          parameters, "tex1",
+          std::bind(&SpectrumTexture::Checkerboard2D::mutable_tex1,
+                    &checkerboard));
+      TryRemoveSpectrumTexture(
+          parameters, "tex2",
+          std::bind(&SpectrumTexture::Checkerboard2D::mutable_tex2,
+                    &checkerboard));
+      TryRemoveUVParameters(parameters, checkerboard);
+    } else {
+      auto& checkerboard = *spectrum_texture.mutable_checkerboard3d();
+
+      TryRemoveSpectrumTexture(
+          parameters, "tex1",
+          std::bind(&SpectrumTexture::Checkerboard3D::mutable_tex1,
+                    &checkerboard));
+      TryRemoveSpectrumTexture(
+          parameters, "tex2",
+          std::bind(&SpectrumTexture::Checkerboard3D::mutable_tex2,
+                    &checkerboard));
+    }
+  } else if (spectrum_texture_type == "constant") {
+    auto& constant = *spectrum_texture.mutable_constant();
+
+    TryRemoveSpectrumTexture(
+        parameters, "value",
+        std::bind(&SpectrumTexture::Constant::mutable_value, &constant));
+  } else if (spectrum_texture_type == "dots") {
+    auto& dots = *spectrum_texture.mutable_dots();
+
+    TryRemoveSpectrumTexture(
+        parameters, "inside",
+        std::bind(&SpectrumTexture::Dots::mutable_inside, &dots));
+    TryRemoveSpectrumTexture(
+        parameters, "outside",
+        std::bind(&SpectrumTexture::Dots::mutable_outside, &dots));
+    TryRemoveUVParameters(parameters, dots);
+  } else if (spectrum_texture_type == "fbm") {
+    auto& fbm = *spectrum_texture.mutable_fbm();
+
+    if (std::optional<int32_t> octaves =
+            TryRemoveInteger(parameters, "octaves");
+        octaves) {
+      fbm.set_octaves(*octaves);
+    }
+
+    if (std::optional<double> roughness =
+            TryRemoveFloat(parameters, "roughness");
+        roughness) {
+      fbm.set_roughness(*roughness);
+    }
+  } else if (spectrum_texture_type == "imagemap") {
+    auto& imagemap = *spectrum_texture.mutable_imagemap();
+
+    if (std::optional<bool> gamma = TryRemoveBool(parameters, "gamma"); gamma) {
+      imagemap.set_gamma(*gamma);
+    }
+
+    if (std::optional<absl::string_view> filename =
+            TryRemoveString(parameters, "filename");
+        filename) {
+      imagemap.set_filename(*filename);
+    }
+
+    if (std::optional<double> maxanisotropy =
+            TryRemoveFloat(parameters, "maxanisotropy");
+        maxanisotropy) {
+      imagemap.set_maxanisotropy(*maxanisotropy);
+    }
+
+    if (std::optional<double> scale = TryRemoveFloat(parameters, "scale");
+        scale) {
+      imagemap.set_scale(*scale);
+    }
+
+    if (std::optional<bool> trilinear = TryRemoveBool(parameters, "trilinear");
+        trilinear) {
+      imagemap.set_trilinear(*trilinear);
+    }
+
+    if (std::optional<ImageWrapping> wrap = TryRemoveImageWrapping(parameters);
+        wrap) {
+      imagemap.set_wrap(*wrap);
+    }
+
+    TryRemoveUVParameters(parameters, imagemap);
+  } else if (spectrum_texture_type == "marble") {
+    auto& marble = *spectrum_texture.mutable_marble();
+
+    if (std::optional<int32_t> octaves =
+            TryRemoveInteger(parameters, "octaves");
+        octaves) {
+      marble.set_octaves(*octaves);
+    }
+
+    if (std::optional<double> roughness =
+            TryRemoveFloat(parameters, "roughness");
+        roughness) {
+      marble.set_roughness(*roughness);
+    }
+
+    if (std::optional<double> scale = TryRemoveFloat(parameters, "scale");
+        scale) {
+      marble.set_scale(*scale);
+    }
+
+    if (std::optional<double> variation =
+            TryRemoveFloat(parameters, "variation");
+        variation) {
+      marble.set_variation(*variation);
+    }
+  } else if (spectrum_texture_type == "mix") {
+    auto& mix = *spectrum_texture.mutable_mix();
+
+    TryRemoveFloatTexture(
+        parameters, "amount",
+        std::bind(&SpectrumTexture::Mix::mutable_amount, &mix));
+    TryRemoveSpectrumTexture(
+        parameters, "tex1",
+        std::bind(&SpectrumTexture::Mix::mutable_tex1, &mix));
+    TryRemoveSpectrumTexture(
+        parameters, "tex2",
+        std::bind(&SpectrumTexture::Mix::mutable_tex2, &mix));
+  } else if (spectrum_texture_type == "ptex") {
+    auto& ptex = *spectrum_texture.mutable_ptex();
+
+    if (std::optional<absl::string_view> filename =
+            TryRemoveString(parameters, "filename");
+        filename) {
+      ptex.set_filename(*filename);
+    }
+
+    if (std::optional<double> gamma = TryRemoveFloat(parameters, "gamma");
+        gamma) {
+      ptex.set_gamma(*gamma);
+    }
+  } else if (spectrum_texture_type == "scale") {
+    auto& scale = *spectrum_texture.mutable_scale();
+
+    TryRemoveSpectrumTexture(
+        parameters, "tex1",
+        std::bind(&SpectrumTexture::Scale::mutable_tex1, &scale));
+    TryRemoveSpectrumTexture(
+        parameters, "tex2",
+        std::bind(&SpectrumTexture::Scale::mutable_tex2, &scale));
+  } else if (spectrum_texture_type == "uv") {
+    auto& uv = *spectrum_texture.mutable_uv();
+    TryRemoveUVParameters(parameters, uv);
+  } else if (spectrum_texture_type == "windy") {
+    spectrum_texture.mutable_windy();
+  } else if (spectrum_texture_type == "wrinkled") {
+    auto& wrinkled = *spectrum_texture.mutable_wrinkled();
+
+    if (std::optional<int32_t> octaves =
+            TryRemoveInteger(parameters, "octaves");
+        octaves) {
+      wrinkled.set_octaves(*octaves);
+    }
+
+    if (std::optional<double> roughness =
+            TryRemoveFloat(parameters, "roughness");
+        roughness) {
+      wrinkled.set_roughness(*roughness);
+    }
+  } else {
+    std::cerr << "Unrecognized Texture type: \"" << spectrum_texture_type
+              << "\"" << std::endl;
+  }
+
   return absl::OkStatus();
 }
 

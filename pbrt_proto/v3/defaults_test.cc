@@ -222,5 +222,162 @@ TEST(Canonicalize, Sampler) {
               EqualsProto(R"pb(directives { sampler {} })pb"));
 }
 
+// Unset SpectrumTexture are left unset
+TEST(Canonicalize, SpectrumTexture) {
+  EXPECT_THAT(
+      MakeCanonical(R"pb(directives { spectrum_texture { name: "" } })pb"),
+      EqualsProto(R"pb(directives { spectrum_texture { name: "" } })pb"));
+}
+
+TEST(Canonicalize, SpectrumTextureBilerp) {
+  EXPECT_THAT(MakeCanonical(R"pb(directives {
+                                   spectrum_texture {
+                                     name: ""
+                                     bilerp {}
+                                   }
+                                 })pb"),
+              EqualsProto(R"pb(directives {
+                                 spectrum_texture {
+                                   name: ""
+                                   bilerp {
+                                     v00 { uniform_spectrum: 0.0 }
+                                     v01 { uniform_spectrum: 1.0 }
+                                     v10 { uniform_spectrum: 0.0 }
+                                     v11 { uniform_spectrum: 1.0 }
+                                     v1 { x: 1.0 y: 0.0 z: 0.0 }
+                                     v2 { x: 0.0 y: 1.0 z: 0.0 }
+                                   }
+                                 }
+                               })pb"));
+}
+
+TEST(Canonicalize, SpectrumTextureCheckerboard2D) {
+  EXPECT_THAT(MakeCanonical(R"pb(directives {
+                                   spectrum_texture {
+                                     name: ""
+                                     checkerboard2d {}
+                                   }
+                                 })pb"),
+              EqualsProto(R"pb(directives {
+                                 spectrum_texture {
+                                   name: ""
+                                   checkerboard2d {
+                                     tex1 { uniform_spectrum: 1.0 }
+                                     tex2 { uniform_spectrum: 0.0 }
+                                     v1 { x: 1.0 y: 0.0 z: 0.0 }
+                                     v2 { x: 0.0 y: 1.0 z: 0.0 }
+                                   }
+                                 }
+                               })pb"));
+}
+
+TEST(Canonicalize, SpectrumTextureCheckerboard3D) {
+  EXPECT_THAT(MakeCanonical(R"pb(directives {
+                                   spectrum_texture {
+                                     name: ""
+                                     checkerboard3d {}
+                                   }
+                                 })pb"),
+              EqualsProto(R"pb(directives {
+                                 spectrum_texture {
+                                   name: ""
+                                   checkerboard3d {
+                                     tex1 { uniform_spectrum: 1.0 }
+                                     tex2 { uniform_spectrum: 0.0 }
+                                   }
+                                 }
+                               })pb"));
+}
+
+TEST(Canonicalize, SpectrumTextureConstant) {
+  EXPECT_THAT(MakeCanonical(R"pb(directives {
+                                   spectrum_texture {
+                                     name: ""
+                                     constant {}
+                                   }
+                                 })pb"),
+              EqualsProto(R"pb(directives {
+                                 spectrum_texture {
+                                   name: ""
+                                   constant { value { uniform_spectrum: 1.0 } }
+                                 }
+                               })pb"));
+}
+
+TEST(Canonicalize, SpectrumTextureDots) {
+  EXPECT_THAT(MakeCanonical(R"pb(directives {
+                                   spectrum_texture {
+                                     name: ""
+                                     dots {}
+                                   }
+                                 })pb"),
+              EqualsProto(R"pb(directives {
+                                 spectrum_texture {
+                                   name: ""
+                                   dots {
+                                     inside { uniform_spectrum: 1.0 }
+                                     outside { uniform_spectrum: 0.0 }
+                                     v1 { x: 1.0 y: 0.0 z: 0.0 }
+                                     v2 { x: 0.0 y: 1.0 z: 0.0 }
+                                   }
+                                 }
+                               })pb"));
+}
+
+TEST(Canonicalize, SpectrumTextureImagemap) {
+  EXPECT_THAT(MakeCanonical(R"pb(directives {
+                                   spectrum_texture {
+                                     name: ""
+                                     imagemap {}
+                                   }
+                                 })pb"),
+              EqualsProto(R"pb(directives {
+                                 spectrum_texture {
+                                   name: ""
+                                   imagemap {
+                                     v1 { x: 1.0 y: 0.0 z: 0.0 }
+                                     v2 { x: 0.0 y: 1.0 z: 0.0 }
+                                   }
+                                 }
+                               })pb"));
+}
+
+TEST(Canonicalize, SpectrumTextureMix) {
+  EXPECT_THAT(MakeCanonical(R"pb(directives {
+                                   spectrum_texture {
+                                     name: ""
+                                     mix {}
+                                   }
+                                 })pb"),
+              EqualsProto(R"pb(directives {
+                                 spectrum_texture {
+                                   name: ""
+                                   mix {
+                                     tex1 { uniform_spectrum: 0.0 }
+                                     tex2 { uniform_spectrum: 1.0 }
+                                     amount { float_value: 0.5 }
+                                   }
+                                 }
+                               })pb"));
+}
+
+TEST(Canonicalize, SpectrumTextureScale) {
+  EXPECT_THAT(MakeCanonical(R"pb(directives {
+                                   spectrum_texture {
+                                     name: ""
+                                     scale {}
+                                   }
+                                 })pb"),
+              EqualsProto(R"pb(directives {
+                                 spectrum_texture {
+                                   name: ""
+                                   scale {
+                                     tex1 { uniform_spectrum: 1.0 }
+                                     tex2 { uniform_spectrum: 1.0 }
+                                   }
+                                 }
+                               })pb"));
+}
+
 }  // namespace
 }  // namespace pbrt_proto::v3

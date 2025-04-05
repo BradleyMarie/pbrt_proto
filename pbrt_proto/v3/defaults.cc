@@ -37,6 +37,14 @@ void SetFloatTextureParameterDefault(FloatTextureParameter& parameter,
   }
 }
 
+void SetSpectrumTextureParameterDefault(SpectrumTextureParameter& parameter,
+                                        double default_value) {
+  if (parameter.spectrum_texture_parameter_type_case() ==
+      SpectrumTextureParameter::SPECTRUM_TEXTURE_PARAMETER_TYPE_NOT_SET) {
+    parameter.set_uniform_spectrum(default_value);
+  }
+}
+
 template <typename T>
 void SetDefaultV1(T& message) {
   if (!message.has_v1()) {
@@ -182,6 +190,132 @@ void Canonicalize(PbrtProto& proto) {
         }
         break;
       case Directive::kSpectrumTexture:
+        switch (directive.spectrum_texture().spectrum_texture_type_case()) {
+          case SpectrumTexture::kBilerp:
+            SetSpectrumTextureParameterDefault(
+                *directive.mutable_spectrum_texture()
+                     ->mutable_bilerp()
+                     ->mutable_v00(),
+                0.0);
+            SetSpectrumTextureParameterDefault(
+                *directive.mutable_spectrum_texture()
+                     ->mutable_bilerp()
+                     ->mutable_v01(),
+                1.0);
+            SetSpectrumTextureParameterDefault(
+                *directive.mutable_spectrum_texture()
+                     ->mutable_bilerp()
+                     ->mutable_v10(),
+                0.0);
+            SetSpectrumTextureParameterDefault(
+                *directive.mutable_spectrum_texture()
+                     ->mutable_bilerp()
+                     ->mutable_v11(),
+                1.0);
+            SetDefaultV1(
+                *directive.mutable_spectrum_texture()->mutable_bilerp());
+            SetDefaultV2(
+                *directive.mutable_spectrum_texture()->mutable_bilerp());
+            break;
+          case SpectrumTexture::kConstant:
+            SetSpectrumTextureParameterDefault(
+                *directive.mutable_spectrum_texture()
+                     ->mutable_constant()
+                     ->mutable_value(),
+                1.0);
+            break;
+          case SpectrumTexture::kCheckerboard2D:
+            SetSpectrumTextureParameterDefault(
+                *directive.mutable_spectrum_texture()
+                     ->mutable_checkerboard2d()
+                     ->mutable_tex1(),
+                1.0);
+            SetSpectrumTextureParameterDefault(
+                *directive.mutable_spectrum_texture()
+                     ->mutable_checkerboard2d()
+                     ->mutable_tex2(),
+                0.0);
+            SetDefaultV1(*directive.mutable_spectrum_texture()
+                              ->mutable_checkerboard2d());
+            SetDefaultV2(*directive.mutable_spectrum_texture()
+                              ->mutable_checkerboard2d());
+            break;
+          case SpectrumTexture::kCheckerboard3D:
+            SetSpectrumTextureParameterDefault(
+                *directive.mutable_spectrum_texture()
+                     ->mutable_checkerboard3d()
+                     ->mutable_tex1(),
+                1.0);
+            SetSpectrumTextureParameterDefault(
+                *directive.mutable_spectrum_texture()
+                     ->mutable_checkerboard3d()
+                     ->mutable_tex2(),
+                0.0);
+            break;
+          case SpectrumTexture::kDots:
+            SetSpectrumTextureParameterDefault(
+                *directive.mutable_spectrum_texture()
+                     ->mutable_dots()
+                     ->mutable_inside(),
+                1.0);
+            SetSpectrumTextureParameterDefault(
+                *directive.mutable_spectrum_texture()
+                     ->mutable_dots()
+                     ->mutable_outside(),
+                0.0);
+            SetDefaultV1(*directive.mutable_spectrum_texture()->mutable_dots());
+            SetDefaultV2(*directive.mutable_spectrum_texture()->mutable_dots());
+            break;
+          case SpectrumTexture::kFbm:
+            break;
+          case SpectrumTexture::kImagemap:
+            SetDefaultV1(
+                *directive.mutable_spectrum_texture()->mutable_imagemap());
+            SetDefaultV2(
+                *directive.mutable_spectrum_texture()->mutable_imagemap());
+            break;
+          case SpectrumTexture::kMarble:
+            break;
+          case SpectrumTexture::kMix:
+            SetFloatTextureParameterDefault(
+                *directive.mutable_spectrum_texture()
+                     ->mutable_mix()
+                     ->mutable_amount(),
+                0.5);
+            SetSpectrumTextureParameterDefault(
+                *directive.mutable_spectrum_texture()
+                     ->mutable_mix()
+                     ->mutable_tex1(),
+                0.0);
+            SetSpectrumTextureParameterDefault(
+                *directive.mutable_spectrum_texture()
+                     ->mutable_mix()
+                     ->mutable_tex2(),
+                1.0);
+            break;
+          case SpectrumTexture::kPtex:
+            break;
+          case SpectrumTexture::kScale:
+            SetSpectrumTextureParameterDefault(
+                *directive.mutable_spectrum_texture()
+                     ->mutable_scale()
+                     ->mutable_tex1(),
+                1.0);
+            SetSpectrumTextureParameterDefault(
+                *directive.mutable_spectrum_texture()
+                     ->mutable_scale()
+                     ->mutable_tex2(),
+                1.0);
+            break;
+          case SpectrumTexture::kUv:
+            break;
+          case SpectrumTexture::kWindy:
+            break;
+          case SpectrumTexture::kWrinkled:
+            break;
+          case SpectrumTexture::SPECTRUM_TEXTURE_TYPE_NOT_SET:
+            break;
+        }
         break;
       default:
         break;

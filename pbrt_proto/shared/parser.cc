@@ -813,14 +813,18 @@ absl::Status TryRemoveValues(
     return absl::OkStatus();
   }
 
-  const absl::Span<T>& values =
-      *std::get_if<absl::Span<T>>(&iter->second.values);
-  if (required_size.has_value() && values.size() != *required_size) {
+  const absl::Span<T>* values =
+      std::get_if<absl::Span<T>>(&iter->second.values);
+  if (!values) {
+    return absl::OkStatus();
+  }
+
+  if (required_size.has_value() && values->size() != *required_size) {
     return InvalidValueCountError(iter->second.directive,
                                   iter->second.type_name, parameter_name);
   }
 
-  value = values;
+  value = *values;
   parameters.erase(iter);
 
   return absl::OkStatus();
@@ -839,14 +843,18 @@ absl::Status TryRemoveValue(
     return absl::OkStatus();
   }
 
-  const absl::Span<T>& values =
-      *std::get_if<absl::Span<T>>(&iter->second.values);
-  if (values.size() != 1) {
+  const absl::Span<T>* values =
+      std::get_if<absl::Span<T>>(&iter->second.values);
+  if (!values) {
+    return absl::OkStatus();
+  }
+
+  if (values->size() != 1) {
     // This error value is currently not exposed
     return absl::InvalidArgumentError("TODO_Q");
   }
 
-  value = values[0];
+  value = (*values)[0];
   parameters.erase(iter);
 
   return absl::OkStatus();

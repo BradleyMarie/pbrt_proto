@@ -2219,6 +2219,22 @@ TEST(TryRemoveFloats, WrongType) {
   EXPECT_THAT(parameters, Contains(Key("name")));
 }
 
+TEST(TryRemoveFloats, WrongStoredType) {
+  std::vector<int32_t> values;
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::FLOAT,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name1", parameter}};
+
+  std::optional<absl::Span<double>> removed_values;
+  EXPECT_THAT(TryRemoveFloats(parameters, "name1", 4, removed_values), IsOk());
+  EXPECT_THAT(removed_values, Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name1")));
+}
+
 TEST(TryRemoveFloats, WrongName) {
   std::vector<double> values;
   Parameter parameter{.directive = "",
@@ -2275,6 +2291,22 @@ TEST(TryRemoveIntegers, WrongType) {
   std::vector<int32_t> values;
   Parameter parameter{.directive = "",
                       .type = ParameterType::BLACKBODY_V1,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  std::optional<absl::Span<int32_t>> removed_values;
+  EXPECT_THAT(TryRemoveIntegers(parameters, "name", 4, removed_values), IsOk());
+  EXPECT_THAT(removed_values, Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name")));
+}
+
+TEST(TryRemoveIntegers, WrongStoredType) {
+  std::vector<double> values;
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::INTEGER,
                       .type_name = "",
                       .values = absl::MakeSpan(values)};
 
@@ -2353,6 +2385,20 @@ TEST(TryRemoveSpectralSamples, WrongType) {
   EXPECT_THAT(parameters, Contains(Key("name")));
 }
 
+TEST(TryRemoveSpectralSamples, WrongStoredType) {
+  std::vector<double> values;
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::SPECTRUM,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  EXPECT_THAT(TryRemoveSpectralSamples(parameters, "name"), Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name")));
+}
+
 TEST(TryRemoveSpectralSamples, WrongName) {
   std::vector<std::array<double, 2>> values;
   Parameter parameter{.directive = "",
@@ -2387,6 +2433,20 @@ TEST(TryRemoveBlackbodyV1, WrongType) {
   std::vector<std::array<double, 2>> values;
   Parameter parameter{.directive = "",
                       .type = ParameterType::FLOAT,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  EXPECT_THAT(TryRemoveBlackbodyV1(parameters, "name"), Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name")));
+}
+
+TEST(TryRemoveBlackbodyV1, WrongStoredType) {
+  std::vector<double> values;
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::BLACKBODY_V1,
                       .type_name = "",
                       .values = absl::MakeSpan(values)};
 
@@ -2440,6 +2500,20 @@ TEST(TryRemoveBool, WrongType) {
   EXPECT_THAT(parameters, Contains(Key("name")));
 }
 
+TEST(TryRemoveBool, WrongStoredType) {
+  std::vector<std::array<double, 2>> values;
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::BOOL,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  EXPECT_THAT(TryRemoveBool(parameters, "name"), Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name")));
+}
+
 TEST(TryRemoveBool, WrongName) {
   absl::InlinedVector<bool, 1> values;
   Parameter parameter{.directive = "",
@@ -2472,6 +2546,20 @@ TEST(TryRemoveFloat, WrongType) {
   std::vector<double> values;
   Parameter parameter{.directive = "",
                       .type = ParameterType::BLACKBODY_V1,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  EXPECT_THAT(TryRemoveFloat(parameters, "name"), Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name")));
+}
+
+TEST(TryRemoveFloat, WrongStoredType) {
+  std::vector<int32_t> values;
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::FLOAT,
                       .type_name = "",
                       .values = absl::MakeSpan(values)};
 
@@ -2524,6 +2612,20 @@ TEST(TryRemoveInteger, WrongType) {
   EXPECT_THAT(parameters, Contains(Key("name")));
 }
 
+TEST(TryRemoveInteger, WrongStoredType) {
+  std::vector<double> values;
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::INTEGER,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  EXPECT_THAT(TryRemoveInteger(parameters, "name"), Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name")));
+}
+
 TEST(TryRemoveInteger, WrongName) {
   std::vector<int32_t> values;
   Parameter parameter{.directive = "",
@@ -2566,6 +2668,20 @@ TEST(TryRemoveString, WrongType) {
   EXPECT_THAT(parameters, Contains(Key("name")));
 }
 
+TEST(TryRemoveString, WrongStoredType) {
+  std::vector<double> values;
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::STRING,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  EXPECT_THAT(TryRemoveString(parameters, "name"), Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name")));
+}
+
 TEST(TryRemoveString, WrongName) {
   std::vector<absl::string_view> values;
   Parameter parameter{.directive = "",
@@ -2598,6 +2714,20 @@ TEST(TryRemoveRgb, WrongType) {
   std::vector<std::array<double, 3>> values;
   Parameter parameter{.directive = "",
                       .type = ParameterType::FLOAT,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  EXPECT_THAT(TryRemoveRgb(parameters, "name"), Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name")));
+}
+
+TEST(TryRemoveRgb, WrongStoredType) {
+  std::vector<std::array<double, 2>> values;
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::RGB,
                       .type_name = "",
                       .values = absl::MakeSpan(values)};
 
@@ -2651,6 +2781,20 @@ TEST(TryRemoveSpectrumFilename, WrongType) {
   EXPECT_THAT(parameters, Contains(Key("name")));
 }
 
+TEST(TryRemoveSpectrumFilename, WrongStoredType) {
+  std::vector<double> values;
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::SPECTRUM,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  EXPECT_THAT(TryRemoveSpectrumFilename(parameters, "name"), Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name")));
+}
+
 TEST(TryRemoveSpectrumFilename, WrongName) {
   std::vector<absl::string_view> values;
   Parameter parameter{.directive = "",
@@ -2684,6 +2828,20 @@ TEST(TryRemoveTexture, WrongType) {
   std::vector<absl::string_view> values;
   Parameter parameter{.directive = "",
                       .type = ParameterType::BLACKBODY_V1,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  EXPECT_THAT(TryRemoveTexture(parameters, "name"), Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name")));
+}
+
+TEST(TryRemoveTexture, WrongStoredType) {
+  std::vector<double> values;
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::TEXTURE,
                       .type_name = "",
                       .values = absl::MakeSpan(values)};
 
@@ -2736,6 +2894,20 @@ TEST(TryRemoveVector3, WrongType) {
   EXPECT_THAT(parameters, Contains(Key("name")));
 }
 
+TEST(TryRemoveVector3, WrongStoredType) {
+  std::vector<std::array<double, 2>> values;
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::VECTOR3,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  EXPECT_THAT(TryRemoveVector3(parameters, "name"), Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name")));
+}
+
 TEST(TryRemoveVector3, WrongName) {
   std::vector<std::array<double, 3>> values;
   Parameter parameter{.directive = "",
@@ -2769,6 +2941,20 @@ TEST(TryRemoveXyz, WrongType) {
   std::vector<std::array<double, 3>> values;
   Parameter parameter{.directive = "",
                       .type = ParameterType::FLOAT,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  EXPECT_THAT(TryRemoveXyz(parameters, "name"), Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name")));
+}
+
+TEST(TryRemoveXyz, WrongStoredType) {
+  std::vector<std::array<double, 2>> values;
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::XYZ,
                       .type_name = "",
                       .values = absl::MakeSpan(values)};
 
