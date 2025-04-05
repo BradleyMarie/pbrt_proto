@@ -2271,58 +2271,6 @@ TEST(TryRemoveFloats, Found) {
   EXPECT_THAT(parameters, Not(Contains(Key("name"))));
 }
 
-TEST(TryRemoveSpectralSamples, WrongType) {
-  std::vector<std::array<double, 2>> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::BLACKBODY_V1,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
-
-  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
-      {"name", parameter}};
-
-  std::optional<absl::Span<std::array<double, 2>>> removed_values;
-  EXPECT_THAT(TryRemoveSpectralSamples(parameters, "name", removed_values),
-              IsOk());
-  EXPECT_THAT(removed_values, Eq(std::nullopt));
-  EXPECT_THAT(parameters, Contains(Key("name")));
-}
-
-TEST(TryRemoveSpectralSamples, WrongName) {
-  std::vector<std::array<double, 2>> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::SPECTRUM,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
-
-  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
-      {"name1", parameter}};
-
-  std::optional<absl::Span<std::array<double, 2>>> removed_values;
-  EXPECT_THAT(TryRemoveSpectralSamples(parameters, "name2", removed_values),
-              IsOk());
-  EXPECT_THAT(removed_values, Eq(std::nullopt));
-  EXPECT_THAT(parameters, Contains(Key("name1")));
-}
-
-TEST(TryRemoveSpectralSamples, Found) {
-  std::vector<std::array<double, 2>> values = {{1.0, 2.0}, {3.0, 4.0}};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::SPECTRUM,
-                      .type_name = "aaa",
-                      .values = absl::MakeSpan(values)};
-
-  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
-      {"name", parameter}};
-
-  std::optional<absl::Span<std::array<double, 2>>> removed_values;
-  EXPECT_THAT(TryRemoveSpectralSamples(parameters, "name", removed_values),
-              IsOk());
-  EXPECT_THAT(removed_values, Optional(ElementsAre(ElementsAre(1.0, 2.0),
-                                                   ElementsAre(3.0, 4.0))));
-  EXPECT_THAT(parameters, Not(Contains(Key("name"))));
-}
-
 TEST(TryRemoveIntegers, WrongType) {
   std::vector<int32_t> values;
   Parameter parameter{.directive = "",
@@ -2388,6 +2336,50 @@ TEST(TryRemoveIntegers, Found) {
   std::optional<absl::Span<int32_t>> removed_values;
   EXPECT_THAT(TryRemoveIntegers(parameters, "name", 4, removed_values), IsOk());
   EXPECT_THAT(removed_values, Optional(ElementsAre(1, 2, 3, 4)));
+  EXPECT_THAT(parameters, Not(Contains(Key("name"))));
+}
+
+TEST(TryRemoveSpectralSamples, WrongType) {
+  std::vector<std::array<double, 2>> values;
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::BLACKBODY_V1,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  EXPECT_THAT(TryRemoveSpectralSamples(parameters, "name"), Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name")));
+}
+
+TEST(TryRemoveSpectralSamples, WrongName) {
+  std::vector<std::array<double, 2>> values;
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::SPECTRUM,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name1", parameter}};
+
+  EXPECT_THAT(TryRemoveSpectralSamples(parameters, "name2"), Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name1")));
+}
+
+TEST(TryRemoveSpectralSamples, Found) {
+  std::vector<std::array<double, 2>> values = {{1.0, 2.0}, {3.0, 4.0}};
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::SPECTRUM,
+                      .type_name = "aaa",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  EXPECT_THAT(
+      TryRemoveSpectralSamples(parameters, "name"),
+      Optional(ElementsAre(ElementsAre(1.0, 2.0), ElementsAre(3.0, 4.0))));
   EXPECT_THAT(parameters, Not(Contains(Key("name"))));
 }
 

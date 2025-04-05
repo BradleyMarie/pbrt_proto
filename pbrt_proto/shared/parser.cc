@@ -1128,14 +1128,6 @@ absl::Status TryRemoveFloats(
                                                required_size, result);
 }
 
-absl::Status TryRemoveSpectralSamples(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    absl::string_view parameter_name,
-    std::optional<absl::Span<std::array<double, 2>>>& result) {
-  return TryRemoveValues<ParameterType::SPECTRUM>(parameters, parameter_name,
-                                                  std::nullopt, result);
-}
-
 absl::Status TryRemoveIntegers(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     absl::string_view parameter_name, size_t required_size,
@@ -1186,6 +1178,16 @@ std::optional<absl::string_view> TryRemoveSpectrumFilename(
     absl::string_view parameter_name) {
   std::optional<absl::string_view> result;
   TryRemoveValue<ParameterType::SPECTRUM>(parameters, parameter_name, result)
+      .IgnoreError();
+  return result;
+}
+
+std::optional<absl::Span<std::array<double, 2>>> TryRemoveSpectralSamples(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view parameter_name) {
+  std::optional<absl::Span<std::array<double, 2>>> result;
+  TryRemoveValues<ParameterType::SPECTRUM>(parameters, parameter_name,
+                                           std::nullopt, result)
       .IgnoreError();
   return result;
 }
