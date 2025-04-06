@@ -41,7 +41,10 @@ TEST(Canonicalize, AreaLightSourceDiffuse) {
       EqualsProto(
           R"pb(directives {
                  area_light_source {
-                   diffuse { L { rgb_spectrum { r: 1.0 g: 1.0 b: 1.0 } } }
+                   diffuse {
+                     L { rgb_spectrum { r: 1.0 g: 1.0 b: 1.0 } }
+                     scale { rgb_spectrum { r: 1.0 g: 1.0 b: 1.0 } }
+                   }
                  }
                })pb"));
 }
@@ -229,6 +232,99 @@ TEST(Canonicalize, FloatTextureScale) {
 TEST(Canonicalize, Integrator) {
   EXPECT_THAT(MakeCanonical(R"pb(directives { integrator {} })pb"),
               EqualsProto(R"pb(directives { integrator {} })pb"));
+}
+
+// Unset LightSource are left unset
+TEST(Canonicalize, LightSource) {
+  EXPECT_THAT(MakeCanonical(R"pb(directives { light_source {} })pb"),
+              EqualsProto(R"pb(directives { light_source {} })pb"));
+}
+
+TEST(Canonicalize, LightSourceDistant) {
+  EXPECT_THAT(
+      MakeCanonical(R"pb(directives { light_source { distant {} } })pb"),
+      EqualsProto(
+          R"pb(directives {
+                 light_source {
+                   distant {
+                     L { rgb_spectrum { r: 1.0 g: 1.0 b: 1.0 } }
+                     from { x: 0.0 y: 0.0 z: 0.0 }
+                     to { x: 0.0 y: 0.0 z: 1.0 }
+                     scale { rgb_spectrum { r: 1.0 g: 1.0 b: 1.0 } }
+                   }
+                 }
+               })pb"));
+}
+
+TEST(Canonicalize, LightSourceGoniometric) {
+  EXPECT_THAT(
+      MakeCanonical(R"pb(directives { light_source { goniometric {} } })pb"),
+      EqualsProto(
+          R"pb(directives {
+                 light_source {
+                   goniometric {
+                     I { rgb_spectrum { r: 1.0 g: 1.0 b: 1.0 } }
+                     scale { rgb_spectrum { r: 1.0 g: 1.0 b: 1.0 } }
+                   }
+                 }
+               })pb"));
+}
+
+TEST(Canonicalize, LightSourceInfinite) {
+  EXPECT_THAT(
+      MakeCanonical(R"pb(directives { light_source { infinite {} } })pb"),
+      EqualsProto(
+          R"pb(directives {
+                 light_source {
+                   infinite {
+                     L { rgb_spectrum { r: 1.0 g: 1.0 b: 1.0 } }
+                     scale { rgb_spectrum { r: 1.0 g: 1.0 b: 1.0 } }
+                   }
+                 }
+               })pb"));
+}
+
+TEST(Canonicalize, LightSourcePoint) {
+  EXPECT_THAT(MakeCanonical(R"pb(directives { light_source { point {} } })pb"),
+              EqualsProto(
+                  R"pb(directives {
+                         light_source {
+                           point {
+                             L { rgb_spectrum { r: 1.0 g: 1.0 b: 1.0 } }
+                             from { x: 0.0 y: 0.0 z: 0.0 }
+                             scale { rgb_spectrum { r: 1.0 g: 1.0 b: 1.0 } }
+                           }
+                         }
+                       })pb"));
+}
+
+TEST(Canonicalize, LightSourceProjection) {
+  EXPECT_THAT(
+      MakeCanonical(R"pb(directives { light_source { projection {} } })pb"),
+      EqualsProto(
+          R"pb(directives {
+                 light_source {
+                   projection {
+                     I { rgb_spectrum { r: 1.0 g: 1.0 b: 1.0 } }
+                     scale { rgb_spectrum { r: 1.0 g: 1.0 b: 1.0 } }
+                   }
+                 }
+               })pb"));
+}
+
+TEST(Canonicalize, LightSourceSpot) {
+  EXPECT_THAT(MakeCanonical(R"pb(directives { light_source { spot {} } })pb"),
+              EqualsProto(
+                  R"pb(directives {
+                         light_source {
+                           spot {
+                             I { rgb_spectrum { r: 1.0 g: 1.0 b: 1.0 } }
+                             from { x: 0.0 y: 0.0 z: 0.0 }
+                             to { x: 0.0 y: 0.0 z: 1.0 }
+                             scale { rgb_spectrum { r: 1.0 g: 1.0 b: 1.0 } }
+                           }
+                         }
+                       })pb"));
 }
 
 // Unset Sampler are left unset and should eventually cause a black image to be

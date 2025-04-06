@@ -65,10 +65,49 @@ void SetDefaultV2(T& message) {
   }
 }
 
-void SetWhiteRgbSpectrum(Spectrum& spectrum) {
-  spectrum.mutable_rgb_spectrum()->set_r(1.0);
-  spectrum.mutable_rgb_spectrum()->set_g(1.0);
-  spectrum.mutable_rgb_spectrum()->set_b(1.0);
+template <typename T>
+void SetDefaultFrom(T& message) {
+  if (!message.has_from()) {
+    message.mutable_from()->set_x(0.0);
+    message.mutable_from()->set_y(0.0);
+    message.mutable_from()->set_z(0.0);
+  }
+}
+
+template <typename T>
+void SetDefaultTo(T& message) {
+  if (!message.has_to()) {
+    message.mutable_to()->set_x(0.0);
+    message.mutable_to()->set_y(0.0);
+    message.mutable_to()->set_z(1.0);
+  }
+}
+
+template <typename T>
+void SetDefaultI(T& message) {
+  if (!message.has_i()) {
+    message.mutable_i()->mutable_rgb_spectrum()->set_r(1.0);
+    message.mutable_i()->mutable_rgb_spectrum()->set_g(1.0);
+    message.mutable_i()->mutable_rgb_spectrum()->set_b(1.0);
+  }
+}
+
+template <typename T>
+void SetDefaultL(T& message) {
+  if (!message.has_l()) {
+    message.mutable_l()->mutable_rgb_spectrum()->set_r(1.0);
+    message.mutable_l()->mutable_rgb_spectrum()->set_g(1.0);
+    message.mutable_l()->mutable_rgb_spectrum()->set_b(1.0);
+  }
+}
+
+template <typename T>
+void SetDefaultScale(T& message) {
+  if (!message.has_scale()) {
+    message.mutable_scale()->mutable_rgb_spectrum()->set_r(1.0);
+    message.mutable_scale()->mutable_rgb_spectrum()->set_g(1.0);
+    message.mutable_scale()->mutable_rgb_spectrum()->set_b(1.0);
+  }
 }
 
 }  // namespace
@@ -90,11 +129,10 @@ void Canonicalize(PbrtProto& proto) {
       case Directive::kAreaLightSource:
         if (directive.area_light_source().area_light_source_type_case() ==
             AreaLightSource::kDiffuse) {
-          if (!directive.area_light_source().diffuse().has_l()) {
-            SetWhiteRgbSpectrum(*directive.mutable_area_light_source()
-                                     ->mutable_diffuse()
-                                     ->mutable_l());
-          }
+          SetDefaultL(
+              *directive.mutable_area_light_source()->mutable_diffuse());
+          SetDefaultScale(
+              *directive.mutable_area_light_source()->mutable_diffuse());
         }
         break;
       case Directive::kFloatTexture:
@@ -202,6 +240,48 @@ void Canonicalize(PbrtProto& proto) {
           case FloatTexture::kWrinkled:
             break;
           case FloatTexture::FLOAT_TEXTURE_TYPE_NOT_SET:
+            break;
+        }
+        break;
+      case Directive::kLightSource:
+        switch (directive.light_source().light_source_type_case()) {
+          case LightSource::kDistant:
+            SetDefaultL(*directive.mutable_light_source()->mutable_distant());
+            SetDefaultFrom(
+                *directive.mutable_light_source()->mutable_distant());
+            SetDefaultTo(*directive.mutable_light_source()->mutable_distant());
+            SetDefaultScale(
+                *directive.mutable_light_source()->mutable_distant());
+            break;
+          case LightSource::kGoniometric:
+            SetDefaultI(
+                *directive.mutable_light_source()->mutable_goniometric());
+            SetDefaultScale(
+                *directive.mutable_light_source()->mutable_goniometric());
+            break;
+          case LightSource::kInfinite:
+            SetDefaultL(*directive.mutable_light_source()->mutable_infinite());
+            SetDefaultScale(
+                *directive.mutable_light_source()->mutable_infinite());
+            break;
+          case LightSource::kPoint:
+            SetDefaultL(*directive.mutable_light_source()->mutable_point());
+            SetDefaultFrom(*directive.mutable_light_source()->mutable_point());
+            SetDefaultScale(*directive.mutable_light_source()->mutable_point());
+            break;
+          case LightSource::kProjection:
+            SetDefaultI(
+                *directive.mutable_light_source()->mutable_projection());
+            SetDefaultScale(
+                *directive.mutable_light_source()->mutable_projection());
+            break;
+          case LightSource::kSpot:
+            SetDefaultI(*directive.mutable_light_source()->mutable_spot());
+            SetDefaultFrom(*directive.mutable_light_source()->mutable_spot());
+            SetDefaultTo(*directive.mutable_light_source()->mutable_spot());
+            SetDefaultScale(*directive.mutable_light_source()->mutable_spot());
+            break;
+          case LightSource::LIGHT_SOURCE_TYPE_NOT_SET:
             break;
         }
         break;

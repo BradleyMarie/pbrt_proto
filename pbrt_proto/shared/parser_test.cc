@@ -131,6 +131,10 @@ class MockParser final : public Parser {
                (absl::flat_hash_map<absl::string_view, Parameter>&)),
               (override));
   MOCK_METHOD(absl::Status, Import, (absl::string_view), (override));
+  MOCK_METHOD(absl::Status, LightSource,
+              (absl::string_view,
+               (absl::flat_hash_map<absl::string_view, Parameter>&)),
+              (override));
   MOCK_METHOD(absl::Status, LookAt,
               (double, double, double, double, double, double, double, double,
                double),
@@ -1856,6 +1860,30 @@ TEST(Import, Fails) {
               StatusIs(absl::StatusCode::kUnknown, ""));
 }
 
+TEST(LightSource, Succeeds) {
+  std::stringstream stream("LightSource \"abc\"");
+  MockParser parser;
+  EXPECT_CALL(parser, LightSource("abc", IsEmpty()))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(LightSource, MissingType) {
+  std::stringstream stream("LightSource");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Missing type parameter to directive LightSource"));
+}
+
+TEST(LightSource, Fails) {
+  std::stringstream stream("LightSource \"abc\"");
+  MockParser parser;
+  EXPECT_CALL(parser, LightSource("abc", IsEmpty()))
+      .WillOnce(Return(absl::UnknownError("")));
+  EXPECT_THAT(parser.ReadFrom(stream),
+              StatusIs(absl::StatusCode::kUnknown, ""));
+}
+
 TEST(LookAt, MissingParameters) {
   std::stringstream stream("LookAt 1 2 3 4 5 6 7 8");
   EXPECT_THAT(MockParser().ReadFrom(stream),
@@ -2682,59 +2710,60 @@ TEST(TryRemoveInteger, Found) {
   EXPECT_THAT(parameters, Not(Contains(Key("name1"))));
 }
 
-TEST(TryRemoveString, WrongType) {
-  std::vector<absl::string_view> values;
+TEST(TryRemovePoint3, WrongType) {
+  std::vector<std::array<double, 3>> values;
   Parameter parameter{.directive = "",
-                      .type = ParameterType::BLACKBODY_V1,
+                      .type = ParameterType::FLOAT,
                       .type_name = "",
                       .values = absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
 
-  EXPECT_THAT(TryRemoveString(parameters, "name"), Eq(std::nullopt));
+  EXPECT_THAT(TryRemovePoint3(parameters, "name"), Eq(std::nullopt));
   EXPECT_THAT(parameters, Contains(Key("name")));
 }
 
-TEST(TryRemoveString, WrongStoredType) {
-  std::vector<double> values;
+TEST(TryRemovePoint3, WrongStoredType) {
+  std::vector<std::array<double, 2>> values;
   Parameter parameter{.directive = "",
-                      .type = ParameterType::STRING,
+                      .type = ParameterType::POINT3,
                       .type_name = "",
                       .values = absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
 
-  EXPECT_THAT(TryRemoveString(parameters, "name"), Eq(std::nullopt));
+  EXPECT_THAT(TryRemovePoint3(parameters, "name"), Eq(std::nullopt));
   EXPECT_THAT(parameters, Contains(Key("name")));
 }
 
-TEST(TryRemoveString, WrongName) {
-  std::vector<absl::string_view> values;
+TEST(TryRemovePoint3, WrongName) {
+  std::vector<std::array<double, 3>> values;
   Parameter parameter{.directive = "",
-                      .type = ParameterType::STRING,
+                      .type = ParameterType::POINT3,
                       .type_name = "",
                       .values = absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name1", parameter}};
 
-  EXPECT_THAT(TryRemoveString(parameters, "name2"), Eq(std::nullopt));
+  EXPECT_THAT(TryRemovePoint3(parameters, "name2"), Eq(std::nullopt));
   EXPECT_THAT(parameters, Contains(Key("name1")));
 }
 
-TEST(TryRemoveString, Found) {
-  std::vector<absl::string_view> values = {"abc"};
+TEST(TryRemovePoint3, Found) {
+  std::vector<std::array<double, 3>> values = {{1.0, 2.0, 3.0}};
   Parameter parameter{.directive = "",
-                      .type = ParameterType::STRING,
+                      .type = ParameterType::POINT3,
                       .type_name = "aaa",
                       .values = absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
 
-  EXPECT_THAT(TryRemoveString(parameters, "name"), Optional(Eq("abc")));
+  EXPECT_THAT(TryRemovePoint3(parameters, "name"),
+              Optional(ElementsAre(1.0, 2.0, 3.0)));
   EXPECT_THAT(parameters, Not(Contains(Key("name1"))));
 }
 
@@ -2792,6 +2821,62 @@ TEST(TryRemoveRgb, Found) {
 
   EXPECT_THAT(TryRemoveRgb(parameters, "name"),
               Optional(ElementsAre(1.0, 2.0, 3.0)));
+  EXPECT_THAT(parameters, Not(Contains(Key("name1"))));
+}
+
+TEST(TryRemoveString, WrongType) {
+  std::vector<absl::string_view> values;
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::BLACKBODY_V1,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  EXPECT_THAT(TryRemoveString(parameters, "name"), Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name")));
+}
+
+TEST(TryRemoveString, WrongStoredType) {
+  std::vector<double> values;
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::STRING,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  EXPECT_THAT(TryRemoveString(parameters, "name"), Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name")));
+}
+
+TEST(TryRemoveString, WrongName) {
+  std::vector<absl::string_view> values;
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::STRING,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name1", parameter}};
+
+  EXPECT_THAT(TryRemoveString(parameters, "name2"), Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name1")));
+}
+
+TEST(TryRemoveString, Found) {
+  std::vector<absl::string_view> values = {"abc"};
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::STRING,
+                      .type_name = "aaa",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  EXPECT_THAT(TryRemoveString(parameters, "name"), Optional(Eq("abc")));
   EXPECT_THAT(parameters, Not(Contains(Key("name1"))));
 }
 

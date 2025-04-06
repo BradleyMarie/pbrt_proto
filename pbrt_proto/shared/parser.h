@@ -113,6 +113,10 @@ class Parser {
 
   virtual absl::Status Import(absl::string_view path) = 0;
 
+  virtual absl::Status LightSource(
+      absl::string_view light_source_type,
+      absl::flat_hash_map<absl::string_view, Parameter>& parameters) = 0;
+
   virtual absl::Status LookAt(double eye_x, double eye_y, double eye_z,
                               double look_x, double look_y, double look_z,
                               double up_x, double up_y, double up_z) = 0;
@@ -186,15 +190,19 @@ std::optional<int32_t> TryRemoveInteger(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     absl::string_view parameter_name);
 
+std::optional<std::array<double, 3>> TryRemovePoint3(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view parameter_name);
+
+std::optional<std::array<double, 3>> TryRemoveRgb(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view parameter_name);
+
 std::optional<absl::Span<std::array<double, 2>>> TryRemoveSpectralSamples(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     absl::string_view parameter_name);
 
 std::optional<absl::string_view> TryRemoveString(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    absl::string_view parameter_name);
-
-std::optional<std::array<double, 3>> TryRemoveRgb(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     absl::string_view parameter_name);
 

@@ -998,6 +998,14 @@ absl::Status Parser::ReadFrom(std::istream& stream) {
       }
 
       status = Import(*name);
+    } else if (**next == "LightSource") {
+      absl::StatusOr<absl::string_view> type_name = ReadParameters(
+          "LightSource", parameter_type_names_, storage, tokenizer, parameters);
+      if (!type_name.ok()) {
+        return type_name.status();
+      }
+
+      status = LightSource(*type_name, parameters);
     } else if (**next == "LookAt") {
       auto values = ReadFloatParameters("LookAt", storage, tokenizer, 9, false);
       if (!values.ok()) {
@@ -1190,6 +1198,24 @@ std::optional<int32_t> TryRemoveInteger(
   return result;
 }
 
+std::optional<std::array<double, 3>> TryRemovePoint3(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view parameter_name) {
+  std::optional<std::array<double, 3>> result;
+  TryRemoveValue<ParameterType::POINT3>(parameters, parameter_name, result)
+      .IgnoreError();
+  return result;
+}
+
+std::optional<std::array<double, 3>> TryRemoveRgb(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view parameter_name) {
+  std::optional<std::array<double, 3>> result;
+  TryRemoveValue<ParameterType::RGB>(parameters, parameter_name, result)
+      .IgnoreError();
+  return result;
+}
+
 std::optional<absl::string_view> TryRemoveSpectrumFilename(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     absl::string_view parameter_name) {
@@ -1214,15 +1240,6 @@ std::optional<absl::string_view> TryRemoveString(
     absl::string_view parameter_name) {
   std::optional<absl::string_view> result;
   TryRemoveValue<ParameterType::STRING>(parameters, parameter_name, result)
-      .IgnoreError();
-  return result;
-}
-
-std::optional<std::array<double, 3>> TryRemoveRgb(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    absl::string_view parameter_name) {
-  std::optional<std::array<double, 3>> result;
-  TryRemoveValue<ParameterType::RGB>(parameters, parameter_name, result)
       .IgnoreError();
   return result;
 }

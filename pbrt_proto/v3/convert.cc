@@ -322,6 +322,10 @@ class ParserV3 final : public Parser {
 
   absl::Status Import(absl::string_view path) override;
 
+  absl::Status LightSource(
+      absl::string_view light_source_type,
+      absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
+
   absl::Status LookAt(double eye_x, double eye_y, double eye_z, double look_x,
                       double look_y, double look_z, double up_x, double up_y,
                       double up_z) override;
@@ -475,6 +479,13 @@ absl::Status ParserV3::AreaLightSource(
         twosided) {
       diffuse.set_twosided(*twosided);
     }
+
+    TryRemoveSpectrum(
+        parameters, "scale",
+        std::bind(&AreaLightSource::Diffuse::mutable_scale, &diffuse));
+  } else {
+    std::cerr << "Unrecognized AreaLightSource type: \""
+              << area_light_source_type << "\"" << std::endl;
   }
 
   return absl::OkStatus();
@@ -1300,6 +1311,153 @@ absl::Status ParserV3::Integrator(
 absl::Status ParserV3::Import(absl::string_view path) {
   return absl::UnimplementedError(
       "Directive 'Import' is not supported in pbrt-v3");
+}
+
+absl::Status ParserV3::LightSource(
+    absl::string_view light_source_type,
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
+  auto& light_source = *output_.add_directives()->mutable_light_source();
+
+  if (light_source_type == "distant") {
+    auto& distant = *light_source.mutable_distant();
+
+    TryRemoveSpectrum(parameters, "L",
+                      std::bind(&LightSource::Distant::mutable_l, &distant));
+
+    if (std::optional<std::array<double, 3>> from =
+            TryRemovePoint3(parameters, "from");
+        from) {
+      distant.mutable_from()->set_x((*from)[0]);
+      distant.mutable_from()->set_y((*from)[1]);
+      distant.mutable_from()->set_z((*from)[2]);
+    }
+
+    if (std::optional<std::array<double, 3>> to =
+            TryRemovePoint3(parameters, "to");
+        to) {
+      distant.mutable_to()->set_x((*to)[0]);
+      distant.mutable_to()->set_y((*to)[1]);
+      distant.mutable_to()->set_z((*to)[2]);
+    }
+
+    TryRemoveSpectrum(
+        parameters, "scale",
+        std::bind(&LightSource::Distant::mutable_scale, &distant));
+  } else if (light_source_type == "goniometric") {
+    auto& goniometric = *light_source.mutable_goniometric();
+
+    TryRemoveSpectrum(
+        parameters, "I",
+        std::bind(&LightSource::Goniometric::mutable_i, &goniometric));
+
+    if (std::optional<absl::string_view> mapname =
+            TryRemoveString(parameters, "mapname");
+        mapname) {
+      goniometric.set_mapname(*mapname);
+    }
+
+    TryRemoveSpectrum(
+        parameters, "scale",
+        std::bind(&LightSource::Goniometric::mutable_scale, &goniometric));
+  } else if (light_source_type == "infinite") {
+    auto& infinite = *light_source.mutable_infinite();
+
+    TryRemoveSpectrum(parameters, "L",
+                      std::bind(&LightSource::Infinite::mutable_l, &infinite));
+
+    if (std::optional<int32_t> samples =
+            TryRemoveInteger(parameters, "samples");
+        samples) {
+      infinite.set_samples(*samples);
+    }
+
+    if (std::optional<absl::string_view> mapname =
+            TryRemoveString(parameters, "mapname");
+        mapname) {
+      infinite.set_mapname(*mapname);
+    }
+
+    TryRemoveSpectrum(
+        parameters, "scale",
+        std::bind(&LightSource::Infinite::mutable_scale, &infinite));
+  } else if (light_source_type == "point") {
+    auto& point = *light_source.mutable_point();
+
+    TryRemoveSpectrum(parameters, "L",
+                      std::bind(&LightSource::Point::mutable_l, &point));
+
+    if (std::optional<std::array<double, 3>> from =
+            TryRemovePoint3(parameters, "from");
+        from) {
+      point.mutable_from()->set_x((*from)[0]);
+      point.mutable_from()->set_y((*from)[1]);
+      point.mutable_from()->set_z((*from)[2]);
+    }
+
+    TryRemoveSpectrum(parameters, "scale",
+                      std::bind(&LightSource::Point::mutable_scale, &point));
+  } else if (light_source_type == "projection") {
+    auto& projection = *light_source.mutable_projection();
+
+    TryRemoveSpectrum(
+        parameters, "I",
+        std::bind(&LightSource::Projection::mutable_i, &projection));
+
+    if (std::optional<double> fov = TryRemoveFloat(parameters, "fov"); fov) {
+      projection.set_fov(*fov);
+    }
+
+    if (std::optional<absl::string_view> mapname =
+            TryRemoveString(parameters, "mapname");
+        mapname) {
+      projection.set_mapname(*mapname);
+    }
+
+    TryRemoveSpectrum(
+        parameters, "scale",
+        std::bind(&LightSource::Projection::mutable_scale, &projection));
+  } else if (light_source_type == "spot") {
+    auto& spot = *light_source.mutable_spot();
+
+    TryRemoveSpectrum(parameters, "I",
+                      std::bind(&LightSource::Spot::mutable_i, &spot));
+
+    if (std::optional<std::array<double, 3>> from =
+            TryRemovePoint3(parameters, "from");
+        from) {
+      spot.mutable_from()->set_x((*from)[0]);
+      spot.mutable_from()->set_y((*from)[1]);
+      spot.mutable_from()->set_z((*from)[2]);
+    }
+
+    if (std::optional<std::array<double, 3>> to =
+            TryRemovePoint3(parameters, "to");
+        to) {
+      spot.mutable_to()->set_x((*to)[0]);
+      spot.mutable_to()->set_y((*to)[1]);
+      spot.mutable_to()->set_z((*to)[2]);
+    }
+
+    if (std::optional<double> coneangle =
+            TryRemoveFloat(parameters, "coneangle");
+        coneangle) {
+      spot.set_coneangle(*coneangle);
+    }
+
+    if (std::optional<double> conedeltaangle =
+            TryRemoveFloat(parameters, "conedeltaangle");
+        conedeltaangle) {
+      spot.set_conedeltaangle(*conedeltaangle);
+    }
+
+    TryRemoveSpectrum(parameters, "scale",
+                      std::bind(&LightSource::Spot::mutable_scale, &spot));
+  } else {
+    std::cerr << "Unrecognized LightSource type: \"" << light_source_type
+              << "\"" << std::endl;
+  }
+
+  return absl::OkStatus();
 }
 
 absl::Status ParserV3::LookAt(double eye_x, double eye_y, double eye_z,

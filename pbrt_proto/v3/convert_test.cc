@@ -387,10 +387,17 @@ TEST(Convert, ActiveTransformEnd) {
                                     })pb")));
 }
 
+TEST(Convert, AreaLightSourceUnknown) {
+  std::stringstream stream("AreaLightSource \"unknown\"");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(R"pb(directives { area_light_source {} })pb")));
+}
+
 TEST(Convert, AreaLightSourceDiffuse) {
   std::stringstream stream(
       "AreaLightSource \"diffuse\" \"blackbody L\" [1.0 2.0] \"bool twosided\" "
-      "\"true\" \"integer samples\" 2");
+      "\"true\" \"integer samples\" 2 \"blackbody scale\" [11.0 12.0]");
   EXPECT_THAT(
       Convert(stream),
       IsOkAndHolds(EqualsProto(
@@ -400,6 +407,9 @@ TEST(Convert, AreaLightSourceDiffuse) {
                      L { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
                      twosided: true
                      samples: 2
+                     scale {
+                       blackbody_spectrum { temperature: 11.0 scale: 12.0 }
+                     }
                    }
                  }
                })pb")));
@@ -1387,6 +1397,140 @@ TEST(Convert, Import) {
   EXPECT_THAT(Convert(stream),
               StatusIs(absl::StatusCode::kUnimplemented,
                        "Directive 'Import' is not supported in pbrt-v3"));
+}
+
+TEST(Convert, LightSourceUnknown) {
+  std::stringstream stream("LightSource \"unknown\"");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(R"pb(directives {
+                                                               light_source {}
+                                                             })pb")));
+}
+
+TEST(Convert, LightSourceDistant) {
+  std::stringstream stream(
+      "LightSource \"distant\" \"blackbody L\" [1.0 2.0] \"point from\" [3.0 "
+      "4.0 5.0] \"point to\" [6.0 7.0 8.0] \"blackbody scale\" [9.0 10.0]");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(
+          R"pb(directives {
+                 light_source {
+                   distant {
+                     L { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
+                     from { x: 3.0 y: 4.0 z: 5.0 }
+                     to { x: 6.0 y: 7.0 z: 8.0 }
+                     scale {
+                       blackbody_spectrum { temperature: 9.0 scale: 10.0 }
+                     }
+                   }
+                 }
+               })pb")));
+}
+
+TEST(Convert, LightSourceGoniometric) {
+  std::stringstream stream(
+      "LightSource \"goniometric\" \"blackbody I\" [1.0 2.0] \"string "
+      "mapname\" \"a\" \"blackbody scale\" [9.0 10.0]");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(
+          R"pb(directives {
+                 light_source {
+                   goniometric {
+                     I { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
+                     mapname: "a"
+                     scale {
+                       blackbody_spectrum { temperature: 9.0 scale: 10.0 }
+                     }
+                   }
+                 }
+               })pb")));
+}
+
+TEST(Convert, LightSourceInfinite) {
+  std::stringstream stream(
+      "LightSource \"infinite\" \"blackbody L\" [1.0 2.0] \"integer samples\" "
+      "3 \"string mapname\" \"a\" \"blackbody scale\" [9.0 10.0]");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(
+          R"pb(directives {
+                 light_source {
+                   infinite {
+                     L { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
+                     samples: 3
+                     mapname: "a"
+                     scale {
+                       blackbody_spectrum { temperature: 9.0 scale: 10.0 }
+                     }
+                   }
+                 }
+               })pb")));
+}
+
+TEST(Convert, LightSourcePoint) {
+  std::stringstream stream(
+      "LightSource \"point\" \"blackbody L\" [1.0 2.0] \"point from\" [3.0 4.0 "
+      "5.0] \"blackbody scale\" [9.0 10.0]");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(
+          R"pb(directives {
+                 light_source {
+                   point {
+                     L { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
+                     from { x: 3.0 y: 4.0 z: 5.0 }
+                     scale {
+                       blackbody_spectrum { temperature: 9.0 scale: 10.0 }
+                     }
+                   }
+                 }
+               })pb")));
+}
+
+TEST(Convert, LightSourceProjection) {
+  std::stringstream stream(
+      "LightSource \"projection\" \"blackbody I\" [1.0 2.0] \"float fov\" 3.0 "
+      "\"string mapname\" \"a\" \"blackbody scale\" [9.0 10.0]");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(
+          R"pb(directives {
+                 light_source {
+                   projection {
+                     I { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
+                     fov: 3.0
+                     mapname: "a"
+                     scale {
+                       blackbody_spectrum { temperature: 9.0 scale: 10.0 }
+                     }
+                   }
+                 }
+               })pb")));
+}
+
+TEST(Convert, LightSourceSpot) {
+  std::stringstream stream(
+      "LightSource \"spot\" \"blackbody I\" [1.0 2.0] \"point from\" [3.0 4.0 "
+      "5.0] \"point to\" [6.0 7.0 8.0] \"float coneangle\" 9.0 \"float "
+      "conedeltaangle\" 10.0 \"blackbody scale\" [11.0 12.0]");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(
+          R"pb(directives {
+                 light_source {
+                   spot {
+                     I { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
+                     from { x: 3.0 y: 4.0 z: 5.0 }
+                     to { x: 6.0 y: 7.0 z: 8.0 }
+                     coneangle: 9.0
+                     conedeltaangle: 10.0
+                     scale {
+                       blackbody_spectrum { temperature: 11.0 scale: 12.0 }
+                     }
+                   }
+                 }
+               })pb")));
 }
 
 TEST(Convert, LookAt) {

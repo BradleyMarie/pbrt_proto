@@ -28,6 +28,12 @@ enum Mapping2D {
   PLANAR = 3;
 }
 
+message Point {
+  double x = 1 [features.field_presence = LEGACY_REQUIRED];
+  double y = 2 [features.field_presence = LEGACY_REQUIRED];
+  double z = 3 [features.field_presence = LEGACY_REQUIRED];
+}
+
 message RgbSpectrum {
   double r = 1 [features.field_presence = LEGACY_REQUIRED];
   double g = 2 [features.field_presence = LEGACY_REQUIRED];
@@ -128,6 +134,7 @@ message AreaLightSource {
     Spectrum L = 1 [features.field_presence = EXPLICIT];
     bool twosided = 2 [default = false];
     int32 samples = 3 [default = 1];
+    Spectrum scale = 4 [features.field_presence = EXPLICIT];
   }
 
   oneof area_light_source_type {
@@ -507,6 +514,59 @@ message Integrator {
   }
 }
 
+message LightSource {
+  message Distant {
+    Spectrum L = 1 [features.field_presence = EXPLICIT];
+    pbrt_proto.v3.Point from = 2 [features.field_presence = EXPLICIT];
+    pbrt_proto.v3.Point to = 3 [features.field_presence = EXPLICIT];
+    Spectrum scale = 4 [features.field_presence = EXPLICIT];
+  }
+
+  message Goniometric {
+    Spectrum I = 1 [features.field_presence = EXPLICIT];
+    string mapname = 2 [default = ""];
+    Spectrum scale = 3 [features.field_presence = EXPLICIT];
+  }
+
+  message Infinite {
+    Spectrum L = 1 [features.field_presence = EXPLICIT];
+    int32 samples = 2 [default = 1];
+    string mapname = 3 [features.field_presence = EXPLICIT];
+    Spectrum scale = 4 [features.field_presence = EXPLICIT];
+  }
+
+  message Point {
+    Spectrum L = 1 [features.field_presence = EXPLICIT];
+    pbrt_proto.v3.Point from = 2 [features.field_presence = EXPLICIT];
+    Spectrum scale = 3 [features.field_presence = EXPLICIT];
+  }
+
+  message Projection {
+    Spectrum I = 1 [features.field_presence = EXPLICIT];
+    double fov = 2 [default = 45.0];
+    string mapname = 3 [default = ""];
+    Spectrum scale = 4 [features.field_presence = EXPLICIT];
+  }
+
+  message Spot {
+    Spectrum I = 1 [features.field_presence = EXPLICIT];
+    pbrt_proto.v3.Point from = 2 [features.field_presence = EXPLICIT];
+    pbrt_proto.v3.Point to = 3 [features.field_presence = EXPLICIT];
+    double coneangle = 4 [default = 30.0];
+    double conedeltaangle = 5 [default = 5.0];
+    Spectrum scale = 6 [features.field_presence = EXPLICIT];
+  }
+
+  oneof light_source_type {
+    Distant distant = 1;
+    Goniometric goniometric = 2;
+    Infinite infinite = 3;
+    Point point = 4;
+    Projection projection = 5;
+    Spot spot = 6;
+  }
+}
+
 message LookAt {
   double eye_x = 1 [features.field_presence = LEGACY_REQUIRED];
   double eye_y = 2 [features.field_presence = LEGACY_REQUIRED];
@@ -784,22 +844,23 @@ message Directive {
     Identity identity = 13;
     Include include = 14;
     Integrator integrator = 15;
-    LookAt look_at = 16;
-    ObjectBegin object_begin = 17;
-    ObjectEnd object_end = 18;
-    ObjectInstance object_instance = 19;
-    ReverseOrientation reverse_orientation = 20;
-    Rotate rotate = 21;
-    Sampler sampler = 22;
-    Scale scale = 23;
-    SpectrumTexture spectrum_texture = 24;
-    Transform transform = 25;
-    TransformBegin transform_begin = 26;
-    TransformEnd transform_end = 27;
-    TransformTimes transform_times = 28;
-    Translate translate = 29;
-    WorldBegin world_begin = 30;
-    WorldEnd world_end = 31;
+    LightSource light_source = 16;
+    LookAt look_at = 17;
+    ObjectBegin object_begin = 18;
+    ObjectEnd object_end = 19;
+    ObjectInstance object_instance = 20;
+    ReverseOrientation reverse_orientation = 21;
+    Rotate rotate = 22;
+    Sampler sampler = 23;
+    Scale scale = 24;
+    SpectrumTexture spectrum_texture = 25;
+    Transform transform = 26;
+    TransformBegin transform_begin = 27;
+    TransformEnd transform_end = 28;
+    TransformTimes transform_times = 29;
+    Translate translate = 30;
+    WorldBegin world_begin = 31;
+    WorldEnd world_end = 32;
   }
 }
 
