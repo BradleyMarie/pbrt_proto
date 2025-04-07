@@ -514,6 +514,231 @@ message Integrator {
   }
 }
 
+message MakeNamedMaterial {
+  string name = 1 [features.field_presence = LEGACY_REQUIRED];
+  Material material = 2 [features.field_presence = LEGACY_REQUIRED];
+}
+
+message Material {
+  message Disney {
+    SpectrumTexture color = 1 [features.field_presence = EXPLICIT];
+    FloatTexture anisotropic = 2 [features.field_presence = EXPLICIT];
+    FloatTexture clearcoat = 3 [features.field_presence = EXPLICIT];
+    FloatTexture clearcoatgloss = 4 [features.field_presence = EXPLICIT];
+    FloatTexture eta = 5 [features.field_presence = EXPLICIT];
+    FloatTexture metallic = 6 [features.field_presence = EXPLICIT];
+    FloatTexture roughness = 7 [features.field_presence = EXPLICIT];
+    SpectrumTexture scatterdistance = 8 [features.field_presence = EXPLICIT];
+    FloatTexture sheen = 9 [features.field_presence = EXPLICIT];
+    FloatTexture sheentint = 10 [features.field_presence = EXPLICIT];
+    FloatTexture spectrans = 11 [features.field_presence = EXPLICIT];
+    FloatTexture speculartint = 12 [features.field_presence = EXPLICIT];
+    bool thin = 13 [default = false];
+    FloatTexture difftrans = 14 [features.field_presence = EXPLICIT];
+    SpectrumTexture flatness = 15 [features.field_presence = EXPLICIT];
+    FloatTexture bumpmap = 16 [features.field_presence = EXPLICIT]; // Must check
+  }
+
+  message Fourier {
+    string bsdffile = 1 [default = ""];
+    FloatTexture bumpmap = 2 [features.field_presence = EXPLICIT]; // Must check
+  }
+
+  message Glass {
+    SpectrumTexture Kr = 1 [features.field_presence = EXPLICIT];
+    SpectrumTexture Kt = 2 [features.field_presence = EXPLICIT];
+    FloatTexture eta = 3 [features.field_presence = EXPLICIT];
+    FloatTexture uroughness = 4 [features.field_presence = EXPLICIT];
+    FloatTexture vroughness = 5 [features.field_presence = EXPLICIT];
+    bool remaproughness = 7 [default = true];
+    FloatTexture bumpmap = 8 [features.field_presence = EXPLICIT]; // Must check
+  }
+
+  message Hair {
+     // Must check sigma_a for presence
+    SpectrumTexture sigma_a = 1 [features.field_presence = EXPLICIT];
+    SpectrumTexture color = 2 [features.field_presence = EXPLICIT];
+    FloatTexture eumelanin = 3 [features.field_presence = EXPLICIT];
+    FloatTexture pheomelanin = 4 [features.field_presence = EXPLICIT];
+    FloatTexture eta = 5 [features.field_presence = EXPLICIT];
+    FloatTexture beta_m = 6 [features.field_presence = EXPLICIT];
+    FloatTexture beta_n = 7 [features.field_presence = EXPLICIT];
+    FloatTexture alpha = 8 [features.field_presence = EXPLICIT];
+    FloatTexture bumpmap = 9 [features.field_presence = EXPLICIT]; // Must check
+  }
+
+  message KdSubsurface {
+    SpectrumTexture Kd = 1 [features.field_presence = EXPLICIT];
+    FloatTexture mfp = 2 [features.field_presence = EXPLICIT];
+    FloatTexture eta = 3 [features.field_presence = EXPLICIT];
+    SpectrumTexture Kr = 4 [features.field_presence = EXPLICIT];
+    SpectrumTexture Kt = 5 [features.field_presence = EXPLICIT];
+    FloatTexture uroughness = 6 [features.field_presence = EXPLICIT];
+    FloatTexture vroughness = 7 [features.field_presence = EXPLICIT];
+    bool remaproughness = 8 [default = true];
+    FloatTexture bumpmap = 9 [features.field_presence = EXPLICIT]; // Must check
+  }
+
+  message Matte {
+    SpectrumTexture Kd = 1 [features.field_presence = EXPLICIT];
+    FloatTexture sigma = 2 [features.field_presence = EXPLICIT];
+    FloatTexture bumpmap = 3 [features.field_presence = EXPLICIT]; // Must check
+  }
+
+  message Metal {
+    SpectrumTexture eta = 1 [features.field_presence = EXPLICIT];
+    SpectrumTexture k = 2 [features.field_presence = EXPLICIT];
+    FloatTexture roughness = 3 [features.field_presence = EXPLICIT];
+    FloatTexture uroughness = 4 [features.field_presence = EXPLICIT];
+    FloatTexture vroughness = 5 [features.field_presence = EXPLICIT];
+    bool remaproughness = 6 [default = true];
+    FloatTexture bumpmap = 7 [features.field_presence = EXPLICIT]; // Must check
+  }
+
+  message Mirror {
+    SpectrumTexture Kr = 1 [features.field_presence = EXPLICIT];
+    FloatTexture bumpmap = 2 [features.field_presence = EXPLICIT]; // Must check
+  }
+
+  message Mix {
+    FloatTexture amount = 1 [features.field_presence = EXPLICIT];
+    string namedmaterial1 = 2 [default = ""];
+    string namedmaterial2 = 3 [default = ""];
+  }
+
+  message None {
+    // Empty Message
+  }
+
+  message Plastic {
+    SpectrumTexture Kd = 1 [features.field_presence = EXPLICIT];
+    SpectrumTexture Ks = 2 [features.field_presence = EXPLICIT];
+    FloatTexture roughness = 3 [features.field_presence = EXPLICIT];
+    bool remaproughness = 4 [default = true];
+    FloatTexture bumpmap = 5 [features.field_presence = EXPLICIT]; // Must check
+  }
+
+  message Substrate {
+    SpectrumTexture Kd = 1 [features.field_presence = EXPLICIT];
+    SpectrumTexture Ks = 2 [features.field_presence = EXPLICIT];
+    FloatTexture uroughness = 3 [features.field_presence = EXPLICIT];
+    FloatTexture vroughness = 4 [features.field_presence = EXPLICIT];
+    bool remaproughness = 5 [default = true];
+    FloatTexture bumpmap = 6 [features.field_presence = EXPLICIT]; // Must check
+  }
+
+  message Subsurface {
+    enum MeasuredSubsurfaces {
+      option features.enum_type = CLOSED;
+      APPLE = 0;
+      CHICKEN1 = 1;
+      CHICKEN2 = 2;
+      CREAM = 3;
+      KETCHUP = 4;
+      MARBLE = 5;
+      POTATO = 6;
+      SKIMMILK = 7;
+      SKIN1 = 8;
+      SKIN2 = 9;
+      SPECTRALON = 10;
+      WHOLEMILK = 11;
+      LOWFAT_MILK = 12;
+      REDUCED_MILK = 13;
+      REGULAR_MILK = 14;
+      ESPRESSO = 15;
+      MINT_MOCHA_COFFEE = 16;
+      LOWFAT_SOY_MILK = 17;
+      REGULAR_SOY_MILK = 18;
+      LOWFAT_CHOCOLATE_MILK = 19;
+      REGULAR_CHOCOLATE_MILK = 20;
+      COKE = 21;
+      PEPSI = 22;
+      SPRITE = 23;
+      GATORADE = 24;
+      CHARDONNAY = 25;
+      WHITE_ZINFANDEL = 26;
+      MERLOT = 27;
+      BUDWEISER_BEER = 28;
+      COORS_LIGHT_BEER = 29;
+      CLOROX = 30;
+      APPLE_JUICE = 31;
+      CRANBERRY_JUICE = 32;
+      GRAPE_JUICE = 33;
+      RUBY_GRAPEFRUIT_JUICE = 34;
+      WHITE_GRAPEFRUIT_JUICE = 35;
+      SHAMPOO = 36;
+      STRAWBERRY_SHAMPOO = 37;
+      HEAD_AND_SHOULDERS_SHAMPOO = 38;
+      LEMON_TEA_POWDER = 39;
+      ORANGE_POWDER = 40;
+      PINK_LEMONADE = 41;
+      CAPPUCCINO_POWDER = 42;
+      SALT_POWDER = 43;
+      SUGAR_POWDER = 44;
+      SUISSE_MOCHA_POWDER = 45;
+      PACIFIC_OCEAN_SURFACE_WATER = 46;
+    }
+
+    MeasuredSubsurfaces name = 1 [features.field_presence = EXPLICIT]; // Must check
+    SpectrumTexture sigma_a = 2 [features.field_presence = EXPLICIT];
+    SpectrumTexture sigma_s = 3 [features.field_presence = EXPLICIT];
+    double scale = 4 [default = 1.0];
+    FloatTexture eta = 5 [features.field_presence = EXPLICIT];
+    SpectrumTexture Kr = 6 [features.field_presence = EXPLICIT];
+    SpectrumTexture Kt = 7 [features.field_presence = EXPLICIT];
+    FloatTexture uroughness = 8 [features.field_presence = EXPLICIT];
+    FloatTexture vroughness = 9 [features.field_presence = EXPLICIT];
+    bool remaproughness = 10 [default = true];
+    FloatTexture bumpmap = 11 [features.field_presence = EXPLICIT]; // Must check    
+  }
+
+  message Translucent {
+    SpectrumTexture Kd = 1 [features.field_presence = EXPLICIT];
+    SpectrumTexture Ks = 2 [features.field_presence = EXPLICIT];
+    FloatTexture reflect = 3 [features.field_presence = EXPLICIT];
+    FloatTexture transmit = 4 [features.field_presence = EXPLICIT];
+    FloatTexture roughness = 5 [features.field_presence = EXPLICIT];
+    bool remaproughness = 6 [default = true];
+    FloatTexture bumpmap = 7 [features.field_presence = EXPLICIT]; // Must check
+  }
+
+  message Uber {
+    SpectrumTexture Kd = 1 [features.field_presence = EXPLICIT];
+    SpectrumTexture Ks = 2 [features.field_presence = EXPLICIT];
+    SpectrumTexture Kr = 3 [features.field_presence = EXPLICIT];
+    SpectrumTexture Kt = 4 [features.field_presence = EXPLICIT];
+    FloatTexture roughness = 5 [features.field_presence = EXPLICIT];
+    FloatTexture uroughness = 6 [features.field_presence = EXPLICIT];
+    FloatTexture vroughness = 7 [features.field_presence = EXPLICIT];
+    FloatTexture eta = 8 [features.field_presence = EXPLICIT];
+    FloatTexture opacity = 9 [features.field_presence = EXPLICIT];
+    bool remaproughness = 10 [default = true];
+    FloatTexture bumpmap = 11 [features.field_presence = EXPLICIT]; // Must check
+  }
+
+  oneof material_type {
+    Disney disney = 1;
+    Fourier fourier = 2;
+    Glass glass = 3;
+    Hair hair = 4;
+    KdSubsurface kdsubsurface = 5;
+    Matte matte = 6;
+    Metal metal = 7;
+    Mirror mirror = 8;
+    Mix mix = 9;
+    None none = 10;
+    Plastic plastic = 11;
+    Substrate substrate = 12;
+    Subsurface subsurface = 13;
+    Translucent translucent = 14;
+    Uber uber = 15;
+  }
+}
+
+message NamedMaterial {
+  string name = 1 [features.field_presence = LEGACY_REQUIRED];
+}
+
 message LightSource {
   message Distant {
     Spectrum L = 1 [features.field_presence = EXPLICIT];
@@ -531,7 +756,7 @@ message LightSource {
   message Infinite {
     Spectrum L = 1 [features.field_presence = EXPLICIT];
     int32 samples = 2 [default = 1];
-    string mapname = 3 [features.field_presence = EXPLICIT];
+    string mapname = 3 [features.field_presence = EXPLICIT]; // Must check
     Spectrum scale = 4 [features.field_presence = EXPLICIT];
   }
 
@@ -846,21 +1071,24 @@ message Directive {
     Integrator integrator = 15;
     LightSource light_source = 16;
     LookAt look_at = 17;
-    ObjectBegin object_begin = 18;
-    ObjectEnd object_end = 19;
-    ObjectInstance object_instance = 20;
-    ReverseOrientation reverse_orientation = 21;
-    Rotate rotate = 22;
-    Sampler sampler = 23;
-    Scale scale = 24;
-    SpectrumTexture spectrum_texture = 25;
-    Transform transform = 26;
-    TransformBegin transform_begin = 27;
-    TransformEnd transform_end = 28;
-    TransformTimes transform_times = 29;
-    Translate translate = 30;
-    WorldBegin world_begin = 31;
-    WorldEnd world_end = 32;
+    MakeNamedMaterial make_named_material = 18;
+    Material material = 19;
+    NamedMaterial named_material = 20;
+    ObjectBegin object_begin = 21;
+    ObjectEnd object_end = 22;
+    ObjectInstance object_instance = 23;
+    ReverseOrientation reverse_orientation = 24;
+    Rotate rotate = 25;
+    Sampler sampler = 26;
+    Scale scale = 27;
+    SpectrumTexture spectrum_texture = 28;
+    Transform transform = 29;
+    TransformBegin transform_begin = 30;
+    TransformEnd transform_end = 31;
+    TransformTimes transform_times = 32;
+    Translate translate = 33;
+    WorldBegin world_begin = 34;
+    WorldEnd world_end = 35;
   }
 }
 
