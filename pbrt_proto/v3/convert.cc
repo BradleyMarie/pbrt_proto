@@ -265,6 +265,20 @@ static const absl::flat_hash_map<absl::string_view, ParameterType>
         },
 };
 
+Material ParseMaterial(
+    absl::string_view material_type,
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
+  Material material;
+
+  if (material_type == "" || material_type == "none") {
+    // Do Nothing
+  } else {
+    // matte
+  }
+
+  return material;
+}
+
 class ParserV3 final : public Parser {
  public:
   ParserV3(PbrtProto& output) noexcept
@@ -329,6 +343,16 @@ class ParserV3 final : public Parser {
   absl::Status LookAt(double eye_x, double eye_y, double eye_z, double look_x,
                       double look_y, double look_z, double up_x, double up_y,
                       double up_z) override;
+
+  absl::Status MakeNamedMaterial(
+      absl::string_view material_name,
+      absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
+
+  absl::Status Material(
+      absl::string_view material_type,
+      absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
+
+  absl::Status NamedMaterial(absl::string_view material) override;
 
   absl::Status ObjectBegin(absl::string_view path) override;
 
@@ -1473,6 +1497,32 @@ absl::Status ParserV3::LookAt(double eye_x, double eye_y, double eye_z,
   look_at.set_up_x(up_x);
   look_at.set_up_y(up_y);
   look_at.set_up_z(up_z);
+  return absl::OkStatus();
+}
+
+absl::Status ParserV3::MakeNamedMaterial(
+    absl::string_view material_name,
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
+  auto& make_named_material =
+      *output_.add_directives()->mutable_make_named_material();
+
+  make_named_material.set_name(material_name);
+  *make_named_material.mutable_material() = ParseMaterial(
+      TryRemoveString(parameters, "type").value_or(""), parameters);
+
+  return absl::OkStatus();
+}
+
+absl::Status ParserV3::Material(
+    absl::string_view material_type,
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
+  *output_.add_directives()->mutable_material() =
+      ParseMaterial(material_type, parameters);
+  return absl::OkStatus();
+}
+
+absl::Status ParserV3::NamedMaterial(absl::string_view name) {
+  output_.add_directives()->mutable_named_material()->set_name(name);
   return absl::OkStatus();
 }
 

@@ -679,7 +679,9 @@ message Material {
       PACIFIC_OCEAN_SURFACE_WATER = 46;
     }
 
-    MeasuredSubsurfaces name = 1 [features.field_presence = EXPLICIT]; // Must check
+    // If using pbrt_proto::v3::Canonicalize, there is no need to check this
+    // field and the correct values will be filled into sigma_a and sigma_s.
+    MeasuredSubsurfaces name = 1 [features.field_presence = EXPLICIT];
     SpectrumTexture sigma_a = 2 [features.field_presence = EXPLICIT];
     SpectrumTexture sigma_s = 3 [features.field_presence = EXPLICIT];
     double scale = 4 [default = 1.0];

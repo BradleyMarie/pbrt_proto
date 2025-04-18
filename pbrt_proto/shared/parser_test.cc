@@ -139,6 +139,15 @@ class MockParser final : public Parser {
               (double, double, double, double, double, double, double, double,
                double),
               (override));
+  MOCK_METHOD(absl::Status, MakeNamedMaterial,
+              (absl::string_view,
+               (absl::flat_hash_map<absl::string_view, Parameter>&)),
+              (override));
+  MOCK_METHOD(absl::Status, Material,
+              (absl::string_view,
+               (absl::flat_hash_map<absl::string_view, Parameter>&)),
+              (override));
+  MOCK_METHOD(absl::Status, NamedMaterial, (absl::string_view), (override));
   MOCK_METHOD(absl::Status, ObjectBegin, (absl::string_view), (override));
   MOCK_METHOD(absl::Status, ObjectEnd, (), (override));
   MOCK_METHOD(absl::Status, ObjectInstance, (absl::string_view), (override));
@@ -1903,6 +1912,78 @@ TEST(LookAt, Fails) {
   std::stringstream stream("LookAt 1 2 3 4 5 6 7 8 9");
   MockParser parser;
   EXPECT_CALL(parser, LookAt(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0))
+      .WillOnce(Return(absl::UnknownError("")));
+  EXPECT_THAT(parser.ReadFrom(stream),
+              StatusIs(absl::StatusCode::kUnknown, ""));
+}
+
+TEST(MakeNamedMaterial, Succeeds) {
+  std::stringstream stream("MakeNamedMaterial \"abc\"");
+  MockParser parser;
+  EXPECT_CALL(parser, MakeNamedMaterial("abc", IsEmpty()))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(MakeNamedMaterial, MissingType) {
+  std::stringstream stream("MakeNamedMaterial");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(absl::StatusCode::kInvalidArgument,
+               "Missing name parameter to directive MakeNamedMaterial"));
+}
+
+TEST(MakeNamedMaterial, Fails) {
+  std::stringstream stream("MakeNamedMaterial \"abc\"");
+  MockParser parser;
+  EXPECT_CALL(parser, MakeNamedMaterial("abc", IsEmpty()))
+      .WillOnce(Return(absl::UnknownError("")));
+  EXPECT_THAT(parser.ReadFrom(stream),
+              StatusIs(absl::StatusCode::kUnknown, ""));
+}
+
+TEST(Material, Succeeds) {
+  std::stringstream stream("Material \"abc\"");
+  MockParser parser;
+  EXPECT_CALL(parser, Material("abc", IsEmpty()))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Material, MissingType) {
+  std::stringstream stream("Material");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Missing type parameter to directive Material"));
+}
+
+TEST(Material, Fails) {
+  std::stringstream stream("Material \"abc\"");
+  MockParser parser;
+  EXPECT_CALL(parser, Material("abc", IsEmpty()))
+      .WillOnce(Return(absl::UnknownError("")));
+  EXPECT_THAT(parser.ReadFrom(stream),
+              StatusIs(absl::StatusCode::kUnknown, ""));
+}
+
+TEST(NamedMaterial, Invalid) {
+  std::stringstream stream("NamedMaterial a");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Invalid parameter to directive NamedMaterial: 'a'"));
+}
+
+TEST(NamedMaterial, Succeeds) {
+  std::stringstream stream("NamedMaterial \"a\"");
+  MockParser parser;
+  EXPECT_CALL(parser, NamedMaterial("a")).WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(NamedMaterial, Fails) {
+  std::stringstream stream("NamedMaterial \"a\"");
+  MockParser parser;
+  EXPECT_CALL(parser, NamedMaterial("a"))
       .WillOnce(Return(absl::UnknownError("")));
   EXPECT_THAT(parser.ReadFrom(stream),
               StatusIs(absl::StatusCode::kUnknown, ""));

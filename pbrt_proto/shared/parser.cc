@@ -556,9 +556,9 @@ absl::StatusOr<absl::InlinedVector<double, 16>> ReadFloatParameters(
   return results;
 }
 
-absl::StatusOr<absl::string_view> ReadTypeName(absl::string_view directive,
-                                               ParameterStorage& storage,
-                                               Tokenizer& tokenizer) {
+absl::StatusOr<absl::string_view> ReadTypeName(
+    absl::string_view directive, ParameterStorage& storage,
+    Tokenizer& tokenizer, absl::string_view first_parameter_name) {
   absl::StatusOr<const std::string*> next = tokenizer.Next();
   if (!next.ok()) {
     return next.status();
@@ -566,13 +566,14 @@ absl::StatusOr<absl::string_view> ReadTypeName(absl::string_view directive,
 
   if (!*next) {
     return absl::InvalidArgumentError(
-        absl::StrCat("Missing type parameter to directive ", directive));
+        absl::StrCat("Missing ", first_parameter_name,
+                     " parameter to directive ", directive));
   }
 
   if ((**next)[0] != '"') {
-    return absl::InvalidArgumentError(
-        absl::StrCat("Unquoted type parameter to directive ", directive, ": '",
-                     **next, "'"));
+    return absl::InvalidArgumentError(absl::StrCat(
+        "Unquoted ", first_parameter_name, " parameter to directive ",
+        directive, ": '", **next, "'"));
   }
 
   absl::string_view type_name = **next;
@@ -627,9 +628,10 @@ absl::StatusOr<absl::string_view> ReadParameters(
     const absl::flat_hash_map<absl::string_view, ParameterType>&
         parameter_type_names,
     ParameterStorage& storage, Tokenizer& tokenizer,
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view first_parameter_name = "type") {
   absl::StatusOr<absl::string_view> type_name =
-      ReadTypeName(directive, storage, tokenizer);
+      ReadTypeName(directive, storage, tokenizer, first_parameter_name);
   if (!type_name.ok()) {
     return type_name.status();
   }
@@ -1015,6 +1017,30 @@ absl::Status Parser::ReadFrom(std::istream& stream) {
       status = LookAt((*values)[0], (*values)[1], (*values)[2], (*values)[3],
                       (*values)[4], (*values)[5], (*values)[6], (*values)[7],
                       (*values)[8]);
+    } else if (**next == "MakeNamedMaterial") {
+      absl::StatusOr<absl::string_view> material_name =
+          ReadParameters("MakeNamedMaterial", parameter_type_names_, storage,
+                         tokenizer, parameters, "name");
+      if (!material_name.ok()) {
+        return material_name.status();
+      }
+
+      status = MakeNamedMaterial(*material_name, parameters);
+    } else if (**next == "Material") {
+      absl::StatusOr<absl::string_view> type_name = ReadParameters(
+          "Material", parameter_type_names_, storage, tokenizer, parameters);
+      if (!type_name.ok()) {
+        return type_name.status();
+      }
+
+      status = Material(*type_name, parameters);
+    } else if (**next == "NamedMaterial") {
+      auto name = ReadQuotedString("NamedMaterial", tokenizer);
+      if (!name.ok()) {
+        return name.status();
+      }
+
+      status = NamedMaterial(*name);
     } else if (**next == "ObjectBegin") {
       auto name = ReadQuotedString("ObjectBegin", tokenizer);
       if (!name.ok()) {

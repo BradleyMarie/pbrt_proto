@@ -121,6 +121,16 @@ class Parser {
                               double look_x, double look_y, double look_z,
                               double up_x, double up_y, double up_z) = 0;
 
+  virtual absl::Status MakeNamedMaterial(
+      absl::string_view material_name,
+      absl::flat_hash_map<absl::string_view, Parameter>& parameters) = 0;
+
+  virtual absl::Status Material(
+      absl::string_view material_type,
+      absl::flat_hash_map<absl::string_view, Parameter>& parameters) = 0;
+
+  virtual absl::Status NamedMaterial(absl::string_view material) = 0;
+
   virtual absl::Status ObjectBegin(absl::string_view name) = 0;
 
   virtual absl::Status ObjectEnd() = 0;

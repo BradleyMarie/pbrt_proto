@@ -1550,6 +1550,48 @@ TEST(Convert, LookAt) {
                                                              })pb")));
 }
 
+TEST(Convert, MakeNamedMaterialEmpty) {
+  std::stringstream stream("MakeNamedMaterial \"a\" \"string type\" \"\"");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives {
+                                              make_named_material {
+                                                name: "a"
+                                                material {}
+                                              }
+                                            })pb")));
+}
+
+TEST(Convert, MakeNamedMaterialNone) {
+  std::stringstream stream("MakeNamedMaterial \"a\" \"string type\" \"none\"");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives {
+                                              make_named_material {
+                                                name: "a"
+                                                material {}
+                                              }
+                                            })pb")));
+}
+
+TEST(Convert, MaterialEmpty) {
+  std::stringstream stream("Material \"\"");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives { material {} })pb")));
+}
+
+TEST(Convert, MaterialEmptyNone) {
+  std::stringstream stream("Material \"none\"");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives { material {} })pb")));
+}
+
+TEST(Convert, NamedMaterial) {
+  std::stringstream stream("NamedMaterial \"a\"");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives {
+                                              named_material { name: "a" }
+                                            })pb")));
+}
+
 TEST(Convert, ObjectBegin) {
   std::stringstream stream("ObjectBegin \"a\"");
   EXPECT_THAT(Convert(stream),
