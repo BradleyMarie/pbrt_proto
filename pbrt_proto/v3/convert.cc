@@ -199,6 +199,26 @@ void TryRemoveUVParameters(
   }
 }
 
+Material ParseMaterial(
+    absl::string_view material_type,
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
+  Material material;
+
+  if (material_type == "" || material_type == "none") {
+    // Do Nothing
+  } else {
+    auto& matte = *material.mutable_matte();
+    TryRemoveSpectrumTexture(parameters, "Kd",
+                             std::bind(&Material::Matte::mutable_kd, &matte));
+    TryRemoveFloatTexture(parameters, "sigma",
+                          std::bind(&Material::Matte::mutable_sigma, &matte));
+    TryRemoveFloatTexture(parameters, "bumpmap",
+                          std::bind(&Material::Matte::mutable_bumpmap, &matte));
+  }
+
+  return material;
+}
+
 static const absl::flat_hash_map<absl::string_view, ParameterType>
     parameter_type_names = {
         {
@@ -264,20 +284,6 @@ static const absl::flat_hash_map<absl::string_view, ParameterType>
             ParameterType::XYZ,
         },
 };
-
-Material ParseMaterial(
-    absl::string_view material_type,
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
-  Material material;
-
-  if (material_type == "" || material_type == "none") {
-    // Do Nothing
-  } else {
-    // matte
-  }
-
-  return material;
-}
 
 class ParserV3 final : public Parser {
  public:

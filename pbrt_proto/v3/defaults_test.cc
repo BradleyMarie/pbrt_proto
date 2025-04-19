@@ -327,6 +327,19 @@ TEST(Canonicalize, LightSourceSpot) {
                        })pb"));
 }
 
+TEST(Canonicalize, MaterialMatte) {
+  EXPECT_THAT(MakeCanonical(R"pb(directives { material { matte {} } })pb"),
+              EqualsProto(
+                  R"pb(directives {
+                         material {
+                           matte {
+                             Kd { uniform_spectrum: 0.5 }
+                             sigma { float_value: 0.0 }
+                           }
+                         }
+                       })pb"));
+}
+
 // Unset Sampler are left unset and should eventually cause a black image to be
 // rendered
 // https://github.com/mmp/pbrt-v3/blob/13d871faae88233b327d04cda24022b8bb0093ee/src/core/api.cpp#L1671

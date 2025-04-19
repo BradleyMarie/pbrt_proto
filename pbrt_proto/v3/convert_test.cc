@@ -1584,6 +1584,30 @@ TEST(Convert, MaterialEmptyNone) {
               IsOkAndHolds(EqualsProto(R"pb(directives { material {} })pb")));
 }
 
+TEST(Convert, MaterialMatte) {
+  std::stringstream stream(
+      "Material \"matte\" \"texture Kd\" \"a\" \"float sigma\" 1.0 \"float "
+      "bumpmap\" 2.0");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(R"pb(directives {
+                                      material {
+                                        matte {
+                                          Kd { spectrum_texture_name: "a" }
+                                          sigma { float_value: 1.0 }
+                                          bumpmap { float_value: 2.0 }
+                                        }
+                                      }
+                                    })pb")));
+}
+
+TEST(Convert, MaterialInvalidMatte) {
+  std::stringstream stream("Material \"abcdefg\"");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(R"pb(directives { material { matte {} } })pb")));
+}
+
 TEST(Convert, NamedMaterial) {
   std::stringstream stream("NamedMaterial \"a\"");
   EXPECT_THAT(Convert(stream),

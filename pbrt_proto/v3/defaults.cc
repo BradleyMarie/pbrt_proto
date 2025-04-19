@@ -418,6 +418,46 @@ void Canonicalize(PbrtProto& proto) {
             break;
         }
         break;
+      case Directive::kMaterial:
+        switch (directive.material().material_type_case()) {
+          case Material::kDisney:
+            break;
+          case Material::kFourier:
+            break;
+          case Material::kGlass:
+            break;
+          case Material::kHair:
+            break;
+          case Material::kKdsubsurface:
+            break;
+          case Material::kMatte:
+            SetSpectrumTextureParameterDefault(
+                *directive.mutable_material()->mutable_matte()->mutable_kd(),
+                0.5);
+            SetFloatTextureParameterDefault(
+                *directive.mutable_material()->mutable_matte()->mutable_sigma(),
+                0.0);
+            break;
+          case Material::kMetal:
+            break;
+          case Material::kMirror:
+            break;
+          case Material::kMix:
+            break;
+          case Material::kPlastic:
+            break;
+          case Material::kSubstrate:
+            break;
+          case Material::kSubsurface:
+            break;
+          case Material::kTranslucent:
+            break;
+          case Material::kUber:
+            break;
+          case Material::MATERIAL_TYPE_NOT_SET:
+            break;
+        }
+        break;
       case Directive::kSpectrumTexture:
         switch (directive.spectrum_texture().spectrum_texture_type_case()) {
           case SpectrumTexture::kBilerp:
