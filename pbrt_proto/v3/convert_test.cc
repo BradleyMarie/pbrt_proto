@@ -1665,8 +1665,8 @@ TEST(Convert, MaterialGlass) {
                                    R"pb(directives {
                                           material {
                                             glass {
-                                              Kr: { spectrum_texture_name: "a" }
-                                              Kt: { spectrum_texture_name: "b" }
+                                              Kr { spectrum_texture_name: "a" }
+                                              Kt { spectrum_texture_name: "b" }
                                               eta { float_value: 1.0 }
                                               uroughness { float_value: 2.0 }
                                               vroughness { float_value: 3.0 }
@@ -1689,8 +1689,8 @@ TEST(Convert, MaterialGlassIndex) {
                                    R"pb(directives {
                                           material {
                                             glass {
-                                              Kr: { spectrum_texture_name: "a" }
-                                              Kt: { spectrum_texture_name: "b" }
+                                              Kr { spectrum_texture_name: "a" }
+                                              Kt { spectrum_texture_name: "b" }
                                               eta { float_value: 1.0 }
                                               uroughness { float_value: 2.0 }
                                               vroughness { float_value: 3.0 }
@@ -1717,8 +1717,8 @@ TEST(Convert, MaterialHair) {
                   R"pb(directives {
                          material {
                            hair {
-                             sigma_a: { spectrum_texture_name: "a" }
-                             color: { spectrum_texture_name: "b" }
+                             sigma_a { spectrum_texture_name: "a" }
+                             color { spectrum_texture_name: "b" }
                              eumelanin { float_value: 1.0 }
                              pheomelanin { float_value: 2.0 }
                              eta { float_value: 3.0 }
@@ -1729,6 +1729,38 @@ TEST(Convert, MaterialHair) {
                            }
                          }
                        })pb")));
+}
+
+TEST(Convert, MaterialKdSubsurface) {
+  std::stringstream stream(
+      "Material \"kdsubsurface\" "
+      "\"texture Kd\" \"a\" "
+      "\"float mfp\" 1.0 "
+      "\"texture Kr\" \"b\" "
+      "\"texture Kt\" \"c\" "
+      "\"float uroughness\" 2.0 "
+      "\"float vroughness\" 3.0 "
+      "\"float eta\" 4.0 "
+      "\"float scale\" 5.0 "
+      "\"float g\" 6.0 "
+      "\"float bumpmap\" 7.0 ");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
+                                   R"pb(directives {
+                                          material {
+                                            kdsubsurface {
+                                              Kd { spectrum_texture_name: "a" }
+                                              Kr { spectrum_texture_name: "b" }
+                                              Kt { spectrum_texture_name: "c" }
+                                              mfp { float_value: 1.0 }
+                                              uroughness { float_value: 2.0 }
+                                              vroughness { float_value: 3.0 }
+                                              eta: 4.0
+                                              scale: 5.0
+                                              g: 6.0
+                                              bumpmap { float_value: 7.0 }
+                                            }
+                                          }
+                                        })pb")));
 }
 
 TEST(Convert, MaterialMatte) {

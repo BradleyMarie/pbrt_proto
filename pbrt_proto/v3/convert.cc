@@ -319,6 +319,49 @@ Material ParseMaterial(
                           std::bind(&Material::Hair::mutable_alpha, &hair));
     TryRemoveFloatTexture(parameters, "bumpmap",
                           std::bind(&Material::Hair::mutable_bumpmap, &hair));
+  } else if (material_type == "kdsubsurface") {
+    auto& kdsubsurface = *material.mutable_kdsubsurface();
+    TryRemoveSpectrumTexture(
+        parameters, "Kd",
+        std::bind(&Material::KdSubsurface::mutable_kd, &kdsubsurface));
+    TryRemoveFloatTexture(
+        parameters, "mfp",
+        std::bind(&Material::KdSubsurface::mutable_mfp, &kdsubsurface));
+    TryRemoveSpectrumTexture(
+        parameters, "Kr",
+        std::bind(&Material::KdSubsurface::mutable_kr, &kdsubsurface));
+    TryRemoveSpectrumTexture(
+        parameters, "Kt",
+        std::bind(&Material::KdSubsurface::mutable_kt, &kdsubsurface));
+    TryRemoveFloatTexture(
+        parameters, "uroughness",
+        std::bind(&Material::KdSubsurface::mutable_uroughness, &kdsubsurface));
+    TryRemoveFloatTexture(
+        parameters, "vroughness",
+        std::bind(&Material::KdSubsurface::mutable_vroughness, &kdsubsurface));
+
+    if (std::optional<double> eta = TryRemoveFloat(parameters, "eta"); eta) {
+      kdsubsurface.set_eta(*eta);
+    }
+
+    if (std::optional<double> scale = TryRemoveFloat(parameters, "scale");
+        scale) {
+      kdsubsurface.set_scale(*scale);
+    }
+
+    if (std::optional<double> g = TryRemoveFloat(parameters, "g"); g) {
+      kdsubsurface.set_g(*g);
+    }
+
+    if (std::optional<bool> remaproughness =
+            TryRemoveBool(parameters, "remaproughness");
+        remaproughness) {
+      kdsubsurface.set_remaproughness(*remaproughness);
+    }
+
+    TryRemoveFloatTexture(
+        parameters, "bumpmap",
+        std::bind(&Material::KdSubsurface::mutable_bumpmap, &kdsubsurface));
   } else {
     auto& matte = *material.mutable_matte();
     TryRemoveSpectrumTexture(parameters, "Kd",

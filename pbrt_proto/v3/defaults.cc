@@ -313,6 +313,24 @@ void CanonicalizeMaterial(Material& material) {
                                       2.0);
       break;
     case Material::kKdsubsurface:
+      if (!material.kdsubsurface().has_kd()) {
+        auto& kd = *material.mutable_kdsubsurface()
+                        ->mutable_kd()
+                        ->mutable_rgb_spectrum();
+        kd.set_r(0.5);
+        kd.set_g(0.5);
+        kd.set_b(0.5);
+      }
+      SetFloatTextureParameterDefault(
+          *material.mutable_kdsubsurface()->mutable_mfp(), 1.0);
+      SetSpectrumTextureParameterDefault(
+          *material.mutable_kdsubsurface()->mutable_kr(), 1.0);
+      SetSpectrumTextureParameterDefault(
+          *material.mutable_kdsubsurface()->mutable_kt(), 1.0);
+      SetFloatTextureParameterDefault(
+          *material.mutable_kdsubsurface()->mutable_uroughness(), 0.0);
+      SetFloatTextureParameterDefault(
+          *material.mutable_kdsubsurface()->mutable_vroughness(), 0.0);
       break;
     case Material::kMatte:
       SetSpectrumTextureParameterDefault(

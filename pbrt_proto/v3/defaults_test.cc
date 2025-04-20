@@ -467,6 +467,24 @@ TEST(Canonicalize, MaterialHairWithSigmaA) {
                        })pb"));
 }
 
+TEST(Canonicalize, MaterialKdSubsurface) {
+  EXPECT_THAT(
+      MakeCanonical(R"pb(directives { material { kdsubsurface {} } })pb"),
+      EqualsProto(
+          R"pb(directives {
+                 material {
+                   kdsubsurface {
+                     Kd { rgb_spectrum { r: 0.5 g: 0.5 b: 0.5 } }
+                     mfp { float_value: 1.0 }
+                     Kr { uniform_spectrum: 1.0 }
+                     Kt { uniform_spectrum: 1.0 }
+                     uroughness { float_value: 0.0 }
+                     vroughness { float_value: 0.0 }
+                   }
+                 }
+               })pb"));
+}
+
 TEST(Canonicalize, MaterialMatte) {
   EXPECT_THAT(MakeCanonical(R"pb(directives { material { matte {} } })pb"),
               EqualsProto(
