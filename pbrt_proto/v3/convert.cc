@@ -256,6 +256,18 @@ Material ParseMaterial(
     TryRemoveFloatTexture(
         parameters, "bumpmap",
         std::bind(&Material::Disney::mutable_bumpmap, &disney));
+  } else if (material_type == "fourier") {
+    auto& fourier = *material.mutable_fourier();
+
+    if (std::optional<absl::string_view> bsdffile =
+            TryRemoveString(parameters, "bsdffile");
+        bsdffile) {
+      fourier.set_bsdffile(*bsdffile);
+    }
+    
+    TryRemoveFloatTexture(
+      parameters, "bumpmap",
+      std::bind(&Material::Fourier::mutable_bumpmap, &fourier));
   } else {
     auto& matte = *material.mutable_matte();
     TryRemoveSpectrumTexture(parameters, "Kd",

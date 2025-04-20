@@ -243,6 +243,73 @@ void SetDefaultScale(T& message) {
   }
 }
 
+void CanonicalizeMaterial(Material& material) {
+  switch (material.material_type_case()) {
+    case Material::kDisney:
+      SetSpectrumTextureParameterDefault(
+          *material.mutable_disney()->mutable_color(), 0.5);
+      SetFloatTextureParameterDefault(
+          *material.mutable_disney()->mutable_anisotropic(), 0.0);
+      SetFloatTextureParameterDefault(
+          *material.mutable_disney()->mutable_clearcoat(), 0.0);
+      SetFloatTextureParameterDefault(
+          *material.mutable_disney()->mutable_clearcoatgloss(), 1.0);
+      SetFloatTextureParameterDefault(*material.mutable_disney()->mutable_eta(),
+                                      1.5);
+      SetFloatTextureParameterDefault(
+          *material.mutable_disney()->mutable_metallic(), 0.0);
+      SetFloatTextureParameterDefault(
+          *material.mutable_disney()->mutable_roughness(), 0.5);
+      SetSpectrumTextureParameterDefault(
+          *material.mutable_disney()->mutable_scatterdistance(), 0.0);
+      SetFloatTextureParameterDefault(
+          *material.mutable_disney()->mutable_sheen(), 0.0);
+      SetFloatTextureParameterDefault(
+          *material.mutable_disney()->mutable_sheentint(), 0.5);
+      SetFloatTextureParameterDefault(
+          *material.mutable_disney()->mutable_spectrans(), 0.0);
+      SetFloatTextureParameterDefault(
+          *material.mutable_disney()->mutable_speculartint(), 0.0);
+      SetFloatTextureParameterDefault(
+          *material.mutable_disney()->mutable_difftrans(), 1.0);
+      SetFloatTextureParameterDefault(
+          *material.mutable_disney()->mutable_flatness(), 0.0);
+      break;
+    case Material::kFourier:
+      break;
+    case Material::kGlass:
+      break;
+    case Material::kHair:
+      break;
+    case Material::kKdsubsurface:
+      break;
+    case Material::kMatte:
+      SetSpectrumTextureParameterDefault(
+          *material.mutable_matte()->mutable_kd(), 0.5);
+      SetFloatTextureParameterDefault(
+          *material.mutable_matte()->mutable_sigma(), 0.0);
+      break;
+    case Material::kMetal:
+      break;
+    case Material::kMirror:
+      break;
+    case Material::kMix:
+      break;
+    case Material::kPlastic:
+      break;
+    case Material::kSubstrate:
+      break;
+    case Material::kSubsurface:
+      break;
+    case Material::kTranslucent:
+      break;
+    case Material::kUber:
+      break;
+    case Material::MATERIAL_TYPE_NOT_SET:
+      break;
+  }
+}
+
 }  // namespace
 
 const PbrtProto& GetDefaults() {
@@ -418,100 +485,12 @@ void Canonicalize(PbrtProto& proto) {
             break;
         }
         break;
+      case Directive::kMakeNamedMaterial:
+        CanonicalizeMaterial(
+            *directive.mutable_make_named_material()->mutable_material());
+        break;
       case Directive::kMaterial:
-        switch (directive.material().material_type_case()) {
-          case Material::kDisney:
-            SetSpectrumTextureParameterDefault(*directive.mutable_material()
-                                                    ->mutable_disney()
-                                                    ->mutable_color(),
-                                               0.5);
-            SetFloatTextureParameterDefault(*directive.mutable_material()
-                                                 ->mutable_disney()
-                                                 ->mutable_anisotropic(),
-                                            0.0);
-            SetFloatTextureParameterDefault(*directive.mutable_material()
-                                                 ->mutable_disney()
-                                                 ->mutable_clearcoat(),
-                                            0.0);
-            SetFloatTextureParameterDefault(*directive.mutable_material()
-                                                 ->mutable_disney()
-                                                 ->mutable_clearcoatgloss(),
-                                            1.0);
-            SetFloatTextureParameterDefault(
-                *directive.mutable_material()->mutable_disney()->mutable_eta(),
-                1.5);
-            SetFloatTextureParameterDefault(*directive.mutable_material()
-                                                 ->mutable_disney()
-                                                 ->mutable_metallic(),
-                                            0.0);
-            SetFloatTextureParameterDefault(*directive.mutable_material()
-                                                 ->mutable_disney()
-                                                 ->mutable_roughness(),
-                                            0.5);
-            SetSpectrumTextureParameterDefault(*directive.mutable_material()
-                                                    ->mutable_disney()
-                                                    ->mutable_scatterdistance(),
-                                               0.0);
-            SetFloatTextureParameterDefault(*directive.mutable_material()
-                                                 ->mutable_disney()
-                                                 ->mutable_sheen(),
-                                            0.0);
-            SetFloatTextureParameterDefault(*directive.mutable_material()
-                                                 ->mutable_disney()
-                                                 ->mutable_sheentint(),
-                                            0.5);
-            SetFloatTextureParameterDefault(*directive.mutable_material()
-                                                 ->mutable_disney()
-                                                 ->mutable_spectrans(),
-                                            0.0);
-            SetFloatTextureParameterDefault(*directive.mutable_material()
-                                                 ->mutable_disney()
-                                                 ->mutable_speculartint(),
-                                            0.0);
-            SetFloatTextureParameterDefault(*directive.mutable_material()
-                                                 ->mutable_disney()
-                                                 ->mutable_difftrans(),
-                                            1.0);
-            SetFloatTextureParameterDefault(*directive.mutable_material()
-                                                 ->mutable_disney()
-                                                 ->mutable_flatness(),
-                                            0.0);
-            break;
-          case Material::kFourier:
-            break;
-          case Material::kGlass:
-            break;
-          case Material::kHair:
-            break;
-          case Material::kKdsubsurface:
-            break;
-          case Material::kMatte:
-            SetSpectrumTextureParameterDefault(
-                *directive.mutable_material()->mutable_matte()->mutable_kd(),
-                0.5);
-            SetFloatTextureParameterDefault(
-                *directive.mutable_material()->mutable_matte()->mutable_sigma(),
-                0.0);
-            break;
-          case Material::kMetal:
-            break;
-          case Material::kMirror:
-            break;
-          case Material::kMix:
-            break;
-          case Material::kPlastic:
-            break;
-          case Material::kSubstrate:
-            break;
-          case Material::kSubsurface:
-            break;
-          case Material::kTranslucent:
-            break;
-          case Material::kUber:
-            break;
-          case Material::MATERIAL_TYPE_NOT_SET:
-            break;
-        }
+        CanonicalizeMaterial(*directive.mutable_material());
         break;
       case Directive::kSpectrumTexture:
         switch (directive.spectrum_texture().spectrum_texture_type_case()) {

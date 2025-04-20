@@ -1629,6 +1629,22 @@ TEST(Convert, MaterialDisney) {
                        })pb")));
 }
 
+TEST(Convert, MaterialFourier) {
+  std::stringstream stream(
+      "Material \"fourier\" "
+      "\"string bsdffile\" \"a\" "
+      "\"float bumpmap\" 1.0 ");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
+                                   R"pb(directives {
+                                          material {
+                                            fourier {
+                                              bsdffile: "a"
+                                              bumpmap { float_value: 1.0 }
+                                            }
+                                          }
+                                        })pb")));
+}
+
 TEST(Convert, MaterialMatte) {
   std::stringstream stream(
       "Material \"matte\" \"texture Kd\" \"a\" \"float sigma\" 1.0 \"float "

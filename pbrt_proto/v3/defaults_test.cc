@@ -327,6 +327,50 @@ TEST(Canonicalize, LightSourceSpot) {
                        })pb"));
 }
 
+// Unset MakeNamedMaterial are left unset
+TEST(Canonicalize, MakeNamedMaterialEmpty) {
+  EXPECT_THAT(MakeCanonical(R"pb(directives {
+                                   make_named_material {
+                                     name: "a"
+                                     material {}
+                                   }
+                                 })pb"),
+              EqualsProto(
+                  R"pb(directives {
+                         make_named_material {
+                           name: "a"
+                           material {}
+                         }
+                       })pb"));
+}
+
+TEST(Canonicalize, MakeNamedMaterialMatte) {
+  EXPECT_THAT(MakeCanonical(R"pb(directives {
+                                   make_named_material {
+                                     name: "a"
+                                     material { matte {} }
+                                   }
+                                 })pb"),
+              EqualsProto(
+                  R"pb(directives {
+                         make_named_material {
+                           name: "a"
+                           material {
+                             matte {
+                               Kd { uniform_spectrum: 0.5 }
+                               sigma { float_value: 0.0 }
+                             }
+                           }
+                         }
+                       })pb"));
+}
+
+// Unset Material are left unset
+TEST(Canonicalize, MaterialEmpty) {
+  EXPECT_THAT(MakeCanonical(R"pb(directives { material {} })pb"),
+              EqualsProto(R"pb(directives { material {} })pb"));
+}
+
 TEST(Canonicalize, MaterialDisney) {
   EXPECT_THAT(MakeCanonical(R"pb(directives { material { disney {} } })pb"),
               EqualsProto(
@@ -350,6 +394,12 @@ TEST(Canonicalize, MaterialDisney) {
                            }
                          }
                        })pb"));
+}
+
+TEST(Canonicalize, MaterialFourier) {
+  EXPECT_THAT(MakeCanonical(R"pb(directives { material { fourier {} } })pb"),
+              EqualsProto(
+                  R"pb(directives { material { fourier {} } })pb"));
 }
 
 TEST(Canonicalize, MaterialMatte) {
