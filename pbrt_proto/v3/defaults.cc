@@ -290,6 +290,27 @@ void CanonicalizeMaterial(Material& material) {
           *material.mutable_glass()->mutable_vroughness(), 0.0);
       break;
     case Material::kHair:
+      if (!material.hair().has_sigma_a() && !material.hair().has_color() &&
+          !material.hair().has_eumelanin() &&
+          !material.hair().has_pheomelanin()) {
+        auto& sigma_a =
+            *material.mutable_hair()->mutable_sigma_a()->mutable_rgb_spectrum();
+        sigma_a.set_r(1.3 * 0.419);
+        sigma_a.set_g(1.3 * 0.697);
+        sigma_a.set_b(1.3 * 1.37);
+      }
+      SetFloatTextureParameterDefault(
+          *material.mutable_hair()->mutable_eumelanin(), 0.0);
+      SetFloatTextureParameterDefault(
+          *material.mutable_hair()->mutable_pheomelanin(), 0.0);
+      SetFloatTextureParameterDefault(*material.mutable_hair()->mutable_eta(),
+                                      1.55);
+      SetFloatTextureParameterDefault(
+          *material.mutable_hair()->mutable_beta_m(), 0.3);
+      SetFloatTextureParameterDefault(
+          *material.mutable_hair()->mutable_beta_n(), 0.3);
+      SetFloatTextureParameterDefault(*material.mutable_hair()->mutable_alpha(),
+                                      2.0);
       break;
     case Material::kKdsubsurface:
       break;

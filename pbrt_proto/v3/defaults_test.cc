@@ -417,6 +417,56 @@ TEST(Canonicalize, MaterialGlass) {
                        })pb"));
 }
 
+TEST(Canonicalize, MaterialHairEmpty) {
+  PbrtProto directives = ParseTextOrDie(
+      R"pb(directives {
+             material {
+               hair {
+                 eumelanin { float_value: 0.0 }
+                 pheomelanin { float_value: 0.0 }
+                 eta { float_value: 1.55 }
+                 beta_m { float_value: 0.3 }
+                 beta_n { float_value: 0.3 }
+                 alpha { float_value: 2.0 }
+               }
+             }
+           })pb");
+
+  auto& sigma_a = *directives.mutable_directives(0)
+                       ->mutable_material()
+                       ->mutable_hair()
+                       ->mutable_sigma_a()
+                       ->mutable_rgb_spectrum();
+  sigma_a.set_r(1.3 * 0.419);
+  sigma_a.set_g(1.3 * 0.697);
+  sigma_a.set_b(1.3 * 1.37);
+
+  EXPECT_EQ(
+      MakeCanonical(R"pb(directives { material { hair {} } })pb").DebugString(),
+      directives.DebugString());
+}
+
+TEST(Canonicalize, MaterialHairWithSigmaA) {
+  EXPECT_THAT(MakeCanonical(
+                  R"pb(directives {
+                         material { hair { sigma_a { uniform_spectrum: 1.0 } } }
+                       })pb"),
+              EqualsProto(
+                  R"pb(directives {
+                         material {
+                           hair {
+                             sigma_a { uniform_spectrum: 1.0 }
+                             eumelanin { float_value: 0.0 }
+                             pheomelanin { float_value: 0.0 }
+                             eta { float_value: 1.55 }
+                             beta_m { float_value: 0.3 }
+                             beta_n { float_value: 0.3 }
+                             alpha { float_value: 2.0 }
+                           }
+                         }
+                       })pb"));
+}
+
 TEST(Canonicalize, MaterialMatte) {
   EXPECT_THAT(MakeCanonical(R"pb(directives { material { matte {} } })pb"),
               EqualsProto(

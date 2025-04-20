@@ -1700,6 +1700,37 @@ TEST(Convert, MaterialGlassIndex) {
                                         })pb")));
 }
 
+TEST(Convert, MaterialHair) {
+  std::stringstream stream(
+      "Material \"hair\" "
+      "\"texture sigma_a\" \"a\" "
+      "\"texture color\" \"b\" "
+      "\"float eumelanin\" 1.0 "
+      "\"float pheomelanin\" 2.0 "
+      "\"float eta\" 3.0 "
+      "\"float beta_m\" 4.0 "
+      "\"float beta_n\" 5.0 "
+      "\"float alpha\" 6.0 "
+      "\"float bumpmap\" 7.0 ");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(
+                  R"pb(directives {
+                         material {
+                           hair {
+                             sigma_a: { spectrum_texture_name: "a" }
+                             color: { spectrum_texture_name: "b" }
+                             eumelanin { float_value: 1.0 }
+                             pheomelanin { float_value: 2.0 }
+                             eta { float_value: 3.0 }
+                             beta_m { float_value: 4.0 }
+                             beta_n { float_value: 5.0 }
+                             alpha { float_value: 6.0 }
+                             bumpmap { float_value: 7.0 }
+                           }
+                         }
+                       })pb")));
+}
+
 TEST(Convert, MaterialMatte) {
   std::stringstream stream(
       "Material \"matte\" \"texture Kd\" \"a\" \"float sigma\" 1.0 \"float "

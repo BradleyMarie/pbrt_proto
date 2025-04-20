@@ -297,6 +297,28 @@ Material ParseMaterial(
 
     TryRemoveFloatTexture(parameters, "bumpmap",
                           std::bind(&Material::Glass::mutable_bumpmap, &glass));
+  } else if (material_type == "hair") {
+    auto& hair = *material.mutable_hair();
+    TryRemoveSpectrumTexture(
+        parameters, "sigma_a",
+        std::bind(&Material::Hair::mutable_sigma_a, &hair));
+    TryRemoveSpectrumTexture(parameters, "color",
+                             std::bind(&Material::Hair::mutable_color, &hair));
+    TryRemoveFloatTexture(parameters, "eumelanin",
+                          std::bind(&Material::Hair::mutable_eumelanin, &hair));
+    TryRemoveFloatTexture(
+        parameters, "pheomelanin",
+        std::bind(&Material::Hair::mutable_pheomelanin, &hair));
+    TryRemoveFloatTexture(parameters, "eta",
+                          std::bind(&Material::Hair::mutable_eta, &hair));
+    TryRemoveFloatTexture(parameters, "beta_m",
+                          std::bind(&Material::Hair::mutable_beta_m, &hair));
+    TryRemoveFloatTexture(parameters, "beta_n",
+                          std::bind(&Material::Hair::mutable_beta_n, &hair));
+    TryRemoveFloatTexture(parameters, "alpha",
+                          std::bind(&Material::Hair::mutable_alpha, &hair));
+    TryRemoveFloatTexture(parameters, "bumpmap",
+                          std::bind(&Material::Hair::mutable_bumpmap, &hair));
   } else {
     auto& matte = *material.mutable_matte();
     TryRemoveSpectrumTexture(parameters, "Kd",
