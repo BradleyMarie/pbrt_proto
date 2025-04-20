@@ -374,6 +374,8 @@ void CanonicalizeMaterial(Material& material) {
           *material.mutable_mirror()->mutable_kr(), 0.9);
       break;
     case Material::kMix:
+      SetFloatTextureParameterDefault(*material.mutable_mix()->mutable_amount(),
+                                      0.5);
       break;
     case Material::kPlastic:
       break;

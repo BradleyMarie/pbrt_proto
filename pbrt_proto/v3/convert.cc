@@ -393,6 +393,22 @@ Material ParseMaterial(
     TryRemoveFloatTexture(
         parameters, "bumpmap",
         std::bind(&Material::Mirror::mutable_bumpmap, &mirror));
+  } else if (material_type == "mix") {
+    auto& mix = *material.mutable_mix();
+    TryRemoveFloatTexture(parameters, "amount",
+                          std::bind(&Material::Mix::mutable_amount, &mix));
+
+    if (std::optional<absl::string_view> namedmaterial1 =
+            TryRemoveString(parameters, "namedmaterial1");
+        namedmaterial1) {
+      mix.set_namedmaterial1(*namedmaterial1);
+    }
+
+    if (std::optional<absl::string_view> namedmaterial2 =
+            TryRemoveString(parameters, "namedmaterial2");
+        namedmaterial2) {
+      mix.set_namedmaterial2(*namedmaterial2);
+    }
   } else {
     auto& matte = *material.mutable_matte();
     TryRemoveSpectrumTexture(parameters, "Kd",

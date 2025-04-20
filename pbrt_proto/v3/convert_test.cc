@@ -1825,6 +1825,24 @@ TEST(Convert, MaterialMirror) {
                                     })pb")));
 }
 
+TEST(Convert, MaterialMix) {
+  std::stringstream stream(
+      "Material \"mix\" "
+      "\"float amount\" 1.0 "
+      "\"string namedmaterial1\" \"a\" "
+      "\"string namedmaterial2\" \"b\" ");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
+                                   R"pb(directives {
+                                          material {
+                                            mix {
+                                              amount { float_value: 1.0 }
+                                              namedmaterial1: "a"
+                                              namedmaterial2: "b"
+                                            }
+                                          }
+                                        })pb")));
+}
+
 TEST(Convert, NamedMaterial) {
   std::stringstream stream("NamedMaterial \"a\"");
   EXPECT_THAT(Convert(stream),
