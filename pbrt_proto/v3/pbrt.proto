@@ -535,7 +535,7 @@ message Material {
     FloatTextureParameter speculartint = 12 [features.field_presence = EXPLICIT];
     bool thin = 13 [default = false];
     FloatTextureParameter difftrans = 14 [features.field_presence = EXPLICIT];
-    SpectrumTextureParameter flatness = 15 [features.field_presence = EXPLICIT];
+    FloatTextureParameter flatness = 15 [features.field_presence = EXPLICIT];
     FloatTextureParameter bumpmap = 16 [features.field_presence = EXPLICIT]; // Must check
   }
 
@@ -604,10 +604,6 @@ message Material {
     FloatTextureParameter amount = 1 [features.field_presence = EXPLICIT];
     string namedmaterial1 = 2 [default = ""];
     string namedmaterial2 = 3 [default = ""];
-  }
-
-  message None {
-    // Empty Message
   }
 
   message Plastic {

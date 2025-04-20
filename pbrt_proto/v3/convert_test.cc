@@ -1584,6 +1584,51 @@ TEST(Convert, MaterialEmptyNone) {
               IsOkAndHolds(EqualsProto(R"pb(directives { material {} })pb")));
 }
 
+TEST(Convert, MaterialDisney) {
+  std::stringstream stream(
+      "Material \"disney\" "
+      "\"texture color\" \"a\" "
+      "\"float anisotropic\" 1.0 "
+      "\"float clearcoat\" 2.0 "
+      "\"float clearcoatgloss\" 3.0 "
+      "\"float eta\" 4.0 "
+      "\"float metallic\" 5.0 "
+      "\"float roughness\" 6.0 "
+      "\"texture scatterdistance\" \"b\" "
+      "\"float sheen\" 7.0 "
+      "\"float sheentint\" 8.0 "
+      "\"float spectrans\" 9.0 "
+      "\"float speculartint\" 10.0 "
+      "\"bool thin\" \"true\" "
+      "\"float difftrans\" 11.0 "
+      "\"float flatness\" 12.0 "
+      "\"float bumpmap\" 13.0 ");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(
+                  R"pb(directives {
+                         material {
+                           disney {
+                             color { spectrum_texture_name: "a" }
+                             scatterdistance { spectrum_texture_name: "b" }
+                             anisotropic { float_value: 1.0 }
+                             clearcoat { float_value: 2.0 }
+                             clearcoatgloss { float_value: 3.0 }
+                             eta { float_value: 4.0 }
+                             metallic { float_value: 5.0 }
+                             roughness { float_value: 6.0 }
+                             sheen { float_value: 7.0 }
+                             sheentint { float_value: 8.0 }
+                             spectrans { float_value: 9.0 }
+                             speculartint { float_value: 10.0 }
+                             difftrans { float_value: 11.0 }
+                             flatness { float_value: 12.0 }
+                             bumpmap { float_value: 13.0 }
+                             thin: true
+                           }
+                         }
+                       })pb")));
+}
+
 TEST(Convert, MaterialMatte) {
   std::stringstream stream(
       "Material \"matte\" \"texture Kd\" \"a\" \"float sigma\" 1.0 \"float "

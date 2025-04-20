@@ -327,6 +327,31 @@ TEST(Canonicalize, LightSourceSpot) {
                        })pb"));
 }
 
+TEST(Canonicalize, MaterialDisney) {
+  EXPECT_THAT(MakeCanonical(R"pb(directives { material { disney {} } })pb"),
+              EqualsProto(
+                  R"pb(directives {
+                         material {
+                           disney {
+                             color { uniform_spectrum: 0.5 }
+                             scatterdistance { uniform_spectrum: 0.0 }
+                             anisotropic { float_value: 0.0 }
+                             clearcoat { float_value: 0.0 }
+                             clearcoatgloss { float_value: 1.0 }
+                             eta { float_value: 1.5 }
+                             metallic { float_value: 0.0 }
+                             roughness { float_value: 0.5 }
+                             sheen { float_value: 0.0 }
+                             sheentint { float_value: 0.5 }
+                             spectrans { float_value: 0.0 }
+                             speculartint { float_value: 0.0 }
+                             difftrans { float_value: 1.0 }
+                             flatness { float_value: 0.0 }
+                           }
+                         }
+                       })pb"));
+}
+
 TEST(Canonicalize, MaterialMatte) {
   EXPECT_THAT(MakeCanonical(R"pb(directives { material { matte {} } })pb"),
               EqualsProto(

@@ -206,6 +206,56 @@ Material ParseMaterial(
 
   if (material_type == "" || material_type == "none") {
     // Do Nothing
+  } else if (material_type == "disney") {
+    auto& disney = *material.mutable_disney();
+    TryRemoveSpectrumTexture(
+        parameters, "color",
+        std::bind(&Material::Disney::mutable_color, &disney));
+    TryRemoveFloatTexture(
+        parameters, "anisotropic",
+        std::bind(&Material::Disney::mutable_anisotropic, &disney));
+    TryRemoveFloatTexture(
+        parameters, "clearcoat",
+        std::bind(&Material::Disney::mutable_clearcoat, &disney));
+    TryRemoveFloatTexture(
+        parameters, "clearcoatgloss",
+        std::bind(&Material::Disney::mutable_clearcoatgloss, &disney));
+    TryRemoveFloatTexture(parameters, "eta",
+                          std::bind(&Material::Disney::mutable_eta, &disney));
+    TryRemoveFloatTexture(
+        parameters, "metallic",
+        std::bind(&Material::Disney::mutable_metallic, &disney));
+    TryRemoveFloatTexture(
+        parameters, "roughness",
+        std::bind(&Material::Disney::mutable_roughness, &disney));
+    TryRemoveSpectrumTexture(
+        parameters, "scatterdistance",
+        std::bind(&Material::Disney::mutable_scatterdistance, &disney));
+    TryRemoveFloatTexture(parameters, "sheen",
+                          std::bind(&Material::Disney::mutable_sheen, &disney));
+    TryRemoveFloatTexture(
+        parameters, "sheentint",
+        std::bind(&Material::Disney::mutable_sheentint, &disney));
+    TryRemoveFloatTexture(
+        parameters, "spectrans",
+        std::bind(&Material::Disney::mutable_spectrans, &disney));
+    TryRemoveFloatTexture(
+        parameters, "speculartint",
+        std::bind(&Material::Disney::mutable_speculartint, &disney));
+
+    if (std::optional<bool> thin = TryRemoveBool(parameters, "thin"); thin) {
+      disney.set_thin(*thin);
+    }
+
+    TryRemoveFloatTexture(
+        parameters, "difftrans",
+        std::bind(&Material::Disney::mutable_difftrans, &disney));
+    TryRemoveFloatTexture(
+        parameters, "flatness",
+        std::bind(&Material::Disney::mutable_flatness, &disney));
+    TryRemoveFloatTexture(
+        parameters, "bumpmap",
+        std::bind(&Material::Disney::mutable_bumpmap, &disney));
   } else {
     auto& matte = *material.mutable_matte();
     TryRemoveSpectrumTexture(parameters, "Kd",
