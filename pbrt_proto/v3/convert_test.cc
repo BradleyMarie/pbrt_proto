@@ -1584,6 +1584,13 @@ TEST(Convert, MaterialEmptyNone) {
               IsOkAndHolds(EqualsProto(R"pb(directives { material {} })pb")));
 }
 
+TEST(Convert, MaterialInvalid) {
+  std::stringstream stream("Material \"abcdefg\"");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(R"pb(directives { material { matte {} } })pb")));
+}
+
 TEST(Convert, MaterialDisney) {
   std::stringstream stream(
       "Material \"disney\" "
@@ -1645,6 +1652,54 @@ TEST(Convert, MaterialFourier) {
                                         })pb")));
 }
 
+TEST(Convert, MaterialGlass) {
+  std::stringstream stream(
+      "Material \"glass\" "
+      "\"texture Kr\" \"a\" "
+      "\"texture Kt\" \"b\" "
+      "\"float eta\" 1.0 "
+      "\"float uroughness\" 2.0 "
+      "\"float vroughness\" 3.0 "
+      "\"float bumpmap\" 4.0 ");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
+                                   R"pb(directives {
+                                          material {
+                                            glass {
+                                              Kr: { spectrum_texture_name: "a" }
+                                              Kt: { spectrum_texture_name: "b" }
+                                              eta { float_value: 1.0 }
+                                              uroughness { float_value: 2.0 }
+                                              vroughness { float_value: 3.0 }
+                                              bumpmap { float_value: 4.0 }
+                                            }
+                                          }
+                                        })pb")));
+}
+
+TEST(Convert, MaterialGlassIndex) {
+  std::stringstream stream(
+      "Material \"glass\" "
+      "\"texture Kr\" \"a\" "
+      "\"texture Kt\" \"b\" "
+      "\"float index\" 1.0 "
+      "\"float uroughness\" 2.0 "
+      "\"float vroughness\" 3.0 "
+      "\"float bumpmap\" 4.0 ");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
+                                   R"pb(directives {
+                                          material {
+                                            glass {
+                                              Kr: { spectrum_texture_name: "a" }
+                                              Kt: { spectrum_texture_name: "b" }
+                                              eta { float_value: 1.0 }
+                                              uroughness { float_value: 2.0 }
+                                              vroughness { float_value: 3.0 }
+                                              bumpmap { float_value: 4.0 }
+                                            }
+                                          }
+                                        })pb")));
+}
+
 TEST(Convert, MaterialMatte) {
   std::stringstream stream(
       "Material \"matte\" \"texture Kd\" \"a\" \"float sigma\" 1.0 \"float "
@@ -1660,13 +1715,6 @@ TEST(Convert, MaterialMatte) {
                                         }
                                       }
                                     })pb")));
-}
-
-TEST(Convert, MaterialInvalidMatte) {
-  std::stringstream stream("Material \"abcdefg\"");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(R"pb(directives { material { matte {} } })pb")));
 }
 
 TEST(Convert, NamedMaterial) {

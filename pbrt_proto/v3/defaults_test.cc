@@ -398,8 +398,23 @@ TEST(Canonicalize, MaterialDisney) {
 
 TEST(Canonicalize, MaterialFourier) {
   EXPECT_THAT(MakeCanonical(R"pb(directives { material { fourier {} } })pb"),
+              EqualsProto(R"pb(directives { material { fourier {} } })pb"));
+}
+
+TEST(Canonicalize, MaterialGlass) {
+  EXPECT_THAT(MakeCanonical(R"pb(directives { material { glass {} } })pb"),
               EqualsProto(
-                  R"pb(directives { material { fourier {} } })pb"));
+                  R"pb(directives {
+                         material {
+                           glass {
+                             Kr { uniform_spectrum: 1.0 }
+                             Kt { uniform_spectrum: 1.0 }
+                             eta { float_value: 1.5 }
+                             uroughness { float_value: 0.0 }
+                             vroughness { float_value: 0.0 }
+                           }
+                         }
+                       })pb"));
 }
 
 TEST(Canonicalize, MaterialMatte) {

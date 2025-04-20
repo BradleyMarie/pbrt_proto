@@ -278,6 +278,16 @@ void CanonicalizeMaterial(Material& material) {
     case Material::kFourier:
       break;
     case Material::kGlass:
+      SetSpectrumTextureParameterDefault(
+          *material.mutable_glass()->mutable_kr(), 1.0);
+      SetSpectrumTextureParameterDefault(
+          *material.mutable_glass()->mutable_kt(), 1.0);
+      SetFloatTextureParameterDefault(*material.mutable_glass()->mutable_eta(),
+                                      1.5);
+      SetFloatTextureParameterDefault(
+          *material.mutable_glass()->mutable_uroughness(), 0.0);
+      SetFloatTextureParameterDefault(
+          *material.mutable_glass()->mutable_vroughness(), 0.0);
       break;
     case Material::kHair:
       break;

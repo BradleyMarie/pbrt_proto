@@ -264,10 +264,39 @@ Material ParseMaterial(
         bsdffile) {
       fourier.set_bsdffile(*bsdffile);
     }
-    
+
     TryRemoveFloatTexture(
-      parameters, "bumpmap",
-      std::bind(&Material::Fourier::mutable_bumpmap, &fourier));
+        parameters, "bumpmap",
+        std::bind(&Material::Fourier::mutable_bumpmap, &fourier));
+  } else if (material_type == "glass") {
+    auto& glass = *material.mutable_glass();
+    TryRemoveSpectrumTexture(parameters, "Kr",
+                             std::bind(&Material::Glass::mutable_kr, &glass));
+    TryRemoveSpectrumTexture(parameters, "Kt",
+                             std::bind(&Material::Glass::mutable_kt, &glass));
+    TryRemoveFloatTexture(parameters, "eta",
+                          std::bind(&Material::Glass::mutable_eta, &glass));
+
+    if (!glass.has_eta()) {
+      TryRemoveFloatTexture(parameters, "index",
+                            std::bind(&Material::Glass::mutable_eta, &glass));
+    }
+
+    TryRemoveFloatTexture(
+        parameters, "uroughness",
+        std::bind(&Material::Glass::mutable_uroughness, &glass));
+    TryRemoveFloatTexture(
+        parameters, "vroughness",
+        std::bind(&Material::Glass::mutable_vroughness, &glass));
+
+    if (std::optional<bool> remaproughness =
+            TryRemoveBool(parameters, "remaproughness");
+        remaproughness) {
+      glass.set_remaproughness(*remaproughness);
+    }
+
+    TryRemoveFloatTexture(parameters, "bumpmap",
+                          std::bind(&Material::Glass::mutable_bumpmap, &glass));
   } else {
     auto& matte = *material.mutable_matte();
     TryRemoveSpectrumTexture(parameters, "Kd",
