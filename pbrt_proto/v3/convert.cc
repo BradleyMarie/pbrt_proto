@@ -362,6 +362,30 @@ Material ParseMaterial(
     TryRemoveFloatTexture(
         parameters, "bumpmap",
         std::bind(&Material::KdSubsurface::mutable_bumpmap, &kdsubsurface));
+  } else if (material_type == "metal") {
+    auto& metal = *material.mutable_metal();
+    TryRemoveSpectrumTexture(parameters, "eta",
+                             std::bind(&Material::Metal::mutable_eta, &metal));
+    TryRemoveSpectrumTexture(parameters, "k",
+                             std::bind(&Material::Metal::mutable_k, &metal));
+    TryRemoveFloatTexture(
+        parameters, "roughness",
+        std::bind(&Material::Metal::mutable_roughness, &metal));
+    TryRemoveFloatTexture(
+        parameters, "uroughness",
+        std::bind(&Material::Metal::mutable_uroughness, &metal));
+    TryRemoveFloatTexture(
+        parameters, "vroughness",
+        std::bind(&Material::Metal::mutable_vroughness, &metal));
+
+    if (std::optional<bool> remaproughness =
+            TryRemoveBool(parameters, "remaproughness");
+        remaproughness) {
+      metal.set_remaproughness(*remaproughness);
+    }
+
+    TryRemoveFloatTexture(parameters, "bumpmap",
+                          std::bind(&Material::Metal::mutable_bumpmap, &metal));
   } else {
     auto& matte = *material.mutable_matte();
     TryRemoveSpectrumTexture(parameters, "Kd",

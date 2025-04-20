@@ -589,11 +589,13 @@ message Material {
   }
 
   message Metal {
+    // If using pbrt_proto::v3::Canonicalize, uroughness and vroughness will be
+    // filled with the value from roughness if they are not set.
     SpectrumTextureParameter eta = 1 [features.field_presence = EXPLICIT];
     SpectrumTextureParameter k = 2 [features.field_presence = EXPLICIT];
     FloatTextureParameter roughness = 3 [features.field_presence = EXPLICIT];
-    FloatTextureParameter uroughness = 4 [features.field_presence = EXPLICIT];
-    FloatTextureParameter vroughness = 5 [features.field_presence = EXPLICIT];
+    FloatTextureParameter uroughness = 4 [features.field_presence = EXPLICIT]; // Must check
+    FloatTextureParameter vroughness = 5 [features.field_presence = EXPLICIT]; // Must check
     bool remaproughness = 6 [default = true];
     FloatTextureParameter bumpmap = 7 [features.field_presence = EXPLICIT]; // Must check
   }

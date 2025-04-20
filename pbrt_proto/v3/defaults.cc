@@ -339,6 +339,35 @@ void CanonicalizeMaterial(Material& material) {
           *material.mutable_matte()->mutable_sigma(), 0.0);
       break;
     case Material::kMetal:
+      if (!material.metal().has_eta()) {
+        auto& eta = *material.mutable_metal()
+                         ->mutable_eta()
+                         ->mutable_sampled_spectrum();
+        for (size_t i = 0; i < kCopperSamples; i++) {
+          auto& sample = *eta.add_samples();
+          sample.set_wavelength(kCopperWavelengths[i]);
+          sample.set_intensity(kCopperN[i]);
+        }
+      }
+      if (!material.metal().has_k()) {
+        auto& k =
+            *material.mutable_metal()->mutable_k()->mutable_sampled_spectrum();
+        for (size_t i = 0; i < kCopperSamples; i++) {
+          auto& sample = *k.add_samples();
+          sample.set_wavelength(kCopperWavelengths[i]);
+          sample.set_intensity(kCopperK[i]);
+        }
+      }
+      SetFloatTextureParameterDefault(
+          *material.mutable_metal()->mutable_roughness(), 0.01);
+      if (!material.metal().has_uroughness()) {
+        *material.mutable_metal()->mutable_uroughness() =
+            material.metal().roughness();
+      }
+      if (!material.metal().has_vroughness()) {
+        *material.mutable_metal()->mutable_vroughness() =
+            material.metal().roughness();
+      }
       break;
     case Material::kMirror:
       break;

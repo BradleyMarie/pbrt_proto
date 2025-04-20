@@ -498,6 +498,35 @@ TEST(Canonicalize, MaterialMatte) {
                        })pb"));
 }
 
+TEST(Canonicalize, MaterialMetal) {
+  PbrtProto canonical =
+      MakeCanonical(R"pb(directives { material { metal {} } })pb");
+  canonical.mutable_directives(0)
+      ->mutable_material()
+      ->mutable_metal()
+      ->mutable_eta()
+      ->mutable_sampled_spectrum()
+      ->clear_samples();
+  canonical.mutable_directives(0)
+      ->mutable_material()
+      ->mutable_metal()
+      ->mutable_k()
+      ->mutable_sampled_spectrum()
+      ->clear_samples();
+  EXPECT_THAT(canonical, EqualsProto(
+                             R"pb(directives {
+                                    material {
+                                      metal {
+                                        eta { sampled_spectrum {} }
+                                        k { sampled_spectrum {} }
+                                        roughness { float_value: 0.01 }
+                                        uroughness { float_value: 0.01 }
+                                        vroughness { float_value: 0.01 }
+                                      }
+                                    }
+                                  })pb"));
+}
+
 // Unset Sampler are left unset and should eventually cause a black image to be
 // rendered
 // https://github.com/mmp/pbrt-v3/blob/13d871faae88233b327d04cda24022b8bb0093ee/src/core/api.cpp#L1671

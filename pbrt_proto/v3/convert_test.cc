@@ -1660,6 +1660,7 @@ TEST(Convert, MaterialGlass) {
       "\"float eta\" 1.0 "
       "\"float uroughness\" 2.0 "
       "\"float vroughness\" 3.0 "
+      "\"bool remaproughness\" \"false\" "
       "\"float bumpmap\" 4.0 ");
   EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
                                    R"pb(directives {
@@ -1670,6 +1671,7 @@ TEST(Convert, MaterialGlass) {
                                               eta { float_value: 1.0 }
                                               uroughness { float_value: 2.0 }
                                               vroughness { float_value: 3.0 }
+                                              remaproughness: false
                                               bumpmap { float_value: 4.0 }
                                             }
                                           }
@@ -1743,6 +1745,7 @@ TEST(Convert, MaterialKdSubsurface) {
       "\"float eta\" 4.0 "
       "\"float scale\" 5.0 "
       "\"float g\" 6.0 "
+      "\"bool remaproughness\" \"false\" "
       "\"float bumpmap\" 7.0 ");
   EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
                                    R"pb(directives {
@@ -1757,6 +1760,7 @@ TEST(Convert, MaterialKdSubsurface) {
                                               eta: 4.0
                                               scale: 5.0
                                               g: 6.0
+                                              remaproughness: false
                                               bumpmap { float_value: 7.0 }
                                             }
                                           }
@@ -1778,6 +1782,32 @@ TEST(Convert, MaterialMatte) {
                                         }
                                       }
                                     })pb")));
+}
+
+TEST(Convert, MaterialMetal) {
+  std::stringstream stream(
+      "Material \"metal\" "
+      "\"texture eta\" \"a\" "
+      "\"texture k\" \"b\" "
+      "\"float roughness\" 1.0 "
+      "\"float uroughness\" 2.0 "
+      "\"float vroughness\" 3.0 "
+      "\"bool remaproughness\" \"false\" "
+      "\"float bumpmap\" 4.0 ");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
+                                   R"pb(directives {
+                                          material {
+                                            metal {
+                                              eta { spectrum_texture_name: "a" }
+                                              k { spectrum_texture_name: "b" }
+                                              roughness { float_value: 1.0 }
+                                              uroughness { float_value: 2.0 }
+                                              vroughness { float_value: 3.0 }
+                                              remaproughness: false
+                                              bumpmap { float_value: 4.0 }
+                                            }
+                                          }
+                                        })pb")));
 }
 
 TEST(Convert, NamedMaterial) {
