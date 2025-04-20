@@ -1810,6 +1810,21 @@ TEST(Convert, MaterialMetal) {
                                         })pb")));
 }
 
+TEST(Convert, MaterialMirror) {
+  std::stringstream stream(
+      "Material \"mirror\" \"texture Kr\" \"a\" \"float bumpmap\" 1.0");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(R"pb(directives {
+                                      material {
+                                        mirror {
+                                          Kr { spectrum_texture_name: "a" }
+                                          bumpmap { float_value: 1.0 }
+                                        }
+                                      }
+                                    })pb")));
+}
+
 TEST(Convert, NamedMaterial) {
   std::stringstream stream("NamedMaterial \"a\"");
   EXPECT_THAT(Convert(stream),

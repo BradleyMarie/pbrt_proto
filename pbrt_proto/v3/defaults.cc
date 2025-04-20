@@ -370,6 +370,8 @@ void CanonicalizeMaterial(Material& material) {
       }
       break;
     case Material::kMirror:
+      SetSpectrumTextureParameterDefault(
+          *material.mutable_mirror()->mutable_kr(), 0.9);
       break;
     case Material::kMix:
       break;

@@ -386,6 +386,13 @@ Material ParseMaterial(
 
     TryRemoveFloatTexture(parameters, "bumpmap",
                           std::bind(&Material::Metal::mutable_bumpmap, &metal));
+  } else if (material_type == "mirror") {
+    auto& mirror = *material.mutable_mirror();
+    TryRemoveSpectrumTexture(parameters, "Kr",
+                             std::bind(&Material::Mirror::mutable_kr, &mirror));
+    TryRemoveFloatTexture(
+        parameters, "bumpmap",
+        std::bind(&Material::Mirror::mutable_bumpmap, &mirror));
   } else {
     auto& matte = *material.mutable_matte();
     TryRemoveSpectrumTexture(parameters, "Kd",
