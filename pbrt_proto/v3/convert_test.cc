@@ -1926,6 +1926,33 @@ TEST(Convert, MaterialSubsurface) {
                        })pb")));
 }
 
+TEST(Convert, MaterialTranslucent) {
+  std::stringstream stream(
+      "Material \"translucent\" "
+      "\"texture Kd\" \"a\" "
+      "\"texture Ks\" \"b\" "
+      "\"texture reflect\" \"c\" "
+      "\"texture transmit\" \"d\" "
+      "\"float roughness\" 1.0 "
+      "\"bool remaproughness\" \"false\" "
+      "\"float bumpmap\" 2.0 ");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(
+                  R"pb(directives {
+                         material {
+                           translucent {
+                             Kd { spectrum_texture_name: "a" }
+                             Ks { spectrum_texture_name: "b" }
+                             reflect { spectrum_texture_name: "c" }
+                             transmit { spectrum_texture_name: "d" }
+                             roughness { float_value: 1.0 }
+                             remaproughness: false
+                             bumpmap { float_value: 2.0 }
+                           }
+                         }
+                       })pb")));
+}
+
 TEST(Convert, NamedMaterial) {
   std::stringstream stream("NamedMaterial \"a\"");
   EXPECT_THAT(Convert(stream),

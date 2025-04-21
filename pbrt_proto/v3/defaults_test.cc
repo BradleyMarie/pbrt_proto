@@ -640,6 +640,23 @@ TEST(Canonicalize, MaterialSubsurfaceKeepsIfSpecified) {
                })pb"));
 }
 
+TEST(Canonicalize, MaterialTranslucent) {
+  EXPECT_THAT(
+      MakeCanonical(R"pb(directives { material { translucent {} } })pb"),
+      EqualsProto(
+          R"pb(directives {
+                 material {
+                   translucent {
+                     Kd { uniform_spectrum: 0.25 }
+                     Ks { uniform_spectrum: 0.25 }
+                     reflect { uniform_spectrum: 0.5 }
+                     transmit { uniform_spectrum: 0.5 }
+                     roughness { float_value: 0.1 }
+                   }
+                 }
+               })pb"));
+}
+
 // Unset Sampler are left unset and should eventually cause a black image to be
 // rendered
 // https://github.com/mmp/pbrt-v3/blob/13d871faae88233b327d04cda24022b8bb0093ee/src/core/api.cpp#L1671
