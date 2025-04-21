@@ -1843,6 +1843,28 @@ TEST(Convert, MaterialMix) {
                                         })pb")));
 }
 
+TEST(Convert, MaterialPlastic) {
+  std::stringstream stream(
+      "Material \"plastic\" "
+      "\"texture Kd\" \"a\" "
+      "\"texture Ks\" \"b\" "
+      "\"float roughness\" 1.0 "
+      "\"bool remaproughness\" \"false\" "
+      "\"float bumpmap\" 2.0 ");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
+                                   R"pb(directives {
+                                          material {
+                                            plastic {
+                                              Kd { spectrum_texture_name: "a" }
+                                              Ks { spectrum_texture_name: "b" }
+                                              roughness { float_value: 1.0 }
+                                              remaproughness: false
+                                              bumpmap { float_value: 2.0 }
+                                            }
+                                          }
+                                        })pb")));
+}
+
 TEST(Convert, NamedMaterial) {
   std::stringstream stream("NamedMaterial \"a\"");
   EXPECT_THAT(Convert(stream),

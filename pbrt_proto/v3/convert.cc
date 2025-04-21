@@ -409,6 +409,25 @@ Material ParseMaterial(
         namedmaterial2) {
       mix.set_namedmaterial2(*namedmaterial2);
     }
+  } else if (material_type == "plastic") {
+    auto& plastic = *material.mutable_plastic();
+    TryRemoveSpectrumTexture(
+        parameters, "Kd", std::bind(&Material::Plastic::mutable_kd, &plastic));
+    TryRemoveSpectrumTexture(
+        parameters, "Ks", std::bind(&Material::Plastic::mutable_ks, &plastic));
+    TryRemoveFloatTexture(
+        parameters, "roughness",
+        std::bind(&Material::Plastic::mutable_roughness, &plastic));
+
+    if (std::optional<bool> remaproughness =
+            TryRemoveBool(parameters, "remaproughness");
+        remaproughness) {
+      plastic.set_remaproughness(*remaproughness);
+    }
+
+    TryRemoveFloatTexture(
+        parameters, "bumpmap",
+        std::bind(&Material::Plastic::mutable_bumpmap, &plastic));
   } else {
     auto& matte = *material.mutable_matte();
     TryRemoveSpectrumTexture(parameters, "Kd",
