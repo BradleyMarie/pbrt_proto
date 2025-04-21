@@ -386,6 +386,14 @@ void CanonicalizeMaterial(Material& material) {
           *material.mutable_plastic()->mutable_roughness(), 0.1);
       break;
     case Material::kSubstrate:
+      SetSpectrumTextureParameterDefault(
+          *material.mutable_substrate()->mutable_kd(), 0.5);
+      SetSpectrumTextureParameterDefault(
+          *material.mutable_substrate()->mutable_ks(), 0.5);
+      SetFloatTextureParameterDefault(
+          *material.mutable_substrate()->mutable_uroughness(), 0.1);
+      SetFloatTextureParameterDefault(
+          *material.mutable_substrate()->mutable_vroughness(), 0.1);
       break;
     case Material::kSubsurface:
       break;
