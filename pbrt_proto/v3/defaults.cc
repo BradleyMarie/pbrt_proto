@@ -464,6 +464,33 @@ void CanonicalizeMaterial(Material& material) {
           *material.mutable_translucent()->mutable_roughness(), 0.1);
       break;
     case Material::kUber:
+      SetSpectrumTextureParameterDefault(*material.mutable_uber()->mutable_kd(),
+                                         0.25);
+      SetSpectrumTextureParameterDefault(*material.mutable_uber()->mutable_ks(),
+                                         0.25);
+      SetSpectrumTextureParameterDefault(*material.mutable_uber()->mutable_kr(),
+                                         0.0);
+      SetSpectrumTextureParameterDefault(*material.mutable_uber()->mutable_kt(),
+                                         0.0);
+
+      SetFloatTextureParameterDefault(
+          *material.mutable_uber()->mutable_roughness(), 0.1);
+
+      if (!material.uber().has_uroughness()) {
+        *material.mutable_uber()->mutable_uroughness() =
+            material.uber().roughness();
+      }
+
+      if (!material.uber().has_vroughness()) {
+        *material.mutable_uber()->mutable_vroughness() =
+            material.uber().roughness();
+      }
+
+      SetFloatTextureParameterDefault(*material.mutable_uber()->mutable_eta(),
+                                      1.5);
+
+      SetFloatTextureParameterDefault(
+          *material.mutable_uber()->mutable_opacity(), 1.0);
       break;
     case Material::MATERIAL_TYPE_NOT_SET:
       break;

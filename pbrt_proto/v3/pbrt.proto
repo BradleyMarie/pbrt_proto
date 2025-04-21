@@ -707,6 +707,8 @@ message Material {
   }
 
   message Uber {
+    // If using pbrt_proto::v3::Canonicalize, uroughness and vroughness will be
+    // filled with the value from roughness if they are not set.
     SpectrumTextureParameter Kd = 1 [features.field_presence = EXPLICIT];
     SpectrumTextureParameter Ks = 2 [features.field_presence = EXPLICIT];
     SpectrumTextureParameter Kr = 3 [features.field_presence = EXPLICIT];

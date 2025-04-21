@@ -1953,6 +1953,74 @@ TEST(Convert, MaterialTranslucent) {
                        })pb")));
 }
 
+TEST(Convert, MaterialUber) {
+  std::stringstream stream(
+      "Material \"uber\" "
+      "\"texture Kd\" \"a\" "
+      "\"texture Ks\" \"b\" "
+      "\"texture Kr\" \"c\" "
+      "\"texture Kt\" \"d\" "
+      "\"float roughness\" 1.0 "
+      "\"float uroughness\" 2.0 "
+      "\"float vroughness\" 3.0 "
+      "\"float eta\" 4.0 "
+      "\"float opacity\" 5.0 "
+      "\"bool remaproughness\" \"false\" "
+      "\"float bumpmap\" 6.0 ");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
+                                   R"pb(directives {
+                                          material {
+                                            uber {
+                                              Kd { spectrum_texture_name: "a" }
+                                              Ks { spectrum_texture_name: "b" }
+                                              Kr { spectrum_texture_name: "c" }
+                                              Kt { spectrum_texture_name: "d" }
+                                              roughness { float_value: 1.0 }
+                                              uroughness { float_value: 2.0 }
+                                              vroughness { float_value: 3.0 }
+                                              eta { float_value: 4.0 }
+                                              opacity { float_value: 5.0 }
+                                              remaproughness: false
+                                              bumpmap { float_value: 6.0 }
+                                            }
+                                          }
+                                        })pb")));
+}
+
+TEST(Convert, MaterialUberIndex) {
+  std::stringstream stream(
+      "Material \"uber\" "
+      "\"texture Kd\" \"a\" "
+      "\"texture Ks\" \"b\" "
+      "\"texture Kr\" \"c\" "
+      "\"texture Kt\" \"d\" "
+      "\"float roughness\" 1.0 "
+      "\"float uroughness\" 2.0 "
+      "\"float vroughness\" 3.0 "
+      "\"float index\" 4.0 "
+      "\"float opacity\" 5.0 "
+      "\"bool remaproughness\" \"false\" "
+      "\"float bumpmap\" 6.0 ");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
+                                   R"pb(directives {
+                                          material {
+                                            uber {
+                                              Kd { spectrum_texture_name: "a" }
+                                              Ks { spectrum_texture_name: "b" }
+                                              Kr { spectrum_texture_name: "c" }
+                                              Kt { spectrum_texture_name: "d" }
+                                              roughness { float_value: 1.0 }
+                                              uroughness { float_value: 2.0 }
+                                              vroughness { float_value: 3.0 }
+                                              eta { float_value: 4.0 }
+                                              opacity { float_value: 5.0 }
+                                              remaproughness: false
+                                              bumpmap { float_value: 6.0 }
+                                            }
+                                          }
+                                        })pb")));
+}
+
 TEST(Convert, NamedMaterial) {
   std::stringstream stream("NamedMaterial \"a\"");
   EXPECT_THAT(Convert(stream),

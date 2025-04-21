@@ -657,6 +657,53 @@ TEST(Canonicalize, MaterialTranslucent) {
                })pb"));
 }
 
+TEST(Canonicalize, MaterialUber) {
+  EXPECT_THAT(MakeCanonical(R"pb(directives { material { uber {} } })pb"),
+              EqualsProto(
+                  R"pb(directives {
+                         material {
+                           uber {
+                             Kd { uniform_spectrum: 0.25 }
+                             Ks { uniform_spectrum: 0.25 }
+                             Kr { uniform_spectrum: 0.0 }
+                             Kt { uniform_spectrum: 0.0 }
+                             roughness { float_value: 0.1 }
+                             uroughness { float_value: 0.1 }
+                             vroughness { float_value: 0.1 }
+                             eta { float_value: 1.5 }
+                             opacity { float_value: 1.0 }
+                           }
+                         }
+                       })pb"));
+}
+
+TEST(Canonicalize, MaterialUberHasRoughness) {
+  EXPECT_THAT(MakeCanonical(R"pb(directives {
+                                   material {
+                                     uber {
+                                       uroughness { float_value: 0.2 }
+                                       vroughness { float_value: 0.2 }
+                                     }
+                                   }
+                                 })pb"),
+              EqualsProto(
+                  R"pb(directives {
+                         material {
+                           uber {
+                             Kd { uniform_spectrum: 0.25 }
+                             Ks { uniform_spectrum: 0.25 }
+                             Kr { uniform_spectrum: 0.0 }
+                             Kt { uniform_spectrum: 0.0 }
+                             roughness { float_value: 0.1 }
+                             uroughness { float_value: 0.2 }
+                             vroughness { float_value: 0.2 }
+                             eta { float_value: 1.5 }
+                             opacity { float_value: 1.0 }
+                           }
+                         }
+                       })pb"));
+}
+
 // Unset Sampler are left unset and should eventually cause a black image to be
 // rendered
 // https://github.com/mmp/pbrt-v3/blob/13d871faae88233b327d04cda24022b8bb0093ee/src/core/api.cpp#L1671

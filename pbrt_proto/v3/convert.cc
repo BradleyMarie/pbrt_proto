@@ -592,6 +592,44 @@ Material ParseMaterial(
     TryRemoveFloatTexture(
         parameters, "bumpmap",
         std::bind(&Material::Translucent::mutable_bumpmap, &translucent));
+  } else if (material_type == "uber") {
+    auto& uber = *material.mutable_uber();
+    TryRemoveSpectrumTexture(parameters, "Kd",
+                             std::bind(&Material::Uber::mutable_kd, &uber));
+    TryRemoveSpectrumTexture(parameters, "Ks",
+                             std::bind(&Material::Uber::mutable_ks, &uber));
+    TryRemoveSpectrumTexture(parameters, "Kr",
+                             std::bind(&Material::Uber::mutable_kr, &uber));
+    TryRemoveSpectrumTexture(parameters, "Kt",
+                             std::bind(&Material::Uber::mutable_kt, &uber));
+
+    TryRemoveFloatTexture(parameters, "roughness",
+                          std::bind(&Material::Uber::mutable_roughness, &uber));
+    TryRemoveFloatTexture(
+        parameters, "uroughness",
+        std::bind(&Material::Uber::mutable_uroughness, &uber));
+    TryRemoveFloatTexture(
+        parameters, "vroughness",
+        std::bind(&Material::Uber::mutable_vroughness, &uber));
+
+    TryRemoveFloatTexture(parameters, "eta",
+                          std::bind(&Material::Uber::mutable_eta, &uber));
+    if (!uber.has_eta()) {
+      TryRemoveFloatTexture(parameters, "index",
+                            std::bind(&Material::Uber::mutable_eta, &uber));
+    }
+
+    TryRemoveFloatTexture(parameters, "opacity",
+                          std::bind(&Material::Uber::mutable_opacity, &uber));
+
+    if (std::optional<bool> remaproughness =
+            TryRemoveBool(parameters, "remaproughness");
+        remaproughness) {
+      uber.set_remaproughness(*remaproughness);
+    }
+
+    TryRemoveFloatTexture(parameters, "bumpmap",
+                          std::bind(&Material::Uber::mutable_bumpmap, &uber));
   } else {
     auto& matte = *material.mutable_matte();
     TryRemoveSpectrumTexture(parameters, "Kd",
