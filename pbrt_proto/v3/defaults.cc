@@ -299,6 +299,7 @@ void CanonicalizeMaterial(Material& material) {
         sigma_a.set_g(1.3 * 0.697);
         sigma_a.set_b(1.3 * 1.37);
       }
+
       SetFloatTextureParameterDefault(
           *material.mutable_hair()->mutable_eumelanin(), 0.0);
       SetFloatTextureParameterDefault(
@@ -321,6 +322,7 @@ void CanonicalizeMaterial(Material& material) {
         kd.set_g(0.5);
         kd.set_b(0.5);
       }
+
       SetFloatTextureParameterDefault(
           *material.mutable_kdsubsurface()->mutable_mfp(), 1.0);
       SetSpectrumTextureParameterDefault(
@@ -349,6 +351,7 @@ void CanonicalizeMaterial(Material& material) {
           sample.set_intensity(kCopperN[i]);
         }
       }
+
       if (!material.metal().has_k()) {
         auto& k =
             *material.mutable_metal()->mutable_k()->mutable_sampled_spectrum();
@@ -358,12 +361,15 @@ void CanonicalizeMaterial(Material& material) {
           sample.set_intensity(kCopperK[i]);
         }
       }
+
       SetFloatTextureParameterDefault(
           *material.mutable_metal()->mutable_roughness(), 0.01);
+
       if (!material.metal().has_uroughness()) {
         *material.mutable_metal()->mutable_uroughness() =
             material.metal().roughness();
       }
+
       if (!material.metal().has_vroughness()) {
         *material.mutable_metal()->mutable_vroughness() =
             material.metal().roughness();
@@ -396,6 +402,54 @@ void CanonicalizeMaterial(Material& material) {
           *material.mutable_substrate()->mutable_vroughness(), 0.1);
       break;
     case Material::kSubsurface:
+      if (material.subsurface().has_name()) {
+        if (!material.subsurface().has_sigma_a()) {
+          auto& sigma_a = *material.mutable_subsurface()
+                               ->mutable_sigma_a()
+                               ->mutable_rgb_spectrum();
+          sigma_a.set_r(kSigmaA[material.subsurface().name()][0]);
+          sigma_a.set_g(kSigmaA[material.subsurface().name()][1]);
+          sigma_a.set_b(kSigmaA[material.subsurface().name()][2]);
+        }
+
+        if (!material.subsurface().has_sigma_s()) {
+          auto& sigma_s = *material.mutable_subsurface()
+                               ->mutable_sigma_s()
+                               ->mutable_rgb_spectrum();
+          sigma_s.set_r(kSigmaS[material.subsurface().name()][0]);
+          sigma_s.set_g(kSigmaS[material.subsurface().name()][1]);
+          sigma_s.set_b(kSigmaS[material.subsurface().name()][2]);
+        }
+
+        material.mutable_subsurface()->clear_g();
+      }
+
+      if (!material.subsurface().has_sigma_a()) {
+        auto& sigma_a = *material.mutable_subsurface()
+                             ->mutable_sigma_a()
+                             ->mutable_rgb_spectrum();
+        sigma_a.set_r(0.0011);
+        sigma_a.set_g(0.0024);
+        sigma_a.set_b(0.014);
+      }
+
+      if (!material.subsurface().has_sigma_s()) {
+        auto& sigma_s = *material.mutable_subsurface()
+                             ->mutable_sigma_s()
+                             ->mutable_rgb_spectrum();
+        sigma_s.set_r(2.55);
+        sigma_s.set_g(3.21);
+        sigma_s.set_b(3.77);
+      }
+
+      SetSpectrumTextureParameterDefault(
+          *material.mutable_subsurface()->mutable_kr(), 1.0);
+      SetSpectrumTextureParameterDefault(
+          *material.mutable_subsurface()->mutable_kt(), 1.0);
+      SetFloatTextureParameterDefault(
+          *material.mutable_subsurface()->mutable_uroughness(), 0.0);
+      SetFloatTextureParameterDefault(
+          *material.mutable_subsurface()->mutable_vroughness(), 0.0);
       break;
     case Material::kTranslucent:
       break;

@@ -202,6 +202,64 @@ void TryRemoveUVParameters(
 Material ParseMaterial(
     absl::string_view material_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
+  static const absl::flat_hash_map<absl::string_view,
+                                   Material::Subsurface::MeasuredSubsurfaces>
+      kSubsurfaces = {
+          {"Apple", Material::Subsurface::APPLE},
+          {"Chicken1", Material::Subsurface::CHICKEN1},
+          {"Chicken2", Material::Subsurface::CHICKEN2},
+          {"Cream", Material::Subsurface::CREAM},
+          {"Ketchup", Material::Subsurface::KETCHUP},
+          {"Marble", Material::Subsurface::MARBLE},
+          {"Potato", Material::Subsurface::POTATO},
+          {"Skimmilk", Material::Subsurface::SKIMMILK},
+          {"Skin1", Material::Subsurface::SKIN1},
+          {"Skin2", Material::Subsurface::SKIN2},
+          {"Spectralon", Material::Subsurface::SPECTRALON},
+          {"Wholemilk", Material::Subsurface::WHOLEMILK},
+          {"Lowfat Milk", Material::Subsurface::LOWFAT_MILK},
+          {"Reduced Milk", Material::Subsurface::REDUCED_MILK},
+          {"Regular Milk", Material::Subsurface::REGULAR_MILK},
+          {"Espresso", Material::Subsurface::ESPRESSO},
+          {"Mint Mocha Coffee", Material::Subsurface::MINT_MOCHA_COFFEE},
+          {"Lowfat Soy Milk", Material::Subsurface::LOWFAT_SOY_MILK},
+          {"Regular Soy Milk", Material::Subsurface::REGULAR_SOY_MILK},
+          {"Lowfat Chocolate Milk",
+           Material::Subsurface::LOWFAT_CHOCOLATE_MILK},
+          {"Regular Chocolate Milk",
+           Material::Subsurface::REGULAR_CHOCOLATE_MILK},
+          {"Coke", Material::Subsurface::COKE},
+          {"Pepsi", Material::Subsurface::PEPSI},
+          {"Sprite", Material::Subsurface::SPRITE},
+          {"Gatorade", Material::Subsurface::GATORADE},
+          {"Chardonnay", Material::Subsurface::CHARDONNAY},
+          {"White Zinfandel", Material::Subsurface::WHITE_ZINFANDEL},
+          {"Merlot", Material::Subsurface::MERLOT},
+          {"Budweiser Beer", Material::Subsurface::BUDWEISER_BEER},
+          {"Coors Light Beer", Material::Subsurface::COORS_LIGHT_BEER},
+          {"Clorox", Material::Subsurface::CLOROX},
+          {"Apple Juice", Material::Subsurface::APPLE_JUICE},
+          {"Cranberry Juice", Material::Subsurface::CRANBERRY_JUICE},
+          {"Grape Juice", Material::Subsurface::GRAPE_JUICE},
+          {"Ruby Grapefruit Juice",
+           Material::Subsurface::RUBY_GRAPEFRUIT_JUICE},
+          {"White Grapefruit Juice",
+           Material::Subsurface::WHITE_GRAPEFRUIT_JUICE},
+          {"Shampoo", Material::Subsurface::SHAMPOO},
+          {"Strawberry Shampoo", Material::Subsurface::STRAWBERRY_SHAMPOO},
+          {"Head & Shoulders Shampoo",
+           Material::Subsurface::HEAD_AND_SHOULDERS_SHAMPOO},
+          {"Lemon Tea Powder", Material::Subsurface::LEMON_TEA_POWDER},
+          {"Orange Powder", Material::Subsurface::ORANGE_POWDER},
+          {"Pink Lemonade Powder", Material::Subsurface::PINK_LEMONADE_POWDER},
+          {"Cappuccino Powder", Material::Subsurface::CAPPUCCINO_POWDER},
+          {"Salt Powder", Material::Subsurface::SALT_POWDER},
+          {"Sugar Powder", Material::Subsurface::SUGAR_POWDER},
+          {"Suisse Mocha Powder", Material::Subsurface::SUISSE_MOCHA_POWDER},
+          {"Pacific Ocean Surface Water",
+           Material::Subsurface::PACIFIC_OCEAN_SURFACE_WATER},
+      };
+
   Material material;
 
   if (material_type == "" || material_type == "none") {
@@ -452,6 +510,60 @@ Material ParseMaterial(
     TryRemoveFloatTexture(
         parameters, "bumpmap",
         std::bind(&Material::Substrate::mutable_bumpmap, &substrate));
+  } else if (material_type == "subsurface") {
+    auto& subsurface = *material.mutable_subsurface();
+
+    if (std::optional<absl::string_view> name =
+            TryRemoveString(parameters, "name");
+        name) {
+      auto iter = kSubsurfaces.find(*name);
+      if (iter != kSubsurfaces.end()) {
+        subsurface.set_name(iter->second);
+      }
+    }
+
+    TryRemoveSpectrumTexture(
+        parameters, "sigma_a",
+        std::bind(&Material::Subsurface::mutable_sigma_a, &subsurface));
+    TryRemoveSpectrumTexture(
+        parameters, "sigma_s",
+        std::bind(&Material::Subsurface::mutable_sigma_s, &subsurface));
+
+    if (std::optional<double> g = TryRemoveFloat(parameters, "g"); g) {
+      subsurface.set_g(*g);
+    }
+
+    if (std::optional<double> scale = TryRemoveFloat(parameters, "scale");
+        scale) {
+      subsurface.set_scale(*scale);
+    }
+
+    if (std::optional<double> eta = TryRemoveFloat(parameters, "eta"); eta) {
+      subsurface.set_eta(*eta);
+    }
+
+    TryRemoveSpectrumTexture(
+        parameters, "Kr",
+        std::bind(&Material::Subsurface::mutable_kr, &subsurface));
+    TryRemoveSpectrumTexture(
+        parameters, "Kt",
+        std::bind(&Material::Subsurface::mutable_kt, &subsurface));
+    TryRemoveFloatTexture(
+        parameters, "uroughness",
+        std::bind(&Material::Subsurface::mutable_uroughness, &subsurface));
+    TryRemoveFloatTexture(
+        parameters, "vroughness",
+        std::bind(&Material::Subsurface::mutable_vroughness, &subsurface));
+
+    if (std::optional<bool> remaproughness =
+            TryRemoveBool(parameters, "remaproughness");
+        remaproughness) {
+      subsurface.set_remaproughness(*remaproughness);
+    }
+
+    TryRemoveFloatTexture(
+        parameters, "bumpmap",
+        std::bind(&Material::Subsurface::mutable_bumpmap, &subsurface));
   } else {
     auto& matte = *material.mutable_matte();
     TryRemoveSpectrumTexture(parameters, "Kd",

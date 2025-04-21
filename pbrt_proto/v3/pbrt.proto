@@ -672,7 +672,7 @@ message Material {
       HEAD_AND_SHOULDERS_SHAMPOO = 38;
       LEMON_TEA_POWDER = 39;
       ORANGE_POWDER = 40;
-      PINK_LEMONADE = 41;
+      PINK_LEMONADE_POWDER = 41;
       CAPPUCCINO_POWDER = 42;
       SALT_POWDER = 43;
       SUGAR_POWDER = 44;
@@ -685,14 +685,15 @@ message Material {
     MeasuredSubsurfaces name = 1 [features.field_presence = EXPLICIT];
     SpectrumTextureParameter sigma_a = 2 [features.field_presence = EXPLICIT];
     SpectrumTextureParameter sigma_s = 3 [features.field_presence = EXPLICIT];
-    double scale = 4 [default = 1.0];
-    FloatTextureParameter eta = 5 [features.field_presence = EXPLICIT];
-    SpectrumTextureParameter Kr = 6 [features.field_presence = EXPLICIT];
-    SpectrumTextureParameter Kt = 7 [features.field_presence = EXPLICIT];
-    FloatTextureParameter uroughness = 8 [features.field_presence = EXPLICIT];
-    FloatTextureParameter vroughness = 9 [features.field_presence = EXPLICIT];
-    bool remaproughness = 10 [default = true];
-    FloatTextureParameter bumpmap = 11 [features.field_presence = EXPLICIT]; // Must check    
+    double g = 4 [default = 0.0];
+    double scale = 5 [default = 1.0];
+    double eta = 6 [default = 1.33];
+    SpectrumTextureParameter Kr = 7 [features.field_presence = EXPLICIT];
+    SpectrumTextureParameter Kt = 8 [features.field_presence = EXPLICIT];
+    FloatTextureParameter uroughness = 9 [features.field_presence = EXPLICIT];
+    FloatTextureParameter vroughness = 10 [features.field_presence = EXPLICIT];
+    bool remaproughness = 11 [default = true];
+    FloatTextureParameter bumpmap = 12 [features.field_presence = EXPLICIT]; // Must check    
   }
 
   message Translucent {

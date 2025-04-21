@@ -1889,6 +1889,43 @@ TEST(Convert, MaterialSubstrate) {
                                         })pb")));
 }
 
+TEST(Convert, MaterialSubsurface) {
+  std::stringstream stream(
+      "Material \"subsurface\" "
+      "\"string name\" \"Coke\" "
+      "\"texture sigma_a\" \"a\" "
+      "\"texture sigma_s\" \"b\" "
+      "\"float g\" 1.0 "
+      "\"float scale\" 2.0 "
+      "\"float eta\" 3.0 "
+      "\"texture Kr\" \"c\" "
+      "\"texture Kt\" \"d\" "
+      "\"float uroughness\" 4.0 "
+      "\"float vroughness\" 5.0 "
+      "\"bool remaproughness\" \"false\" "
+      "\"float bumpmap\" 6.0 ");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(
+                  R"pb(directives {
+                         material {
+                           subsurface {
+                             name: COKE
+                             sigma_a { spectrum_texture_name: "a" }
+                             sigma_s { spectrum_texture_name: "b" }
+                             g: 1.0
+                             scale: 2.0
+                             eta: 3.0
+                             Kr { spectrum_texture_name: "c" }
+                             Kt { spectrum_texture_name: "d" }
+                             uroughness { float_value: 4.0 }
+                             vroughness { float_value: 5.0 }
+                             remaproughness: false
+                             bumpmap { float_value: 6.0 }
+                           }
+                         }
+                       })pb")));
+}
+
 TEST(Convert, NamedMaterial) {
   std::stringstream stream("NamedMaterial \"a\"");
   EXPECT_THAT(Convert(stream),

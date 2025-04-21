@@ -572,6 +572,74 @@ TEST(Canonicalize, MaterialSubstrate) {
                        })pb"));
 }
 
+TEST(Canonicalize, MaterialSubsurfaceEmpty) {
+  EXPECT_THAT(
+      MakeCanonical(R"pb(directives { material { subsurface {} } })pb"),
+      EqualsProto(
+          R"pb(directives {
+                 material {
+                   subsurface {
+                     sigma_a { rgb_spectrum { r: 0.0011 g: 0.0024 b: 0.014 } }
+                     sigma_s { rgb_spectrum { r: 2.55 g: 3.21 b: 3.77 } }
+                     Kr { uniform_spectrum: 1.0 }
+                     Kt { uniform_spectrum: 1.0 }
+                     uroughness { float_value: 0.0 }
+                     vroughness { float_value: 0.0 }
+                   }
+                 }
+               })pb"));
+}
+
+TEST(Canonicalize, MaterialSubsurfaceWithName) {
+  EXPECT_THAT(
+      MakeCanonical(R"pb(directives {
+                           material { subsurface { name: APPLE g: 1.0 } }
+                         })pb"),
+      EqualsProto(
+          R"pb(directives {
+                 material {
+                   subsurface {
+                     name: APPLE
+                     sigma_a { rgb_spectrum { r: 2.29 g: 2.39 b: 1.97 } }
+                     sigma_s { rgb_spectrum { r: 0.0030 g: 0.0034 b: 0.046 } }
+                     Kr { uniform_spectrum: 1.0 }
+                     Kt { uniform_spectrum: 1.0 }
+                     uroughness { float_value: 0.0 }
+                     vroughness { float_value: 0.0 }
+                   }
+                 }
+               })pb"));
+}
+
+TEST(Canonicalize, MaterialSubsurfaceKeepsIfSpecified) {
+  EXPECT_THAT(
+      MakeCanonical(
+          R"pb(directives {
+                 material {
+                   subsurface {
+                     name: COKE
+                     sigma_a { rgb_spectrum { r: 2.29 g: 2.39 b: 1.97 } }
+                     sigma_s { rgb_spectrum { r: 0.0030 g: 0.0034 b: 0.046 } }
+                     g: 1.0
+                   }
+                 }
+               })pb"),
+      EqualsProto(
+          R"pb(directives {
+                 material {
+                   subsurface {
+                     name: COKE
+                     sigma_a { rgb_spectrum { r: 2.29 g: 2.39 b: 1.97 } }
+                     sigma_s { rgb_spectrum { r: 0.0030 g: 0.0034 b: 0.046 } }
+                     Kr { uniform_spectrum: 1.0 }
+                     Kt { uniform_spectrum: 1.0 }
+                     uroughness { float_value: 0.0 }
+                     vroughness { float_value: 0.0 }
+                   }
+                 }
+               })pb"));
+}
+
 // Unset Sampler are left unset and should eventually cause a black image to be
 // rendered
 // https://github.com/mmp/pbrt-v3/blob/13d871faae88233b327d04cda24022b8bb0093ee/src/core/api.cpp#L1671
