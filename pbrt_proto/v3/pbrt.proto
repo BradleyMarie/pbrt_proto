@@ -879,6 +879,159 @@ message Scale {
   double z = 3 [features.field_presence = LEGACY_REQUIRED];
 }
 
+message Shape {
+  message Cone {
+    double radius = 1 [default = 1.0];
+    double height = 2 [default = 1.0];
+    double phimax = 3 [default = 360.0];
+  }
+
+  message Curve {
+    enum Basis {
+      option features.enum_type = CLOSED;
+      BEZIER = 1;
+      BSPLINE = 2;
+    }
+
+    message Points {
+      Point p0 = 1 [features.field_presence = LEGACY_REQUIRED];
+      Point p1 = 2 [features.field_presence = LEGACY_REQUIRED];
+      Point p2 = 3 [features.field_presence = LEGACY_REQUIRED];
+      Point p3 = 4 [features.field_presence = LEGACY_REQUIRED];
+    }
+
+    enum Type {
+      option features.enum_type = CLOSED;
+      CYLINDER = 1;
+      FLAT = 2;
+      RIBBON = 3;
+    }
+
+    message Normals {
+      Vector n0 = 1 [features.field_presence = LEGACY_REQUIRED];
+      Vector n1 = 2 [features.field_presence = LEGACY_REQUIRED];
+    }
+
+    Points P = 1;
+    Basis basis = 2 [default = BEZIER];
+    int32 degree = 3 [default = 3];
+    Type type = 4 [default = FLAT];
+    Normals N = 5;
+    double width = 6 [default = 1.0];
+    double width0 = 7 [features.field_presence = EXPLICIT, default = 1.0];
+    double width1 = 8 [features.field_presence = EXPLICIT, default = 1.0];
+    int32 splitdepth = 9 [default = 3];
+  }
+
+  message Cylinder {
+    double radius = 1 [default = 1.0];
+    double zmin = 2 [default = -1.0];
+    double zmax = 3 [default = 1.0];
+    double phimax = 4 [default = 360.0];
+  }
+
+  message Disk {
+    double height = 1 [default = 0.0];
+    double radius = 2 [default = 1.0];
+    double innerradius = 3 [default = 0.0];
+    double phimax = 4 [default = 360.0];
+  }
+
+  message HeightField {
+    int32 nu = 1;
+    int32 nv = 2;
+    repeated double Pz = 3;
+  }
+
+  message Hyperboloid {
+    Point p1 = 1;
+    Point p2 = 2;
+    double phimax = 3 [default = 360.0];
+  }
+
+  message LoopSubdiv {
+    int32 levels = 1 [default = 3];
+    repeated int32 indices = 2;
+    repeated Point P = 3;
+  }
+
+  message Nurbs {
+    message PointWithWeight {
+      Point p = 1 [features.field_presence = LEGACY_REQUIRED];
+      double weight = 2 [features.field_presence = LEGACY_REQUIRED];
+    }
+
+    int32 nu = 1;
+    int32 nv = 2;
+    int32 uorder = 3;
+    int32 vorder = 4;
+    repeated float uknots = 5;
+    repeated float vknots = 6;
+    double u0 = 7;
+    double v0 = 9;
+    double u1 = 10;
+    double v1 = 11;
+    repeated Point P = 12;
+    repeated PointWithWeight Pw = 13;
+  }
+
+  message Paraboloid {
+    double radius = 1 [default = 1.0];
+    double zmin = 2 [default = 0.0];
+    double zmax = 3 [default = 1.0];
+    double phimax = 4 [default = 360.0];
+  }
+
+  message PlyMesh {
+    message VertexIndices {
+      int32 v0 = 1 [features.field_presence = LEGACY_REQUIRED];
+      int32 v1 = 2 [features.field_presence = LEGACY_REQUIRED];
+      int32 v2 = 3 [features.field_presence = LEGACY_REQUIRED];
+    }
+
+    message UVCoordinate {
+      double u = 1 [features.field_presence = LEGACY_REQUIRED];
+      double v = 2 [features.field_presence = LEGACY_REQUIRED];
+    }
+
+    repeated VertexIndices indices = 1;
+    repeated Point P = 2;
+    repeated Vector N = 3;
+    repeated Vector S = 4;
+    repeated UVCoordinate uv = 5;
+    FloatTextureParameter alpha = 6;
+    FloatTextureParameter shadowalpha = 7;
+  }
+
+  message Sphere {
+    double radius = 1 [default = 1.0];
+    double zmin = 2 [features.field_presence = EXPLICIT];
+    double zmax = 3 [features.field_presence = EXPLICIT];
+    double phimax = 4 [default = 360.0];
+  }
+
+  message TriangleMesh {
+    string filename = 1;
+    FloatTextureParameter alpha = 2;
+    FloatTextureParameter shadowalpha = 3;
+  }
+
+  oneof shape_type {
+    Cone cone = 1;
+    Curve curve = 2;
+    Cylinder cylinder = 3;
+    Disk disk = 4;
+    HeightField heightfield = 5;
+    Hyperboloid hyperboloid = 6;
+    LoopSubdiv loopsubdiv = 7;
+    Nurbs nurbs = 8;
+    Paraboloid paraboloid = 9;
+    PlyMesh plymesh = 10;
+    Sphere sphere = 11;
+    TriangleMesh trianglemesh = 12;
+  }
+}
+
 message SpectrumTexture {
   string name = 1 [features.field_presence = LEGACY_REQUIRED];
 
@@ -1085,15 +1238,16 @@ message Directive {
     ReverseOrientation reverse_orientation = 24;
     Rotate rotate = 25;
     Sampler sampler = 26;
-    Scale scale = 27;
-    SpectrumTexture spectrum_texture = 28;
-    Transform transform = 29;
-    TransformBegin transform_begin = 30;
-    TransformEnd transform_end = 31;
-    TransformTimes transform_times = 32;
-    Translate translate = 33;
-    WorldBegin world_begin = 34;
-    WorldEnd world_end = 35;
+    Shape shape = 27;
+    Scale scale = 28;
+    SpectrumTexture spectrum_texture = 29;
+    Transform transform = 30;
+    TransformBegin transform_begin = 31;
+    TransformEnd transform_end = 32;
+    TransformTimes transform_times = 33;
+    Translate translate = 34;
+    WorldBegin world_begin = 35;
+    WorldEnd world_end = 36;
   }
 }
 
