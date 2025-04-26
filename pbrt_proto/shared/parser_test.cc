@@ -159,6 +159,10 @@ class MockParser final : public Parser {
                (absl::flat_hash_map<absl::string_view, Parameter>&)),
               (override));
   MOCK_METHOD(absl::Status, Scale, (double, double, double), (override));
+  MOCK_METHOD(absl::Status, Shape,
+              (absl::string_view,
+               (absl::flat_hash_map<absl::string_view, Parameter>&)),
+              (override));
   MOCK_METHOD(absl::Status, SpectrumTexture,
               (absl::string_view, absl::string_view,
                (absl::flat_hash_map<absl::string_view, Parameter>&)),
@@ -2132,6 +2136,30 @@ TEST(Scale, Fails) {
   std::stringstream stream("Scale 1 2 3");
   MockParser parser;
   EXPECT_CALL(parser, Scale(1.0, 2.0, 3.0))
+      .WillOnce(Return(absl::UnknownError("")));
+  EXPECT_THAT(parser.ReadFrom(stream),
+              StatusIs(absl::StatusCode::kUnknown, ""));
+}
+
+TEST(Shape, Succeeds) {
+  std::stringstream stream("Shape \"abc\"");
+  MockParser parser;
+  EXPECT_CALL(parser, Shape("abc", IsEmpty()))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Shape, MissingType) {
+  std::stringstream stream("Shape");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Missing type parameter to directive Shape"));
+}
+
+TEST(Shape, Fails) {
+  std::stringstream stream("Shape \"abc\"");
+  MockParser parser;
+  EXPECT_CALL(parser, Shape("abc", IsEmpty()))
       .WillOnce(Return(absl::UnknownError("")));
   EXPECT_THAT(parser.ReadFrom(stream),
               StatusIs(absl::StatusCode::kUnknown, ""));

@@ -1081,6 +1081,14 @@ absl::Status Parser::ReadFrom(std::istream& stream) {
       }
 
       status = Scale((*values)[0], (*values)[1], (*values)[2]);
+    } else if (**next == "Shape") {
+      absl::StatusOr<absl::string_view> type_name = ReadParameters(
+          "Shape", parameter_type_names_, storage, tokenizer, parameters);
+      if (!type_name.ok()) {
+        return type_name.status();
+      }
+
+      status = Shape(*type_name, parameters);
     } else if (**next == "Texture") {
       auto name = ReadQuotedString("Texture", tokenizer);
       if (!name.ok()) {

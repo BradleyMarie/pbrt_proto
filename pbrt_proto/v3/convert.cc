@@ -631,6 +631,11 @@ Material ParseMaterial(
     TryRemoveFloatTexture(parameters, "bumpmap",
                           std::bind(&Material::Uber::mutable_bumpmap, &uber));
   } else {
+    if (material_type != "matte") {
+      std::cerr << "Unrecognized Material type: \"" << material_type << "\""
+                << std::endl;
+    }
+
     auto& matte = *material.mutable_matte();
     TryRemoveSpectrumTexture(parameters, "Kd",
                              std::bind(&Material::Matte::mutable_kd, &matte));
@@ -799,6 +804,10 @@ class ParserV3 final : public Parser {
       absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
 
   absl::Status Scale(double x, double y, double z) override;
+
+  absl::Status Shape(
+      absl::string_view shape_type,
+      absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
 
   absl::Status SpectrumTexture(
       absl::string_view spectrum_texture_name,
@@ -2086,6 +2095,13 @@ absl::Status ParserV3::Sampler(
               << std::endl;
   }
 
+  return absl::OkStatus();
+}
+
+absl::Status ParserV3::Shape(
+    absl::string_view shape_type,
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
+  auto& shape = *output_.add_directives()->mutable_shape();
   return absl::OkStatus();
 }
 

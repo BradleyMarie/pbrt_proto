@@ -142,10 +142,14 @@ class Parser {
   virtual absl::Status Rotate(double angle, double x, double y, double z) = 0;
 
   virtual absl::Status Sampler(
-      absl::string_view accelerator_type,
+      absl::string_view sampler_type,
       absl::flat_hash_map<absl::string_view, Parameter>& parameters) = 0;
 
   virtual absl::Status Scale(double x, double y, double z) = 0;
+
+  virtual absl::Status Shape(
+      absl::string_view shape_type,
+      absl::flat_hash_map<absl::string_view, Parameter>& parameters) = 0;
 
   virtual absl::Status SpectrumTexture(
       absl::string_view spectrum_texture_name,
