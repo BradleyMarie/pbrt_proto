@@ -2102,6 +2102,29 @@ absl::Status ParserV3::Shape(
     absl::string_view shape_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
   auto& shape = *output_.add_directives()->mutable_shape();
+
+  if (shape_type == "cone") {
+    auto& cone = *shape.mutable_cone();
+
+    if (std::optional<int32_t> radius = TryRemoveFloat(parameters, "radius");
+        radius.has_value()) {
+      cone.set_radius(*radius);
+    }
+
+    if (std::optional<int32_t> height = TryRemoveFloat(parameters, "height");
+        height.has_value()) {
+      cone.set_height(*height);
+    }
+
+    if (std::optional<int32_t> phimax = TryRemoveFloat(parameters, "phimax");
+        phimax.has_value()) {
+      cone.set_phimax(*phimax);
+    }
+  } else {
+    std::cerr << "Unrecognized Shape type: \"" << shape_type << "\""
+              << std::endl;
+  }
+
   return absl::OkStatus();
 }
 

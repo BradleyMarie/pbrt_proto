@@ -2161,6 +2161,25 @@ TEST(Convert, Scale) {
                                             })pb")));
 }
 
+TEST(Convert, ShapeUnknown) {
+  std::stringstream stream("Shape \"unknown\"");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives { shape {} })pb")));
+}
+
+TEST(Convert, SamplerCone) {
+  std::stringstream stream(
+      "Shape \"cone\" "
+      "\"float radius\" 2 "
+      "\"float height\" 3.0 "
+      "\"float phimax\" 4.0");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(
+                  R"pb(directives {
+                         shape { cone { radius: 2.0 height: 3.0 phimax: 4.0 } }
+                       })pb")));
+}
+
 TEST(Convert, SpectrumTextureUnknown) {
   std::stringstream stream("Texture \"name\" \"spectrum\" \"unknown\"");
   EXPECT_THAT(Convert(stream),
