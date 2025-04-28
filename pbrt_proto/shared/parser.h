@@ -188,6 +188,10 @@ absl::Status TryRemoveIntegers(
     absl::string_view parameter_name, size_t required_size,
     std::optional<absl::Span<int32_t>>& result);
 
+std::optional<absl::Span<int32_t>> TryRemoveIntegers(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view parameter_name);
+
 std::optional<std::array<double, 2>> TryRemoveBlackbodyV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     absl::string_view parameter_name);

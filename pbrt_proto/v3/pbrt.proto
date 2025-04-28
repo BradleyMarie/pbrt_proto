@@ -945,8 +945,14 @@ message Shape {
   }
 
   message LoopSubdiv {
+    message VertexIndices {
+      int32 v0 = 1 [features.field_presence = LEGACY_REQUIRED];
+      int32 v1 = 2 [features.field_presence = LEGACY_REQUIRED];
+      int32 v2 = 3 [features.field_presence = LEGACY_REQUIRED];
+    }
+
     int32 levels = 1 [default = 3];
-    repeated int32 indices = 2;
+    repeated VertexIndices indices = 2;
     repeated Point P = 3;
   }
 

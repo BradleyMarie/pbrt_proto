@@ -2536,6 +2536,63 @@ TEST(TryRemoveIntegers, Found) {
   EXPECT_THAT(parameters, Not(Contains(Key("name"))));
 }
 
+TEST(TryRemoveIntegers2, WrongType) {
+  std::vector<int32_t> values;
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::FLOAT,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  EXPECT_THAT(TryRemoveIntegers(parameters, "name"), Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name")));
+}
+
+TEST(TryRemoveIntegers2, WrongStoredType) {
+  std::vector<double> values;
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::INTEGER,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  EXPECT_THAT(TryRemoveIntegers(parameters, "name"), Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name")));
+}
+
+TEST(TryRemoveIntegers2, WrongName) {
+  std::vector<int32_t> values;
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::INTEGER,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name1", parameter}};
+
+  EXPECT_THAT(TryRemoveIntegers(parameters, "name2"), Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name1")));
+}
+
+TEST(TryRemoveIntegers2, Found) {
+  std::vector<int32_t> values = {{1, 2, 3}};
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::INTEGER,
+                      .type_name = "aaa",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  EXPECT_THAT(TryRemoveIntegers(parameters, "name"),
+              Optional(ElementsAre(1, 2, 3)));
+  EXPECT_THAT(parameters, Not(Contains(Key("name1"))));
+}
+
 TEST(TryRemoveSpectralSamples, WrongType) {
   std::vector<std::array<double, 2>> values;
   Parameter parameter{.directive = "",

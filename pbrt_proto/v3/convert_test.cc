@@ -2382,6 +2382,45 @@ TEST(Convert, ShapeHyperboloid) {
                                         })pb")));
 }
 
+TEST(Convert, ShapeLoopsubdiv) {
+  std::stringstream stream(
+      "Shape \"loopsubdiv\" "
+      "\"integer indices\" [0 1 2 2 1 0] "
+      "\"point P\" [4.0 5.0 6.0 7.0 8.0 9.0 10.0 11.0 12.0] "
+      "\"integer levels\" 13 ");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
+                                   R"pb(directives {
+                                          shape {
+                                            loopsubdiv {
+                                              indices { v0: 0 v1: 1 v2: 2 }
+                                              indices { v0: 2 v1: 1 v2: 0 }
+                                              P { x: 4.0 y: 5.0 z: 6.0 }
+                                              P { x: 7.0 y: 8.0 z: 9.0 }
+                                              P { x: 10.0 y: 11.0 z: 12.0 }
+                                              levels: 13
+                                            }
+                                          }
+                                        })pb")));
+}
+
+TEST(Convert, ShapeLoopsubdivNoIndices) {
+  std::stringstream stream(
+      "Shape \"loopsubdiv\" "
+      "\"point P\" [4.0 5.0 6.0 7.0 8.0 9.0 10.0 11.0 12.0] "
+      "\"integer levels\" 13 ");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
+                                   R"pb(directives { shape {} })pb")));
+}
+
+TEST(Convert, ShapeLoopsubdivNoP) {
+  std::stringstream stream(
+      "Shape \"loopsubdiv\" "
+      "\"integer indices\" [0 1 2 2 1 0] "
+      "\"integer levels\" 13 ");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
+                                   R"pb(directives { shape {} })pb")));
+}
+
 TEST(Convert, SpectrumTextureUnknown) {
   std::stringstream stream("Texture \"name\" \"spectrum\" \"unknown\"");
   EXPECT_THAT(Convert(stream),

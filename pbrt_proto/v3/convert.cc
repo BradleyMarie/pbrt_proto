@@ -2309,7 +2309,42 @@ absl::Status ParserV3::Shape(
       hyperboloid.set_phimax(*phimax);
     }
   } else if (shape_type == "loopsubdiv") {
-    //
+    auto& loopsubdiv = *shape.mutable_loopsubdiv();
+
+    if (std::optional<int32_t> levels = TryRemoveInteger(parameters, "levels");
+        levels.has_value()) {
+      loopsubdiv.set_levels(*levels);
+    }
+
+    if (std::optional<absl::Span<int32_t>> indices =
+            TryRemoveIntegers(parameters, "indices");
+        indices.has_value()) {
+      for (size_t i = 0; i < indices->size() / 3u; i++) {
+        auto& face = *loopsubdiv.add_indices();
+        face.set_v0((*indices)[3u * i + 0]);
+        face.set_v1((*indices)[3u * i + 1]);
+        face.set_v2((*indices)[3u * i + 2]);
+      }
+    } else {
+      std::cerr << "Missing required loopsubdiv Shape parameter: 'indices'"
+                << std::endl;
+      shape.clear_loopsubdiv();
+    }
+
+    if (std::optional<absl::Span<std::array<double, 3>>> p =
+            TryRemovePoint3s(parameters, "P");
+        p.has_value()) {
+      for (const auto& src : *p) {
+        auto& dest = *loopsubdiv.add_p();
+        dest.set_x(src[0]);
+        dest.set_y(src[1]);
+        dest.set_z(src[2]);
+      }
+    } else {
+      std::cerr << "Missing required loopsubdiv Shape parameter: 'P'"
+                << std::endl;
+      shape.clear_loopsubdiv();
+    }
   } else {
     std::cerr << "Unrecognized Shape type: \"" << shape_type << "\""
               << std::endl;
