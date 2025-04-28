@@ -2167,10 +2167,10 @@ TEST(Convert, ShapeUnknown) {
               IsOkAndHolds(EqualsProto(R"pb(directives { shape {} })pb")));
 }
 
-TEST(Convert, SamplerCone) {
+TEST(Convert, ShapeCone) {
   std::stringstream stream(
       "Shape \"cone\" "
-      "\"float radius\" 2 "
+      "\"float radius\" 2.0 "
       "\"float height\" 3.0 "
       "\"float phimax\" 4.0");
   EXPECT_THAT(Convert(stream),
@@ -2178,6 +2178,89 @@ TEST(Convert, SamplerCone) {
                   R"pb(directives {
                          shape { cone { radius: 2.0 height: 3.0 phimax: 4.0 } }
                        })pb")));
+}
+
+TEST(Convert, ShapeCurve) {
+  std::stringstream stream(
+      "Shape \"curve\" "
+      "\"point P\" [1 2 3] "
+      "\"string basis\" \"bspline\" "
+      "\"integer degree\" 4 "
+      "\"string type\" \"ribbon\" "
+      "\"normal N\" [5 6 7] "
+      "\"float width\" 8.0 "
+      "\"float width0\" 9.0 "
+      "\"float width1\" 10.0 "
+      "\"integer splitdepth\" 11 ");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
+                                   R"pb(directives {
+                                          shape {
+                                            curve {
+                                              P { x: 1.0 y: 2.0 z: 3.0 }
+                                              basis: BSPLINE
+                                              degree: 4
+                                              type: RIBBON
+                                              N { x: 5.0 y: 6.0 z: 7.0 }
+                                              width: 8.0
+                                              width0: 9.0
+                                              width1: 10.0
+                                              splitdepth: 11
+                                            }
+                                          }
+                                        })pb")));
+}
+
+TEST(Convert, ShapeCurveBadBasis) {
+  std::stringstream stream(
+      "Shape \"curve\" "
+      "\"string basis\" \"bad\" ");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives { shape {} })pb")));
+}
+
+TEST(Convert, ShapeCurveBezier) {
+  std::stringstream stream(
+      "Shape \"curve\" "
+      "\"string basis\" \"bezier\" ");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(
+                  R"pb(directives { shape { curve { basis: BEZIER } } })pb")));
+}
+
+TEST(Convert, ShapeCurveCylinder) {
+  std::stringstream stream(
+      "Shape \"curve\" "
+      "\"string type\" \"cylinder\" ");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(
+                  R"pb(directives { shape { curve { type: CYLINDER } } })pb")));
+}
+
+TEST(Convert, ShapeCurveFlat) {
+  std::stringstream stream(
+      "Shape \"curve\" "
+      "\"string type\" \"flat\" ");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(
+                  R"pb(directives { shape { curve { type: FLAT } } })pb")));
+}
+
+TEST(Convert, ShapeCurveRibbon) {
+  std::stringstream stream(
+      "Shape \"curve\" "
+      "\"string type\" \"ribbon\" ");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(
+                  R"pb(directives { shape { curve { type: RIBBON } } })pb")));
+}
+
+TEST(Convert, ShapeCurveUnknownType) {
+  std::stringstream stream(
+      "Shape \"curve\" "
+      "\"string type\" \"abc\" ");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(
+                  R"pb(directives { shape { curve { type: CYLINDER } } })pb")));
 }
 
 TEST(Convert, SpectrumTextureUnknown) {

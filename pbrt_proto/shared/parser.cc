@@ -1232,11 +1232,31 @@ std::optional<int32_t> TryRemoveInteger(
   return result;
 }
 
+std::optional<absl::Span<std::array<double, 3>>> TryRemoveNormals(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view parameter_name) {
+  std::optional<absl::Span<std::array<double, 3>>> result;
+  TryRemoveValues<ParameterType::NORMAL3>(parameters, parameter_name,
+                                          std::nullopt, result)
+      .IgnoreError();
+  return result;
+}
+
 std::optional<std::array<double, 3>> TryRemovePoint3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     absl::string_view parameter_name) {
   std::optional<std::array<double, 3>> result;
   TryRemoveValue<ParameterType::POINT3>(parameters, parameter_name, result)
+      .IgnoreError();
+  return result;
+}
+
+std::optional<absl::Span<std::array<double, 3>>> TryRemovePoint3s(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view parameter_name) {
+  std::optional<absl::Span<std::array<double, 3>>> result;
+  TryRemoveValues<ParameterType::POINT3>(parameters, parameter_name,
+                                         std::nullopt, result)
       .IgnoreError();
   return result;
 }

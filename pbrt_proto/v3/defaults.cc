@@ -679,6 +679,44 @@ void Canonicalize(PbrtProto& proto) {
       case Directive::kMaterial:
         CanonicalizeMaterial(*directive.mutable_material());
         break;
+      case Directive::kShape:
+        switch (directive.shape().shape_type_case()) {
+          case Shape::kCone:
+            break;
+          case Shape::kCurve:
+            if (!directive.shape().curve().has_width0()) {
+              directive.mutable_shape()->mutable_curve()->set_width0(
+                  directive.shape().curve().width());
+            }
+            if (!directive.shape().curve().has_width1()) {
+              directive.mutable_shape()->mutable_curve()->set_width1(
+                  directive.shape().curve().width());
+            }
+            break;
+          case Shape::kCylinder:
+            break;
+          case Shape::kDisk:
+            break;
+          case Shape::kHeightfield:
+            break;
+          case Shape::kHyperboloid:
+            break;
+          case Shape::kLoopsubdiv:
+            break;
+          case Shape::kNurbs:
+            break;
+          case Shape::kParaboloid:
+            break;
+          case Shape::kPlymesh:
+            break;
+          case Shape::kSphere:
+            break;
+          case Shape::kTrianglemesh:
+            break;
+          case Shape::SHAPE_TYPE_NOT_SET:
+            break;
+        }
+        break;
       case Directive::kSpectrumTexture:
         switch (directive.spectrum_texture().spectrum_texture_type_case()) {
           case SpectrumTexture::kBilerp:

@@ -2106,19 +2106,102 @@ absl::Status ParserV3::Shape(
   if (shape_type == "cone") {
     auto& cone = *shape.mutable_cone();
 
-    if (std::optional<int32_t> radius = TryRemoveFloat(parameters, "radius");
+    if (std::optional<double> radius = TryRemoveFloat(parameters, "radius");
         radius.has_value()) {
       cone.set_radius(*radius);
     }
 
-    if (std::optional<int32_t> height = TryRemoveFloat(parameters, "height");
+    if (std::optional<double> height = TryRemoveFloat(parameters, "height");
         height.has_value()) {
       cone.set_height(*height);
     }
 
-    if (std::optional<int32_t> phimax = TryRemoveFloat(parameters, "phimax");
+    if (std::optional<double> phimax = TryRemoveFloat(parameters, "phimax");
         phimax.has_value()) {
       cone.set_phimax(*phimax);
+    }
+  } else if (shape_type == "curve") {
+    auto& curve = *shape.mutable_curve();
+
+    if (std::optional<double> width = TryRemoveFloat(parameters, "width");
+        width.has_value()) {
+      curve.set_width(*width);
+    }
+
+    if (std::optional<double> width0 = TryRemoveFloat(parameters, "width0");
+        width0.has_value()) {
+      curve.set_width0(*width0);
+    }
+
+    if (std::optional<double> width1 = TryRemoveFloat(parameters, "width1");
+        width1.has_value()) {
+      curve.set_width1(*width1);
+    }
+
+    if (std::optional<int32_t> degree = TryRemoveInteger(parameters, "degree");
+        degree.has_value()) {
+      curve.set_degree(*degree);
+    }
+
+    if (std::optional<absl::string_view> basis =
+            TryRemoveString(parameters, "basis");
+        basis.has_value()) {
+      if (*basis == "bezier") {
+        curve.set_basis(Shape::Curve::BEZIER);
+      } else if (*basis == "bspline") {
+        curve.set_basis(Shape::Curve::BSPLINE);
+      } else {
+        std::cerr
+            << "Unrecognized value for 'curve' Shape parameter 'basis': \""
+            << *basis << "\"" << std::endl;
+
+        shape.clear_curve();
+        return absl::OkStatus();
+      }
+    }
+
+    if (std::optional<absl::Span<std::array<double, 3>>> p =
+            TryRemovePoint3s(parameters, "P");
+        p.has_value()) {
+      for (const auto& src : *p) {
+        auto& dest = *curve.add_p();
+        dest.set_x(src[0]);
+        dest.set_y(src[1]);
+        dest.set_z(src[2]);
+      }
+    }
+
+    if (std::optional<absl::string_view> type =
+            TryRemoveString(parameters, "type");
+        type.has_value()) {
+      if (*type == "cylinder") {
+        curve.set_type(Shape::Curve::CYLINDER);
+      } else if (*type == "flat") {
+        curve.set_type(Shape::Curve::FLAT);
+      } else if (*type == "ribbon") {
+        curve.set_type(Shape::Curve::RIBBON);
+      } else {
+        std::cerr << "Unrecognized value for 'curve' Shape parameter 'type': \""
+                  << *type << "\"" << std::endl;
+        curve.set_type(Shape::Curve::CYLINDER);
+      }
+    }
+
+    if (std::optional<absl::Span<std::array<double, 3>>> n =
+            TryRemoveNormals(parameters, "N");
+        n.has_value()) {
+      for (const auto& src : *n) {
+        auto& dest = *curve.add_n();
+        dest.set_x(src[0]);
+        dest.set_y(src[1]);
+        dest.set_z(src[2]);
+      }
+    }
+
+    if (std::optional<int32_t> splitdepth =
+            TryRemoveInteger(parameters, "splitdepth");
+        splitdepth.has_value()) {
+      curve.set_splitdepth(*splitdepth);
     }
   } else {
     std::cerr << "Unrecognized Shape type: \"" << shape_type << "\""

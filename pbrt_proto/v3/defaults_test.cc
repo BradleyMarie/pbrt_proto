@@ -712,6 +712,24 @@ TEST(Canonicalize, Sampler) {
               EqualsProto(R"pb(directives { sampler {} })pb"));
 }
 
+// Unset Shape are left unset
+TEST(Canonicalize, Shape) {
+  EXPECT_THAT(MakeCanonical(R"pb(directives { shape {} })pb"),
+              EqualsProto(R"pb(directives { shape {} })pb"));
+}
+
+TEST(Canonicalize, ShapeCone) {
+  EXPECT_THAT(MakeCanonical(R"pb(directives { shape { cone {} } })pb"),
+              EqualsProto(R"pb(directives { shape { cone {} } })pb"));
+}
+
+TEST(Canonicalize, ShapeCurve) {
+  EXPECT_THAT(MakeCanonical(R"pb(directives { shape { curve {} } })pb"),
+              EqualsProto(R"pb(directives {
+                                 shape { curve { width0: 1.0 width1: 1.0 } }
+                               })pb"));
+}
+
 // Unset SpectrumTexture are left unset
 TEST(Canonicalize, SpectrumTexture) {
   EXPECT_THAT(

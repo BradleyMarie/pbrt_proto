@@ -893,13 +893,6 @@ message Shape {
       BSPLINE = 2;
     }
 
-    message Points {
-      Point p0 = 1 [features.field_presence = LEGACY_REQUIRED];
-      Point p1 = 2 [features.field_presence = LEGACY_REQUIRED];
-      Point p2 = 3 [features.field_presence = LEGACY_REQUIRED];
-      Point p3 = 4 [features.field_presence = LEGACY_REQUIRED];
-    }
-
     enum Type {
       option features.enum_type = CLOSED;
       CYLINDER = 1;
@@ -912,14 +905,16 @@ message Shape {
       Vector n1 = 2 [features.field_presence = LEGACY_REQUIRED];
     }
 
-    Points P = 1;
+    // If using pbrt_proto::v3::Canonicalize, width0 and width1 will be filled
+    // with the value from width if not set.
+    repeated Point P = 1;
     Basis basis = 2 [default = BEZIER];
     int32 degree = 3 [default = 3];
     Type type = 4 [default = FLAT];
-    Normals N = 5;
+    repeated Vector N = 5;
     double width = 6 [default = 1.0];
-    double width0 = 7 [features.field_presence = EXPLICIT, default = 1.0];
-    double width1 = 8 [features.field_presence = EXPLICIT, default = 1.0];
+    double width0 = 7 [features.field_presence = EXPLICIT];
+    double width1 = 8 [features.field_presence = EXPLICIT];
     int32 splitdepth = 9 [default = 3];
   }
 
@@ -983,6 +978,19 @@ message Shape {
   }
 
   message PlyMesh {
+    string filename = 1;
+    FloatTextureParameter alpha = 2;
+    FloatTextureParameter shadowalpha = 3;
+  }
+
+  message Sphere {
+    double radius = 1 [default = 1.0];
+    double zmin = 2 [features.field_presence = EXPLICIT];
+    double zmax = 3 [features.field_presence = EXPLICIT];
+    double phimax = 4 [default = 360.0];
+  }
+
+  message TriangleMesh {
     message VertexIndices {
       int32 v0 = 1 [features.field_presence = LEGACY_REQUIRED];
       int32 v1 = 2 [features.field_presence = LEGACY_REQUIRED];
@@ -1001,19 +1009,6 @@ message Shape {
     repeated UVCoordinate uv = 5;
     FloatTextureParameter alpha = 6;
     FloatTextureParameter shadowalpha = 7;
-  }
-
-  message Sphere {
-    double radius = 1 [default = 1.0];
-    double zmin = 2 [features.field_presence = EXPLICIT];
-    double zmax = 3 [features.field_presence = EXPLICIT];
-    double phimax = 4 [default = 360.0];
-  }
-
-  message TriangleMesh {
-    string filename = 1;
-    FloatTextureParameter alpha = 2;
-    FloatTextureParameter shadowalpha = 3;
   }
 
   oneof shape_type {
