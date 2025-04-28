@@ -2269,22 +2269,19 @@ absl::Status ParserV3::Shape(
 
     int64_t required_size = static_cast<int64_t>(heightfield.nu()) *
                             static_cast<int64_t>(heightfield.nv());
-
-    bool has_pz = false;
-    if (required_size <= std::numeric_limits<ssize_t>::max()) {
-      std::optional<absl::Span<double>> pz;
-      if (absl::Status status = TryRemoveFloats(
-              parameters, "Pz", static_cast<size_t>(required_size), pz);
-          status.ok() && pz.has_value()) {
-        for (const auto& value : *pz) {
-          heightfield.add_pz(value);
-        }
-
-        has_pz = true;
-      }
+    if (required_size > std::numeric_limits<int32_t>::max()) {
+      return absl::InvalidArgumentError(
+          "Heighfield shape is too large to be stored in a 1D proto array");
     }
 
-    if (!has_pz) {
+    std::optional<absl::Span<double>> pz;
+    if (absl::Status status = TryRemoveFloats(
+            parameters, "Pz", static_cast<size_t>(required_size), pz);
+        status.ok() && pz.has_value()) {
+      for (const auto& value : *pz) {
+        heightfield.add_pz(value);
+      }
+    } else {
       return absl::InvalidArgumentError(
           "Missing or invalid heightfield Shape parameter: 'Pz'");
     }

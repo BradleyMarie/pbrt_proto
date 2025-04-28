@@ -2331,6 +2331,18 @@ TEST(Convert, ShapeHeightfieldNoNv) {
                        "Missing required heightfield Shape parameter: 'nv'"));
 }
 
+TEST(Convert, ShapeHeightfieldTooLarge) {
+  std::stringstream stream(
+      "Shape \"heightfield\" "
+      "\"integer nu\" 65535 "
+      "\"integer nv\" 65535 ");
+  EXPECT_THAT(
+      Convert(stream),
+      StatusIs(
+          absl::StatusCode::kInvalidArgument,
+          "Heighfield shape is too large to be stored in a 1D proto array"));
+}
+
 TEST(Convert, ShapeHeightfieldNoPz) {
   std::stringstream stream(
       "Shape \"heightfield\" "
