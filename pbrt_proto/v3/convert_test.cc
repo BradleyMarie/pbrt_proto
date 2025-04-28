@@ -2704,6 +2704,58 @@ TEST(Convert, ShapeNurbsBadPw) {
               IsOkAndHolds(EqualsProto(R"pb(directives { shape {} })pb")));
 }
 
+TEST(Convert, ShapeParaboloid) {
+  std::stringstream stream(
+      "Shape \"paraboloid\" "
+      "\"float radius\" 1.0 "
+      "\"float zmin\" 2.0 "
+      "\"float zmax\" 3.0 "
+      "\"float phimax\" 4.0");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(
+          R"pb(directives {
+                 shape {
+                   paraboloid { radius: 1.0 zmin: 2.0 zmax: 3.0 phimax: 4.0 }
+                 }
+               })pb")));
+}
+
+TEST(Convert, ShapePlymesh) {
+  std::stringstream stream(
+      "Shape \"plymesh\" "
+      "\"string filename\" \"1.0\" "
+      "\"float alpha\" 2.0 "
+      "\"float shadowalpha\" 3.0 ");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
+                                   R"pb(directives {
+                                          shape {
+                                            plymesh {
+                                              filename: "1.0"
+                                              alpha { float_value: 2.0 }
+                                              shadowalpha { float_value: 3.0 }
+                                            }
+                                          }
+                                        })pb")));
+}
+
+TEST(Convert, ShapeSphere) {
+  std::stringstream stream(
+      "Shape \"sphere\" "
+      "\"float radius\" 1.0 "
+      "\"float zmin\" 2.0 "
+      "\"float zmax\" 3.0 "
+      "\"float phimax\" 4.0");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(
+          R"pb(directives {
+                 shape {
+                   sphere { radius: 1.0 zmin: 2.0 zmax: 3.0 phimax: 4.0 }
+                 }
+               })pb")));
+}
+
 TEST(Convert, SpectrumTextureUnknown) {
   std::stringstream stream("Texture \"name\" \"spectrum\" \"unknown\"");
   EXPECT_THAT(Convert(stream),

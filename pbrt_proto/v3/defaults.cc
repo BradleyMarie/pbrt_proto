@@ -738,6 +738,14 @@ void Canonicalize(PbrtProto& proto) {
           case Shape::kPlymesh:
             break;
           case Shape::kSphere:
+            if (!directive.shape().sphere().has_zmin()) {
+              directive.mutable_shape()->mutable_sphere()->set_zmin(
+                  -directive.shape().sphere().radius());
+            }
+            if (!directive.shape().sphere().has_zmax()) {
+              directive.mutable_shape()->mutable_sphere()->set_zmax(
+                  directive.shape().sphere().radius());
+            }
             break;
           case Shape::kTrianglemesh:
             break;

@@ -984,12 +984,14 @@ message Shape {
   }
 
   message PlyMesh {
-    string filename = 1;
+    string filename = 1 [default = ""];
     FloatTextureParameter alpha = 2;
     FloatTextureParameter shadowalpha = 3;
   }
 
   message Sphere {
+    // If using pbrt_proto::v3::Canonicalize, zmin and zmax will be filled
+    // with the value from radius if not set.
     double radius = 1 [default = 1.0];
     double zmin = 2 [features.field_presence = EXPLICIT];
     double zmax = 3 [features.field_presence = EXPLICIT];

@@ -757,6 +757,28 @@ TEST(Canonicalize, ShapeHyperboloid) {
                                })pb"));
 }
 
+TEST(Canonicalize, ShapeLoopsubdiv) {
+  EXPECT_THAT(MakeCanonical(R"pb(directives { shape { loopsubdiv {} } })pb"),
+              EqualsProto(R"pb(directives { shape { loopsubdiv {} } })pb"));
+}
+
+TEST(Canonicalize, ShapeNurbs) {
+  EXPECT_THAT(MakeCanonical(R"pb(directives { shape { nurbs {} } })pb"),
+              EqualsProto(R"pb(directives { shape { nurbs {} } })pb"));
+}
+
+TEST(Canonicalize, ShapeParaboloid) {
+  EXPECT_THAT(MakeCanonical(R"pb(directives { shape { paraboloid {} } })pb"),
+              EqualsProto(R"pb(directives { shape { paraboloid {} } })pb"));
+}
+
+TEST(Canonicalize, ShapeSphere) {
+  EXPECT_THAT(MakeCanonical(R"pb(directives { shape { sphere {} } })pb"),
+              EqualsProto(R"pb(directives {
+                                 shape { sphere { zmin: -1.0 zmax: 1.0 } }
+                               })pb"));
+}
+
 // Unset SpectrumTexture are left unset
 TEST(Canonicalize, SpectrumTexture) {
   EXPECT_THAT(

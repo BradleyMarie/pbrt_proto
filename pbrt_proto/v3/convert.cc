@@ -2480,6 +2480,65 @@ absl::Status ParserV3::Shape(
       shape.clear_nurbs();
       return absl::OkStatus();
     }
+  } else if (shape_type == "paraboloid") {
+    auto& paraboloid = *shape.mutable_paraboloid();
+
+    if (std::optional<double> radius = TryRemoveFloat(parameters, "radius");
+        radius.has_value()) {
+      paraboloid.set_radius(*radius);
+    }
+
+    if (std::optional<double> zmin = TryRemoveFloat(parameters, "zmin");
+        zmin.has_value()) {
+      paraboloid.set_zmin(*zmin);
+    }
+
+    if (std::optional<double> zmax = TryRemoveFloat(parameters, "zmax");
+        zmax.has_value()) {
+      paraboloid.set_zmax(*zmax);
+    }
+
+    if (std::optional<double> phimax = TryRemoveFloat(parameters, "phimax");
+        phimax.has_value()) {
+      paraboloid.set_phimax(*phimax);
+    }
+  } else if (shape_type == "plymesh") {
+    auto& plymesh = *shape.mutable_plymesh();
+
+    if (std::optional<absl::string_view> filename =
+            TryRemoveString(parameters, "filename");
+        filename) {
+      plymesh.set_filename(*filename);
+    }
+
+    TryRemoveFloatTexture(parameters, "alpha",
+                          std::bind(&Shape::PlyMesh::mutable_alpha, &plymesh));
+
+    TryRemoveFloatTexture(
+        parameters, "shadowalpha",
+        std::bind(&Shape::PlyMesh::mutable_shadowalpha, &plymesh));
+  } else if (shape_type == "sphere") {
+    auto& sphere = *shape.mutable_sphere();
+
+    if (std::optional<double> radius = TryRemoveFloat(parameters, "radius");
+        radius.has_value()) {
+      sphere.set_radius(*radius);
+    }
+
+    if (std::optional<double> zmin = TryRemoveFloat(parameters, "zmin");
+        zmin.has_value()) {
+      sphere.set_zmin(*zmin);
+    }
+
+    if (std::optional<double> zmax = TryRemoveFloat(parameters, "zmax");
+        zmax.has_value()) {
+      sphere.set_zmax(*zmax);
+    }
+
+    if (std::optional<double> phimax = TryRemoveFloat(parameters, "phimax");
+        phimax.has_value()) {
+      sphere.set_phimax(*phimax);
+    }
   } else {
     std::cerr << "Unrecognized Shape type: \"" << shape_type << "\""
               << std::endl;
