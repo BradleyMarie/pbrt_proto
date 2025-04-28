@@ -2286,7 +2286,28 @@ absl::Status ParserV3::Shape(
           "Missing or invalid heightfield Shape parameter: 'Pz'");
     }
   } else if (shape_type == "hyperboloid") {
-    //
+    auto& hyperboloid = *shape.mutable_hyperboloid();
+
+    if (std::optional<std::array<double, 3>> p1 =
+            TryRemovePoint3(parameters, "p1");
+        p1.has_value()) {
+      hyperboloid.mutable_p1()->set_x((*p1)[0]);
+      hyperboloid.mutable_p1()->set_y((*p1)[1]);
+      hyperboloid.mutable_p1()->set_z((*p1)[2]);
+    }
+
+    if (std::optional<std::array<double, 3>> p2 =
+            TryRemovePoint3(parameters, "p2");
+        p2.has_value()) {
+      hyperboloid.mutable_p2()->set_x((*p2)[0]);
+      hyperboloid.mutable_p2()->set_y((*p2)[1]);
+      hyperboloid.mutable_p2()->set_z((*p2)[2]);
+    }
+
+    if (std::optional<double> phimax = TryRemoveFloat(parameters, "phimax");
+        phimax.has_value()) {
+      hyperboloid.set_phimax(*phimax);
+    }
   } else if (shape_type == "loopsubdiv") {
     //
   } else {

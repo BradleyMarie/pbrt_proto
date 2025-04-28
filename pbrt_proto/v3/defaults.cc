@@ -700,6 +700,34 @@ void Canonicalize(PbrtProto& proto) {
           case Shape::kHeightfield:
             break;
           case Shape::kHyperboloid:
+            if (!directive.shape().hyperboloid().has_p1()) {
+              directive.mutable_shape()
+                  ->mutable_hyperboloid()
+                  ->mutable_p1()
+                  ->set_x(0.0);
+              directive.mutable_shape()
+                  ->mutable_hyperboloid()
+                  ->mutable_p1()
+                  ->set_y(0.0);
+              directive.mutable_shape()
+                  ->mutable_hyperboloid()
+                  ->mutable_p1()
+                  ->set_z(0.0);
+            }
+            if (!directive.shape().hyperboloid().has_p2()) {
+              directive.mutable_shape()
+                  ->mutable_hyperboloid()
+                  ->mutable_p2()
+                  ->set_x(1.0);
+              directive.mutable_shape()
+                  ->mutable_hyperboloid()
+                  ->mutable_p2()
+                  ->set_y(1.0);
+              directive.mutable_shape()
+                  ->mutable_hyperboloid()
+                  ->mutable_p2()
+                  ->set_z(1.0);
+            }
             break;
           case Shape::kLoopsubdiv:
             break;

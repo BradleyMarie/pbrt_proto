@@ -2364,6 +2364,24 @@ TEST(Convert, ShapeHeightfieldNWrongSizePz) {
                        "Missing or invalid heightfield Shape parameter: 'Pz'"));
 }
 
+TEST(Convert, ShapeHyperboloid) {
+  std::stringstream stream(
+      "Shape \"hyperboloid\" "
+      "\"point p1\" [1.0 2.0 3.0] "
+      "\"point p2\" [4.0 5.0 6.0] "
+      "\"float phimax\" 7.0");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
+                                   R"pb(directives {
+                                          shape {
+                                            hyperboloid {
+                                              p1 { x: 1.0 y: 2.0 z: 3.0 }
+                                              p2 { x: 4.0 y: 5.0 z: 6.0 }
+                                              phimax: 7.0
+                                            }
+                                          }
+                                        })pb")));
+}
+
 TEST(Convert, SpectrumTextureUnknown) {
   std::stringstream stream("Texture \"name\" \"spectrum\" \"unknown\"");
   EXPECT_THAT(Convert(stream),

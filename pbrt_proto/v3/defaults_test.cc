@@ -745,6 +745,18 @@ TEST(Canonicalize, ShapeHeightfield) {
               EqualsProto(R"pb(directives { shape { heightfield {} } })pb"));
 }
 
+TEST(Canonicalize, ShapeHyperboloid) {
+  EXPECT_THAT(MakeCanonical(R"pb(directives { shape { hyperboloid {} } })pb"),
+              EqualsProto(R"pb(directives {
+                                 shape {
+                                   hyperboloid {
+                                     p1 { x: 0.0 y: 0.0 z: 0.0 }
+                                     p2 { x: 1.0 y: 1.0 z: 1.0 }
+                                   }
+                                 }
+                               })pb"));
+}
+
 // Unset SpectrumTexture are left unset
 TEST(Canonicalize, SpectrumTexture) {
   EXPECT_THAT(
