@@ -2278,9 +2278,7 @@ absl::Status ParserV3::Shape(
     if (absl::Status status = TryRemoveFloats(
             parameters, "Pz", static_cast<size_t>(required_size), pz);
         status.ok() && pz.has_value()) {
-      for (const auto& value : *pz) {
-        heightfield.add_pz(value);
-      }
+      heightfield.mutable_pz()->Add(pz->begin(), pz->end());
     } else {
       return absl::InvalidArgumentError(
           "Missing or invalid heightfield Shape parameter: 'Pz'");
@@ -2329,6 +2327,7 @@ absl::Status ParserV3::Shape(
       std::cerr << "Missing required loopsubdiv Shape parameter: 'indices'"
                 << std::endl;
       shape.clear_loopsubdiv();
+      return absl::OkStatus();
     }
 
     if (std::optional<absl::Span<std::array<double, 3>>> p =
@@ -2344,10 +2343,147 @@ absl::Status ParserV3::Shape(
       std::cerr << "Missing required loopsubdiv Shape parameter: 'P'"
                 << std::endl;
       shape.clear_loopsubdiv();
+      return absl::OkStatus();
+    }
+  } else if (shape_type == "nurbs") {
+    auto& nurbs = *shape.mutable_nurbs();
+
+    if (std::optional<int32_t> nu = TryRemoveInteger(parameters, "nu");
+        nu.has_value()) {
+      nurbs.set_nu(*nu);
+    } else {
+      std::cerr << "Missing required nurbs Shape parameter: 'nu'" << std::endl;
+      shape.clear_nurbs();
+      return absl::OkStatus();
+    }
+
+    if (std::optional<int32_t> nv = TryRemoveInteger(parameters, "nv");
+        nv.has_value()) {
+      nurbs.set_nv(*nv);
+    } else {
+      std::cerr << "Missing required nurbs Shape parameter: 'nv'" << std::endl;
+      shape.clear_nurbs();
+      return absl::OkStatus();
+    }
+
+    if (std::optional<int32_t> uorder = TryRemoveInteger(parameters, "uorder");
+        uorder.has_value()) {
+      nurbs.set_uorder(*uorder);
+    } else {
+      std::cerr << "Missing required nurbs Shape parameter: 'uorder'"
+                << std::endl;
+      shape.clear_nurbs();
+      return absl::OkStatus();
+    }
+
+    if (std::optional<int32_t> vorder = TryRemoveInteger(parameters, "vorder");
+        vorder.has_value()) {
+      nurbs.set_vorder(*vorder);
+    } else {
+      std::cerr << "Missing required nurbs Shape parameter: 'vorder'"
+                << std::endl;
+      shape.clear_nurbs();
+      return absl::OkStatus();
+    }
+
+    std::optional<absl::Span<double>> uknots;
+    if (absl::Status status =
+            TryRemoveFloats(parameters, "uknots",
+                            static_cast<uint32_t>(nurbs.nu()) +
+                                static_cast<uint32_t>(nurbs.uorder()),
+                            uknots);
+        status.ok() && uknots.has_value()) {
+      nurbs.mutable_uknots()->Add(uknots->begin(), uknots->end());
+    } else {
+      std::cerr << "Missing required nurbs Shape parameter: 'uknots'"
+                << std::endl;
+      shape.clear_nurbs();
+      return absl::OkStatus();
+    }
+
+    std::optional<absl::Span<double>> vknots;
+    if (absl::Status status =
+            TryRemoveFloats(parameters, "vknots",
+                            static_cast<uint32_t>(nurbs.nv()) +
+                                static_cast<uint32_t>(nurbs.vorder()),
+                            vknots);
+        status.ok() && vknots.has_value()) {
+      nurbs.mutable_vknots()->Add(vknots->begin(), vknots->end());
+    } else {
+      std::cerr << "Missing required nurbs Shape parameter: 'vknots'"
+                << std::endl;
+      shape.clear_nurbs();
+      return absl::OkStatus();
+    }
+
+    if (std::optional<double> v0 = TryRemoveFloat(parameters, "v0");
+        v0.has_value()) {
+      nurbs.set_v0(*v0);
+    }
+
+    if (std::optional<double> v1 = TryRemoveFloat(parameters, "v1");
+        v1.has_value()) {
+      nurbs.set_v1(*v1);
+    }
+
+    if (std::optional<double> u0 = TryRemoveFloat(parameters, "u0");
+        u0.has_value()) {
+      nurbs.set_u0(*u0);
+    }
+
+    if (std::optional<double> u1 = TryRemoveFloat(parameters, "u1");
+        u1.has_value()) {
+      nurbs.set_u1(*u1);
+    }
+
+    int64_t required_points =
+        static_cast<int64_t>(nurbs.nu()) * static_cast<int64_t>(nurbs.nv());
+    if (required_points > std::numeric_limits<int32_t>::max()) {
+      return absl::InvalidArgumentError(
+          "Nurbs shape has too many points to be stored in a 1D proto array");
+    }
+
+    size_t num_points = 0;
+    if (std::optional<absl::Span<std::array<double, 3>>> p =
+            TryRemovePoint3s(parameters, "P");
+        p.has_value()) {
+      for (auto& src : *p) {
+        auto& dest = *nurbs.add_p();
+        dest.set_x(src[0]);
+        dest.set_y(src[1]);
+        dest.set_z(src[2]);
+        num_points += 1;
+      }
+    } else if (std::optional<absl::Span<double>> pw =
+                   TryRemoveFloats(parameters, "Pw");
+               pw.has_value() && pw->size() % 4u == 0u) {
+      for (size_t i = 0; i < pw->size() / 4; i++) {
+        auto& dest = *nurbs.add_pw();
+        dest.mutable_p()->set_x((*pw)[4 * i + 0]);
+        dest.mutable_p()->set_y((*pw)[4 * i + 1]);
+        dest.mutable_p()->set_z((*pw)[4 * i + 2]);
+        dest.set_weight((*pw)[4 * i + 3]);
+        num_points += 1;
+      }
+    } else {
+      std::cerr
+          << "Invalid or missing required nurbs Shape parameter: 'P' or 'Pw'"
+          << std::endl;
+      shape.clear_nurbs();
+      return absl::OkStatus();
+    }
+
+    if (num_points != static_cast<size_t>(required_points)) {
+      std::cerr
+          << "Invalid or missing required nurbs Shape parameter: 'P' or 'Pw'"
+          << std::endl;
+      shape.clear_nurbs();
+      return absl::OkStatus();
     }
   } else {
     std::cerr << "Unrecognized Shape type: \"" << shape_type << "\""
               << std::endl;
+    return absl::OkStatus();
   }
 
   return absl::OkStatus();

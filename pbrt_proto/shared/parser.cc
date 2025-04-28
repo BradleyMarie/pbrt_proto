@@ -1195,6 +1195,16 @@ absl::Status TryRemoveIntegers(
                                                  required_size, result);
 }
 
+std::optional<absl::Span<double>> TryRemoveFloats(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view parameter_name) {
+  std::optional<absl::Span<double>> result;
+  TryRemoveValues<ParameterType::FLOAT>(parameters, parameter_name,
+                                        std::nullopt, result)
+      .IgnoreError();
+  return result;
+}
+
 std::optional<absl::Span<int32_t>> TryRemoveIntegers(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     absl::string_view parameter_name) {

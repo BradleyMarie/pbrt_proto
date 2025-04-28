@@ -2408,8 +2408,8 @@ TEST(Convert, ShapeLoopsubdivNoIndices) {
       "Shape \"loopsubdiv\" "
       "\"point P\" [4.0 5.0 6.0 7.0 8.0 9.0 10.0 11.0 12.0] "
       "\"integer levels\" 13 ");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives { shape {} })pb")));
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives { shape {} })pb")));
 }
 
 TEST(Convert, ShapeLoopsubdivNoP) {
@@ -2417,8 +2417,291 @@ TEST(Convert, ShapeLoopsubdivNoP) {
       "Shape \"loopsubdiv\" "
       "\"integer indices\" [0 1 2 2 1 0] "
       "\"integer levels\" 13 ");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives { shape {} })pb")));
+}
+
+TEST(Convert, ShapeNurbs) {
+  std::stringstream stream(
+      "Shape \"nurbs\" "
+      "\"integer nu\" 1 "
+      "\"integer nv\" 2 "
+      "\"integer uorder\" 3 "
+      "\"integer vorder\" 4 "
+      "\"float uknots\" [5.0 6.0 7.0 8.0] "
+      "\"float vknots\" [9.0 10.0 11.0 12.0 13.0 14.0] "
+      "\"float v0\" 15.0 "
+      "\"float v1\" 16.0 "
+      "\"float u0\" 17.0 "
+      "\"float u1\" 18.0 "
+      "\"point P\" [19.0 20.0 21.0 22.0 23.0 24.0] ");
   EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives { shape {} })pb")));
+                                   R"pb(directives {
+                                          shape {
+                                            nurbs {
+                                              nu: 1
+                                              nv: 2
+                                              uorder: 3
+                                              vorder: 4
+                                              uknots: 5.0
+                                              uknots: 6.0
+                                              uknots: 7.0
+                                              uknots: 8.0
+                                              vknots: 9.0
+                                              vknots: 10.0
+                                              vknots: 11.0
+                                              vknots: 12.0
+                                              vknots: 13.0
+                                              vknots: 14.0
+                                              v0: 15.0
+                                              v1: 16.0
+                                              u0: 17.0
+                                              u1: 18.0
+                                              P { x: 19.0 y: 20.0 z: 21.0 }
+                                              P { x: 22.0 y: 23.0 z: 24.0 }
+                                            }
+                                          }
+                                        })pb")));
+}
+
+TEST(Convert, ShapeNurbsPw) {
+  std::stringstream stream(
+      "Shape \"nurbs\" "
+      "\"integer nu\" 1 "
+      "\"integer nv\" 2 "
+      "\"integer uorder\" 3 "
+      "\"integer vorder\" 4 "
+      "\"float uknots\" [5.0 6.0 7.0 8.0] "
+      "\"float vknots\" [9.0 10.0 11.0 12.0 13.0 14.0] "
+      "\"float v0\" 15.0 "
+      "\"float v1\" 16.0 "
+      "\"float u0\" 17.0 "
+      "\"float u1\" 18.0 "
+      "\"float Pw\" [19.0 20.0 21.0 22.0 23.0 24.0 25.0 26.0] ");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
+                                   R"pb(directives {
+                                          shape {
+                                            nurbs {
+                                              nu: 1
+                                              nv: 2
+                                              uorder: 3
+                                              vorder: 4
+                                              uknots: 5.0
+                                              uknots: 6.0
+                                              uknots: 7.0
+                                              uknots: 8.0
+                                              vknots: 9.0
+                                              vknots: 10.0
+                                              vknots: 11.0
+                                              vknots: 12.0
+                                              vknots: 13.0
+                                              vknots: 14.0
+                                              v0: 15.0
+                                              v1: 16.0
+                                              u0: 17.0
+                                              u1: 18.0
+                                              Pw {
+                                                p { x: 19.0 y: 20.0 z: 21.0 }
+                                                weight: 22.0
+                                              }
+                                              Pw {
+                                                p { x: 23.0 y: 24.0 z: 25.0 }
+                                                weight: 26.0
+                                              }
+                                            }
+                                          }
+                                        })pb")));
+}
+
+TEST(Convert, ShapeNurbsNoNu) {
+  std::stringstream stream(
+      "Shape \"nurbs\" "
+      "\"integer nv\" 2 "
+      "\"integer uorder\" 3 "
+      "\"integer vorder\" 4 "
+      "\"float uknots\" [5.0 6.0 7.0 8.0] "
+      "\"float vknots\" [9.0 10.0 11.0 12.0 13.0 14.0] "
+      "\"float v0\" 15.0 "
+      "\"float v1\" 16.0 "
+      "\"float u0\" 17.0 "
+      "\"float u1\" 18.0 "
+      "\"point P\" [19.0 20.0 21.0 22.0 23.0 24.0] ");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives { shape {} })pb")));
+}
+
+TEST(Convert, ShapeNurbsNoNv) {
+  std::stringstream stream(
+      "Shape \"nurbs\" "
+      "\"integer nu\" 1 "
+      "\"integer uorder\" 3 "
+      "\"integer vorder\" 4 "
+      "\"float uknots\" [5.0 6.0 7.0 8.0] "
+      "\"float vknots\" [9.0 10.0 11.0 12.0 13.0 14.0] "
+      "\"float v0\" 15.0 "
+      "\"float v1\" 16.0 "
+      "\"float u0\" 17.0 "
+      "\"float u1\" 18.0 "
+      "\"point P\" [19.0 20.0 21.0 22.0 23.0 24.0] ");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives { shape {} })pb")));
+}
+
+TEST(Convert, ShapeNurbsNoUorder) {
+  std::stringstream stream(
+      "Shape \"nurbs\" "
+      "\"integer nu\" 1 "
+      "\"integer nv\" 2 "
+      "\"integer vorder\" 4 "
+      "\"float uknots\" [5.0 6.0 7.0 8.0] "
+      "\"float vknots\" [9.0 10.0 11.0 12.0 13.0 14.0] "
+      "\"float v0\" 15.0 "
+      "\"float v1\" 16.0 "
+      "\"float u0\" 17.0 "
+      "\"float u1\" 18.0 "
+      "\"point P\" [19.0 20.0 21.0 22.0 23.0 24.0] ");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives { shape {} })pb")));
+}
+
+TEST(Convert, ShapeNurbsNoVorder) {
+  std::stringstream stream(
+      "Shape \"nurbs\" "
+      "\"integer nu\" 1 "
+      "\"integer nv\" 2 "
+      "\"integer uorder\" 3 "
+      "\"float uknots\" [5.0 6.0 7.0 8.0] "
+      "\"float vknots\" [9.0 10.0 11.0 12.0 13.0 14.0] "
+      "\"float v0\" 15.0 "
+      "\"float v1\" 16.0 "
+      "\"float u0\" 17.0 "
+      "\"float u1\" 18.0 "
+      "\"point P\" [19.0 20.0 21.0 22.0 23.0 24.0] ");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives { shape {} })pb")));
+}
+
+TEST(Convert, ShapeNurbsNoUKnots) {
+  std::stringstream stream(
+      "Shape \"nurbs\" "
+      "\"integer nu\" 1 "
+      "\"integer nv\" 2 "
+      "\"integer uorder\" 3 "
+      "\"integer vorder\" 4 "
+      "\"float vknots\" [9.0 10.0 11.0 12.0 13.0 14.0] "
+      "\"float v0\" 15.0 "
+      "\"float v1\" 16.0 "
+      "\"float u0\" 17.0 "
+      "\"float u1\" 18.0 "
+      "\"point P\" [19.0 20.0 21.0 22.0 23.0 24.0] ");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives { shape {} })pb")));
+}
+
+TEST(Convert, ShapeNurbsBadUKnots) {
+  std::stringstream stream(
+      "Shape \"nurbs\" "
+      "\"integer nu\" 1 "
+      "\"integer nv\" 2 "
+      "\"integer uorder\" 3 "
+      "\"integer vorder\" 4 "
+      "\"float uknots\" [5.0 6.0 7.0] "
+      "\"float vknots\" [9.0 10.0 11.0 12.0 13.0 14.0] "
+      "\"float v0\" 15.0 "
+      "\"float v1\" 16.0 "
+      "\"float u0\" 17.0 "
+      "\"float u1\" 18.0 "
+      "\"point P\" [19.0 20.0 21.0 22.0 23.0 24.0] ");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives { shape {} })pb")));
+}
+
+TEST(Convert, ShapeNurbsNoVKnots) {
+  std::stringstream stream(
+      "Shape \"nurbs\" "
+      "\"integer nu\" 1 "
+      "\"integer nv\" 2 "
+      "\"integer uorder\" 3 "
+      "\"integer vorder\" 4 "
+      "\"float uknots\" [5.0 6.0 7.0 8.0] "
+      "\"float v0\" 15.0 "
+      "\"float v1\" 16.0 "
+      "\"float u0\" 17.0 "
+      "\"float u1\" 18.0 "
+      "\"point P\" [19.0 20.0 21.0 22.0 23.0 24.0] ");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives { shape {} })pb")));
+}
+
+TEST(Convert, ShapeNurbsNoBadVKnots) {
+  std::stringstream stream(
+      "Shape \"nurbs\" "
+      "\"integer nu\" 1 "
+      "\"integer nv\" 2 "
+      "\"integer uorder\" 3 "
+      "\"integer vorder\" 4 "
+      "\"float uknots\" [5.0 6.0 7.0 8.0] "
+      "\"float vknots\" [9.0 10.0 11.0 12.0 13.0] "
+      "\"float v0\" 15.0 "
+      "\"float v1\" 16.0 "
+      "\"float u0\" 17.0 "
+      "\"float u1\" 18.0 "
+      "\"point P\" [19.0 20.0 21.0 22.0 23.0 24.0] ");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives { shape {} })pb")));
+}
+
+TEST(Convert, ShapeNurbsNoP) {
+  std::stringstream stream(
+      "Shape \"nurbs\" "
+      "\"integer nu\" 1 "
+      "\"integer nv\" 2 "
+      "\"integer uorder\" 3 "
+      "\"integer vorder\" 4 "
+      "\"float uknots\" [5.0 6.0 7.0 8.0] "
+      "\"float vknots\" [9.0 10.0 11.0 12.0 13.0 14.0] "
+      "\"float v0\" 15.0 "
+      "\"float v1\" 16.0 "
+      "\"float u0\" 17.0 "
+      "\"float u1\" 18.0 ");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives { shape {} })pb")));
+}
+
+TEST(Convert, ShapeNurbsBadP) {
+  std::stringstream stream(
+      "Shape \"nurbs\" "
+      "\"integer nu\" 1 "
+      "\"integer nv\" 2 "
+      "\"integer uorder\" 3 "
+      "\"integer vorder\" 4 "
+      "\"float uknots\" [5.0 6.0 7.0 8.0] "
+      "\"float vknots\" [9.0 10.0 11.0 12.0 13.0 14.0] "
+      "\"float v0\" 15.0 "
+      "\"float v1\" 16.0 "
+      "\"float u0\" 17.0 "
+      "\"float u1\" 18.0 "
+      "\"point P\" [19.0 20.0 21.0] ");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives { shape {} })pb")));
+}
+
+TEST(Convert, ShapeNurbsBadPw) {
+  std::stringstream stream(
+      "Shape \"nurbs\" "
+      "\"integer nu\" 1 "
+      "\"integer nv\" 2 "
+      "\"integer uorder\" 3 "
+      "\"integer vorder\" 4 "
+      "\"float uknots\" [5.0 6.0 7.0 8.0] "
+      "\"float vknots\" [9.0 10.0 11.0 12.0 13.0 14.0] "
+      "\"float v0\" 15.0 "
+      "\"float v1\" 16.0 "
+      "\"float u0\" 17.0 "
+      "\"float u1\" 18.0 "
+      "\"float Pw\" [19.0 20.0 21.0] ");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives { shape {} })pb")));
 }
 
 TEST(Convert, SpectrumTextureUnknown) {
