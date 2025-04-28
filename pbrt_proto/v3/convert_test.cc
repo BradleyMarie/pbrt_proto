@@ -2223,8 +2223,9 @@ TEST(Convert, ShapeCurveBezier) {
       "Shape \"curve\" "
       "\"string basis\" \"bezier\" ");
   EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(
-                  R"pb(directives { shape { curve { basis: BEZIER } } })pb")));
+              IsOkAndHolds(EqualsProto(R"pb(directives {
+                                              shape { curve { basis: BEZIER } }
+                                            })pb")));
 }
 
 TEST(Convert, ShapeCurveCylinder) {
@@ -2232,8 +2233,9 @@ TEST(Convert, ShapeCurveCylinder) {
       "Shape \"curve\" "
       "\"string type\" \"cylinder\" ");
   EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(
-                  R"pb(directives { shape { curve { type: CYLINDER } } })pb")));
+              IsOkAndHolds(EqualsProto(R"pb(directives {
+                                              shape { curve { type: CYLINDER } }
+                                            })pb")));
 }
 
 TEST(Convert, ShapeCurveFlat) {
@@ -2241,8 +2243,9 @@ TEST(Convert, ShapeCurveFlat) {
       "Shape \"curve\" "
       "\"string type\" \"flat\" ");
   EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(
-                  R"pb(directives { shape { curve { type: FLAT } } })pb")));
+              IsOkAndHolds(EqualsProto(R"pb(directives {
+                                              shape { curve { type: FLAT } }
+                                            })pb")));
 }
 
 TEST(Convert, ShapeCurveRibbon) {
@@ -2250,8 +2253,9 @@ TEST(Convert, ShapeCurveRibbon) {
       "Shape \"curve\" "
       "\"string type\" \"ribbon\" ");
   EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(
-                  R"pb(directives { shape { curve { type: RIBBON } } })pb")));
+              IsOkAndHolds(EqualsProto(R"pb(directives {
+                                              shape { curve { type: RIBBON } }
+                                            })pb")));
 }
 
 TEST(Convert, ShapeCurveUnknownType) {
@@ -2259,8 +2263,93 @@ TEST(Convert, ShapeCurveUnknownType) {
       "Shape \"curve\" "
       "\"string type\" \"abc\" ");
   EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives {
+                                              shape { curve { type: CYLINDER } }
+                                            })pb")));
+}
+
+TEST(Convert, ShapeCylinder) {
+  std::stringstream stream(
+      "Shape \"cylinder\" "
+      "\"float radius\" 2.0 "
+      "\"float zmin\" 3.0 "
+      "\"float zmax\" 4.0 "
+      "\"float phimax\" 5.0");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(
+          R"pb(directives {
+                 shape {
+                   cylinder { radius: 2.0 zmin: 3.0 zmax: 4.0 phimax: 5.0 }
+                 }
+               })pb")));
+}
+
+TEST(Convert, ShapeDisk) {
+  std::stringstream stream(
+      "Shape \"disk\" "
+      "\"float height\" 1.0 "
+      "\"float radius\" 2.0 "
+      "\"float innerradius\" 3.0 "
+      "\"float phimax\" 4.0");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(
+          R"pb(directives {
+                 shape {
+                   disk { height: 1.0 radius: 2.0 innerradius: 3.0 phimax: 4.0 }
+                 }
+               })pb")));
+}
+
+TEST(Convert, ShapeHeightfield) {
+  std::stringstream stream(
+      "Shape \"heightfield\" "
+      "\"integer nu\" 1 "
+      "\"integer nv\" 2 "
+      "\"float Pz\" [3.0 4.0] ");
+  EXPECT_THAT(Convert(stream),
               IsOkAndHolds(EqualsProto(
-                  R"pb(directives { shape { curve { type: CYLINDER } } })pb")));
+                  R"pb(directives {
+                         shape { heightfield { nu: 1 nv: 2 Pz: 3.0 Pz: 4.0 } }
+                       })pb")));
+}
+
+TEST(Convert, ShapeHeightfieldNoNu) {
+  std::stringstream stream("Shape \"heightfield\" ");
+  EXPECT_THAT(Convert(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Missing required heightfield Shape parameter: 'nu'"));
+}
+
+TEST(Convert, ShapeHeightfieldNoNv) {
+  std::stringstream stream(
+      "Shape \"heightfield\" "
+      "\"integer nu\" 1 ");
+  EXPECT_THAT(Convert(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Missing required heightfield Shape parameter: 'nv'"));
+}
+
+TEST(Convert, ShapeHeightfieldNoPz) {
+  std::stringstream stream(
+      "Shape \"heightfield\" "
+      "\"integer nu\" 1 "
+      "\"integer nv\" 2 ");
+  EXPECT_THAT(Convert(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Missing or invalid heightfield Shape parameter: 'Pz'"));
+}
+
+TEST(Convert, ShapeHeightfieldNWrongSizePz) {
+  std::stringstream stream(
+      "Shape \"heightfield\" "
+      "\"integer nu\" 1 "
+      "\"integer nv\" 2 "
+      "\"float Pz\" [3.0] ");
+  EXPECT_THAT(Convert(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Missing or invalid heightfield Shape parameter: 'Pz'"));
 }
 
 TEST(Convert, SpectrumTextureUnknown) {

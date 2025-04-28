@@ -2203,6 +2203,95 @@ absl::Status ParserV3::Shape(
         splitdepth.has_value()) {
       curve.set_splitdepth(*splitdepth);
     }
+  } else if (shape_type == "cylinder") {
+    auto& cylinder = *shape.mutable_cylinder();
+
+    if (std::optional<double> radius = TryRemoveFloat(parameters, "radius");
+        radius.has_value()) {
+      cylinder.set_radius(*radius);
+    }
+
+    if (std::optional<double> zmin = TryRemoveFloat(parameters, "zmin");
+        zmin.has_value()) {
+      cylinder.set_zmin(*zmin);
+    }
+
+    if (std::optional<double> zmax = TryRemoveFloat(parameters, "zmax");
+        zmax.has_value()) {
+      cylinder.set_zmax(*zmax);
+    }
+
+    if (std::optional<double> phimax = TryRemoveFloat(parameters, "phimax");
+        phimax.has_value()) {
+      cylinder.set_phimax(*phimax);
+    }
+  } else if (shape_type == "disk") {
+    auto& disk = *shape.mutable_disk();
+
+    if (std::optional<double> height = TryRemoveFloat(parameters, "height");
+        height.has_value()) {
+      disk.set_height(*height);
+    }
+
+    if (std::optional<double> radius = TryRemoveFloat(parameters, "radius");
+        radius.has_value()) {
+      disk.set_radius(*radius);
+    }
+
+    if (std::optional<double> innerradius =
+            TryRemoveFloat(parameters, "innerradius");
+        innerradius.has_value()) {
+      disk.set_innerradius(*innerradius);
+    }
+
+    if (std::optional<double> phimax = TryRemoveFloat(parameters, "phimax");
+        phimax.has_value()) {
+      disk.set_phimax(*phimax);
+    }
+  } else if (shape_type == "heightfield") {
+    auto& heightfield = *shape.mutable_heightfield();
+
+    if (std::optional<int32_t> nu = TryRemoveInteger(parameters, "nu");
+        nu.has_value()) {
+      heightfield.set_nu(*nu);
+    } else {
+      return absl::InvalidArgumentError(
+          "Missing required heightfield Shape parameter: 'nu'");
+    }
+
+    if (std::optional<int32_t> nv = TryRemoveInteger(parameters, "nv");
+        nv.has_value()) {
+      heightfield.set_nv(*nv);
+    } else {
+      return absl::InvalidArgumentError(
+          "Missing required heightfield Shape parameter: 'nv'");
+    }
+
+    int64_t required_size = static_cast<int64_t>(heightfield.nu()) *
+                            static_cast<int64_t>(heightfield.nv());
+
+    bool has_pz = false;
+    if (required_size <= std::numeric_limits<ssize_t>::max()) {
+      std::optional<absl::Span<double>> pz;
+      if (absl::Status status = TryRemoveFloats(
+              parameters, "Pz", static_cast<size_t>(required_size), pz);
+          status.ok() && pz.has_value()) {
+        for (const auto& value : *pz) {
+          heightfield.add_pz(value);
+        }
+
+        has_pz = true;
+      }
+    }
+
+    if (!has_pz) {
+      return absl::InvalidArgumentError(
+          "Missing or invalid heightfield Shape parameter: 'Pz'");
+    }
+  } else if (shape_type == "hyperboloid") {
+    //
+  } else if (shape_type == "loopsubdiv") {
+    //
   } else {
     std::cerr << "Unrecognized Shape type: \"" << shape_type << "\""
               << std::endl;

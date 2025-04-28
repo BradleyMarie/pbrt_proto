@@ -730,6 +730,21 @@ TEST(Canonicalize, ShapeCurve) {
                                })pb"));
 }
 
+TEST(Canonicalize, ShapeCylinder) {
+  EXPECT_THAT(MakeCanonical(R"pb(directives { shape { cylinder {} } })pb"),
+              EqualsProto(R"pb(directives { shape { cylinder {} } })pb"));
+}
+
+TEST(Canonicalize, ShapeDisk) {
+  EXPECT_THAT(MakeCanonical(R"pb(directives { shape { disk {} } })pb"),
+              EqualsProto(R"pb(directives { shape { disk {} } })pb"));
+}
+
+TEST(Canonicalize, ShapeHeightfield) {
+  EXPECT_THAT(MakeCanonical(R"pb(directives { shape { heightfield {} } })pb"),
+              EqualsProto(R"pb(directives { shape { heightfield {} } })pb"));
+}
+
 // Unset SpectrumTexture are left unset
 TEST(Canonicalize, SpectrumTexture) {
   EXPECT_THAT(
