@@ -2756,6 +2756,42 @@ TEST(Convert, ShapeSphere) {
                })pb")));
 }
 
+TEST(Convert, ShapeTriangleMesh) {
+  std::stringstream stream(
+      "Shape \"trianglemesh\" "
+      "\"integer indices\" [0 1 2] "
+      "\"point3 P\" [3 4 5 6 7 8 9 10 11] "
+      "\"normal N\" [12 13 14 15 16 17 18 19 20] "
+      "\"vector S\" [21 22 23 24 25 26 27 28 29] "
+      "\"point2 uv\" [30 31 32 33 34 35] "
+      "\"integer faceIndices\" [36] "
+      "\"float alpha\" 37.0 "
+      "\"float shadowalpha\" 38.0 ");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
+                                   R"pb(directives {
+                                          shape {
+                                            trianglemesh {
+                                              indices { v0: 0 v1: 1 v2: 2 }
+                                              P { x: 3 y: 4 z: 5 }
+                                              P { x: 6 y: 7 z: 8 }
+                                              P { x: 9 y: 10 z: 11 }
+                                              N { x: 12 y: 13 z: 14 }
+                                              N { x: 15 y: 16 z: 17 }
+                                              N { x: 18 y: 19 z: 20 }
+                                              S { x: 21 y: 22 z: 23 }
+                                              S { x: 24 y: 25 z: 26 }
+                                              S { x: 27 y: 28 z: 29 }
+                                              uv { u: 30 v: 31 }
+                                              uv { u: 32 v: 33 }
+                                              uv { u: 34 v: 35 }
+                                              faceIndices: 36
+                                              alpha { float_value: 37 }
+                                              shadowalpha { float_value: 38 }
+                                            }
+                                          }
+                                        })pb")));
+}
+
 TEST(Convert, SpectrumTextureUnknown) {
   std::stringstream stream("Texture \"name\" \"spectrum\" \"unknown\"");
   EXPECT_THAT(Convert(stream),

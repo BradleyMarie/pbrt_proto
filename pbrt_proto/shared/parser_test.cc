@@ -2990,6 +2990,63 @@ TEST(TryRemoveNormals, Found) {
   EXPECT_THAT(parameters, Not(Contains(Key("name1"))));
 }
 
+TEST(TryRemovePoint2s, WrongType) {
+  std::vector<std::array<double, 2>> values;
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::FLOAT,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  EXPECT_THAT(TryRemovePoint2s(parameters, "name"), Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name")));
+}
+
+TEST(TryRemovePoint2s, WrongStoredType) {
+  std::vector<std::array<double, 3>> values;
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::POINT2,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  EXPECT_THAT(TryRemovePoint2s(parameters, "name"), Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name")));
+}
+
+TEST(TryRemovePoint2s, WrongName) {
+  std::vector<std::array<double, 2>> values;
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::POINT2,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name1", parameter}};
+
+  EXPECT_THAT(TryRemovePoint2s(parameters, "name2"), Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name1")));
+}
+
+TEST(TryRemovePoint2s, Found) {
+  std::vector<std::array<double, 2>> values = {{1.0, 2.0}};
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::POINT2,
+                      .type_name = "aaa",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  EXPECT_THAT(TryRemovePoint2s(parameters, "name"),
+              Optional(ElementsAre(ElementsAre(1.0, 2.0))));
+  EXPECT_THAT(parameters, Not(Contains(Key("name1"))));
+}
+
 TEST(TryRemovePoint3, WrongType) {
   std::vector<std::array<double, 3>> values;
   Parameter parameter{.directive = "",
@@ -3384,6 +3441,63 @@ TEST(TryRemoveVector3, Found) {
 
   EXPECT_THAT(TryRemoveVector3(parameters, "name"),
               Optional(ElementsAre(1.0, 2.0, 3.0)));
+  EXPECT_THAT(parameters, Not(Contains(Key("name1"))));
+}
+
+TEST(TryRemoveVector3s, WrongType) {
+  std::vector<std::array<double, 3>> values;
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::FLOAT,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  EXPECT_THAT(TryRemoveVector3s(parameters, "name"), Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name")));
+}
+
+TEST(TryRemoveVector3s, WrongStoredType) {
+  std::vector<std::array<double, 2>> values;
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::VECTOR3,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  EXPECT_THAT(TryRemoveVector3s(parameters, "name"), Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name")));
+}
+
+TEST(TryRemoveVector3s, WrongName) {
+  std::vector<std::array<double, 3>> values;
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::VECTOR3,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name1", parameter}};
+
+  EXPECT_THAT(TryRemoveVector3s(parameters, "name2"), Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name1")));
+}
+
+TEST(TryRemoveVector3s, Found) {
+  std::vector<std::array<double, 3>> values = {{1.0, 2.0, 3.0}};
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::VECTOR3,
+                      .type_name = "aaa",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  EXPECT_THAT(TryRemoveVector3s(parameters, "name"),
+              Optional(ElementsAre(ElementsAre(1.0, 2.0, 3.0))));
   EXPECT_THAT(parameters, Not(Contains(Key("name1"))));
 }
 

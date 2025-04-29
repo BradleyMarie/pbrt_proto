@@ -1015,8 +1015,9 @@ message Shape {
     repeated Vector N = 3;
     repeated Vector S = 4;
     repeated UVCoordinate uv = 5;
-    FloatTextureParameter alpha = 6;
-    FloatTextureParameter shadowalpha = 7;
+    repeated int32 faceIndices = 6;
+    FloatTextureParameter alpha = 7;
+    FloatTextureParameter shadowalpha = 8;
   }
 
   oneof shape_type {

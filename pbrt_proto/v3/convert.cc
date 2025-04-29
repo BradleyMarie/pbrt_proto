@@ -2317,6 +2317,7 @@ absl::Status ParserV3::Shape(
     if (std::optional<absl::Span<int32_t>> indices =
             TryRemoveIntegers(parameters, "indices");
         indices.has_value()) {
+      indices->remove_suffix(indices->size() % 3);
       for (size_t i = 0; i < indices->size() / 3u; i++) {
         auto& face = *loopsubdiv.add_indices();
         face.set_v0((*indices)[3u * i + 0]);
@@ -2333,6 +2334,7 @@ absl::Status ParserV3::Shape(
     if (std::optional<absl::Span<std::array<double, 3>>> p =
             TryRemovePoint3s(parameters, "P");
         p.has_value()) {
+      p->remove_suffix(p->size() % 3);
       for (const auto& src : *p) {
         auto& dest = *loopsubdiv.add_p();
         dest.set_x(src[0]);
@@ -2539,6 +2541,116 @@ absl::Status ParserV3::Shape(
         phimax.has_value()) {
       sphere.set_phimax(*phimax);
     }
+  } else if (shape_type == "trianglemesh") {
+    auto& trianglemesh = *shape.mutable_trianglemesh();
+
+    if (std::optional<absl::Span<std::array<double, 3>>> p =
+            TryRemovePoint3s(parameters, "P");
+        p.has_value()) {
+      for (const auto& src : *p) {
+        auto& dest = *trianglemesh.add_p();
+        dest.set_x(src[0]);
+        dest.set_y(src[1]);
+        dest.set_z(src[2]);
+      }
+    } else {
+      std::cerr
+          << "Invalid or missing required trianglemesh Shape parameter: 'P'"
+          << std::endl;
+      shape.clear_trianglemesh();
+      return absl::OkStatus();
+    }
+
+    if (std::optional<absl::Span<int32_t>> indices =
+            TryRemoveIntegers(parameters, "indices");
+        indices.has_value()) {
+      indices->remove_suffix(indices->size() % 3);
+      for (size_t i = 0; i < indices->size() / 3; i++) {
+        auto& dest = *trianglemesh.add_indices();
+        dest.set_v0((*indices)[3u * i + 0]);
+        dest.set_v1((*indices)[3u * i + 1]);
+        dest.set_v2((*indices)[3u * i + 2]);
+      }
+    } else {
+      std::cerr << "Invalid or missing required trianglemesh Shape parameter: "
+                   "'indices'"
+                << std::endl;
+      shape.clear_trianglemesh();
+      return absl::OkStatus();
+    }
+
+    if (std::optional<absl::Span<std::array<double, 3>>> n =
+            TryRemoveNormals(parameters, "N");
+        n.has_value()) {
+      for (const auto& src : *n) {
+        auto& dest = *trianglemesh.add_n();
+        dest.set_x(src[0]);
+        dest.set_y(src[1]);
+        dest.set_z(src[2]);
+      }
+    }
+
+    if (std::optional<absl::Span<std::array<double, 3>>> s =
+            TryRemoveVector3s(parameters, "S");
+        s.has_value()) {
+      for (const auto& src : *s) {
+        auto& dest = *trianglemesh.add_s();
+        dest.set_x(src[0]);
+        dest.set_y(src[1]);
+        dest.set_z(src[2]);
+      }
+    }
+
+    if (std::optional<absl::Span<int32_t>> faceIndices =
+            TryRemoveIntegers(parameters, "faceIndices");
+        faceIndices.has_value()) {
+      trianglemesh.mutable_faceindices()->Add(faceIndices->begin(),
+                                              faceIndices->end());
+    }
+
+    if (std::optional<absl::Span<std::array<double, 2>>> uv =
+            TryRemovePoint2s(parameters, "uv");
+        uv.has_value()) {
+      for (const auto& src : *uv) {
+        auto& dest = *trianglemesh.add_uv();
+        dest.set_u(src[0]);
+        dest.set_v(src[1]);
+      }
+    } else if (std::optional<absl::Span<std::array<double, 2>>> st =
+                   TryRemovePoint2s(parameters, "st");
+               st.has_value()) {
+      for (const auto& src : *st) {
+        auto& dest = *trianglemesh.add_uv();
+        dest.set_u(src[0]);
+        dest.set_v(src[1]);
+      }
+    } else if (std::optional<absl::Span<double>> uv =
+                   TryRemoveFloats(parameters, "uv");
+               uv.has_value()) {
+      uv->remove_suffix(uv->size() % 2);
+      for (size_t i = 0; i < uv->size() / 2; i++) {
+        auto& dest = *trianglemesh.add_uv();
+        dest.set_u((*uv)[2 * i + 0]);
+        dest.set_v((*uv)[2 * i + 1]);
+      }
+    } else if (std::optional<absl::Span<double>> st =
+                   TryRemoveFloats(parameters, "st");
+               st.has_value()) {
+      st->remove_suffix(st->size() % 2);
+      for (size_t i = 0; i < st->size() / 2; i++) {
+        auto& dest = *trianglemesh.add_uv();
+        dest.set_u((*st)[2 * i + 0]);
+        dest.set_v((*st)[2 * i + 1]);
+      }
+    }
+
+    TryRemoveFloatTexture(
+        parameters, "alpha",
+        std::bind(&Shape::TriangleMesh::mutable_alpha, &trianglemesh));
+
+    TryRemoveFloatTexture(
+        parameters, "shadowalpha",
+        std::bind(&Shape::TriangleMesh::mutable_shadowalpha, &trianglemesh));
   } else {
     std::cerr << "Unrecognized Shape type: \"" << shape_type << "\""
               << std::endl;

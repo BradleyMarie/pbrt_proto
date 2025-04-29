@@ -216,6 +216,10 @@ std::optional<absl::Span<std::array<double, 3>>> TryRemoveNormals(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     absl::string_view parameter_name);
 
+std::optional<absl::Span<std::array<double, 2>>> TryRemovePoint2s(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view parameter_name);
+
 std::optional<std::array<double, 3>> TryRemovePoint3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     absl::string_view parameter_name);
@@ -245,6 +249,10 @@ std::optional<absl::string_view> TryRemoveTexture(
     absl::string_view parameter_name);
 
 std::optional<std::array<double, 3>> TryRemoveVector3(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view parameter_name);
+
+std::optional<absl::Span<std::array<double, 3>>> TryRemoveVector3s(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     absl::string_view parameter_name);
 

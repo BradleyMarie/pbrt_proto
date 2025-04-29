@@ -1262,6 +1262,16 @@ std::optional<absl::Span<std::array<double, 3>>> TryRemoveNormals(
   return result;
 }
 
+std::optional<absl::Span<std::array<double, 2>>> TryRemovePoint2s(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view parameter_name) {
+  std::optional<absl::Span<std::array<double, 2>>> result;
+  TryRemoveValues<ParameterType::POINT2>(parameters, parameter_name,
+                                         std::nullopt, result)
+      .IgnoreError();
+  return result;
+}
+
 std::optional<std::array<double, 3>> TryRemovePoint3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     absl::string_view parameter_name) {
@@ -1332,6 +1342,16 @@ std::optional<std::array<double, 3>> TryRemoveVector3(
     absl::string_view parameter_name) {
   std::optional<std::array<double, 3>> result;
   TryRemoveValue<ParameterType::VECTOR3>(parameters, parameter_name, result)
+      .IgnoreError();
+  return result;
+}
+
+std::optional<absl::Span<std::array<double, 3>>> TryRemoveVector3s(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view parameter_name) {
+  std::optional<absl::Span<std::array<double, 3>>> result;
+  TryRemoveValues<ParameterType::VECTOR3>(parameters, parameter_name,
+                                          std::nullopt, result)
       .IgnoreError();
   return result;
 }
