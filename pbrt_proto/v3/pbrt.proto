@@ -1034,6 +1034,60 @@ message Shape {
     Sphere sphere = 11;
     TriangleMesh trianglemesh = 12;
   }
+
+  message MaterialOverrides {
+    message Eta {
+      double as_value = 1 [features.field_presence = EXPLICIT];
+      FloatTextureParameter as_float_texture = 2 [features.field_presence = EXPLICIT];
+      SpectrumTextureParameter as_spectrum_texture = 3[features.field_presence = EXPLICIT];
+    }
+
+    bool remaproughness = 1 [features.field_presence = EXPLICIT];
+    bool thin = 2 [features.field_presence = EXPLICIT];
+    double g = 3 [features.field_presence = EXPLICIT];
+    double scale = 4 [features.field_presence = EXPLICIT];
+    FloatTextureParameter alpha = 5 [features.field_presence = EXPLICIT];
+    FloatTextureParameter amount = 6 [features.field_presence = EXPLICIT];
+    FloatTextureParameter anisotropic = 7 [features.field_presence = EXPLICIT];
+    FloatTextureParameter beta_m = 8 [features.field_presence = EXPLICIT];
+    FloatTextureParameter beta_n = 9 [features.field_presence = EXPLICIT];
+    FloatTextureParameter bumpmap = 10 [features.field_presence = EXPLICIT];
+    FloatTextureParameter clearcoat = 11 [features.field_presence = EXPLICIT];
+    FloatTextureParameter clearcoatgloss = 12 [features.field_presence = EXPLICIT];
+    FloatTextureParameter difftrans = 13 [features.field_presence = EXPLICIT];
+    FloatTextureParameter eumelanin = 14 [features.field_presence = EXPLICIT];
+    FloatTextureParameter flatness = 15 [features.field_presence = EXPLICIT];
+    FloatTextureParameter metallic = 16 [features.field_presence = EXPLICIT];
+    FloatTextureParameter mfp = 17 [features.field_presence = EXPLICIT];
+    FloatTextureParameter opacity = 18 [features.field_presence = EXPLICIT];
+    FloatTextureParameter pheomelanin = 19 [features.field_presence = EXPLICIT];
+    FloatTextureParameter roughness = 20 [features.field_presence = EXPLICIT];
+    FloatTextureParameter sheen = 21 [features.field_presence = EXPLICIT];
+    FloatTextureParameter sheentint = 22 [features.field_presence = EXPLICIT];
+    FloatTextureParameter sigma = 23 [features.field_presence = EXPLICIT];
+    FloatTextureParameter spectrans = 24 [features.field_presence = EXPLICIT];
+    FloatTextureParameter speculartint = 25 [features.field_presence = EXPLICIT];
+    FloatTextureParameter uroughness = 26 [features.field_presence = EXPLICIT];
+    FloatTextureParameter vroughness = 27 [features.field_presence = EXPLICIT];
+    Material.Subsurface.MeasuredSubsurfaces name = 28 [features.field_presence = EXPLICIT];
+    SpectrumTextureParameter color = 29 [features.field_presence = EXPLICIT];
+    SpectrumTextureParameter k = 30 [features.field_presence = EXPLICIT];
+    SpectrumTextureParameter Kd = 31 [features.field_presence = EXPLICIT];
+    SpectrumTextureParameter Kr = 32 [features.field_presence = EXPLICIT];
+    SpectrumTextureParameter Ks = 33 [features.field_presence = EXPLICIT];
+    SpectrumTextureParameter Kt = 34 [features.field_presence = EXPLICIT];
+    SpectrumTextureParameter reflect = 35 [features.field_presence = EXPLICIT];
+    SpectrumTextureParameter scatterdistance = 36 [features.field_presence = EXPLICIT];
+    SpectrumTextureParameter sigma_a = 37 [features.field_presence = EXPLICIT];
+    SpectrumTextureParameter sigma_s = 38 [features.field_presence = EXPLICIT];
+    SpectrumTextureParameter transmit = 39 [features.field_presence = EXPLICIT];
+    string bsdffile = 40 [features.field_presence = EXPLICIT];
+    string namedmaterial1 = 41 [features.field_presence = EXPLICIT];
+    string namedmaterial2 = 42 [features.field_presence = EXPLICIT];
+    Eta eta = 43 [features.field_presence = EXPLICIT];
+  }
+
+  MaterialOverrides overrides = 13;
 }
 
 message SpectrumTexture {
