@@ -91,21 +91,27 @@ void TryRemoveSpectrum(
   }
 }
 
-void TryRemoveFloatTexture(
+bool TryRemoveFloatTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     absl::string_view parameter_name,
     absl::FunctionRef<FloatTextureParameter*()> get_output) {
   if (std::optional<double> value = TryRemoveFloat(parameters, parameter_name);
       value) {
     get_output()->set_float_value(*value);
-  } else if (std::optional<absl::string_view> texture_name =
-                 TryRemoveTexture(parameters, parameter_name);
-             texture_name) {
-    get_output()->set_float_texture_name(*texture_name);
+    return true;
   }
+
+  if (std::optional<absl::string_view> texture_name =
+          TryRemoveTexture(parameters, parameter_name);
+      texture_name) {
+    get_output()->set_float_texture_name(*texture_name);
+    return true;
+  }
+
+  return false;
 }
 
-void TryRemoveSpectrumTexture(
+bool TryRemoveSpectrumTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     absl::string_view parameter_name,
     absl::FunctionRef<SpectrumTextureParameter*()> get_output) {
@@ -114,35 +120,53 @@ void TryRemoveSpectrumTexture(
       value) {
     get_output()->mutable_blackbody_spectrum()->set_temperature((*value)[0]);
     get_output()->mutable_blackbody_spectrum()->set_scale((*value)[1]);
-  } else if (std::optional<std::array<double, 3>> value =
-                 TryRemoveRgb(parameters, parameter_name);
-             value) {
+    return true;
+  }
+
+  if (std::optional<std::array<double, 3>> value =
+          TryRemoveRgb(parameters, parameter_name);
+      value) {
     get_output()->mutable_rgb_spectrum()->set_r((*value)[0]);
     get_output()->mutable_rgb_spectrum()->set_g((*value)[1]);
     get_output()->mutable_rgb_spectrum()->set_b((*value)[2]);
-  } else if (std::optional<std::array<double, 3>> value =
-                 TryRemoveXyz(parameters, parameter_name);
-             value) {
+    return true;
+  }
+
+  if (std::optional<std::array<double, 3>> value =
+          TryRemoveXyz(parameters, parameter_name);
+      value) {
     get_output()->mutable_xyz_spectrum()->set_x((*value)[0]);
     get_output()->mutable_xyz_spectrum()->set_y((*value)[1]);
     get_output()->mutable_xyz_spectrum()->set_z((*value)[2]);
-  } else if (std::optional<absl::Span<std::array<double, 2>>> values =
-                 TryRemoveSpectralSamples(parameters, parameter_name);
-             values) {
+    return true;
+  }
+
+  if (std::optional<absl::Span<std::array<double, 2>>> values =
+          TryRemoveSpectralSamples(parameters, parameter_name);
+      values) {
     for (const auto [wavelength, intensity] : *values) {
       auto& sample = *get_output()->mutable_sampled_spectrum()->add_samples();
       sample.set_wavelength(wavelength);
       sample.set_intensity(intensity);
     }
-  } else if (std::optional<absl::string_view> value =
-                 TryRemoveSpectrumFilename(parameters, parameter_name);
-             value) {
-    get_output()->set_sampled_spectrum_filename(*value);
-  } else if (std::optional<absl::string_view> value =
-                 TryRemoveTexture(parameters, parameter_name);
-             value) {
-    get_output()->set_spectrum_texture_name(*value);
+    return true;
   }
+
+  if (std::optional<absl::string_view> value =
+          TryRemoveSpectrumFilename(parameters, parameter_name);
+      value) {
+    get_output()->set_sampled_spectrum_filename(*value);
+    return true;
+  }
+
+  if (std::optional<absl::string_view> value =
+          TryRemoveTexture(parameters, parameter_name);
+      value) {
+    get_output()->set_spectrum_texture_name(*value);
+    return true;
+  }
+
+  return false;
 }
 
 template <typename T>
@@ -199,67 +223,65 @@ void TryRemoveUVParameters(
   }
 }
 
+static const absl::flat_hash_map<absl::string_view,
+                                 Material::Subsurface::MeasuredSubsurfaces>
+    kSubsurfaces = {
+        {"Apple", Material::Subsurface::APPLE},
+        {"Chicken1", Material::Subsurface::CHICKEN1},
+        {"Chicken2", Material::Subsurface::CHICKEN2},
+        {"Cream", Material::Subsurface::CREAM},
+        {"Ketchup", Material::Subsurface::KETCHUP},
+        {"Marble", Material::Subsurface::MARBLE},
+        {"Potato", Material::Subsurface::POTATO},
+        {"Skimmilk", Material::Subsurface::SKIMMILK},
+        {"Skin1", Material::Subsurface::SKIN1},
+        {"Skin2", Material::Subsurface::SKIN2},
+        {"Spectralon", Material::Subsurface::SPECTRALON},
+        {"Wholemilk", Material::Subsurface::WHOLEMILK},
+        {"Lowfat Milk", Material::Subsurface::LOWFAT_MILK},
+        {"Reduced Milk", Material::Subsurface::REDUCED_MILK},
+        {"Regular Milk", Material::Subsurface::REGULAR_MILK},
+        {"Espresso", Material::Subsurface::ESPRESSO},
+        {"Mint Mocha Coffee", Material::Subsurface::MINT_MOCHA_COFFEE},
+        {"Lowfat Soy Milk", Material::Subsurface::LOWFAT_SOY_MILK},
+        {"Regular Soy Milk", Material::Subsurface::REGULAR_SOY_MILK},
+        {"Lowfat Chocolate Milk", Material::Subsurface::LOWFAT_CHOCOLATE_MILK},
+        {"Regular Chocolate Milk",
+         Material::Subsurface::REGULAR_CHOCOLATE_MILK},
+        {"Coke", Material::Subsurface::COKE},
+        {"Pepsi", Material::Subsurface::PEPSI},
+        {"Sprite", Material::Subsurface::SPRITE},
+        {"Gatorade", Material::Subsurface::GATORADE},
+        {"Chardonnay", Material::Subsurface::CHARDONNAY},
+        {"White Zinfandel", Material::Subsurface::WHITE_ZINFANDEL},
+        {"Merlot", Material::Subsurface::MERLOT},
+        {"Budweiser Beer", Material::Subsurface::BUDWEISER_BEER},
+        {"Coors Light Beer", Material::Subsurface::COORS_LIGHT_BEER},
+        {"Clorox", Material::Subsurface::CLOROX},
+        {"Apple Juice", Material::Subsurface::APPLE_JUICE},
+        {"Cranberry Juice", Material::Subsurface::CRANBERRY_JUICE},
+        {"Grape Juice", Material::Subsurface::GRAPE_JUICE},
+        {"Ruby Grapefruit Juice", Material::Subsurface::RUBY_GRAPEFRUIT_JUICE},
+        {"White Grapefruit Juice",
+         Material::Subsurface::WHITE_GRAPEFRUIT_JUICE},
+        {"Shampoo", Material::Subsurface::SHAMPOO},
+        {"Strawberry Shampoo", Material::Subsurface::STRAWBERRY_SHAMPOO},
+        {"Head & Shoulders Shampoo",
+         Material::Subsurface::HEAD_AND_SHOULDERS_SHAMPOO},
+        {"Lemon Tea Powder", Material::Subsurface::LEMON_TEA_POWDER},
+        {"Orange Powder", Material::Subsurface::ORANGE_POWDER},
+        {"Pink Lemonade Powder", Material::Subsurface::PINK_LEMONADE_POWDER},
+        {"Cappuccino Powder", Material::Subsurface::CAPPUCCINO_POWDER},
+        {"Salt Powder", Material::Subsurface::SALT_POWDER},
+        {"Sugar Powder", Material::Subsurface::SUGAR_POWDER},
+        {"Suisse Mocha Powder", Material::Subsurface::SUISSE_MOCHA_POWDER},
+        {"Pacific Ocean Surface Water",
+         Material::Subsurface::PACIFIC_OCEAN_SURFACE_WATER},
+};
+
 Material ParseMaterial(
     absl::string_view material_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
-  static const absl::flat_hash_map<absl::string_view,
-                                   Material::Subsurface::MeasuredSubsurfaces>
-      kSubsurfaces = {
-          {"Apple", Material::Subsurface::APPLE},
-          {"Chicken1", Material::Subsurface::CHICKEN1},
-          {"Chicken2", Material::Subsurface::CHICKEN2},
-          {"Cream", Material::Subsurface::CREAM},
-          {"Ketchup", Material::Subsurface::KETCHUP},
-          {"Marble", Material::Subsurface::MARBLE},
-          {"Potato", Material::Subsurface::POTATO},
-          {"Skimmilk", Material::Subsurface::SKIMMILK},
-          {"Skin1", Material::Subsurface::SKIN1},
-          {"Skin2", Material::Subsurface::SKIN2},
-          {"Spectralon", Material::Subsurface::SPECTRALON},
-          {"Wholemilk", Material::Subsurface::WHOLEMILK},
-          {"Lowfat Milk", Material::Subsurface::LOWFAT_MILK},
-          {"Reduced Milk", Material::Subsurface::REDUCED_MILK},
-          {"Regular Milk", Material::Subsurface::REGULAR_MILK},
-          {"Espresso", Material::Subsurface::ESPRESSO},
-          {"Mint Mocha Coffee", Material::Subsurface::MINT_MOCHA_COFFEE},
-          {"Lowfat Soy Milk", Material::Subsurface::LOWFAT_SOY_MILK},
-          {"Regular Soy Milk", Material::Subsurface::REGULAR_SOY_MILK},
-          {"Lowfat Chocolate Milk",
-           Material::Subsurface::LOWFAT_CHOCOLATE_MILK},
-          {"Regular Chocolate Milk",
-           Material::Subsurface::REGULAR_CHOCOLATE_MILK},
-          {"Coke", Material::Subsurface::COKE},
-          {"Pepsi", Material::Subsurface::PEPSI},
-          {"Sprite", Material::Subsurface::SPRITE},
-          {"Gatorade", Material::Subsurface::GATORADE},
-          {"Chardonnay", Material::Subsurface::CHARDONNAY},
-          {"White Zinfandel", Material::Subsurface::WHITE_ZINFANDEL},
-          {"Merlot", Material::Subsurface::MERLOT},
-          {"Budweiser Beer", Material::Subsurface::BUDWEISER_BEER},
-          {"Coors Light Beer", Material::Subsurface::COORS_LIGHT_BEER},
-          {"Clorox", Material::Subsurface::CLOROX},
-          {"Apple Juice", Material::Subsurface::APPLE_JUICE},
-          {"Cranberry Juice", Material::Subsurface::CRANBERRY_JUICE},
-          {"Grape Juice", Material::Subsurface::GRAPE_JUICE},
-          {"Ruby Grapefruit Juice",
-           Material::Subsurface::RUBY_GRAPEFRUIT_JUICE},
-          {"White Grapefruit Juice",
-           Material::Subsurface::WHITE_GRAPEFRUIT_JUICE},
-          {"Shampoo", Material::Subsurface::SHAMPOO},
-          {"Strawberry Shampoo", Material::Subsurface::STRAWBERRY_SHAMPOO},
-          {"Head & Shoulders Shampoo",
-           Material::Subsurface::HEAD_AND_SHOULDERS_SHAMPOO},
-          {"Lemon Tea Powder", Material::Subsurface::LEMON_TEA_POWDER},
-          {"Orange Powder", Material::Subsurface::ORANGE_POWDER},
-          {"Pink Lemonade Powder", Material::Subsurface::PINK_LEMONADE_POWDER},
-          {"Cappuccino Powder", Material::Subsurface::CAPPUCCINO_POWDER},
-          {"Salt Powder", Material::Subsurface::SALT_POWDER},
-          {"Sugar Powder", Material::Subsurface::SUGAR_POWDER},
-          {"Suisse Mocha Powder", Material::Subsurface::SUISSE_MOCHA_POWDER},
-          {"Pacific Ocean Surface Water",
-           Material::Subsurface::PACIFIC_OCEAN_SURFACE_WATER},
-      };
-
   Material material;
 
   if (material_type == "" || material_type == "none") {
@@ -2655,6 +2677,195 @@ absl::Status ParserV3::Shape(
     std::cerr << "Unrecognized Shape type: \"" << shape_type << "\""
               << std::endl;
     return absl::OkStatus();
+  }
+
+  auto& overrides = *shape.mutable_overrides();
+
+  bool overrides_populated = false;
+  if (std::optional<bool> remaproughness =
+          TryRemoveBool(parameters, "remaproughness");
+      remaproughness.has_value()) {
+    overrides.set_remaproughness(*remaproughness);
+    overrides_populated = true;
+  }
+
+  if (std::optional<bool> thin = TryRemoveBool(parameters, "thin");
+      thin.has_value()) {
+    overrides.set_thin(*thin);
+    overrides_populated = true;
+  }
+
+  if (std::optional<double> g = TryRemoveFloat(parameters, "g");
+      g.has_value()) {
+    overrides.set_g(*g);
+    overrides_populated = true;
+  }
+
+  if (std::optional<double> scale = TryRemoveFloat(parameters, "scale");
+      scale.has_value()) {
+    overrides.set_scale(*scale);
+    overrides_populated = true;
+  }
+
+  overrides_populated |= TryRemoveFloatTexture(
+      parameters, "alpha",
+      std::bind(&Shape::MaterialOverrides::mutable_alpha, &overrides));
+  overrides_populated |= TryRemoveFloatTexture(
+      parameters, "amount",
+      std::bind(&Shape::MaterialOverrides::mutable_amount, &overrides));
+  overrides_populated |= TryRemoveFloatTexture(
+      parameters, "anisotropic",
+      std::bind(&Shape::MaterialOverrides::mutable_anisotropic, &overrides));
+  overrides_populated |= TryRemoveFloatTexture(
+      parameters, "beta_m",
+      std::bind(&Shape::MaterialOverrides::mutable_beta_m, &overrides));
+  overrides_populated |= TryRemoveFloatTexture(
+      parameters, "beta_n",
+      std::bind(&Shape::MaterialOverrides::mutable_beta_n, &overrides));
+  overrides_populated |= TryRemoveFloatTexture(
+      parameters, "bumpmap",
+      std::bind(&Shape::MaterialOverrides::mutable_bumpmap, &overrides));
+  overrides_populated |= TryRemoveFloatTexture(
+      parameters, "clearcoat",
+      std::bind(&Shape::MaterialOverrides::mutable_clearcoat, &overrides));
+  overrides_populated |= TryRemoveFloatTexture(
+      parameters, "clearcoatgloss",
+      std::bind(&Shape::MaterialOverrides::mutable_clearcoatgloss, &overrides));
+  overrides_populated |= TryRemoveFloatTexture(
+      parameters, "difftrans",
+      std::bind(&Shape::MaterialOverrides::mutable_difftrans, &overrides));
+  overrides_populated |= TryRemoveFloatTexture(
+      parameters, "eumelanin",
+      std::bind(&Shape::MaterialOverrides::mutable_eumelanin, &overrides));
+  overrides_populated |= TryRemoveFloatTexture(
+      parameters, "flatness",
+      std::bind(&Shape::MaterialOverrides::mutable_flatness, &overrides));
+  overrides_populated |= TryRemoveFloatTexture(
+      parameters, "metallic",
+      std::bind(&Shape::MaterialOverrides::mutable_metallic, &overrides));
+  overrides_populated |= TryRemoveFloatTexture(
+      parameters, "mfp",
+      std::bind(&Shape::MaterialOverrides::mutable_mfp, &overrides));
+  overrides_populated |= TryRemoveFloatTexture(
+      parameters, "opacity",
+      std::bind(&Shape::MaterialOverrides::mutable_opacity, &overrides));
+  overrides_populated |= TryRemoveFloatTexture(
+      parameters, "pheomelanin",
+      std::bind(&Shape::MaterialOverrides::mutable_pheomelanin, &overrides));
+  overrides_populated |= TryRemoveFloatTexture(
+      parameters, "roughness",
+      std::bind(&Shape::MaterialOverrides::mutable_roughness, &overrides));
+  overrides_populated |= TryRemoveFloatTexture(
+      parameters, "sheen",
+      std::bind(&Shape::MaterialOverrides::mutable_sheen, &overrides));
+  overrides_populated |= TryRemoveFloatTexture(
+      parameters, "sheentint",
+      std::bind(&Shape::MaterialOverrides::mutable_sheentint, &overrides));
+  overrides_populated |= TryRemoveFloatTexture(
+      parameters, "sigma",
+      std::bind(&Shape::MaterialOverrides::mutable_sigma, &overrides));
+  overrides_populated |= TryRemoveFloatTexture(
+      parameters, "spectrans",
+      std::bind(&Shape::MaterialOverrides::mutable_spectrans, &overrides));
+  overrides_populated |= TryRemoveFloatTexture(
+      parameters, "speculartint",
+      std::bind(&Shape::MaterialOverrides::mutable_speculartint, &overrides));
+  overrides_populated |= TryRemoveFloatTexture(
+      parameters, "uroughness",
+      std::bind(&Shape::MaterialOverrides::mutable_uroughness, &overrides));
+  overrides_populated |= TryRemoveFloatTexture(
+      parameters, "vroughness",
+      std::bind(&Shape::MaterialOverrides::mutable_vroughness, &overrides));
+
+  if (std::optional<absl::string_view> name =
+          TryRemoveString(parameters, "name");
+      name.has_value()) {
+    auto iter = kSubsurfaces.find(*name);
+    if (iter != kSubsurfaces.end()) {
+      overrides.set_name(iter->second);
+      overrides_populated = true;
+    }
+  }
+
+  overrides_populated |= TryRemoveSpectrumTexture(
+      parameters, "color",
+      std::bind(&Shape::MaterialOverrides::mutable_color, &overrides));
+  overrides_populated |= TryRemoveSpectrumTexture(
+      parameters, "k",
+      std::bind(&Shape::MaterialOverrides::mutable_k, &overrides));
+  overrides_populated |= TryRemoveSpectrumTexture(
+      parameters, "Kd",
+      std::bind(&Shape::MaterialOverrides::mutable_kd, &overrides));
+  overrides_populated |= TryRemoveSpectrumTexture(
+      parameters, "Kr",
+      std::bind(&Shape::MaterialOverrides::mutable_kr, &overrides));
+  overrides_populated |= TryRemoveSpectrumTexture(
+      parameters, "Ks",
+      std::bind(&Shape::MaterialOverrides::mutable_ks, &overrides));
+  overrides_populated |= TryRemoveSpectrumTexture(
+      parameters, "Kt",
+      std::bind(&Shape::MaterialOverrides::mutable_kt, &overrides));
+  overrides_populated |= TryRemoveSpectrumTexture(
+      parameters, "reflect",
+      std::bind(&Shape::MaterialOverrides::mutable_reflect, &overrides));
+  overrides_populated |= TryRemoveSpectrumTexture(
+      parameters, "scatterdistance",
+      std::bind(&Shape::MaterialOverrides::mutable_scatterdistance,
+                &overrides));
+  overrides_populated |= TryRemoveSpectrumTexture(
+      parameters, "sigma_a",
+      std::bind(&Shape::MaterialOverrides::mutable_sigma_a, &overrides));
+  overrides_populated |= TryRemoveSpectrumTexture(
+      parameters, "sigma_s",
+      std::bind(&Shape::MaterialOverrides::mutable_sigma_s, &overrides));
+  overrides_populated |= TryRemoveSpectrumTexture(
+      parameters, "transmit",
+      std::bind(&Shape::MaterialOverrides::mutable_transmit, &overrides));
+
+  if (std::optional<absl::string_view> bsdffile =
+          TryRemoveString(parameters, "bsdffile");
+      bsdffile.has_value()) {
+    overrides.set_bsdffile(*bsdffile);
+    overrides_populated = true;
+  }
+
+  if (std::optional<absl::string_view> namedmaterial1 =
+          TryRemoveString(parameters, "namedmaterial1");
+      namedmaterial1.has_value()) {
+    overrides.set_namedmaterial1(*namedmaterial1);
+    overrides_populated = true;
+  }
+
+  if (std::optional<absl::string_view> namedmaterial2 =
+          TryRemoveString(parameters, "namedmaterial2");
+      namedmaterial2.has_value()) {
+    overrides.set_namedmaterial2(*namedmaterial2);
+    overrides_populated = true;
+  }
+
+  if (std::optional<double> eta = TryRemoveFloat(parameters, "eta");
+      eta.has_value()) {
+    overrides.mutable_eta()->set_as_value(*eta);
+    overrides.mutable_eta()->mutable_as_float_texture()->set_float_value(*eta);
+    overrides_populated = true;
+  } else if (std::optional<absl::string_view> eta =
+                 TryRemoveTexture(parameters, "eta");
+             eta.has_value()) {
+    overrides.mutable_eta()->mutable_as_float_texture()->set_float_texture_name(
+        *eta);
+    overrides.mutable_eta()
+        ->mutable_as_spectrum_texture()
+        ->set_spectrum_texture_name(*eta);
+    overrides_populated = true;
+  } else {
+    overrides_populated |= TryRemoveSpectrumTexture(
+        parameters, "eta",
+        std::bind(&Shape::MaterialOverrides::Eta::mutable_as_spectrum_texture,
+                  overrides.mutable_eta()));
+  }
+
+  if (!overrides_populated) {
+    shape.clear_overrides();
   }
 
   return absl::OkStatus();

@@ -2792,6 +2792,148 @@ TEST(Convert, ShapeTriangleMesh) {
                                         })pb")));
 }
 
+TEST(Convert, ShapeOverrides) {
+  std::stringstream stream(
+      "Shape \"sphere\" "
+      "\"bool remaproughness\" \"true\" "
+      "\"bool thin\" \"true\" "
+      "\"float g\" 1.0 "
+      "\"float scale\" 2.0 "
+      "\"float alpha\" 3.0 "
+      "\"float amount\" 4.0 "
+      "\"float anisotropic\" 5.0 "
+      "\"float beta_m\" 6.0 "
+      "\"float beta_n\" 7.0 "
+      "\"float bumpmap\" 8.0 "
+      "\"float clearcoat\" 9.0 "
+      "\"float clearcoatgloss\" 10.0 "
+      "\"float difftrans\" 10.0 "
+      "\"float eumelanin\" 11.0 "
+      "\"float flatness\" 12.0 "
+      "\"float metallic\" 13.0 "
+      "\"float mfp\" 14.0 "
+      "\"float opacity\" 15.0 "
+      "\"float pheomelanin\" 16.0 "
+      "\"float roughness\" 17.0 "
+      "\"float sheen\" 18.0 "
+      "\"float sheentint\" 19.0 "
+      "\"float sigma\" 20.0 "
+      "\"float spectrans\" 21.0 "
+      "\"float speculartint\" 22.0 "
+      "\"float uroughness\" 23.0 "
+      "\"float vroughness\" 24.0 "
+      "\"string name\" \"Apple\" "
+      "\"texture color\" \"a\" "
+      "\"texture k\" \"b\" "
+      "\"texture Kd\" \"c\" "
+      "\"texture Kr\" \"d\" "
+      "\"texture Ks\" \"e\" "
+      "\"texture Kt\" \"f\" "
+      "\"texture reflect\" \"g\" "
+      "\"texture scatterdistance\" \"h\" "
+      "\"texture sigma_a\" \"i\" "
+      "\"texture sigma_s\" \"j\" "
+      "\"texture transmit\" \"k\" "
+      "\"string bsdffile\" \"l\" "
+      "\"string namedmaterial1\" \"m\" "
+      "\"string namedmaterial2\" \"n\" "
+      "\"float eta\" 25.0 ");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(
+                  R"pb(directives {
+                         shape {
+                           sphere {}
+                           overrides {
+                             remaproughness: true
+                             thin: true
+                             g: 1.0
+                             scale: 2.0
+                             alpha { float_value: 3.0 }
+                             amount { float_value: 4.0 }
+                             anisotropic { float_value: 5.0 }
+                             beta_m { float_value: 6.0 }
+                             beta_n { float_value: 7.0 }
+                             bumpmap { float_value: 8.0 }
+                             clearcoat { float_value: 9.0 }
+                             clearcoatgloss { float_value: 10.0 }
+                             difftrans { float_value: 10.0 }
+                             eumelanin { float_value: 11.0 }
+                             flatness { float_value: 12.0 }
+                             metallic { float_value: 13.0 }
+                             mfp { float_value: 14.0 }
+                             opacity { float_value: 15.0 }
+                             pheomelanin { float_value: 16.0 }
+                             roughness { float_value: 17.0 }
+                             sheen { float_value: 18.0 }
+                             sheentint { float_value: 19.0 }
+                             sigma { float_value: 20.0 }
+                             spectrans { float_value: 21.0 }
+                             speculartint { float_value: 22.0 }
+                             uroughness { float_value: 23.0 }
+                             vroughness { float_value: 24.0 }
+                             name: APPLE
+                             color { spectrum_texture_name: "a" }
+                             k { spectrum_texture_name: "b" }
+                             Kd { spectrum_texture_name: "c" }
+                             Kr { spectrum_texture_name: "d" }
+                             Ks { spectrum_texture_name: "e" }
+                             Kt { spectrum_texture_name: "f" }
+                             reflect { spectrum_texture_name: "g" }
+                             scatterdistance { spectrum_texture_name: "h" }
+                             sigma_a { spectrum_texture_name: "i" }
+                             sigma_s { spectrum_texture_name: "j" }
+                             transmit { spectrum_texture_name: "k" }
+                             bsdffile: "l"
+                             namedmaterial1: "m"
+                             namedmaterial2: "n"
+                             eta {
+                               as_value: 25.0
+                               as_float_texture { float_value: 25.0 }
+                             }
+                           }
+                         }
+                       })pb")));
+}
+
+TEST(Convert, ShapeOverridesEtaTexture) {
+  std::stringstream stream(
+      "Shape \"sphere\" "
+      "\"texture eta\" \"a\" ");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(
+          R"pb(directives {
+                 shape {
+                   sphere {}
+                   overrides {
+                     eta {
+                       as_float_texture { float_texture_name: "a" }
+                       as_spectrum_texture { spectrum_texture_name: "a" }
+                     }
+                   }
+                 }
+               })pb")));
+}
+
+TEST(Convert, ShapeOverridesEtaSampled) {
+  std::stringstream stream(
+      "Shape \"sphere\" "
+      "\"spectrum eta\" \"a\" ");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(
+          R"pb(directives {
+                 shape {
+                   sphere {}
+                   overrides {
+                     eta {
+                       as_spectrum_texture { sampled_spectrum_filename: "a" }
+                     }
+                   }
+                 }
+               })pb")));
+}
+
 TEST(Convert, SpectrumTextureUnknown) {
   std::stringstream stream("Texture \"name\" \"spectrum\" \"unknown\"");
   EXPECT_THAT(Convert(stream),
