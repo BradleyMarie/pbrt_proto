@@ -676,6 +676,144 @@ void Canonicalize(PbrtProto& proto) {
         CanonicalizeMaterial(
             *directive.mutable_make_named_material()->mutable_material());
         break;
+      case Directive::kMakeNamedMedium:
+        switch (directive.make_named_medium().medium_type_case()) {
+          case MakeNamedMedium::kHomogeneous:
+            if (directive.make_named_medium().homogeneous().has_preset()) {
+              if (!directive.make_named_medium().homogeneous().has_sigma_a()) {
+                auto& sigma_a = *directive.mutable_make_named_medium()
+                                     ->mutable_homogeneous()
+                                     ->mutable_sigma_a()
+                                     ->mutable_rgb_spectrum();
+                sigma_a.set_r(kSigmaA[directive.make_named_medium()
+                                          .homogeneous()
+                                          .preset()][0]);
+                sigma_a.set_g(kSigmaA[directive.make_named_medium()
+                                          .homogeneous()
+                                          .preset()][1]);
+                sigma_a.set_b(kSigmaA[directive.make_named_medium()
+                                          .homogeneous()
+                                          .preset()][2]);
+              }
+
+              if (!directive.make_named_medium().homogeneous().has_sigma_s()) {
+                auto& sigma_s = *directive.mutable_make_named_medium()
+                                     ->mutable_homogeneous()
+                                     ->mutable_sigma_s()
+                                     ->mutable_rgb_spectrum();
+                sigma_s.set_r(kSigmaS[directive.make_named_medium()
+                                          .homogeneous()
+                                          .preset()][0]);
+                sigma_s.set_g(kSigmaS[directive.make_named_medium()
+                                          .homogeneous()
+                                          .preset()][1]);
+                sigma_s.set_b(kSigmaS[directive.make_named_medium()
+                                          .homogeneous()
+                                          .preset()][2]);
+              }
+            }
+
+            if (!directive.make_named_medium().homogeneous().has_sigma_a()) {
+              auto& sigma_a = *directive.mutable_make_named_medium()
+                                   ->mutable_homogeneous()
+                                   ->mutable_sigma_a()
+                                   ->mutable_rgb_spectrum();
+              sigma_a.set_r(0.0011);
+              sigma_a.set_g(0.0024);
+              sigma_a.set_b(0.014);
+            }
+
+            if (!directive.make_named_medium().homogeneous().has_sigma_s()) {
+              auto& sigma_s = *directive.mutable_make_named_medium()
+                                   ->mutable_homogeneous()
+                                   ->mutable_sigma_s()
+                                   ->mutable_rgb_spectrum();
+              sigma_s.set_r(2.55);
+              sigma_s.set_g(3.21);
+              sigma_s.set_b(3.77);
+            }
+            break;
+          case MakeNamedMedium::kHeterogeneous:
+            if (directive.make_named_medium().heterogeneous().has_preset()) {
+              if (!directive.make_named_medium()
+                       .heterogeneous()
+                       .has_sigma_a()) {
+                auto& sigma_a = *directive.mutable_make_named_medium()
+                                     ->mutable_heterogeneous()
+                                     ->mutable_sigma_a()
+                                     ->mutable_rgb_spectrum();
+                sigma_a.set_r(kSigmaA[directive.make_named_medium()
+                                          .heterogeneous()
+                                          .preset()][0]);
+                sigma_a.set_g(kSigmaA[directive.make_named_medium()
+                                          .heterogeneous()
+                                          .preset()][1]);
+                sigma_a.set_b(kSigmaA[directive.make_named_medium()
+                                          .heterogeneous()
+                                          .preset()][2]);
+              }
+
+              if (!directive.make_named_medium()
+                       .heterogeneous()
+                       .has_sigma_s()) {
+                auto& sigma_s = *directive.mutable_make_named_medium()
+                                     ->mutable_heterogeneous()
+                                     ->mutable_sigma_s()
+                                     ->mutable_rgb_spectrum();
+                sigma_s.set_r(kSigmaS[directive.make_named_medium()
+                                          .heterogeneous()
+                                          .preset()][0]);
+                sigma_s.set_g(kSigmaS[directive.make_named_medium()
+                                          .heterogeneous()
+                                          .preset()][1]);
+                sigma_s.set_b(kSigmaS[directive.make_named_medium()
+                                          .heterogeneous()
+                                          .preset()][2]);
+              }
+            }
+
+            if (!directive.make_named_medium().heterogeneous().has_sigma_a()) {
+              auto& sigma_a = *directive.mutable_make_named_medium()
+                                   ->mutable_heterogeneous()
+                                   ->mutable_sigma_a()
+                                   ->mutable_rgb_spectrum();
+              sigma_a.set_r(0.0011);
+              sigma_a.set_g(0.0024);
+              sigma_a.set_b(0.014);
+            }
+
+            if (!directive.make_named_medium().heterogeneous().has_sigma_s()) {
+              auto& sigma_s = *directive.mutable_make_named_medium()
+                                   ->mutable_heterogeneous()
+                                   ->mutable_sigma_s()
+                                   ->mutable_rgb_spectrum();
+              sigma_s.set_r(2.55);
+              sigma_s.set_g(3.21);
+              sigma_s.set_b(3.77);
+            }
+
+            if (!directive.make_named_medium().heterogeneous().has_p0()) {
+              auto& p0 = *directive.mutable_make_named_medium()
+                              ->mutable_heterogeneous()
+                              ->mutable_p0();
+              p0.set_x(0.0);
+              p0.set_y(0.0);
+              p0.set_z(0.0);
+            }
+
+            if (!directive.make_named_medium().heterogeneous().has_p1()) {
+              auto& p1 = *directive.mutable_make_named_medium()
+                              ->mutable_heterogeneous()
+                              ->mutable_p1();
+              p1.set_x(1.0);
+              p1.set_y(1.0);
+              p1.set_z(1.0);
+            }
+            break;
+          case MakeNamedMedium::MEDIUM_TYPE_NOT_SET:
+            break;
+        }
+        break;
       case Directive::kMaterial:
         CanonicalizeMaterial(*directive.mutable_material());
         break;

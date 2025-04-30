@@ -1981,6 +1981,130 @@ absl::Status ParserV3::MakeNamedMaterial(
 absl::Status ParserV3::MakeNamedMedium(
     absl::string_view medium_name,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
+  auto& make_named_medium =
+      *output_.add_directives()->mutable_make_named_medium();
+
+  make_named_medium.set_name(medium_name);
+
+  absl::string_view medium_type =
+      TryRemoveString(parameters, "type").value_or("");
+  if (medium_type == "homogeneous") {
+    auto& homogeneous = *make_named_medium.mutable_homogeneous();
+
+    if (std::optional<absl::string_view> preset =
+            TryRemoveString(parameters, "preset");
+        preset.has_value()) {
+      auto iter = kSubsurfaces.find(*preset);
+      if (iter != kSubsurfaces.end()) {
+        homogeneous.set_preset(iter->second);
+      }
+    }
+
+    TryRemoveSpectrum(parameters, "sigma_a",
+                      std::bind(&MakeNamedMedium::Homogeneous::mutable_sigma_a,
+                                &homogeneous));
+    TryRemoveSpectrum(parameters, "sigma_s",
+                      std::bind(&MakeNamedMedium::Homogeneous::mutable_sigma_s,
+                                &homogeneous));
+
+    if (std::optional<double> g = TryRemoveFloat(parameters, "g");
+        g.has_value()) {
+      homogeneous.set_g(*g);
+    }
+
+    if (std::optional<double> scale = TryRemoveFloat(parameters, "scale");
+        scale.has_value()) {
+      homogeneous.set_scale(*scale);
+    }
+  } else if (medium_type == "heterogeneous") {
+    auto& heterogeneous = *make_named_medium.mutable_heterogeneous();
+
+    if (std::optional<absl::string_view> preset =
+            TryRemoveString(parameters, "preset");
+        preset.has_value()) {
+      auto iter = kSubsurfaces.find(*preset);
+      if (iter != kSubsurfaces.end()) {
+        heterogeneous.set_preset(iter->second);
+      }
+    }
+
+    TryRemoveSpectrum(
+        parameters, "sigma_a",
+        std::bind(&MakeNamedMedium::Heterogeneous::mutable_sigma_a,
+                  &heterogeneous));
+    TryRemoveSpectrum(
+        parameters, "sigma_s",
+        std::bind(&MakeNamedMedium::Heterogeneous::mutable_sigma_s,
+                  &heterogeneous));
+
+    if (std::optional<double> g = TryRemoveFloat(parameters, "g");
+        g.has_value()) {
+      heterogeneous.set_g(*g);
+    }
+
+    if (std::optional<double> scale = TryRemoveFloat(parameters, "scale");
+        scale.has_value()) {
+      heterogeneous.set_scale(*scale);
+    }
+
+    if (std::optional<std::array<double, 3>> p0 =
+            TryRemovePoint3(parameters, "p0");
+        p0.has_value()) {
+      heterogeneous.mutable_p0()->set_x((*p0)[0]);
+      heterogeneous.mutable_p0()->set_y((*p0)[1]);
+      heterogeneous.mutable_p0()->set_z((*p0)[2]);
+    }
+
+    if (std::optional<std::array<double, 3>> p1 =
+            TryRemovePoint3(parameters, "p1");
+        p1.has_value()) {
+      heterogeneous.mutable_p1()->set_x((*p1)[0]);
+      heterogeneous.mutable_p1()->set_y((*p1)[1]);
+      heterogeneous.mutable_p1()->set_z((*p1)[2]);
+    }
+
+    if (std::optional<int32_t> nx = TryRemoveInteger(parameters, "nx");
+        nx.has_value()) {
+      heterogeneous.set_nx(*nx);
+    }
+
+    if (std::optional<int32_t> ny = TryRemoveInteger(parameters, "ny");
+        ny.has_value()) {
+      heterogeneous.set_ny(*ny);
+    }
+
+    if (std::optional<int32_t> nz = TryRemoveInteger(parameters, "nz");
+        nz.has_value()) {
+      heterogeneous.set_nz(*nz);
+    }
+
+    int64_t required_size = static_cast<int64_t>(heterogeneous.nx()) *
+                            static_cast<int64_t>(heterogeneous.ny());
+    if (required_size < std::numeric_limits<int32_t>::max()) {
+      required_size *= static_cast<int64_t>(heterogeneous.nz());
+    }
+
+    if (required_size > std::numeric_limits<int32_t>::max()) {
+      return absl::InvalidArgumentError(
+          "Heterogeneous medium is too large to be stored in a 1D proto array");
+    }
+
+    if (std::optional<absl::Span<double>> density =
+            TryRemoveFloats(parameters, "density");
+        density.has_value() &&
+        density->size() == static_cast<size_t>(required_size)) {
+      heterogeneous.mutable_density()->Add(density->begin(), density->end());
+    } else {
+      std::cerr << "Invalid or missing required heterogeneous MakeNamedMedia "
+                   "parameter: 'density'"
+                << std::endl;
+      make_named_medium.clear_heterogeneous();
+    }
+  } else {
+    std::cerr << "Unrecognized MakeNamedMedium type: \"" << medium_type << "\""
+              << std::endl;
+  }
+
   return absl::OkStatus();
 }
 

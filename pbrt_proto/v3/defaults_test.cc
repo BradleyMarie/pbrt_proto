@@ -365,6 +365,102 @@ TEST(Canonicalize, MakeNamedMaterialMatte) {
                        })pb"));
 }
 
+TEST(Canonicalize, MakeNamedMediaEmpty) {
+  EXPECT_THAT(
+      MakeCanonical(R"pb(directives { make_named_medium { name: "a" } })pb"),
+      EqualsProto(R"pb(directives { make_named_medium { name: "a" } })pb"));
+}
+
+TEST(Canonicalize, MakeNamedMediaHomogeneousEmpty) {
+  EXPECT_THAT(
+      MakeCanonical(
+          R"pb(directives {
+                 make_named_medium {
+                   name: "a"
+                   homogeneous {}
+                 }
+               })pb"),
+      EqualsProto(
+          R"pb(directives {
+                 make_named_medium {
+                   name: "a"
+                   homogeneous {
+                     sigma_a { rgb_spectrum { r: 0.0011 g: 0.0024 b: 0.014 } }
+                     sigma_s { rgb_spectrum { r: 2.55 g: 3.21 b: 3.77 } }
+                   }
+                 }
+               })pb"));
+}
+
+TEST(Canonicalize, MakeNamedMediaHomogeneousWithPreset) {
+  EXPECT_THAT(
+      MakeCanonical(
+          R"pb(directives {
+                 make_named_medium {
+                   name: "a"
+                   homogeneous { preset: APPLE }
+                 }
+               })pb"),
+      EqualsProto(
+          R"pb(directives {
+                 make_named_medium {
+                   name: "a"
+                   homogeneous {
+                     preset: APPLE
+                     sigma_a { rgb_spectrum { r: 2.29 g: 2.39 b: 1.97 } }
+                     sigma_s { rgb_spectrum { r: 0.0030 g: 0.0034 b: 0.046 } }
+                   }
+                 }
+               })pb"));
+}
+
+TEST(Canonicalize, MakeNamedMediaHeterogeneousEmpty) {
+  EXPECT_THAT(
+      MakeCanonical(
+          R"pb(directives {
+                 make_named_medium {
+                   name: "a"
+                   heterogeneous {}
+                 }
+               })pb"),
+      EqualsProto(
+          R"pb(directives {
+                 make_named_medium {
+                   name: "a"
+                   heterogeneous {
+                     sigma_a { rgb_spectrum { r: 0.0011 g: 0.0024 b: 0.014 } }
+                     sigma_s { rgb_spectrum { r: 2.55 g: 3.21 b: 3.77 } }
+                     p0 { x: 0.0 y: 0.0 z: 0.0 }
+                     p1 { x: 1.0 y: 1.0 z: 1.0 }
+                   }
+                 }
+               })pb"));
+}
+
+TEST(Canonicalize, MakeNamedMediaHeterogeneousWithPreset) {
+  EXPECT_THAT(
+      MakeCanonical(
+          R"pb(directives {
+                 make_named_medium {
+                   name: "a"
+                   heterogeneous { preset: APPLE }
+                 }
+               })pb"),
+      EqualsProto(
+          R"pb(directives {
+                 make_named_medium {
+                   name: "a"
+                   heterogeneous {
+                     preset: APPLE
+                     sigma_a { rgb_spectrum { r: 2.29 g: 2.39 b: 1.97 } }
+                     sigma_s { rgb_spectrum { r: 0.0030 g: 0.0034 b: 0.046 } }
+                     p0 { x: 0.0 y: 0.0 z: 0.0 }
+                     p1 { x: 1.0 y: 1.0 z: 1.0 }
+                   }
+                 }
+               })pb"));
+}
+
 // Unset Material are left unset
 TEST(Canonicalize, MaterialEmpty) {
   EXPECT_THAT(MakeCanonical(R"pb(directives { material {} })pb"),

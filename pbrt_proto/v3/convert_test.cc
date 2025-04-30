@@ -1572,6 +1572,104 @@ TEST(Convert, MakeNamedMaterialNone) {
                                             })pb")));
 }
 
+TEST(Convert, MakeNamedMediumNone) {
+  std::stringstream stream("MakeNamedMedium \"a\" ");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives {
+                                              make_named_medium { name: "a" }
+                                            })pb")));
+}
+
+TEST(Convert, MakeNamedMediumHomogeneous) {
+  std::stringstream stream(
+      "MakeNamedMedium \"a\""
+      "\"string type\" \"homogeneous\" "
+      "\"string preset\" \"Apple\" "
+      "\"spectrum sigma_a\" \"a\" "
+      "\"spectrum sigma_s\" \"b\" "
+      "\"float g\" 1.0 "
+      "\"float scale\" 2.0 ");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(
+                  R"pb(directives {
+                         make_named_medium {
+                           name: "a"
+                           homogeneous {
+                             preset: APPLE
+                             sigma_a { sampled_spectrum_filename: "a" }
+                             sigma_s { sampled_spectrum_filename: "b" }
+                             g: 1.0
+                             scale: 2.0
+                           }
+                         }
+                       })pb")));
+}
+
+TEST(Convert, MakeNamedMediumHeterogeneous) {
+  std::stringstream stream(
+      "MakeNamedMedium \"a\""
+      "\"string type\" \"heterogeneous\" "
+      "\"string preset\" \"Apple\" "
+      "\"spectrum sigma_a\" \"a\" "
+      "\"spectrum sigma_s\" \"b\" "
+      "\"float g\" 1.0 "
+      "\"float scale\" 2.0 "
+      "\"point p0\" [3 4 5] "
+      "\"point p1\" [6 7 8] "
+      "\"integer nx\" 1 "
+      "\"integer ny\" 2 "
+      "\"integer nz\" 3 "
+      "\"float density\" [1 2 3 4 5 6] ");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(
+                  R"pb(directives {
+                         make_named_medium {
+                           name: "a"
+                           heterogeneous {
+                             preset: APPLE
+                             sigma_a { sampled_spectrum_filename: "a" }
+                             sigma_s { sampled_spectrum_filename: "b" }
+                             g: 1.0
+                             scale: 2.0
+                             p0 { x: 3.0 y: 4.0 z: 5.0 }
+                             p1 { x: 6.0 y: 7.0 z: 8.0 }
+                             nx: 1
+                             ny: 2
+                             nz: 3
+                             density: 1
+                             density: 2
+                             density: 3
+                             density: 4
+                             density: 5
+                             density: 6
+                           }
+                         }
+                       })pb")));
+}
+
+TEST(Convert, MakeNamedMediumHeterogeneousNoDensity) {
+  std::stringstream stream(
+      "MakeNamedMedium \"a\""
+      "\"string type\" \"heterogeneous\" ");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives {
+                                              make_named_medium { name: "a" }
+                                            })pb")));
+}
+
+TEST(Convert, MakeNamedMediumHeterogeneousDensityWrongSize) {
+  std::stringstream stream(
+      "MakeNamedMedium \"a\""
+      "\"integer nx\" 1 "
+      "\"integer ny\" 2 "
+      "\"integer nz\" 3 "
+      "\"float density\" [1 2 3 4 5] ");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives {
+                                              make_named_medium { name: "a" }
+                                            })pb")));
+}
+
 TEST(Convert, MaterialEmpty) {
   std::stringstream stream("Material \"\"");
   EXPECT_THAT(Convert(stream),
