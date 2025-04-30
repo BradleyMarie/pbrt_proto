@@ -1026,6 +1026,15 @@ absl::Status Parser::ReadFrom(std::istream& stream) {
       }
 
       status = MakeNamedMaterial(*material_name, parameters);
+    } else if (**next == "MakeNamedMedium") {
+      absl::StatusOr<absl::string_view> medium_name =
+          ReadParameters("MakeNamedMedium", parameter_type_names_, storage,
+                         tokenizer, parameters, "name");
+      if (!medium_name.ok()) {
+        return medium_name.status();
+      }
+
+      status = MakeNamedMedium(*medium_name, parameters);
     } else if (**next == "Material") {
       absl::StatusOr<absl::string_view> type_name = ReadParameters(
           "Material", parameter_type_names_, storage, tokenizer, parameters);
@@ -1034,6 +1043,20 @@ absl::Status Parser::ReadFrom(std::istream& stream) {
       }
 
       status = Material(*type_name, parameters);
+    } else if (**next == "MediumInterface") {
+      auto inside = ReadQuotedString("MediumInterface", tokenizer);
+      if (!inside.ok()) {
+        return inside.status();
+      }
+
+      absl::string_view persisted_inside = storage.Add(*inside);
+
+      auto outside = ReadQuotedString("MediumInterface", tokenizer);
+      if (!outside.ok()) {
+        return outside.status();
+      }
+
+      status = MediumInterface(persisted_inside, *outside);
     } else if (**next == "NamedMaterial") {
       auto name = ReadQuotedString("NamedMaterial", tokenizer);
       if (!name.ok()) {

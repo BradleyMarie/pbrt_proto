@@ -2021,6 +2021,15 @@ TEST(Convert, MaterialUberIndex) {
                                         })pb")));
 }
 
+TEST(Convert, MediumInterface) {
+  std::stringstream stream("MediumInterface \"a\" \"b\"");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(
+                  R"pb(directives {
+                         medium_interface { inside: "a" outside: "b" }
+                       })pb")));
+}
+
 TEST(Convert, NamedMaterial) {
   std::stringstream stream("NamedMaterial \"a\"");
   EXPECT_THAT(Convert(stream),

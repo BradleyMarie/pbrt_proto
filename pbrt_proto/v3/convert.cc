@@ -223,60 +223,57 @@ void TryRemoveUVParameters(
   }
 }
 
-static const absl::flat_hash_map<absl::string_view,
-                                 Material::Subsurface::MeasuredSubsurfaces>
+static const absl::flat_hash_map<absl::string_view, MeasuredSubsurfaces>
     kSubsurfaces = {
-        {"Apple", Material::Subsurface::APPLE},
-        {"Chicken1", Material::Subsurface::CHICKEN1},
-        {"Chicken2", Material::Subsurface::CHICKEN2},
-        {"Cream", Material::Subsurface::CREAM},
-        {"Ketchup", Material::Subsurface::KETCHUP},
-        {"Marble", Material::Subsurface::MARBLE},
-        {"Potato", Material::Subsurface::POTATO},
-        {"Skimmilk", Material::Subsurface::SKIMMILK},
-        {"Skin1", Material::Subsurface::SKIN1},
-        {"Skin2", Material::Subsurface::SKIN2},
-        {"Spectralon", Material::Subsurface::SPECTRALON},
-        {"Wholemilk", Material::Subsurface::WHOLEMILK},
-        {"Lowfat Milk", Material::Subsurface::LOWFAT_MILK},
-        {"Reduced Milk", Material::Subsurface::REDUCED_MILK},
-        {"Regular Milk", Material::Subsurface::REGULAR_MILK},
-        {"Espresso", Material::Subsurface::ESPRESSO},
-        {"Mint Mocha Coffee", Material::Subsurface::MINT_MOCHA_COFFEE},
-        {"Lowfat Soy Milk", Material::Subsurface::LOWFAT_SOY_MILK},
-        {"Regular Soy Milk", Material::Subsurface::REGULAR_SOY_MILK},
-        {"Lowfat Chocolate Milk", Material::Subsurface::LOWFAT_CHOCOLATE_MILK},
-        {"Regular Chocolate Milk",
-         Material::Subsurface::REGULAR_CHOCOLATE_MILK},
-        {"Coke", Material::Subsurface::COKE},
-        {"Pepsi", Material::Subsurface::PEPSI},
-        {"Sprite", Material::Subsurface::SPRITE},
-        {"Gatorade", Material::Subsurface::GATORADE},
-        {"Chardonnay", Material::Subsurface::CHARDONNAY},
-        {"White Zinfandel", Material::Subsurface::WHITE_ZINFANDEL},
-        {"Merlot", Material::Subsurface::MERLOT},
-        {"Budweiser Beer", Material::Subsurface::BUDWEISER_BEER},
-        {"Coors Light Beer", Material::Subsurface::COORS_LIGHT_BEER},
-        {"Clorox", Material::Subsurface::CLOROX},
-        {"Apple Juice", Material::Subsurface::APPLE_JUICE},
-        {"Cranberry Juice", Material::Subsurface::CRANBERRY_JUICE},
-        {"Grape Juice", Material::Subsurface::GRAPE_JUICE},
-        {"Ruby Grapefruit Juice", Material::Subsurface::RUBY_GRAPEFRUIT_JUICE},
-        {"White Grapefruit Juice",
-         Material::Subsurface::WHITE_GRAPEFRUIT_JUICE},
-        {"Shampoo", Material::Subsurface::SHAMPOO},
-        {"Strawberry Shampoo", Material::Subsurface::STRAWBERRY_SHAMPOO},
+        {"Apple", MeasuredSubsurfaces::APPLE},
+        {"Chicken1", MeasuredSubsurfaces::CHICKEN1},
+        {"Chicken2", MeasuredSubsurfaces::CHICKEN2},
+        {"Cream", MeasuredSubsurfaces::CREAM},
+        {"Ketchup", MeasuredSubsurfaces::KETCHUP},
+        {"Marble", MeasuredSubsurfaces::MARBLE},
+        {"Potato", MeasuredSubsurfaces::POTATO},
+        {"Skimmilk", MeasuredSubsurfaces::SKIMMILK},
+        {"Skin1", MeasuredSubsurfaces::SKIN1},
+        {"Skin2", MeasuredSubsurfaces::SKIN2},
+        {"Spectralon", MeasuredSubsurfaces::SPECTRALON},
+        {"Wholemilk", MeasuredSubsurfaces::WHOLEMILK},
+        {"Lowfat Milk", MeasuredSubsurfaces::LOWFAT_MILK},
+        {"Reduced Milk", MeasuredSubsurfaces::REDUCED_MILK},
+        {"Regular Milk", MeasuredSubsurfaces::REGULAR_MILK},
+        {"Espresso", MeasuredSubsurfaces::ESPRESSO},
+        {"Mint Mocha Coffee", MeasuredSubsurfaces::MINT_MOCHA_COFFEE},
+        {"Lowfat Soy Milk", MeasuredSubsurfaces::LOWFAT_SOY_MILK},
+        {"Regular Soy Milk", MeasuredSubsurfaces::REGULAR_SOY_MILK},
+        {"Lowfat Chocolate Milk", MeasuredSubsurfaces::LOWFAT_CHOCOLATE_MILK},
+        {"Regular Chocolate Milk", MeasuredSubsurfaces::REGULAR_CHOCOLATE_MILK},
+        {"Coke", MeasuredSubsurfaces::COKE},
+        {"Pepsi", MeasuredSubsurfaces::PEPSI},
+        {"Sprite", MeasuredSubsurfaces::SPRITE},
+        {"Gatorade", MeasuredSubsurfaces::GATORADE},
+        {"Chardonnay", MeasuredSubsurfaces::CHARDONNAY},
+        {"White Zinfandel", MeasuredSubsurfaces::WHITE_ZINFANDEL},
+        {"Merlot", MeasuredSubsurfaces::MERLOT},
+        {"Budweiser Beer", MeasuredSubsurfaces::BUDWEISER_BEER},
+        {"Coors Light Beer", MeasuredSubsurfaces::COORS_LIGHT_BEER},
+        {"Clorox", MeasuredSubsurfaces::CLOROX},
+        {"Apple Juice", MeasuredSubsurfaces::APPLE_JUICE},
+        {"Cranberry Juice", MeasuredSubsurfaces::CRANBERRY_JUICE},
+        {"Grape Juice", MeasuredSubsurfaces::GRAPE_JUICE},
+        {"Ruby Grapefruit Juice", MeasuredSubsurfaces::RUBY_GRAPEFRUIT_JUICE},
+        {"White Grapefruit Juice", MeasuredSubsurfaces::WHITE_GRAPEFRUIT_JUICE},
+        {"Shampoo", MeasuredSubsurfaces::SHAMPOO},
+        {"Strawberry Shampoo", MeasuredSubsurfaces::STRAWBERRY_SHAMPOO},
         {"Head & Shoulders Shampoo",
-         Material::Subsurface::HEAD_AND_SHOULDERS_SHAMPOO},
-        {"Lemon Tea Powder", Material::Subsurface::LEMON_TEA_POWDER},
-        {"Orange Powder", Material::Subsurface::ORANGE_POWDER},
-        {"Pink Lemonade Powder", Material::Subsurface::PINK_LEMONADE_POWDER},
-        {"Cappuccino Powder", Material::Subsurface::CAPPUCCINO_POWDER},
-        {"Salt Powder", Material::Subsurface::SALT_POWDER},
-        {"Sugar Powder", Material::Subsurface::SUGAR_POWDER},
-        {"Suisse Mocha Powder", Material::Subsurface::SUISSE_MOCHA_POWDER},
+         MeasuredSubsurfaces::HEAD_AND_SHOULDERS_SHAMPOO},
+        {"Lemon Tea Powder", MeasuredSubsurfaces::LEMON_TEA_POWDER},
+        {"Orange Powder", MeasuredSubsurfaces::ORANGE_POWDER},
+        {"Pink Lemonade Powder", MeasuredSubsurfaces::PINK_LEMONADE_POWDER},
+        {"Cappuccino Powder", MeasuredSubsurfaces::CAPPUCCINO_POWDER},
+        {"Salt Powder", MeasuredSubsurfaces::SALT_POWDER},
+        {"Sugar Powder", MeasuredSubsurfaces::SUGAR_POWDER},
+        {"Suisse Mocha Powder", MeasuredSubsurfaces::SUISSE_MOCHA_POWDER},
         {"Pacific Ocean Surface Water",
-         Material::Subsurface::PACIFIC_OCEAN_SURFACE_WATER},
+         MeasuredSubsurfaces::PACIFIC_OCEAN_SURFACE_WATER},
 };
 
 Material ParseMaterial(
@@ -805,9 +802,16 @@ class ParserV3 final : public Parser {
       absl::string_view material_name,
       absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
 
+  absl::Status MakeNamedMedium(
+      absl::string_view medium_name,
+      absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
+
   absl::Status Material(
       absl::string_view material_type,
       absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
+
+  absl::Status MediumInterface(absl::string_view inside,
+                               absl::string_view outside) override;
 
   absl::Status NamedMaterial(absl::string_view material) override;
 
@@ -1974,11 +1978,26 @@ absl::Status ParserV3::MakeNamedMaterial(
   return absl::OkStatus();
 }
 
+absl::Status ParserV3::MakeNamedMedium(
+    absl::string_view medium_name,
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
+  return absl::OkStatus();
+}
+
 absl::Status ParserV3::Material(
     absl::string_view material_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
   *output_.add_directives()->mutable_material() =
       ParseMaterial(material_type, parameters);
+  return absl::OkStatus();
+}
+
+absl::Status ParserV3::MediumInterface(absl::string_view inside,
+                                       absl::string_view outside) {
+  auto& material_interface =
+      *output_.add_directives()->mutable_medium_interface();
+  material_interface.set_inside(inside);
+  material_interface.set_outside(outside);
   return absl::OkStatus();
 }
 

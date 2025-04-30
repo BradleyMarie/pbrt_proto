@@ -28,6 +28,57 @@ enum Mapping2D {
   PLANAR = 3;
 }
 
+enum MeasuredSubsurfaces {
+  option features.enum_type = CLOSED;
+  APPLE = 0;
+  CHICKEN1 = 1;
+  CHICKEN2 = 2;
+  CREAM = 3;
+  KETCHUP = 4;
+  MARBLE = 5;
+  POTATO = 6;
+  SKIMMILK = 7;
+  SKIN1 = 8;
+  SKIN2 = 9;
+  SPECTRALON = 10;
+  WHOLEMILK = 11;
+  LOWFAT_MILK = 12;
+  REDUCED_MILK = 13;
+  REGULAR_MILK = 14;
+  ESPRESSO = 15;
+  MINT_MOCHA_COFFEE = 16;
+  LOWFAT_SOY_MILK = 17;
+  REGULAR_SOY_MILK = 18;
+  LOWFAT_CHOCOLATE_MILK = 19;
+  REGULAR_CHOCOLATE_MILK = 20;
+  COKE = 21;
+  PEPSI = 22;
+  SPRITE = 23;
+  GATORADE = 24;
+  CHARDONNAY = 25;
+  WHITE_ZINFANDEL = 26;
+  MERLOT = 27;
+  BUDWEISER_BEER = 28;
+  COORS_LIGHT_BEER = 29;
+  CLOROX = 30;
+  APPLE_JUICE = 31;
+  CRANBERRY_JUICE = 32;
+  GRAPE_JUICE = 33;
+  RUBY_GRAPEFRUIT_JUICE = 34;
+  WHITE_GRAPEFRUIT_JUICE = 35;
+  SHAMPOO = 36;
+  STRAWBERRY_SHAMPOO = 37;
+  HEAD_AND_SHOULDERS_SHAMPOO = 38;
+  LEMON_TEA_POWDER = 39;
+  ORANGE_POWDER = 40;
+  PINK_LEMONADE_POWDER = 41;
+  CAPPUCCINO_POWDER = 42;
+  SALT_POWDER = 43;
+  SUGAR_POWDER = 44;
+  SUISSE_MOCHA_POWDER = 45;
+  PACIFIC_OCEAN_SURFACE_WATER = 46;
+}
+
 message Point {
   double x = 1 [features.field_presence = LEGACY_REQUIRED];
   double y = 2 [features.field_presence = LEGACY_REQUIRED];
@@ -519,6 +570,41 @@ message MakeNamedMaterial {
   Material material = 2 [features.field_presence = LEGACY_REQUIRED];
 }
 
+message MakeNamedMedium {
+  message Homogeneous {
+    // If using pbrt_proto::v3::Canonicalize, sigma_a will be filled with the
+    // default color if none of the other color-determining parameters are set.
+    MeasuredSubsurfaces preset = 1 [features.field_presence = EXPLICIT];
+    Spectrum sigma_a = 2 [features.field_presence = EXPLICIT];
+    Spectrum sigma_s = 3 [features.field_presence = EXPLICIT];
+    double g = 4 [default = 0.0];
+    double scale = 5 [default = 1.0];
+  }
+
+  message Heterogeneous {
+    // If using pbrt_proto::v3::Canonicalize, sigma_a will be filled with the
+    // default color if none of the other color-determining parameters are set.
+    MeasuredSubsurfaces preset = 1 [features.field_presence = EXPLICIT];
+    Spectrum sigma_a = 2 [features.field_presence = EXPLICIT];
+    Spectrum sigma_s = 3 [features.field_presence = EXPLICIT];
+    double g = 4 [default = 0.0];
+    double scale = 5 [default = 1.0];
+    Point p0 = 6  [features.field_presence = EXPLICIT];
+    Point p1 = 7  [features.field_presence = EXPLICIT];
+    int32 nx = 8 [default = 1];
+    int32 ny = 9 [default = 1];
+    int32 nz = 10 [default = 1];
+    repeated double density = 11;
+  }
+
+  string name = 1 [features.field_presence = LEGACY_REQUIRED];
+
+  oneof medium_type {
+    Homogeneous homogeneous = 2;
+    Heterogeneous heterogeneous = 3;
+  }
+}
+
 message Material {
   message Disney {
     SpectrumTextureParameter color = 1 [features.field_presence = EXPLICIT];
@@ -629,57 +715,6 @@ message Material {
   }
 
   message Subsurface {
-    enum MeasuredSubsurfaces {
-      option features.enum_type = CLOSED;
-      APPLE = 0;
-      CHICKEN1 = 1;
-      CHICKEN2 = 2;
-      CREAM = 3;
-      KETCHUP = 4;
-      MARBLE = 5;
-      POTATO = 6;
-      SKIMMILK = 7;
-      SKIN1 = 8;
-      SKIN2 = 9;
-      SPECTRALON = 10;
-      WHOLEMILK = 11;
-      LOWFAT_MILK = 12;
-      REDUCED_MILK = 13;
-      REGULAR_MILK = 14;
-      ESPRESSO = 15;
-      MINT_MOCHA_COFFEE = 16;
-      LOWFAT_SOY_MILK = 17;
-      REGULAR_SOY_MILK = 18;
-      LOWFAT_CHOCOLATE_MILK = 19;
-      REGULAR_CHOCOLATE_MILK = 20;
-      COKE = 21;
-      PEPSI = 22;
-      SPRITE = 23;
-      GATORADE = 24;
-      CHARDONNAY = 25;
-      WHITE_ZINFANDEL = 26;
-      MERLOT = 27;
-      BUDWEISER_BEER = 28;
-      COORS_LIGHT_BEER = 29;
-      CLOROX = 30;
-      APPLE_JUICE = 31;
-      CRANBERRY_JUICE = 32;
-      GRAPE_JUICE = 33;
-      RUBY_GRAPEFRUIT_JUICE = 34;
-      WHITE_GRAPEFRUIT_JUICE = 35;
-      SHAMPOO = 36;
-      STRAWBERRY_SHAMPOO = 37;
-      HEAD_AND_SHOULDERS_SHAMPOO = 38;
-      LEMON_TEA_POWDER = 39;
-      ORANGE_POWDER = 40;
-      PINK_LEMONADE_POWDER = 41;
-      CAPPUCCINO_POWDER = 42;
-      SALT_POWDER = 43;
-      SUGAR_POWDER = 44;
-      SUISSE_MOCHA_POWDER = 45;
-      PACIFIC_OCEAN_SURFACE_WATER = 46;
-    }
-
     // If using pbrt_proto::v3::Canonicalize, there is no need to check this
     // field and the correct values will be filled into sigma_a and sigma_s.
     MeasuredSubsurfaces name = 1 [features.field_presence = EXPLICIT];
@@ -738,6 +773,11 @@ message Material {
     Translucent translucent = 13;
     Uber uber = 14;
   }
+}
+
+message MediumInterface {
+  string inside = 1 [features.field_presence = LEGACY_REQUIRED];
+  string outside = 2 [features.field_presence = LEGACY_REQUIRED];
 }
 
 message NamedMaterial {
@@ -1069,7 +1109,7 @@ message Shape {
     FloatTextureParameter speculartint = 25 [features.field_presence = EXPLICIT];
     FloatTextureParameter uroughness = 26 [features.field_presence = EXPLICIT];
     FloatTextureParameter vroughness = 27 [features.field_presence = EXPLICIT];
-    Material.Subsurface.MeasuredSubsurfaces name = 28 [features.field_presence = EXPLICIT];
+    MeasuredSubsurfaces name = 28 [features.field_presence = EXPLICIT];
     SpectrumTextureParameter color = 29 [features.field_presence = EXPLICIT];
     SpectrumTextureParameter k = 30 [features.field_presence = EXPLICIT];
     SpectrumTextureParameter Kd = 31 [features.field_presence = EXPLICIT];
@@ -1288,24 +1328,26 @@ message Directive {
     LightSource light_source = 16;
     LookAt look_at = 17;
     MakeNamedMaterial make_named_material = 18;
-    Material material = 19;
-    NamedMaterial named_material = 20;
-    ObjectBegin object_begin = 21;
-    ObjectEnd object_end = 22;
-    ObjectInstance object_instance = 23;
-    ReverseOrientation reverse_orientation = 24;
-    Rotate rotate = 25;
-    Sampler sampler = 26;
-    Shape shape = 27;
-    Scale scale = 28;
-    SpectrumTexture spectrum_texture = 29;
-    Transform transform = 30;
-    TransformBegin transform_begin = 31;
-    TransformEnd transform_end = 32;
-    TransformTimes transform_times = 33;
-    Translate translate = 34;
-    WorldBegin world_begin = 35;
-    WorldEnd world_end = 36;
+    MakeNamedMedium make_named_medium = 19;
+    Material material = 20;
+    MediumInterface medium_interface = 21;
+    NamedMaterial named_material = 22;
+    ObjectBegin object_begin = 23;
+    ObjectEnd object_end = 24;
+    ObjectInstance object_instance = 25;
+    ReverseOrientation reverse_orientation = 26;
+    Rotate rotate = 27;
+    Sampler sampler = 28;
+    Shape shape = 29;
+    Scale scale = 30;
+    SpectrumTexture spectrum_texture = 31;
+    Transform transform = 32;
+    TransformBegin transform_begin = 33;
+    TransformEnd transform_end = 34;
+    TransformTimes transform_times = 35;
+    Translate translate = 36;
+    WorldBegin world_begin = 37;
+    WorldEnd world_end = 38;
   }
 }
 

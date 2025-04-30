@@ -125,9 +125,16 @@ class Parser {
       absl::string_view material_name,
       absl::flat_hash_map<absl::string_view, Parameter>& parameters) = 0;
 
+  virtual absl::Status MakeNamedMedium(
+      absl::string_view medium_name,
+      absl::flat_hash_map<absl::string_view, Parameter>& parameters) = 0;
+
   virtual absl::Status Material(
       absl::string_view material_type,
       absl::flat_hash_map<absl::string_view, Parameter>& parameters) = 0;
+
+  virtual absl::Status MediumInterface(absl::string_view inside,
+                                       absl::string_view outside) = 0;
 
   virtual absl::Status NamedMaterial(absl::string_view material) = 0;
 
