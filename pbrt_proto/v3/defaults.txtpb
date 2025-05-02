@@ -1,0 +1,45 @@
+# proto-file: pbrt_proto/v3/defaults.proto
+# proto-message: pbrt_proto.v3.Defaults
+
+global_defaults {
+  directives {
+    accelerator {
+      bvh { }
+    }
+  }
+  directives {
+    camera {
+      perspective { }
+    }
+  }
+  directives {
+    film {
+      image { }
+    }
+  }
+  directives {
+    filter {
+      box { }
+    }
+  }
+  directives {
+    integrator {
+      path { }
+    }
+  }
+  directives {
+    sampler {
+      halton { }
+    }
+  }
+}
+default_material {
+  matte {
+    Kd {
+      uniform_spectrum: 0.5
+    }
+    sigma {
+      float_value: 0.0
+    }
+  }
+}

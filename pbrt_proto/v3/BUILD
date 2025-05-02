@@ -29,6 +29,34 @@ cc_test(
     ],
 )
 
+proto_library(
+    name = "defaults_proto",
+    srcs = ["defaults.proto"],
+    deps = [
+        ":pbrt_proto",
+    ],
+)
+
+genrule(
+    name = "defaults_binpb",
+    srcs = [
+        ":defaults.txtpb",
+    ],
+    outs = ["defaults.binpb"],
+    cmd = "cat $(execpath :defaults.txtpb) | " +
+          "$(execpath @protobuf//:protoc) " +
+          "--encode=pbrt_proto.v3.Defaults " +
+          "--deterministic_output " +
+          "--descriptor_set_in=$(execpath :defaults_proto):$(execpath :pbrt_proto) " +
+          "> $@",
+    tools = [
+        ":defaults_proto",
+        ":pbrt_proto",
+        "@protobuf//:protoc",
+    ],
+    visibility = ["//visibility:public"],
+)
+
 cc_library(
     name = "defaults",
     srcs = ["defaults.cc"],

@@ -1,0 +1,25 @@
+syntax = "proto2";
+
+import "pbrt_proto/v3/pbrt.proto";
+
+package pbrt_proto.v3;
+
+// This protocol buffer represents the structure of the static data that is
+// needed for parsing PBRT Proto v3 inputs.
+message Defaults {
+  // This field contains the set of scene defaults that PBRT defines for scenes
+  // such as the default accelerator, the default camera, etc. When parsing a
+  // PBRT Proto model, these defaults can be fed into the parser ahead of the
+  // model being renderered to configure these bits of global state. Then the
+  // model is free to override them if required.
+  //
+  // This field is guaranteed to provide at an Accelerator, a Camera, a Film, a
+  // Filter, an Integrator, and a Sampler; however, their order and type (while
+  // static) are not defined as part of this interface.
+  required PbrtProto global_defaults = 1;
+
+  // This field contains the default material to use if none is specified. This
+  // cannot be part of global_defaults because materials cannot be specified
+  // before the WorldBegin directive.
+  required Material default_material = 2;
+}
