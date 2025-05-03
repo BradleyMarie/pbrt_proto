@@ -189,7 +189,41 @@ message Defaults {
 
   // A container for the default values for every type of Shape
   message DefaultShapes {
-    // TODO
+    // The default "cone" Shape is fully captured in its definition
+    reserved 1;
+
+    // The default "curve" Shape is fully captured in its definition
+    reserved 2;
+
+    // The default "cylinder" Shape is fully captured in its definition
+    reserved 3;
+
+    // The default "disk" Shape is fully captured in its definition
+    reserved 4;
+
+    // The default "heightfield" Shape is fully captured in its definition
+    reserved 5;
+
+    // The default "heightfield" Shape
+    required Shape.Hyperboloid hyperboloid = 6;
+
+    // The default "loopsubdiv" Shape is fully captured in its definition
+    reserved 7;
+
+    // The default "nurbs" Shape is fully captured in its definition
+    reserved 8;
+
+    // The default "paraboloid" Shape is fully captured in its definition
+    reserved 9;
+
+    // The default "plymesh" Shape
+    required Shape.PlyMesh plymesh = 10;
+
+    // The default "sphere" Shape is fully captured in its definition
+    reserved 11;
+
+    // The default "trianglemesh" Shape
+    required Shape.TriangleMesh trianglemesh = 12;
   }
 
   // The default values for every type of Shape
