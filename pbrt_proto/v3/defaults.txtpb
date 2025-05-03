@@ -43,3 +43,137 @@ default_material {
     }
   }
 }
+area_light_sources {
+  diffuse {
+    L {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    scale {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+  }
+}
+films {
+  image {
+    cropwindow {
+      x_min: 0.0
+      x_max: 1.0
+      y_min: 0.0
+      y_max: 1.0
+    }
+  }
+}
+float_textures {
+  bilerp {
+    v00 {
+      float_value: 0.0
+    }
+    v01 {
+      float_value: 1.0
+    }
+    v10 {
+      float_value: 0.0
+    }
+    v11 {
+      float_value: 1.0
+    }
+    v1 {
+      x: 1.0
+      y: 0.0
+      z: 0.0
+    }
+    v2 {
+      x: 0.0
+      y: 1.0
+      z: 0.0
+    }
+  }
+  checkerboard2d {
+    tex1 {
+      float_value: 1.0
+    }
+    tex2 {
+      float_value: 0.0
+    }
+    v1 {
+      x: 1.0
+      y: 0.0
+      z: 0.0
+    }
+    v2 {
+      x: 0.0
+      y: 1.0
+      z: 0.0
+    }
+  }
+  checkerboard3d {
+    tex1 {
+      float_value: 1.0
+    }
+    tex2 {
+      float_value: 0.0
+    }
+  }
+  constant {
+    value {
+      float_value: 1.0
+    }
+  }
+  dots {
+    inside {
+      float_value: 1.0
+    }
+    outside {
+      float_value: 0.0
+    }
+    v1 {
+      x: 1.0
+      y: 0.0
+      z: 0.0
+    }
+    v2 {
+      x: 0.0
+      y: 1.0
+      z: 0.0
+    }
+  }
+  imagemap {
+    v1 {
+      x: 1.0
+      y: 0.0
+      z: 0.0
+    }
+    v2 {
+      x: 0.0
+      y: 1.0
+      z: 0.0
+    }
+  }
+  mix {
+    tex1 {
+      float_value: 0.0
+    }
+    tex2 {
+      float_value: 1.0
+    }
+    amount {
+      float_value: 0.5
+    }
+  }
+  scale {
+    tex1 {
+      float_value: 1.0
+    }
+    tex2 {
+      float_value: 1.0
+    }
+  }
+}

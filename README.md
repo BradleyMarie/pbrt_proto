@@ -65,5 +65,3 @@ following roughly ordered set of principals was used to guide the process.
    possible to their PBRT equivalents; however, when the additional structure
    that Protocol Buffers provide enables the elimination of classes of errors it
    is permissible to do so.
-7) There is no need to check for the presence of any field unless explicitly
-   indicated in its documentation.

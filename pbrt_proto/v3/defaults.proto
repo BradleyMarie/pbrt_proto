@@ -6,6 +6,11 @@ package pbrt_proto.v3;
 
 // This protocol buffer represents the structure of the static data that is
 // needed for parsing PBRT Proto v3 inputs.
+//
+// For each directive with provided defaults, the expected usage is that the
+// renderer will first read its own input then merge the values from these
+// defaults into that proto. If there is no default for the type provide here,
+// then the parsed proto can be used directly.
 message Defaults {
   // This field contains the set of scene defaults that PBRT defines for scenes
   // such as the default accelerator, the default camera, etc. When parsing a
@@ -22,4 +27,67 @@ message Defaults {
   // cannot be part of global_defaults because materials cannot be specified
   // before the WorldBegin directive.
   required Material default_material = 2;
+
+  // A container for the default values for every type of AreaLightSource
+  message DefaultAreaLightSources {
+    // The default "diffuse" AreaLightSource
+    required AreaLightSource.Diffuse diffuse = 1;
+  }
+
+  // The default values for every type of AreaLightSource
+  required DefaultAreaLightSources area_light_sources = 3;
+
+  // A container for the default values for every type of Film
+  message DefaultFilms {
+    // The default "image" Film
+    required Film.Image image = 1;
+  }
+
+  // The default values for every type of Film
+  required DefaultFilms films = 4;
+
+  // A container for the default values for every type of FloatTexture
+  message DefaultFloatTextures {
+    // The default "bilerp" FloatTexture
+    required FloatTexture.Bilerp bilerp = 1;
+
+    // The default 2D "checkerboard" FloatTexture
+    required FloatTexture.Checkerboard2D checkerboard2d = 2;
+
+    // The default 3D "checkerboard" FloatTexture
+    required FloatTexture.Checkerboard2D checkerboard3d = 3;
+
+    // The default "constant" FloatTexture
+    required FloatTexture.Constant constant = 4;
+
+    // The default "dots" FloatTexture
+    required FloatTexture.Dots dots = 5;
+
+    // The default "fbm" FloatTexture is fully captured in its definition
+    reserved 6;
+
+    // The default "imagemap" FloatTexture
+    required FloatTexture.ImageMap imagemap = 7;
+
+    // The default "marble" FloatTexture is fully captured in its definition
+    reserved 8;
+
+    // The default "mix" FloatTexture
+    required FloatTexture.Mix mix = 9;
+
+    // The default "ptex" FloatTexture is fully captured in its definition
+    reserved 10;
+
+    // The default "scale" FloatTexture
+    required FloatTexture.Scale scale = 11;
+
+    // The default "windy" FloatTexture is fully captured in its definition
+    reserved 12;
+
+    // The default "wrinkled" FloatTexture is fully captured in its definition
+    reserved 13;
+  }
+
+  // The default values for every type of FloatTexture
+  required DefaultFloatTextures float_textures = 5;
 }
