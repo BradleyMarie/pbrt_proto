@@ -1,27 +1,24 @@
-edition = "2023";
+syntax = "proto2";
 
 package pbrt_proto.v3;
 
 enum AntialiasingMode {
-  option features.enum_type = CLOSED;
   CLOSEDFORM = 0;
   NONE = 1;
 }
 
 message BlackbodySpectrum {
-  double temperature = 1 [features.field_presence = LEGACY_REQUIRED];
-  double scale = 2 [features.field_presence = LEGACY_REQUIRED];
+  required double temperature = 1;
+  required double scale = 2;
 }
 
 enum ImageWrapping {
-  option features.enum_type = CLOSED;
   REPEAT = 0;
   BLACK = 1;
   CLAMP = 2;
 }
 
 enum Mapping2D {
-  option features.enum_type = CLOSED;
   UV = 0;
   SPHERICAL = 1;
   CYLINDRICAL = 2;
@@ -29,7 +26,6 @@ enum Mapping2D {
 }
 
 enum MeasuredSubsurface {
-  option features.enum_type = CLOSED;
   APPLE = 0;
   CHICKEN1 = 1;
   CHICKEN2 = 2;
@@ -80,36 +76,36 @@ enum MeasuredSubsurface {
 }
 
 message Point {
-  double x = 1 [features.field_presence = LEGACY_REQUIRED];
-  double y = 2 [features.field_presence = LEGACY_REQUIRED];
-  double z = 3 [features.field_presence = LEGACY_REQUIRED];
+  required double x = 1;
+  required double y = 2;
+  required double z = 3;
 }
 
 message RgbSpectrum {
-  double r = 1 [features.field_presence = LEGACY_REQUIRED];
-  double g = 2 [features.field_presence = LEGACY_REQUIRED];
-  double b = 3 [features.field_presence = LEGACY_REQUIRED];
+  required double r = 1;
+  required double g = 2;
+  required double b = 3;
 }
 
 message SampledSpectrum {
   message Sample {
-    double wavelength = 1 [features.field_presence = LEGACY_REQUIRED];
-    double intensity = 2 [features.field_presence = LEGACY_REQUIRED];
+    required double wavelength = 1;
+    required double intensity = 2;
   }
 
   repeated Sample samples = 1;
 }
 
 message XyzSpectrum {
-  double x = 1 [features.field_presence = LEGACY_REQUIRED];
-  double y = 2 [features.field_presence = LEGACY_REQUIRED];
-  double z = 3 [features.field_presence = LEGACY_REQUIRED];
+  required double x = 1;
+  required double y = 2;
+  required double z = 3;
 }
 
 message Vector {
-  double x = 1 [features.field_presence = LEGACY_REQUIRED];
-  double y = 2 [features.field_presence = LEGACY_REQUIRED];
-  double z = 3 [features.field_presence = LEGACY_REQUIRED];
+  required double x = 1;
+  required double y = 2;
+  required double z = 3;
 }
 
 message Spectrum {
@@ -144,23 +140,22 @@ message SpectrumTextureParameter {
 message Accelerator {
   message Bvh {
     enum SplitMethod {
-      option features.enum_type = CLOSED;
       SAH = 0;
       MIDDLE = 1;
       EQUAL = 2;
       HLBVH = 3;
     }
 
-    int32 maxnodeprims = 1 [default = 4];
-    SplitMethod splitmethod = 2;
+    optional int32 maxnodeprims = 1 [default = 4];
+    optional SplitMethod splitmethod = 2 [default = SAH];
   }
 
   message KdTree {
-    int32 intersectcost = 1 [default = 80];
-    int32 traversalcost = 2 [default = 1];
-    double emptybonus = 3 [default = 0.5];
-    int32 maxprims = 4 [default = 1];
-    int32 maxdepth = 5 [default = -1];
+    optional int32 intersectcost = 1 [default = 80];
+    optional int32 traversalcost = 2 [default = 1];
+    optional double emptybonus = 3 [default = 0.5];
+    optional int32 maxprims = 4 [default = 1];
+    optional int32 maxdepth = 5 [default = -1];
   }
 
   oneof accelerator_type {
@@ -171,21 +166,20 @@ message Accelerator {
 
 message ActiveTransform {
   enum ActiveTransformation {
-    option features.enum_type = CLOSED;
     ALL = 1;
     START_TIME = 2;
     END_TIME = 3;
   };
 
-  ActiveTransformation active = 1 [features.field_presence = LEGACY_REQUIRED];
+  optional ActiveTransformation active = 1 [default = ALL];
 }
 
 message AreaLightSource {
   message Diffuse {
-    Spectrum L = 1 [features.field_presence = EXPLICIT];
-    bool twosided = 2 [default = false];
-    int32 samples = 3 [default = 1];
-    Spectrum scale = 4 [features.field_presence = EXPLICIT];
+    optional Spectrum L = 1;
+    optional bool twosided = 2 [default = false];
+    optional int32 samples = 3 [default = 1];
+    optional Spectrum scale = 4;
   }
 
   oneof area_light_source_type {
@@ -203,44 +197,44 @@ message AttributeEnd {
 
 message Camera {
   message ScreenWindow {
-    double x_min = 1;
-    double x_max = 2;
-    double y_min = 3;
-    double y_max = 4;
+    required double x_min = 1;
+    required double x_max = 2;
+    required double y_min = 3;
+    required double y_max = 4;
   }
 
   message Environment {
-    double shutteropen = 1 [default = 0.0];
-    double shutterclose = 2 [default = 1.0];
+    optional double shutteropen = 1 [default = 0.0];
+    optional double shutterclose = 2 [default = 1.0];
   }
 
   message Orthographic {
-    double lensradius = 1 [default = 0.0];
-    double focaldistance = 2 [default = 1e6];
-    double frameaspectratio = 3 [features.field_presence = EXPLICIT];
-    ScreenWindow screenwindow = 4  [features.field_presence = EXPLICIT];
-    double shutteropen = 5 [default = 0.0];
-    double shutterclose = 6 [default = 1.0];
+    optional double lensradius = 1 [default = 0.0];
+    optional double focaldistance = 2 [default = 1e6];
+    optional double frameaspectratio = 3;  // Must check
+    optional ScreenWindow screenwindow = 4;
+    optional double shutteropen = 5 [default = 0.0];
+    optional double shutterclose = 6 [default = 1.0];
   }
 
   message Perspective {
-    double lensradius = 1 [default = 0.0];
-    double focaldistance = 2 [default = 1e6];
-    double frameaspectratio = 3 [features.field_presence = EXPLICIT];
-    ScreenWindow screenwindow = 4 [features.field_presence = EXPLICIT];
-    double fov = 5 [default = 90.0];
-    double halffov = 6 [features.field_presence = EXPLICIT];
-    double shutteropen = 7 [default = 0.0];
-    double shutterclose = 8 [default = 1.0];
+    optional double lensradius = 1 [default = 0.0];
+    optional double focaldistance = 2 [default = 1e6];
+    optional double frameaspectratio = 3;  // Must check
+    optional ScreenWindow screenwindow = 4;
+    optional double fov = 5 [default = 90.0];
+    optional double halffov = 6;  // Must check, overrides fov
+    optional double shutteropen = 7 [default = 0.0];
+    optional double shutterclose = 8 [default = 1.0];
   }
 
   message Realistic {
-    string lensfile = 1;
-    double aperturediameter = 2 [default = 1.0];
-    double focaldistance = 3 [default = 10.0];
-    bool simpleweighting = 4 [default = true];
-    double shutteropen = 5 [default = 0.0];
-    double shutterclose = 6 [default = 1.0];
+    optional string lensfile = 1 [default = ""];
+    optional double aperturediameter = 2 [default = 1.0];
+    optional double focaldistance = 3 [default = 10.0];
+    optional bool simpleweighting = 4 [default = true];
+    optional double shutteropen = 5 [default = 0.0];
+    optional double shutterclose = 6 [default = 1.0];
   }
 
   oneof camera_type {
@@ -252,48 +246,48 @@ message Camera {
 }
 
 message ConcatTransform {
-  double m00 = 1 [features.field_presence = LEGACY_REQUIRED];
-  double m01 = 2 [features.field_presence = LEGACY_REQUIRED];
-  double m02 = 3 [features.field_presence = LEGACY_REQUIRED];
-  double m03 = 4 [features.field_presence = LEGACY_REQUIRED];
-  double m10 = 5 [features.field_presence = LEGACY_REQUIRED];
-  double m11 = 6 [features.field_presence = LEGACY_REQUIRED];
-  double m12 = 7 [features.field_presence = LEGACY_REQUIRED];
-  double m13 = 8 [features.field_presence = LEGACY_REQUIRED];
-  double m20 = 9 [features.field_presence = LEGACY_REQUIRED];
-  double m21 = 10 [features.field_presence = LEGACY_REQUIRED];
-  double m22 = 11 [features.field_presence = LEGACY_REQUIRED];
-  double m23 = 12 [features.field_presence = LEGACY_REQUIRED];
-  double m30 = 13 [features.field_presence = LEGACY_REQUIRED];
-  double m31 = 14 [features.field_presence = LEGACY_REQUIRED];
-  double m32 = 15 [features.field_presence = LEGACY_REQUIRED];
-  double m33 = 16 [features.field_presence = LEGACY_REQUIRED];
+  required double m00 = 1;
+  required double m01 = 2;
+  required double m02 = 3;
+  required double m03 = 4;
+  required double m10 = 5;
+  required double m11 = 6;
+  required double m12 = 7;
+  required double m13 = 8;
+  required double m20 = 9;
+  required double m21 = 10;
+  required double m22 = 11;
+  required double m23 = 12;
+  required double m30 = 13;
+  required double m31 = 14;
+  required double m32 = 15;
+  required double m33 = 16;
 }
 
 message CoordinateSystem {
-  string name = 1 [features.field_presence = LEGACY_REQUIRED];
+  required string name = 1;
 }
 
 message CoordSysTransform {
-  string name = 1 [features.field_presence = LEGACY_REQUIRED];
+  required string name = 1;
 }
 
 message Film {
   message Image {
     message CropWindow {
-      double x_min = 1 [default = 0.0];
-      double x_max = 2 [default = 1.0];
-      double y_min = 3 [default = 0.0];
-      double y_max = 4 [default = 1.0];
+      required double x_min = 1;
+      required double x_max = 2;
+      required double y_min = 3;
+      required double y_max = 4;
     };
 
-    int32 xresolution = 1 [default = 1280];
-    int32 yresolution = 2  [default = 720];
-    CropWindow cropwindow = 3;
-    double scale = 4  [default = 1.0];
-    double maxsampleluminance = 5 [default = inf];
-    double diagonal = 6 [default = 35.0];
-    string filename = 7 [default = "pbrt.exr"];
+    optional int32 xresolution = 1 [default = 1280];
+    optional int32 yresolution = 2  [default = 720];
+    optional CropWindow cropwindow = 3;
+    optional double scale = 4  [default = 1.0];
+    optional double maxsampleluminance = 5 [default = inf];
+    optional double diagonal = 6 [default = 35.0];
+    optional string filename = 7 [default = "pbrt.exr"];
   }
 
   oneof film_type {
@@ -303,32 +297,32 @@ message Film {
 
 message Filter {
   message Box {
-    double xwidth = 1 [default = 0.5];
-    double ywidth = 2 [default = 0.5];
+    optional double xwidth = 1 [default = 0.5];
+    optional double ywidth = 2 [default = 0.5];
   }
 
   message Gaussian {
-    double xwidth = 1 [default = 2.0];
-    double ywidth = 2 [default = 2.0];
-    double alpha = 3 [default = 2.0];
+    optional double xwidth = 1 [default = 2.0];
+    optional double ywidth = 2 [default = 2.0];
+    optional double alpha = 3 [default = 2.0];
   }
 
   message Mitchell {
-    double xwidth = 1 [default = 0.5];
-    double ywidth = 2 [default = 0.5];
-    double B = 3 [default = 0.333333333333333333];
-    double C = 4 [default = 0.333333333333333333];
+    optional double xwidth = 1 [default = 0.5];
+    optional double ywidth = 2 [default = 0.5];
+    optional double B = 3 [default = 0.333333333333333333];
+    optional double C = 4 [default = 0.333333333333333333];
   }
 
   message Sinc {
-    double xwidth = 1 [default = 4.0];
-    double ywidth = 2 [default = 4.0];
-    double tau = 3 [default = 3.0];
+    optional double xwidth = 1 [default = 4.0];
+    optional double ywidth = 2 [default = 4.0];
+    optional double tau = 3 [default = 3.0];
   }
 
   message Triangle {
-    double xwidth = 1 [default = 2.0];
-    double ywidth = 2 [default = 2.0];
+    optional double xwidth = 1 [default = 2.0];
+    optional double ywidth = 2 [default = 2.0];
   }
 
   oneof filter_type {
@@ -341,98 +335,98 @@ message Filter {
 }
 
 message FloatTexture {
-  string name = 1 [features.field_presence = LEGACY_REQUIRED];
+  required string name = 1;
 
   message Bilerp {
-    FloatTextureParameter v00 = 1;
-    FloatTextureParameter v01 = 2;
-    FloatTextureParameter v10 = 3;
-    FloatTextureParameter v11 = 4;
-    Mapping2D mapping = 5 [default = UV];
-    double uscale = 6 [default = 1.0];
-    double vscale = 7 [default = 1.0];
-    double udelta = 8 [default = 0.0];
-    double vdelta = 9 [default = 0.0];
-    Vector v1 = 10 [features.field_presence = EXPLICIT];
-    Vector v2 = 11 [features.field_presence = EXPLICIT];
+    optional FloatTextureParameter v00 = 1;
+    optional FloatTextureParameter v01 = 2;
+    optional FloatTextureParameter v10 = 3;
+    optional FloatTextureParameter v11 = 4;
+    optional Mapping2D mapping = 5 [default = UV];
+    optional double uscale = 6 [default = 1.0];
+    optional double vscale = 7 [default = 1.0];
+    optional double udelta = 8 [default = 0.0];
+    optional double vdelta = 9 [default = 0.0];
+    optional Vector v1 = 10;
+    optional Vector v2 = 11;
   }
 
   message Checkerboard2D {
-    FloatTextureParameter tex1 = 1;
-    FloatTextureParameter tex2 = 2;
-    AntialiasingMode aamode = 3 [default = CLOSEDFORM];
-    Mapping2D mapping = 4 [default = UV];
-    double uscale = 5 [default = 1.0];
-    double vscale = 6 [default = 1.0];
-    double udelta = 7 [default = 0.0];
-    double vdelta = 8 [default = 0.0];
-    Vector v1 = 9 [features.field_presence = EXPLICIT];
-    Vector v2 = 10 [features.field_presence = EXPLICIT];
+    optional FloatTextureParameter tex1 = 1;
+    optional FloatTextureParameter tex2 = 2;
+    optional AntialiasingMode aamode = 3 [default = CLOSEDFORM];
+    optional Mapping2D mapping = 4 [default = UV];
+    optional double uscale = 5 [default = 1.0];
+    optional double vscale = 6 [default = 1.0];
+    optional double udelta = 7 [default = 0.0];
+    optional double vdelta = 8 [default = 0.0];
+    optional Vector v1 = 9;
+    optional Vector v2 = 10;
   }
 
   message Checkerboard3D {
-    FloatTextureParameter tex1 = 1;
-    FloatTextureParameter tex2 = 2;
+    optional FloatTextureParameter tex1 = 1;
+    optional FloatTextureParameter tex2 = 2;
   }
 
   message Constant {
-    FloatTextureParameter value = 1;
+    optional FloatTextureParameter value = 1;
   }
 
   message Dots {
-    FloatTextureParameter inside = 1;
-    FloatTextureParameter outside = 2;
-    Mapping2D mapping = 3 [default = UV];
-    double uscale = 4 [default = 1.0];
-    double vscale = 5 [default = 1.0];
-    double udelta = 6 [default = 0.0];
-    double vdelta = 7 [default = 0.0];
-    Vector v1 = 8 [features.field_presence = EXPLICIT];
-    Vector v2 = 9 [features.field_presence = EXPLICIT];
+    optional FloatTextureParameter inside = 1;
+    optional FloatTextureParameter outside = 2;
+    optional Mapping2D mapping = 3 [default = UV];
+    optional double uscale = 4 [default = 1.0];
+    optional double vscale = 5 [default = 1.0];
+    optional double udelta = 6 [default = 0.0];
+    optional double vdelta = 7 [default = 0.0];
+    optional Vector v1 = 8;
+    optional Vector v2 = 9;
   }
 
   message FBm {
-    int32 octaves = 1 [default = 8];
-    double roughness = 2 [default = 0.5];
+    optional int32 octaves = 1 [default = 8];
+    optional double roughness = 2 [default = 0.5];
   }
 
   message ImageMap {
-    string filename = 1 [default = ""];
-    ImageWrapping wrap = 2 [default = REPEAT];
-    double maxanisotropy = 3 [default = 8.0];
-    bool trilinear = 4 [default = false];
-    double scale = 5 [default = 1.0];
-    bool gamma = 6 [features.field_presence = EXPLICIT];
-    Mapping2D mapping = 7 [default = UV];
-    double uscale = 8 [default = 1.0];
-    double vscale = 9 [default = 1.0];
-    double udelta = 10 [default = 0.0];
-    double vdelta = 11 [default = 0.0];
-    Vector v1 = 12 [features.field_presence = EXPLICIT];
-    Vector v2 = 13 [features.field_presence = EXPLICIT];
+    optional string filename = 1 [default = ""];
+    optional ImageWrapping wrap = 2 [default = REPEAT];
+    optional double maxanisotropy = 3 [default = 8.0];
+    optional bool trilinear = 4 [default = false];
+    optional double scale = 5 [default = 1.0];
+    optional bool gamma = 6;  // Must check, default varies by filetype
+    optional Mapping2D mapping = 7 [default = UV];
+    optional double uscale = 8 [default = 1.0];
+    optional double vscale = 9 [default = 1.0];
+    optional double udelta = 10 [default = 0.0];
+    optional double vdelta = 11 [default = 0.0];
+    optional Vector v1 = 12;
+    optional Vector v2 = 13;
   }
 
   message Marble {
-    int32 octaves = 1 [default = 8];
-    double roughness = 2 [default = 0.5];
-    double scale = 3 [default = 1.0];
-    double variation = 4 [default = 0.2];
+    optional int32 octaves = 1 [default = 8];
+    optional double roughness = 2 [default = 0.5];
+    optional double scale = 3 [default = 1.0];
+    optional double variation = 4 [default = 0.2];
   }
 
   message Mix {
-    FloatTextureParameter tex1 = 1;
-    FloatTextureParameter tex2 = 2;
-    FloatTextureParameter amount = 3;
+    optional FloatTextureParameter tex1 = 1;
+    optional FloatTextureParameter tex2 = 2;
+    optional FloatTextureParameter amount = 3;
   }
 
   message Ptex {
-    string filename = 1 [default = ""];
-    double gamma = 2 [default = 2.2];
+    optional string filename = 1 [default = ""];
+    optional double gamma = 2 [default = 2.2];
   }
 
   message Scale {
-    FloatTextureParameter tex1 = 1;
-    FloatTextureParameter tex2 = 2;
+    optional FloatTextureParameter tex1 = 1;
+    optional FloatTextureParameter tex2 = 2;
   }
 
   message Windy {
@@ -440,8 +434,8 @@ message FloatTexture {
   }
 
   message Wrinkled {
-    int32 octaves = 1 [default = 8];
-    double roughness = 2 [default = 0.5];
+    optional int32 octaves = 1 [default = 8];
+    optional double roughness = 2 [default = 0.5];
   }
 
   oneof float_texture_type {
@@ -466,91 +460,82 @@ message Identity {
 }
 
 message Include {
-  string path = 1 [features.field_presence = LEGACY_REQUIRED];
+  required string path = 1;
 }
 
 message Integrator {
   enum LightSampleStrategy {
-    option features.enum_type = CLOSED;
     SPATIAL = 0;
     POWER = 1;
     UNIFORM = 2;
   }
 
   message PixelBounds {
-    int32 x_min = 1 [default = 0];
-    int32 x_max = 2 [features.field_presence = EXPLICIT];
-    int32 y_min = 3 [default = 0];
-    int32 y_max = 4 [features.field_presence = EXPLICIT];
+    required int32 x_min = 1;
+    required int32 x_max = 2;
+    required int32 y_min = 3;
+    required int32 y_max = 4;
   }
 
   message AmbientOcclusion {
-    bool cossample = 1 [default = true];
-    int32 nsamples = 2 [default = 64];
-    PixelBounds pixelbounds = 3;
+    optional bool cossample = 1 [default = true];
+    optional int32 nsamples = 2 [default = 64];
+    optional PixelBounds pixelbounds = 3;
   }
 
   message Bdpt {
-    int32 maxdepth = 1 [default = 5];
-    bool visualizestrategies = 2 [default = false];
-    bool visualizeweights = 3 [default = false];
-    LightSampleStrategy lightsamplestrategy = 4 [default = POWER];
-    PixelBounds pixelbounds = 5;
+    optional int32 maxdepth = 1 [default = 5];
+    optional bool visualizestrategies = 2 [default = false];
+    optional bool visualizeweights = 3 [default = false];
+    optional LightSampleStrategy lightsamplestrategy = 4 [default = POWER];
+    optional PixelBounds pixelbounds = 5;
   }
 
   message DirectLighting {
     enum Strategy {
-      option features.enum_type = CLOSED;
       ALL = 0;
       ONE = 1;
     }
 
-    int32 maxdepth = 1 [default = 5];
-    Strategy strategy = 2;
-    PixelBounds pixelbounds = 3;
+    optional int32 maxdepth = 1 [default = 5];
+    optional Strategy strategy = 2 [default = ALL];
+    optional PixelBounds pixelbounds = 3;
   }
 
   message Mlt {
-    int32 maxdepth = 1 [default = 5];
-    int32 bootstrapsamples = 2 [default = 100000];
-    int32 chains = 3 [default = 1000];
-    int32 mutationsperpixel = 4 [default = 100];
-    double largestepprobability = 5 [default = 0.3];
-    double sigma = 6 [default = 0.01];
+    optional int32 maxdepth = 1 [default = 5];
+    optional int32 bootstrapsamples = 2 [default = 100000];
+    optional int32 chains = 3 [default = 1000];
+    optional int32 mutationsperpixel = 4 [default = 100];
+    optional double largestepprobability = 5 [default = 0.3];
+    optional double sigma = 6 [default = 0.01];
   }
 
   message Path {
-    int32 maxdepth = 1 [default = 5];
-    double rrthreshold = 2 [default = 1.0];
-    LightSampleStrategy lightsamplestrategy = 3 [default = SPATIAL];
-    PixelBounds pixelbounds = 4;
+    optional int32 maxdepth = 1 [default = 5];
+    optional double rrthreshold = 2 [default = 1.0];
+    optional LightSampleStrategy lightsamplestrategy = 3 [default = SPATIAL];
+    optional PixelBounds pixelbounds = 4;
   }
 
   message Sppm {
-    int32 maxdepth = 1 [default = 5];
-    int32 numiterations = 2 [default = 64];
-    int32 photonsperiteration = 3 [default = -1];
-    int32 imagewritefrequency = 4 [default = -2147483648];
-    double radius = 5 [default = 1.0];
+    optional int32 maxdepth = 1 [default = 5];
+    optional int32 numiterations = 2 [default = 64];
+    optional int32 photonsperiteration = 3 [default = -1];
+    optional int32 imagewritefrequency = 4 [default = -2147483648];
+    optional double radius = 5 [default = 1.0];
   }
 
   message VolPath {
-    int32 maxdepth = 1 [default = 5];
-    double rrthreshold = 2 [default = 1.0];
-    LightSampleStrategy lightsamplestrategy = 3 [default = SPATIAL];
-    PixelBounds pixelbounds = 4;
+    optional int32 maxdepth = 1 [default = 5];
+    optional double rrthreshold = 2 [default = 1.0];
+    optional LightSampleStrategy lightsamplestrategy = 3 [default = SPATIAL];
+    optional PixelBounds pixelbounds = 4;
   }
 
   message Whitted {
-    message PixelBounds {
-      int32 x_min = 1 [default = 0];
-      int32 x_max = 2 [features.field_presence = EXPLICIT];
-      int32 y_min = 3 [default = 0];
-      int32 y_max = 4 [features.field_presence = EXPLICIT];
-    }
-
-    int32 maxdepth = 1 [default = 5];
-    PixelBounds pixelbounds = 2;
+    optional int32 maxdepth = 1 [default = 5];
+    optional PixelBounds pixelbounds = 2;
   }
 
   oneof integrator_type {
@@ -566,38 +551,34 @@ message Integrator {
 }
 
 message MakeNamedMaterial {
-  string name = 1 [features.field_presence = LEGACY_REQUIRED];
-  Material material = 2 [features.field_presence = LEGACY_REQUIRED];
+  required string name = 1;
+  required Material material = 2;
 }
 
 message MakeNamedMedium {
   message Homogeneous {
-    // If using pbrt_proto::v3::Canonicalize, sigma_a will be filled with the
-    // default color if none of the other color-determining parameters are set.
-    MeasuredSubsurface preset = 1 [features.field_presence = EXPLICIT];
-    Spectrum sigma_a = 2 [features.field_presence = EXPLICIT];
-    Spectrum sigma_s = 3 [features.field_presence = EXPLICIT];
-    double g = 4 [default = 0.0];
-    double scale = 5 [default = 1.0];
+    optional MeasuredSubsurface preset = 1 [default = WHOLEMILK];
+    optional Spectrum sigma_a = 2;
+    optional Spectrum sigma_s = 3;
+    optional double g = 4 [default = 0.0];
+    optional double scale = 5 [default = 1.0];
   }
 
   message Heterogeneous {
-    // If using pbrt_proto::v3::Canonicalize, sigma_a will be filled with the
-    // default color if none of the other color-determining parameters are set.
-    MeasuredSubsurface preset = 1 [features.field_presence = EXPLICIT];
-    Spectrum sigma_a = 2 [features.field_presence = EXPLICIT];
-    Spectrum sigma_s = 3 [features.field_presence = EXPLICIT];
-    double g = 4 [default = 0.0];
-    double scale = 5 [default = 1.0];
-    Point p0 = 6  [features.field_presence = EXPLICIT];
-    Point p1 = 7  [features.field_presence = EXPLICIT];
-    int32 nx = 8 [default = 1];
-    int32 ny = 9 [default = 1];
-    int32 nz = 10 [default = 1];
+    optional MeasuredSubsurface preset = 1 [default = WHOLEMILK];
+    optional Spectrum sigma_a = 2;
+    optional Spectrum sigma_s = 3;
+    optional double g = 4 [default = 0.0];
+    optional double scale = 5 [default = 1.0];
+    optional Point p0 = 6;
+    optional Point p1 = 7;
+    optional int32 nx = 8 [default = 1];
+    optional int32 ny = 9 [default = 1];
+    optional int32 nz = 10 [default = 1];
     repeated double density = 11;  // Must check size == nx * ny * nz
   }
 
-  string name = 1 [features.field_presence = LEGACY_REQUIRED];
+  required string name = 1;
 
   oneof medium_type {
     Homogeneous homogeneous = 2;
@@ -607,154 +588,146 @@ message MakeNamedMedium {
 
 message Material {
   message Disney {
-    SpectrumTextureParameter color = 1 [features.field_presence = EXPLICIT];
-    FloatTextureParameter anisotropic = 2 [features.field_presence = EXPLICIT];
-    FloatTextureParameter clearcoat = 3 [features.field_presence = EXPLICIT];
-    FloatTextureParameter clearcoatgloss = 4 [features.field_presence = EXPLICIT];
-    FloatTextureParameter eta = 5 [features.field_presence = EXPLICIT];
-    FloatTextureParameter metallic = 6 [features.field_presence = EXPLICIT];
-    FloatTextureParameter roughness = 7 [features.field_presence = EXPLICIT];
-    SpectrumTextureParameter scatterdistance = 8 [features.field_presence = EXPLICIT];
-    FloatTextureParameter sheen = 9 [features.field_presence = EXPLICIT];
-    FloatTextureParameter sheentint = 10 [features.field_presence = EXPLICIT];
-    FloatTextureParameter spectrans = 11 [features.field_presence = EXPLICIT];
-    FloatTextureParameter speculartint = 12 [features.field_presence = EXPLICIT];
-    bool thin = 13 [default = false];
-    FloatTextureParameter difftrans = 14 [features.field_presence = EXPLICIT];
-    FloatTextureParameter flatness = 15 [features.field_presence = EXPLICIT];
-    FloatTextureParameter bumpmap = 16 [features.field_presence = EXPLICIT];
+    optional SpectrumTextureParameter color = 1;
+    optional FloatTextureParameter anisotropic = 2;
+    optional FloatTextureParameter clearcoat = 3;
+    optional FloatTextureParameter clearcoatgloss = 4;
+    optional FloatTextureParameter eta = 5;
+    optional FloatTextureParameter metallic = 6;
+    optional FloatTextureParameter roughness = 7;
+    optional SpectrumTextureParameter scatterdistance = 8;
+    optional FloatTextureParameter sheen = 9;
+    optional FloatTextureParameter sheentint = 10;
+    optional FloatTextureParameter spectrans = 11;
+    optional FloatTextureParameter speculartint = 12;
+    optional bool thin = 13 [default = false];
+    optional FloatTextureParameter difftrans = 14;
+    optional FloatTextureParameter flatness = 15;
+    optional FloatTextureParameter bumpmap = 16;
   }
 
   message Fourier {
-    string bsdffile = 1 [default = ""];
-    FloatTextureParameter bumpmap = 2 [features.field_presence = EXPLICIT];
+    optional string bsdffile = 1 [default = ""];
+    optional FloatTextureParameter bumpmap = 2;
   }
 
   message Glass {
-    SpectrumTextureParameter Kr = 1 [features.field_presence = EXPLICIT];
-    SpectrumTextureParameter Kt = 2 [features.field_presence = EXPLICIT];
-    FloatTextureParameter eta = 3 [features.field_presence = EXPLICIT];
-    FloatTextureParameter uroughness = 4 [features.field_presence = EXPLICIT];
-    FloatTextureParameter vroughness = 5 [features.field_presence = EXPLICIT];
-    bool remaproughness = 7 [default = true];
-    FloatTextureParameter bumpmap = 8 [features.field_presence = EXPLICIT];
+    optional SpectrumTextureParameter Kr = 1;
+    optional SpectrumTextureParameter Kt = 2;
+    optional FloatTextureParameter eta = 3;
+    optional FloatTextureParameter uroughness = 4;
+    optional FloatTextureParameter vroughness = 5;
+    optional bool remaproughness = 7 [default = true];
+    optional FloatTextureParameter bumpmap = 8;
   }
 
   message Hair {
-    // If using pbrt_proto::v3::Canonicalize, sigma_a will be filled with the
-    // default color if none of the other color-determining parameters are set.
-    SpectrumTextureParameter sigma_a = 1 [features.field_presence = EXPLICIT];  // Must check
-    SpectrumTextureParameter color = 2 [features.field_presence = EXPLICIT];  // Must check
-    FloatTextureParameter eumelanin = 3 [features.field_presence = EXPLICIT];
-    FloatTextureParameter pheomelanin = 4 [features.field_presence = EXPLICIT];
-    FloatTextureParameter eta = 5 [features.field_presence = EXPLICIT];
-    FloatTextureParameter beta_m = 6 [features.field_presence = EXPLICIT];
-    FloatTextureParameter beta_n = 7 [features.field_presence = EXPLICIT];
-    FloatTextureParameter alpha = 8 [features.field_presence = EXPLICIT];
-    FloatTextureParameter bumpmap = 9 [features.field_presence = EXPLICIT];
+    optional SpectrumTextureParameter sigma_a = 1; // Must check
+    optional SpectrumTextureParameter color = 2; // Must check
+    optional FloatTextureParameter eumelanin = 3;
+    optional FloatTextureParameter pheomelanin = 4;
+    optional FloatTextureParameter eta = 5;
+    optional FloatTextureParameter beta_m = 6;
+    optional FloatTextureParameter beta_n = 7;
+    optional FloatTextureParameter alpha = 8;
+    optional FloatTextureParameter bumpmap = 9;
   }
 
   message KdSubsurface {
-    SpectrumTextureParameter Kd = 1 [features.field_presence = EXPLICIT];
-    FloatTextureParameter mfp = 2 [features.field_presence = EXPLICIT];
-    SpectrumTextureParameter Kr = 3 [features.field_presence = EXPLICIT];
-    SpectrumTextureParameter Kt = 4 [features.field_presence = EXPLICIT];
-    FloatTextureParameter uroughness = 5 [features.field_presence = EXPLICIT];
-    FloatTextureParameter vroughness = 6 [features.field_presence = EXPLICIT];
-    double eta = 7 [default = 1.33];
-    double scale = 8 [default = 1.0];
-    double g = 9 [default = 0.0];
-    bool remaproughness = 10 [default = true];
-    FloatTextureParameter bumpmap = 11 [features.field_presence = EXPLICIT];
+    optional SpectrumTextureParameter Kd = 1;
+    optional FloatTextureParameter mfp = 2;
+    optional SpectrumTextureParameter Kr = 3;
+    optional SpectrumTextureParameter Kt = 4;
+    optional FloatTextureParameter uroughness = 5;
+    optional FloatTextureParameter vroughness = 6;
+    optional double eta = 7 [default = 1.33];
+    optional double scale = 8 [default = 1.0];
+    optional double g = 9 [default = 0.0];
+    optional bool remaproughness = 10 [default = true];
+    optional FloatTextureParameter bumpmap = 11;
   }
 
   message Matte {
-    SpectrumTextureParameter Kd = 1 [features.field_presence = EXPLICIT];
-    FloatTextureParameter sigma = 2 [features.field_presence = EXPLICIT];
-    FloatTextureParameter bumpmap = 3 [features.field_presence = EXPLICIT];
+    optional SpectrumTextureParameter Kd = 1;
+    optional FloatTextureParameter sigma = 2;
+    optional FloatTextureParameter bumpmap = 3;
   }
 
   message Metal {
-    // If using pbrt_proto::v3::Canonicalize, uroughness and vroughness will be
-    // filled with the value from roughness if they are not set.
-    SpectrumTextureParameter eta = 1 [features.field_presence = EXPLICIT];
-    SpectrumTextureParameter k = 2 [features.field_presence = EXPLICIT];
-    FloatTextureParameter roughness = 3 [features.field_presence = EXPLICIT];
-    FloatTextureParameter uroughness = 4 [features.field_presence = EXPLICIT];
-    FloatTextureParameter vroughness = 5 [features.field_presence = EXPLICIT];
-    bool remaproughness = 6 [default = true];
-    FloatTextureParameter bumpmap = 7 [features.field_presence = EXPLICIT];
+    optional SpectrumTextureParameter eta = 1;
+    optional SpectrumTextureParameter k = 2;
+    optional FloatTextureParameter roughness = 3;
+    optional FloatTextureParameter uroughness = 4;
+    optional FloatTextureParameter vroughness = 5;
+    optional bool remaproughness = 6 [default = true];
+    optional FloatTextureParameter bumpmap = 7;
   }
 
   message Mirror {
-    SpectrumTextureParameter Kr = 1 [features.field_presence = EXPLICIT];
-    FloatTextureParameter bumpmap = 2 [features.field_presence = EXPLICIT];
+    optional SpectrumTextureParameter Kr = 1;
+    optional FloatTextureParameter bumpmap = 2;
   }
 
   message Mix {
-    FloatTextureParameter amount = 1 [features.field_presence = EXPLICIT];
-    string namedmaterial1 = 2 [default = ""];
-    string namedmaterial2 = 3 [default = ""];
+    optional FloatTextureParameter amount = 1;
+    optional string namedmaterial1 = 2 [default = ""];
+    optional string namedmaterial2 = 3 [default = ""];
   }
 
   message Plastic {
-    SpectrumTextureParameter Kd = 1 [features.field_presence = EXPLICIT];
-    SpectrumTextureParameter Ks = 2 [features.field_presence = EXPLICIT];
-    FloatTextureParameter roughness = 3 [features.field_presence = EXPLICIT];
-    bool remaproughness = 4 [default = true];
-    FloatTextureParameter bumpmap = 5 [features.field_presence = EXPLICIT];
+    optional SpectrumTextureParameter Kd = 1;
+    optional SpectrumTextureParameter Ks = 2;
+    optional FloatTextureParameter roughness = 3;
+    optional bool remaproughness = 4 [default = true];
+    optional FloatTextureParameter bumpmap = 5;
   }
 
   message Substrate {
-    SpectrumTextureParameter Kd = 1 [features.field_presence = EXPLICIT];
-    SpectrumTextureParameter Ks = 2 [features.field_presence = EXPLICIT];
-    FloatTextureParameter uroughness = 3 [features.field_presence = EXPLICIT];
-    FloatTextureParameter vroughness = 4 [features.field_presence = EXPLICIT];
-    bool remaproughness = 5 [default = true];
-    FloatTextureParameter bumpmap = 6 [features.field_presence = EXPLICIT];
+    optional SpectrumTextureParameter Kd = 1;
+    optional SpectrumTextureParameter Ks = 2;
+    optional FloatTextureParameter uroughness = 3;
+    optional FloatTextureParameter vroughness = 4;
+    optional bool remaproughness = 5 [default = true];
+    optional FloatTextureParameter bumpmap = 6;
   }
 
   message Subsurface {
-    // If using pbrt_proto::v3::Canonicalize, there is no need to check this
-    // field and the correct values will be filled into sigma_a and sigma_s.
-    MeasuredSubsurface name = 1 [features.field_presence = EXPLICIT];
-    SpectrumTextureParameter sigma_a = 2 [features.field_presence = EXPLICIT];
-    SpectrumTextureParameter sigma_s = 3 [features.field_presence = EXPLICIT];
-    double g = 4 [default = 0.0];  // Must be explicitly cleared if name is set
-    double scale = 5 [default = 1.0];
-    double eta = 6 [default = 1.33];
-    SpectrumTextureParameter Kr = 7 [features.field_presence = EXPLICIT];
-    SpectrumTextureParameter Kt = 8 [features.field_presence = EXPLICIT];
-    FloatTextureParameter uroughness = 9 [features.field_presence = EXPLICIT];
-    FloatTextureParameter vroughness = 10 [features.field_presence = EXPLICIT];
-    bool remaproughness = 11 [default = true];
-    FloatTextureParameter bumpmap = 12 [features.field_presence = EXPLICIT];
+    optional MeasuredSubsurface name = 1;
+    optional SpectrumTextureParameter sigma_a = 2;
+    optional SpectrumTextureParameter sigma_s = 3;
+    optional double g = 4 [default = 0.0];  // Must be explicitly cleared if name is set
+    optional double scale = 5 [default = 1.0];
+    optional double eta = 6 [default = 1.33];
+    optional SpectrumTextureParameter Kr = 7;
+    optional SpectrumTextureParameter Kt = 8;
+    optional FloatTextureParameter uroughness = 9;
+    optional FloatTextureParameter vroughness = 10;
+    optional bool remaproughness = 11 [default = true];
+    optional FloatTextureParameter bumpmap = 12;
   }
 
   message Translucent {
-    SpectrumTextureParameter Kd = 1 [features.field_presence = EXPLICIT];
-    SpectrumTextureParameter Ks = 2 [features.field_presence = EXPLICIT];
-    SpectrumTextureParameter reflect = 3 [features.field_presence = EXPLICIT];
-    SpectrumTextureParameter transmit = 4 [features.field_presence = EXPLICIT];
-    FloatTextureParameter roughness = 5 [features.field_presence = EXPLICIT];
-    bool remaproughness = 6 [default = true];
-    FloatTextureParameter bumpmap = 7 [features.field_presence = EXPLICIT];
+    optional SpectrumTextureParameter Kd = 1;
+    optional SpectrumTextureParameter Ks = 2;
+    optional SpectrumTextureParameter reflect = 3;
+    optional SpectrumTextureParameter transmit = 4;
+    optional FloatTextureParameter roughness = 5;
+    optional bool remaproughness = 6 [default = true];
+    optional FloatTextureParameter bumpmap = 7;
   }
 
   message Uber {
-    // If using pbrt_proto::v3::Canonicalize, uroughness and vroughness will be
-    // filled with the value from roughness if they are not set.
-    SpectrumTextureParameter Kd = 1 [features.field_presence = EXPLICIT];
-    SpectrumTextureParameter Ks = 2 [features.field_presence = EXPLICIT];
-    SpectrumTextureParameter Kr = 3 [features.field_presence = EXPLICIT];
-    SpectrumTextureParameter Kt = 4 [features.field_presence = EXPLICIT];
-    FloatTextureParameter roughness = 5 [features.field_presence = EXPLICIT];
-    FloatTextureParameter uroughness = 6 [features.field_presence = EXPLICIT];  // Must check
-    FloatTextureParameter vroughness = 7 [features.field_presence = EXPLICIT];  // Must check
-    FloatTextureParameter eta = 8 [features.field_presence = EXPLICIT];
-    FloatTextureParameter opacity = 9 [features.field_presence = EXPLICIT];
-    bool remaproughness = 10 [default = true];
-    FloatTextureParameter bumpmap = 11 [features.field_presence = EXPLICIT];
+    optional SpectrumTextureParameter Kd = 1;
+    optional SpectrumTextureParameter Ks = 2;
+    optional SpectrumTextureParameter Kr = 3;
+    optional SpectrumTextureParameter Kt = 4;
+    optional FloatTextureParameter roughness = 5;
+    optional FloatTextureParameter uroughness = 6;  // Must check
+    optional FloatTextureParameter vroughness = 7;  // Must check
+    optional FloatTextureParameter eta = 8;
+    optional FloatTextureParameter opacity = 9;
+    optional bool remaproughness = 10 [default = true];
+    optional FloatTextureParameter bumpmap = 11;
   }
 
   oneof material_type {
@@ -776,55 +749,55 @@ message Material {
 }
 
 message MediumInterface {
-  string inside = 1 [features.field_presence = LEGACY_REQUIRED];
-  string outside = 2 [features.field_presence = LEGACY_REQUIRED];
+  required string inside = 1;
+  required string outside = 2;
 }
 
 message NamedMaterial {
-  string name = 1 [features.field_presence = LEGACY_REQUIRED];
+  required string name = 1;
 }
 
 message LightSource {
   message Distant {
-    Spectrum L = 1 [features.field_presence = EXPLICIT];
-    pbrt_proto.v3.Point from = 2 [features.field_presence = EXPLICIT];
-    pbrt_proto.v3.Point to = 3 [features.field_presence = EXPLICIT];
-    Spectrum scale = 4 [features.field_presence = EXPLICIT];
+    optional Spectrum L = 1;
+    optional pbrt_proto.v3.Point from = 2;
+    optional pbrt_proto.v3.Point to = 3;
+    optional Spectrum scale = 4;
   }
 
   message Goniometric {
-    Spectrum I = 1 [features.field_presence = EXPLICIT];
-    string mapname = 2 [default = ""];
-    Spectrum scale = 3 [features.field_presence = EXPLICIT];
+    optional Spectrum I = 1;
+    optional string mapname = 2 [default = ""];
+    optional Spectrum scale = 3;
   }
 
   message Infinite {
-    Spectrum L = 1 [features.field_presence = EXPLICIT];
-    int32 samples = 2 [default = 1];
-    string mapname = 3 [features.field_presence = EXPLICIT]; // Must check
-    Spectrum scale = 4 [features.field_presence = EXPLICIT];
+    optional Spectrum L = 1;
+    optional int32 samples = 2 [default = 1];
+    optional string mapname = 3 [default = ""];
+    optional Spectrum scale = 4;
   }
 
   message Point {
-    Spectrum L = 1 [features.field_presence = EXPLICIT];
-    pbrt_proto.v3.Point from = 2 [features.field_presence = EXPLICIT];
-    Spectrum scale = 3 [features.field_presence = EXPLICIT];
+    optional Spectrum L = 1;
+    optional pbrt_proto.v3.Point from = 2;
+    optional Spectrum scale = 3;
   }
 
   message Projection {
-    Spectrum I = 1 [features.field_presence = EXPLICIT];
-    double fov = 2 [default = 45.0];
-    string mapname = 3 [default = ""];
-    Spectrum scale = 4 [features.field_presence = EXPLICIT];
+    optional Spectrum I = 1;
+    optional double fov = 2 [default = 45.0];
+    optional string mapname = 3 [default = ""];
+    optional Spectrum scale = 4;
   }
 
   message Spot {
-    Spectrum I = 1 [features.field_presence = EXPLICIT];
-    pbrt_proto.v3.Point from = 2 [features.field_presence = EXPLICIT];
-    pbrt_proto.v3.Point to = 3 [features.field_presence = EXPLICIT];
-    double coneangle = 4 [default = 30.0];
-    double conedeltaangle = 5 [default = 5.0];
-    Spectrum scale = 6 [features.field_presence = EXPLICIT];
+    optional Spectrum I = 1;
+    optional pbrt_proto.v3.Point from = 2;
+    optional pbrt_proto.v3.Point to = 3;
+    optional double coneangle = 4 [default = 30.0];
+    optional double conedeltaangle = 5 [default = 5.0];
+    optional Spectrum scale = 6;
   }
 
   oneof light_source_type {
@@ -838,19 +811,19 @@ message LightSource {
 }
 
 message LookAt {
-  double eye_x = 1 [features.field_presence = LEGACY_REQUIRED];
-  double eye_y = 2 [features.field_presence = LEGACY_REQUIRED];
-  double eye_z = 3 [features.field_presence = LEGACY_REQUIRED];
-  double look_x = 4 [features.field_presence = LEGACY_REQUIRED];
-  double look_y = 5 [features.field_presence = LEGACY_REQUIRED];
-  double look_z = 6 [features.field_presence = LEGACY_REQUIRED];
-  double up_x = 7 [features.field_presence = LEGACY_REQUIRED];
-  double up_y = 8 [features.field_presence = LEGACY_REQUIRED];
-  double up_z = 9 [features.field_presence = LEGACY_REQUIRED];
+  required double eye_x = 1;
+  required double eye_y = 2;
+  required double eye_z = 3;
+  required double look_x = 4;
+  required double look_y = 5;
+  required double look_z = 6;
+  required double up_x = 7;
+  required double up_y = 8;
+  required double up_z = 9;
 }
 
 message ObjectBegin {
-  string name = 1 [features.field_presence = LEGACY_REQUIRED];
+  required string name = 1;
 }
 
 message ObjectEnd {
@@ -858,7 +831,7 @@ message ObjectEnd {
 }
 
 message ObjectInstance {
-  string name = 1 [features.field_presence = LEGACY_REQUIRED];
+  required string name = 1;
 }
 
 message ReverseOrientation {
@@ -866,41 +839,41 @@ message ReverseOrientation {
 }
 
 message Rotate {
-  double angle = 1 [features.field_presence = LEGACY_REQUIRED];
-  double x = 2 [features.field_presence = LEGACY_REQUIRED];
-  double y = 3 [features.field_presence = LEGACY_REQUIRED];
-  double z = 4 [features.field_presence = LEGACY_REQUIRED];
+  required double angle = 1;
+  required double x = 2;
+  required double y = 3;
+  required double z = 4;
 }
 
 message Sampler {
   message Halton {
-    int32 pixelsamples = 1 [default = 16];
-    bool samplepixelcenter = 2 [default = false];
+    optional int32 pixelsamples = 1 [default = 16];
+    optional bool samplepixelcenter = 2 [default = false];
   }
 
   message MaxMinDist {
-    int32 pixelsamples = 1 [default = 16];
-    int32 dimensions = 2 [default = 4];
+    optional int32 pixelsamples = 1 [default = 16];
+    optional int32 dimensions = 2 [default = 4];
   }
 
   message Random {
-    int32 pixelsamples = 1 [default = 4];
+    optional int32 pixelsamples = 1 [default = 4];
   }
 
   message Sobol {
-    int32 pixelsamples = 1 [default = 16];
+    optional int32 pixelsamples = 1 [default = 16];
   }
 
   message Stratified {
-    bool jitter = 1 [default = true];
-    int32 xsamples = 2 [default = 4];
-    int32 ysamples = 3 [default = 4];
-    int32 dimensions = 4 [default = 4];
+    optional bool jitter = 1 [default = true];
+    optional int32 xsamples = 2 [default = 4];
+    optional int32 ysamples = 3 [default = 4];
+    optional int32 dimensions = 4 [default = 4];
   }
 
   message ZeroTwoSequence {
-    int32 pixelsamples = 1 [default = 16];
-    int32 dimensions = 2 [default = 4];
+    optional int32 pixelsamples = 1 [default = 16];
+    optional int32 dimensions = 2 [default = 4];
   }
 
   oneof sampler_type {
@@ -914,140 +887,136 @@ message Sampler {
 }
 
 message Scale {
-  double x = 1 [features.field_presence = LEGACY_REQUIRED];
-  double y = 2 [features.field_presence = LEGACY_REQUIRED];
-  double z = 3 [features.field_presence = LEGACY_REQUIRED];
+  required double x = 1;
+  required double y = 2;
+  required double z = 3;
 }
 
 message Shape {
   message Cone {
-    double radius = 1 [default = 1.0];
-    double height = 2 [default = 1.0];
-    double phimax = 3 [default = 360.0];
+    optional double radius = 1 [default = 1.0];
+    optional double height = 2 [default = 1.0];
+    optional double phimax = 3 [default = 360.0];
   }
 
   message Curve {
     enum Basis {
-      option features.enum_type = CLOSED;
       BEZIER = 1;
       BSPLINE = 2;
     }
 
     enum Type {
-      option features.enum_type = CLOSED;
       CYLINDER = 1;
       FLAT = 2;
       RIBBON = 3;
     }
 
     message Normals {
-      Vector n0 = 1 [features.field_presence = LEGACY_REQUIRED];
-      Vector n1 = 2 [features.field_presence = LEGACY_REQUIRED];
+      required Vector n0 = 1;
+      required Vector n1 = 2;
     }
 
     // If using pbrt_proto::v3::Canonicalize, width0 and width1 will be filled
     // with the value from width if not set.
     repeated Point P = 1;
-    Basis basis = 2 [default = BEZIER];
-    int32 degree = 3 [default = 3];
-    Type type = 4 [default = FLAT];
+    optional Basis basis = 2 [default = BEZIER];
+    optional int32 degree = 3 [default = 3];
+    optional Type type = 4 [default = FLAT];
     repeated Vector N = 5;
-    double width = 6 [default = 1.0];
-    double width0 = 7 [features.field_presence = EXPLICIT];
-    double width1 = 8 [features.field_presence = EXPLICIT];
-    int32 splitdepth = 9 [default = 3];
+    optional double width = 6 [default = 1.0];
+    optional double width0 = 7;  // Must check
+    optional double width1 = 8;  // Must check
+    optional int32 splitdepth = 9 [default = 3];
   }
 
   message Cylinder {
-    double radius = 1 [default = 1.0];
-    double zmin = 2 [default = -1.0];
-    double zmax = 3 [default = 1.0];
-    double phimax = 4 [default = 360.0];
+    optional double radius = 1 [default = 1.0];
+    optional double zmin = 2 [default = -1.0];
+    optional double zmax = 3 [default = 1.0];
+    optional double phimax = 4 [default = 360.0];
   }
 
   message Disk {
-    double height = 1 [default = 0.0];
-    double radius = 2 [default = 1.0];
-    double innerradius = 3 [default = 0.0];
-    double phimax = 4 [default = 360.0];
+    optional double height = 1 [default = 0.0];
+    optional double radius = 2 [default = 1.0];
+    optional double innerradius = 3 [default = 0.0];
+    optional double phimax = 4 [default = 360.0];
   }
 
   message HeightField {
-    int32 nu = 1;
-    int32 nv = 2;
+    optional int32 nu = 1;
+    optional int32 nv = 2;
     repeated double Pz = 3;
   }
 
   message Hyperboloid {
-    Point p1 = 1;
-    Point p2 = 2;
-    double phimax = 3 [default = 360.0];
+    optional Point p1 = 1;
+    optional Point p2 = 2;
+    optional double phimax = 3 [default = 360.0];
   }
 
   message LoopSubdiv {
     message VertexIndices {
-      int32 v0 = 1 [features.field_presence = LEGACY_REQUIRED];
-      int32 v1 = 2 [features.field_presence = LEGACY_REQUIRED];
-      int32 v2 = 3 [features.field_presence = LEGACY_REQUIRED];
+      required int32 v0 = 1;
+      required int32 v1 = 2;
+      required int32 v2 = 3;
     }
 
-    int32 levels = 1 [default = 3];
+    optional int32 levels = 1 [default = 3];
     repeated VertexIndices indices = 2;
     repeated Point P = 3;
   }
 
   message Nurbs {
     message PointWithWeight {
-      Point p = 1 [features.field_presence = LEGACY_REQUIRED];
-      double weight = 2 [features.field_presence = LEGACY_REQUIRED];
+      required Point p = 1;
+      required double weight = 2;
     }
 
-    int32 nu = 1;
-    int32 nv = 2;
-    int32 uorder = 3;
-    int32 vorder = 4;
+    optional int32 nu = 1;
+    optional int32 nv = 2;
+    optional int32 uorder = 3;
+    optional int32 vorder = 4;
     repeated float uknots = 5;
     repeated float vknots = 6;
-    double u0 = 7;
-    double v0 = 9;
-    double u1 = 10;
-    double v1 = 11;
+    optional double u0 = 7;
+    optional double v0 = 9;
+    optional double u1 = 10;
+    optional double v1 = 11;
     repeated Point P = 12;
     repeated PointWithWeight Pw = 13;
   }
 
   message Paraboloid {
-    double radius = 1 [default = 1.0];
-    double zmin = 2 [default = 0.0];
-    double zmax = 3 [default = 1.0];
-    double phimax = 4 [default = 360.0];
+    optional double radius = 1 [default = 1.0];
+    optional double zmin = 2 [default = 0.0];
+    optional double zmax = 3 [default = 1.0];
+    optional double phimax = 4 [default = 360.0];
   }
 
   message PlyMesh {
-    string filename = 1 [default = ""];
-    FloatTextureParameter alpha = 2;
-    FloatTextureParameter shadowalpha = 3;
+    optional string filename = 1 [default = ""];
+    optional FloatTextureParameter alpha = 2;
+    optional FloatTextureParameter shadowalpha = 3;
   }
 
   message Sphere {
-    // If using pbrt_proto::v3::Canonicalize, zmin and zmax will be filled
-    // with the value from radius if not set.
-    double radius = 1 [default = 1.0];
-    double zmin = 2 [features.field_presence = EXPLICIT];
-    double zmax = 3 [features.field_presence = EXPLICIT];
-    double phimax = 4 [default = 360.0];
+    optional double radius = 1 [default = 1.0];
+    optional double zmin = 2;  // Must check
+    optional double zmax = 3;  // Must check
+    optional double phimax = 4 [default = 360.0];
   }
 
   message TriangleMesh {
     message VertexIndices {
-      int32 v0 = 1 [features.field_presence = LEGACY_REQUIRED];
-      int32 v1 = 2 [features.field_presence = LEGACY_REQUIRED];
-      int32 v2 = 3 [features.field_presence = LEGACY_REQUIRED];
+      required int32 v0 = 1;
+      required int32 v1 = 2;
+      required int32 v2 = 3;
     }
 
     message UVCoordinate {
-      double u = 1 [features.field_presence = LEGACY_REQUIRED];
-      double v = 2 [features.field_presence = LEGACY_REQUIRED];
+      required double u = 1;
+      required double v = 2;
     }
 
     repeated VertexIndices indices = 1;
@@ -1056,8 +1025,8 @@ message Shape {
     repeated Vector S = 4;
     repeated UVCoordinate uv = 5;
     repeated int32 faceIndices = 6;
-    FloatTextureParameter alpha = 7;
-    FloatTextureParameter shadowalpha = 8;
+    optional FloatTextureParameter alpha = 7;
+    optional FloatTextureParameter shadowalpha = 8;
   }
 
   oneof shape_type {
@@ -1077,162 +1046,162 @@ message Shape {
 
   message MaterialOverrides {
     message Eta {
-      double as_value = 1 [features.field_presence = EXPLICIT];
-      FloatTextureParameter as_float_texture = 2 [features.field_presence = EXPLICIT];
-      SpectrumTextureParameter as_spectrum_texture = 3[features.field_presence = EXPLICIT];
+      optional double as_value = 1;
+      optional FloatTextureParameter as_float_texture = 2;
+      optional SpectrumTextureParameter as_spectrum_texture = 3;
     }
 
-    bool remaproughness = 1 [features.field_presence = EXPLICIT];
-    bool thin = 2 [features.field_presence = EXPLICIT];
-    double g = 3 [features.field_presence = EXPLICIT];
-    double scale = 4 [features.field_presence = EXPLICIT];
-    FloatTextureParameter alpha = 5 [features.field_presence = EXPLICIT];
-    FloatTextureParameter amount = 6 [features.field_presence = EXPLICIT];
-    FloatTextureParameter anisotropic = 7 [features.field_presence = EXPLICIT];
-    FloatTextureParameter beta_m = 8 [features.field_presence = EXPLICIT];
-    FloatTextureParameter beta_n = 9 [features.field_presence = EXPLICIT];
-    FloatTextureParameter bumpmap = 10 [features.field_presence = EXPLICIT];
-    FloatTextureParameter clearcoat = 11 [features.field_presence = EXPLICIT];
-    FloatTextureParameter clearcoatgloss = 12 [features.field_presence = EXPLICIT];
-    FloatTextureParameter difftrans = 13 [features.field_presence = EXPLICIT];
-    FloatTextureParameter eumelanin = 14 [features.field_presence = EXPLICIT];
-    FloatTextureParameter flatness = 15 [features.field_presence = EXPLICIT];
-    FloatTextureParameter metallic = 16 [features.field_presence = EXPLICIT];
-    FloatTextureParameter mfp = 17 [features.field_presence = EXPLICIT];
-    FloatTextureParameter opacity = 18 [features.field_presence = EXPLICIT];
-    FloatTextureParameter pheomelanin = 19 [features.field_presence = EXPLICIT];
-    FloatTextureParameter roughness = 20 [features.field_presence = EXPLICIT];
-    FloatTextureParameter sheen = 21 [features.field_presence = EXPLICIT];
-    FloatTextureParameter sheentint = 22 [features.field_presence = EXPLICIT];
-    FloatTextureParameter sigma = 23 [features.field_presence = EXPLICIT];
-    FloatTextureParameter spectrans = 24 [features.field_presence = EXPLICIT];
-    FloatTextureParameter speculartint = 25 [features.field_presence = EXPLICIT];
-    FloatTextureParameter uroughness = 26 [features.field_presence = EXPLICIT];
-    FloatTextureParameter vroughness = 27 [features.field_presence = EXPLICIT];
-    MeasuredSubsurface name = 28 [features.field_presence = EXPLICIT];
-    SpectrumTextureParameter color = 29 [features.field_presence = EXPLICIT];
-    SpectrumTextureParameter k = 30 [features.field_presence = EXPLICIT];
-    SpectrumTextureParameter Kd = 31 [features.field_presence = EXPLICIT];
-    SpectrumTextureParameter Kr = 32 [features.field_presence = EXPLICIT];
-    SpectrumTextureParameter Ks = 33 [features.field_presence = EXPLICIT];
-    SpectrumTextureParameter Kt = 34 [features.field_presence = EXPLICIT];
-    SpectrumTextureParameter reflect = 35 [features.field_presence = EXPLICIT];
-    SpectrumTextureParameter scatterdistance = 36 [features.field_presence = EXPLICIT];
-    SpectrumTextureParameter sigma_a = 37 [features.field_presence = EXPLICIT];
-    SpectrumTextureParameter sigma_s = 38 [features.field_presence = EXPLICIT];
-    SpectrumTextureParameter transmit = 39 [features.field_presence = EXPLICIT];
-    string bsdffile = 40 [features.field_presence = EXPLICIT];
-    string namedmaterial1 = 41 [features.field_presence = EXPLICIT];
-    string namedmaterial2 = 42 [features.field_presence = EXPLICIT];
-    Eta eta = 43 [features.field_presence = EXPLICIT];
+    optional bool remaproughness = 1;
+    optional bool thin = 2;
+    optional double g = 3;
+    optional double scale = 4;
+    optional FloatTextureParameter alpha = 5;
+    optional FloatTextureParameter amount = 6;
+    optional FloatTextureParameter anisotropic = 7;
+    optional FloatTextureParameter beta_m = 8;
+    optional FloatTextureParameter beta_n = 9;
+    optional FloatTextureParameter bumpmap = 10;
+    optional FloatTextureParameter clearcoat = 11;
+    optional FloatTextureParameter clearcoatgloss = 12;
+    optional FloatTextureParameter difftrans = 13;
+    optional FloatTextureParameter eumelanin = 14;
+    optional FloatTextureParameter flatness = 15;
+    optional FloatTextureParameter metallic = 16;
+    optional FloatTextureParameter mfp = 17;
+    optional FloatTextureParameter opacity = 18;
+    optional FloatTextureParameter pheomelanin = 19;
+    optional FloatTextureParameter roughness = 20;
+    optional FloatTextureParameter sheen = 21;
+    optional FloatTextureParameter sheentint = 22;
+    optional FloatTextureParameter sigma = 23;
+    optional FloatTextureParameter spectrans = 24;
+    optional FloatTextureParameter speculartint = 25;
+    optional FloatTextureParameter uroughness = 26;
+    optional FloatTextureParameter vroughness = 27;
+    optional MeasuredSubsurface name = 28;
+    optional SpectrumTextureParameter color = 29;
+    optional SpectrumTextureParameter k = 30;
+    optional SpectrumTextureParameter Kd = 31;
+    optional SpectrumTextureParameter Kr = 32;
+    optional SpectrumTextureParameter Ks = 33;
+    optional SpectrumTextureParameter Kt = 34;
+    optional SpectrumTextureParameter reflect = 35;
+    optional SpectrumTextureParameter scatterdistance = 36;
+    optional SpectrumTextureParameter sigma_a = 37;
+    optional SpectrumTextureParameter sigma_s = 38;
+    optional SpectrumTextureParameter transmit = 39;
+    optional string bsdffile = 40;
+    optional string namedmaterial1 = 41;
+    optional string namedmaterial2 = 42;
+    optional Eta eta = 43;
   }
 
-  MaterialOverrides overrides = 13;
+  optional MaterialOverrides overrides = 13;
 }
 
 message SpectrumTexture {
-  string name = 1 [features.field_presence = LEGACY_REQUIRED];
+  required string name = 1;
 
   message Bilerp {
-    SpectrumTextureParameter v00 = 1;
-    SpectrumTextureParameter v01 = 2;
-    SpectrumTextureParameter v10 = 3;
-    SpectrumTextureParameter v11 = 4;
-    Mapping2D mapping = 5 [default = UV];
-    double uscale = 6 [default = 1.0];
-    double vscale = 7 [default = 1.0];
-    double udelta = 8 [default = 0.0];
-    double vdelta = 9 [default = 0.0];
-    Vector v1 = 10 [features.field_presence = EXPLICIT];
-    Vector v2 = 11 [features.field_presence = EXPLICIT];
+    optional SpectrumTextureParameter v00 = 1;
+    optional SpectrumTextureParameter v01 = 2;
+    optional SpectrumTextureParameter v10 = 3;
+    optional SpectrumTextureParameter v11 = 4;
+    optional Mapping2D mapping = 5 [default = UV];
+    optional double uscale = 6 [default = 1.0];
+    optional double vscale = 7 [default = 1.0];
+    optional double udelta = 8 [default = 0.0];
+    optional double vdelta = 9 [default = 0.0];
+    optional Vector v1 = 10;
+    optional Vector v2 = 11;
   }
 
   message Checkerboard2D {
-    SpectrumTextureParameter tex1 = 1;
-    SpectrumTextureParameter tex2 = 2;
-    AntialiasingMode aamode = 3 [default = CLOSEDFORM];
-    Mapping2D mapping = 4 [default = UV];
-    double uscale = 5 [default = 1.0];
-    double vscale = 6 [default = 1.0];
-    double udelta = 7 [default = 0.0];
-    double vdelta = 8 [default = 0.0];
-    Vector v1 = 9 [features.field_presence = EXPLICIT];
-    Vector v2 = 10 [features.field_presence = EXPLICIT];
+    optional SpectrumTextureParameter tex1 = 1;
+    optional SpectrumTextureParameter tex2 = 2;
+    optional AntialiasingMode aamode = 3 [default = CLOSEDFORM];
+    optional Mapping2D mapping = 4 [default = UV];
+    optional double uscale = 5 [default = 1.0];
+    optional double vscale = 6 [default = 1.0];
+    optional double udelta = 7 [default = 0.0];
+    optional double vdelta = 8 [default = 0.0];
+    optional Vector v1 = 9;
+    optional Vector v2 = 10;
   }
 
   message Checkerboard3D {
-    SpectrumTextureParameter tex1 = 1;
-    SpectrumTextureParameter tex2 = 2;
+    optional SpectrumTextureParameter tex1 = 1;
+    optional SpectrumTextureParameter tex2 = 2;
   }
 
   message Constant {
-    SpectrumTextureParameter value = 1;
+    optional SpectrumTextureParameter value = 1;
   }
 
   message Dots {
-    SpectrumTextureParameter inside = 1;
-    SpectrumTextureParameter outside = 2;
-    Mapping2D mapping = 3 [default = UV];
-    double uscale = 4 [default = 1.0];
-    double vscale = 5 [default = 1.0];
-    double udelta = 6 [default = 0.0];
-    double vdelta = 7 [default = 0.0];
-    Vector v1 = 8 [features.field_presence = EXPLICIT];
-    Vector v2 = 9 [features.field_presence = EXPLICIT];
+    optional SpectrumTextureParameter inside = 1;
+    optional SpectrumTextureParameter outside = 2;
+    optional Mapping2D mapping = 3 [default = UV];
+    optional double uscale = 4 [default = 1.0];
+    optional double vscale = 5 [default = 1.0];
+    optional double udelta = 6 [default = 0.0];
+    optional double vdelta = 7 [default = 0.0];
+    optional Vector v1 = 8;
+    optional Vector v2 = 9;
   }
 
   message FBm {
-    int32 octaves = 1 [default = 8];
-    double roughness = 2 [default = 0.5];
+    optional int32 octaves = 1 [default = 8];
+    optional double roughness = 2 [default = 0.5];
   }
 
   message ImageMap {
-    string filename = 1 [default = ""];
-    ImageWrapping wrap = 2 [default = REPEAT];
-    double maxanisotropy = 3 [default = 8.0];
-    bool trilinear = 4 [default = false];
-    double scale = 5 [default = 1.0];
-    bool gamma = 6 [features.field_presence = EXPLICIT];
-    Mapping2D mapping = 7 [default = UV];
-    double uscale = 8 [default = 1.0];
-    double vscale = 9 [default = 1.0];
-    double udelta = 10 [default = 0.0];
-    double vdelta = 11 [default = 0.0];
-    Vector v1 = 12 [features.field_presence = EXPLICIT];
-    Vector v2 = 13 [features.field_presence = EXPLICIT];
+    optional string filename = 1 [default = ""];
+    optional ImageWrapping wrap = 2 [default = REPEAT];
+    optional double maxanisotropy = 3 [default = 8.0];
+    optional bool trilinear = 4 [default = false];
+    optional double scale = 5 [default = 1.0];
+    optional bool gamma = 6;  // Must check, default varies by filetype
+    optional Mapping2D mapping = 7 [default = UV];
+    optional double uscale = 8 [default = 1.0];
+    optional double vscale = 9 [default = 1.0];
+    optional double udelta = 10 [default = 0.0];
+    optional double vdelta = 11 [default = 0.0];
+    optional Vector v1 = 12;
+    optional Vector v2 = 13;
   }
 
   message Marble {
-    int32 octaves = 1 [default = 8];
-    double roughness = 2 [default = 0.5];
-    double scale = 3 [default = 1.0];
-    double variation = 4 [default = 0.2];
+    optional int32 octaves = 1 [default = 8];
+    optional double roughness = 2 [default = 0.5];
+    optional double scale = 3 [default = 1.0];
+    optional double variation = 4 [default = 0.2];
   }
 
   message Mix {
-    SpectrumTextureParameter tex1 = 1;
-    SpectrumTextureParameter tex2 = 2;
-    FloatTextureParameter amount = 3;
+    optional SpectrumTextureParameter tex1 = 1;
+    optional SpectrumTextureParameter tex2 = 2;
+    optional FloatTextureParameter amount = 3;
   }
 
   message Ptex {
-    string filename = 1 [default = ""];
-    double gamma = 2 [default = 2.2];
+    optional string filename = 1 [default = ""];
+    optional double gamma = 2 [default = 2.2];
   }
 
   message Scale {
-    SpectrumTextureParameter tex1 = 1;
-    SpectrumTextureParameter tex2 = 2;
+    optional SpectrumTextureParameter tex1 = 1;
+    optional SpectrumTextureParameter tex2 = 2;
   }
 
   message Uv {
-    Mapping2D mapping = 1 [default = UV];
-    double uscale = 2 [default = 1.0];
-    double vscale = 3 [default = 1.0];
-    double udelta = 4 [default = 0.0];
-    double vdelta = 5 [default = 0.0];
-    Vector v1 = 6 [features.field_presence = EXPLICIT];
-    Vector v2 = 7 [features.field_presence = EXPLICIT];
+    optional Mapping2D mapping = 1 [default = UV];
+    optional double uscale = 2 [default = 1.0];
+    optional double vscale = 3 [default = 1.0];
+    optional double udelta = 4 [default = 0.0];
+    optional double vdelta = 5 [default = 0.0];
+    optional Vector v1 = 6;
+    optional Vector v2 = 7;
   }
 
   message Windy {
@@ -1240,8 +1209,8 @@ message SpectrumTexture {
   }
 
   message Wrinkled {
-    int32 octaves = 1 [default = 8];
-    double roughness = 2 [default = 0.5];
+    optional int32 octaves = 1 [default = 8];
+    optional double roughness = 2 [default = 0.5];
   }
 
   oneof spectrum_texture_type {
@@ -1263,22 +1232,22 @@ message SpectrumTexture {
 }
 
 message Transform {
-  double m00 = 1 [features.field_presence = LEGACY_REQUIRED];
-  double m01 = 2 [features.field_presence = LEGACY_REQUIRED];
-  double m02 = 3 [features.field_presence = LEGACY_REQUIRED];
-  double m03 = 4 [features.field_presence = LEGACY_REQUIRED];
-  double m10 = 5 [features.field_presence = LEGACY_REQUIRED];
-  double m11 = 6 [features.field_presence = LEGACY_REQUIRED];
-  double m12 = 7 [features.field_presence = LEGACY_REQUIRED];
-  double m13 = 8 [features.field_presence = LEGACY_REQUIRED];
-  double m20 = 9 [features.field_presence = LEGACY_REQUIRED];
-  double m21 = 10 [features.field_presence = LEGACY_REQUIRED];
-  double m22 = 11 [features.field_presence = LEGACY_REQUIRED];
-  double m23 = 12 [features.field_presence = LEGACY_REQUIRED];
-  double m30 = 13 [features.field_presence = LEGACY_REQUIRED];
-  double m31 = 14 [features.field_presence = LEGACY_REQUIRED];
-  double m32 = 15 [features.field_presence = LEGACY_REQUIRED];
-  double m33 = 16 [features.field_presence = LEGACY_REQUIRED];
+  required double m00 = 1;
+  required double m01 = 2;
+  required double m02 = 3;
+  required double m03 = 4;
+  required double m10 = 5;
+  required double m11 = 6;
+  required double m12 = 7;
+  required double m13 = 8;
+  required double m20 = 9;
+  required double m21 = 10;
+  required double m22 = 11;
+  required double m23 = 12;
+  required double m30 = 13;
+  required double m31 = 14;
+  required double m32 = 15;
+  required double m33 = 16;
 }
 
 message TransformBegin {
@@ -1290,14 +1259,14 @@ message TransformEnd {
 }
 
 message TransformTimes {
-  double start_time = 1 [features.field_presence = LEGACY_REQUIRED];
-  double end_time = 2 [features.field_presence = LEGACY_REQUIRED];
+  required double start_time = 1;
+  required double end_time = 2;
 }
 
 message Translate {
-  double x = 1 [features.field_presence = LEGACY_REQUIRED];
-  double y = 2 [features.field_presence = LEGACY_REQUIRED];
-  double z = 3 [features.field_presence = LEGACY_REQUIRED];
+  required double x = 1;
+  required double y = 2;
+  required double z = 3;
 }
 
 message WorldBegin {
