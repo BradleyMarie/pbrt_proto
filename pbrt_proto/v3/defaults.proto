@@ -93,7 +93,51 @@ message Defaults {
 
   // A container for the default values for every type of Material
   message DefaultMaterials {
-    // TODO
+    // The default "disney" Material
+    required Material.Disney disney = 1;
+
+    // The default "fourier" Material is fully captured in its definition
+    reserved 2;
+
+    // The default "glass" Material
+    required Material.Glass glass = 3;
+
+    // The default "hair" Material
+    required Material.Hair hair = 4;
+
+    // The default "kdsubsurface" Material
+    required Material.KdSubsurface kdsubsurface = 5;
+
+    // The default "matte" Material
+    required Material.Matte matte = 6;
+
+    // The default "metal" Material
+    required Material.Metal metal = 7;
+
+    // The default "mirror" Material
+    required Material.Mirror mirror = 8;
+
+    // The default "mix" Material
+    required Material.Mix mix = 9;
+
+    // The default "plastic" Material
+    required Material.Plastic plastic = 10;
+
+    // The default "substrate" Material
+    required Material.Substrate substrate = 11;
+  
+    // The default "subsurface" Material for every MeasuredSubsurface
+    // 
+    // NOTE: Protocol Buffers do not allow enums to be used directly as map
+    //       keys, so int32 is used here as the key type instead. Every value in
+    //       MeasuredSubsurface is guaranteed to be present in this map.
+    map<int32, Material.Subsurface> subsurfaces = 12;
+
+    // The default "translucent" Material
+    required Material.Translucent translucent = 13;
+
+    // The default "uber" Material
+    required Material.Uber uber = 14;
   }
 
   // The default values for every type of Material
@@ -101,7 +145,19 @@ message Defaults {
 
   // A container for the default values for every type of Medium
   message DefaultMedia {
-    // TODO
+    // The default "homogeneous" Medium for every MeasuredSubsurface
+    // 
+    // NOTE: Protocol Buffers do not allow enums to be used directly as map
+    //       keys, so int32 is used here as the key type instead. Every value in
+    //       MeasuredSubsurface is guaranteed to be present in this map.
+    map<int32, MakeNamedMedium.Homogeneous> homogeneous = 1;
+ 
+    // The default "heterogeneous" Medium for every MeasuredSubsurface
+    // 
+    // NOTE: Protocol Buffers do not allow enums to be used directly as map
+    //       keys, so int32 is used here as the key type instead. Every value in
+    //       MeasuredSubsurface is guaranteed to be present in this map.
+    map<int32, MakeNamedMedium.Heterogeneous> heterogeneous = 2;
   }
 
   // The default values for every type of Medium

@@ -177,8 +177,4493 @@ float_textures {
     }
   }
 }
-materials { }
-media { }
+materials {
+  disney {
+    color {
+      uniform_spectrum: 0.5
+    }
+    anisotropic {
+      float_value: 0.0
+    }
+    clearcoat {
+      float_value: 0.0
+    }
+    clearcoatgloss {
+      float_value: 1.0
+    }
+    eta {
+      float_value: 1.5
+    }
+    metallic {
+      float_value: 0.0
+    }
+    roughness {
+      float_value: 0.5
+    }
+    scatterdistance {
+      uniform_spectrum: 0.0
+    }
+    sheen {
+      float_value: 0.0
+    }
+    speculartint {
+      float_value: 0.5
+    }
+    spectrans {
+      float_value: 0.0
+    }
+    difftrans {
+      float_value: 1.0
+    }
+    flatness {
+      float_value: 0.0
+    }
+  }
+  glass {
+    Kr {
+      uniform_spectrum: 1.0
+    }
+    Kt {
+      uniform_spectrum: 0.0
+    }
+    eta {
+      float_value: 1.5
+    }
+    uroughness {
+      float_value: 0.0
+    }
+    vroughness {
+      float_value: 0.0
+    }
+  }
+  hair {
+    # TODO
+  }
+  kdsubsurface {
+    Kd {
+      rgb_spectrum {
+        r: 0.5
+        g: 0.5
+        b: 0.5
+      }
+    }
+    Kr {
+      uniform_spectrum: 1.0
+    }
+    Kt {
+      uniform_spectrum: 1.0
+    }
+    mfp {
+      float_value: 1.0
+    }
+    uroughness {
+      float_value: 0.0
+    }
+    vroughness {
+      float_value: 0.0
+    }
+  }
+  matte {
+    Kd {
+      uniform_spectrum: 0.5
+    }
+    sigma {
+      float_value: 0.0
+    }
+  }
+  metal {
+    eta {
+      sampled_spectrum {
+        samples {
+          wavelength: 298.7570554
+          intensity: 1.400313
+        }
+        samples {
+          wavelength: 302.4004341
+          intensity: 1.38
+        }
+        samples {
+          wavelength: 306.1337728
+          intensity: 1.358438
+        }
+        samples {
+          wavelength: 309.960445
+          intensity: 1.34
+        }
+        samples {
+          wavelength: 313.8839949
+          intensity: 1.329063
+        }
+        samples {
+          wavelength: 317.9081487
+          intensity: 1.325
+        }
+        samples {
+          wavelength: 322.036826
+          intensity: 1.3325
+        }
+        samples {
+          wavelength: 326.2741526
+          intensity: 1.34
+        }
+        samples {
+          wavelength: 330.6244747
+          intensity: 1.334375
+        }
+        samples {
+          wavelength: 335.092373
+          intensity: 1.325
+        }
+        samples {
+          wavelength: 339.6826795
+          intensity: 1.317812
+        }
+        samples {
+          wavelength: 344.4004944
+          intensity: 1.31
+        }
+        samples {
+          wavelength: 349.2512056
+          intensity: 1.300313
+        }
+        samples {
+          wavelength: 354.2405086
+          intensity: 1.29
+        }
+        samples {
+          wavelength: 359.374429
+          intensity: 1.281563
+        }
+        samples {
+          wavelength: 364.6593471
+          intensity: 1.27
+        }
+        samples {
+          wavelength: 370.1020239
+          intensity: 1.249062
+        }
+        samples {
+          wavelength: 375.7096303
+          intensity: 1.225
+        }
+        samples {
+          wavelength: 381.4897785
+          intensity: 1.2
+        }
+        samples {
+          wavelength: 387.4505563
+          intensity: 1.18
+        }
+        samples {
+          wavelength: 393.6005651
+          intensity: 1.174375
+        }
+        samples {
+          wavelength: 399.9489613
+          intensity: 1.175
+        }
+        samples {
+          wavelength: 406.5055016
+          intensity: 1.1775
+        }
+        samples {
+          wavelength: 413.2805933
+          intensity: 1.18
+        }
+        samples {
+          wavelength: 420.2853492
+          intensity: 1.178125
+        }
+        samples {
+          wavelength: 427.5316483
+          intensity: 1.175
+        }
+        samples {
+          wavelength: 435.0322035
+          intensity: 1.172812
+        }
+        samples {
+          wavelength: 442.8006357
+          intensity: 1.17
+        }
+        samples {
+          wavelength: 450.8515564
+          intensity: 1.165312
+        }
+        samples {
+          wavelength: 459.2006593
+          intensity: 1.16
+        }
+        samples {
+          wavelength: 467.8648226
+          intensity: 1.155312
+        }
+        samples {
+          wavelength: 476.8622231
+          intensity: 1.15
+        }
+        samples {
+          wavelength: 486.2124627
+          intensity: 1.142812
+        }
+        samples {
+          wavelength: 495.936712
+          intensity: 1.135
+        }
+        samples {
+          wavelength: 506.0578694
+          intensity: 1.131562
+        }
+        samples {
+          wavelength: 516.6007417
+          intensity: 1.12
+        }
+        samples {
+          wavelength: 527.5922468
+          intensity: 1.092437
+        }
+        samples {
+          wavelength: 539.0616435
+          intensity: 1.04
+        }
+        samples {
+          wavelength: 551.0407911
+          intensity: 0.950375
+        }
+        samples {
+          wavelength: 563.5644455
+          intensity: 0.826
+        }
+        samples {
+          wavelength: 576.6705953
+          intensity: 0.645875
+        }
+        samples {
+          wavelength: 590.4008476
+          intensity: 0.468
+        }
+        samples {
+          wavelength: 604.8008683
+          intensity: 0.35125
+        }
+        samples {
+          wavelength: 619.92089
+          intensity: 0.272
+        }
+        samples {
+          wavelength: 635.8162974
+          intensity: 0.230813
+        }
+        samples {
+          wavelength: 652.5483053
+          intensity: 0.214
+        }
+        samples {
+          wavelength: 670.1847459
+          intensity: 0.20925
+        }
+        samples {
+          wavelength: 688.8009889
+          intensity: 0.213
+        }
+        samples {
+          wavelength: 708.4810171
+          intensity: 0.21625
+        }
+        samples {
+          wavelength: 729.3186941
+          intensity: 0.223
+        }
+        samples {
+          wavelength: 751.4192606
+          intensity: 0.2365
+        }
+        samples {
+          wavelength: 774.9011125
+          intensity: 0.25
+        }
+        samples {
+          wavelength: 799.8979226
+          intensity: 0.254188
+        }
+        samples {
+          wavelength: 826.5611867
+          intensity: 0.26
+        }
+        samples {
+          wavelength: 855.0632966
+          intensity: 0.28
+        }
+        samples {
+          wavelength: 885.6012714
+          intensity: 0.3
+        }
+      }
+    }
+    k {
+      sampled_spectrum {
+        samples {
+          wavelength: 298.7570554
+          intensity: 1.662125
+        }
+        samples {
+          wavelength: 302.4004341
+          intensity: 1.687
+        }
+        samples {
+          wavelength: 306.1337728
+          intensity: 1.703313
+        }
+        samples {
+          wavelength: 309.960445
+          intensity: 1.72
+        }
+        samples {
+          wavelength: 313.8839949
+          intensity: 1.744563
+        }
+        samples {
+          wavelength: 317.9081487
+          intensity: 1.77
+        }
+        samples {
+          wavelength: 322.036826
+          intensity: 1.791625
+        }
+        samples {
+          wavelength: 326.2741526
+          intensity: 1.81
+        }
+        samples {
+          wavelength: 330.6244747
+          intensity: 1.822125
+        }
+        samples {
+          wavelength: 335.092373
+          intensity: 1.834
+        }
+        samples {
+          wavelength: 339.6826795
+          intensity: 1.85175
+        }
+        samples {
+          wavelength: 344.4004944
+          intensity: 1.872
+        }
+        samples {
+          wavelength: 349.2512056
+          intensity: 1.89425
+        }
+        samples {
+          wavelength: 354.2405086
+          intensity: 1.916
+        }
+        samples {
+          wavelength: 359.374429
+          intensity: 1.931688
+        }
+        samples {
+          wavelength: 364.6593471
+          intensity: 1.95
+        }
+        samples {
+          wavelength: 370.1020239
+          intensity: 1.972438
+        }
+        samples {
+          wavelength: 375.7096303
+          intensity: 2.015
+        }
+        samples {
+          wavelength: 381.4897785
+          intensity: 2.121562
+        }
+        samples {
+          wavelength: 387.4505563
+          intensity: 2.21
+        }
+        samples {
+          wavelength: 393.6005651
+          intensity: 2.177188
+        }
+        samples {
+          wavelength: 399.9489613
+          intensity: 2.13
+        }
+        samples {
+          wavelength: 406.5055016
+          intensity: 2.160063
+        }
+        samples {
+          wavelength: 413.2805933
+          intensity: 2.21
+        }
+        samples {
+          wavelength: 420.2853492
+          intensity: 2.249938
+        }
+        samples {
+          wavelength: 427.5316483
+          intensity: 2.289
+        }
+        samples {
+          wavelength: 435.0322035
+          intensity: 2.326
+        }
+        samples {
+          wavelength: 442.8006357
+          intensity: 2.362
+        }
+        samples {
+          wavelength: 450.8515564
+          intensity: 2.397625
+        }
+        samples {
+          wavelength: 459.2006593
+          intensity: 2.433
+        }
+        samples {
+          wavelength: 467.8648226
+          intensity: 2.469187
+        }
+        samples {
+          wavelength: 476.8622231
+          intensity: 2.504
+        }
+        samples {
+          wavelength: 486.2124627
+          intensity: 2.535875
+        }
+        samples {
+          wavelength: 495.936712
+          intensity: 2.564
+        }
+        samples {
+          wavelength: 506.0578694
+          intensity: 2.589625
+        }
+        samples {
+          wavelength: 516.6007417
+          intensity: 2.605
+        }
+        samples {
+          wavelength: 527.5922468
+          intensity: 2.595562
+        }
+        samples {
+          wavelength: 539.0616435
+          intensity: 2.583
+        }
+        samples {
+          wavelength: 551.0407911
+          intensity: 2.5765
+        }
+        samples {
+          wavelength: 563.5644455
+          intensity: 2.599
+        }
+        samples {
+          wavelength: 576.6705953
+          intensity: 2.678062
+        }
+        samples {
+          wavelength: 590.4008476
+          intensity: 2.809
+        }
+        samples {
+          wavelength: 604.8008683
+          intensity: 3.01075
+        }
+        samples {
+          wavelength: 619.92089
+          intensity: 3.24
+        }
+        samples {
+          wavelength: 635.8162974
+          intensity: 3.458187
+        }
+        samples {
+          wavelength: 652.5483053
+          intensity: 3.67
+        }
+        samples {
+          wavelength: 670.1847459
+          intensity: 3.863125
+        }
+        samples {
+          wavelength: 688.8009889
+          intensity: 4.05
+        }
+        samples {
+          wavelength: 708.4810171
+          intensity: 4.239563
+        }
+        samples {
+          wavelength: 729.3186941
+          intensity: 4.43
+        }
+        samples {
+          wavelength: 751.4192606
+          intensity: 4.619563
+        }
+        samples {
+          wavelength: 774.9011125
+          intensity: 4.817
+        }
+        samples {
+          wavelength: 799.8979226
+          intensity: 5.034125
+        }
+        samples {
+          wavelength: 826.5611867
+          intensity: 5.26
+        }
+        samples {
+          wavelength: 855.0632966
+          intensity: 5.485625
+        }
+        samples {
+          wavelength: 885.6012714
+          intensity: 5.717
+        }
+      }
+    }
+    roughness {
+      float_value: 0.01
+    }
+  }
+  mirror {
+    Kr {
+      uniform_spectrum: 0.9
+    }
+  }
+  mix {
+    amount {
+      float_value: 0.5
+    }
+  }
+  plastic {
+    Kd {
+      uniform_spectrum: 0.25
+    }
+    Ks {
+      uniform_spectrum: 0.25
+    }
+    roughness {
+      float_value: 0.1
+    }
+  }
+  substrate {
+    Kd {
+      uniform_spectrum: 0.5
+    }
+    Ks {
+      uniform_spectrum: 0.5
+    }
+    uroughness {
+      float_value: 0.1
+    }
+    vroughness {
+      float_value: 0.1
+    }
+  }
+  subsurfaces {
+    key: 0
+    value {
+      name: APPLE
+      sigma_a {
+        rgb_spectrum {
+          r: 2.29
+          g: 2.39
+          b: 1.97
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.0030
+          g: 0.0034
+          b: 0.046
+        }
+      }
+      Kr {
+        uniform_spectrum: 1.0
+      }
+      Kt {
+        uniform_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 1
+    value {
+      name: CHICKEN1
+      sigma_a {
+        rgb_spectrum {
+          r: 0.15
+          g: 0.21
+          b: 0.38
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.015
+          g: 0.077
+          b: 0.19
+        }
+      }
+      Kr {
+        uniform_spectrum: 1.0
+      }
+      Kt {
+        uniform_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 2
+    value {
+      name: CHICKEN2
+      sigma_a {
+        rgb_spectrum {
+          r: 0.19
+          g: 0.25
+          b: 0.32
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.018
+          g: 0.088
+          b: 0.20
+        }
+      }
+      Kr {
+        uniform_spectrum: 1.0
+      }
+      Kt {
+        uniform_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 3
+    value {
+      name: CREAM
+      sigma_a {
+        rgb_spectrum {
+          r: 7.38
+          g: 5.47
+          b: 3.15
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.0002
+          g: 0.0028
+          b: 0.0163
+        }
+      }
+      Kr {
+        uniform_spectrum: 1.0
+      }
+      Kt {
+        uniform_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 4
+    value {
+      name: KETCHUP
+      sigma_a {
+        rgb_spectrum {
+          r: 0.18
+          g: 0.07
+          b: 0.03
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.061
+          g: 0.97
+          b: 1.45
+        }
+      }
+      Kr {
+        uniform_spectrum: 1.0
+      }
+      Kt {
+        uniform_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 5
+    value {
+      name: MARBLE
+      sigma_a {
+        rgb_spectrum {
+          r: 2.19
+          g: 2.62
+          b: 3.00
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.0021
+          g: 0.0041
+          b: 0.0071
+        }
+      }
+      Kr {
+        uniform_spectrum: 1.0
+      }
+      Kt {
+        uniform_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 6
+    value {
+      name: POTATO
+      sigma_a {
+        rgb_spectrum {
+          r: 0.68
+          g: 0.70
+          b: 0.55
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.0024
+          g: 0.0090
+          b: 0.12
+        }
+      }
+      Kr {
+        uniform_spectrum: 1.0
+      }
+      Kt {
+        uniform_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 7
+    value {
+      name: SKIMMILK
+      sigma_a {
+        rgb_spectrum {
+          r: 0.70
+          g: 1.22
+          b: 1.90
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.0014
+          g: 0.0025
+          b: 0.0142
+        }
+      }
+      Kr {
+        uniform_spectrum: 1.0
+      }
+      Kt {
+        uniform_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 8
+    value {
+      name: SKIN1
+      sigma_a {
+        rgb_spectrum {
+          r: 0.74
+          g: 0.88
+          b: 1.01
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.032
+          g: 0.17
+          b: 0.48
+        }
+      }
+      Kr {
+        uniform_spectrum: 1.0
+      }
+      Kt {
+        uniform_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 9
+    value {
+      name: SKIN2
+      sigma_a {
+        rgb_spectrum {
+          r: 1.09
+          g: 1.59
+          b: 1.79
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.013
+          g: 0.070
+          b: 0.145
+        }
+      }
+      Kr {
+        uniform_spectrum: 1.0
+      }
+      Kt {
+        uniform_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 10
+    value {
+      name: SPECTRALON
+      sigma_a {
+        rgb_spectrum {
+          r: 11.6
+          g: 20.4
+          b: 14.9
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.00
+          g: 0.00
+          b: 0.00
+        }
+      }
+      Kr {
+        uniform_spectrum: 1.0
+      }
+      Kt {
+        uniform_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 11
+    value {
+      name: WHOLEMILK
+      sigma_a {
+        rgb_spectrum {
+          r: 2.55
+          g: 3.21
+          b: 3.77
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.0011
+          g: 0.0024
+          b: 0.014
+        }
+      }
+      Kr {
+        uniform_spectrum: 1.0
+      }
+      Kt {
+        uniform_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 12
+    value {
+      name: LOWFAT_MILK
+      sigma_a {
+        rgb_spectrum {
+          r: 0.89187
+          g: 1.5136
+          b: 2.532
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.002875
+          g: 0.00575
+          b: 0.0115
+        }
+      }
+      Kr {
+        uniform_spectrum: 1.0
+      }
+      Kt {
+        uniform_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 13
+    value {
+      name: REDUCED_MILK
+      sigma_a {
+        rgb_spectrum {
+          r: 2.4858
+          g: 3.1669
+          b: 4.5214
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.0025556
+          g: 0.0051111
+          b: 0.012778
+        }
+      }
+      Kr {
+        uniform_spectrum: 1.0
+      }
+      Kt {
+        uniform_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 14
+    value {
+      name: REGULAR_MILK
+      sigma_a {
+        rgb_spectrum {
+          r: 4.5513
+          g: 5.8294
+          b: 7.136
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.0015333
+          g: 0.0046
+          b: 0.019933
+        }
+      }
+      Kr {
+        uniform_spectrum: 1.0
+      }
+      Kt {
+        uniform_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 15
+    value {
+      name: ESPRESSO
+      sigma_a {
+        rgb_spectrum {
+          r: 0.72378
+          g: 0.84557
+          b: 1.0247
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 4.7984
+          g: 6.5751
+          b: 8.8493
+        }
+      }
+      Kr {
+        uniform_spectrum: 1.0
+      }
+      Kt {
+        uniform_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 16
+    value {
+      name: MINT_MOCHA_COFFEE
+      sigma_a {
+        rgb_spectrum {
+          r: 0.31602
+          g: 0.38538
+          b: 0.48131
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 3.772
+          g: 5.8228
+          b: 7.82
+        }
+      }
+      Kr {
+        uniform_spectrum: 1.0
+      }
+      Kt {
+        uniform_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 17
+    value {
+      name: LOWFAT_SOY_MILK
+      sigma_a {
+        rgb_spectrum {
+          r: 0.30576
+          g: 0.34233
+          b: 0.61664
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.0014375
+          g: 0.0071875
+          b: 0.035937
+        }
+      }
+      Kr {
+        uniform_spectrum: 1.0
+      }
+      Kt {
+        uniform_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 18
+    value {
+      name: REGULAR_SOY_MILK
+      sigma_a {
+        rgb_spectrum {
+          r: 0.59223
+          g: 0.73866
+          b: 1.4693
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.0019167
+          g: 0.0095833
+          b: 0.065167
+        }
+      }
+      Kr {
+        uniform_spectrum: 1.0
+      }
+      Kt {
+        uniform_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 19
+    value {
+      name: LOWFAT_CHOCOLATE_MILK
+      sigma_a {
+        rgb_spectrum {
+          r: 0.64925
+          g: 0.83916
+          b: 1.1057
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.0115
+          g: 0.0368
+          b: 0.1564
+        }
+      }
+      Kr {
+        uniform_spectrum: 1.0
+      }
+      Kt {
+        uniform_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 20
+    value {
+      name: REGULAR_CHOCOLATE_MILK
+      sigma_a {
+        rgb_spectrum {
+          r: 1.4585
+          g: 2.1289
+          b: 2.9527
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.010063
+          g: 0.043125
+          b: 0.14375
+        }
+      }
+      Kr {
+        uniform_spectrum: 1.0
+      }
+      Kt {
+        uniform_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 21
+    value {
+      name: COKE
+      sigma_a {
+        rgb_spectrum {
+          r: 8.9053e-05
+          g: 8.372e-05
+          b: 0
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.10014
+          g: 0.16503
+          b: 0.2468
+        }
+      }
+      Kr {
+        uniform_spectrum: 1.0
+      }
+      Kt {
+        uniform_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 22
+    value {
+      name: PEPSI
+      sigma_a {
+        rgb_spectrum {
+          r: 6.1697e-05
+          g: 4.2564e-05
+          b: 0
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.091641
+          g: 0.14158
+          b: 0.20729
+        }
+      }
+      Kr {
+        uniform_spectrum: 1.0
+      }
+      Kt {
+        uniform_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 23
+    value {
+      name: SPRITE
+      sigma_a {
+        rgb_spectrum {
+          r: 6.0306e-06
+          g: 6.4139e-06
+          b: 6.5504e-06
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.001886
+          g: 0.0018308
+          b: 0.0020025
+        }
+      }
+      Kr {
+        uniform_spectrum: 1.0
+      }
+      Kt {
+        uniform_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 24
+    value {
+      name: GATORADE
+      sigma_a {
+        rgb_spectrum {
+          r: 0.0024574
+          g: 0.003007
+          b: 0.0037325
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.024794
+          g: 0.019289
+          b: 0.008878
+        }
+      }
+      Kr {
+        uniform_spectrum: 1.0
+      }
+      Kt {
+        uniform_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 25
+    value {
+      name: CHARDONNAY
+      sigma_a {
+        rgb_spectrum {
+          r: 1.7982e-05
+          g: 1.3758e-05
+          b: 1.2023e-05
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.010782
+          g: 0.011855
+          b: 0.023997
+        }
+      }
+      Kr {
+        uniform_spectrum: 1.0
+      }
+      Kt {
+        uniform_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 26
+    value {
+      name: WHITE_ZINFANDEL
+      sigma_a {
+        rgb_spectrum {
+          r: 1.7501e-05
+          g: 1.9069e-05
+          b: 1.288e-05
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.012072
+          g: 0.016184
+          b: 0.019843
+        }
+      }
+      Kr {
+        uniform_spectrum: 1.0
+      }
+      Kt {
+        uniform_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 27
+    value {
+      name: MERLOT
+      sigma_a {
+        rgb_spectrum {
+          r: 2.1129e-05
+          g: 0.0
+          b: 0.0
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.11632
+          g: 0.25191
+          b: 0.29434
+        }
+      }
+      Kr {
+        uniform_spectrum: 1.0
+      }
+      Kt {
+        uniform_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 28
+    value {
+      name: BUDWEISER_BEER
+      sigma_a {
+        rgb_spectrum {
+          r: 2.4356e-05
+          g: 2.4079e-05
+          b: 1.0564e-05
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.011492
+          g: 0.024911
+          b: 0.057786
+        }
+      }
+      Kr {
+        uniform_spectrum: 1.0
+      }
+      Kt {
+        uniform_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 29
+    value {
+      name: COORS_LIGHT_BEER
+      sigma_a {
+        rgb_spectrum {
+          r: 5.0922e-05
+          g: 4.301e-05
+          b: 0
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.006164
+          g: 0.013984
+          b: 0.034983
+        }
+      }
+      Kr {
+        uniform_spectrum: 1.0
+      }
+      Kt {
+        uniform_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 30
+    value {
+      name: CLOROX
+      sigma_a {
+        rgb_spectrum {
+          r: 0.0024035
+          g: 0.0031373
+          b: 0.003991
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.0033542
+          g: 0.014892
+          b: 0.026297
+        }
+      }
+      Kr {
+        uniform_spectrum: 1.0
+      }
+      Kt {
+        uniform_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 31
+    value {
+      name: APPLE_JUICE
+      sigma_a {
+        rgb_spectrum {
+          r: 0.00013612
+          g: 0.00015836
+          b: 0.000227
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.012957
+          g: 0.023741
+          b: 0.052184
+        }
+      }
+      Kr {
+        uniform_spectrum: 1.0
+      }
+      Kt {
+        uniform_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 32
+    value {
+      name: CRANBERRY_JUICE
+      sigma_a {
+        rgb_spectrum {
+          r: 0.00010402
+          g: 0.00011646
+          b: 7.8139e-05
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.039437
+          g: 0.094223
+          b: 0.12426
+        }
+      }
+      Kr {
+        uniform_spectrum: 1.0
+      }
+      Kt {
+        uniform_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 33
+    value {
+      name: GRAPE_JUICE
+      sigma_a {
+        rgb_spectrum {
+          r: 5.382e-05
+          g: 0
+          b: 0
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.10404
+          g: 0.23958
+          b: 0.29325
+        }
+      }
+      Kr {
+        uniform_spectrum: 1.0
+      }
+      Kt {
+        uniform_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 34
+    value {
+      name: RUBY_GRAPEFRUIT_JUICE
+      sigma_a {
+        rgb_spectrum {
+          r: 0.011002
+          g: 0.010927
+          b: 0.011036
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.085867
+          g: 0.18314
+          b: 0.25262
+        }
+      }
+      Kr {
+        uniform_spectrum: 1.0
+      }
+      Kt {
+        uniform_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 35
+    value {
+      name: WHITE_GRAPEFRUIT_JUICE
+      sigma_a {
+        rgb_spectrum {
+          r: 0.22826
+          g: 0.23998
+          b: 0.32748
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.0138
+          g: 0.018831
+          b: 0.056781
+        }
+      }
+      Kr {
+        uniform_spectrum: 1.0
+      }
+      Kt {
+        uniform_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 36
+    value {
+      name: SHAMPOO
+      sigma_a {
+        rgb_spectrum {
+          r: 0.0007176
+          g: 0.0008303
+          b: 0.0009016
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.014107
+          g: 0.045693
+          b: 0.061717
+        }
+      }
+      Kr {
+        uniform_spectrum: 1.0
+      }
+      Kt {
+        uniform_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 37
+    value {
+      name: STRAWBERRY_SHAMPOO
+      sigma_a {
+        rgb_spectrum {
+          r: 0.00015671
+          g: 0.00015947
+          b: 1.518e-05
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.01449
+          g: 0.05796
+          b: 0.075823
+        }
+      }
+      Kr {
+        uniform_spectrum: 1.0
+      }
+      Kt {
+        uniform_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 38
+    value {
+      name: HEAD_AND_SHOULDERS_SHAMPOO
+      sigma_a {
+        rgb_spectrum {
+          r: 0.023805
+          g: 0.028804
+          b: 0.034306
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.084621
+          g: 0.15688
+          b: 0.20365
+        }
+      }
+      Kr {
+        uniform_spectrum: 1.0
+      }
+      Kt {
+        uniform_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 39
+    value {
+      name: LEMON_TEA_POWDER
+      sigma_a {
+        rgb_spectrum {
+          r: 0.040224
+          g: 0.045264
+          b: 0.051081
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 2.4288
+          g: 4.5757
+          b: 7.2127
+        }
+      }
+      Kr {
+        uniform_spectrum: 1.0
+      }
+      Kt {
+        uniform_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 40
+    value {
+      name: ORANGE_POWDER
+      sigma_a {
+        rgb_spectrum {
+          r: 0.00015617
+          g: 0.00017482
+          b: 0.0001762
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.001449
+          g: 0.003441
+          b: 0.007863
+        }
+      }
+      Kr {
+        uniform_spectrum: 1.0
+      }
+      Kt {
+        uniform_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 41
+    value {
+      name: PINK_LEMONADE_POWDER
+      sigma_a {
+        rgb_spectrum {
+          r: 0.00012103
+          g: 0.00013073
+          b: 0.00012528
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.001165
+          g: 0.002366
+          b: 0.003195
+        }
+      }
+      Kr {
+        uniform_spectrum: 1.0
+      }
+      Kt {
+        uniform_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 42
+    value {
+      name: CAPPUCCINO_POWDER
+      sigma_a {
+        rgb_spectrum {
+          r: 1.8436
+          g: 2.5851
+          b: 2.1662
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 35.844
+          g: 49.547
+          b: 61.084
+        }
+      }
+      Kr {
+        uniform_spectrum: 1.0
+      }
+      Kt {
+        uniform_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 43
+    value {
+      name: SALT_POWDER
+      sigma_a {
+        rgb_spectrum {
+          r: 0.027333
+          g: 0.032451
+          b: 0.031979
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.28415
+          g: 0.3257
+          b: 0.34148
+        }
+      }
+      Kr {
+        uniform_spectrum: 1.0
+      }
+      Kt {
+        uniform_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 44
+    value {
+      name: SUGAR_POWDER
+      sigma_a {
+        rgb_spectrum {
+          r: 0.00022272
+          g: 0.00025513
+          b: 0.000271
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.012638
+          g: 0.031051
+          b: 0.050124
+        }
+      }
+      Kr {
+        uniform_spectrum: 1.0
+      }
+      Kt {
+        uniform_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 45
+    value {
+      name: SUISSE_MOCHA_POWDER
+      sigma_a {
+        rgb_spectrum {
+          r: 2.7979
+          g: 3.5452
+          b: 4.3365
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 17.502
+          g: 27.004
+          b: 35.433
+        }
+      }
+      Kr {
+        uniform_spectrum: 1.0
+      }
+      Kt {
+        uniform_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 46
+    value {
+      name: PACIFIC_OCEAN_SURFACE_WATER
+      sigma_a {
+        rgb_spectrum {
+          r: 0.0001764
+          g: 0.00032095
+          b: 0.00019617
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.031845
+          g: 0.031324
+          b: 0.030147
+        }
+      }
+      Kr {
+        uniform_spectrum: 1.0
+      }
+      Kt {
+        uniform_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  translucent {
+    Kd {
+      uniform_spectrum: 0.25
+    }
+    Ks {
+      uniform_spectrum: 0.25
+    }
+    reflect {
+      uniform_spectrum: 0.5
+    }
+    transmit {
+      uniform_spectrum: 0.5
+    }
+    roughness {
+      float_value: 0.1
+    }
+  }
+  uber {
+    Kd {
+      uniform_spectrum: 0.25
+    }
+    Ks {
+      uniform_spectrum: 0.25
+    }
+    Kr {
+      uniform_spectrum: 0.25
+    }
+    Kt {
+      uniform_spectrum: 0.25
+    }
+    roughness {
+      float_value: 0.1
+    }
+    eta {
+      float_value: 1.5
+    }
+    opacity {
+      float_value: 1.0
+    }
+  }
+}
+media {
+  homogeneous {
+    key: 0
+    value {
+      preset: APPLE
+      sigma_a {
+        rgb_spectrum {
+          r: 2.29
+          g: 2.39
+          b: 1.97
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.0030
+          g: 0.0034
+          b: 0.046
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 1
+    value {
+      preset: CHICKEN1
+      sigma_a {
+        rgb_spectrum {
+          r: 0.15
+          g: 0.21
+          b: 0.38
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.015
+          g: 0.077
+          b: 0.19
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 2
+    value {
+      preset: CHICKEN2
+      sigma_a {
+        rgb_spectrum {
+          r: 0.19
+          g: 0.25
+          b: 0.32
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.018
+          g: 0.088
+          b: 0.20
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 3
+    value {
+      preset: CREAM
+      sigma_a {
+        rgb_spectrum {
+          r: 7.38
+          g: 5.47
+          b: 3.15
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.0002
+          g: 0.0028
+          b: 0.0163
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 4
+    value {
+      preset: KETCHUP
+      sigma_a {
+        rgb_spectrum {
+          r: 0.18
+          g: 0.07
+          b: 0.03
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.061
+          g: 0.97
+          b: 1.45
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 5
+    value {
+      preset: MARBLE
+      sigma_a {
+        rgb_spectrum {
+          r: 2.19
+          g: 2.62
+          b: 3.00
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.0021
+          g: 0.0041
+          b: 0.0071
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 6
+    value {
+      preset: POTATO
+      sigma_a {
+        rgb_spectrum {
+          r: 0.68
+          g: 0.70
+          b: 0.55
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.0024
+          g: 0.0090
+          b: 0.12
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 7
+    value {
+      preset: SKIMMILK
+      sigma_a {
+        rgb_spectrum {
+          r: 0.70
+          g: 1.22
+          b: 1.90
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.0014
+          g: 0.0025
+          b: 0.0142
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 8
+    value {
+      preset: SKIN1
+      sigma_a {
+        rgb_spectrum {
+          r: 0.74
+          g: 0.88
+          b: 1.01
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.032
+          g: 0.17
+          b: 0.48
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 9
+    value {
+      preset: SKIN2
+      sigma_a {
+        rgb_spectrum {
+          r: 1.09
+          g: 1.59
+          b: 1.79
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.013
+          g: 0.070
+          b: 0.145
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 10
+    value {
+      preset: SPECTRALON
+      sigma_a {
+        rgb_spectrum {
+          r: 11.6
+          g: 20.4
+          b: 14.9
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.00
+          g: 0.00
+          b: 0.00
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 11
+    value {
+      preset: WHOLEMILK
+      sigma_a {
+        rgb_spectrum {
+          r: 2.55
+          g: 3.21
+          b: 3.77
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.0011
+          g: 0.0024
+          b: 0.014
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 12
+    value {
+      preset: LOWFAT_MILK
+      sigma_a {
+        rgb_spectrum {
+          r: 0.89187
+          g: 1.5136
+          b: 2.532
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.002875
+          g: 0.00575
+          b: 0.0115
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 13
+    value {
+      preset: REDUCED_MILK
+      sigma_a {
+        rgb_spectrum {
+          r: 2.4858
+          g: 3.1669
+          b: 4.5214
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.0025556
+          g: 0.0051111
+          b: 0.012778
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 14
+    value {
+      preset: REGULAR_MILK
+      sigma_a {
+        rgb_spectrum {
+          r: 4.5513
+          g: 5.8294
+          b: 7.136
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.0015333
+          g: 0.0046
+          b: 0.019933
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 15
+    value {
+      preset: ESPRESSO
+      sigma_a {
+        rgb_spectrum {
+          r: 0.72378
+          g: 0.84557
+          b: 1.0247
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 4.7984
+          g: 6.5751
+          b: 8.8493
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 16
+    value {
+      preset: MINT_MOCHA_COFFEE
+      sigma_a {
+        rgb_spectrum {
+          r: 0.31602
+          g: 0.38538
+          b: 0.48131
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 3.772
+          g: 5.8228
+          b: 7.82
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 17
+    value {
+      preset: LOWFAT_SOY_MILK
+      sigma_a {
+        rgb_spectrum {
+          r: 0.30576
+          g: 0.34233
+          b: 0.61664
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.0014375
+          g: 0.0071875
+          b: 0.035937
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 18
+    value {
+      preset: REGULAR_SOY_MILK
+      sigma_a {
+        rgb_spectrum {
+          r: 0.59223
+          g: 0.73866
+          b: 1.4693
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.0019167
+          g: 0.0095833
+          b: 0.065167
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 19
+    value {
+      preset: LOWFAT_CHOCOLATE_MILK
+      sigma_a {
+        rgb_spectrum {
+          r: 0.64925
+          g: 0.83916
+          b: 1.1057
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.0115
+          g: 0.0368
+          b: 0.1564
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 20
+    value {
+      preset: REGULAR_CHOCOLATE_MILK
+      sigma_a {
+        rgb_spectrum {
+          r: 1.4585
+          g: 2.1289
+          b: 2.9527
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.010063
+          g: 0.043125
+          b: 0.14375
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 21
+    value {
+      preset: COKE
+      sigma_a {
+        rgb_spectrum {
+          r: 8.9053e-05
+          g: 8.372e-05
+          b: 0
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.10014
+          g: 0.16503
+          b: 0.2468
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 22
+    value {
+      preset: PEPSI
+      sigma_a {
+        rgb_spectrum {
+          r: 6.1697e-05
+          g: 4.2564e-05
+          b: 0
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.091641
+          g: 0.14158
+          b: 0.20729
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 23
+    value {
+      preset: SPRITE
+      sigma_a {
+        rgb_spectrum {
+          r: 6.0306e-06
+          g: 6.4139e-06
+          b: 6.5504e-06
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.001886
+          g: 0.0018308
+          b: 0.0020025
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 24
+    value {
+      preset: GATORADE
+      sigma_a {
+        rgb_spectrum {
+          r: 0.0024574
+          g: 0.003007
+          b: 0.0037325
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.024794
+          g: 0.019289
+          b: 0.008878
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 25
+    value {
+      preset: CHARDONNAY
+      sigma_a {
+        rgb_spectrum {
+          r: 1.7982e-05
+          g: 1.3758e-05
+          b: 1.2023e-05
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.010782
+          g: 0.011855
+          b: 0.023997
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 26
+    value {
+      preset: WHITE_ZINFANDEL
+      sigma_a {
+        rgb_spectrum {
+          r: 1.7501e-05
+          g: 1.9069e-05
+          b: 1.288e-05
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.012072
+          g: 0.016184
+          b: 0.019843
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 27
+    value {
+      preset: MERLOT
+      sigma_a {
+        rgb_spectrum {
+          r: 2.1129e-05
+          g: 0.0
+          b: 0.0
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.11632
+          g: 0.25191
+          b: 0.29434
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 28
+    value {
+      preset: BUDWEISER_BEER
+      sigma_a {
+        rgb_spectrum {
+          r: 2.4356e-05
+          g: 2.4079e-05
+          b: 1.0564e-05
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.011492
+          g: 0.024911
+          b: 0.057786
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 29
+    value {
+      preset: COORS_LIGHT_BEER
+      sigma_a {
+        rgb_spectrum {
+          r: 5.0922e-05
+          g: 4.301e-05
+          b: 0
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.006164
+          g: 0.013984
+          b: 0.034983
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 30
+    value {
+      preset: CLOROX
+      sigma_a {
+        rgb_spectrum {
+          r: 0.0024035
+          g: 0.0031373
+          b: 0.003991
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.0033542
+          g: 0.014892
+          b: 0.026297
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 31
+    value {
+      preset: APPLE_JUICE
+      sigma_a {
+        rgb_spectrum {
+          r: 0.00013612
+          g: 0.00015836
+          b: 0.000227
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.012957
+          g: 0.023741
+          b: 0.052184
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 32
+    value {
+      preset: CRANBERRY_JUICE
+      sigma_a {
+        rgb_spectrum {
+          r: 0.00010402
+          g: 0.00011646
+          b: 7.8139e-05
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.039437
+          g: 0.094223
+          b: 0.12426
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 33
+    value {
+      preset: GRAPE_JUICE
+      sigma_a {
+        rgb_spectrum {
+          r: 5.382e-05
+          g: 0
+          b: 0
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.10404
+          g: 0.23958
+          b: 0.29325
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 34
+    value {
+      preset: RUBY_GRAPEFRUIT_JUICE
+      sigma_a {
+        rgb_spectrum {
+          r: 0.011002
+          g: 0.010927
+          b: 0.011036
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.085867
+          g: 0.18314
+          b: 0.25262
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 35
+    value {
+      preset: WHITE_GRAPEFRUIT_JUICE
+      sigma_a {
+        rgb_spectrum {
+          r: 0.22826
+          g: 0.23998
+          b: 0.32748
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.0138
+          g: 0.018831
+          b: 0.056781
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 36
+    value {
+      preset: SHAMPOO
+      sigma_a {
+        rgb_spectrum {
+          r: 0.0007176
+          g: 0.0008303
+          b: 0.0009016
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.014107
+          g: 0.045693
+          b: 0.061717
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 37
+    value {
+      preset: STRAWBERRY_SHAMPOO
+      sigma_a {
+        rgb_spectrum {
+          r: 0.00015671
+          g: 0.00015947
+          b: 1.518e-05
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.01449
+          g: 0.05796
+          b: 0.075823
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 38
+    value {
+      preset: HEAD_AND_SHOULDERS_SHAMPOO
+      sigma_a {
+        rgb_spectrum {
+          r: 0.023805
+          g: 0.028804
+          b: 0.034306
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.084621
+          g: 0.15688
+          b: 0.20365
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 39
+    value {
+      preset: LEMON_TEA_POWDER
+      sigma_a {
+        rgb_spectrum {
+          r: 0.040224
+          g: 0.045264
+          b: 0.051081
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 2.4288
+          g: 4.5757
+          b: 7.2127
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 40
+    value {
+      preset: ORANGE_POWDER
+      sigma_a {
+        rgb_spectrum {
+          r: 0.00015617
+          g: 0.00017482
+          b: 0.0001762
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.001449
+          g: 0.003441
+          b: 0.007863
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 41
+    value {
+      preset: PINK_LEMONADE_POWDER
+      sigma_a {
+        rgb_spectrum {
+          r: 0.00012103
+          g: 0.00013073
+          b: 0.00012528
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.001165
+          g: 0.002366
+          b: 0.003195
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 42
+    value {
+      preset: CAPPUCCINO_POWDER
+      sigma_a {
+        rgb_spectrum {
+          r: 1.8436
+          g: 2.5851
+          b: 2.1662
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 35.844
+          g: 49.547
+          b: 61.084
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 43
+    value {
+      preset: SALT_POWDER
+      sigma_a {
+        rgb_spectrum {
+          r: 0.027333
+          g: 0.032451
+          b: 0.031979
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.28415
+          g: 0.3257
+          b: 0.34148
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 44
+    value {
+      preset: SUGAR_POWDER
+      sigma_a {
+        rgb_spectrum {
+          r: 0.00022272
+          g: 0.00025513
+          b: 0.000271
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.012638
+          g: 0.031051
+          b: 0.050124
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 45
+    value {
+      preset: SUISSE_MOCHA_POWDER
+      sigma_a {
+        rgb_spectrum {
+          r: 2.7979
+          g: 3.5452
+          b: 4.3365
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 17.502
+          g: 27.004
+          b: 35.433
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 46
+    value {
+      preset: PACIFIC_OCEAN_SURFACE_WATER
+      sigma_a {
+        rgb_spectrum {
+          r: 0.0001764
+          g: 0.00032095
+          b: 0.00019617
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.031845
+          g: 0.031324
+          b: 0.030147
+        }
+      }
+    }
+  }
+  heterogeneous {
+    key: 0
+    value {
+      preset: APPLE
+      sigma_a {
+        rgb_spectrum {
+          r: 2.29
+          g: 2.39
+          b: 1.97
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.0030
+          g: 0.0034
+          b: 0.046
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 1
+    value {
+      preset: CHICKEN1
+      sigma_a {
+        rgb_spectrum {
+          r: 0.15
+          g: 0.21
+          b: 0.38
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.015
+          g: 0.077
+          b: 0.19
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 2
+    value {
+      preset: CHICKEN2
+      sigma_a {
+        rgb_spectrum {
+          r: 0.19
+          g: 0.25
+          b: 0.32
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.018
+          g: 0.088
+          b: 0.20
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 3
+    value {
+      preset: CREAM
+      sigma_a {
+        rgb_spectrum {
+          r: 7.38
+          g: 5.47
+          b: 3.15
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.0002
+          g: 0.0028
+          b: 0.0163
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 4
+    value {
+      preset: KETCHUP
+      sigma_a {
+        rgb_spectrum {
+          r: 0.18
+          g: 0.07
+          b: 0.03
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.061
+          g: 0.97
+          b: 1.45
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 5
+    value {
+      preset: MARBLE
+      sigma_a {
+        rgb_spectrum {
+          r: 2.19
+          g: 2.62
+          b: 3.00
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.0021
+          g: 0.0041
+          b: 0.0071
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 6
+    value {
+      preset: POTATO
+      sigma_a {
+        rgb_spectrum {
+          r: 0.68
+          g: 0.70
+          b: 0.55
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.0024
+          g: 0.0090
+          b: 0.12
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 7
+    value {
+      preset: SKIMMILK
+      sigma_a {
+        rgb_spectrum {
+          r: 0.70
+          g: 1.22
+          b: 1.90
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.0014
+          g: 0.0025
+          b: 0.0142
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 8
+    value {
+      preset: SKIN1
+      sigma_a {
+        rgb_spectrum {
+          r: 0.74
+          g: 0.88
+          b: 1.01
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.032
+          g: 0.17
+          b: 0.48
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 9
+    value {
+      preset: SKIN2
+      sigma_a {
+        rgb_spectrum {
+          r: 1.09
+          g: 1.59
+          b: 1.79
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.013
+          g: 0.070
+          b: 0.145
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 10
+    value {
+      preset: SPECTRALON
+      sigma_a {
+        rgb_spectrum {
+          r: 11.6
+          g: 20.4
+          b: 14.9
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.00
+          g: 0.00
+          b: 0.00
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 11
+    value {
+      preset: WHOLEMILK
+      sigma_a {
+        rgb_spectrum {
+          r: 2.55
+          g: 3.21
+          b: 3.77
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.0011
+          g: 0.0024
+          b: 0.014
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 12
+    value {
+      preset: LOWFAT_MILK
+      sigma_a {
+        rgb_spectrum {
+          r: 0.89187
+          g: 1.5136
+          b: 2.532
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.002875
+          g: 0.00575
+          b: 0.0115
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 13
+    value {
+      preset: REDUCED_MILK
+      sigma_a {
+        rgb_spectrum {
+          r: 2.4858
+          g: 3.1669
+          b: 4.5214
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.0025556
+          g: 0.0051111
+          b: 0.012778
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 14
+    value {
+      preset: REGULAR_MILK
+      sigma_a {
+        rgb_spectrum {
+          r: 4.5513
+          g: 5.8294
+          b: 7.136
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.0015333
+          g: 0.0046
+          b: 0.019933
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 15
+    value {
+      preset: ESPRESSO
+      sigma_a {
+        rgb_spectrum {
+          r: 0.72378
+          g: 0.84557
+          b: 1.0247
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 4.7984
+          g: 6.5751
+          b: 8.8493
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 16
+    value {
+      preset: MINT_MOCHA_COFFEE
+      sigma_a {
+        rgb_spectrum {
+          r: 0.31602
+          g: 0.38538
+          b: 0.48131
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 3.772
+          g: 5.8228
+          b: 7.82
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 17
+    value {
+      preset: LOWFAT_SOY_MILK
+      sigma_a {
+        rgb_spectrum {
+          r: 0.30576
+          g: 0.34233
+          b: 0.61664
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.0014375
+          g: 0.0071875
+          b: 0.035937
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 18
+    value {
+      preset: REGULAR_SOY_MILK
+      sigma_a {
+        rgb_spectrum {
+          r: 0.59223
+          g: 0.73866
+          b: 1.4693
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.0019167
+          g: 0.0095833
+          b: 0.065167
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 19
+    value {
+      preset: LOWFAT_CHOCOLATE_MILK
+      sigma_a {
+        rgb_spectrum {
+          r: 0.64925
+          g: 0.83916
+          b: 1.1057
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.0115
+          g: 0.0368
+          b: 0.1564
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 20
+    value {
+      preset: REGULAR_CHOCOLATE_MILK
+      sigma_a {
+        rgb_spectrum {
+          r: 1.4585
+          g: 2.1289
+          b: 2.9527
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.010063
+          g: 0.043125
+          b: 0.14375
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 21
+    value {
+      preset: COKE
+      sigma_a {
+        rgb_spectrum {
+          r: 8.9053e-05
+          g: 8.372e-05
+          b: 0
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.10014
+          g: 0.16503
+          b: 0.2468
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 22
+    value {
+      preset: PEPSI
+      sigma_a {
+        rgb_spectrum {
+          r: 6.1697e-05
+          g: 4.2564e-05
+          b: 0
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.091641
+          g: 0.14158
+          b: 0.20729
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 23
+    value {
+      preset: SPRITE
+      sigma_a {
+        rgb_spectrum {
+          r: 6.0306e-06
+          g: 6.4139e-06
+          b: 6.5504e-06
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.001886
+          g: 0.0018308
+          b: 0.0020025
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 24
+    value {
+      preset: GATORADE
+      sigma_a {
+        rgb_spectrum {
+          r: 0.0024574
+          g: 0.003007
+          b: 0.0037325
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.024794
+          g: 0.019289
+          b: 0.008878
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 25
+    value {
+      preset: CHARDONNAY
+      sigma_a {
+        rgb_spectrum {
+          r: 1.7982e-05
+          g: 1.3758e-05
+          b: 1.2023e-05
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.010782
+          g: 0.011855
+          b: 0.023997
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 26
+    value {
+      preset: WHITE_ZINFANDEL
+      sigma_a {
+        rgb_spectrum {
+          r: 1.7501e-05
+          g: 1.9069e-05
+          b: 1.288e-05
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.012072
+          g: 0.016184
+          b: 0.019843
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 27
+    value {
+      preset: MERLOT
+      sigma_a {
+        rgb_spectrum {
+          r: 2.1129e-05
+          g: 0.0
+          b: 0.0
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.11632
+          g: 0.25191
+          b: 0.29434
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 28
+    value {
+      preset: BUDWEISER_BEER
+      sigma_a {
+        rgb_spectrum {
+          r: 2.4356e-05
+          g: 2.4079e-05
+          b: 1.0564e-05
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.011492
+          g: 0.024911
+          b: 0.057786
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 29
+    value {
+      preset: COORS_LIGHT_BEER
+      sigma_a {
+        rgb_spectrum {
+          r: 5.0922e-05
+          g: 4.301e-05
+          b: 0
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.006164
+          g: 0.013984
+          b: 0.034983
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 30
+    value {
+      preset: CLOROX
+      sigma_a {
+        rgb_spectrum {
+          r: 0.0024035
+          g: 0.0031373
+          b: 0.003991
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.0033542
+          g: 0.014892
+          b: 0.026297
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 31
+    value {
+      preset: APPLE_JUICE
+      sigma_a {
+        rgb_spectrum {
+          r: 0.00013612
+          g: 0.00015836
+          b: 0.000227
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.012957
+          g: 0.023741
+          b: 0.052184
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 32
+    value {
+      preset: CRANBERRY_JUICE
+      sigma_a {
+        rgb_spectrum {
+          r: 0.00010402
+          g: 0.00011646
+          b: 7.8139e-05
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.039437
+          g: 0.094223
+          b: 0.12426
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 33
+    value {
+      preset: GRAPE_JUICE
+      sigma_a {
+        rgb_spectrum {
+          r: 5.382e-05
+          g: 0
+          b: 0
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.10404
+          g: 0.23958
+          b: 0.29325
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 34
+    value {
+      preset: RUBY_GRAPEFRUIT_JUICE
+      sigma_a {
+        rgb_spectrum {
+          r: 0.011002
+          g: 0.010927
+          b: 0.011036
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.085867
+          g: 0.18314
+          b: 0.25262
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 35
+    value {
+      preset: WHITE_GRAPEFRUIT_JUICE
+      sigma_a {
+        rgb_spectrum {
+          r: 0.22826
+          g: 0.23998
+          b: 0.32748
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.0138
+          g: 0.018831
+          b: 0.056781
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 36
+    value {
+      preset: SHAMPOO
+      sigma_a {
+        rgb_spectrum {
+          r: 0.0007176
+          g: 0.0008303
+          b: 0.0009016
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.014107
+          g: 0.045693
+          b: 0.061717
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 37
+    value {
+      preset: STRAWBERRY_SHAMPOO
+      sigma_a {
+        rgb_spectrum {
+          r: 0.00015671
+          g: 0.00015947
+          b: 1.518e-05
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.01449
+          g: 0.05796
+          b: 0.075823
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 38
+    value {
+      preset: HEAD_AND_SHOULDERS_SHAMPOO
+      sigma_a {
+        rgb_spectrum {
+          r: 0.023805
+          g: 0.028804
+          b: 0.034306
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.084621
+          g: 0.15688
+          b: 0.20365
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 39
+    value {
+      preset: LEMON_TEA_POWDER
+      sigma_a {
+        rgb_spectrum {
+          r: 0.040224
+          g: 0.045264
+          b: 0.051081
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 2.4288
+          g: 4.5757
+          b: 7.2127
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 40
+    value {
+      preset: ORANGE_POWDER
+      sigma_a {
+        rgb_spectrum {
+          r: 0.00015617
+          g: 0.00017482
+          b: 0.0001762
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.001449
+          g: 0.003441
+          b: 0.007863
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 41
+    value {
+      preset: PINK_LEMONADE_POWDER
+      sigma_a {
+        rgb_spectrum {
+          r: 0.00012103
+          g: 0.00013073
+          b: 0.00012528
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.001165
+          g: 0.002366
+          b: 0.003195
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 42
+    value {
+      preset: CAPPUCCINO_POWDER
+      sigma_a {
+        rgb_spectrum {
+          r: 1.8436
+          g: 2.5851
+          b: 2.1662
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 35.844
+          g: 49.547
+          b: 61.084
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 43
+    value {
+      preset: SALT_POWDER
+      sigma_a {
+        rgb_spectrum {
+          r: 0.027333
+          g: 0.032451
+          b: 0.031979
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.28415
+          g: 0.3257
+          b: 0.34148
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 44
+    value {
+      preset: SUGAR_POWDER
+      sigma_a {
+        rgb_spectrum {
+          r: 0.00022272
+          g: 0.00025513
+          b: 0.000271
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.012638
+          g: 0.031051
+          b: 0.050124
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 45
+    value {
+      preset: SUISSE_MOCHA_POWDER
+      sigma_a {
+        rgb_spectrum {
+          r: 2.7979
+          g: 3.5452
+          b: 4.3365
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 17.502
+          g: 27.004
+          b: 35.433
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 46
+    value {
+      preset: PACIFIC_OCEAN_SURFACE_WATER
+      sigma_a {
+        rgb_spectrum {
+          r: 0.0001764
+          g: 0.00032095
+          b: 0.00019617
+        }
+      }
+      sigma_s {
+        rgb_spectrum {
+          r: 0.031845
+          g: 0.031324
+          b: 0.030147
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+}
 light_sources {
   distant {
     L {

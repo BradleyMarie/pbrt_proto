@@ -28,7 +28,7 @@ enum Mapping2D {
   PLANAR = 3;
 }
 
-enum MeasuredSubsurfaces {
+enum MeasuredSubsurface {
   option features.enum_type = CLOSED;
   APPLE = 0;
   CHICKEN1 = 1;
@@ -574,7 +574,7 @@ message MakeNamedMedium {
   message Homogeneous {
     // If using pbrt_proto::v3::Canonicalize, sigma_a will be filled with the
     // default color if none of the other color-determining parameters are set.
-    MeasuredSubsurfaces preset = 1 [features.field_presence = EXPLICIT];
+    MeasuredSubsurface preset = 1 [features.field_presence = EXPLICIT];
     Spectrum sigma_a = 2 [features.field_presence = EXPLICIT];
     Spectrum sigma_s = 3 [features.field_presence = EXPLICIT];
     double g = 4 [default = 0.0];
@@ -584,7 +584,7 @@ message MakeNamedMedium {
   message Heterogeneous {
     // If using pbrt_proto::v3::Canonicalize, sigma_a will be filled with the
     // default color if none of the other color-determining parameters are set.
-    MeasuredSubsurfaces preset = 1 [features.field_presence = EXPLICIT];
+    MeasuredSubsurface preset = 1 [features.field_presence = EXPLICIT];
     Spectrum sigma_a = 2 [features.field_presence = EXPLICIT];
     Spectrum sigma_s = 3 [features.field_presence = EXPLICIT];
     double g = 4 [default = 0.0];
@@ -594,7 +594,7 @@ message MakeNamedMedium {
     int32 nx = 8 [default = 1];
     int32 ny = 9 [default = 1];
     int32 nz = 10 [default = 1];
-    repeated double density = 11;
+    repeated double density = 11;  // Must check size == nx * ny * nz
   }
 
   string name = 1 [features.field_presence = LEGACY_REQUIRED];
@@ -717,10 +717,10 @@ message Material {
   message Subsurface {
     // If using pbrt_proto::v3::Canonicalize, there is no need to check this
     // field and the correct values will be filled into sigma_a and sigma_s.
-    MeasuredSubsurfaces name = 1 [features.field_presence = EXPLICIT];
+    MeasuredSubsurface name = 1 [features.field_presence = EXPLICIT];
     SpectrumTextureParameter sigma_a = 2 [features.field_presence = EXPLICIT];
     SpectrumTextureParameter sigma_s = 3 [features.field_presence = EXPLICIT];
-    double g = 4 [default = 0.0];
+    double g = 4 [default = 0.0];  // Must be explicitly cleared if name is set
     double scale = 5 [default = 1.0];
     double eta = 6 [default = 1.33];
     SpectrumTextureParameter Kr = 7 [features.field_presence = EXPLICIT];
@@ -749,8 +749,8 @@ message Material {
     SpectrumTextureParameter Kr = 3 [features.field_presence = EXPLICIT];
     SpectrumTextureParameter Kt = 4 [features.field_presence = EXPLICIT];
     FloatTextureParameter roughness = 5 [features.field_presence = EXPLICIT];
-    FloatTextureParameter uroughness = 6 [features.field_presence = EXPLICIT];
-    FloatTextureParameter vroughness = 7 [features.field_presence = EXPLICIT];
+    FloatTextureParameter uroughness = 6 [features.field_presence = EXPLICIT]; // Must check
+    FloatTextureParameter vroughness = 7 [features.field_presence = EXPLICIT]; // Must check
     FloatTextureParameter eta = 8 [features.field_presence = EXPLICIT];
     FloatTextureParameter opacity = 9 [features.field_presence = EXPLICIT];
     bool remaproughness = 10 [default = true];
@@ -1109,7 +1109,7 @@ message Shape {
     FloatTextureParameter speculartint = 25 [features.field_presence = EXPLICIT];
     FloatTextureParameter uroughness = 26 [features.field_presence = EXPLICIT];
     FloatTextureParameter vroughness = 27 [features.field_presence = EXPLICIT];
-    MeasuredSubsurfaces name = 28 [features.field_presence = EXPLICIT];
+    MeasuredSubsurface name = 28 [features.field_presence = EXPLICIT];
     SpectrumTextureParameter color = 29 [features.field_presence = EXPLICIT];
     SpectrumTextureParameter k = 30 [features.field_presence = EXPLICIT];
     SpectrumTextureParameter Kd = 31 [features.field_presence = EXPLICIT];
