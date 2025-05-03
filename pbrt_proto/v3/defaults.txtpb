@@ -177,3 +177,247 @@ float_textures {
     }
   }
 }
+materials { }
+media { }
+light_sources {
+  distant {
+    L {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    scale {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    from {
+      x: 0.0
+      y: 0.0
+      z: 0.0
+    }
+    to {
+      x: 0.0
+      y: 0.0
+      z: 1.0
+    }
+  }
+  goniometric {
+    I {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    scale {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+  }
+  infinite {
+    L {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    scale {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+  }
+  point {
+    L {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    scale {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    from {
+      x: 0.0
+      y: 0.0
+      z: 0.0
+    }
+  }
+  projection {
+    I {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    scale {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+  }
+  spot {
+    I {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    scale {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    from {
+      x: 0.0
+      y: 0.0
+      z: 0.0
+    }
+    to {
+      x: 0.0
+      y: 0.0
+      z: 1.0
+    }
+  }
+}
+shapes { }
+spectrum_textures {
+  bilerp {
+    v00 {
+      uniform_spectrum: 0.0
+    }
+    v01 {
+      uniform_spectrum: 1.0
+    }
+    v10 {
+      uniform_spectrum: 0.0
+    }
+    v11 {
+      uniform_spectrum: 1.0
+    }
+    v1 {
+      x: 1.0
+      y: 0.0
+      z: 0.0
+    }
+    v2 {
+      x: 0.0
+      y: 1.0
+      z: 0.0
+    }
+  }
+  checkerboard2d {
+    tex1 {
+      uniform_spectrum: 1.0
+    }
+    tex2 {
+      uniform_spectrum: 0.0
+    }
+    v1 {
+      x: 1.0
+      y: 0.0
+      z: 0.0
+    }
+    v2 {
+      x: 0.0
+      y: 1.0
+      z: 0.0
+    }
+  }
+  checkerboard3d {
+    tex1 {
+      uniform_spectrum: 1.0
+    }
+    tex2 {
+      uniform_spectrum: 0.0
+    }
+  }
+  constant {
+    value {
+      uniform_spectrum: 1.0
+    }
+  }
+  dots {
+    inside {
+      uniform_spectrum: 1.0
+    }
+    outside {
+      uniform_spectrum: 0.0
+    }
+    v1 {
+      x: 1.0
+      y: 0.0
+      z: 0.0
+    }
+    v2 {
+      x: 0.0
+      y: 1.0
+      z: 0.0
+    }
+  }
+  imagemap {
+    v1 {
+      x: 1.0
+      y: 0.0
+      z: 0.0
+    }
+    v2 {
+      x: 0.0
+      y: 1.0
+      z: 0.0
+    }
+  }
+  mix {
+    tex1 {
+      uniform_spectrum: 0.0
+    }
+    tex2 {
+      uniform_spectrum: 1.0
+    }
+    amount {
+      float_value: 0.5
+    }
+  }
+  scale {
+    tex1 {
+      uniform_spectrum: 1.0
+    }
+    tex2 {
+      uniform_spectrum: 1.0
+    }
+  }
+  uv {
+    v1 {
+      x: 1.0
+      y: 0.0
+      z: 0.0
+    }
+    v2 {
+      x: 0.0
+      y: 1.0
+      z: 0.0
+    }
+  }
+}

@@ -919,13 +919,6 @@ void Canonicalize(PbrtProto& proto) {
             SetDefaultV2(
                 *directive.mutable_spectrum_texture()->mutable_bilerp());
             break;
-          case SpectrumTexture::kConstant:
-            SetSpectrumTextureParameterDefault(
-                *directive.mutable_spectrum_texture()
-                     ->mutable_constant()
-                     ->mutable_value(),
-                1.0);
-            break;
           case SpectrumTexture::kCheckerboard2D:
             SetSpectrumTextureParameterDefault(
                 *directive.mutable_spectrum_texture()
@@ -953,6 +946,13 @@ void Canonicalize(PbrtProto& proto) {
                      ->mutable_checkerboard3d()
                      ->mutable_tex2(),
                 0.0);
+            break;
+          case SpectrumTexture::kConstant:
+            SetSpectrumTextureParameterDefault(
+                *directive.mutable_spectrum_texture()
+                     ->mutable_constant()
+                     ->mutable_value(),
+                1.0);
             break;
           case SpectrumTexture::kDots:
             SetSpectrumTextureParameterDefault(

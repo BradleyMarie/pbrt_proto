@@ -90,4 +90,101 @@ message Defaults {
 
   // The default values for every type of FloatTexture
   required DefaultFloatTextures float_textures = 5;
+
+  // A container for the default values for every type of Material
+  message DefaultMaterials {
+    // TODO
+  }
+
+  // The default values for every type of Material
+  required DefaultMaterials materials = 6;
+
+  // A container for the default values for every type of Medium
+  message DefaultMedia {
+    // TODO
+  }
+
+  // The default values for every type of Medium
+  required DefaultMedia media = 7;
+
+  // A container for the default values for every type of LightSource
+  message DefaultLightSources {
+    // The default "distant" LightSource
+    required LightSource.Distant distant = 1;
+
+    // The default "goniometric" LightSource
+    required LightSource.Goniometric goniometric = 2;
+
+    // The default "infinite" LightSource
+    required LightSource.Infinite infinite = 3;
+
+    // The default "point" LightSource
+    required LightSource.Point point = 4;
+
+    // The default "projection" LightSource
+    required LightSource.Projection projection = 5;
+
+    // The default "spot" LightSource
+    required LightSource.Spot spot = 6;
+  }
+
+  // The default values for every type of LightSource
+  required DefaultLightSources light_sources = 8;
+
+  // A container for the default values for every type of Shape
+  message DefaultShapes {
+    // TODO
+  }
+
+  // The default values for every type of Shape
+  required DefaultShapes shapes = 9;
+
+  // A container for the default values for every type of SpectrumTexture
+  message DefaultSpectrumTextures {
+    // The default "bilerp" SpectrumTexture
+    required SpectrumTexture.Bilerp bilerp = 1;
+
+    // The default 2D "checkerboard" SpectrumTexture
+    required SpectrumTexture.Checkerboard2D checkerboard2d = 2;
+
+    // The default 3D "checkerboard" SpectrumTexture
+    required SpectrumTexture.Checkerboard2D checkerboard3d = 3;
+
+    // The default "constant" SpectrumTexture
+    required SpectrumTexture.Constant constant = 4;
+
+    // The default "dots" SpectrumTexture
+    required SpectrumTexture.Dots dots = 5;
+
+    // The default "fbm" SpectrumTexture is fully captured in its definition
+    reserved 6;
+
+    // The default "imagemap" SpectrumTexture
+    required SpectrumTexture.ImageMap imagemap = 7;
+
+    // The default "marble" SpectrumTexture is fully captured in its definition
+    reserved 8;
+
+    // The default "mix" SpectrumTexture
+    required SpectrumTexture.Mix mix = 9;
+
+    // The default "ptex" SpectrumTexture is fully captured in its definition
+    reserved 10;
+
+    // The default "scale" SpectrumTexture
+    required SpectrumTexture.Scale scale = 11;
+
+    // The default "uv" SpectrumTexture is fully captured in its definition
+    required SpectrumTexture.Uv uv = 12;
+
+    // The default "windy" SpectrumTexture is fully captured in its definition
+    reserved 13;
+
+    // The default "wrinkled" SpectrumTexture is fully captured in its
+    // definition
+    reserved 14;
+  }
+
+  // The default values for every type of SpectrumTexture
+  required DefaultSpectrumTextures spectrum_textures = 10;
 }
