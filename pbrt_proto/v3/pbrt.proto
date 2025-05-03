@@ -645,8 +645,8 @@ message Material {
     // default color if none of the other color-determining parameters are set.
     SpectrumTextureParameter sigma_a = 1 [features.field_presence = EXPLICIT];  // Must check
     SpectrumTextureParameter color = 2 [features.field_presence = EXPLICIT];  // Must check
-    FloatTextureParameter eumelanin = 3 [features.field_presence = EXPLICIT];  // Must check
-    FloatTextureParameter pheomelanin = 4 [features.field_presence = EXPLICIT];  // Must check
+    FloatTextureParameter eumelanin = 3 [features.field_presence = EXPLICIT];
+    FloatTextureParameter pheomelanin = 4 [features.field_presence = EXPLICIT];
     FloatTextureParameter eta = 5 [features.field_presence = EXPLICIT];
     FloatTextureParameter beta_m = 6 [features.field_presence = EXPLICIT];
     FloatTextureParameter beta_n = 7 [features.field_presence = EXPLICIT];
