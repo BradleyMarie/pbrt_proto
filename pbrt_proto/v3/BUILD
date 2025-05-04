@@ -42,6 +42,14 @@ cc_proto_library(
     deps = [":defaults_proto"],
 )
 
+filegroup(
+    name = "defaults_txtpb",
+    srcs = [
+        ":defaults.txtpb",
+    ],
+    visibility = ["//visibility:public"],
+)
+
 genrule(
     name = "defaults_binpb",
     srcs = [
