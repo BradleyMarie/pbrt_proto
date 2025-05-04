@@ -158,6 +158,11 @@ message Accelerator {
     optional int32 maxdepth = 5 [default = -1];
   }
 
+  // If a directive contains an Accelerator with none of these fields set, the
+  // renderer should treat that as if `bvh` with the default empty value.
+  //
+  // https://github.com/mmp/pbrt-v3/blob/13d871faae88233b327d04cda24022b8bb0093ee/src/core/api.cpp#L1571
+  // https://github.com/mmp/pbrt-v3/blob/13d871faae88233b327d04cda24022b8bb0093ee/src/core/api.cpp#L1654
   oneof accelerator_type {
     Bvh bvh = 1;
     KdTree kdtree = 2;
@@ -182,6 +187,8 @@ message AreaLightSource {
     optional Spectrum scale = 4;
   }
 
+  // If none of these fields are present, subsequent surfaces are not area
+  // lights.
   oneof area_light_source_type {
     Diffuse diffuse = 1;
   }
@@ -237,6 +244,10 @@ message Camera {
     optional double shutterclose = 6 [default = 1.0];
   }
 
+  // If attempting to render with a Camera that does not have one of these
+  // fields set, the renderer should render a black image.
+  //
+  // https://github.com/mmp/pbrt-v3/blob/13d871faae88233b327d04cda24022b8bb0093ee/src/core/api.cpp#L1664
   oneof camera_type {
     Environment environment = 1;
     Orthographic orthographic = 2;
@@ -290,11 +301,20 @@ message Film {
     optional string filename = 7 [default = "pbrt.exr"];
   }
 
+
+  // If attempting to render to a Film that does not have one of these fields
+  // set, the renderer should render a black image.
+  //
+  // https://github.com/mmp/pbrt-v3/blob/13d871faae88233b327d04cda24022b8bb0093ee/src/core/api.cpp#L1720
   oneof film_type {
     Image image = 1;
   }
 }
 
+// If attempting to render with a Filter that does not have one of these fields
+// set, the renderer should exit immediately with an error.
+//
+// https://github.com/mmp/pbrt-v3/blob/13d871faae88233b327d04cda24022b8bb0093ee/src/core/api.cpp#L852
 message Filter {
   message Box {
     optional double xwidth = 1 [default = 0.5];
@@ -438,6 +458,10 @@ message FloatTexture {
     optional double roughness = 2 [default = 0.5];
   }
 
+  // If none of these fields are set, the directive should be ignored and have
+  // no impact.
+  //
+  // https://github.com/mmp/pbrt-v3/blob/13d871faae88233b327d04cda24022b8bb0093ee/src/core/api.cpp#L1209
   oneof float_texture_type {
     Bilerp bilerp = 2;
     Checkerboard2D checkerboard2d = 3;
@@ -538,6 +562,10 @@ message Integrator {
     optional PixelBounds pixelbounds = 2;
   }
 
+  // If attempting to render to a Film that does not have one of these fields
+  // set, the renderer should render a black image.
+  //
+  // https://github.com/mmp/pbrt-v3/blob/13d871faae88233b327d04cda24022b8bb0093ee/src/core/api.cpp#L1619
   oneof integrator_type {
     AmbientOcclusion ambientocclusion = 1;
     Bdpt bdpt = 2;
@@ -580,6 +608,10 @@ message MakeNamedMedium {
 
   required string name = 1;
 
+  // If none of these fields are set, the directive should be ignored and have
+  // no impact.
+  //
+  // https://github.com/mmp/pbrt-v3/blob/13d871faae88233b327d04cda24022b8bb0093ee/src/core/api.cpp#L1097
   oneof medium_type {
     Homogeneous homogeneous = 2;
     Heterogeneous heterogeneous = 3;
@@ -730,6 +762,8 @@ message Material {
     optional FloatTextureParameter bumpmap = 11;
   }
 
+  // If none of these fields are set, surfaces with this material applied should
+  // be ignored during ray intersections. 
   oneof material_type {
     Disney disney = 1;
     Fourier fourier = 2;
@@ -800,6 +834,10 @@ message LightSource {
     optional Spectrum scale = 6;
   }
 
+  // If none of these fields are set, the directive should be ignored and have
+  // no impact.
+  //
+  // https://github.com/mmp/pbrt-v3/blob/13d871faae88233b327d04cda24022b8bb0093ee/src/core/api.cpp#L1306
   oneof light_source_type {
     Distant distant = 1;
     Goniometric goniometric = 2;
@@ -876,6 +914,10 @@ message Sampler {
     optional int32 dimensions = 2 [default = 4];
   }
 
+  // If attempting to render to a Sampler that does not have one of these fields
+  // set, the renderer should render a black image.
+  //
+  // https://github.com/mmp/pbrt-v3/blob/13d871faae88233b327d04cda24022b8bb0093ee/src/core/api.cpp#L1671
   oneof sampler_type {
     Halton halton = 1;
     MaxMinDist maxmindist = 2;
@@ -1029,6 +1071,11 @@ message Shape {
     optional FloatTextureParameter shadowalpha = 8;
   }
 
+  // If none of these fields are set, the directive should be ignored and have
+  // no impact.
+  //
+  // https://github.com/mmp/pbrt-v3/blob/13d871faae88233b327d04cda24022b8bb0093ee/src/core/api.cpp#L1345
+  // https://github.com/mmp/pbrt-v3/blob/13d871faae88233b327d04cda24022b8bb0093ee/src/core/api.cpp#L1373
   oneof shape_type {
     Cone cone = 1;
     Curve curve = 2;
@@ -1213,6 +1260,10 @@ message SpectrumTexture {
     optional double roughness = 2 [default = 0.5];
   }
 
+  // If none of these fields are set, the directive should be ignored and have
+  // no impact.
+  //
+  // https://github.com/mmp/pbrt-v3/blob/13d871faae88233b327d04cda24022b8bb0093ee/src/core/api.cpp#L1227
   oneof spectrum_texture_type {
     Bilerp bilerp = 2;
     Checkerboard2D checkerboard2d = 3;
