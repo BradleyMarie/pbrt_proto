@@ -37,6 +37,11 @@ proto_library(
     ],
 )
 
+cc_proto_library(
+    name = "defaults_cc_proto",
+    deps = [":defaults_proto"],
+)
+
 genrule(
     name = "defaults_binpb",
     srcs = [
@@ -57,25 +62,21 @@ genrule(
     visibility = ["//visibility:public"],
 )
 
-cc_library(
-    name = "defaults",
-    srcs = ["defaults.cc"],
-    hdrs = ["defaults.h"],
-    deps = [
-        ":pbrt_cc_proto",
-    ],
-)
-
 cc_test(
     name = "defaults_test",
     srcs = ["defaults_test.cc"],
+    data = [
+        ":defaults.binpb",
+    ],
     deps = [
-        ":defaults",
+        ":defaults_cc_proto",
         ":pbrt_cc_proto",
         "//pbrt_proto/testing:proto_matchers",
         "@abseil-cpp//absl/functional:function_ref",
+        "@abseil-cpp//absl/log:check",
         "@abseil-cpp//absl/status:status_matchers",
         "@abseil-cpp//absl/strings:string_view",
+        "@bazel_tools//tools/cpp/runfiles",
         "@googletest//:gtest_main",
     ],
 )

@@ -18,7 +18,7 @@ message Defaults {
   // model being renderered to configure these bits of global state. Then the
   // model is free to override them if required.
   //
-  // This field is guaranteed to provide at an Accelerator, a Camera, a Film, a
+  // This field is guaranteed to provide an Accelerator, a Camera, a Film, a
   // Filter, an Integrator, and a Sampler; however, their order and type (while
   // static) are not defined as part of this interface.
   required PbrtProto global_defaults = 1;
