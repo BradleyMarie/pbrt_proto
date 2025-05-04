@@ -33,12 +33,12 @@ class DefaultsTest : public testing::Test {
 };
 
 TEST_F(DefaultsTest, Global) {
-  bool found_accelerator;
-  bool found_camera;
-  bool found_film;
-  bool found_filter;
-  bool found_integrator;
-  bool found_sampler;
+  bool found_accelerator = false;
+  bool found_camera = false;
+  bool found_film = false;
+  bool found_filter = false;
+  bool found_integrator = false;
+  bool found_sampler = false;
   for (auto& directive : defaults_.global_defaults().directives()) {
     if (directive.has_accelerator()) {
       EXPECT_NE(directive.accelerator().accelerator_type_case(),
