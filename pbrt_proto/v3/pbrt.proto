@@ -110,11 +110,12 @@ message Vector {
 
 message Spectrum {
   oneof spectrum_type {
-    BlackbodySpectrum blackbody_spectrum = 1;
-    RgbSpectrum rgb_spectrum = 2;
-    XyzSpectrum xyz_spectrum = 3;
-    SampledSpectrum sampled_spectrum = 4;
-    string sampled_spectrum_filename = 5;
+    double uniform_spectrum = 1;
+    BlackbodySpectrum blackbody_spectrum = 2;
+    RgbSpectrum rgb_spectrum = 3;
+    XyzSpectrum xyz_spectrum = 4;
+    SampledSpectrum sampled_spectrum = 5;
+    string sampled_spectrum_filename = 6;
   }
 }
 
@@ -219,7 +220,7 @@ message Camera {
     optional double lensradius = 1 [default = 0.0];
     optional double focaldistance = 2 [default = 1e6];
     optional double frameaspectratio = 3;  // Must check
-    optional ScreenWindow screenwindow = 4;
+    optional ScreenWindow screenwindow = 4;  // Must check
     optional double shutteropen = 5 [default = 0.0];
     optional double shutterclose = 6 [default = 1.0];
   }
@@ -228,7 +229,7 @@ message Camera {
     optional double lensradius = 1 [default = 0.0];
     optional double focaldistance = 2 [default = 1e6];
     optional double frameaspectratio = 3;  // Must check
-    optional ScreenWindow screenwindow = 4;
+    optional ScreenWindow screenwindow = 4;  // Must check
     optional double fov = 5 [default = 90.0];
     optional double halffov = 6;  // Must check, overrides fov
     optional double shutteropen = 7 [default = 0.0];
@@ -390,7 +391,7 @@ message FloatTexture {
   }
 
   message Constant {
-    optional FloatTextureParameter value = 1;
+    optional double value = 1 [default = 1.0];
   }
 
   message Dots {
@@ -1182,7 +1183,7 @@ message SpectrumTexture {
   }
 
   message Constant {
-    optional SpectrumTextureParameter value = 1;
+    optional Spectrum value = 1;
   }
 
   message Dots {

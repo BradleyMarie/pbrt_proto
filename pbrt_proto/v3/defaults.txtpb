@@ -122,11 +122,6 @@ float_textures {
       float_value: 0.0
     }
   }
-  constant {
-    value {
-      float_value: 1.0
-    }
-  }
   dots {
     inside {
       float_value: 1.0

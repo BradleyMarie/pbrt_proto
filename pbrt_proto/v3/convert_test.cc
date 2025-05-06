@@ -108,56 +108,55 @@ TEST(Convert, TryRemoveSpectrumFindsXyz) {
 
 TEST(Convert, TryRemoveFloatTextureNoMatch) {
   std::stringstream stream(
-      "Texture \"name\" \"float\" \"constant\" \"integer e\" 1");
+      "Texture \"name\" \"float\" \"scale\" \"integer e\" 1");
   EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(R"pb(directives {
                                                                float_texture {
                                                                  name: "name"
-                                                                 constant {}
+                                                                 scale {}
                                                                }
                                                              })pb")));
 }
 
 TEST(Convert, TryRemoveFloatTextureFindsFloat) {
   std::stringstream stream(
-      "Texture \"name\" \"float\" \"constant\" \"float value\" 1.0");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(
-                  R"pb(directives {
-                         float_texture {
-                           name: "name"
-                           constant { value { float_value: 1.0 } }
-                         }
-                       })pb")));
+      "Texture \"name\" \"float\" \"scale\" \"float tex1\" 1.0");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
+                                   R"pb(directives {
+                                          float_texture {
+                                            name: "name"
+                                            scale { tex1 { float_value: 1.0 } }
+                                          }
+                                        })pb")));
 }
 
 TEST(Convert, TryRemoveFloatTextureFindsTexture) {
   std::stringstream stream(
-      "Texture \"name\" \"float\" \"constant\" \"texture value\" \"value\"");
+      "Texture \"name\" \"float\" \"scale\" \"texture tex1\" \"value\"");
   EXPECT_THAT(Convert(stream),
               IsOkAndHolds(EqualsProto(
                   R"pb(directives {
                          float_texture {
                            name: "name"
-                           constant { value { float_texture_name: "value" } }
+                           scale { tex1 { float_texture_name: "value" } }
                          }
                        })pb")));
 }
 
 TEST(Convert, TryRemoveSpectrumTextureNoMatch) {
   std::stringstream stream(
-      "Texture \"name\" \"spectrum\" \"constant\" \"integer e\" 1");
+      "Texture \"name\" \"spectrum\" \"scale\" \"integer e\" 1");
   EXPECT_THAT(Convert(stream),
               IsOkAndHolds(EqualsProto(R"pb(directives {
                                               spectrum_texture {
                                                 name: "name"
-                                                constant {}
+                                                scale {}
                                               }
                                             })pb")));
 }
 
 TEST(Convert, TryRemoveSpectrumTextureFindsBlackbody) {
   std::stringstream stream(
-      "Texture \"name\" \"spectrum\" \"constant\" \"blackbody value\" [1.0 "
+      "Texture \"name\" \"spectrum\" \"scale\" \"blackbody tex1\" [1.0 "
       "2.0]");
   EXPECT_THAT(
       Convert(stream),
@@ -165,10 +164,8 @@ TEST(Convert, TryRemoveSpectrumTextureFindsBlackbody) {
           R"pb(directives {
                  spectrum_texture {
                    name: "name"
-                   constant {
-                     value {
-                       blackbody_spectrum { temperature: 1.0 scale: 2.0 }
-                     }
+                   scale {
+                     tex1 { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
                    }
                  }
                })pb")));
@@ -176,29 +173,29 @@ TEST(Convert, TryRemoveSpectrumTextureFindsBlackbody) {
 
 TEST(Convert, TryRemoveSpectrumTextureFindsRgb) {
   std::stringstream stream(
-      "Texture \"name\" \"spectrum\" \"constant\" \"rgb value\" [1.0 2.0 3.0]");
+      "Texture \"name\" \"spectrum\" \"scale\" \"rgb tex1\" [1.0 2.0 3.0]");
   EXPECT_THAT(
       Convert(stream),
       IsOkAndHolds(EqualsProto(
           R"pb(directives {
                  spectrum_texture {
                    name: "name"
-                   constant { value { rgb_spectrum { r: 1.0 g: 2.0 b: 3.0 } } }
+                   scale { tex1 { rgb_spectrum { r: 1.0 g: 2.0 b: 3.0 } } }
                  }
                })pb")));
 }
 
 TEST(Convert, TryRemoveSpectrumTextureFindsSamples) {
   std::stringstream stream(
-      "Texture \"name\" \"spectrum\" \"constant\" \"spectrum value\" [1.0 2.0 "
+      "Texture \"name\" \"spectrum\" \"scale\" \"spectrum tex1\" [1.0 2.0 "
       "3.0 4.0]");
   EXPECT_THAT(Convert(stream),
               IsOkAndHolds(EqualsProto(
                   R"pb(directives {
                          spectrum_texture {
                            name: "name"
-                           constant {
-                             value {
+                           scale {
+                             tex1 {
                                sampled_spectrum {
                                  samples { wavelength: 1.0 intensity: 2.0 }
                                  samples { wavelength: 3.0 intensity: 4.0 }
@@ -211,53 +208,52 @@ TEST(Convert, TryRemoveSpectrumTextureFindsSamples) {
 
 TEST(Convert, TryRemoveSpectrumTextureFindsFilename) {
   std::stringstream stream(
-      "Texture \"name\" \"spectrum\" \"constant\" \"spectrum value\" "
+      "Texture \"name\" \"spectrum\" \"scale\" \"spectrum tex1\" "
       "\"value\"");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(
-          R"pb(directives {
-                 spectrum_texture {
-                   name: "name"
-                   constant { value { sampled_spectrum_filename: "value" } }
-                 }
-               })pb")));
-}
-
-TEST(Convert, TryRemoveSpectrumTextureFindsTexture) {
-  std::stringstream stream(
-      "Texture \"name\" \"spectrum\" \"constant\" \"texture value\" \"value\"");
   EXPECT_THAT(Convert(stream),
               IsOkAndHolds(EqualsProto(
                   R"pb(directives {
                          spectrum_texture {
                            name: "name"
-                           constant { value { spectrum_texture_name: "value" } }
+                           scale { tex1 { sampled_spectrum_filename: "value" } }
+                         }
+                       })pb")));
+}
+
+TEST(Convert, TryRemoveSpectrumTextureFindsTexture) {
+  std::stringstream stream(
+      "Texture \"name\" \"spectrum\" \"scale\" \"texture tex1\" \"value\"");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(
+                  R"pb(directives {
+                         spectrum_texture {
+                           name: "name"
+                           scale { tex1 { spectrum_texture_name: "value" } }
                          }
                        })pb")));
 }
 
 TEST(Convert, TryRemoveSpectrumTextureFindsXyz) {
   std::stringstream stream(
-      "Texture \"name\" \"spectrum\" \"constant\" \"xyz value\" [1.0 2.0 3.0]");
+      "Texture \"name\" \"spectrum\" \"scale\" \"xyz tex1\" [1.0 2.0 3.0]");
   EXPECT_THAT(
       Convert(stream),
       IsOkAndHolds(EqualsProto(
           R"pb(directives {
                  spectrum_texture {
                    name: "name"
-                   constant { value { xyz_spectrum { x: 1.0 y: 2.0 z: 3.0 } } }
+                   scale { tex1 { xyz_spectrum { x: 1.0 y: 2.0 z: 3.0 } } }
                  }
                })pb")));
 }
 
 TEST(Convert, TryRemoveFloatTextureFindsIgnoresOther) {
   std::stringstream stream(
-      "Texture \"name\" \"float\" \"constant\" \"integer value\" 1");
+      "Texture \"name\" \"float\" \"scale\" \"integer value\" 1");
   EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(R"pb(directives {
                                                                float_texture {
                                                                  name: "name"
-                                                                 constant {}
+                                                                 scale {}
                                                                }
                                                              })pb")));
 }
@@ -846,14 +842,13 @@ TEST(Convert, FloatTextureFbm) {
 TEST(Convert, FloatTextureConstant) {
   std::stringstream stream(
       "Texture \"name\" \"float\" \"constant\" \"float value\" 1.0");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(
-                  R"pb(directives {
-                         float_texture {
-                           name: "name"
-                           constant { value { float_value: 1.0 } }
-                         }
-                       })pb")));
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
+                                   R"pb(directives {
+                                          float_texture {
+                                            name: "name"
+                                            constant { value: 1.0 }
+                                          }
+                                        })pb")));
 }
 
 TEST(Convert, FloatTextureImageMapBlack) {

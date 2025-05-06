@@ -1397,9 +1397,10 @@ absl::Status ParserV3::FloatTexture(
   } else if (float_texture_type == "constant") {
     auto& constant = *float_texture.mutable_constant();
 
-    TryRemoveFloatTexture(
-        parameters, "value",
-        std::bind(&FloatTexture::Constant::mutable_value, &constant));
+    if (std::optional<double> value = TryRemoveFloat(parameters, "value");
+        value) {
+      constant.set_value(*value);
+    }
   } else if (float_texture_type == "dots") {
     auto& dots = *float_texture.mutable_dots();
 
@@ -3074,7 +3075,7 @@ absl::Status ParserV3::SpectrumTexture(
   } else if (spectrum_texture_type == "constant") {
     auto& constant = *spectrum_texture.mutable_constant();
 
-    TryRemoveSpectrumTexture(
+    TryRemoveSpectrum(
         parameters, "value",
         std::bind(&SpectrumTexture::Constant::mutable_value, &constant));
   } else if (spectrum_texture_type == "dots") {

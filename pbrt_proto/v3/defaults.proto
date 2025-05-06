@@ -57,8 +57,8 @@ message Defaults {
     // The default 3D "checkerboard" FloatTexture
     required FloatTexture.Checkerboard2D checkerboard3d = 3;
 
-    // The default "constant" FloatTexture
-    required FloatTexture.Constant constant = 4;
+    // The default "constant" FloatTexture is fully captured in its definition
+    reserved 4;
 
     // The default "dots" FloatTexture
     required FloatTexture.Dots dots = 5;
