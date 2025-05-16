@@ -116,7 +116,7 @@ class MockParser final : public Parser {
               (absl::string_view,
                (absl::flat_hash_map<absl::string_view, Parameter>&)),
               (override));
-  MOCK_METHOD(absl::Status, Filter,
+  MOCK_METHOD(absl::Status, PixelFilter,
               (absl::string_view,
                (absl::flat_hash_map<absl::string_view, Parameter>&)),
               (override));
@@ -1772,30 +1772,6 @@ TEST(Film, Fails) {
               StatusIs(absl::StatusCode::kUnknown, ""));
 }
 
-TEST(Filter, Succeeds) {
-  std::stringstream stream("Filter \"abc\"");
-  MockParser parser;
-  EXPECT_CALL(parser, Filter("abc", IsEmpty()))
-      .WillOnce(Return(absl::OkStatus()));
-  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
-}
-
-TEST(Filter, MissingType) {
-  std::stringstream stream("Filter");
-  EXPECT_THAT(MockParser().ReadFrom(stream),
-              StatusIs(absl::StatusCode::kInvalidArgument,
-                       "Missing type parameter to directive Filter"));
-}
-
-TEST(Filter, Fails) {
-  std::stringstream stream("Filter \"abc\"");
-  MockParser parser;
-  EXPECT_CALL(parser, Filter("abc", IsEmpty()))
-      .WillOnce(Return(absl::UnknownError("")));
-  EXPECT_THAT(parser.ReadFrom(stream),
-              StatusIs(absl::StatusCode::kUnknown, ""));
-}
-
 TEST(Identity, Succeeds) {
   std::stringstream stream("Identity");
   MockParser parser;
@@ -2110,6 +2086,30 @@ TEST(ObjectInstance, Fails) {
   std::stringstream stream("ObjectInstance \"a\"");
   MockParser parser;
   EXPECT_CALL(parser, ObjectInstance("a"))
+      .WillOnce(Return(absl::UnknownError("")));
+  EXPECT_THAT(parser.ReadFrom(stream),
+              StatusIs(absl::StatusCode::kUnknown, ""));
+}
+
+TEST(PixelFilter, Succeeds) {
+  std::stringstream stream("PixelFilter \"abc\"");
+  MockParser parser;
+  EXPECT_CALL(parser, PixelFilter("abc", IsEmpty()))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(PixelFilter, MissingType) {
+  std::stringstream stream("PixelFilter");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Missing type parameter to directive PixelFilter"));
+}
+
+TEST(PixelFilter, Fails) {
+  std::stringstream stream("PixelFilter \"abc\"");
+  MockParser parser;
+  EXPECT_CALL(parser, PixelFilter("abc", IsEmpty()))
       .WillOnce(Return(absl::UnknownError("")));
   EXPECT_THAT(parser.ReadFrom(stream),
               StatusIs(absl::StatusCode::kUnknown, ""));

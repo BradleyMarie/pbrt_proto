@@ -18,13 +18,13 @@ global_defaults {
     }
   }
   directives {
-    filter {
-      box { }
+    integrator {
+      path { }
     }
   }
   directives {
-    integrator {
-      path { }
+    pixel_filter {
+      box { }
     }
   }
   directives {

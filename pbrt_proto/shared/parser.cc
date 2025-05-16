@@ -968,14 +968,6 @@ absl::Status Parser::ReadFrom(std::istream& stream) {
       }
 
       status = Film(*type_name, parameters);
-    } else if (**next == "Filter") {
-      absl::StatusOr<absl::string_view> type_name = ReadParameters(
-          "Filter", parameter_type_names_, storage, tokenizer, parameters);
-      if (!type_name.ok()) {
-        return type_name.status();
-      }
-
-      status = Filter(*type_name, parameters);
     } else if (**next == "Identity") {
       status = Identity();
     } else if (**next == "Include") {
@@ -1080,6 +1072,14 @@ absl::Status Parser::ReadFrom(std::istream& stream) {
       }
 
       status = ObjectInstance(*name);
+    } else if (**next == "PixelFilter") {
+      absl::StatusOr<absl::string_view> type_name = ReadParameters(
+          "PixelFilter", parameter_type_names_, storage, tokenizer, parameters);
+      if (!type_name.ok()) {
+        return type_name.status();
+      }
+
+      status = PixelFilter(*type_name, parameters);
     } else if (**next == "ReverseOrientation") {
       status = ReverseOrientation();
     } else if (**next == "Rotate") {

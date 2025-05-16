@@ -94,10 +94,6 @@ class Parser {
       absl::string_view film_type,
       absl::flat_hash_map<absl::string_view, Parameter>& parameters) = 0;
 
-  virtual absl::Status Filter(
-      absl::string_view filter_type,
-      absl::flat_hash_map<absl::string_view, Parameter>& parameters) = 0;
-
   virtual absl::Status FloatTexture(
       absl::string_view float_texture_name,
       absl::string_view float_texture_type,
@@ -143,6 +139,10 @@ class Parser {
   virtual absl::Status ObjectEnd() = 0;
 
   virtual absl::Status ObjectInstance(absl::string_view name) = 0;
+
+  virtual absl::Status PixelFilter(
+      absl::string_view pixel_filter_type,
+      absl::flat_hash_map<absl::string_view, Parameter>& parameters) = 0;
 
   virtual absl::Status ReverseOrientation() = 0;
 

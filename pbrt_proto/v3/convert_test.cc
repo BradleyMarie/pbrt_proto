@@ -635,67 +635,6 @@ TEST(Convert, FilmImage) {
                })pb")));
 }
 
-TEST(Convert, FilterUnknown) {
-  std::stringstream stream("Filter \"unknown\"");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives { filter {} })pb")));
-}
-
-TEST(Convert, FilterBox) {
-  std::stringstream stream(
-      "Filter \"box\" \"float xwidth\" 1.0 \"float ywidth\" 2.0");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(R"pb(directives {
-                                      filter { box { xwidth: 1.0 ywidth: 2.0 } }
-                                    })pb")));
-}
-
-TEST(Convert, FilterGaussian) {
-  std::stringstream stream(
-      "Filter \"gaussian\" \"float xwidth\" 1.0 \"float ywidth\" 2.0 \"float "
-      "alpha\" 3.0");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(
-          R"pb(directives {
-                 filter { gaussian { xwidth: 1.0 ywidth: 2.0 alpha: 3.0 } }
-               })pb")));
-}
-
-TEST(Convert, FilterMitchell) {
-  std::stringstream stream(
-      "Filter \"mitchell\" \"float xwidth\" 1.0 \"float ywidth\" 2.0 \"float "
-      "B\" 3.0 \"float C\" 4.0");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(
-          R"pb(directives {
-                 filter { mitchell { xwidth: 1.0 ywidth: 2.0 B: 3.0 C: 4.0 } }
-               })pb")));
-}
-
-TEST(Convert, FilterSinc) {
-  std::stringstream stream(
-      "Filter \"sinc\" \"float xwidth\" 1.0 \"float ywidth\" 2.0 \"float tau\" "
-      "3.0");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(
-                  R"pb(directives {
-                         filter { sinc { xwidth: 1.0 ywidth: 2.0 tau: 3.0 } }
-                       })pb")));
-}
-
-TEST(Convert, FilterTriangle) {
-  std::stringstream stream(
-      "Filter \"triangle\" \"float xwidth\" 1.0 \"float ywidth\" 3.0");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(
-                  R"pb(directives {
-                         filter { triangle { xwidth: 1.0 ywidth: 3.0 } }
-                       })pb")));
-}
-
 TEST(Convert, FloatTextureUnknown) {
   std::stringstream stream("Texture \"name\" \"float\" \"unknown\"");
   EXPECT_THAT(Convert(stream),
@@ -2151,6 +2090,74 @@ TEST(Convert, ObjectInstance) {
               IsOkAndHolds(EqualsProto(R"pb(directives {
                                               object_instance { name: "a" }
                                             })pb")));
+}
+
+TEST(Convert, PixelFilterUnknown) {
+  std::stringstream stream("PixelFilter \"unknown\"");
+  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(R"pb(directives {
+                                                               pixel_filter {}
+                                                             })pb")));
+}
+
+TEST(Convert, PixelFilterBox) {
+  std::stringstream stream(
+      "PixelFilter \"box\" \"float xwidth\" 1.0 \"float ywidth\" 2.0");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(
+                  R"pb(directives {
+                         pixel_filter { box { xwidth: 1.0 ywidth: 2.0 } }
+                       })pb")));
+}
+
+TEST(Convert, PixelFilterGaussian) {
+  std::stringstream stream(
+      "PixelFilter \"gaussian\" \"float xwidth\" 1.0 \"float ywidth\" 2.0 "
+      "\"float "
+      "alpha\" 3.0");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(
+                  R"pb(directives {
+                         pixel_filter {
+                           gaussian { xwidth: 1.0 ywidth: 2.0 alpha: 3.0 }
+                         }
+                       })pb")));
+}
+
+TEST(Convert, PixelFilterMitchell) {
+  std::stringstream stream(
+      "PixelFilter \"mitchell\" \"float xwidth\" 1.0 \"float ywidth\" 2.0 "
+      "\"float "
+      "B\" 3.0 \"float C\" 4.0");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(
+                  R"pb(directives {
+                         pixel_filter {
+                           mitchell { xwidth: 1.0 ywidth: 2.0 B: 3.0 C: 4.0 }
+                         }
+                       })pb")));
+}
+
+TEST(Convert, PixelFilterSinc) {
+  std::stringstream stream(
+      "PixelFilter \"sinc\" \"float xwidth\" 1.0 \"float ywidth\" 2.0 \"float "
+      "tau\" "
+      "3.0");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(
+          R"pb(directives {
+                 pixel_filter { sinc { xwidth: 1.0 ywidth: 2.0 tau: 3.0 } }
+               })pb")));
+}
+
+TEST(Convert, PixelFilterTriangle) {
+  std::stringstream stream(
+      "PixelFilter \"triangle\" \"float xwidth\" 1.0 \"float ywidth\" 3.0");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(
+                  R"pb(directives {
+                         pixel_filter { triangle { xwidth: 1.0 ywidth: 3.0 } }
+                       })pb")));
 }
 
 TEST(Convert, ReverseOrientation) {

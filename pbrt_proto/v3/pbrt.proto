@@ -312,49 +312,6 @@ message Film {
   }
 }
 
-// If attempting to render with a Filter that does not have one of these fields
-// set, the renderer should exit immediately with an error.
-//
-// https://github.com/mmp/pbrt-v3/blob/13d871faae88233b327d04cda24022b8bb0093ee/src/core/api.cpp#L852
-message Filter {
-  message Box {
-    optional double xwidth = 1 [default = 0.5];
-    optional double ywidth = 2 [default = 0.5];
-  }
-
-  message Gaussian {
-    optional double xwidth = 1 [default = 2.0];
-    optional double ywidth = 2 [default = 2.0];
-    optional double alpha = 3 [default = 2.0];
-  }
-
-  message Mitchell {
-    optional double xwidth = 1 [default = 0.5];
-    optional double ywidth = 2 [default = 0.5];
-    optional double B = 3 [default = 0.333333333333333333];
-    optional double C = 4 [default = 0.333333333333333333];
-  }
-
-  message Sinc {
-    optional double xwidth = 1 [default = 4.0];
-    optional double ywidth = 2 [default = 4.0];
-    optional double tau = 3 [default = 3.0];
-  }
-
-  message Triangle {
-    optional double xwidth = 1 [default = 2.0];
-    optional double ywidth = 2 [default = 2.0];
-  }
-
-  oneof filter_type {
-    Box box = 1;
-    Gaussian gaussian = 2;
-    Mitchell mitchell = 3;
-    Sinc sinc = 4;
-    Triangle triangle = 5;
-  }
-}
-
 message FloatTexture {
   required string name = 1;
 
@@ -873,6 +830,49 @@ message ObjectInstance {
   required string name = 1;
 }
 
+// If attempting to render with a PixelFilter that does not have one of these
+// fields set, the renderer should exit immediately with an error.
+//
+// https://github.com/mmp/pbrt-v3/blob/13d871faae88233b327d04cda24022b8bb0093ee/src/core/api.cpp#L852
+message PixelFilter {
+  message Box {
+    optional double xwidth = 1 [default = 0.5];
+    optional double ywidth = 2 [default = 0.5];
+  }
+
+  message Gaussian {
+    optional double xwidth = 1 [default = 2.0];
+    optional double ywidth = 2 [default = 2.0];
+    optional double alpha = 3 [default = 2.0];
+  }
+
+  message Mitchell {
+    optional double xwidth = 1 [default = 0.5];
+    optional double ywidth = 2 [default = 0.5];
+    optional double B = 3 [default = 0.333333333333333333];
+    optional double C = 4 [default = 0.333333333333333333];
+  }
+
+  message Sinc {
+    optional double xwidth = 1 [default = 4.0];
+    optional double ywidth = 2 [default = 4.0];
+    optional double tau = 3 [default = 3.0];
+  }
+
+  message Triangle {
+    optional double xwidth = 1 [default = 2.0];
+    optional double ywidth = 2 [default = 2.0];
+  }
+
+  oneof pixel_filter_type {
+    Box box = 1;
+    Gaussian gaussian = 2;
+    Mitchell mitchell = 3;
+    Sinc sinc = 4;
+    Triangle triangle = 5;
+  }
+}
+
 message ReverseOrientation {
   // Empty Message
 }
@@ -1341,21 +1341,21 @@ message Directive {
     CoordinateSystem coordinate_system = 8;
     CoordSysTransform coord_sys_transform = 9;
     Film film = 10;
-    Filter filter = 11;
-    FloatTexture float_texture = 12;
-    Identity identity = 13;
-    Include include = 14;
-    Integrator integrator = 15;
-    LightSource light_source = 16;
-    LookAt look_at = 17;
-    MakeNamedMaterial make_named_material = 18;
-    MakeNamedMedium make_named_medium = 19;
-    Material material = 20;
-    MediumInterface medium_interface = 21;
-    NamedMaterial named_material = 22;
-    ObjectBegin object_begin = 23;
-    ObjectEnd object_end = 24;
-    ObjectInstance object_instance = 25;
+    FloatTexture float_texture = 11;
+    Identity identity = 12;
+    Include include = 13;
+    Integrator integrator = 14;
+    LightSource light_source = 15;
+    LookAt look_at = 16;
+    MakeNamedMaterial make_named_material = 17;
+    MakeNamedMedium make_named_medium = 18;
+    Material material = 19;
+    MediumInterface medium_interface = 20;
+    NamedMaterial named_material = 21;
+    ObjectBegin object_begin = 22;
+    ObjectEnd object_end = 23;
+    ObjectInstance object_instance = 24;
+    PixelFilter pixel_filter = 25;
     ReverseOrientation reverse_orientation = 26;
     Rotate rotate = 27;
     Sampler sampler = 28;

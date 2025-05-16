@@ -36,7 +36,7 @@ TEST_F(DefaultsTest, Global) {
   bool found_accelerator = false;
   bool found_camera = false;
   bool found_film = false;
-  bool found_filter = false;
+  bool found_pixel_filter = false;
   bool found_integrator = false;
   bool found_sampler = false;
   for (auto& directive : defaults_.global_defaults().directives()) {
@@ -54,16 +54,16 @@ TEST_F(DefaultsTest, Global) {
       EXPECT_NE(directive.film().film_type_case(), Film::FILM_TYPE_NOT_SET);
       EXPECT_FALSE(found_film);
       found_film = true;
-    } else if (directive.has_filter()) {
-      EXPECT_NE(directive.filter().filter_type_case(),
-                Filter::FILTER_TYPE_NOT_SET);
-      EXPECT_FALSE(found_filter);
-      found_filter = true;
     } else if (directive.has_integrator()) {
       EXPECT_NE(directive.integrator().integrator_type_case(),
                 Integrator::INTEGRATOR_TYPE_NOT_SET);
       EXPECT_FALSE(found_integrator);
       found_integrator = true;
+    } else if (directive.has_pixel_filter()) {
+      EXPECT_NE(directive.pixel_filter().pixel_filter_type_case(),
+                PixelFilter::PIXEL_FILTER_TYPE_NOT_SET);
+      EXPECT_FALSE(found_pixel_filter);
+      found_pixel_filter = true;
     } else if (directive.has_sampler()) {
       EXPECT_NE(directive.sampler().sampler_type_case(),
                 Sampler::SAMPLER_TYPE_NOT_SET);
@@ -74,7 +74,7 @@ TEST_F(DefaultsTest, Global) {
   EXPECT_TRUE(found_accelerator);
   EXPECT_TRUE(found_camera);
   EXPECT_TRUE(found_film);
-  EXPECT_TRUE(found_filter);
+  EXPECT_TRUE(found_pixel_filter);
   EXPECT_TRUE(found_integrator);
   EXPECT_TRUE(found_sampler);
 }
