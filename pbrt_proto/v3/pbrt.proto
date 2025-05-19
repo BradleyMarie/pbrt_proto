@@ -1141,7 +1141,7 @@ message Shape {
   }
 
   // If your protobuf implementation supports lazy fields, there is no need to
-  // decode this field and it can instead be parsed as a string directly onto
+  // parse this field and it can instead be merged as a string directly onto
   // whatever material is being applied to this shape.
   optional MaterialOverrides overrides = 13 [lazy = true];
 }
