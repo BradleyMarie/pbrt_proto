@@ -678,6 +678,10 @@ static const absl::flat_hash_map<absl::string_view, ParameterType>
             ParameterType::BOOL,
         },
         {
+            "color",
+            ParameterType::RGB,
+        },
+        {
             "float",
             ParameterType::FLOAT,
         },

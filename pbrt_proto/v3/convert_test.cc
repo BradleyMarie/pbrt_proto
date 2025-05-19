@@ -49,6 +49,19 @@ TEST(Convert, TryRemoveSpectrumFindsBlackbody) {
                })pb")));
 }
 
+TEST(Convert, TryRemoveSpectrumFindsColor) {
+  std::stringstream stream(
+      "AreaLightSource \"diffuse\" \"color L\" [1.0 2.0 3.0]");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(
+          R"pb(directives {
+                 area_light_source {
+                   diffuse { L { rgb_spectrum { r: 1.0 g: 2.0 b: 3.0 } } }
+                 }
+               })pb")));
+}
+
 TEST(Convert, TryRemoveSpectrumFindsRgb) {
   std::stringstream stream(
       "AreaLightSource \"diffuse\" \"rgb L\" [1.0 2.0 3.0]");
