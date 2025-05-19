@@ -2995,10 +2995,8 @@ TEST(Convert, ShapeOverrides) {
                              bsdffile: "l"
                              namedmaterial1: "m"
                              namedmaterial2: "n"
-                             eta {
-                               as_value: 25.0
-                               as_float_texture { float_value: 25.0 }
-                             }
+                             eta_as_value: 25.0
+                             eta_as_float_texture { float_value: 25.0 }
                            }
                          }
                        })pb")));
@@ -3015,10 +3013,8 @@ TEST(Convert, ShapeOverridesEtaTexture) {
                  shape {
                    sphere {}
                    overrides {
-                     eta {
-                       as_float_texture { float_texture_name: "a" }
-                       as_spectrum_texture { spectrum_texture_name: "a" }
-                     }
+                     eta_as_float_texture { float_texture_name: "a" }
+                     eta_as_spectrum_texture { spectrum_texture_name: "a" }
                    }
                  }
                })pb")));
@@ -3035,9 +3031,7 @@ TEST(Convert, ShapeOverridesEtaSampled) {
                  shape {
                    sphere {}
                    overrides {
-                     eta {
-                       as_spectrum_texture { sampled_spectrum_filename: "a" }
-                     }
+                     eta_as_spectrum_texture { sampled_spectrum_filename: "a" }
                    }
                  }
                })pb")));

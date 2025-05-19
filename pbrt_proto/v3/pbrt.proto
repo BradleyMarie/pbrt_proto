@@ -578,146 +578,146 @@ message MakeNamedMedium {
 
 message Material {
   message Disney {
-    optional SpectrumTextureParameter color = 1;
-    optional FloatTextureParameter anisotropic = 2;
-    optional FloatTextureParameter clearcoat = 3;
-    optional FloatTextureParameter clearcoatgloss = 4;
-    optional FloatTextureParameter eta = 5;
-    optional FloatTextureParameter metallic = 6;
-    optional FloatTextureParameter roughness = 7;
-    optional SpectrumTextureParameter scatterdistance = 8;
-    optional FloatTextureParameter sheen = 9;
-    optional FloatTextureParameter sheentint = 10;
-    optional FloatTextureParameter spectrans = 11;
-    optional FloatTextureParameter speculartint = 12;
-    optional bool thin = 13 [default = false];
+    optional bool thin = 2 [default = false];
+    optional FloatTextureParameter anisotropic = 8;
+    optional FloatTextureParameter bumpmap = 11;
+    optional FloatTextureParameter clearcoat = 12;
+    optional FloatTextureParameter clearcoatgloss = 13;
     optional FloatTextureParameter difftrans = 14;
-    optional FloatTextureParameter flatness = 15;
-    optional FloatTextureParameter bumpmap = 16;
+    optional FloatTextureParameter eta = 15;
+    optional FloatTextureParameter flatness = 17;
+    optional FloatTextureParameter metallic = 18;
+    optional FloatTextureParameter roughness = 22;
+    optional FloatTextureParameter sheen = 23;
+    optional FloatTextureParameter sheentint = 24;
+    optional FloatTextureParameter spectrans = 26;
+    optional FloatTextureParameter speculartint = 27;
+    optional SpectrumTextureParameter color = 32;
+    optional SpectrumTextureParameter scatterdistance = 39;
   }
 
   message Fourier {
-    optional string bsdffile = 1 [default = ""];
-    optional FloatTextureParameter bumpmap = 2;
+    optional FloatTextureParameter bumpmap = 11;
+    optional string bsdffile = 43 [default = ""];
   }
 
   message Glass {
-    optional SpectrumTextureParameter Kr = 1;
-    optional SpectrumTextureParameter Kt = 2;
-    optional FloatTextureParameter eta = 3;
-    optional FloatTextureParameter uroughness = 4;
-    optional FloatTextureParameter vroughness = 5;
-    optional bool remaproughness = 7 [default = true];
-    optional FloatTextureParameter bumpmap = 8;
+    optional bool remaproughness = 1 [default = true];
+    optional FloatTextureParameter bumpmap = 11;
+    optional FloatTextureParameter eta = 15;
+    optional FloatTextureParameter uroughness = 28;
+    optional FloatTextureParameter vroughness = 29;
+    optional SpectrumTextureParameter Kr = 35;
+    optional SpectrumTextureParameter Kt = 37;
   }
 
   message Hair {
-    optional SpectrumTextureParameter sigma_a = 1; // Must check
-    optional SpectrumTextureParameter color = 2; // Must check
-    optional FloatTextureParameter eumelanin = 3;
-    optional FloatTextureParameter pheomelanin = 4;
-    optional FloatTextureParameter eta = 5;
-    optional FloatTextureParameter beta_m = 6;
-    optional FloatTextureParameter beta_n = 7;
-    optional FloatTextureParameter alpha = 8;
-    optional FloatTextureParameter bumpmap = 9;
+    optional FloatTextureParameter alpha = 6;
+    optional FloatTextureParameter beta_m = 9;
+    optional FloatTextureParameter beta_n = 10;
+    optional FloatTextureParameter bumpmap = 11;
+    optional FloatTextureParameter eta = 15;
+    optional FloatTextureParameter eumelanin = 16;
+    optional FloatTextureParameter pheomelanin = 21;
+    optional SpectrumTextureParameter color = 32; // Must check
+    optional SpectrumTextureParameter sigma_a = 40; // Must check
   }
 
   message KdSubsurface {
-    optional SpectrumTextureParameter Kd = 1;
-    optional FloatTextureParameter mfp = 2;
-    optional SpectrumTextureParameter Kr = 3;
-    optional SpectrumTextureParameter Kt = 4;
-    optional FloatTextureParameter uroughness = 5;
-    optional FloatTextureParameter vroughness = 6;
-    optional double eta = 7 [default = 1.33];
-    optional double scale = 8 [default = 1.0];
-    optional double g = 9 [default = 0.0];
-    optional bool remaproughness = 10 [default = true];
+    optional bool remaproughness = 1 [default = true];
+    optional double eta = 3 [default = 1.33];
+    optional double g = 4 [default = 0.0];
+    optional double scale = 5 [default = 1.0];
     optional FloatTextureParameter bumpmap = 11;
+    optional FloatTextureParameter mfp = 19;
+    optional FloatTextureParameter uroughness = 28;
+    optional FloatTextureParameter vroughness = 29;
+    optional SpectrumTextureParameter Kd = 34;
+    optional SpectrumTextureParameter Kr = 35;
+    optional SpectrumTextureParameter Kt = 37;
   }
 
   message Matte {
-    optional SpectrumTextureParameter Kd = 1;
-    optional FloatTextureParameter sigma = 2;
-    optional FloatTextureParameter bumpmap = 3;
+    optional FloatTextureParameter bumpmap = 11;
+    optional FloatTextureParameter sigma = 25;
+    optional SpectrumTextureParameter Kd = 34;
   }
 
   message Metal {
-    optional SpectrumTextureParameter eta = 1;
-    optional SpectrumTextureParameter k = 2;
-    optional FloatTextureParameter roughness = 3;
-    optional FloatTextureParameter uroughness = 4;
-    optional FloatTextureParameter vroughness = 5;
-    optional bool remaproughness = 6 [default = true];
-    optional FloatTextureParameter bumpmap = 7;
+    optional bool remaproughness = 1 [default = true];
+    optional FloatTextureParameter bumpmap = 11;
+    optional FloatTextureParameter roughness = 22;
+    optional FloatTextureParameter uroughness = 28;
+    optional FloatTextureParameter vroughness = 29;
+    optional SpectrumTextureParameter eta = 31;
+    optional SpectrumTextureParameter k = 33;
   }
 
   message Mirror {
-    optional SpectrumTextureParameter Kr = 1;
-    optional FloatTextureParameter bumpmap = 2;
+    optional FloatTextureParameter bumpmap = 11;
+    optional SpectrumTextureParameter Kr = 35;
   }
 
   message Mix {
-    optional FloatTextureParameter amount = 1;
-    optional string namedmaterial1 = 2 [default = ""];
-    optional string namedmaterial2 = 3 [default = ""];
+    optional FloatTextureParameter amount = 7;
+    optional string namedmaterial1 = 44 [default = ""];
+    optional string namedmaterial2 = 45 [default = ""];
   }
 
   message Plastic {
-    optional SpectrumTextureParameter Kd = 1;
-    optional SpectrumTextureParameter Ks = 2;
-    optional FloatTextureParameter roughness = 3;
-    optional bool remaproughness = 4 [default = true];
-    optional FloatTextureParameter bumpmap = 5;
+    optional bool remaproughness = 1 [default = true];
+    optional FloatTextureParameter bumpmap = 11;
+    optional FloatTextureParameter roughness = 22;
+    optional SpectrumTextureParameter Kd = 34;
+    optional SpectrumTextureParameter Ks = 36;
   }
 
   message Substrate {
-    optional SpectrumTextureParameter Kd = 1;
-    optional SpectrumTextureParameter Ks = 2;
-    optional FloatTextureParameter uroughness = 3;
-    optional FloatTextureParameter vroughness = 4;
-    optional bool remaproughness = 5 [default = true];
-    optional FloatTextureParameter bumpmap = 6;
+    optional bool remaproughness = 1 [default = true];
+    optional FloatTextureParameter bumpmap = 11;
+    optional FloatTextureParameter uroughness = 28;
+    optional FloatTextureParameter vroughness = 29;
+    optional SpectrumTextureParameter Kd = 34;
+    optional SpectrumTextureParameter Ks = 36;
   }
 
   message Subsurface {
-    optional MeasuredSubsurface name = 1;
-    optional SpectrumTextureParameter sigma_a = 2;
-    optional SpectrumTextureParameter sigma_s = 3;
+    optional bool remaproughness = 1 [default = true];
+    optional double eta = 3 [default = 1.33];
     optional double g = 4 [default = 0.0];  // Must be explicitly cleared if name is set
     optional double scale = 5 [default = 1.0];
-    optional double eta = 6 [default = 1.33];
-    optional SpectrumTextureParameter Kr = 7;
-    optional SpectrumTextureParameter Kt = 8;
-    optional FloatTextureParameter uroughness = 9;
-    optional FloatTextureParameter vroughness = 10;
-    optional bool remaproughness = 11 [default = true];
-    optional FloatTextureParameter bumpmap = 12;
+    optional FloatTextureParameter bumpmap = 11;
+    optional FloatTextureParameter uroughness = 28;
+    optional FloatTextureParameter vroughness = 29;
+    optional MeasuredSubsurface name = 30;
+    optional SpectrumTextureParameter Kr = 35;
+    optional SpectrumTextureParameter Kt = 37;
+    optional SpectrumTextureParameter sigma_a = 40;
+    optional SpectrumTextureParameter sigma_s = 41;
   }
 
   message Translucent {
-    optional SpectrumTextureParameter Kd = 1;
-    optional SpectrumTextureParameter Ks = 2;
-    optional SpectrumTextureParameter reflect = 3;
-    optional SpectrumTextureParameter transmit = 4;
-    optional FloatTextureParameter roughness = 5;
-    optional bool remaproughness = 6 [default = true];
-    optional FloatTextureParameter bumpmap = 7;
+    optional bool remaproughness = 1 [default = true];
+    optional FloatTextureParameter bumpmap = 11;
+    optional FloatTextureParameter roughness = 22;
+    optional SpectrumTextureParameter Kd = 34;
+    optional SpectrumTextureParameter Ks = 36;
+    optional SpectrumTextureParameter reflect = 38;
+    optional SpectrumTextureParameter transmit = 42;
   }
 
   message Uber {
-    optional SpectrumTextureParameter Kd = 1;
-    optional SpectrumTextureParameter Ks = 2;
-    optional SpectrumTextureParameter Kr = 3;
-    optional SpectrumTextureParameter Kt = 4;
-    optional FloatTextureParameter roughness = 5;
-    optional FloatTextureParameter uroughness = 6;  // Must check
-    optional FloatTextureParameter vroughness = 7;  // Must check
-    optional FloatTextureParameter eta = 8;
-    optional FloatTextureParameter opacity = 9;
-    optional bool remaproughness = 10 [default = true];
+    optional bool remaproughness = 1 [default = true];
     optional FloatTextureParameter bumpmap = 11;
+    optional FloatTextureParameter eta = 15;
+    optional FloatTextureParameter opacity = 20;
+    optional FloatTextureParameter roughness = 22;
+    optional FloatTextureParameter uroughness = 28;  // Must check
+    optional FloatTextureParameter vroughness = 29;  // Must check
+    optional SpectrumTextureParameter Kd = 34;
+    optional SpectrumTextureParameter Kr = 35;
+    optional SpectrumTextureParameter Ks = 36;
+    optional SpectrumTextureParameter Kt = 37;
   }
 
   // If none of these fields are set, surfaces with this material applied should
@@ -1093,58 +1093,57 @@ message Shape {
   }
 
   message MaterialOverrides {
-    message Eta {
-      optional double as_value = 1;
-      optional FloatTextureParameter as_float_texture = 2;
-      optional SpectrumTextureParameter as_spectrum_texture = 3;
-    }
-
     optional bool remaproughness = 1;
     optional bool thin = 2;
-    optional double g = 3;
-    optional double scale = 4;
-    optional FloatTextureParameter alpha = 5;
-    optional FloatTextureParameter amount = 6;
-    optional FloatTextureParameter anisotropic = 7;
-    optional FloatTextureParameter beta_m = 8;
-    optional FloatTextureParameter beta_n = 9;
-    optional FloatTextureParameter bumpmap = 10;
-    optional FloatTextureParameter clearcoat = 11;
-    optional FloatTextureParameter clearcoatgloss = 12;
-    optional FloatTextureParameter difftrans = 13;
-    optional FloatTextureParameter eumelanin = 14;
-    optional FloatTextureParameter flatness = 15;
-    optional FloatTextureParameter metallic = 16;
-    optional FloatTextureParameter mfp = 17;
-    optional FloatTextureParameter opacity = 18;
-    optional FloatTextureParameter pheomelanin = 19;
-    optional FloatTextureParameter roughness = 20;
-    optional FloatTextureParameter sheen = 21;
-    optional FloatTextureParameter sheentint = 22;
-    optional FloatTextureParameter sigma = 23;
-    optional FloatTextureParameter spectrans = 24;
-    optional FloatTextureParameter speculartint = 25;
-    optional FloatTextureParameter uroughness = 26;
-    optional FloatTextureParameter vroughness = 27;
-    optional MeasuredSubsurface name = 28;
-    optional SpectrumTextureParameter color = 29;
-    optional SpectrumTextureParameter k = 30;
-    optional SpectrumTextureParameter Kd = 31;
-    optional SpectrumTextureParameter Kr = 32;
-    optional SpectrumTextureParameter Ks = 33;
-    optional SpectrumTextureParameter Kt = 34;
-    optional SpectrumTextureParameter reflect = 35;
-    optional SpectrumTextureParameter scatterdistance = 36;
-    optional SpectrumTextureParameter sigma_a = 37;
-    optional SpectrumTextureParameter sigma_s = 38;
-    optional SpectrumTextureParameter transmit = 39;
-    optional string bsdffile = 40;
-    optional string namedmaterial1 = 41;
-    optional string namedmaterial2 = 42;
-    optional Eta eta = 43;
+    optional double eta_as_value = 3;
+    optional double g = 4;
+    optional double scale = 5;
+    optional FloatTextureParameter alpha = 6;
+    optional FloatTextureParameter amount = 7;
+    optional FloatTextureParameter anisotropic = 8;
+    optional FloatTextureParameter beta_m = 9;
+    optional FloatTextureParameter beta_n = 10;
+    optional FloatTextureParameter bumpmap = 11;
+    optional FloatTextureParameter clearcoat = 12;
+    optional FloatTextureParameter clearcoatgloss = 13;
+    optional FloatTextureParameter difftrans = 14;
+    optional FloatTextureParameter eta_as_float_texture = 15;
+    optional FloatTextureParameter eumelanin = 16;
+    optional FloatTextureParameter flatness = 17;
+    optional FloatTextureParameter metallic = 18;
+    optional FloatTextureParameter mfp = 19;
+    optional FloatTextureParameter opacity = 20;
+    optional FloatTextureParameter pheomelanin = 21;
+    optional FloatTextureParameter roughness = 22;
+    optional FloatTextureParameter sheen = 23;
+    optional FloatTextureParameter sheentint = 24;
+    optional FloatTextureParameter sigma = 25;
+    optional FloatTextureParameter spectrans = 26;
+    optional FloatTextureParameter speculartint = 27;
+    optional FloatTextureParameter uroughness = 28;
+    optional FloatTextureParameter vroughness = 29;
+    optional MeasuredSubsurface name = 30;
+    optional SpectrumTextureParameter eta_as_spectrum_texture = 31;
+    optional SpectrumTextureParameter color = 32;
+    optional SpectrumTextureParameter k = 33;
+    optional SpectrumTextureParameter Kd = 34;
+    optional SpectrumTextureParameter Kr = 35;
+    optional SpectrumTextureParameter Ks = 36;
+    optional SpectrumTextureParameter Kt = 37;
+    optional SpectrumTextureParameter reflect = 38;
+    optional SpectrumTextureParameter scatterdistance = 39;
+    optional SpectrumTextureParameter sigma_a = 40;
+    optional SpectrumTextureParameter sigma_s = 41;
+    optional SpectrumTextureParameter transmit = 42;
+    optional string bsdffile = 43;
+    optional string namedmaterial1 = 44;
+    optional string namedmaterial2 = 45;
   }
 
-  optional MaterialOverrides overrides = 13;
+  // If your protobuf implementation supports lazy fields, there is no need to
+  // decode this field and it can instead be parsed as a string directly onto
+  // whatever material is being applied to this shape.
+  optional MaterialOverrides overrides = 13 [lazy = true];
 }
 
 message SpectrumTexture {

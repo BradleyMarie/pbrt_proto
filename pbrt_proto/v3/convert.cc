@@ -2989,23 +2989,21 @@ absl::Status ParserV3::Shape(
 
   if (std::optional<double> eta = TryRemoveFloat(parameters, "eta");
       eta.has_value()) {
-    overrides.mutable_eta()->set_as_value(*eta);
-    overrides.mutable_eta()->mutable_as_float_texture()->set_float_value(*eta);
+    overrides.set_eta_as_value(*eta);
+    overrides.mutable_eta_as_float_texture()->set_float_value(*eta);
     overrides_populated = true;
   } else if (std::optional<absl::string_view> eta =
                  TryRemoveTexture(parameters, "eta");
              eta.has_value()) {
-    overrides.mutable_eta()->mutable_as_float_texture()->set_float_texture_name(
+    overrides.mutable_eta_as_float_texture()->set_float_texture_name(*eta);
+    overrides.mutable_eta_as_spectrum_texture()->set_spectrum_texture_name(
         *eta);
-    overrides.mutable_eta()
-        ->mutable_as_spectrum_texture()
-        ->set_spectrum_texture_name(*eta);
     overrides_populated = true;
   } else {
     overrides_populated |= TryRemoveSpectrumTexture(
         parameters, "eta",
-        std::bind(&Shape::MaterialOverrides::Eta::mutable_as_spectrum_texture,
-                  overrides.mutable_eta()));
+        std::bind(&Shape::MaterialOverrides::mutable_eta_as_spectrum_texture,
+                  &overrides));
   }
 
   if (!overrides_populated) {
