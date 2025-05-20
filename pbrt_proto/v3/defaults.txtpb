@@ -222,7 +222,7 @@ materials {
       uniform_spectrum: 1.0
     }
     Kt {
-      uniform_spectrum: 0.0
+      uniform_spectrum: 1.0
     }
     eta {
       float_value: 1.5
