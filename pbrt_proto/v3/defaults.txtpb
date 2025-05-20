@@ -2479,10 +2479,10 @@ materials {
       uniform_spectrum: 0.25
     }
     Kr {
-      uniform_spectrum: 0.25
+      uniform_spectrum: 0.0
     }
     Kt {
-      uniform_spectrum: 0.25
+      uniform_spectrum: 0.0
     }
     roughness {
       float_value: 0.1
