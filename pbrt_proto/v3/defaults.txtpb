@@ -213,9 +213,6 @@ materials {
     flatness {
       float_value: 0.0
     }
-    bumpmap {
-      float_value: 0.0
-    }
   }
   glass {
     Kr {
@@ -231,9 +228,6 @@ materials {
       float_value: 0.0
     }
     vroughness {
-      float_value: 0.0
-    }
-    bumpmap {
       float_value: 0.0
     }
   }
@@ -255,9 +249,6 @@ materials {
     }
     alpha {
       float_value: 2.0
-    }
-    bumpmap {
-      float_value: 0.0
     }
   }
   kdsubsurface {
@@ -283,18 +274,12 @@ materials {
     vroughness {
       float_value: 0.0
     }
-    bumpmap {
-      float_value: 0.0
-    }
   }
   matte {
     Kd {
       uniform_spectrum: 0.5
     }
     sigma {
-      float_value: 0.0
-    }
-    bumpmap {
       float_value: 0.0
     }
   }
@@ -758,16 +743,10 @@ materials {
     roughness {
       float_value: 0.01
     }
-    bumpmap {
-      float_value: 0.0
-    }
   }
   mirror {
     Kr {
       uniform_spectrum: 0.9
-    }
-    bumpmap {
-      float_value: 0.0
     }
   }
   mix {
@@ -785,9 +764,6 @@ materials {
     roughness {
       float_value: 0.1
     }
-    bumpmap {
-      float_value: 0.0
-    }
   }
   substrate {
     Kd {
@@ -801,9 +777,6 @@ materials {
     }
     vroughness {
       float_value: 0.1
-    }
-    bumpmap {
-      float_value: 0.0
     }
   }
   subsurfaces {
@@ -834,9 +807,6 @@ materials {
         float_value: 0.0
       }
       vroughness {
-        float_value: 0.0
-      }
-      bumpmap {
         float_value: 0.0
       }
     }
@@ -871,9 +841,6 @@ materials {
       vroughness {
         float_value: 0.0
       }
-      bumpmap {
-        float_value: 0.0
-      }
     }
   }
   subsurfaces {
@@ -904,9 +871,6 @@ materials {
         float_value: 0.0
       }
       vroughness {
-        float_value: 0.0
-      }
-      bumpmap {
         float_value: 0.0
       }
     }
@@ -941,9 +905,6 @@ materials {
       vroughness {
         float_value: 0.0
       }
-      bumpmap {
-        float_value: 0.0
-      }
     }
   }
   subsurfaces {
@@ -974,9 +935,6 @@ materials {
         float_value: 0.0
       }
       vroughness {
-        float_value: 0.0
-      }
-      bumpmap {
         float_value: 0.0
       }
     }
@@ -1011,9 +969,6 @@ materials {
       vroughness {
         float_value: 0.0
       }
-      bumpmap {
-        float_value: 0.0
-      }
     }
   }
   subsurfaces {
@@ -1044,9 +999,6 @@ materials {
         float_value: 0.0
       }
       vroughness {
-        float_value: 0.0
-      }
-      bumpmap {
         float_value: 0.0
       }
     }
@@ -1081,9 +1033,6 @@ materials {
       vroughness {
         float_value: 0.0
       }
-      bumpmap {
-        float_value: 0.0
-      }
     }
   }
   subsurfaces {
@@ -1114,9 +1063,6 @@ materials {
         float_value: 0.0
       }
       vroughness {
-        float_value: 0.0
-      }
-      bumpmap {
         float_value: 0.0
       }
     }
@@ -1151,9 +1097,6 @@ materials {
       vroughness {
         float_value: 0.0
       }
-      bumpmap {
-        float_value: 0.0
-      }
     }
   }
   subsurfaces {
@@ -1184,9 +1127,6 @@ materials {
         float_value: 0.0
       }
       vroughness {
-        float_value: 0.0
-      }
-      bumpmap {
         float_value: 0.0
       }
     }
@@ -1221,9 +1161,6 @@ materials {
       vroughness {
         float_value: 0.0
       }
-      bumpmap {
-        float_value: 0.0
-      }
     }
   }
   subsurfaces {
@@ -1254,9 +1191,6 @@ materials {
         float_value: 0.0
       }
       vroughness {
-        float_value: 0.0
-      }
-      bumpmap {
         float_value: 0.0
       }
     }
@@ -1291,9 +1225,6 @@ materials {
       vroughness {
         float_value: 0.0
       }
-      bumpmap {
-        float_value: 0.0
-      }
     }
   }
   subsurfaces {
@@ -1324,9 +1255,6 @@ materials {
         float_value: 0.0
       }
       vroughness {
-        float_value: 0.0
-      }
-      bumpmap {
         float_value: 0.0
       }
     }
@@ -1361,9 +1289,6 @@ materials {
       vroughness {
         float_value: 0.0
       }
-      bumpmap {
-        float_value: 0.0
-      }
     }
   }
   subsurfaces {
@@ -1394,9 +1319,6 @@ materials {
         float_value: 0.0
       }
       vroughness {
-        float_value: 0.0
-      }
-      bumpmap {
         float_value: 0.0
       }
     }
@@ -1431,9 +1353,6 @@ materials {
       vroughness {
         float_value: 0.0
       }
-      bumpmap {
-        float_value: 0.0
-      }
     }
   }
   subsurfaces {
@@ -1464,9 +1383,6 @@ materials {
         float_value: 0.0
       }
       vroughness {
-        float_value: 0.0
-      }
-      bumpmap {
         float_value: 0.0
       }
     }
@@ -1501,9 +1417,6 @@ materials {
       vroughness {
         float_value: 0.0
       }
-      bumpmap {
-        float_value: 0.0
-      }
     }
   }
   subsurfaces {
@@ -1534,9 +1447,6 @@ materials {
         float_value: 0.0
       }
       vroughness {
-        float_value: 0.0
-      }
-      bumpmap {
         float_value: 0.0
       }
     }
@@ -1571,9 +1481,6 @@ materials {
       vroughness {
         float_value: 0.0
       }
-      bumpmap {
-        float_value: 0.0
-      }
     }
   }
   subsurfaces {
@@ -1604,9 +1511,6 @@ materials {
         float_value: 0.0
       }
       vroughness {
-        float_value: 0.0
-      }
-      bumpmap {
         float_value: 0.0
       }
     }
@@ -1641,9 +1545,6 @@ materials {
       vroughness {
         float_value: 0.0
       }
-      bumpmap {
-        float_value: 0.0
-      }
     }
   }
   subsurfaces {
@@ -1674,9 +1575,6 @@ materials {
         float_value: 0.0
       }
       vroughness {
-        float_value: 0.0
-      }
-      bumpmap {
         float_value: 0.0
       }
     }
@@ -1711,9 +1609,6 @@ materials {
       vroughness {
         float_value: 0.0
       }
-      bumpmap {
-        float_value: 0.0
-      }
     }
   }
   subsurfaces {
@@ -1744,9 +1639,6 @@ materials {
         float_value: 0.0
       }
       vroughness {
-        float_value: 0.0
-      }
-      bumpmap {
         float_value: 0.0
       }
     }
@@ -1781,9 +1673,6 @@ materials {
       vroughness {
         float_value: 0.0
       }
-      bumpmap {
-        float_value: 0.0
-      }
     }
   }
   subsurfaces {
@@ -1814,9 +1703,6 @@ materials {
         float_value: 0.0
       }
       vroughness {
-        float_value: 0.0
-      }
-      bumpmap {
         float_value: 0.0
       }
     }
@@ -1851,9 +1737,6 @@ materials {
       vroughness {
         float_value: 0.0
       }
-      bumpmap {
-        float_value: 0.0
-      }
     }
   }
   subsurfaces {
@@ -1884,9 +1767,6 @@ materials {
         float_value: 0.0
       }
       vroughness {
-        float_value: 0.0
-      }
-      bumpmap {
         float_value: 0.0
       }
     }
@@ -1921,9 +1801,6 @@ materials {
       vroughness {
         float_value: 0.0
       }
-      bumpmap {
-        float_value: 0.0
-      }
     }
   }
   subsurfaces {
@@ -1954,9 +1831,6 @@ materials {
         float_value: 0.0
       }
       vroughness {
-        float_value: 0.0
-      }
-      bumpmap {
         float_value: 0.0
       }
     }
@@ -1991,9 +1865,6 @@ materials {
       vroughness {
         float_value: 0.0
       }
-      bumpmap {
-        float_value: 0.0
-      }
     }
   }
   subsurfaces {
@@ -2024,9 +1895,6 @@ materials {
         float_value: 0.0
       }
       vroughness {
-        float_value: 0.0
-      }
-      bumpmap {
         float_value: 0.0
       }
     }
@@ -2061,9 +1929,6 @@ materials {
       vroughness {
         float_value: 0.0
       }
-      bumpmap {
-        float_value: 0.0
-      }
     }
   }
   subsurfaces {
@@ -2094,9 +1959,6 @@ materials {
         float_value: 0.0
       }
       vroughness {
-        float_value: 0.0
-      }
-      bumpmap {
         float_value: 0.0
       }
     }
@@ -2131,9 +1993,6 @@ materials {
       vroughness {
         float_value: 0.0
       }
-      bumpmap {
-        float_value: 0.0
-      }
     }
   }
   subsurfaces {
@@ -2164,9 +2023,6 @@ materials {
         float_value: 0.0
       }
       vroughness {
-        float_value: 0.0
-      }
-      bumpmap {
         float_value: 0.0
       }
     }
@@ -2201,9 +2057,6 @@ materials {
       vroughness {
         float_value: 0.0
       }
-      bumpmap {
-        float_value: 0.0
-      }
     }
   }
   subsurfaces {
@@ -2234,9 +2087,6 @@ materials {
         float_value: 0.0
       }
       vroughness {
-        float_value: 0.0
-      }
-      bumpmap {
         float_value: 0.0
       }
     }
@@ -2271,9 +2121,6 @@ materials {
       vroughness {
         float_value: 0.0
       }
-      bumpmap {
-        float_value: 0.0
-      }
     }
   }
   subsurfaces {
@@ -2304,9 +2151,6 @@ materials {
         float_value: 0.0
       }
       vroughness {
-        float_value: 0.0
-      }
-      bumpmap {
         float_value: 0.0
       }
     }
@@ -2341,9 +2185,6 @@ materials {
       vroughness {
         float_value: 0.0
       }
-      bumpmap {
-        float_value: 0.0
-      }
     }
   }
   subsurfaces {
@@ -2374,9 +2215,6 @@ materials {
         float_value: 0.0
       }
       vroughness {
-        float_value: 0.0
-      }
-      bumpmap {
         float_value: 0.0
       }
     }
@@ -2411,9 +2249,6 @@ materials {
       vroughness {
         float_value: 0.0
       }
-      bumpmap {
-        float_value: 0.0
-      }
     }
   }
   subsurfaces {
@@ -2446,9 +2281,6 @@ materials {
       vroughness {
         float_value: 0.0
       }
-      bumpmap {
-        float_value: 0.0
-      }
     }
   }
   translucent {
@@ -2466,9 +2298,6 @@ materials {
     }
     roughness {
       float_value: 0.1
-    }
-    bumpmap {
-      float_value: 0.0
     }
   }
   uber {
@@ -2492,9 +2321,6 @@ materials {
     }
     opacity {
       float_value: 1.0
-    }
-    bumpmap {
-      float_value: 0.0
     }
   }
 }
