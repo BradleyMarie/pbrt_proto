@@ -1,6 +1,7 @@
 #include "pbrt_proto/shared/parser.h"
 
 #include <cassert>
+#include <functional>
 #include <iostream>
 #include <istream>
 #include <memory>
@@ -869,6 +870,371 @@ absl::Status Parser::ReadFrom(std::istream& stream) {
 
   ParameterStorage storage;
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
+  absl::flat_hash_map<absl::string_view, std::function<absl::Status()>>
+      directives = {
+          {"Accelerator",
+           [&]() {
+             absl::StatusOr<absl::string_view> type_name =
+                 ReadParameters("Accelerator", parameter_type_names_, storage,
+                                tokenizer, parameters);
+             if (!type_name.ok()) {
+               return type_name.status();
+             }
+
+             return Accelerator(*type_name, parameters);
+           }},
+          {"ActiveTransform",
+           [&]() {
+             absl::StatusOr<const std::string*> next = tokenizer.Next();
+             if (!next.ok()) {
+               return next.status();
+             }
+
+             if (!*next) {
+               return absl::InvalidArgumentError(
+                   "Missing parameter to directive ActiveTransform");
+             }
+
+             ActiveTransformation transformation;
+             if (**next == "All") {
+               transformation = ActiveTransformation::ALL;
+             } else if (**next == "StartTime") {
+               transformation = ActiveTransformation::START_TIME;
+             } else if (**next == "EndTime") {
+               transformation = ActiveTransformation::END_TIME;
+             } else {
+               return absl::InvalidArgumentError(
+                   "Invalid parameter to directive ActiveTransforms: '" +
+                   **next + "'");
+             }
+
+             return ActiveTransform(transformation);
+           }},
+          {"AreaLightSource",
+           [&]() {
+             absl::StatusOr<absl::string_view> type_name =
+                 ReadParameters("AreaLightSource", parameter_type_names_,
+                                storage, tokenizer, parameters);
+             if (!type_name.ok()) {
+               return type_name.status();
+             }
+
+             return AreaLightSource(*type_name, parameters);
+           }},
+          {"AttributeBegin", [&]() { return AttributeBegin(); }},
+          {"AttributeEnd", [&]() { return AttributeEnd(); }},
+          {"Camera",
+           [&]() {
+             absl::StatusOr<absl::string_view> type_name =
+                 ReadParameters("Camera", parameter_type_names_, storage,
+                                tokenizer, parameters);
+             if (!type_name.ok()) {
+               return type_name.status();
+             }
+
+             return Camera(*type_name, parameters);
+           }},
+          {"ConcatTransform",
+           [&]() {
+             auto values = ReadFloatParameters("ConcatTransform", storage,
+                                               tokenizer, 16, true);
+             if (!values.ok()) {
+               return values.status();
+             }
+
+             return ConcatTransform(
+                 (*values)[0], (*values)[1], (*values)[2], (*values)[3],
+                 (*values)[4], (*values)[5], (*values)[6], (*values)[7],
+                 (*values)[8], (*values)[9], (*values)[10], (*values)[11],
+                 (*values)[12], (*values)[13], (*values)[14], (*values)[15]);
+           }},
+          {"CoordinateSystem",
+           [&]() {
+             auto name = ReadQuotedString("CoordinateSystem", tokenizer);
+             if (!name.ok()) {
+               return name.status();
+             }
+
+             return CoordinateSystem(*name);
+           }},
+          {"CoordSysTransform",
+           [&]() {
+             auto name = ReadQuotedString("CoordSysTransform", tokenizer);
+             if (!name.ok()) {
+               return name.status();
+             }
+
+             return CoordSysTransform(*name);
+           }},
+          {"Film",
+           [&]() {
+             absl::StatusOr<absl::string_view> type_name = ReadParameters(
+                 "Film", parameter_type_names_, storage, tokenizer, parameters);
+             if (!type_name.ok()) {
+               return type_name.status();
+             }
+
+             return Film(*type_name, parameters);
+           }},
+          {"Identity", [&]() { return Identity(); }},
+          {"Include",
+           [&]() {
+             auto name = ReadQuotedString("Include", tokenizer);
+             if (!name.ok()) {
+               return name.status();
+             }
+
+             return Include(*name);
+           }},
+          {"Integrator",
+           [&]() {
+             absl::StatusOr<absl::string_view> type_name =
+                 ReadParameters("Integrator", parameter_type_names_, storage,
+                                tokenizer, parameters);
+             if (!type_name.ok()) {
+               return type_name.status();
+             }
+
+             return Integrator(*type_name, parameters);
+           }},
+          {"Import",
+           [&]() {
+             auto name = ReadQuotedString("Import", tokenizer);
+             if (!name.ok()) {
+               return name.status();
+             }
+
+             return Import(*name);
+           }},
+          {"LightSource",
+           [&]() {
+             absl::StatusOr<absl::string_view> type_name =
+                 ReadParameters("LightSource", parameter_type_names_, storage,
+                                tokenizer, parameters);
+             if (!type_name.ok()) {
+               return type_name.status();
+             }
+
+             return LightSource(*type_name, parameters);
+           }},
+          {"LookAt",
+           [&]() {
+             auto values =
+                 ReadFloatParameters("LookAt", storage, tokenizer, 9, false);
+             if (!values.ok()) {
+               return values.status();
+             }
+
+             return LookAt((*values)[0], (*values)[1], (*values)[2],
+                           (*values)[3], (*values)[4], (*values)[5],
+                           (*values)[6], (*values)[7], (*values)[8]);
+           }},
+          {"MakeNamedMaterial",
+           [&]() {
+             absl::StatusOr<absl::string_view> material_name =
+                 ReadParameters("MakeNamedMaterial", parameter_type_names_,
+                                storage, tokenizer, parameters, "name");
+             if (!material_name.ok()) {
+               return material_name.status();
+             }
+
+             return MakeNamedMaterial(*material_name, parameters);
+           }},
+          {"MakeNamedMedium",
+           [&]() {
+             absl::StatusOr<absl::string_view> medium_name =
+                 ReadParameters("MakeNamedMedium", parameter_type_names_,
+                                storage, tokenizer, parameters, "name");
+             if (!medium_name.ok()) {
+               return medium_name.status();
+             }
+
+             return MakeNamedMedium(*medium_name, parameters);
+           }},
+          {"Material",
+           [&]() {
+             absl::StatusOr<absl::string_view> type_name =
+                 ReadParameters("Material", parameter_type_names_, storage,
+                                tokenizer, parameters);
+             if (!type_name.ok()) {
+               return type_name.status();
+             }
+
+             return Material(*type_name, parameters);
+           }},
+          {"MediumInterface",
+           [&]() {
+             auto inside = ReadQuotedString("MediumInterface", tokenizer);
+             if (!inside.ok()) {
+               return inside.status();
+             }
+
+             absl::string_view persisted_inside = storage.Add(*inside);
+
+             auto outside = ReadQuotedString("MediumInterface", tokenizer);
+             if (!outside.ok()) {
+               return outside.status();
+             }
+
+             return MediumInterface(persisted_inside, *outside);
+           }},
+          {"NamedMaterial",
+           [&]() {
+             auto name = ReadQuotedString("NamedMaterial", tokenizer);
+             if (!name.ok()) {
+               return name.status();
+             }
+
+             return NamedMaterial(*name);
+           }},
+          {"ObjectBegin",
+           [&]() {
+             auto name = ReadQuotedString("ObjectBegin", tokenizer);
+             if (!name.ok()) {
+               return name.status();
+             }
+
+             return ObjectBegin(*name);
+           }},
+          {"ObjectEnd", [&]() { return ObjectEnd(); }},
+          {"ObjectInstance",
+           [&]() {
+             auto name = ReadQuotedString("ObjectInstance", tokenizer);
+             if (!name.ok()) {
+               return name.status();
+             }
+
+             return ObjectInstance(*name);
+           }},
+          {"PixelFilter",
+           [&]() {
+             absl::StatusOr<absl::string_view> type_name =
+                 ReadParameters("PixelFilter", parameter_type_names_, storage,
+                                tokenizer, parameters);
+             if (!type_name.ok()) {
+               return type_name.status();
+             }
+
+             return PixelFilter(*type_name, parameters);
+           }},
+          {"ReverseOrientation", [&]() { return ReverseOrientation(); }},
+          {"Rotate",
+           [&]() {
+             auto values =
+                 ReadFloatParameters("Rotate", storage, tokenizer, 4, false);
+             if (!values.ok()) {
+               return values.status();
+             }
+
+             return Rotate((*values)[0], (*values)[1], (*values)[2],
+                           (*values)[3]);
+           }},
+          {"Sampler",
+           [&]() {
+             absl::StatusOr<absl::string_view> type_name =
+                 ReadParameters("Sampler", parameter_type_names_, storage,
+                                tokenizer, parameters);
+             if (!type_name.ok()) {
+               return type_name.status();
+             }
+
+             return Sampler(*type_name, parameters);
+           }},
+          {"Scale",
+           [&]() {
+             auto values =
+                 ReadFloatParameters("Scale", storage, tokenizer, 3, false);
+             if (!values.ok()) {
+               return values.status();
+             }
+
+             return Scale((*values)[0], (*values)[1], (*values)[2]);
+           }},
+          {"Shape",
+           [&]() {
+             absl::StatusOr<absl::string_view> type_name =
+                 ReadParameters("Shape", parameter_type_names_, storage,
+                                tokenizer, parameters);
+             if (!type_name.ok()) {
+               return type_name.status();
+             }
+
+             return Shape(*type_name, parameters);
+           }},
+          {"Texture",
+           [&]() {
+             auto name = ReadQuotedString("Texture", tokenizer);
+             if (!name.ok()) {
+               return name.status();
+             }
+
+             absl::string_view texture_name = storage.Add(*name);
+
+             auto type = ReadQuotedString("Texture", tokenizer);
+             if (!type.ok()) {
+               return type.status();
+             }
+
+             absl::Status (Parser::*impl)(
+                 absl::string_view, absl::string_view,
+                 absl::flat_hash_map<absl::string_view, Parameter>&);
+             if (*type == "color" || *type == "spectrum") {
+               impl = &Parser::SpectrumTexture;
+             } else if (*type == "float") {
+               impl = &Parser::FloatTexture;
+             } else {
+               return absl::InvalidArgumentError(
+                   absl::StrCat("Unrecgonized Texture type: \"", *type, "\""));
+             }
+
+             absl::StatusOr<absl::string_view> type_name =
+                 ReadParameters("Texture", parameter_type_names_, storage,
+                                tokenizer, parameters);
+             if (!type_name.ok()) {
+               return type_name.status();
+             }
+
+             return (this->*impl)(texture_name, *type_name, parameters);
+           }},
+          {"Transform",
+           [&]() {
+             auto values =
+                 ReadFloatParameters("Transform", storage, tokenizer, 16, true);
+             if (!values.ok()) {
+               return values.status();
+             }
+
+             return Transform(
+                 (*values)[0], (*values)[1], (*values)[2], (*values)[3],
+                 (*values)[4], (*values)[5], (*values)[6], (*values)[7],
+                 (*values)[8], (*values)[9], (*values)[10], (*values)[11],
+                 (*values)[12], (*values)[13], (*values)[14], (*values)[15]);
+           }},
+          {"TransformBegin", [&]() { return TransformBegin(); }},
+          {"TransformEnd", [&]() { return TransformEnd(); }},
+          {"TransformTimes",
+           [&]() {
+             auto values = ReadFloatParameters("TransformTimes", storage,
+                                               tokenizer, 2, false);
+             if (!values.ok()) {
+               return values.status();
+             }
+
+             return TransformTimes((*values)[0], (*values)[1]);
+           }},
+          {"Translate",
+           [&]() {
+             auto values =
+                 ReadFloatParameters("Translate", storage, tokenizer, 3, false);
+             if (!values.ok()) {
+               return values.status();
+             }
+
+             return Translate((*values)[0], (*values)[1], (*values)[2]);
+           }},
+          {"WorldBegin", [&]() { return WorldBegin(); }},
+          {"WorldEnd", [&]() { return WorldEnd(); }}};
+
   for (;;) {
     absl::StatusOr<const std::string*> next = tokenizer.Next();
     if (!next.ok()) {
@@ -879,313 +1245,13 @@ absl::Status Parser::ReadFrom(std::istream& stream) {
       break;
     }
 
-    absl::Status status;
-    if (**next == "Accelerator") {
-      absl::StatusOr<absl::string_view> type_name = ReadParameters(
-          "Accelerator", parameter_type_names_, storage, tokenizer, parameters);
-      if (!type_name.ok()) {
-        return type_name.status();
-      }
-
-      status = Accelerator(*type_name, parameters);
-    } else if (**next == "ActiveTransform") {
-      next = tokenizer.Next();
-      if (!next.ok()) {
-        return next.status();
-      }
-
-      if (!*next) {
-        return absl::InvalidArgumentError(
-            "Missing parameter to directive ActiveTransform");
-      }
-
-      ActiveTransformation transformation;
-      if (**next == "All") {
-        transformation = ActiveTransformation::ALL;
-      } else if (**next == "StartTime") {
-        transformation = ActiveTransformation::START_TIME;
-      } else if (**next == "EndTime") {
-        transformation = ActiveTransformation::END_TIME;
-      } else {
-        return absl::InvalidArgumentError(
-            "Invalid parameter to directive ActiveTransforms: '" + **next +
-            "'");
-      }
-
-      status = ActiveTransform(transformation);
-    } else if (**next == "AreaLightSource") {
-      absl::StatusOr<absl::string_view> type_name =
-          ReadParameters("AreaLightSource", parameter_type_names_, storage,
-                         tokenizer, parameters);
-      if (!type_name.ok()) {
-        return type_name.status();
-      }
-
-      status = AreaLightSource(*type_name, parameters);
-    } else if (**next == "AttributeBegin") {
-      status = AttributeBegin();
-    } else if (**next == "AttributeEnd") {
-      status = AttributeEnd();
-    } else if (**next == "Camera") {
-      absl::StatusOr<absl::string_view> type_name = ReadParameters(
-          "Camera", parameter_type_names_, storage, tokenizer, parameters);
-      if (!type_name.ok()) {
-        return type_name.status();
-      }
-
-      status = Camera(*type_name, parameters);
-    } else if (**next == "ConcatTransform") {
-      auto values =
-          ReadFloatParameters("ConcatTransform", storage, tokenizer, 16, true);
-      if (!values.ok()) {
-        return values.status();
-      }
-
-      status = ConcatTransform(
-          (*values)[0], (*values)[1], (*values)[2], (*values)[3], (*values)[4],
-          (*values)[5], (*values)[6], (*values)[7], (*values)[8], (*values)[9],
-          (*values)[10], (*values)[11], (*values)[12], (*values)[13],
-          (*values)[14], (*values)[15]);
-    } else if (**next == "CoordinateSystem") {
-      auto name = ReadQuotedString("CoordinateSystem", tokenizer);
-      if (!name.ok()) {
-        return name.status();
-      }
-
-      status = CoordinateSystem(*name);
-    } else if (**next == "CoordSysTransform") {
-      auto name = ReadQuotedString("CoordSysTransform", tokenizer);
-      if (!name.ok()) {
-        return name.status();
-      }
-
-      status = CoordSysTransform(*name);
-    } else if (**next == "Film") {
-      absl::StatusOr<absl::string_view> type_name = ReadParameters(
-          "Film", parameter_type_names_, storage, tokenizer, parameters);
-      if (!type_name.ok()) {
-        return type_name.status();
-      }
-
-      status = Film(*type_name, parameters);
-    } else if (**next == "Identity") {
-      status = Identity();
-    } else if (**next == "Include") {
-      auto name = ReadQuotedString("Include", tokenizer);
-      if (!name.ok()) {
-        return name.status();
-      }
-
-      status = Include(*name);
-    } else if (**next == "Integrator") {
-      absl::StatusOr<absl::string_view> type_name = ReadParameters(
-          "Integrator", parameter_type_names_, storage, tokenizer, parameters);
-      if (!type_name.ok()) {
-        return type_name.status();
-      }
-
-      status = Integrator(*type_name, parameters);
-    } else if (**next == "Import") {
-      auto name = ReadQuotedString("Import", tokenizer);
-      if (!name.ok()) {
-        return name.status();
-      }
-
-      status = Import(*name);
-    } else if (**next == "LightSource") {
-      absl::StatusOr<absl::string_view> type_name = ReadParameters(
-          "LightSource", parameter_type_names_, storage, tokenizer, parameters);
-      if (!type_name.ok()) {
-        return type_name.status();
-      }
-
-      status = LightSource(*type_name, parameters);
-    } else if (**next == "LookAt") {
-      auto values = ReadFloatParameters("LookAt", storage, tokenizer, 9, false);
-      if (!values.ok()) {
-        return values.status();
-      }
-
-      status = LookAt((*values)[0], (*values)[1], (*values)[2], (*values)[3],
-                      (*values)[4], (*values)[5], (*values)[6], (*values)[7],
-                      (*values)[8]);
-    } else if (**next == "MakeNamedMaterial") {
-      absl::StatusOr<absl::string_view> material_name =
-          ReadParameters("MakeNamedMaterial", parameter_type_names_, storage,
-                         tokenizer, parameters, "name");
-      if (!material_name.ok()) {
-        return material_name.status();
-      }
-
-      status = MakeNamedMaterial(*material_name, parameters);
-    } else if (**next == "MakeNamedMedium") {
-      absl::StatusOr<absl::string_view> medium_name =
-          ReadParameters("MakeNamedMedium", parameter_type_names_, storage,
-                         tokenizer, parameters, "name");
-      if (!medium_name.ok()) {
-        return medium_name.status();
-      }
-
-      status = MakeNamedMedium(*medium_name, parameters);
-    } else if (**next == "Material") {
-      absl::StatusOr<absl::string_view> type_name = ReadParameters(
-          "Material", parameter_type_names_, storage, tokenizer, parameters);
-      if (!type_name.ok()) {
-        return type_name.status();
-      }
-
-      status = Material(*type_name, parameters);
-    } else if (**next == "MediumInterface") {
-      auto inside = ReadQuotedString("MediumInterface", tokenizer);
-      if (!inside.ok()) {
-        return inside.status();
-      }
-
-      absl::string_view persisted_inside = storage.Add(*inside);
-
-      auto outside = ReadQuotedString("MediumInterface", tokenizer);
-      if (!outside.ok()) {
-        return outside.status();
-      }
-
-      status = MediumInterface(persisted_inside, *outside);
-    } else if (**next == "NamedMaterial") {
-      auto name = ReadQuotedString("NamedMaterial", tokenizer);
-      if (!name.ok()) {
-        return name.status();
-      }
-
-      status = NamedMaterial(*name);
-    } else if (**next == "ObjectBegin") {
-      auto name = ReadQuotedString("ObjectBegin", tokenizer);
-      if (!name.ok()) {
-        return name.status();
-      }
-
-      status = ObjectBegin(*name);
-    } else if (**next == "ObjectEnd") {
-      status = ObjectEnd();
-    } else if (**next == "ObjectInstance") {
-      auto name = ReadQuotedString("ObjectInstance", tokenizer);
-      if (!name.ok()) {
-        return name.status();
-      }
-
-      status = ObjectInstance(*name);
-    } else if (**next == "PixelFilter") {
-      absl::StatusOr<absl::string_view> type_name = ReadParameters(
-          "PixelFilter", parameter_type_names_, storage, tokenizer, parameters);
-      if (!type_name.ok()) {
-        return type_name.status();
-      }
-
-      status = PixelFilter(*type_name, parameters);
-    } else if (**next == "ReverseOrientation") {
-      status = ReverseOrientation();
-    } else if (**next == "Rotate") {
-      auto values = ReadFloatParameters("Rotate", storage, tokenizer, 4, false);
-      if (!values.ok()) {
-        return values.status();
-      }
-
-      status = Rotate((*values)[0], (*values)[1], (*values)[2], (*values)[3]);
-    } else if (**next == "Sampler") {
-      absl::StatusOr<absl::string_view> type_name = ReadParameters(
-          "Sampler", parameter_type_names_, storage, tokenizer, parameters);
-      if (!type_name.ok()) {
-        return type_name.status();
-      }
-
-      status = Sampler(*type_name, parameters);
-    } else if (**next == "Scale") {
-      auto values = ReadFloatParameters("Scale", storage, tokenizer, 3, false);
-      if (!values.ok()) {
-        return values.status();
-      }
-
-      status = Scale((*values)[0], (*values)[1], (*values)[2]);
-    } else if (**next == "Shape") {
-      absl::StatusOr<absl::string_view> type_name = ReadParameters(
-          "Shape", parameter_type_names_, storage, tokenizer, parameters);
-      if (!type_name.ok()) {
-        return type_name.status();
-      }
-
-      status = Shape(*type_name, parameters);
-    } else if (**next == "Texture") {
-      auto name = ReadQuotedString("Texture", tokenizer);
-      if (!name.ok()) {
-        return name.status();
-      }
-
-      absl::string_view texture_name = storage.Add(*name);
-
-      auto type = ReadQuotedString("Texture", tokenizer);
-      if (!type.ok()) {
-        return type.status();
-      }
-
-      absl::Status (Parser::*impl)(
-          absl::string_view, absl::string_view,
-          absl::flat_hash_map<absl::string_view, Parameter>&);
-      if (*type == "color" || *type == "spectrum") {
-        impl = &Parser::SpectrumTexture;
-      } else if (*type == "float") {
-        impl = &Parser::FloatTexture;
-      } else {
-        return absl::InvalidArgumentError(
-            absl::StrCat("Unrecgonized Texture type: \"", *type, "\""));
-      }
-
-      absl::StatusOr<absl::string_view> type_name = ReadParameters(
-          "Texture", parameter_type_names_, storage, tokenizer, parameters);
-      if (!type_name.ok()) {
-        return type_name.status();
-      }
-
-      status = (this->*impl)(texture_name, *type_name, parameters);
-    } else if (**next == "Transform") {
-      auto values =
-          ReadFloatParameters("Transform", storage, tokenizer, 16, true);
-      if (!values.ok()) {
-        return values.status();
-      }
-
-      status =
-          Transform((*values)[0], (*values)[1], (*values)[2], (*values)[3],
-                    (*values)[4], (*values)[5], (*values)[6], (*values)[7],
-                    (*values)[8], (*values)[9], (*values)[10], (*values)[11],
-                    (*values)[12], (*values)[13], (*values)[14], (*values)[15]);
-    } else if (**next == "TransformBegin") {
-      status = TransformBegin();
-    } else if (**next == "TransformEnd") {
-      status = TransformEnd();
-    } else if (**next == "TransformTimes") {
-      auto values =
-          ReadFloatParameters("TransformTimes", storage, tokenizer, 2, false);
-      if (!values.ok()) {
-        return values.status();
-      }
-
-      status = TransformTimes((*values)[0], (*values)[1]);
-    } else if (**next == "Translate") {
-      auto values =
-          ReadFloatParameters("Translate", storage, tokenizer, 3, false);
-      if (!values.ok()) {
-        return values.status();
-      }
-
-      status = Translate((*values)[0], (*values)[1], (*values)[2]);
-    } else if (**next == "WorldBegin") {
-      status = WorldBegin();
-    } else if (**next == "WorldEnd") {
-      status = WorldEnd();
-    } else {
+    auto iter = directives.find(**next);
+    if (iter == directives.end()) {
       return absl::InvalidArgumentError(
           absl::StrCat("Unrecognized directive: '", **next, "'"));
     }
 
-    if (!status.ok()) {
+    if (absl::Status status = iter->second(); !status.ok()) {
       return status;
     }
 
