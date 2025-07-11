@@ -7,11 +7,12 @@
 #include <optional>
 #include <vector>
 
-#include "absl/container/flat_hash_map.h"
+#include "absl/container/flat_hash_set.h"
 #include "absl/flags/flag.h"
 #include "absl/flags/parse.h"
 #include "absl/status/status.h"
 #include "google/protobuf/arena.h"
+#include "google/protobuf/io/zero_copy_stream_impl.h"
 #include "google/protobuf/text_format.h"
 #include "pbrt_proto/v3/convert.h"
 #include "pbrt_proto/v3/pbrt.pb.h"
@@ -52,26 +53,39 @@ std::string FileExtension() {
   }
 }
 
-std::string Serialize(const pbrt_proto::v3::PbrtProto& proto) {
-  std::string result;
+void Serialize(std::filesystem::path output_path, size_t file_index,
+               const pbrt_proto::v3::PbrtProto& proto) {
+  std::string prefix;
+  if (file_index != 0) {
+    prefix = "." + std::to_string(file_index);
+  }
+
+  output_path.replace_extension(prefix + ".pbrt" + FileExtension());
+
+  std::ofstream output(output_path, std::ios::binary | std::ios::out);
+  if (!output) {
+    std::cerr << "ERROR: Could not open output file" << std::endl;
+    exit(EXIT_FAILURE);
+  }
+
   if (absl::GetFlag(FLAGS_textproto)) {
-    if (!google::protobuf::TextFormat::PrintToString(proto, &result)) {
+    google::protobuf::io::OstreamOutputStream zero_copy_output(&output);
+    if (!google::protobuf::TextFormat::Print(proto, &zero_copy_output)) {
       std::cerr << "ERROR: Could not serialize proto to output" << std::endl;
       exit(EXIT_FAILURE);
     }
   } else {
-    if (!proto.SerializeToString(&result)) {
+    if (!proto.SerializeToOstream(&output)) {
       std::cerr << "ERROR: Could not serialize proto to output" << std::endl;
       exit(EXIT_FAILURE);
     }
   }
-  return result;
 }
 
-std::vector<std::string> ConvertFile(
-    const std::filesystem::path& file, const std::string& partial_file_name,
-    std::vector<std::pair<std::filesystem::path, std::string>>&
-        included_files) {
+void ConvertFile(const std::filesystem::path& file,
+                 const std::string& partial_file_name,
+                 std::vector<std::pair<std::filesystem::path, std::string>>&
+                     included_files) {
   ScopedArena arena;
 
   std::ifstream input(file.c_str(), std::ios_base::in | std::ios_base::binary);
@@ -113,24 +127,22 @@ std::vector<std::string> ConvertFile(
     *directive.mutable_include()->mutable_path() += FileExtension();
   }
 
-  std::vector<std::string> result;
   if (to_v3->ByteSizeLong() < kMaxProtoSize) {
-    result.push_back(Serialize(*to_v3));
-    return result;
+    Serialize(file, 0, *to_v3);
+    return;
   }
 
   pbrt_proto::v3::PbrtProto* parent = arena.Allocate();
-  result.emplace_back();
-
   pbrt_proto::v3::PbrtProto* child = arena.Allocate();
 
   size_t current_size = 0;
+  size_t child_index = 1;
   for (const auto& directive : to_v3->directives()) {
     if (current_size + directive.ByteSizeLong() > kMaxProtoSize) {
       parent->add_directives()->mutable_include()->set_path(
-          partial_file_name + "." + std::to_string(result.size()) + ".pbrt" +
+          partial_file_name + "." + std::to_string(child_index) + ".pbrt" +
           FileExtension());
-      result.push_back(Serialize(*child));
+      Serialize(file, child_index++, *child);
 
       child->clear_directives();
       current_size = 0;
@@ -141,12 +153,11 @@ std::vector<std::string> ConvertFile(
   }
 
   parent->add_directives()->mutable_include()->set_path(
-      partial_file_name + "." + std::to_string(1) + ".pbrt" + FileExtension());
-  result.push_back(Serialize(*child));
+      partial_file_name + "." + std::to_string(child_index) + ".pbrt" +
+      FileExtension());
+  Serialize(file, child_index, *child);
 
-  result[0] = Serialize(*parent);
-
-  return result;
+  Serialize(file, 0, *parent);
 }
 
 int main(int argc, char** argv) {
@@ -181,12 +192,10 @@ int main(int argc, char** argv) {
   }
 
   std::vector<std::pair<std::filesystem::path, std::string>> included_files;
-  std::vector<std::string> parsed_input_file =
-      ConvertFile(input_path, input_path.stem(), included_files);
+  ConvertFile(input_path, input_path.stem(), included_files);
 
-  absl::flat_hash_map<std::filesystem::path, std::vector<std::string>>
-      parsed_files;
-  parsed_files[input_path] = std::move(parsed_input_file);
+  absl::flat_hash_set<std::filesystem::path> parsed_files;
+  parsed_files.insert(input_path);
 
   while (!included_files.empty()) {
     auto [next_file, next_partial_file_name] = included_files.back();
@@ -196,33 +205,8 @@ int main(int argc, char** argv) {
       continue;
     }
 
-    parsed_files[next_file] =
-        ConvertFile(next_file, next_partial_file_name, included_files);
-  }
-
-  for (const auto& [path, serialized] : parsed_files) {
-    for (size_t i = 0; i < serialized.size(); i++) {
-      std::filesystem::path output_path = path;
-
-      std::string prefix;
-      if (i != 0) {
-        prefix = "." + std::to_string(i);
-      }
-
-      output_path.replace_extension(prefix + ".pbrt" + FileExtension());
-
-      std::ofstream output(output_path, std::ios::binary | std::ios::out);
-      if (!output) {
-        std::cerr << "ERROR: Could not open output file" << std::endl;
-        return EXIT_FAILURE;
-      }
-
-      output.write(serialized[i].c_str(), serialized[i].size());
-      if (!output) {
-        std::cerr << "ERROR: Could not write to output file" << std::endl;
-        return EXIT_FAILURE;
-      }
-    }
+    ConvertFile(next_file, next_partial_file_name, included_files);
+    parsed_files.insert(next_file);
   }
 
   return EXIT_SUCCESS;

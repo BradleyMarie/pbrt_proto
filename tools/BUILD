@@ -8,7 +8,7 @@ cc_binary(
     deps = [
         "//pbrt_proto/v3:convert",
         "//pbrt_proto/v3:pbrt_cc_proto",
-        "@abseil-cpp//absl/container:flat_hash_map",
+        "@abseil-cpp//absl/container:flat_hash_set",
         "@abseil-cpp//absl/flags:flag",
         "@abseil-cpp//absl/flags:parse",
         "@abseil-cpp//absl/status:statusor",
