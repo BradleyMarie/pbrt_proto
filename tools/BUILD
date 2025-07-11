@@ -11,7 +11,7 @@ cc_binary(
         "@abseil-cpp//absl/container:flat_hash_set",
         "@abseil-cpp//absl/flags:flag",
         "@abseil-cpp//absl/flags:parse",
-        "@abseil-cpp//absl/status:statusor",
+        "@abseil-cpp//absl/status:status",
         "@abseil-cpp//absl/strings:string_view",
     ],
 )
