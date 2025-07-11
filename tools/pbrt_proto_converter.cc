@@ -1,7 +1,9 @@
+#include <cstdint>
 #include <cstdlib>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <limits>
 #include <optional>
 #include <vector>
 
@@ -26,9 +28,20 @@ ABSL_FLAG(bool, textproto, false,
 ABSL_FLAG(std::optional<uint16_t>, pbrt_version, std::nullopt,
           "The version of pbrt input specified.");
 
-pbrt_proto::v3::PbrtProto ConvertFile(
-    const std::filesystem::path& file,
-    std::vector<std::filesystem::path>& included_files) {
+constexpr int kMaxProtoSize = std::numeric_limits<int32_t>::max() / 2;
+
+std::string FileExtension() {
+  if (absl::GetFlag(FLAGS_textproto)) {
+    return ".v3.txtpb";
+  } else {
+    return ".v3.binpb";
+  }
+}
+
+std::vector<pbrt_proto::v3::PbrtProto> ConvertFile(
+    const std::filesystem::path& file, const std::string& partial_file_name,
+    std::vector<std::pair<std::filesystem::path, std::string>>&
+        included_files) {
   std::ifstream input(file.c_str(), std::ios_base::in | std::ios_base::binary);
   if (!input) {
     std::cerr << "ERROR: Could not open file: " << file << std::endl;
@@ -62,16 +75,38 @@ pbrt_proto::v3::PbrtProto ConvertFile(
       exit(EXIT_FAILURE);
     }
 
-    included_files.push_back(included_path);
-
-    if (absl::GetFlag(FLAGS_textproto)) {
-      *directive.mutable_include()->mutable_path() += ".v3.txtpb";
-    } else {
-      *directive.mutable_include()->mutable_path() += ".v3.binpb";
-    }
+    included_files.emplace_back(included_path,
+                                directive.include().path().substr(
+                                    0, directive.include().path().size() - 5));
+    *directive.mutable_include()->mutable_path() += FileExtension();
   }
 
-  return *std::move(to_v3);
+  std::vector<pbrt_proto::v3::PbrtProto> result;
+  if (to_v3->ByteSizeLong() < kMaxProtoSize) {
+    result.push_back(std::move(*to_v3));
+    return result;
+  }
+
+  result.emplace_back();
+
+  size_t current_size = 0;
+  result[0].add_directives()->mutable_include()->set_path(
+      partial_file_name + "." + std::to_string(1) + ".pbrt" + FileExtension());
+  result.emplace_back();
+  for (const auto& directive : to_v3->directives()) {
+    if (current_size + directive.ByteSizeLong() > kMaxProtoSize) {
+      result[0].add_directives()->mutable_include()->set_path(
+          partial_file_name + "." + std::to_string(result.size()) + ".pbrt" +
+          FileExtension());
+      result.emplace_back();
+      current_size = 0;
+    }
+
+    current_size += directive.ByteSizeLong();
+    *result.back().add_directives() = directive;
+  }
+
+  return result;
 }
 
 int main(int argc, char** argv) {
@@ -105,49 +140,58 @@ int main(int argc, char** argv) {
     return EXIT_FAILURE;
   }
 
-  std::vector<std::filesystem::path> included_files;
-  pbrt_proto::v3::PbrtProto parsed_input_file =
-      ConvertFile(input_path, included_files);
+  std::vector<std::pair<std::filesystem::path, std::string>> included_files;
+  std::vector<pbrt_proto::v3::PbrtProto> parsed_input_file =
+      ConvertFile(input_path, input_path.stem(), included_files);
 
-  absl::flat_hash_map<std::filesystem::path, pbrt_proto::v3::PbrtProto>
+  absl::flat_hash_map<std::filesystem::path,
+                      std::vector<pbrt_proto::v3::PbrtProto>>
       parsed_files;
   parsed_files[input_path] = std::move(parsed_input_file);
 
   while (!included_files.empty()) {
-    std::filesystem::path next_file = included_files.back();
+    auto [next_file, next_partial_file_name] = included_files.back();
     included_files.pop_back();
 
     if (parsed_files.contains(next_file)) {
       continue;
     }
 
-    parsed_files[next_file] = ConvertFile(next_file, included_files);
+    parsed_files[next_file] =
+        ConvertFile(next_file, next_partial_file_name, included_files);
   }
 
-  for (const auto& [path, proto] : parsed_files) {
-    std::filesystem::path output_path = path;
-    if (absl::GetFlag(FLAGS_textproto)) {
-      output_path += ".v3.txtpb";
-    } else {
-      output_path += ".v3.binpb";
-    }
+  for (const auto& [path, protos] : parsed_files) {
+    for (size_t i = 0; i < protos.size(); i++) {
+      std::filesystem::path output_path = path;
 
-    std::ofstream output(output_path, std::ios::binary | std::ios::out);
-    if (!output) {
-      std::cerr << "ERROR: Could not open output file" << std::endl;
-      return EXIT_FAILURE;
-    }
+      std::string prefix;
+      if (i != 0) {
+        prefix = "." + std::to_string(i);
+      }
 
-    if (absl::GetFlag(FLAGS_textproto)) {
-      google::protobuf::io::OstreamOutputStream zero_copy_output(&output);
-      if (!google::protobuf::TextFormat::Print(proto, &zero_copy_output)) {
-        std::cerr << "ERROR: Could not serialize proto to output" << std::endl;
+      output_path.replace_extension(prefix + ".pbrt" + FileExtension());
+
+      std::ofstream output(output_path, std::ios::binary | std::ios::out);
+      if (!output) {
+        std::cerr << "ERROR: Could not open output file" << std::endl;
         return EXIT_FAILURE;
       }
-    } else {
-      if (!proto.SerializeToOstream(&output)) {
-        std::cerr << "ERROR: Could not serialize proto to output" << std::endl;
-        return EXIT_FAILURE;
+
+      if (absl::GetFlag(FLAGS_textproto)) {
+        google::protobuf::io::OstreamOutputStream zero_copy_output(&output);
+        if (!google::protobuf::TextFormat::Print(protos[i],
+                                                 &zero_copy_output)) {
+          std::cerr << "ERROR: Could not serialize proto to output "
+                    << output_path << std::endl;
+          return EXIT_FAILURE;
+        }
+      } else {
+        if (!protos[i].SerializeToOstream(&output)) {
+          std::cerr << "ERROR: Could not serialize proto to output "
+                    << output_path << std::endl;
+          return EXIT_FAILURE;
+        }
       }
     }
   }
