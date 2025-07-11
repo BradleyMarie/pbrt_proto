@@ -143,7 +143,7 @@ absl::StatusOr<bool> Tokenizer::ParseNext(std::string& output) {
   return false;
 }
 
-absl::StatusOr<absl::Nullable<const std::string*>> Tokenizer::Peek() {
+absl::StatusOr<const std::string * absl_nullable> Tokenizer::Peek() {
   if (peeked_valid_) {
     if (*peeked_valid_) {
       return &peeked_;
@@ -165,7 +165,7 @@ absl::StatusOr<absl::Nullable<const std::string*>> Tokenizer::Peek() {
   return nullptr;
 }
 
-absl::StatusOr<absl::Nullable<const std::string*>> Tokenizer::Next() {
+absl::StatusOr<const std::string * absl_nullable> Tokenizer::Next() {
   std::optional<bool> next_valid;
   if (peeked_valid_) {
     std::swap(next_, peeked_);

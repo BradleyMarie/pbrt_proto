@@ -20,8 +20,8 @@ class Tokenizer {
   Tokenizer(const Tokenizer&) = delete;
   Tokenizer& operator=(const Tokenizer&) = delete;
 
-  absl::StatusOr<absl::Nullable<const std::string*>> Peek();
-  absl::StatusOr<absl::Nullable<const std::string*>> Next();
+  absl::StatusOr<const std::string * absl_nullable> Peek();
+  absl::StatusOr<const std::string * absl_nullable> Next();
 
  private:
   absl::StatusOr<bool> ParseNext(std::string& output);

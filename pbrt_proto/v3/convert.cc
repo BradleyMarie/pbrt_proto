@@ -3287,9 +3287,13 @@ absl::Status ParserV3::WorldEnd() {
 
 }  // namespace
 
+absl::Status Convert(std::istream& input, PbrtProto& output) {
+  return ParserV3(output).ReadFrom(input);
+}
+
 absl::StatusOr<PbrtProto> Convert(std::istream& input) {
   PbrtProto output;
-  if (absl::Status error = ParserV3(output).ReadFrom(input); !error.ok()) {
+  if (absl::Status error = Convert(input, output); !error.ok()) {
     return error;
   }
   return output;
