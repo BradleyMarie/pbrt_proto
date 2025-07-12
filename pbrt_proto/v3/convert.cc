@@ -2479,6 +2479,12 @@ absl::Status ParserV3::Shape(
   } else if (shape_type == "loopsubdiv") {
     auto& loopsubdiv = *shape.mutable_loopsubdiv();
 
+    if (std::optional<int32_t> nlevels =
+            TryRemoveInteger(parameters, "nlevels");
+        nlevels.has_value()) {
+      loopsubdiv.set_levels(*nlevels);
+    }
+
     if (std::optional<int32_t> levels = TryRemoveInteger(parameters, "levels");
         levels.has_value()) {
       loopsubdiv.set_levels(*levels);
