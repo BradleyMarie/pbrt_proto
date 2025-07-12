@@ -1417,7 +1417,7 @@ TEST(Convert, LightSourceInfinite) {
 
 TEST(Convert, LightSourcePoint) {
   std::stringstream stream(
-      "LightSource \"point\" \"blackbody L\" [1.0 2.0] \"point from\" [3.0 4.0 "
+      "LightSource \"point\" \"blackbody I\" [1.0 2.0] \"point from\" [3.0 4.0 "
       "5.0] \"blackbody scale\" [9.0 10.0]");
   EXPECT_THAT(
       Convert(stream),
@@ -1425,7 +1425,7 @@ TEST(Convert, LightSourcePoint) {
           R"pb(directives {
                  light_source {
                    point {
-                     L { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
+                     I { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
                      from { x: 3.0 y: 4.0 z: 5.0 }
                      scale {
                        blackbody_spectrum { temperature: 9.0 scale: 10.0 }

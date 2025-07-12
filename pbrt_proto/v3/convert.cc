@@ -1784,8 +1784,8 @@ absl::Status ParserV3::LightSource(
   } else if (light_source_type == "point") {
     auto& point = *light_source.mutable_point();
 
-    TryRemoveSpectrum(parameters, "L",
-                      std::bind(&LightSource::Point::mutable_l, &point));
+    TryRemoveSpectrum(parameters, "I",
+                      std::bind(&LightSource::Point::mutable_i, &point));
 
     if (std::optional<std::array<double, 3>> from =
             TryRemovePoint3(parameters, "from");

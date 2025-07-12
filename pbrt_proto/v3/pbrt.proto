@@ -771,7 +771,7 @@ message LightSource {
   }
 
   message Point {
-    optional Spectrum L = 1;
+    optional Spectrum I = 1;
     optional pbrt_proto.v3.Point from = 2;
     optional Spectrum scale = 3;
   }
