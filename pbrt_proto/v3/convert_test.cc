@@ -1782,9 +1782,9 @@ TEST(Convert, MaterialKdSubsurface) {
   std::stringstream stream(
       "Material \"kdsubsurface\" "
       "\"texture Kd\" \"a\" "
-      "\"float mfp\" 1.0 "
       "\"texture Kr\" \"b\" "
       "\"texture Kt\" \"c\" "
+      "\"texture mfp\" \"d\" "
       "\"float uroughness\" 2.0 "
       "\"float vroughness\" 3.0 "
       "\"float eta\" 4.0 "
@@ -1799,7 +1799,7 @@ TEST(Convert, MaterialKdSubsurface) {
                                               Kd { spectrum_texture_name: "a" }
                                               Kr { spectrum_texture_name: "b" }
                                               Kt { spectrum_texture_name: "c" }
-                                              mfp { float_value: 1.0 }
+                                              mfp { spectrum_texture_name: "d" }
                                               uroughness { float_value: 2.0 }
                                               vroughness { float_value: 3.0 }
                                               eta: 4.0
@@ -2976,7 +2976,6 @@ TEST(Convert, ShapeOverrides) {
       "\"float eumelanin\" 11.0 "
       "\"float flatness\" 12.0 "
       "\"float metallic\" 13.0 "
-      "\"float mfp\" 14.0 "
       "\"float opacity\" 15.0 "
       "\"float pheomelanin\" 16.0 "
       "\"float roughness\" 17.0 "
@@ -2994,6 +2993,7 @@ TEST(Convert, ShapeOverrides) {
       "\"texture Kr\" \"d\" "
       "\"texture Ks\" \"e\" "
       "\"texture Kt\" \"f\" "
+      "\"texture mfp\" \"g\" "
       "\"texture reflect\" \"g\" "
       "\"texture scatterdistance\" \"h\" "
       "\"texture sigma_a\" \"i\" "
@@ -3025,7 +3025,6 @@ TEST(Convert, ShapeOverrides) {
                              eumelanin { float_value: 11.0 }
                              flatness { float_value: 12.0 }
                              metallic { float_value: 13.0 }
-                             mfp { float_value: 14.0 }
                              opacity { float_value: 15.0 }
                              pheomelanin { float_value: 16.0 }
                              roughness { float_value: 17.0 }
@@ -3043,6 +3042,7 @@ TEST(Convert, ShapeOverrides) {
                              Kr { spectrum_texture_name: "d" }
                              Ks { spectrum_texture_name: "e" }
                              Kt { spectrum_texture_name: "f" }
+                             mfp { spectrum_texture_name: "g" }
                              reflect { spectrum_texture_name: "g" }
                              scatterdistance { spectrum_texture_name: "h" }
                              sigma_a { spectrum_texture_name: "i" }

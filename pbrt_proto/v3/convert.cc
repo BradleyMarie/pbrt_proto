@@ -401,15 +401,15 @@ Material ParseMaterial(
     TryRemoveSpectrumTexture(
         parameters, "Kd",
         std::bind(&Material::KdSubsurface::mutable_kd, &kdsubsurface));
-    TryRemoveFloatTexture(
-        parameters, "mfp",
-        std::bind(&Material::KdSubsurface::mutable_mfp, &kdsubsurface));
     TryRemoveSpectrumTexture(
         parameters, "Kr",
         std::bind(&Material::KdSubsurface::mutable_kr, &kdsubsurface));
     TryRemoveSpectrumTexture(
         parameters, "Kt",
         std::bind(&Material::KdSubsurface::mutable_kt, &kdsubsurface));
+    TryRemoveSpectrumTexture(
+        parameters, "mfp",
+        std::bind(&Material::KdSubsurface::mutable_mfp, &kdsubsurface));
     TryRemoveFloatTexture(
         parameters, "uroughness",
         std::bind(&Material::KdSubsurface::mutable_uroughness, &kdsubsurface));
@@ -2898,9 +2898,6 @@ absl::Status ParserV3::Shape(
       parameters, "metallic",
       std::bind(&Shape::MaterialOverrides::mutable_metallic, &overrides));
   overrides_populated |= TryRemoveFloatTexture(
-      parameters, "mfp",
-      std::bind(&Shape::MaterialOverrides::mutable_mfp, &overrides));
-  overrides_populated |= TryRemoveFloatTexture(
       parameters, "opacity",
       std::bind(&Shape::MaterialOverrides::mutable_opacity, &overrides));
   overrides_populated |= TryRemoveFloatTexture(
@@ -2959,6 +2956,9 @@ absl::Status ParserV3::Shape(
   overrides_populated |= TryRemoveSpectrumTexture(
       parameters, "Kt",
       std::bind(&Shape::MaterialOverrides::mutable_kt, &overrides));
+  overrides_populated |= TryRemoveSpectrumTexture(
+      parameters, "mfp",
+      std::bind(&Shape::MaterialOverrides::mutable_mfp, &overrides));
   overrides_populated |= TryRemoveSpectrumTexture(
       parameters, "reflect",
       std::bind(&Shape::MaterialOverrides::mutable_reflect, &overrides));

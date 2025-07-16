@@ -266,7 +266,7 @@ materials {
       uniform_spectrum: 1.0
     }
     mfp {
-      float_value: 1.0
+      uniform_spectrum: 1.0
     }
     uroughness {
       float_value: 0.0
