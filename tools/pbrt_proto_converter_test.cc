@@ -17,7 +17,8 @@ std::string GetRunfilePath(const std::string& path) {
   return runfiles->Rlocation("_main/tools/" + path);
 }
 
-bool Convert(int version, const std::string& file_name) {
+bool Convert(int version, const std::string& file_name,
+             bool allow_warnings = false) {
   std::string binary = GetRunfilePath("pbrt_proto_converter");
   std::string input_file = GetRunfilePath("test_data/" + file_name);
   std::string output_file = GetRunfilePath("test_data/" + file_name + ".out");
@@ -30,7 +31,7 @@ bool Convert(int version, const std::string& file_name) {
   output_stream << std::ifstream(output_file.c_str()).rdbuf();
   std::string output = output_stream.str();
 
-  if (result != 0 || !output.empty()) {
+  if (result != 0 || (!output.empty() && !allow_warnings)) {
     std::cout << output << std::endl;
     return false;
   }
@@ -85,6 +86,8 @@ TEST(ProtoConverter, PBRTv3) {
   EXPECT_TRUE(Convert(3, "pbrt-v3-scenes/dragon/f8-4b.pbrt"));
   EXPECT_TRUE(Convert(3, "pbrt-v3-scenes/dragon/f9-3.pbrt"));
   EXPECT_TRUE(Convert(3, "pbrt-v3-scenes/dragon/f9-4.pbrt"));
+  EXPECT_TRUE(
+      Convert(3, "pbrt-v3-scenes/ecosys/ecosys.pbrt", /*allow_warnings=*/true));
   EXPECT_TRUE(Convert(3, "pbrt-v3-scenes/figures/f10-1ac.pbrt"));
   EXPECT_TRUE(Convert(3, "pbrt-v3-scenes/figures/f10-1b.pbrt"));
   EXPECT_TRUE(Convert(3, "pbrt-v3-scenes/figures/f11-15.pbrt"));

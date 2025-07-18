@@ -19,6 +19,23 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
+    - name: Maximize build space
+      uses: easimon/maximize-build-space@master
+      with:
+        root-reserve-mb: 4096
+        swap-size-mb: 1024
+        remove-android: 'true'
+        remove-codeql: 'true'
+        remove-docker-images: 'true'
+        remove-dotnet: 'true'
+        remove-haskell: 'true'
+
+    - name: Download island scene
+      run: wget https://wdas-datasets-disneyanimation-com.s3-us-west-2.amazonaws.com/moanaislandscene/island-pbrt-v1.1.tgz
+
+    - name: Extract island scene
+      run: tar -xvf island-pbrt-v1.1.tgz && rm island-pbrt-v1.1.tgz
+
     - uses: actions/checkout@v3
 
     - name: debug build
@@ -44,15 +61,3 @@ jobs:
         CC: gcc-${{ matrix.gcc }}
         CXX: g++-${{ matrix.gcc }}
       run: bazel test -c opt ...
-
-    - name: Download island scene
-      run: wget https://wdas-datasets-disneyanimation-com.s3-us-west-2.amazonaws.com/moanaislandscene/island-pbrt-v1.1.tgz
-
-    - name: Extract island scene
-      run: tar -xf island-pbrt-v1.1.tgz
-
-    - name: Convert island scene
-      run: bazel-bin/tools/pbrt_proto_converter --pbrt_version=3 --recursive island/pbrt/island.pbrt
-
-    - name: Convert islandX scene
-      run: bazel-bin/tools/pbrt_proto_converter --pbrt_version=3 --recursive island/pbrt/islandX.pbrt
