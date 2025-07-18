@@ -1,0 +1,132 @@
+LookAt 50 40 180
+        60 30 0
+        0 1 0
+Camera "perspective" 
+        "float fov" [ 50 ] 
+Film "image" 
+        "integer xresolution" [ 1200 ] 
+        "integer yresolution" [ 700 ] 
+        "float maxsampleluminance" [ 10 ] 
+        "string filename" [ "dambreak1.exr" ] 
+# imgtool convert -scale 1.5 --bloomlevel 1 dambreak1.exr dambreak1.png
+
+Sampler "sobol" 
+        "integer pixelsamples" [ 8192 ] 
+Integrator "bdpt" 
+        "integer maxdepth" [ 20 ] 
+
+
+WorldBegin
+
+
+AttributeBegin
+    Rotate 60 0 1 0
+    LightSource "infinite" 
+            "string mapname" [ "sky.exr" ] 
+            "rgb L" [ 3 3 3 ] 
+AttributeEnd
+
+AttributeBegin
+    Material "glass" 
+    # Converted from "tank_wall_back.obj" by obj2pbrt
+    # Scene bounds: (1.078640, 0.104601, 63.142288) - (126.961639, 64.040604, 64.141289)
+    # Name "polySurface3"
+
+    AttributeBegin
+        # Material unspecified in OBJ file
+        Shape "plymesh" "string filename" "geometry/mesh_00001.ply" 
+    AttributeEnd
+    # Converted from "tank_wall_bottom.obj" by obj2pbrt
+    # Scene bounds: (1.078640, 0.149298, 1.167021) - (126.961639, 1.148298, 63.123634)
+    # Name "polySurface1"
+
+    AttributeBegin
+        # Material unspecified in OBJ file
+        Shape "plymesh" "string filename" "geometry/mesh_00002.ply" 
+    AttributeEnd
+    # Converted from "tank_wall_front.obj" by obj2pbrt
+    # Scene bounds: (1.078640, 0.104601, 0.211058) - (126.961639, 64.040604, 1.210058)
+    # Name "polySurface4"
+
+    AttributeBegin
+        # Material unspecified in OBJ file
+        Shape "plymesh" "string filename" "geometry/mesh_00003.ply" 
+    AttributeEnd
+    # Converted from "tank_wall_left.obj" by obj2pbrt
+    # Scene bounds: (126.950043, 0.104601, 0.204847) - (127.949043, 64.040604, 64.140854)
+    # Name "polySurface5"
+
+    AttributeBegin
+        # Material unspecified in OBJ file
+        Shape "plymesh" "string filename" "geometry/mesh_00004.ply" 
+    AttributeEnd
+    # Converted from "tank_wall_right.obj" by obj2pbrt
+    # Scene bounds: (0.079597, 0.104601, 0.204847) - (1.078598, 64.040604, 64.140854)
+    # Name "polySurface6"
+
+    AttributeBegin
+        # Material unspecified in OBJ file
+        Shape "plymesh" "string filename" "geometry/mesh_00005.ply" 
+    AttributeEnd
+    # Converted from "tank_wall_top.obj" by obj2pbrt
+    # Scene bounds: (1.078640, 63.005722, 1.167021) - (126.961639, 64.004715, 63.123634)
+    # Name "polySurface2"
+
+    AttributeBegin
+        # Material unspecified in OBJ file
+        Shape "plymesh" "string filename" "geometry/mesh_00006.ply" 
+    AttributeEnd
+AttributeEnd
+
+AttributeBegin
+    Material "glass" 
+    MakeNamedMedium "liquid" 
+            "string type" [ "homogeneous" ]  "float scale" 0.5
+            "rgb sigma_a" [ 0.0125 0.0125 0.01 ] # 0625 ] 
+            "rgb sigma_s" [ 0.00125 0.00125 0.000625 ] 
+    MediumInterface "" "liquid"
+    ReverseOrientation
+    #The box walls are all already in world-space, but the fluid meshes need a
+    # slight transform to get them to interface correctly, due to a small
+    # inaccuracy in my fluid meshing # system. The required transformation is:
+    Translate -0.600000024 -0.0199999996 -0.600000024
+    Scale 1.00100005 1.00100005 1.00100005
+    # Converted from "water1.obj" by obj2pbrt
+    # Scene bounds: (1.577353, 1.117343, 1.691385) - (127.586357, 63.036682, 63.710018)
+    # Name "initialShadingGroup"
+    MakeNamedMaterial "" 
+            "float roughness" [ 1 ] 
+            "float index" [ 1 ] 
+            "string type" [ "uber" ] 
+            "rgb Kd" [ 0 0 0 ] 
+            "rgb Ks" [ 0 0 0 ] 
+            "rgb Kt" [ 0 0 0 ] 
+            "rgb opacity" [ 1 1 1 ] 
+
+    AttributeBegin
+        # Material unspecified in OBJ file
+        Shape "plymesh" "string filename" "geometry/dambreak1.ply" 
+    AttributeEnd
+AttributeEnd
+
+AttributeBegin
+    # The backdrop needs the following transformation:
+    Translate 0 -0.0399999991 0
+    # Converted from "backdrop.obj" by obj2pbrt
+    # Scene bounds: (-368.511017, 0.030000, -219.573166) - (518.185120, 324.945526, 153.771759)
+    # Name "backdrop:group2"
+    MakeNamedMaterial "" 
+            "float roughness" [ 1 ] 
+            "float index" [ 1 ] 
+            "string type" [ "uber" ] 
+            "rgb Kd" [ 0 0 0 ] 
+            "rgb Ks" [ 0 0 0 ] 
+            "rgb Kt" [ 0 0 0 ] 
+            "rgb opacity" [ 1 1 1 ] 
+
+    AttributeBegin
+        # Material unspecified in OBJ file
+        Shape "plymesh" "string filename" "geometry/mesh_00008.ply" 
+    AttributeEnd
+AttributeEnd
+WorldEnd

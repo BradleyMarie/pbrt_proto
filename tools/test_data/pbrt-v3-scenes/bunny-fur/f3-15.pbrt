@@ -1,0 +1,36 @@
+Film "image" "integer xresolution" [1200] "integer yresolution" [1200]
+    "string filename" "f3-15.exr"
+
+Sampler "sobol" "integer pixelsamples" [2048]
+Sampler "sobol" "integer pixelsamples" [512]
+#Sampler "sobol" "integer pixelsamples" [4]
+
+Integrator "path" "integer maxdepth" 3
+
+LookAt 0 .25 .2    -.02 .07 0  0 1 0
+Camera "perspective" "float fov" [55]
+
+WorldBegin
+
+AttributeBegin
+Rotate 90 1 0 0
+LightSource "infinite" "string mapname"
+    "textures/20060807_wells6_hd.exr"   "color scale" [12 12 12]
+AttributeEnd
+
+Material "plastic" "color Kd" [.1 .1 .1] "color Ks" [.7 .7 .7]
+  "float roughness" .1
+Shape "trianglemesh" "point P" [ -1 0 -1 1 0 -1 1 0 1 -1 0 1 ]
+	"integer indices" [ 0 1 2 2 3 0]
+
+AttributeBegin
+  Translate 0 -.033 0
+  Material "matte" "color Kd" [.4 .4 .4]
+  Shape "plymesh" "string filename" "geometry/bunny.ply" 
+AttributeEnd
+
+Material "plastic" "color Kd" [.8 .82 .8] "color Ks" [.7 .7 .7]
+  "float roughness" .1
+Include "geometry/bunnyfur.pbrt"
+
+WorldEnd

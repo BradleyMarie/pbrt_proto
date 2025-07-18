@@ -64,7 +64,8 @@ void Serialize(std::filesystem::path output_path, size_t file_index,
 
   std::ofstream output(output_path, std::ios::binary | std::ios::out);
   if (!output) {
-    std::cerr << "ERROR: Could not open output file" << std::endl;
+    std::cerr << "ERROR: Could not open output file " << output_path
+              << std::endl;
     exit(EXIT_FAILURE);
   }
 
@@ -82,7 +83,8 @@ void Serialize(std::filesystem::path output_path, size_t file_index,
   }
 }
 
-void ConvertFile(const std::filesystem::path& file,
+void ConvertFile(const std::filesystem::path& search_root,
+                 const std::filesystem::path& file,
                  const std::string& partial_file_name,
                  std::vector<std::pair<std::filesystem::path, std::string>>&
                      included_files) {
@@ -112,13 +114,8 @@ void ConvertFile(const std::filesystem::path& file,
       exit(EXIT_FAILURE);
     }
 
-    std::error_code error_code;
-    included_path = std::filesystem::canonical(included_path, error_code);
-    if (error_code) {
-      std::cerr << "ERROR: Could not resolve an included file path to a "
-                   "canonical path"
-                << std::endl;
-      exit(EXIT_FAILURE);
+    if (included_path.is_relative()) {
+      included_path = search_root / included_path;
     }
 
     included_files.emplace_back(included_path,
@@ -184,7 +181,8 @@ int main(int argc, char** argv) {
   }
 
   std::error_code error_code;
-  input_path = std::filesystem::canonical(input_path, error_code);
+  std::filesystem::path canonical_input_path =
+      std::filesystem::canonical(input_path, error_code);
   if (error_code) {
     std::cerr << "ERROR: Could not resolve input file to a canonical path"
               << std::endl;
@@ -192,20 +190,30 @@ int main(int argc, char** argv) {
   }
 
   std::vector<std::pair<std::filesystem::path, std::string>> included_files;
-  ConvertFile(input_path, input_path.stem(), included_files);
+  ConvertFile(input_path.parent_path(), input_path, input_path.stem(),
+              included_files);
 
   absl::flat_hash_set<std::filesystem::path> parsed_files;
-  parsed_files.insert(input_path);
+  parsed_files.insert(canonical_input_path);
 
   while (!included_files.empty()) {
     auto [next_file, next_partial_file_name] = included_files.back();
     included_files.pop_back();
 
-    if (parsed_files.contains(next_file)) {
+    std::filesystem::path canonical_next_file =
+        std::filesystem::canonical(next_file, error_code);
+    if (error_code) {
+      std::cerr << "ERROR: Could not resolve included file to a canonical path"
+                << std::endl;
+      return EXIT_FAILURE;
+    }
+
+    if (parsed_files.contains(canonical_next_file)) {
       continue;
     }
 
-    ConvertFile(next_file, next_partial_file_name, included_files);
+    ConvertFile(input_path.parent_path(), next_file, next_partial_file_name,
+                included_files);
     parsed_files.insert(next_file);
   }
 

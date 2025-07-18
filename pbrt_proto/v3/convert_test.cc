@@ -424,6 +424,27 @@ TEST(Convert, AreaLightSourceDiffuse) {
                })pb")));
 }
 
+TEST(Convert, AreaLightSourceDiffuseNSamples) {
+  std::stringstream stream(
+      "AreaLightSource \"diffuse\" \"blackbody L\" [1.0 2.0] \"bool twosided\" "
+      "\"true\" \"integer nsamples\" 2 \"blackbody scale\" [11.0 12.0]");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(
+          R"pb(directives {
+                 area_light_source {
+                   diffuse {
+                     L { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
+                     twosided: true
+                     samples: 2
+                     scale {
+                       blackbody_spectrum { temperature: 11.0 scale: 12.0 }
+                     }
+                   }
+                 }
+               })pb")));
+}
+
 TEST(Convert, AttributeBegin) {
   std::stringstream stream("AttributeBegin");
   EXPECT_THAT(
@@ -446,14 +467,44 @@ TEST(Convert, CameraUnknown) {
 
 TEST(Convert, CameraEnvironment) {
   std::stringstream stream(
-      "Camera \"environment\" \"float shutteropen\" 1.0 \"float shutterclose\" "
-      "2.0");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(
-          R"pb(directives {
-                 camera { environment { shutteropen: 1.0 shutterclose: 2.0 } }
-               })pb")));
+      "Camera \"environment\" \"float lensradius\" 3.0 \"float "
+      "frameaspectratio\" 4.0 \"float screenwindow\" [1.0 2.0 3.0 4.0]  "
+      "\"float shutteropen\" 1.0 \"float shutterclose\" 2.0");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives {
+                                              camera {
+                                                environment {
+                                                  lensradius: 3.0
+                                                  frameaspectratio: 4.0
+                                                  screenwindow {
+                                                    x_min: 1.0
+                                                    x_max: 2.0
+                                                    y_min: 3.0
+                                                    y_max: 4.0
+                                                  }
+                                                  shutteropen: 1.0
+                                                  shutterclose: 2.0
+                                                }
+                                              }
+                                            })pb")));
+}
+
+TEST(Convert, CameraEnvironmentBadWindow) {
+  std::stringstream stream(
+      "Camera \"environment\" \"float lensradius\" 3.0 \"float "
+      "frameaspectratio\" 4.0 \"float screenwindow\" [1.0 2.0 3.0]  "
+      "\"float shutteropen\" 1.0 \"float shutterclose\" 2.0");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives {
+                                              camera {
+                                                environment {
+                                                  lensradius: 3.0
+                                                  frameaspectratio: 4.0
+                                                  shutteropen: 1.0
+                                                  shutterclose: 2.0
+                                                }
+                                              }
+                                            })pb")));
 }
 
 TEST(Convert, CameraOrthographic) {
@@ -549,7 +600,7 @@ TEST(Convert, CameraPerspectiveBadWindow) {
 TEST(Convert, CameraRealistic) {
   std::stringstream stream(
       "Camera \"realistic\" \"string lensfile\" \"lens.file\" \"float "
-      "aperturediameter\" 4.0 \"float focaldistance\" 2.0 \"bool "
+      "aperturediameter\" 4.0 \"float focusdistance\" 2.0 \"bool "
       "simpleweighting\" \"false\" \"float shutteropen\" 1.0 \"float "
       "shutterclose\" 2.0");
   EXPECT_THAT(Convert(stream),
@@ -558,7 +609,7 @@ TEST(Convert, CameraRealistic) {
                                                 realistic {
                                                   lensfile: "lens.file"
                                                   aperturediameter: 4.0
-                                                  focaldistance: 2.0
+                                                  focusdistance: 2.0
                                                   simpleweighting: false
                                                   shutteropen: 1.0
                                                   shutterclose: 2.0
@@ -1415,6 +1466,27 @@ TEST(Convert, LightSourceInfinite) {
                })pb")));
 }
 
+TEST(Convert, LightSourceInfiniteNSamples) {
+  std::stringstream stream(
+      "LightSource \"infinite\" \"blackbody L\" [1.0 2.0] \"integer nsamples\" "
+      "3 \"string mapname\" \"a\" \"blackbody scale\" [9.0 10.0]");
+  EXPECT_THAT(
+      Convert(stream),
+      IsOkAndHolds(EqualsProto(
+          R"pb(directives {
+                 light_source {
+                   infinite {
+                     L { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
+                     samples: 3
+                     mapname: "a"
+                     scale {
+                       blackbody_spectrum { temperature: 9.0 scale: 10.0 }
+                     }
+                   }
+                 }
+               })pb")));
+}
+
 TEST(Convert, LightSourcePoint) {
   std::stringstream stream(
       "LightSource \"point\" \"blackbody I\" [1.0 2.0] \"point from\" [3.0 4.0 "
@@ -1873,19 +1945,20 @@ TEST(Convert, MaterialMirror) {
 TEST(Convert, MaterialMix) {
   std::stringstream stream(
       "Material \"mix\" "
-      "\"float amount\" 1.0 "
+      "\"texture amount\" \"a\" "
       "\"string namedmaterial1\" \"a\" "
       "\"string namedmaterial2\" \"b\" ");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives {
-                                          material {
-                                            mix {
-                                              amount { float_value: 1.0 }
-                                              namedmaterial1: "a"
-                                              namedmaterial2: "b"
-                                            }
-                                          }
-                                        })pb")));
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(
+                  R"pb(directives {
+                         material {
+                           mix {
+                             amount { spectrum_texture_name: "a" }
+                             namedmaterial1: "a"
+                             namedmaterial2: "b"
+                           }
+                         }
+                       })pb")));
 }
 
 TEST(Convert, MaterialPlastic) {
@@ -2005,31 +2078,32 @@ TEST(Convert, MaterialUber) {
       "\"texture Ks\" \"b\" "
       "\"texture Kr\" \"c\" "
       "\"texture Kt\" \"d\" "
+      "\"texture opacity\" \"e\" "
       "\"float roughness\" 1.0 "
       "\"float uroughness\" 2.0 "
       "\"float vroughness\" 3.0 "
       "\"float eta\" 4.0 "
-      "\"float opacity\" 5.0 "
       "\"bool remaproughness\" \"false\" "
       "\"float bumpmap\" 6.0 ");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives {
-                                          material {
-                                            uber {
-                                              Kd { spectrum_texture_name: "a" }
-                                              Ks { spectrum_texture_name: "b" }
-                                              Kr { spectrum_texture_name: "c" }
-                                              Kt { spectrum_texture_name: "d" }
-                                              roughness { float_value: 1.0 }
-                                              uroughness { float_value: 2.0 }
-                                              vroughness { float_value: 3.0 }
-                                              eta { float_value: 4.0 }
-                                              opacity { float_value: 5.0 }
-                                              remaproughness: false
-                                              bumpmap { float_value: 6.0 }
-                                            }
-                                          }
-                                        })pb")));
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(
+                  R"pb(directives {
+                         material {
+                           uber {
+                             Kd { spectrum_texture_name: "a" }
+                             Ks { spectrum_texture_name: "b" }
+                             Kr { spectrum_texture_name: "c" }
+                             Kt { spectrum_texture_name: "d" }
+                             opacity { spectrum_texture_name: "e" }
+                             roughness { float_value: 1.0 }
+                             uroughness { float_value: 2.0 }
+                             vroughness { float_value: 3.0 }
+                             eta { float_value: 4.0 }
+                             remaproughness: false
+                             bumpmap { float_value: 6.0 }
+                           }
+                         }
+                       })pb")));
 }
 
 TEST(Convert, MaterialUberIndex) {
@@ -2039,31 +2113,32 @@ TEST(Convert, MaterialUberIndex) {
       "\"texture Ks\" \"b\" "
       "\"texture Kr\" \"c\" "
       "\"texture Kt\" \"d\" "
+      "\"texture opacity\" \"e\" "
       "\"float roughness\" 1.0 "
       "\"float uroughness\" 2.0 "
       "\"float vroughness\" 3.0 "
       "\"float index\" 4.0 "
-      "\"float opacity\" 5.0 "
       "\"bool remaproughness\" \"false\" "
       "\"float bumpmap\" 6.0 ");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives {
-                                          material {
-                                            uber {
-                                              Kd { spectrum_texture_name: "a" }
-                                              Ks { spectrum_texture_name: "b" }
-                                              Kr { spectrum_texture_name: "c" }
-                                              Kt { spectrum_texture_name: "d" }
-                                              roughness { float_value: 1.0 }
-                                              uroughness { float_value: 2.0 }
-                                              vroughness { float_value: 3.0 }
-                                              eta { float_value: 4.0 }
-                                              opacity { float_value: 5.0 }
-                                              remaproughness: false
-                                              bumpmap { float_value: 6.0 }
-                                            }
-                                          }
-                                        })pb")));
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(
+                  R"pb(directives {
+                         material {
+                           uber {
+                             Kd { spectrum_texture_name: "a" }
+                             Ks { spectrum_texture_name: "b" }
+                             Kr { spectrum_texture_name: "c" }
+                             Kt { spectrum_texture_name: "d" }
+                             opacity { spectrum_texture_name: "e" }
+                             roughness { float_value: 1.0 }
+                             uroughness { float_value: 2.0 }
+                             vroughness { float_value: 3.0 }
+                             eta { float_value: 4.0 }
+                             remaproughness: false
+                             bumpmap { float_value: 6.0 }
+                           }
+                         }
+                       })pb")));
 }
 
 TEST(Convert, MediumInterface) {
@@ -2965,7 +3040,6 @@ TEST(Convert, ShapeOverrides) {
       "\"float g\" 1.0 "
       "\"float scale\" 2.0 "
       "\"float alpha\" 3.0 "
-      "\"float amount\" 4.0 "
       "\"float anisotropic\" 5.0 "
       "\"float beta_m\" 6.0 "
       "\"float beta_n\" 7.0 "
@@ -2976,7 +3050,6 @@ TEST(Convert, ShapeOverrides) {
       "\"float eumelanin\" 11.0 "
       "\"float flatness\" 12.0 "
       "\"float metallic\" 13.0 "
-      "\"float opacity\" 15.0 "
       "\"float pheomelanin\" 16.0 "
       "\"float roughness\" 17.0 "
       "\"float sheen\" 18.0 "
@@ -2987,21 +3060,23 @@ TEST(Convert, ShapeOverrides) {
       "\"float uroughness\" 23.0 "
       "\"float vroughness\" 24.0 "
       "\"string name\" \"Apple\" "
-      "\"texture color\" \"a\" "
-      "\"texture k\" \"b\" "
-      "\"texture Kd\" \"c\" "
-      "\"texture Kr\" \"d\" "
-      "\"texture Ks\" \"e\" "
-      "\"texture Kt\" \"f\" "
-      "\"texture mfp\" \"g\" "
-      "\"texture reflect\" \"g\" "
-      "\"texture scatterdistance\" \"h\" "
-      "\"texture sigma_a\" \"i\" "
-      "\"texture sigma_s\" \"j\" "
-      "\"texture transmit\" \"k\" "
-      "\"string bsdffile\" \"l\" "
-      "\"string namedmaterial1\" \"m\" "
-      "\"string namedmaterial2\" \"n\" "
+      "\"texture amount\" \"a\" "
+      "\"texture color\" \"b\" "
+      "\"texture k\" \"c\" "
+      "\"texture Kd\" \"d\" "
+      "\"texture Kr\" \"e\" "
+      "\"texture Ks\" \"f\" "
+      "\"texture Kt\" \"g\" "
+      "\"texture mfp\" \"h\" "
+      "\"texture opacity\" \"i\" "
+      "\"texture reflect\" \"j\" "
+      "\"texture scatterdistance\" \"k\" "
+      "\"texture sigma_a\" \"l\" "
+      "\"texture sigma_s\" \"m\" "
+      "\"texture transmit\" \"n\" "
+      "\"string bsdffile\" \"o\" "
+      "\"string namedmaterial1\" \"p\" "
+      "\"string namedmaterial2\" \"q\" "
       "\"float eta\" 25.0 ");
   EXPECT_THAT(Convert(stream),
               IsOkAndHolds(EqualsProto(
@@ -3014,7 +3089,6 @@ TEST(Convert, ShapeOverrides) {
                              g: 1.0
                              scale: 2.0
                              alpha { float_value: 3.0 }
-                             amount { float_value: 4.0 }
                              anisotropic { float_value: 5.0 }
                              beta_m { float_value: 6.0 }
                              beta_n { float_value: 7.0 }
@@ -3025,7 +3099,6 @@ TEST(Convert, ShapeOverrides) {
                              eumelanin { float_value: 11.0 }
                              flatness { float_value: 12.0 }
                              metallic { float_value: 13.0 }
-                             opacity { float_value: 15.0 }
                              pheomelanin { float_value: 16.0 }
                              roughness { float_value: 17.0 }
                              sheen { float_value: 18.0 }
@@ -3036,21 +3109,23 @@ TEST(Convert, ShapeOverrides) {
                              uroughness { float_value: 23.0 }
                              vroughness { float_value: 24.0 }
                              name: APPLE
-                             color { spectrum_texture_name: "a" }
-                             k { spectrum_texture_name: "b" }
-                             Kd { spectrum_texture_name: "c" }
-                             Kr { spectrum_texture_name: "d" }
-                             Ks { spectrum_texture_name: "e" }
-                             Kt { spectrum_texture_name: "f" }
-                             mfp { spectrum_texture_name: "g" }
-                             reflect { spectrum_texture_name: "g" }
-                             scatterdistance { spectrum_texture_name: "h" }
-                             sigma_a { spectrum_texture_name: "i" }
-                             sigma_s { spectrum_texture_name: "j" }
-                             transmit { spectrum_texture_name: "k" }
-                             bsdffile: "l"
-                             namedmaterial1: "m"
-                             namedmaterial2: "n"
+                             amount { spectrum_texture_name: "a" }
+                             color { spectrum_texture_name: "b" }
+                             k { spectrum_texture_name: "c" }
+                             Kd { spectrum_texture_name: "d" }
+                             Kr { spectrum_texture_name: "e" }
+                             Ks { spectrum_texture_name: "f" }
+                             Kt { spectrum_texture_name: "g" }
+                             mfp { spectrum_texture_name: "h" }
+                             opacity { spectrum_texture_name: "i" }
+                             reflect { spectrum_texture_name: "j" }
+                             scatterdistance { spectrum_texture_name: "k" }
+                             sigma_a { spectrum_texture_name: "l" }
+                             sigma_s { spectrum_texture_name: "m" }
+                             transmit { spectrum_texture_name: "n" }
+                             bsdffile: "o"
+                             namedmaterial1: "p"
+                             namedmaterial2: "q"
                              eta_as_value: 25.0
                              eta_as_float_texture { float_value: 25.0 }
                            }

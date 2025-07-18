@@ -1,0 +1,131 @@
+# Main Scene File
+
+LookAt 3.592741 20.556787 4.337005 3.423012 19.583931 4.179706 -0.026954 -0.154972 0.987551
+
+Integrator "path" "integer maxdepth" [10]
+Sampler "halton" "integer pixelsamples" [512]
+
+Camera "perspective"
+	"float fov" [7.327086285904825]
+
+Film "image"
+#	"integer xresolution" [1440] "integer yresolution" [1280]
+	"integer xresolution" [720] "integer yresolution" [640]
+        "string filename" "glass.exr"
+        
+WorldBegin
+
+AttributeBegin
+Rotate 90 0 0 1
+Rotate -90 1 0 0
+LightSource "infinite" "string mapname"
+    "textures/20060807_wells6_hd.exr"   "color scale" [2.5 2.5 2.5]
+AttributeEnd
+
+# Materials
+
+MakeNamedMedium "liquid" "string type" "homogeneous"
+#  "color sigma_s" [0.1 0.2 0.2] "color sigma_a" [2.5 5.0 0.0]
+#  "color sigma_s" [10 14 14] "color sigma_a" [1 1 1]
+
+MakeNamedMaterial "glass"
+	"string type" ["glass"]
+
+MakeNamedMaterial "juice"
+"string type" "subsurface"
+ "string name" "Regular Milk"  "float scale" 10
+#    "color sigma_a" [ 0.00013612 0.00015836 0.000227 ]
+#    "color sigma_s" [ 0.012957 0.023741 0.052184 ] 
+
+
+# ????
+MakeNamedMaterial "L_S"
+#	"color Kd" [.4 .4 .4]
+#	"float sigma" [0.000000000000000]
+#	"string type" ["matte"]
+	"string type" ["glass"]
+
+# ground plane
+Texture "lines-tex" "color" "imagemap" "string filename" "textures/lines.png"
+    "float uscale" [30] "float vscale" [30]
+MakeNamedMaterial "Material.002"
+	"texture Kd" "lines-tex"
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+# Geometry File
+
+AttributeBegin #  "Cylinder.002"
+
+Transform [1.000000000000000 0.000000000000000 0.000000000000000 0.000000000000000 0.000000000000000 1.000000000000000 0.000000000000000 0.000000000000000 0.000000000000000 0.000000000000000 1.000000000000000 0.000000000000000 -0.518091201782227 0.085730284452438 0.894225358963013 1.000000000000000]
+
+NamedMaterial "juice"
+
+MediumInterface "liquid" ""
+ReverseOrientation
+Shape "plymesh"
+	"string filename" ["geometry/Cylinder_005_0000_m000.ply"]
+
+AttributeEnd # ""
+
+AttributeBegin #  "Cylinder.003"
+
+Transform [1.000000000000000 0.000000000000000 0.000000000000000 0.000000000000000 0.000000000000000 1.000000000000000 0.000000000000000 0.000000000000000 0.000000000000000 0.000000000000000 1.000000000000000 0.000000000000000 -0.518091201782227 0.085730403661728 0.000000000000000 1.000000000000000]
+
+AttributeBegin #  ""
+
+NamedMaterial "glass"
+
+Shape "plymesh"
+	"string filename" ["geometry/Cylinder_004_0000_m000.ply"]
+
+AttributeEnd # ""
+
+AttributeBegin #  ""
+
+NamedMaterial "juice"
+
+MediumInterface "liquid" ""
+ReverseOrientation
+Shape "plymesh"
+	"string filename" ["geometry/Cylinder_004_0000_m001.ply"]
+
+AttributeEnd # ""
+
+AttributeEnd # ""
+
+AttributeBegin #  "Circle.001"
+
+Transform [-0.824985325336456 -0.839466333389282 0.793237924575806 0.000000000000000 0.298582732677460 0.786662340164185 1.143040299415588 0.000000000000000 -1.115696072578430 0.831257641315460 -0.280647546052933 0.000000000000000 5.577849388122559 -4.850372314453125 3.856615543365479 1.000000000000000]
+
+NamedMaterial "L_S"
+
+Shape "plymesh"
+	"string filename" ["geometry/Circle_001_0000_m000.ply"]
+
+AttributeEnd # ""
+
+AttributeBegin #  "Circle"
+
+Transform [-1.366106629371643 -1.354542374610901 -2.524180889129639 0.000000000000000 0.871042966842651 2.467686653137207 -1.795641303062439 0.000000000000000 2.729021310806274 -1.465693831443787 -0.690437614917755 0.000000000000000 -7.312365531921387 3.486090898513794 3.321226119995117 1.000000000000000]
+
+NamedMaterial "L_S"
+
+Shape "plymesh"
+	"string filename" ["geometry/Circle_0000_m000.ply"]
+
+AttributeEnd # ""
+
+AttributeBegin #  "Plane"
+
+Transform [1.000000000000000 0.000000000000000 0.000000000000000 0.000000000000000 0.000000000000000 1.000000000000000 0.000000000000000 0.000000000000000 0.000000000000000 0.000000000000000 1.000000000000000 0.000000000000000 0.000000000000000 0.000000000000000 -0.002501131501049 1.000000000000000]
+
+NamedMaterial "Material.002"
+
+Shape "plymesh"
+	"string filename" ["geometry/Plane_0000_m000.ply"]
+
+AttributeEnd # ""
+
+
+WorldEnd

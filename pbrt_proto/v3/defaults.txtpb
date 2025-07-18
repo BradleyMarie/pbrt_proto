@@ -751,7 +751,7 @@ materials {
   }
   mix {
     amount {
-      float_value: 0.5
+      uniform_spectrum: 0.5
     }
   }
   plastic {
@@ -2313,14 +2313,14 @@ materials {
     Kt {
       uniform_spectrum: 0.0
     }
+    opacity {
+      uniform_spectrum: 1.0
+    }
     roughness {
       float_value: 0.1
     }
     eta {
       float_value: 1.5
-    }
-    opacity {
-      float_value: 1.0
     }
   }
 }

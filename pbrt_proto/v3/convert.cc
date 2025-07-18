@@ -472,8 +472,8 @@ Material ParseMaterial(
         std::bind(&Material::Mirror::mutable_bumpmap, &mirror));
   } else if (material_type == "mix") {
     auto& mix = *material.mutable_mix();
-    TryRemoveFloatTexture(parameters, "amount",
-                          std::bind(&Material::Mix::mutable_amount, &mix));
+    TryRemoveSpectrumTexture(parameters, "amount",
+                             std::bind(&Material::Mix::mutable_amount, &mix));
 
     if (std::optional<absl::string_view> namedmaterial1 =
             TryRemoveString(parameters, "namedmaterial1");
@@ -621,6 +621,9 @@ Material ParseMaterial(
                              std::bind(&Material::Uber::mutable_kr, &uber));
     TryRemoveSpectrumTexture(parameters, "Kt",
                              std::bind(&Material::Uber::mutable_kt, &uber));
+    TryRemoveSpectrumTexture(
+        parameters, "opacity",
+        std::bind(&Material::Uber::mutable_opacity, &uber));
 
     TryRemoveFloatTexture(parameters, "roughness",
                           std::bind(&Material::Uber::mutable_roughness, &uber));
@@ -637,9 +640,6 @@ Material ParseMaterial(
       TryRemoveFloatTexture(parameters, "index",
                             std::bind(&Material::Uber::mutable_eta, &uber));
     }
-
-    TryRemoveFloatTexture(parameters, "opacity",
-                          std::bind(&Material::Uber::mutable_opacity, &uber));
 
     if (std::optional<bool> remaproughness =
             TryRemoveBool(parameters, "remaproughness");
@@ -963,6 +963,12 @@ absl::Status ParserV3::AreaLightSource(
         std::bind(&AreaLightSource::Diffuse::mutable_l, &diffuse));
 
     if (std::optional<int32_t> samples =
+            TryRemoveInteger(parameters, "nsamples");
+        samples) {
+      diffuse.set_samples(*samples);
+    }
+
+    if (std::optional<int32_t> samples =
             TryRemoveInteger(parameters, "samples");
         samples) {
       diffuse.set_samples(*samples);
@@ -1001,6 +1007,34 @@ absl::Status ParserV3::Camera(
 
   if (camera_type == "environment") {
     auto& environment = *camera.mutable_environment();
+
+    if (std::optional<double> lensradius =
+            TryRemoveFloat(parameters, "lensradius");
+        lensradius.has_value()) {
+      environment.set_lensradius(*lensradius);
+    }
+
+    if (std::optional<double> focaldistance =
+            TryRemoveFloat(parameters, "focaldistance");
+        focaldistance.has_value()) {
+      environment.set_focaldistance(*focaldistance);
+    }
+
+    if (std::optional<double> frameaspectratio =
+            TryRemoveFloat(parameters, "frameaspectratio");
+        frameaspectratio.has_value()) {
+      environment.set_frameaspectratio(*frameaspectratio);
+    }
+
+    std::optional<absl::Span<double>> screenwindow;
+    if (absl::Status status =
+            TryRemoveFloats(parameters, "screenwindow", 4, screenwindow);
+        status.ok() && screenwindow.has_value()) {
+      environment.mutable_screenwindow()->set_x_min((*screenwindow)[0]);
+      environment.mutable_screenwindow()->set_x_max((*screenwindow)[1]);
+      environment.mutable_screenwindow()->set_y_min((*screenwindow)[2]);
+      environment.mutable_screenwindow()->set_y_max((*screenwindow)[3]);
+    }
 
     if (std::optional<double> shutteropen =
             TryRemoveFloat(parameters, "shutteropen");
@@ -1122,10 +1156,10 @@ absl::Status ParserV3::Camera(
       realistic.set_aperturediameter(*aperturediameter);
     }
 
-    if (std::optional<double> focaldistance =
-            TryRemoveFloat(parameters, "focaldistance");
-        focaldistance.has_value()) {
-      realistic.set_focaldistance(*focaldistance);
+    if (std::optional<double> focusdistance =
+            TryRemoveFloat(parameters, "focusdistance");
+        focusdistance.has_value()) {
+      realistic.set_focusdistance(*focusdistance);
     }
 
     if (std::optional<bool> simpleweighting =
@@ -1765,6 +1799,12 @@ absl::Status ParserV3::LightSource(
 
     TryRemoveSpectrum(parameters, "L",
                       std::bind(&LightSource::Infinite::mutable_l, &infinite));
+
+    if (std::optional<int32_t> samples =
+            TryRemoveInteger(parameters, "nsamples");
+        samples) {
+      infinite.set_samples(*samples);
+    }
 
     if (std::optional<int32_t> samples =
             TryRemoveInteger(parameters, "samples");
@@ -2865,9 +2905,6 @@ absl::Status ParserV3::Shape(
       parameters, "alpha",
       std::bind(&Shape::MaterialOverrides::mutable_alpha, &overrides));
   overrides_populated |= TryRemoveFloatTexture(
-      parameters, "amount",
-      std::bind(&Shape::MaterialOverrides::mutable_amount, &overrides));
-  overrides_populated |= TryRemoveFloatTexture(
       parameters, "anisotropic",
       std::bind(&Shape::MaterialOverrides::mutable_anisotropic, &overrides));
   overrides_populated |= TryRemoveFloatTexture(
@@ -2897,9 +2934,6 @@ absl::Status ParserV3::Shape(
   overrides_populated |= TryRemoveFloatTexture(
       parameters, "metallic",
       std::bind(&Shape::MaterialOverrides::mutable_metallic, &overrides));
-  overrides_populated |= TryRemoveFloatTexture(
-      parameters, "opacity",
-      std::bind(&Shape::MaterialOverrides::mutable_opacity, &overrides));
   overrides_populated |= TryRemoveFloatTexture(
       parameters, "pheomelanin",
       std::bind(&Shape::MaterialOverrides::mutable_pheomelanin, &overrides));
@@ -2939,6 +2973,9 @@ absl::Status ParserV3::Shape(
   }
 
   overrides_populated |= TryRemoveSpectrumTexture(
+      parameters, "amount",
+      std::bind(&Shape::MaterialOverrides::mutable_amount, &overrides));
+  overrides_populated |= TryRemoveSpectrumTexture(
       parameters, "color",
       std::bind(&Shape::MaterialOverrides::mutable_color, &overrides));
   overrides_populated |= TryRemoveSpectrumTexture(
@@ -2959,6 +2996,9 @@ absl::Status ParserV3::Shape(
   overrides_populated |= TryRemoveSpectrumTexture(
       parameters, "mfp",
       std::bind(&Shape::MaterialOverrides::mutable_mfp, &overrides));
+  overrides_populated |= TryRemoveSpectrumTexture(
+      parameters, "opacity",
+      std::bind(&Shape::MaterialOverrides::mutable_opacity, &overrides));
   overrides_populated |= TryRemoveSpectrumTexture(
       parameters, "reflect",
       std::bind(&Shape::MaterialOverrides::mutable_reflect, &overrides));

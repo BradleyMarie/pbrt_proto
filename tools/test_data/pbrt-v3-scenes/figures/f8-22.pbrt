@@ -1,0 +1,55 @@
+
+Film "image" "integer xresolution" [1600] "integer yresolution" [1000]
+  "string filename" "f8-22.exr"
+
+Sampler "halton" "integer pixelsamples" [8]
+Sampler "halton" "integer pixelsamples" [64]
+Sampler "halton" "integer pixelsamples" [4096]
+## PixelFilter "mitchell"
+
+Integrator "path" "integer maxdepth" 10
+
+LookAt 0 2 4   0 -.5 0  0 1 0
+Camera "perspective" "float fov" [50]
+
+WorldBegin
+
+AttributeBegin
+Rotate 90 0 1 0
+Rotate -90 1 0 0
+LightSource "infinite" "string mapname"
+    "textures/20060807_wells6_hd.exr"  # "color scale" [2.5 2.5 2.5]
+AttributeEnd
+
+AttributeBegin
+Texture "lines" "color" "imagemap" "string filename" "textures/lines.exr"
+Material "plastic"
+ "color Kd" [.1 .1 .1]
+# "texture Kd" "lines"
+  "color Ks" [.7 .7 .7] "float roughness" .1
+Translate 0 0 -40
+Shape "trianglemesh"
+   "point P" [ -4000 -1 -4000   4000 -1 -4000   4000 -1 4000 -4000 -1 4000 ]
+   "float uv" [ 0 0 1 0 1 1 0 1 ]
+	"integer indices" [ 0 1 2 2 3 0]
+AttributeEnd
+
+AttributeBegin
+Material "metal" 
+    "spectrum eta" "spds/Ag.eta.spd"
+    "spectrum k" "spds/Ag.k.spd" "float roughness" .005
+Translate 1.3 0 0
+Shape "sphere"
+AttributeEnd
+
+AttributeBegin
+Translate -1.3 0 0
+Material "metal"
+    "spectrum eta" "spds/Ag.eta.spd"
+    "spectrum k" "spds/Ag.k.spd" "float uroughness" .1 "float vroughness" .0005
+Rotate 30 0 1 0
+Rotate 70 1 0 0
+Shape "sphere"
+AttributeEnd
+
+WorldEnd

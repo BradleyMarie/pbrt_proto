@@ -44,3 +44,15 @@ jobs:
         CC: gcc-${{ matrix.gcc }}
         CXX: g++-${{ matrix.gcc }}
       run: bazel test -c opt ...
+
+    - name: Download island scene
+      run: wget https://wdas-datasets-disneyanimation-com.s3-us-west-2.amazonaws.com/moanaislandscene/island-pbrt-v1.1.tgz
+
+    - name: Extract island scene
+      run: tar -xf island-pbrt-v1.1.tgz
+
+    - name: Convert island scene
+      run: bazel-bin/tools/pbrt_proto_converter --pbrt_version=3 --recursive island/pbrt/island.pbrt
+
+    - name: Convert islandX scene
+      run: bazel-bin/tools/pbrt_proto_converter --pbrt_version=3 --recursive island/pbrt/islandX.pbrt

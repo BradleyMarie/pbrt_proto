@@ -1,0 +1,40 @@
+Texture "terrain" "color" "constant" 
+        "rgb value" [ 0.12 0.079999998 0.079999998 ] 
+Texture "apple-leaves" "color" "imagemap" 
+        "string filename" [ "textures/apple.png" ] 
+Texture "apple-bark" "color" "imagemap" 
+        "string filename" [ "textures/bark.png" ] 
+Texture "bush-color-1" "color" "constant" 
+        "rgb value" [ 0.5 0.89999998 0.5 ] 
+Texture "bush-color-2" "color" "constant" 
+        "rgb value" [ 0.30000001 0.89999998 0.30000001 ] 
+Texture "bush-color-ks" "color" "constant" 
+        "rgb value" [ 0.0020000001 0.0020000001 0.0020000001 ] 
+Texture "dandelion-white" "color" "constant" 
+        "rgb value" [ 0.89999998 0.89999998 0.89999998 ] 
+Texture "dandelion-stem-1" "color" "constant" 
+        "rgb value" [ 0.5 0.60000002 0.40000001 ] 
+Texture "dandelion-stem-2" "color" "constant" 
+        "rgb value" [ 0.40000001 0.5 0.44 ] 
+Texture "grass-1" "color" "constant" 
+        "rgb value" [ 0.40000001 0.89999998 0.60000002 ] 
+Texture "grass-specular" "color" "constant" 
+        "rgb value" [ 0.1 0.1 0.1 ] 
+Texture "grass-2" "color" "constant" 
+        "rgb value" [ 0.40000001 0.64999998 0.40000001 ] 
+Texture "grass-3" "color" "constant" 
+        "rgb value" [ 0.5 0.80000001 0.5 ] 
+Texture "urtica-1" "color" "constant" 
+        "rgb value" [ 0.25 0.14 0.025 ] 
+Texture "urtica-2" "color" "imagemap" 
+        "string filename" [ "textures/urticaleaf.png" ] 
+Texture "urtica-2-alpha" "float" "imagemap" 
+        "string filename" [ "textures/urticaleaf_alpha.png" ] 
+Texture "urtica-3" "color" "constant" 
+        "rgb value" [ 0.30000001 0.60000002 0.40000001 ] 
+Texture "urtica-3-alpha" "float" "imagemap" 
+        "string filename" [ "textures/urticaseed_alpha.png" ] 
+Texture "yellowflower-1" "color" "constant" 
+        "rgb value" [ 0.80000001 0.80000001 0.30000001 ] 
+Texture "yellowflower-2" "color" "constant" 
+        "rgb value" [ 0.40000001 0.89999998 0.2 ] 

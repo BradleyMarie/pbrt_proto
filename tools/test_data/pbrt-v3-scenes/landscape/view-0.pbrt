@@ -1,0 +1,23 @@
+Transform [ 0.919135332 -0.0158095676 0.393624544 0 -2.97783131e-08 0.999194384 0.0401317924 0 -0.393941909 -0.0368865617 0.918394864 0 1339.27234 -363.969574 4576.83008 1  ]
+Camera "perspective" 
+        "float fov" [ 44.095898 ] 
+        "float focaldistance" [ 3000 ] 
+        "float lensradius" [ 0.125 ] 
+Sampler "halton" 
+        "integer pixelsamples" [ 512 ] 
+Film "image" 
+        "integer xresolution" [ 4096 ] 
+        "integer yresolution" [ 2304 ] 
+        "string filename" [ "view-0.exr" ]
+Integrator "path" 
+        "integer maxdepth" [ 5 ] 
+
+#############################################
+WorldBegin
+
+Material "uber" 
+        "float index" [ 1.3329999 ] 
+        "rgb Kd" [ 0.10048151 0.11928019 0.13998489 ] 
+Include "geometry.pbrt"
+
+WorldEnd

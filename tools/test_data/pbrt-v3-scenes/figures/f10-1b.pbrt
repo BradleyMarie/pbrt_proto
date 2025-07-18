@@ -1,0 +1,42 @@
+
+Film "image" "integer xresolution" [1500] "integer yresolution" [1500]
+   "float cropwindow" [.45 .55 .19 .29 ]
+   "string filename" "f10-1b.exr"
+ 
+Sampler "sobol" "integer pixelsamples" [32]
+PixelFilter "box"
+
+Integrator "directlighting"
+
+LookAt 0 2 4   0 -.25 0  0 1 0
+Camera "perspective" "float fov" [35]
+
+WorldBegin
+
+AttributeBegin
+Rotate 180 1 0 0
+Rotate 90 0 1 0
+LightSource "infinite" "string mapname"
+    "textures/20060807_wells6_hd.exr"   "color scale" [2 2 2]
+AttributeEnd
+
+AttributeBegin
+Material "plastic"
+ "color Kd" [.1 .1 .1]
+  "color Ks" [.7 .7 .7] "float roughness" .1
+Translate 0 0 -40
+Shape "trianglemesh"
+   "point P" [ -4000 -1 -4000   4000 -1 -4000   4000 -1 4000 -4000 -1 4000 ]
+   "float uv" [ 0 0 1 0 1 1 0 1 ]
+	"integer indices" [ 0 1 2 2 3 0]
+AttributeEnd
+
+AttributeBegin
+Texture "lines" "color" "imagemap" "string filename" "textures/lines.exr"
+    "float uscale" 5 "float vscale" 5
+Material "matte" "texture Kd" "lines"
+Rotate 130 1 0 0
+Shape "sphere"
+AttributeEnd
+
+WorldEnd

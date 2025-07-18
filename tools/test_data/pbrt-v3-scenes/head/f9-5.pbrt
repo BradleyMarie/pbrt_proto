@@ -1,0 +1,33 @@
+Film "image" "integer xresolution" [2560] "integer yresolution" [1440]
+  "float cropwindow" [.3 .8 .15 .7] 
+  "string filename" "head.exr"
+  
+LookAt 0.322839 0.0534825 0.504299 -0.140808 -0.162727 -0.354936 0.0355799 0.964444 -0.261882
+
+Camera "perspective" "float fov" [30.0]
+
+# The "path" integrator directly handles subsurface scattering
+Integrator "path" "integer maxdepth" [2]
+
+Sampler "halton" "integer pixelsamples" [2048]
+
+WorldBegin
+AttributeBegin
+Scale -1 1 1
+Rotate 90 -1 0 0
+Rotate 90 0 0 1
+LightSource "infinite" "string mapname" ["textures/doge2_latlong.exr"]
+AttributeEnd
+
+Texture "albedomap" "color" "imagemap"
+        "string filename" ["textures/head_albedomap.png"]
+
+# mfp = inverse sigma_t value of Jensen's skin1 parameters (in meters)
+Material "kdsubsurface" "texture Kd" "albedomap"
+   "float eta" [1.33] "color mfp" [1.2953e-03 9.5238e-04 6.7114e-04]
+   "float uroughness" [0.05] "float vroughness" [0.05]
+   "bool remaproughness" ["false"]
+
+Shape "plymesh" "string filename" "geometry/head.ply"
+
+WorldEnd
