@@ -1406,30 +1406,7 @@ absl::Status ParserV3::FloatTexture(
 
     TryRemoveUVParameters(parameters, imagemap);
   } else if (float_texture_type == "marble") {
-    auto& marble = *float_texture.mutable_marble();
-
-    if (std::optional<int32_t> octaves =
-            TryRemoveInteger(parameters, "octaves");
-        octaves) {
-      marble.set_octaves(*octaves);
-    }
-
-    if (std::optional<double> roughness =
-            TryRemoveFloat(parameters, "roughness");
-        roughness) {
-      marble.set_roughness(*roughness);
-    }
-
-    if (std::optional<double> scale = TryRemoveFloat(parameters, "scale");
-        scale) {
-      marble.set_scale(*scale);
-    }
-
-    if (std::optional<double> variation =
-            TryRemoveFloat(parameters, "variation");
-        variation) {
-      marble.set_variation(*variation);
-    }
+    float_texture.mutable_marble();
   } else if (float_texture_type == "mix") {
     auto& mix = *float_texture.mutable_mix();
 

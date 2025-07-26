@@ -948,19 +948,12 @@ TEST(Convert, FloatTextureImageMapRepeat) {
 }
 
 TEST(Convert, FloatTextureMarble) {
-  std::stringstream stream(
-      "Texture \"name\" \"float\" \"marble\" \"integer octaves\" 1 \"float "
-      "roughness\" 2.0 \"float scale\" 3.0 \"float variation\" 4.0");
+  std::stringstream stream("Texture \"name\" \"float\" \"marble\"");
   EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
                                    R"pb(directives {
                                           float_texture {
                                             name: "name"
-                                            marble {
-                                              octaves: 1
-                                              roughness: 2.0
-                                              scale: 3.0
-                                              variation: 4.0
-                                            }
+                                            marble {}
                                           }
                                         })pb")));
 }

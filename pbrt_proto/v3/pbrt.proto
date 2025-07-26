@@ -389,10 +389,7 @@ message FloatTexture {
   }
 
   message Marble {
-    optional int32 octaves = 1 [default = 8];
-    optional double roughness = 2 [default = 0.5];
-    optional double scale = 3 [default = 1.0];
-    optional double variation = 4 [default = 0.2];
+    // Empty Message
   }
 
   message Mix {
