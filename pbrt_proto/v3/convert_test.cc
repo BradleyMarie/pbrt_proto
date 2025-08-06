@@ -1939,6 +1939,9 @@ TEST(Convert, MaterialMix) {
   std::stringstream stream(
       "Material \"mix\" "
       "\"texture amount\" \"a\" "
+      "\"texture Kd\" \"b\" "
+      "\"float bumpmap\" 1.0 "
+      "\"float sigma\" 2.0 "
       "\"string namedmaterial1\" \"a\" "
       "\"string namedmaterial2\" \"b\" ");
   EXPECT_THAT(Convert(stream),
@@ -1946,7 +1949,10 @@ TEST(Convert, MaterialMix) {
                   R"pb(directives {
                          material {
                            mix {
+                             bumpmap { float_value: 1.0 }
+                             sigma { float_value: 2.0 }
                              amount { spectrum_texture_name: "a" }
+                             Kd { spectrum_texture_name: "b" }
                              namedmaterial1: "a"
                              namedmaterial2: "b"
                            }

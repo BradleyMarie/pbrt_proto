@@ -660,7 +660,10 @@ message Material {
   }
 
   message Mix {
+    optional FloatTextureParameter bumpmap = 10;
+    optional FloatTextureParameter sigma = 22;
     optional SpectrumTextureParameter amount = 28;
+    optional SpectrumTextureParameter Kd = 32;
     optional string namedmaterial1 = 44 [default = ""];
     optional string namedmaterial2 = 45 [default = ""];
   }

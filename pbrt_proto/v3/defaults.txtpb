@@ -750,7 +750,13 @@ materials {
     }
   }
   mix {
+    sigma {
+      float_value: 0.0
+    }
     amount {
+      uniform_spectrum: 0.5
+    }
+    Kd {
       uniform_spectrum: 0.5
     }
   }
