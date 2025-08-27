@@ -30,6 +30,18 @@ jobs:
 
     - uses: actions/checkout@v3
 
+    - name: debug build (gcc)
+      run: bazel build ...
+
+    - name: debug tests (gcc)
+      run: bazel test ...
+
+    - name: optimized build (gcc)
+      run: bazel build -c opt ...
+
+    - name: optimized tests (gcc)
+      run: bazel test -c opt ...
+
     - name: debug build (clang)
       run: bazel build ... --repo_env=cc=clang
 
@@ -41,15 +53,3 @@ jobs:
 
     - name: optimized tests (clang)
       run: bazel test -c opt ... --repo_env=cc=clang
-
-    - name: debug build (gcc)
-      run: bazel build ... --repo_env=cc=gcc
-
-    - name: debug tests (gcc)
-      run: bazel test ... --repo_env=cc=gcc
-
-    - name: optimized build (gcc)
-      run: bazel build -c opt ... --repo_env=cc=gcc
-
-    - name: optimized tests (gcc)
-      run: bazel test -c opt ... --repo_env=cc=gcc
