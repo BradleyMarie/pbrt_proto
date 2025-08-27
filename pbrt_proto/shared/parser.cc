@@ -866,7 +866,7 @@ absl::Status TryRemoveValue(
 }  // namespace
 
 absl::Status Parser::ReadFrom(std::istream& stream) {
-  Tokenizer tokenizer(stream);
+  Tokenizer tokenizer(&stream);
 
   ParameterStorage storage;
   absl::flat_hash_map<absl::string_view, Parameter> parameters;

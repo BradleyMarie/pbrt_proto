@@ -12,7 +12,10 @@ namespace pbrt_proto {
 
 class Tokenizer {
  public:
-  Tokenizer(std::istream& stream) noexcept : stream_(&stream) {}
+  // Construct a Tokenizer for an `std::istream` input.
+  //
+  // NOTE: `stream` is not owned
+  Tokenizer(std::istream* absl_nullable stream) noexcept : stream_(stream) {}
 
   Tokenizer(Tokenizer&& moved_from) noexcept;
   Tokenizer& operator=(Tokenizer&& moved_from) noexcept;
@@ -26,7 +29,7 @@ class Tokenizer {
  private:
   absl::StatusOr<bool> ParseNext(std::string& output);
 
-  std::istream* stream_;
+  std::istream* absl_nullable stream_;  // Not owned
   std::string next_;
   std::string peeked_;
   std::optional<bool> peeked_valid_;

@@ -14,15 +14,18 @@ Tokenizer::Tokenizer(Tokenizer&& moved_from) noexcept
       next_(moved_from.next_),
       peeked_(moved_from.peeked_),
       peeked_valid_(moved_from.peeked_valid_) {
+  moved_from.stream_ = nullptr;
   moved_from.next_.clear();
   moved_from.peeked_.clear();
   moved_from.peeked_valid_.reset();
 }
 
 Tokenizer& Tokenizer::operator=(Tokenizer&& moved_from) noexcept {
+  stream_ = moved_from.stream_;
   next_ = moved_from.next_;
   peeked_ = moved_from.peeked_;
   peeked_valid_ = moved_from.peeked_valid_;
+  moved_from.stream_ = nullptr;
   moved_from.next_.clear();
   moved_from.peeked_.clear();
   moved_from.peeked_valid_.reset();
