@@ -42,6 +42,9 @@ jobs:
     - name: optimized tests (gcc)
       run: bazel test -c opt ...
 
+    - name: clean
+      run: bazel clean --async
+
     - name: debug build (clang)
       run: bazel build ... --repo_env=cc=clang
 
