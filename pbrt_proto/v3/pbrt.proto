@@ -952,6 +952,11 @@ message Shape {
       BSPLINE = 2;
     }
 
+    enum Degree {
+      THREE = 1;
+      FOUR = 2;
+    }
+
     enum Type {
       CYLINDER = 1;
       FLAT = 2;
@@ -967,7 +972,7 @@ message Shape {
     // with the value from width if not set.
     repeated Point P = 1;
     optional Basis basis = 2 [default = BEZIER];
-    optional int32 degree = 3 [default = 3];
+    optional Degree degree = 3 [default = THREE];
     optional Type type = 4 [default = FLAT];
     repeated Vector N = 5;
     optional double width = 6 [default = 1.0];

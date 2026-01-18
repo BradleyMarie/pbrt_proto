@@ -2333,7 +2333,18 @@ absl::Status ParserV3::Shape(
 
     if (std::optional<int32_t> degree = TryRemoveInteger(parameters, "degree");
         degree.has_value()) {
-      curve.set_degree(*degree);
+      if (*degree == 3) {
+        curve.set_degree(Shape::Curve::THREE);
+      } else if (*degree == 4) {
+        curve.set_degree(Shape::Curve::FOUR);
+      } else {
+        std::cerr
+            << "Unsupported value for 'curve' Shape parameter 'degree': \""
+            << *degree << "\"" << std::endl;
+
+        shape.clear_curve();
+        return absl::OkStatus();
+      }
     }
 
     if (std::optional<absl::string_view> basis =

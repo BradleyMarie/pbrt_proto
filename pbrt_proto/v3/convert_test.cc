@@ -2381,7 +2381,7 @@ TEST(Convert, ShapeCurve) {
       "Shape \"curve\" "
       "\"point P\" [1 2 3] "
       "\"string basis\" \"bspline\" "
-      "\"integer degree\" 4 "
+      "\"integer degree\" 3 "
       "\"string type\" \"ribbon\" "
       "\"normal N\" [5 6 7] "
       "\"float width\" 8.0 "
@@ -2394,7 +2394,7 @@ TEST(Convert, ShapeCurve) {
                                             curve {
                                               P { x: 1.0 y: 2.0 z: 3.0 }
                                               basis: BSPLINE
-                                              degree: 4
+                                              degree: THREE
                                               type: RIBBON
                                               N { x: 5.0 y: 6.0 z: 7.0 }
                                               width: 8.0
@@ -2462,6 +2462,34 @@ TEST(Convert, ShapeCurveUnknownType) {
               IsOkAndHolds(EqualsProto(R"pb(directives {
                                               shape { curve { type: CYLINDER } }
                                             })pb")));
+}
+
+TEST(Convert, ShapeCurveDegreeThree) {
+  std::stringstream stream(
+      "Shape \"curve\" "
+      "\"integer degree\" 3 ");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives {
+                                              shape { curve { degree: THREE } }
+                                            })pb")));
+}
+
+TEST(Convert, ShapeCurveDegreeFour) {
+  std::stringstream stream(
+      "Shape \"curve\" "
+      "\"integer degree\" 4 ");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives {
+                                              shape { curve { degree: FOUR } }
+                                            })pb")));
+}
+
+TEST(Convert, ShapeCurveDegreeBad) {
+  std::stringstream stream(
+      "Shape \"curve\" "
+      "\"integer degree\" 2 ");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives { shape {} })pb")));
 }
 
 TEST(Convert, ShapeCylinder) {
