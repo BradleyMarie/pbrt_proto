@@ -43,25 +43,28 @@ extension is `.pbrt.v#.txtpb`. For example for PBRT v3 models, it would be
 extension terminates with `.binpb`. For example, `.pbrt.v3.binpb` would be the
 extension for converted v3 models.
 
-# Principals
+# Principle
 
 In designing the conversion logic and the Protocol Buffer projection, the
-following roughly ordered set of principals was used to guide the process.
+following roughly ordered set of principle was used to guide the process.
 
 1) The converted model represents exactly the same scene before and after
-   conversion.
+   conversion; however, the exact data types used to describe the scene may
+   differ from the types used in PBRT as long as there is no loss of data.
 2) The conversion may validate, clamp, drop data, and otherwise sanitize the
    PBRT input as long but only if those changes have no impact on the rendered
    output.
-3) Conversion is only permitted to fail if PBRT would have failed to render,
+3) The conversion is only permitted to fail if PBRT would have failed to render,
    otherwise the conversion must succeed.
-4) Validation annotations will be satisfied on all converted models, and renders
+4) The conversion only is required to support the range of inputs supported by
+   PBRT even if the Protocol Buffers use types with larger ranges.
+5) Validation annotations will be satisfied on all converted models, and renders
    should categorically reject PBRT Proto models with contents that do not
    satisfy them.
-5) Protocol Buffers will be designed to minimize the amount of parsing logic
+6) Protocol Buffers will be designed to minimize the amount of parsing logic
    that renderers will need to write. Any static data needed for parsing will
    be provided as a protocol buffer to ease portability across languages.
-6) The structure of the Protocol Buffer projections should map as closely as
+7) The structure of the Protocol Buffer projections should map as closely as
    possible to their PBRT equivalents; however, when the additional structure
    that Protocol Buffers provide enables the elimination of classes of errors it
    is permissible to do so.
