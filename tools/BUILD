@@ -33,6 +33,7 @@ cc_binary(
 
 cc_test(
     name = "pbrt_proto_converter_test",
+    size = "large",
     srcs = ["pbrt_proto_converter_test.cc"],
     data = [
         ":pbrt_proto_converter",
