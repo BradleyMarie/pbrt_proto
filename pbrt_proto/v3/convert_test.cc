@@ -1659,6 +1659,45 @@ TEST(Convert, MakeNamedMediumHeterogeneous) {
                        })pb")));
 }
 
+TEST(Convert, MakeNamedMediumHeterogeneousBadNx) {
+  std::stringstream stream(
+      "MakeNamedMedium \"a\""
+      "\"integer nx\" -1 "
+      "\"integer ny\" 2 "
+      "\"integer nz\" 3 "
+      "\"float density\" [1 2 3 4 5 6] ");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives {
+                                              make_named_medium { name: "a" }
+                                            })pb")));
+}
+
+TEST(Convert, MakeNamedMediumHeterogeneousBadNy) {
+  std::stringstream stream(
+      "MakeNamedMedium \"a\""
+      "\"integer nx\" 1 "
+      "\"integer ny\" -2 "
+      "\"integer nz\" 3 "
+      "\"float density\" [1 2 3 4 5 6] ");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives {
+                                              make_named_medium { name: "a" }
+                                            })pb")));
+}
+
+TEST(Convert, MakeNamedMediumHeterogeneousBadNz) {
+  std::stringstream stream(
+      "MakeNamedMedium \"a\""
+      "\"integer nx\" 1 "
+      "\"integer ny\" 2 "
+      "\"integer nz\" -3 "
+      "\"float density\" [1 2 3 4 5 6] ");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives {
+                                              make_named_medium { name: "a" }
+                                            })pb")));
+}
+
 TEST(Convert, MakeNamedMediumHeterogeneousNoDensity) {
   std::stringstream stream(
       "MakeNamedMedium \"a\""
@@ -2546,10 +2585,30 @@ TEST(Convert, ShapeHeightfieldNoNu) {
                        "Missing required heightfield Shape parameter: 'nu'"));
 }
 
+TEST(Convert, ShapeHeightfieldBadNu) {
+  std::stringstream stream(
+      "Shape \"heightfield\" "
+      "\"integer nu\" -1 "
+      "\"integer nv\" 2 ");
+  EXPECT_THAT(Convert(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Missing required heightfield Shape parameter: 'nu'"));
+}
+
 TEST(Convert, ShapeHeightfieldNoNv) {
   std::stringstream stream(
       "Shape \"heightfield\" "
       "\"integer nu\" 1 ");
+  EXPECT_THAT(Convert(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Missing required heightfield Shape parameter: 'nv'"));
+}
+
+TEST(Convert, ShapeHeightfieldBadNv) {
+  std::stringstream stream(
+      "Shape \"heightfield\" "
+      "\"integer nu\" 1 "
+      "\"integer nv\" -2 ");
   EXPECT_THAT(Convert(stream),
               StatusIs(absl::StatusCode::kInvalidArgument,
                        "Missing required heightfield Shape parameter: 'nv'"));
@@ -2670,6 +2729,36 @@ TEST(Convert, ShapeLoopsubdivBoth) {
                                         })pb")));
 }
 
+TEST(Convert, ShapeInvalidIndices0) {
+  std::stringstream stream(
+      "Shape \"loopsubdiv\" "
+      "\"integer indices\" [-1 1 2] "
+      "\"point P\" [4.0 5.0 6.0 7.0 8.0 9.0 10.0 11.0 12.0] ");
+  EXPECT_THAT(Convert(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Out of bounds loopsubdiv Shape parameter: 'indices'"));
+}
+
+TEST(Convert, ShapeInvalidIndices1) {
+  std::stringstream stream(
+      "Shape \"loopsubdiv\" "
+      "\"integer indices\" [0 -1 2] "
+      "\"point P\" [4.0 5.0 6.0 7.0 8.0 9.0 10.0 11.0 12.0] ");
+  EXPECT_THAT(Convert(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Out of bounds loopsubdiv Shape parameter: 'indices'"));
+}
+
+TEST(Convert, ShapeInvalidIndices2) {
+  std::stringstream stream(
+      "Shape \"loopsubdiv\" "
+      "\"integer indices\" [0 1 -2] "
+      "\"point P\" [4.0 5.0 6.0 7.0 8.0 9.0 10.0 11.0 12.0] ");
+  EXPECT_THAT(Convert(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Out of bounds loopsubdiv Shape parameter: 'indices'"));
+}
+
 TEST(Convert, ShapeLoopsubdivNoIndices) {
   std::stringstream stream(
       "Shape \"loopsubdiv\" "
@@ -2780,10 +2869,46 @@ TEST(Convert, ShapeNurbsPw) {
                                         })pb")));
 }
 
+TEST(Convert, ShapeNurbsBadNu) {
+  std::stringstream stream(
+      "Shape \"nurbs\" "
+      "\"integer nu\" -1 "
+      "\"integer nv\" 2 "
+      "\"integer uorder\" 3 "
+      "\"integer vorder\" 4 "
+      "\"float uknots\" [5.0 6.0 7.0 8.0] "
+      "\"float vknots\" [9.0 10.0 11.0 12.0 13.0 14.0] "
+      "\"float v0\" 15.0 "
+      "\"float v1\" 16.0 "
+      "\"float u0\" 17.0 "
+      "\"float u1\" 18.0 "
+      "\"point P\" [19.0 20.0 21.0 22.0 23.0 24.0] ");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives { shape {} })pb")));
+}
+
 TEST(Convert, ShapeNurbsNoNu) {
   std::stringstream stream(
       "Shape \"nurbs\" "
       "\"integer nv\" 2 "
+      "\"integer uorder\" 3 "
+      "\"integer vorder\" 4 "
+      "\"float uknots\" [5.0 6.0 7.0 8.0] "
+      "\"float vknots\" [9.0 10.0 11.0 12.0 13.0 14.0] "
+      "\"float v0\" 15.0 "
+      "\"float v1\" 16.0 "
+      "\"float u0\" 17.0 "
+      "\"float u1\" 18.0 "
+      "\"point P\" [19.0 20.0 21.0 22.0 23.0 24.0] ");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives { shape {} })pb")));
+}
+
+TEST(Convert, ShapeNurbsBadNv) {
+  std::stringstream stream(
+      "Shape \"nurbs\" "
+      "\"integer nu\" 1 "
+      "\"integer nv\" -2 "
       "\"integer uorder\" 3 "
       "\"integer vorder\" 4 "
       "\"float uknots\" [5.0 6.0 7.0 8.0] "
@@ -2814,12 +2939,48 @@ TEST(Convert, ShapeNurbsNoNv) {
               IsOkAndHolds(EqualsProto(R"pb(directives { shape {} })pb")));
 }
 
+TEST(Convert, ShapeNurbsBadUorder) {
+  std::stringstream stream(
+      "Shape \"nurbs\" "
+      "\"integer nu\" -1 "
+      "\"integer nv\" 2 "
+      "\"integer uorder\" -3 "
+      "\"integer vorder\" 4 "
+      "\"float uknots\" [5.0 6.0 7.0 8.0] "
+      "\"float vknots\" [9.0 10.0 11.0 12.0 13.0 14.0] "
+      "\"float v0\" 15.0 "
+      "\"float v1\" 16.0 "
+      "\"float u0\" 17.0 "
+      "\"float u1\" 18.0 "
+      "\"point P\" [19.0 20.0 21.0 22.0 23.0 24.0] ");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives { shape {} })pb")));
+}
+
 TEST(Convert, ShapeNurbsNoUorder) {
   std::stringstream stream(
       "Shape \"nurbs\" "
       "\"integer nu\" 1 "
       "\"integer nv\" 2 "
       "\"integer vorder\" 4 "
+      "\"float uknots\" [5.0 6.0 7.0 8.0] "
+      "\"float vknots\" [9.0 10.0 11.0 12.0 13.0 14.0] "
+      "\"float v0\" 15.0 "
+      "\"float v1\" 16.0 "
+      "\"float u0\" 17.0 "
+      "\"float u1\" 18.0 "
+      "\"point P\" [19.0 20.0 21.0 22.0 23.0 24.0] ");
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives { shape {} })pb")));
+}
+
+TEST(Convert, ShapeNurbsBadVorder) {
+  std::stringstream stream(
+      "Shape \"nurbs\" "
+      "\"integer nu\" 1 "
+      "\"integer nv\" 2 "
+      "\"integer uorder\" 3 "
+      "\"integer vorder\" -4 "
       "\"float uknots\" [5.0 6.0 7.0 8.0] "
       "\"float vknots\" [9.0 10.0 11.0 12.0 13.0 14.0] "
       "\"float v0\" 15.0 "

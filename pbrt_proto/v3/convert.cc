@@ -1,5 +1,6 @@
 #include "pbrt_proto/v3/convert.h"
 
+#include <algorithm>
 #include <array>
 #include <functional>
 #include <variant>
@@ -882,7 +883,7 @@ absl::Status ParserV3::Accelerator(
     if (std::optional<int32_t> maxnodeprims =
             TryRemoveInteger(parameters, "maxnodeprims");
         maxnodeprims.has_value()) {
-      bvh.set_maxnodeprims(*maxnodeprims);
+      bvh.set_maxnodeprims(std::max(0, *maxnodeprims));
     }
 
     if (std::optional<absl::string_view> splitmethod =
@@ -916,13 +917,13 @@ absl::Status ParserV3::Accelerator(
     if (std::optional<int32_t> maxdepth =
             TryRemoveInteger(parameters, "maxdepth");
         maxdepth.has_value()) {
-      kdtree.set_maxdepth(*maxdepth);
+      kdtree.set_maxdepth(std::max(0, std::max(0, *maxdepth)));
     }
 
     if (std::optional<int32_t> maxprims =
             TryRemoveInteger(parameters, "maxprims");
         maxprims.has_value()) {
-      kdtree.set_maxprims(*maxprims);
+      kdtree.set_maxprims(std::max(0, *maxprims));
     }
 
     if (std::optional<int32_t> traversalcost =
@@ -971,13 +972,13 @@ absl::Status ParserV3::AreaLightSource(
     if (std::optional<int32_t> samples =
             TryRemoveInteger(parameters, "nsamples");
         samples) {
-      diffuse.set_samples(*samples);
+      diffuse.set_samples(std::max(0, *samples));
     }
 
     if (std::optional<int32_t> samples =
             TryRemoveInteger(parameters, "samples");
         samples) {
-      diffuse.set_samples(*samples);
+      diffuse.set_samples(std::max(0, *samples));
     }
 
     if (std::optional<bool> twosided = TryRemoveBool(parameters, "twosided");
@@ -1241,13 +1242,13 @@ absl::Status ParserV3::Film(
     if (std::optional<int32_t> xresolution =
             TryRemoveInteger(parameters, "xresolution");
         xresolution.has_value()) {
-      image.set_xresolution(*xresolution);
+      image.set_xresolution(std::max(0, *xresolution));
     }
 
     if (std::optional<int32_t> yresolution =
             TryRemoveInteger(parameters, "yresolution");
         yresolution.has_value()) {
-      image.set_yresolution(*yresolution);
+      image.set_yresolution(std::max(0, *yresolution));
     }
 
     std::optional<absl::Span<double>> cropwindow;
@@ -1368,7 +1369,7 @@ absl::Status ParserV3::FloatTexture(
     if (std::optional<int32_t> octaves =
             TryRemoveInteger(parameters, "octaves");
         octaves) {
-      fbm.set_octaves(*octaves);
+      fbm.set_octaves(std::max(0, *octaves));
     }
 
     if (std::optional<double> roughness =
@@ -1452,7 +1453,7 @@ absl::Status ParserV3::FloatTexture(
     if (std::optional<int32_t> octaves =
             TryRemoveInteger(parameters, "octaves");
         octaves) {
-      wrinkled.set_octaves(*octaves);
+      wrinkled.set_octaves(std::max(0, *octaves));
     }
 
     if (std::optional<double> roughness =
@@ -1494,17 +1495,21 @@ absl::Status ParserV3::Integrator(
     if (std::optional<int32_t> nsamples =
             TryRemoveInteger(parameters, "nsamples");
         nsamples.has_value()) {
-      ambientocclusion.set_nsamples(*nsamples);
+      ambientocclusion.set_nsamples(std::max(0, *nsamples));
     }
 
     std::optional<absl::Span<int32_t>> pixelbounds;
     if (absl::Status status =
             TryRemoveIntegers(parameters, "pixelbounds", 4, pixelbounds);
         status.ok() && pixelbounds.has_value()) {
-      ambientocclusion.mutable_pixelbounds()->set_x_min((*pixelbounds)[0]);
-      ambientocclusion.mutable_pixelbounds()->set_x_max((*pixelbounds)[1]);
-      ambientocclusion.mutable_pixelbounds()->set_y_min((*pixelbounds)[2]);
-      ambientocclusion.mutable_pixelbounds()->set_y_max((*pixelbounds)[3]);
+      ambientocclusion.mutable_pixelbounds()->set_x_min(
+          std::max(0, (*pixelbounds)[0]));
+      ambientocclusion.mutable_pixelbounds()->set_x_max(
+          std::max(0, (*pixelbounds)[1]));
+      ambientocclusion.mutable_pixelbounds()->set_y_min(
+          std::max(0, (*pixelbounds)[2]));
+      ambientocclusion.mutable_pixelbounds()->set_y_max(
+          std::max(0, (*pixelbounds)[3]));
     }
   } else if (integrator_type == "bdpt") {
     auto& bdpt = *integrator.mutable_bdpt();
@@ -1512,7 +1517,7 @@ absl::Status ParserV3::Integrator(
     if (std::optional<int32_t> maxdepth =
             TryRemoveInteger(parameters, "maxdepth");
         maxdepth.has_value()) {
-      bdpt.set_maxdepth(*maxdepth);
+      bdpt.set_maxdepth(std::max(0, *maxdepth));
     }
 
     if (std::optional<bool> visualizestrategies =
@@ -1549,7 +1554,7 @@ absl::Status ParserV3::Integrator(
     if (std::optional<int32_t> maxdepth =
             TryRemoveInteger(parameters, "maxdepth");
         maxdepth.has_value()) {
-      directlighting.set_maxdepth(*maxdepth);
+      directlighting.set_maxdepth(std::max(0, *maxdepth));
     }
 
     if (std::optional<absl::string_view> strategy =
@@ -1577,24 +1582,24 @@ absl::Status ParserV3::Integrator(
     if (std::optional<int32_t> maxdepth =
             TryRemoveInteger(parameters, "maxdepth");
         maxdepth.has_value()) {
-      mlt.set_maxdepth(*maxdepth);
+      mlt.set_maxdepth(std::max(0, *maxdepth));
     }
 
     if (std::optional<int32_t> bootstrapsamples =
             TryRemoveInteger(parameters, "bootstrapsamples");
         bootstrapsamples.has_value()) {
-      mlt.set_bootstrapsamples(*bootstrapsamples);
+      mlt.set_bootstrapsamples(std::max(0, *bootstrapsamples));
     }
 
     if (std::optional<int32_t> chains = TryRemoveInteger(parameters, "chains");
         chains.has_value()) {
-      mlt.set_chains(*chains);
+      mlt.set_chains(std::max(0, *chains));
     }
 
     if (std::optional<int32_t> mutationsperpixel =
             TryRemoveInteger(parameters, "mutationsperpixel");
         mutationsperpixel.has_value()) {
-      mlt.set_mutationsperpixel(*mutationsperpixel);
+      mlt.set_mutationsperpixel(std::max(0, *mutationsperpixel));
     }
 
     if (std::optional<double> largestepprobability =
@@ -1613,7 +1618,7 @@ absl::Status ParserV3::Integrator(
     if (std::optional<int32_t> maxdepth =
             TryRemoveInteger(parameters, "maxdepth");
         maxdepth.has_value()) {
-      path.set_maxdepth(*maxdepth);
+      path.set_maxdepth(std::max(0, *maxdepth));
     }
 
     if (std::optional<double> rrthreshold =
@@ -1644,25 +1649,25 @@ absl::Status ParserV3::Integrator(
     if (std::optional<int32_t> maxdepth =
             TryRemoveInteger(parameters, "maxdepth");
         maxdepth.has_value()) {
-      sppm.set_maxdepth(*maxdepth);
+      sppm.set_maxdepth(std::max(0, *maxdepth));
     }
 
     if (std::optional<int32_t> numiterations =
             TryRemoveInteger(parameters, "numiterations");
         numiterations.has_value()) {
-      sppm.set_numiterations(*numiterations);
+      sppm.set_numiterations(std::max(0, *numiterations));
     }
 
     if (std::optional<int32_t> photonsperiteration =
             TryRemoveInteger(parameters, "photonsperiteration");
         photonsperiteration.has_value()) {
-      sppm.set_photonsperiteration(*photonsperiteration);
+      sppm.set_photonsperiteration(std::max(0, *photonsperiteration));
     }
 
     if (std::optional<int32_t> imagewritefrequency =
             TryRemoveInteger(parameters, "imagewritefrequency");
         imagewritefrequency.has_value()) {
-      sppm.set_imagewritefrequency(*imagewritefrequency);
+      sppm.set_imagewritefrequency(std::max(0, *imagewritefrequency));
     }
 
     if (std::optional<double> radius = TryRemoveFloat(parameters, "radius");
@@ -1675,7 +1680,7 @@ absl::Status ParserV3::Integrator(
     if (std::optional<int32_t> maxdepth =
             TryRemoveInteger(parameters, "maxdepth");
         maxdepth.has_value()) {
-      volpath.set_maxdepth(*maxdepth);
+      volpath.set_maxdepth(std::max(0, *maxdepth));
     }
 
     if (std::optional<double> rrthreshold =
@@ -1706,7 +1711,7 @@ absl::Status ParserV3::Integrator(
     if (std::optional<int32_t> maxdepth =
             TryRemoveInteger(parameters, "maxdepth");
         maxdepth.has_value()) {
-      whitted.set_maxdepth(*maxdepth);
+      whitted.set_maxdepth(std::max(0, *maxdepth));
     }
 
     std::optional<absl::Span<int32_t>> pixelbounds;
@@ -1786,13 +1791,13 @@ absl::Status ParserV3::LightSource(
     if (std::optional<int32_t> samples =
             TryRemoveInteger(parameters, "nsamples");
         samples) {
-      infinite.set_samples(*samples);
+      infinite.set_samples(std::max(0, *samples));
     }
 
     if (std::optional<int32_t> samples =
             TryRemoveInteger(parameters, "samples");
         samples) {
-      infinite.set_samples(*samples);
+      infinite.set_samples(std::max(0, *samples));
     }
 
     if (std::optional<absl::string_view> mapname =
@@ -2000,16 +2005,31 @@ absl::Status ParserV3::MakeNamedMedium(
 
     if (std::optional<int32_t> nx = TryRemoveInteger(parameters, "nx");
         nx.has_value()) {
+      if (*nx < 0) {
+        make_named_medium.clear_heterogeneous();
+        return absl::OkStatus();
+      }
+
       heterogeneous.set_nx(*nx);
     }
 
     if (std::optional<int32_t> ny = TryRemoveInteger(parameters, "ny");
         ny.has_value()) {
+      if (*ny < 0) {
+        make_named_medium.clear_heterogeneous();
+        return absl::OkStatus();
+      }
+
       heterogeneous.set_ny(*ny);
     }
 
     if (std::optional<int32_t> nz = TryRemoveInteger(parameters, "nz");
         nz.has_value()) {
+      if (*nz < 0) {
+        make_named_medium.clear_heterogeneous();
+        return absl::OkStatus();
+      }
+
       heterogeneous.set_nz(*nz);
     }
 
@@ -2206,7 +2226,7 @@ absl::Status ParserV3::Sampler(
     if (std::optional<int32_t> pixelsamples =
             TryRemoveInteger(parameters, "pixelsamples");
         pixelsamples.has_value()) {
-      halton.set_pixelsamples(*pixelsamples);
+      halton.set_pixelsamples(std::max(0, *pixelsamples));
     }
 
     if (std::optional<bool> samplepixelcenter =
@@ -2220,13 +2240,13 @@ absl::Status ParserV3::Sampler(
     if (std::optional<int32_t> pixelsamples =
             TryRemoveInteger(parameters, "pixelsamples");
         pixelsamples.has_value()) {
-      maxmindist.set_pixelsamples(*pixelsamples);
+      maxmindist.set_pixelsamples(std::max(0, *pixelsamples));
     }
 
     if (std::optional<int32_t> dimensions =
             TryRemoveInteger(parameters, "dimensions");
         dimensions.has_value()) {
-      maxmindist.set_dimensions(*dimensions);
+      maxmindist.set_dimensions(std::max(0, *dimensions));
     }
   } else if (sampler_type == "random") {
     auto& random = *sampler.mutable_random();
@@ -2234,7 +2254,7 @@ absl::Status ParserV3::Sampler(
     if (std::optional<int32_t> pixelsamples =
             TryRemoveInteger(parameters, "pixelsamples");
         pixelsamples.has_value()) {
-      random.set_pixelsamples(*pixelsamples);
+      random.set_pixelsamples(std::max(0, *pixelsamples));
     }
   } else if (sampler_type == "sobol") {
     auto& sobol = *sampler.mutable_sobol();
@@ -2242,7 +2262,7 @@ absl::Status ParserV3::Sampler(
     if (std::optional<int32_t> pixelsamples =
             TryRemoveInteger(parameters, "pixelsamples");
         pixelsamples.has_value()) {
-      sobol.set_pixelsamples(*pixelsamples);
+      sobol.set_pixelsamples(std::max(0, *pixelsamples));
     }
   } else if (sampler_type == "stratified") {
     auto& stratified = *sampler.mutable_stratified();
@@ -2255,19 +2275,19 @@ absl::Status ParserV3::Sampler(
     if (std::optional<int32_t> xsamples =
             TryRemoveInteger(parameters, "xsamples");
         xsamples.has_value()) {
-      stratified.set_xsamples(*xsamples);
+      stratified.set_xsamples(std::max(0, *xsamples));
     }
 
     if (std::optional<int32_t> ysamples =
             TryRemoveInteger(parameters, "ysamples");
         ysamples.has_value()) {
-      stratified.set_ysamples(*ysamples);
+      stratified.set_ysamples(std::max(0, *ysamples));
     }
 
     if (std::optional<int32_t> dimensions =
             TryRemoveInteger(parameters, "dimensions");
         dimensions.has_value()) {
-      stratified.set_dimensions(*dimensions);
+      stratified.set_dimensions(std::max(0, *dimensions));
     }
   } else if (sampler_type == "02sequence" || sampler_type == "lowdiscrepancy") {
     auto& zerotwosequence = *sampler.mutable_zerotwosequence();
@@ -2275,13 +2295,13 @@ absl::Status ParserV3::Sampler(
     if (std::optional<int32_t> pixelsamples =
             TryRemoveInteger(parameters, "pixelsamples");
         pixelsamples.has_value()) {
-      zerotwosequence.set_pixelsamples(*pixelsamples);
+      zerotwosequence.set_pixelsamples(std::max(0, *pixelsamples));
     }
 
     if (std::optional<int32_t> dimensions =
             TryRemoveInteger(parameters, "dimensions");
         dimensions.has_value()) {
-      zerotwosequence.set_dimensions(*dimensions);
+      zerotwosequence.set_dimensions(std::max(0, *dimensions));
     }
   } else {
     std::cerr << "Unrecognized Sampler type: \"" << sampler_type << "\""
@@ -2405,7 +2425,7 @@ absl::Status ParserV3::Shape(
     if (std::optional<int32_t> splitdepth =
             TryRemoveInteger(parameters, "splitdepth");
         splitdepth.has_value()) {
-      curve.set_splitdepth(*splitdepth);
+      curve.set_splitdepth(std::max(0, *splitdepth));
     }
   } else if (shape_type == "cylinder") {
     auto& cylinder = *shape.mutable_cylinder();
@@ -2456,7 +2476,7 @@ absl::Status ParserV3::Shape(
     auto& heightfield = *shape.mutable_heightfield();
 
     if (std::optional<int32_t> nu = TryRemoveInteger(parameters, "nu");
-        nu.has_value()) {
+        nu.has_value() && *nu >= 0) {
       heightfield.set_nu(*nu);
     } else {
       return absl::InvalidArgumentError(
@@ -2464,15 +2484,15 @@ absl::Status ParserV3::Shape(
     }
 
     if (std::optional<int32_t> nv = TryRemoveInteger(parameters, "nv");
-        nv.has_value()) {
+        nv.has_value() && *nv >= 0) {
       heightfield.set_nv(*nv);
     } else {
       return absl::InvalidArgumentError(
           "Missing required heightfield Shape parameter: 'nv'");
     }
 
-    int64_t required_size = static_cast<int64_t>(heightfield.nu()) *
-                            static_cast<int64_t>(heightfield.nv());
+    uint64_t required_size = static_cast<uint64_t>(heightfield.nu()) *
+                             static_cast<uint64_t>(heightfield.nv());
     if (required_size > std::numeric_limits<int32_t>::max()) {
       return absl::InvalidArgumentError(
           "Heighfield shape is too large to be stored in a 1D proto array");
@@ -2516,29 +2536,12 @@ absl::Status ParserV3::Shape(
     if (std::optional<int32_t> nlevels =
             TryRemoveInteger(parameters, "nlevels");
         nlevels.has_value()) {
-      loopsubdiv.set_levels(*nlevels);
+      loopsubdiv.set_levels(std::max(0, *nlevels));
     }
 
     if (std::optional<int32_t> levels = TryRemoveInteger(parameters, "levels");
         levels.has_value()) {
-      loopsubdiv.set_levels(*levels);
-    }
-
-    if (std::optional<absl::Span<int32_t>> indices =
-            TryRemoveIntegers(parameters, "indices");
-        indices.has_value()) {
-      indices->remove_suffix(indices->size() % 3);
-      for (size_t i = 0; i < indices->size() / 3u; i++) {
-        auto& face = *loopsubdiv.add_indices();
-        face.set_v0((*indices)[3u * i + 0]);
-        face.set_v1((*indices)[3u * i + 1]);
-        face.set_v2((*indices)[3u * i + 2]);
-      }
-    } else {
-      std::cerr << "Missing required loopsubdiv Shape parameter: 'indices'"
-                << std::endl;
-      shape.clear_loopsubdiv();
-      return absl::OkStatus();
+      loopsubdiv.set_levels(std::max(0, *levels));
     }
 
     if (std::optional<absl::Span<std::array<double, 3>>> p =
@@ -2557,11 +2560,43 @@ absl::Status ParserV3::Shape(
       shape.clear_loopsubdiv();
       return absl::OkStatus();
     }
+
+    if (std::optional<absl::Span<int32_t>> indices =
+            TryRemoveIntegers(parameters, "indices");
+        indices.has_value()) {
+      indices->remove_suffix(indices->size() % 3);
+      for (size_t i = 0; i < indices->size() / 3u; i++) {
+        auto& face = *loopsubdiv.add_indices();
+
+        int32_t v0 = (*indices)[3u * i + 0];
+        int32_t v1 = (*indices)[3u * i + 1];
+        int32_t v2 = (*indices)[3u * i + 2];
+        if (v0 < 0 || v1 < 0 || v2 < 0) {
+          return absl::InvalidArgumentError(
+              "Out of bounds loopsubdiv Shape parameter: 'indices'");
+        }
+
+        face.set_v0(v0);
+        face.set_v1(v1);
+        face.set_v2(v2);
+      }
+    } else {
+      std::cerr << "Missing required loopsubdiv Shape parameter: 'indices'"
+                << std::endl;
+      shape.clear_loopsubdiv();
+      return absl::OkStatus();
+    }
   } else if (shape_type == "nurbs") {
     auto& nurbs = *shape.mutable_nurbs();
 
     if (std::optional<int32_t> nu = TryRemoveInteger(parameters, "nu");
         nu.has_value()) {
+      if (*nu < 0) {
+        std::cerr << "Invalid nurbs Shape parameter: 'nu'" << std::endl;
+        shape.clear_nurbs();
+        return absl::OkStatus();
+      }
+
       nurbs.set_nu(*nu);
     } else {
       std::cerr << "Missing required nurbs Shape parameter: 'nu'" << std::endl;
@@ -2571,6 +2606,12 @@ absl::Status ParserV3::Shape(
 
     if (std::optional<int32_t> nv = TryRemoveInteger(parameters, "nv");
         nv.has_value()) {
+      if (*nv < 0) {
+        std::cerr << "Invalid nurbs Shape parameter: 'nv'" << std::endl;
+        shape.clear_nurbs();
+        return absl::OkStatus();
+      }
+
       nurbs.set_nv(*nv);
     } else {
       std::cerr << "Missing required nurbs Shape parameter: 'nv'" << std::endl;
@@ -2580,6 +2621,12 @@ absl::Status ParserV3::Shape(
 
     if (std::optional<int32_t> uorder = TryRemoveInteger(parameters, "uorder");
         uorder.has_value()) {
+      if (*uorder < 0) {
+        std::cerr << "Invalid nurbs Shape parameter: 'uorder'" << std::endl;
+        shape.clear_nurbs();
+        return absl::OkStatus();
+      }
+
       nurbs.set_uorder(*uorder);
     } else {
       std::cerr << "Missing required nurbs Shape parameter: 'uorder'"
@@ -2590,6 +2637,12 @@ absl::Status ParserV3::Shape(
 
     if (std::optional<int32_t> vorder = TryRemoveInteger(parameters, "vorder");
         vorder.has_value()) {
+      if (*vorder < 0) {
+        std::cerr << "Invalid nurbs Shape parameter: 'vorder'" << std::endl;
+        shape.clear_nurbs();
+        return absl::OkStatus();
+      }
+
       nurbs.set_vorder(*vorder);
     } else {
       std::cerr << "Missing required nurbs Shape parameter: 'vorder'"
@@ -2777,9 +2830,18 @@ absl::Status ParserV3::Shape(
       indices->remove_suffix(indices->size() % 3);
       for (size_t i = 0; i < indices->size() / 3; i++) {
         auto& dest = *trianglemesh.add_indices();
-        dest.set_v0((*indices)[3u * i + 0]);
-        dest.set_v1((*indices)[3u * i + 1]);
-        dest.set_v2((*indices)[3u * i + 2]);
+
+        int32_t v0 = (*indices)[3u * i + 0];
+        int32_t v1 = (*indices)[3u * i + 1];
+        int32_t v2 = (*indices)[3u * i + 2];
+        if (v0 < 0 || v1 < 0 || v2 < 0) {
+          return absl::InvalidArgumentError(
+              "Out of bounds trianglemesh Shape parameter: 'indices'");
+        }
+
+        dest.set_v0(v0);
+        dest.set_v1(v1);
+        dest.set_v2(v2);
       }
     } else {
       std::cerr << "Invalid or missing required trianglemesh Shape parameter: "
@@ -3136,7 +3198,7 @@ absl::Status ParserV3::SpectrumTexture(
     if (std::optional<int32_t> octaves =
             TryRemoveInteger(parameters, "octaves");
         octaves) {
-      fbm.set_octaves(*octaves);
+      fbm.set_octaves(std::max(0, *octaves));
     }
 
     if (std::optional<double> roughness =
@@ -3185,7 +3247,7 @@ absl::Status ParserV3::SpectrumTexture(
     if (std::optional<int32_t> octaves =
             TryRemoveInteger(parameters, "octaves");
         octaves) {
-      marble.set_octaves(*octaves);
+      marble.set_octaves(std::max(0, *octaves));
     }
 
     if (std::optional<double> roughness =
@@ -3249,7 +3311,7 @@ absl::Status ParserV3::SpectrumTexture(
     if (std::optional<int32_t> octaves =
             TryRemoveInteger(parameters, "octaves");
         octaves) {
-      wrinkled.set_octaves(*octaves);
+      wrinkled.set_octaves(std::max(0, *octaves));
     }
 
     if (std::optional<double> roughness =
