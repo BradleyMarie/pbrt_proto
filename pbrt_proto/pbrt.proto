@@ -1,0 +1,75 @@
+syntax = "proto2";
+
+package pbrt_proto;
+
+// A blackbody spectral power distribution.
+message BlackbodySpectrum {
+  // The temperature of the emitter in Kelvin.
+  required double temperature = 1;
+
+  // A scale applied to the intensity of the spectrum.
+  required double scale = 2;
+}
+
+// A coordinate in 3D space.
+message Point {
+  // The `x` component of the coordinate.
+  required double x = 1;
+
+  // The `y` component of the coordinate.
+  required double y = 2;
+  
+  // The `z` component of the coordinate.
+  required double z = 3;
+}
+
+// A spectral power distribution represented by an RGB color.
+message RgbSpectrum {
+  // The `r` component of the color.
+  required double r = 1;
+
+  // The `g` component of the color.
+  required double g = 2;
+
+  // The `b` component of the color.
+  required double b = 3;
+}
+
+// A spectral power distribution represented by list of samples.
+message SampledSpectrum {
+  // A single sample of the spectrum's SPD.
+  message Sample {
+    // The wavelength of the sample.
+    required double wavelength = 1;
+
+    // The intensity of the sample.
+    required double intensity = 2;
+  }
+
+  // All of the samples in the spectrum.
+  repeated Sample samples = 1;
+}
+
+// A spectral power distribution represented by an XYZ color.
+message XyzSpectrum {
+  // The `x` component of the color.
+  required double x = 1;
+
+  // The `x` component of the color.
+  required double y = 2;
+
+  // The `x` component of the color.
+  required double z = 3;
+}
+
+// A direction in 3D space
+message Vector {
+  // The `x` component of the direction.
+  required double x = 1;
+
+  // The `y` component of the direction.
+  required double y = 2;
+
+  // The `z` component of the direction.
+  required double z = 3;
+}
