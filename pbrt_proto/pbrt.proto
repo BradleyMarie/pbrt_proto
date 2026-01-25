@@ -2,6 +2,10 @@ syntax = "proto2";
 
 package pbrt_proto;
 
+//
+// Common Data Types
+//
+
 // A blackbody spectral power distribution.
 message BlackbodySpectrum {
   // The temperature of the emitter in Kelvin.
@@ -73,3 +77,305 @@ message Vector {
   // The `z` component of the direction.
   required double z = 3;
 }
+
+//
+// Common Directives
+//
+
+// A directive that selects the current transformation matrix
+message ActiveTransform {
+  // The available transformation matrices.
+  enum ActiveTransformation {
+    ALL = 1;
+    START_TIME = 2;
+    END_TIME = 3;
+  };
+
+  // The selected transformation matrix.
+  required ActiveTransformation active = 1 [default = ALL];
+}
+
+// A directive which pushes the current graphics state including the current
+// transformation matrix and the reverse-orientation setting to the attribute
+// stack.
+message AttributeBegin {}
+
+// A directive which pops the attribute stack and restores the saved graphics
+// state. If the stack is empty, the program should exit with an error.
+message AttributeEnd {}
+
+// A directive which multiplies the current transformation matrix by the matrix
+// specified.
+message ConcatTransform {
+  // The m[0][0] component of the matrix with column-major order.
+  required double m00 = 1;
+
+  // The m[0][1] component of the matrix with column-major order.
+  required double m01 = 2;
+
+  // The m[0][2] component of the matrix with column-major order.
+  required double m02 = 3;
+
+  // The m[0][3] component of the matrix with column-major order.
+  required double m03 = 4;
+
+  // The m[1][0] component of the matrix with column-major order.
+  required double m10 = 5;
+
+  // The m[1][1] component of the matrix with column-major order.
+  required double m11 = 6;
+
+  // The m[1][2] component of the matrix with column-major order.
+  required double m12 = 7;
+
+  // The m[1][3] component of the matrix with column-major order.
+  required double m13 = 8;
+
+  // The m[2][0] component of the matrix with column-major order.
+  required double m20 = 9;
+
+  // The m[2][1] component of the matrix with column-major order.
+  required double m21 = 10;
+
+  // The m[2][2] component of the matrix with column-major order.
+  required double m22 = 11;
+
+  // The m[2][3] component of the matrix with column-major order.
+  required double m23 = 12;
+
+  // The m[3][0] component of the matrix with column-major order.
+  required double m30 = 13;
+
+  // The m[3][1] component of the matrix with column-major order.
+  required double m31 = 14;
+
+  // The m[3][2] component of the matrix with column-major order.
+  required double m32 = 15;
+
+  // The m[3][3] component of the matrix with column-major order.
+  required double m33 = 16;
+}
+
+// A directive which saves the current transformation matrix using the
+// specified name.
+message CoordinateSystem {
+  // The name to give the saved transformation.
+  required string name = 1;
+}
+
+// A directive which sets the current transformation matrix to a previously
+// saved matrix. If no matrix matches the provided name the directive has no
+// effect.
+message CoordSysTransform {
+  // The name of the saved transformation to restore.
+  required string name = 1;
+}
+
+// A directive which sets the current transformation matrix to the identity
+// matrix.
+message Identity {}
+
+// A directive which opens a file and continues parsing from the start of it.
+// Mimics the semantics of the C `#include` preprocessor directive.
+//
+// NOTE: This directive cannot fully capture the semantics of the PBRT Include
+//       directive since it must be a standalone directive and cannot be used
+//       as part of a separate directive.
+message Include {
+  // The relative path to the file to include.
+  required string path = 1;
+}
+
+// A directive which opens a file and parses it in a separate parsing context
+// that inherits the scene-wide state of the renderer.
+message Import {
+  // The relative path to the file to import.
+  required string path = 1;
+}
+
+// A directive which sets the current material to a previously saved material.
+// If no material matches the provided name the directive has no effect.
+message NamedMaterial {
+  // The name of the saved material to restore.
+  required string name = 1;
+}
+
+// A directive which multiplies the current transformation matrix by the inverse
+// of the specified camera matrix.
+message LookAt {
+  // The `x` component of the camera location.
+  required double eye_x = 1;
+
+  // The `y` component of the camera location.
+  required double eye_y = 2;
+
+  // The `z` component of the camera location.
+  required double eye_z = 3;
+
+  // The `x` component of the point the camera faces.
+  required double look_x = 4;
+
+  // The `y` component of the point the camera faces.
+  required double look_y = 5;
+
+  // The `z` component of the point the camera faces.
+  required double look_z = 6;
+
+  // The `x` component of the up direction for the camera.
+  required double up_x = 7;
+
+  // The `y` component of the up direction for the camera.
+  required double up_y = 8;
+
+  // The `z` component of the up direction for the camera.
+  required double up_z = 9;
+}
+
+// A directive which specifies the current interior and exterior participating
+// media.
+message MediumInterface {
+  // The interior medium. If empty, there is no medium.
+  required string inside = 1;
+
+  // The exterior medium. If empty, there is no medium.
+  required string outside = 2;
+}
+
+// A directive which begins creating an instanced object with the specified
+// name.
+message ObjectBegin {
+  // The name to give the indexed object.
+  required string name = 1;
+}
+
+// A directive finalizes the creation of an instanced object.
+message ObjectEnd {}
+
+// A directive which adds a previously instanced object to the scene. If no
+// object matching the name is found, this directive is ignored.
+message ObjectInstance {
+  // The name of the instanced object to draw.
+  required string name = 1;
+}
+
+// A directive which reverses the front and back faces of geometry.
+message ReverseOrientation {}
+
+// A directive which multiplies the current transformation matrix by the
+// specified rotation matrix.
+message Rotate {
+  // The angle of the rotation in degrees.
+  required double angle = 1;
+
+  // The `x` component of the vector about which the rotation occurs.
+  required double x = 2;
+
+  // The `y` component of the vector about which the rotation occurs.
+  required double y = 3;
+
+  // The `z` component of the vector about which the rotation occurs.
+  required double z = 4;
+}
+
+// A directive which multiplies the current transformation matrix by the
+// specified scalar matrix.
+message Scale {
+  // The `x` component of the magnitude of the scale.
+  required double x = 1;
+
+  // The `y` component of the magnitude of the scale.
+  required double y = 2;
+
+  // The `z` component of the magnitude of the scale.
+  required double z = 3;
+}
+
+// A directive which multiplies the current transformation matrix by the
+// specified matrix.
+message Transform {
+  // The m[0][0] component of the matrix with column-major order.
+  required double m00 = 1;
+
+  // The m[0][1] component of the matrix with column-major order.
+  required double m01 = 2;
+
+  // The m[0][2] component of the matrix with column-major order.
+  required double m02 = 3;
+
+  // The m[0][3] component of the matrix with column-major order.
+  required double m03 = 4;
+
+  // The m[1][0] component of the matrix with column-major order.
+  required double m10 = 5;
+
+  // The m[1][1] component of the matrix with column-major order.
+  required double m11 = 6;
+
+  // The m[1][2] component of the matrix with column-major order.
+  required double m12 = 7;
+
+  // The m[1][3] component of the matrix with column-major order.
+  required double m13 = 8;
+
+  // The m[2][0] component of the matrix with column-major order.
+  required double m20 = 9;
+
+  // The m[2][1] component of the matrix with column-major order.
+  required double m21 = 10;
+
+  // The m[2][2] component of the matrix with column-major order.
+  required double m22 = 11;
+
+  // The m[2][3] component of the matrix with column-major order.
+  required double m23 = 12;
+
+  // The m[3][0] component of the matrix with column-major order.
+  required double m30 = 13;
+
+  // The m[3][1] component of the matrix with column-major order.
+  required double m31 = 14;
+
+  // The m[3][2] component of the matrix with column-major order.
+  required double m32 = 15;
+
+  // The m[3][3] component of the matrix with column-major order.
+  required double m33 = 16;
+}
+
+// A directive which pushes the current transformation matrix to the
+// transformation stack.
+message TransformBegin {}
+
+// A directive which pops the transformation stack and sets the current
+// transformation matrix to its contents. If the stack is empty, the program
+// should exit with an error.
+message TransformEnd {}
+
+// A directive which sets the start and end times for animations in the rendered
+// scene.
+message TransformTimes {
+  // The time at which rendering begins.
+  required double start_time = 1;
+
+  // The time at which rendering ends.
+  required double end_time = 2;
+}
+
+// A directive which multiplies the current transformation matrix by the
+// specified translation matrix.
+message Translate {
+  // The `x` component of the magnitude of the translation.
+  required double x = 1;
+
+  // The `y` component of the magnitude of the translation.
+  required double y = 2;
+
+  // The `z` component of the magnitude of the translation.
+  required double z = 3;
+}
+
+// A directive which marks the beginning of the scene geometry.
+message WorldBegin {}
+
+// A directive which triggers rendering then resets the state of the renderer.
+message WorldEnd {}

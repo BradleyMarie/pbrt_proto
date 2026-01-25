@@ -134,16 +134,6 @@ message Accelerator {
   }
 }
 
-message ActiveTransform {
-  enum ActiveTransformation {
-    ALL = 1;
-    START_TIME = 2;
-    END_TIME = 3;
-  };
-
-  optional ActiveTransformation active = 1 [default = ALL];
-}
-
 message AreaLightSource {
   message Diffuse {
     optional Spectrum L = 1;
@@ -157,14 +147,6 @@ message AreaLightSource {
   oneof area_light_source_type {
     Diffuse diffuse = 1;
   }
-}
-
-message AttributeBegin {
-  // Empty Message
-}
-
-message AttributeEnd {
-  // Empty Message
 }
 
 message Camera {
@@ -223,33 +205,6 @@ message Camera {
     Perspective perspective = 3;
     Realistic realistic = 4;
   }
-}
-
-message ConcatTransform {
-  required double m00 = 1;
-  required double m01 = 2;
-  required double m02 = 3;
-  required double m03 = 4;
-  required double m10 = 5;
-  required double m11 = 6;
-  required double m12 = 7;
-  required double m13 = 8;
-  required double m20 = 9;
-  required double m21 = 10;
-  required double m22 = 11;
-  required double m23 = 12;
-  required double m30 = 13;
-  required double m31 = 14;
-  required double m32 = 15;
-  required double m33 = 16;
-}
-
-message CoordinateSystem {
-  required string name = 1;
-}
-
-message CoordSysTransform {
-  required string name = 1;
 }
 
 message Film {
@@ -400,14 +355,6 @@ message FloatTexture {
     Windy windy = 13;
     Wrinkled wrinkled = 14;
   }
-}
-
-message Identity {
-  // Empty Message
-}
-
-message Include {
-  required string path = 1;
 }
 
 message Integrator {
@@ -708,15 +655,6 @@ message Material {
   }
 }
 
-message MediumInterface {
-  required string inside = 1;
-  required string outside = 2;
-}
-
-message NamedMaterial {
-  required string name = 1;
-}
-
 message LightSource {
   message Distant {
     optional Spectrum L = 1;
@@ -774,30 +712,6 @@ message LightSource {
   }
 }
 
-message LookAt {
-  required double eye_x = 1;
-  required double eye_y = 2;
-  required double eye_z = 3;
-  required double look_x = 4;
-  required double look_y = 5;
-  required double look_z = 6;
-  required double up_x = 7;
-  required double up_y = 8;
-  required double up_z = 9;
-}
-
-message ObjectBegin {
-  required string name = 1;
-}
-
-message ObjectEnd {
-  // Empty Message
-}
-
-message ObjectInstance {
-  required string name = 1;
-}
-
 // If attempting to render with a PixelFilter that does not have one of these
 // fields set, the renderer should exit immediately with an error.
 //
@@ -839,17 +753,6 @@ message PixelFilter {
     Sinc sinc = 4;
     Triangle triangle = 5;
   }
-}
-
-message ReverseOrientation {
-  // Empty Message
-}
-
-message Rotate {
-  required double angle = 1;
-  required double x = 2;
-  required double y = 3;
-  required double z = 4;
 }
 
 message Sampler {
@@ -895,12 +798,6 @@ message Sampler {
     Stratified stratified = 5;
     ZeroTwoSequence zerotwosequence = 6;
   }
-}
-
-message Scale {
-  required double x = 1;
-  required double y = 2;
-  required double z = 3;
 }
 
 message Shape {
@@ -1255,92 +1152,46 @@ message SpectrumTexture {
   }
 }
 
-message Transform {
-  required double m00 = 1;
-  required double m01 = 2;
-  required double m02 = 3;
-  required double m03 = 4;
-  required double m10 = 5;
-  required double m11 = 6;
-  required double m12 = 7;
-  required double m13 = 8;
-  required double m20 = 9;
-  required double m21 = 10;
-  required double m22 = 11;
-  required double m23 = 12;
-  required double m30 = 13;
-  required double m31 = 14;
-  required double m32 = 15;
-  required double m33 = 16;
-}
-
-message TransformBegin {
-  // Empty Message
-}
-
-message TransformEnd {
-  // Empty Message
-}
-
-message TransformTimes {
-  required double start_time = 1;
-  required double end_time = 2;
-}
-
-message Translate {
-  required double x = 1;
-  required double y = 2;
-  required double z = 3;
-}
-
-message WorldBegin {
-  // Empty Message
-}
-
-message WorldEnd {
-  // Empty Message
-}
-
 message Directive {
   oneof directive_type {
     Accelerator accelerator = 1;
-    ActiveTransform active_transform = 2;
+    pbrt_proto.ActiveTransform active_transform = 2;
     AreaLightSource area_light_source = 3;
-    AttributeBegin attribute_begin = 4;
-    AttributeEnd attribute_end = 5;
+    pbrt_proto.AttributeBegin attribute_begin = 4;
+    pbrt_proto.AttributeEnd attribute_end = 5;
     Camera camera = 6;
-    ConcatTransform concat_transform = 7;
-    CoordinateSystem coordinate_system = 8;
-    CoordSysTransform coord_sys_transform = 9;
+    pbrt_proto.ConcatTransform concat_transform = 7;
+    pbrt_proto.CoordinateSystem coordinate_system = 8;
+    pbrt_proto.CoordSysTransform coord_sys_transform = 9;
     Film film = 10;
     FloatTexture float_texture = 11;
-    Identity identity = 12;
-    Include include = 13;
+    pbrt_proto.Identity identity = 12;
+    pbrt_proto.Include include = 13;
     Integrator integrator = 14;
     LightSource light_source = 15;
-    LookAt look_at = 16;
+    pbrt_proto.LookAt look_at = 16;
     MakeNamedMaterial make_named_material = 17;
     MakeNamedMedium make_named_medium = 18;
     Material material = 19;
-    MediumInterface medium_interface = 20;
-    NamedMaterial named_material = 21;
-    ObjectBegin object_begin = 22;
-    ObjectEnd object_end = 23;
-    ObjectInstance object_instance = 24;
+    pbrt_proto.MediumInterface medium_interface = 20;
+    pbrt_proto.NamedMaterial named_material = 21;
+    pbrt_proto.ObjectBegin object_begin = 22;
+    pbrt_proto.ObjectEnd object_end = 23;
+    pbrt_proto.ObjectInstance object_instance = 24;
     PixelFilter pixel_filter = 25;
-    ReverseOrientation reverse_orientation = 26;
-    Rotate rotate = 27;
+    pbrt_proto.ReverseOrientation reverse_orientation = 26;
+    pbrt_proto.Rotate rotate = 27;
     Sampler sampler = 28;
     Shape shape = 29;
-    Scale scale = 30;
+    pbrt_proto.Scale scale = 30;
     SpectrumTexture spectrum_texture = 31;
-    Transform transform = 32;
-    TransformBegin transform_begin = 33;
-    TransformEnd transform_end = 34;
-    TransformTimes transform_times = 35;
-    Translate translate = 36;
-    WorldBegin world_begin = 37;
-    WorldEnd world_end = 38;
+    pbrt_proto.Transform transform = 32;
+    pbrt_proto.TransformBegin transform_begin = 33;
+    pbrt_proto.TransformEnd transform_end = 34;
+    pbrt_proto.TransformTimes transform_times = 35;
+    pbrt_proto.Translate translate = 36;
+    pbrt_proto.WorldBegin world_begin = 37;
+    pbrt_proto.WorldEnd world_end = 38;
   }
 }
 
