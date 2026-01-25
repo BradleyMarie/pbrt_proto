@@ -5,7 +5,7 @@
 
 #include "absl/status/status.h"
 #include "absl/status/statusor.h"
-#include "pbrt_proto/v3/pbrt.pb.h"
+#include "pbrt_proto/v3/v3.pb.h"
 
 namespace pbrt_proto::v3 {
 

@@ -6,7 +6,7 @@
 #include "googlemock/include/gmock/gmock.h"
 #include "googletest/include/gtest/gtest.h"
 #include "pbrt_proto/testing/proto_matchers.h"
-#include "pbrt_proto/v3/pbrt.pb.h"
+#include "pbrt_proto/v3/v3.pb.h"
 
 namespace pbrt_proto::v3 {
 namespace {

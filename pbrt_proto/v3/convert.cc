@@ -3,13 +3,16 @@
 #include <algorithm>
 #include <array>
 #include <functional>
+#include <istream>
 #include <variant>
 
 #include "absl/functional/function_ref.h"
 #include "absl/status/status.h"
+#include "absl/status/statusor.h"
 #include "absl/strings/string_view.h"
 #include "absl/types/span.h"
 #include "pbrt_proto/shared/parser.h"
+#include "pbrt_proto/v3/v3.pb.h"
 
 namespace pbrt_proto::v3 {
 namespace {

@@ -1,6 +1,6 @@
 syntax = "proto2";
 
-import "pbrt_proto/v3/pbrt.proto";
+import "pbrt_proto/v3/v3.proto";
 
 package pbrt_proto.v3;
 

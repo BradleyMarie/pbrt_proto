@@ -15,7 +15,7 @@ cc_library(
     srcs = ["convert.cc"],
     hdrs = ["convert.h"],
     deps = [
-        ":pbrt_cc_proto",
+        ":v3_cc_proto",
         "//pbrt_proto/shared:parser",
         "@abseil-cpp//absl/functional:function_ref",
         "@abseil-cpp//absl/status:status",
@@ -30,7 +30,7 @@ cc_test(
     srcs = ["convert_test.cc"],
     deps = [
         ":convert",
-        ":pbrt_cc_proto",
+        ":v3_cc_proto",
         "//pbrt_proto/testing:proto_matchers",
         "@abseil-cpp//absl/status:status_matchers",
         "@googletest//:gtest_main",
@@ -41,7 +41,7 @@ proto_library(
     name = "defaults_proto",
     srcs = ["defaults.proto"],
     deps = [
-        ":pbrt_proto",
+        ":v3_proto",
     ],
 )
 
@@ -68,11 +68,12 @@ genrule(
           "$(execpath @protobuf//:protoc) " +
           "--encode=pbrt_proto.v3.Defaults " +
           "--deterministic_output " +
-          "--descriptor_set_in=$(execpath :defaults_proto):$(execpath :pbrt_proto) " +
+          "--descriptor_set_in=$(execpath :defaults_proto):$(execpath :v3_proto):$(execpath //pbrt_proto) " +
           "> $@",
     tools = [
         ":defaults_proto",
-        ":pbrt_proto",
+        ":v3_proto",
+        "//pbrt_proto",
         "@protobuf//:protoc",
     ],
     visibility = ["//visibility:public"],
@@ -86,7 +87,7 @@ cc_test(
     ],
     deps = [
         ":defaults_cc_proto",
-        ":pbrt_cc_proto",
+        ":v3_cc_proto",
         "//pbrt_proto/testing:proto_matchers",
         "@abseil-cpp//absl/functional:function_ref",
         "@abseil-cpp//absl/log:check",
@@ -98,11 +99,14 @@ cc_test(
 )
 
 proto_library(
-    name = "pbrt_proto",
-    srcs = ["pbrt.proto"],
+    name = "v3_proto",
+    srcs = ["v3.proto"],
+    deps = [
+        "//pbrt_proto",
+    ],
 )
 
 cc_proto_library(
-    name = "pbrt_cc_proto",
-    deps = [":pbrt_proto"],
+    name = "v3_cc_proto",
+    deps = [":v3_proto"],
 )

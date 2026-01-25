@@ -15,7 +15,7 @@
 #include "google/protobuf/io/zero_copy_stream_impl.h"
 #include "google/protobuf/text_format.h"
 #include "pbrt_proto/v3/convert.h"
-#include "pbrt_proto/v3/pbrt.pb.h"
+#include "pbrt_proto/v3/v3.pb.h"
 
 ABSL_FLAG(bool, recursive, false,
           "If true, recursively converts PBRT files that are included or "

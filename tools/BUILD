@@ -19,8 +19,9 @@ cc_binary(
     name = "pbrt_proto_converter",
     srcs = ["pbrt_proto_converter.cc"],
     deps = [
+        "//pbrt_proto:pbrt_cc_proto",
         "//pbrt_proto/v3:convert",
-        "//pbrt_proto/v3:pbrt_cc_proto",
+        "//pbrt_proto/v3:v3_cc_proto",
         "@abseil-cpp//absl/container:flat_hash_set",
         "@abseil-cpp//absl/flags:flag",
         "@abseil-cpp//absl/flags:parse",
