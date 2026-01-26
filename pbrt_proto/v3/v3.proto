@@ -4,24 +4,6 @@ import "pbrt_proto/pbrt.proto";
 
 package pbrt_proto.v3;
 
-enum AntialiasingMode {
-  CLOSEDFORM = 0;
-  NONE = 1;
-}
-
-enum ImageWrapping {
-  REPEAT = 0;
-  BLACK = 1;
-  CLAMP = 2;
-}
-
-enum Mapping2D {
-  UV = 0;
-  SPHERICAL = 1;
-  CYLINDRICAL = 2;
-  PLANAR = 3;
-}
-
 enum MeasuredSubsurface {
   APPLE = 0;
   CHICKEN1 = 1;
@@ -243,7 +225,7 @@ message FloatTexture {
     optional FloatTextureParameter v01 = 2;
     optional FloatTextureParameter v10 = 3;
     optional FloatTextureParameter v11 = 4;
-    optional Mapping2D mapping = 5 [default = UV];
+    optional pbrt_proto.TextureMapping mapping = 5 [default = UV];
     optional double uscale = 6 [default = 1.0];
     optional double vscale = 7 [default = 1.0];
     optional double udelta = 8 [default = 0.0];
@@ -255,8 +237,8 @@ message FloatTexture {
   message Checkerboard2D {
     optional FloatTextureParameter tex1 = 1;
     optional FloatTextureParameter tex2 = 2;
-    optional AntialiasingMode aamode = 3 [default = CLOSEDFORM];
-    optional Mapping2D mapping = 4 [default = UV];
+    optional pbrt_proto.CheckerboardAntialiasing aamode = 3 [default = CLOSEDFORM];
+    optional pbrt_proto.TextureMapping mapping = 4 [default = UV];
     optional double uscale = 5 [default = 1.0];
     optional double vscale = 6 [default = 1.0];
     optional double udelta = 7 [default = 0.0];
@@ -277,7 +259,7 @@ message FloatTexture {
   message Dots {
     optional FloatTextureParameter inside = 1;
     optional FloatTextureParameter outside = 2;
-    optional Mapping2D mapping = 3 [default = UV];
+    optional pbrt_proto.TextureMapping mapping = 3 [default = UV];
     optional double uscale = 4 [default = 1.0];
     optional double vscale = 5 [default = 1.0];
     optional double udelta = 6 [default = 0.0];
@@ -293,12 +275,12 @@ message FloatTexture {
 
   message ImageMap {
     optional string filename = 1 [default = ""];
-    optional ImageWrapping wrap = 2 [default = REPEAT];
+    optional pbrt_proto.ImageWrap wrap = 2 [default = REPEAT];
     optional double maxanisotropy = 3 [default = 8.0];
     optional bool trilinear = 4 [default = false];
     optional double scale = 5 [default = 1.0];
     optional bool gamma = 6;  // Must check, default varies by filetype
-    optional Mapping2D mapping = 7 [default = UV];
+    optional pbrt_proto.TextureMapping mapping = 7 [default = UV];
     optional double uscale = 8 [default = 1.0];
     optional double vscale = 9 [default = 1.0];
     optional double udelta = 10 [default = 0.0];
@@ -1024,7 +1006,7 @@ message SpectrumTexture {
     optional SpectrumTextureParameter v01 = 2;
     optional SpectrumTextureParameter v10 = 3;
     optional SpectrumTextureParameter v11 = 4;
-    optional Mapping2D mapping = 5 [default = UV];
+    optional pbrt_proto.TextureMapping mapping = 5 [default = UV];
     optional double uscale = 6 [default = 1.0];
     optional double vscale = 7 [default = 1.0];
     optional double udelta = 8 [default = 0.0];
@@ -1036,8 +1018,8 @@ message SpectrumTexture {
   message Checkerboard2D {
     optional SpectrumTextureParameter tex1 = 1;
     optional SpectrumTextureParameter tex2 = 2;
-    optional AntialiasingMode aamode = 3 [default = CLOSEDFORM];
-    optional Mapping2D mapping = 4 [default = UV];
+    optional pbrt_proto.CheckerboardAntialiasing aamode = 3 [default = CLOSEDFORM];
+    optional pbrt_proto.TextureMapping mapping = 4 [default = UV];
     optional double uscale = 5 [default = 1.0];
     optional double vscale = 6 [default = 1.0];
     optional double udelta = 7 [default = 0.0];
@@ -1058,7 +1040,7 @@ message SpectrumTexture {
   message Dots {
     optional SpectrumTextureParameter inside = 1;
     optional SpectrumTextureParameter outside = 2;
-    optional Mapping2D mapping = 3 [default = UV];
+    optional pbrt_proto.TextureMapping mapping = 3 [default = UV];
     optional double uscale = 4 [default = 1.0];
     optional double vscale = 5 [default = 1.0];
     optional double udelta = 6 [default = 0.0];
@@ -1074,12 +1056,12 @@ message SpectrumTexture {
 
   message ImageMap {
     optional string filename = 1 [default = ""];
-    optional ImageWrapping wrap = 2 [default = REPEAT];
+    optional pbrt_proto.ImageWrap wrap = 2 [default = REPEAT];
     optional double maxanisotropy = 3 [default = 8.0];
     optional bool trilinear = 4 [default = false];
     optional double scale = 5 [default = 1.0];
     optional bool gamma = 6;  // Must check, default varies by filetype
-    optional Mapping2D mapping = 7 [default = UV];
+    optional pbrt_proto.TextureMapping mapping = 7 [default = UV];
     optional double uscale = 8 [default = 1.0];
     optional double vscale = 9 [default = 1.0];
     optional double udelta = 10 [default = 0.0];
@@ -1112,7 +1094,7 @@ message SpectrumTexture {
   }
 
   message Uv {
-    optional Mapping2D mapping = 1 [default = UV];
+    optional pbrt_proto.TextureMapping mapping = 1 [default = UV];
     optional double uscale = 2 [default = 1.0];
     optional double vscale = 3 [default = 1.0];
     optional double udelta = 4 [default = 0.0];

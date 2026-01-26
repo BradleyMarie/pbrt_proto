@@ -1,3 +1,5 @@
+load("@protobuf//bazel:cc_proto_library.bzl", "cc_proto_library")
+load("@protobuf//bazel:proto_library.bzl", "proto_library")
 load("@rules_cc//cc:defs.bzl", "cc_library", "cc_test")
 
 package(
@@ -5,6 +7,46 @@ package(
     features = [
         "layering_check",
         "parse_headers",
+    ],
+)
+
+cc_library(
+    name = "common",
+    srcs = ["common.cc"],
+    hdrs = ["common.h"],
+    deps = [
+        ":parser",
+        "//pbrt_proto:pbrt_cc_proto",
+        "@abseil-cpp//absl/container:flat_hash_map",
+        "@abseil-cpp//absl/strings:string_view",
+    ],
+)
+
+proto_library(
+    name = "common_test_proto",
+    srcs = ["common_test.proto"],
+    deps = [
+        "//pbrt_proto",
+    ],
+)
+
+cc_proto_library(
+    name = "common_test_cc_proto",
+    deps = [":common_test_proto"],
+)
+
+cc_test(
+    name = "common_test",
+    srcs = ["common_test.cc"],
+    deps = [
+        ":common",
+        ":common_test_cc_proto",
+        ":parser",
+        "//pbrt_proto:pbrt_cc_proto",
+        "//pbrt_proto/testing:proto_matchers",
+        "@abseil-cpp//absl/container:flat_hash_map",
+        "@abseil-cpp//absl/strings:string_view",
+        "@googletest//:gtest_main",
     ],
 )
 

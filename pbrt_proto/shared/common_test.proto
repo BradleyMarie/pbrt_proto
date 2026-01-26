@@ -1,0 +1,15 @@
+syntax = "proto2";
+
+import "pbrt_proto/pbrt.proto";
+
+package pbrt_proto;
+
+message TestUVTexture {
+  optional pbrt_proto.TextureMapping mapping = 1 [default = UV];
+  optional double uscale = 2 [default = 1.0];
+  optional double vscale = 3 [default = 1.0];
+  optional double udelta = 4 [default = 0.0];
+  optional double vdelta = 5 [default = 0.0];
+  optional pbrt_proto.Vector v1 = 6;
+  optional pbrt_proto.Vector v2 = 7;
+}

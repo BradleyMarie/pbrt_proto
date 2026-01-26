@@ -379,3 +379,28 @@ message WorldBegin {}
 
 // A directive which triggers rendering then resets the state of the renderer.
 message WorldEnd {}
+
+//
+// Common Parameters
+//
+
+// The type of antialiasing to apply to 2D checkerboard textures
+enum CheckerboardAntialiasing {
+  CLOSEDFORM = 0;
+  NONE = 1;
+}
+
+// The type of texture wrapping to apply to 2D image textures
+enum ImageWrap {
+  REPEAT = 0;
+  BLACK = 1;
+  CLAMP = 2;
+}
+
+// The type of texture mapping to apply to 2D textures.
+enum TextureMapping {
+  UV = 0;
+  SPHERICAL = 1;
+  CYLINDRICAL = 2;
+  PLANAR = 3;
+}

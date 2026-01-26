@@ -6,11 +6,13 @@
 #include <istream>
 #include <variant>
 
+#include "absl/container/flat_hash_map.h"
 #include "absl/functional/function_ref.h"
 #include "absl/status/status.h"
 #include "absl/status/statusor.h"
 #include "absl/strings/string_view.h"
 #include "absl/types/span.h"
+#include "pbrt_proto/shared/common.h"
 #include "pbrt_proto/shared/parser.h"
 #include "pbrt_proto/v3/v3.pb.h"
 
@@ -25,38 +27,6 @@ Integrator::LightSampleStrategy ParseLightSampleStrategy(
     return Integrator::UNIFORM;
   }
   return Integrator::SPATIAL;
-}
-
-std::optional<ImageWrapping> TryRemoveImageWrapping(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
-  if (std::optional<absl::string_view> wrap =
-          TryRemoveString(parameters, "wrap");
-      wrap) {
-    if (*wrap == "black") {
-      return ImageWrapping::BLACK;
-    } else if (*wrap == "clamp") {
-      return ImageWrapping::CLAMP;
-    } else if (*wrap == "repeat") {
-      return ImageWrapping::REPEAT;
-    }
-  }
-
-  return std::nullopt;
-}
-
-std::optional<AntialiasingMode> TryRemoveAntialiasingMode(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
-  if (std::optional<absl::string_view> aamode =
-          TryRemoveString(parameters, "aamode");
-      aamode) {
-    if (*aamode == "closedform") {
-      return AntialiasingMode::CLOSEDFORM;
-    } else if (*aamode == "none") {
-      return AntialiasingMode::NONE;
-    }
-  }
-
-  return std::nullopt;
 }
 
 void TryRemoveSpectrum(
@@ -171,60 +141,6 @@ bool TryRemoveSpectrumTexture(
   }
 
   return false;
-}
-
-template <typename T>
-void TryRemoveUVParameters(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters, T& output) {
-  if (std::optional<absl::string_view> mapping =
-          TryRemoveString(parameters, "mapping");
-      mapping) {
-    if (*mapping == "uv") {
-      output.set_mapping(Mapping2D::UV);
-    } else if (*mapping == "spherical") {
-      output.set_mapping(Mapping2D::SPHERICAL);
-    } else if (*mapping == "cylindrical") {
-      output.set_mapping(Mapping2D::CYLINDRICAL);
-    } else if (*mapping == "planar") {
-      output.set_mapping(Mapping2D::PLANAR);
-    }
-  }
-
-  if (std::optional<double> uscale = TryRemoveFloat(parameters, "uscale");
-      uscale) {
-    output.set_uscale(*uscale);
-  }
-
-  if (std::optional<double> vscale = TryRemoveFloat(parameters, "vscale");
-      vscale) {
-    output.set_vscale(*vscale);
-  }
-
-  if (std::optional<double> udelta = TryRemoveFloat(parameters, "udelta");
-      udelta) {
-    output.set_udelta(*udelta);
-  }
-
-  if (std::optional<double> vdelta = TryRemoveFloat(parameters, "vdelta");
-      vdelta) {
-    output.set_vdelta(*vdelta);
-  }
-
-  if (std::optional<std::array<double, 3>> v1 =
-          TryRemoveVector3(parameters, "v1");
-      v1) {
-    output.mutable_v1()->set_x((*v1)[0]);
-    output.mutable_v1()->set_y((*v1)[1]);
-    output.mutable_v1()->set_z((*v1)[2]);
-  }
-
-  if (std::optional<std::array<double, 3>> v2 =
-          TryRemoveVector3(parameters, "v2");
-      v2) {
-    output.mutable_v2()->set_x((*v2)[0]);
-    output.mutable_v2()->set_y((*v2)[1]);
-    output.mutable_v2()->set_z((*v2)[2]);
-  }
 }
 
 static const absl::flat_hash_map<absl::string_view, MeasuredSubsurface>
@@ -1322,8 +1238,8 @@ absl::Status ParserV3::FloatTexture(
     if (dimensions == 2) {
       auto& checkerboard = *float_texture.mutable_checkerboard2d();
 
-      if (std::optional<AntialiasingMode> aamode =
-              TryRemoveAntialiasingMode(parameters);
+      if (std::optional<CheckerboardAntialiasing> aamode =
+              TryRemoveAaMode(parameters);
           aamode) {
         checkerboard.set_aamode(*aamode);
       }
@@ -1409,8 +1325,7 @@ absl::Status ParserV3::FloatTexture(
       imagemap.set_trilinear(*trilinear);
     }
 
-    if (std::optional<ImageWrapping> wrap = TryRemoveImageWrapping(parameters);
-        wrap) {
+    if (std::optional<ImageWrap> wrap = TryRemoveWrap(parameters); wrap) {
       imagemap.set_wrap(*wrap);
     }
 
@@ -3152,8 +3067,8 @@ absl::Status ParserV3::SpectrumTexture(
     if (dimensions == 2) {
       auto& checkerboard = *spectrum_texture.mutable_checkerboard2d();
 
-      if (std::optional<AntialiasingMode> aamode =
-              TryRemoveAntialiasingMode(parameters);
+      if (std::optional<CheckerboardAntialiasing> aamode =
+              TryRemoveAaMode(parameters);
           aamode) {
         checkerboard.set_aamode(*aamode);
       }
@@ -3238,8 +3153,7 @@ absl::Status ParserV3::SpectrumTexture(
       imagemap.set_trilinear(*trilinear);
     }
 
-    if (std::optional<ImageWrapping> wrap = TryRemoveImageWrapping(parameters);
-        wrap) {
+    if (std::optional<ImageWrap> wrap = TryRemoveWrap(parameters); wrap) {
       imagemap.set_wrap(*wrap);
     }
 

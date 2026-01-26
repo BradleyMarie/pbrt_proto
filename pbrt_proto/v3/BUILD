@@ -16,7 +16,9 @@ cc_library(
     hdrs = ["convert.h"],
     deps = [
         ":v3_cc_proto",
+        "//pbrt_proto/shared:common",
         "//pbrt_proto/shared:parser",
+        "@abseil-cpp//absl/container:flat_hash_map",
         "@abseil-cpp//absl/functional:function_ref",
         "@abseil-cpp//absl/status:status",
         "@abseil-cpp//absl/status:statusor",
