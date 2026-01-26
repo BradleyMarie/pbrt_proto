@@ -1,9 +1,13 @@
+#include <atomic>
 #include <cstdio>
 #include <cstdlib>
 #include <fstream>
+#include <functional>
 #include <iostream>
+#include <optional>
 #include <sstream>
 #include <string>
+#include <thread>
 #include <vector>
 
 #include "googletest/include/gtest/gtest.h"
@@ -20,34 +24,31 @@ std::string GetRunfilePath(const std::string& path) {
   return runfiles->Rlocation("_main/tools/" + path);
 }
 
-bool Convert(char version, const std::string& file_name,
-             bool allow_warnings = false) {
+std::pair<int, std::string> Convert(int version, const std::string& file_name,
+                                    bool allow_warnings = false) {
   std::string binary = GetRunfilePath("pbrt_proto_converter");
   std::string input_file = GetRunfilePath("test_data/" + file_name);
   std::string output_file = GetRunfilePath("test_data/" + file_name + ".out");
-  std::string command = binary + " --pbrt_version=" + version +
+  std::string command = binary + " --pbrt_version=" + std::to_string(version) +
                         " --recursive " + input_file + " 2> " + output_file;
 
   int result = std::system(command.c_str());
+  if (allow_warnings) {
+    return std::make_pair(result, "");
+  }
 
   std::ostringstream output_stream;
   output_stream << std::ifstream(output_file.c_str()).rdbuf();
-  std::string output = output_stream.str();
 
-  if (result != 0 || (!output.empty() && !allow_warnings)) {
-    std::cout << output << std::endl;
-    return false;
-  }
-
-  return true;
+  return std::make_pair(result, output_stream.str());
 }
 
 struct TestInput {
   std::string path;
-  bool allow_errors = false;
+  bool allow_warnings = false;
 };
 
-const std::vector<TestInput> all_input = {
+const std::vector<TestInput> pbrt_v3_inputs = {
     {"pbrt-v3-scenes/barcelona-pavilion/pavilion-day.pbrt"},
     {"pbrt-v3-scenes/barcelona-pavilion/pavilion-night.pbrt"},
     {"pbrt-v3-scenes/bathroom/bathroom.pbrt"},
@@ -213,14 +214,41 @@ const std::vector<TestInput> all_input = {
     {"pbrt-v3-scenes/yeahright/yeahright.pbrt"},
 };
 
-class ProtoConverterTests : public TestWithParam<TestInput> {};
-
-TEST_P(ProtoConverterTests, Converts) {
-  EXPECT_TRUE(
-      Convert(GetParam().path.at(6), GetParam().path, GetParam().allow_errors));
+void AddAllCallbacks(
+    std::vector<std::function<std::pair<int, std::string>()>>& output,
+    int version, const std::vector<TestInput>& all_input) {
+  for (const TestInput& input : all_input) {
+    output.push_back([version, input]() {
+      return Convert(version, input.path, input.allow_warnings);
+    });
+  }
 }
 
-INSTANTIATE_TEST_SUITE_P(DynamicRangeTests, ProtoConverterTests,
-                         ValuesIn(all_input));
+TEST(Convert, All) {
+  std::vector<std::function<std::pair<int, std::string>()>> callbacks;
+  AddAllCallbacks(callbacks, /*version=*/3, pbrt_v3_inputs);
+
+  std::vector<std::pair<int, std::string>> results(callbacks.size());
+
+  std::atomic<size_t> index = 0;
+  std::vector<std::thread> threads;
+  for (size_t i = 0; i < std::thread::hardware_concurrency(); i++) {
+    threads.emplace_back([&]() {
+      for (size_t work_index = index.fetch_add(1);
+           work_index < callbacks.size(); work_index = index.fetch_add(1)) {
+        results[work_index] = callbacks[work_index]();
+      }
+    });
+  }
+
+  for (std::thread& t : threads) {
+    t.join();
+  }
+
+  for (const auto& [code, output] : results) {
+    EXPECT_EQ(0, code);
+    EXPECT_EQ("", output);
+  }
+}
 
 }  // namespace
