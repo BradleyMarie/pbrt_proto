@@ -1314,6 +1314,16 @@ std::optional<std::array<double, 2>> TryRemoveBlackbodyV1(
   return result;
 }
 
+std::optional<double> TryRemoveBlackbodyV2(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view parameter_name) {
+  std::optional<double> result;
+  TryRemoveValue<ParameterType::BLACKBODY_V2>(parameters, parameter_name,
+                                              result)
+      .IgnoreError();
+  return result;
+}
+
 std::optional<bool> TryRemoveBool(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     absl::string_view parameter_name) {

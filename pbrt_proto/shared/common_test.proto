@@ -4,6 +4,12 @@ import "pbrt_proto/pbrt.proto";
 
 package pbrt_proto;
 
+message TestParameterProto {
+  optional Spectrum spectrum = 1;
+  optional FloatTextureParameter float_parameter = 2;
+  optional SpectrumTextureParameter spectrum_parameter = 3;
+}
+
 message TestUVTexture {
   optional pbrt_proto.TextureMapping mapping = 1 [default = UV];
   optional double uscale = 2 [default = 1.0];

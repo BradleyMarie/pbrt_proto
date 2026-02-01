@@ -91,7 +91,6 @@ cc_test(
         ":defaults_cc_proto",
         ":v3_cc_proto",
         "//pbrt_proto/testing:proto_matchers",
-        "@abseil-cpp//absl/functional:function_ref",
         "@abseil-cpp//absl/log:check",
         "@abseil-cpp//absl/status:status_matchers",
         "@abseil-cpp//absl/strings:string_view",

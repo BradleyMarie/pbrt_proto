@@ -4,11 +4,41 @@
 #include <optional>
 
 #include "absl/container/flat_hash_map.h"
+#include "absl/functional/function_ref.h"
 #include "absl/strings/string_view.h"
 #include "pbrt_proto/pbrt.pb.h"
 #include "pbrt_proto/shared/parser.h"
 
 namespace pbrt_proto {
+
+//
+// Common Variant Data Types
+//
+
+void TryRemoveSpectrumV1(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view parameter_name,
+    absl::FunctionRef<Spectrum*()> get_output);
+
+void TryRemoveSpectrumV2(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view parameter_name,
+    absl::FunctionRef<Spectrum*()> get_output);
+
+bool TryRemoveFloatTexture(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view parameter_name,
+    absl::FunctionRef<FloatTextureParameter*()> get_output);
+
+bool TryRemoveSpectrumTextureV1(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view parameter_name,
+    absl::FunctionRef<SpectrumTextureParameter*()> get_output);
+
+bool TryRemoveSpectrumTextureV2(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view parameter_name,
+    absl::FunctionRef<SpectrumTextureParameter*()> get_output);
 
 //
 // Common Parameters

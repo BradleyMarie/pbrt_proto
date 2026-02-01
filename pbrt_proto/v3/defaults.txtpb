@@ -4,39 +4,39 @@
 global_defaults {
   directives {
     accelerator {
-      bvh { }
+      bvh {}
     }
   }
   directives {
     camera {
-      perspective { }
+      perspective {}
     }
   }
   directives {
     film {
-      image { }
+      image {}
     }
   }
   directives {
     integrator {
-      path { }
+      path {}
     }
   }
   directives {
     pixel_filter {
-      box { }
+      box {}
     }
   }
   directives {
     sampler {
-      halton { }
+      halton {}
     }
   }
 }
 default_material {
   matte {
     Kd {
-      uniform_spectrum: 0.5
+      constant_spectrum: 0.5
     }
     sigma {
       float_value: 0.0
@@ -175,7 +175,7 @@ float_textures {
 materials {
   disney {
     color {
-      uniform_spectrum: 0.5
+      constant_spectrum: 0.5
     }
     anisotropic {
       float_value: 0.0
@@ -196,7 +196,7 @@ materials {
       float_value: 0.5
     }
     scatterdistance {
-      uniform_spectrum: 0.0
+      constant_spectrum: 0.0
     }
     sheen {
       float_value: 0.0
@@ -216,10 +216,10 @@ materials {
   }
   glass {
     Kr {
-      uniform_spectrum: 1.0
+      constant_spectrum: 1.0
     }
     Kt {
-      uniform_spectrum: 1.0
+      constant_spectrum: 1.0
     }
     eta {
       float_value: 1.5
@@ -260,13 +260,13 @@ materials {
       }
     }
     Kr {
-      uniform_spectrum: 1.0
+      constant_spectrum: 1.0
     }
     Kt {
-      uniform_spectrum: 1.0
+      constant_spectrum: 1.0
     }
     mfp {
-      uniform_spectrum: 1.0
+      constant_spectrum: 1.0
     }
     uroughness {
       float_value: 0.0
@@ -277,7 +277,7 @@ materials {
   }
   matte {
     Kd {
-      uniform_spectrum: 0.5
+      constant_spectrum: 0.5
     }
     sigma {
       float_value: 0.0
@@ -746,7 +746,7 @@ materials {
   }
   mirror {
     Kr {
-      uniform_spectrum: 0.9
+      constant_spectrum: 0.9
     }
   }
   mix {
@@ -754,18 +754,18 @@ materials {
       float_value: 0.0
     }
     amount {
-      uniform_spectrum: 0.5
+      constant_spectrum: 0.5
     }
     Kd {
-      uniform_spectrum: 0.5
+      constant_spectrum: 0.5
     }
   }
   plastic {
     Kd {
-      uniform_spectrum: 0.25
+      constant_spectrum: 0.25
     }
     Ks {
-      uniform_spectrum: 0.25
+      constant_spectrum: 0.25
     }
     roughness {
       float_value: 0.1
@@ -773,10 +773,10 @@ materials {
   }
   substrate {
     Kd {
-      uniform_spectrum: 0.5
+      constant_spectrum: 0.5
     }
     Ks {
-      uniform_spectrum: 0.5
+      constant_spectrum: 0.5
     }
     uroughness {
       float_value: 0.1
@@ -804,10 +804,10 @@ materials {
         }
       }
       Kr {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       Kt {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       uroughness {
         float_value: 0.0
@@ -836,10 +836,10 @@ materials {
         }
       }
       Kr {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       Kt {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       uroughness {
         float_value: 0.0
@@ -868,10 +868,10 @@ materials {
         }
       }
       Kr {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       Kt {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       uroughness {
         float_value: 0.0
@@ -900,10 +900,10 @@ materials {
         }
       }
       Kr {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       Kt {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       uroughness {
         float_value: 0.0
@@ -932,10 +932,10 @@ materials {
         }
       }
       Kr {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       Kt {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       uroughness {
         float_value: 0.0
@@ -964,10 +964,10 @@ materials {
         }
       }
       Kr {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       Kt {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       uroughness {
         float_value: 0.0
@@ -996,10 +996,10 @@ materials {
         }
       }
       Kr {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       Kt {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       uroughness {
         float_value: 0.0
@@ -1028,10 +1028,10 @@ materials {
         }
       }
       Kr {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       Kt {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       uroughness {
         float_value: 0.0
@@ -1060,10 +1060,10 @@ materials {
         }
       }
       Kr {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       Kt {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       uroughness {
         float_value: 0.0
@@ -1092,10 +1092,10 @@ materials {
         }
       }
       Kr {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       Kt {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       uroughness {
         float_value: 0.0
@@ -1124,10 +1124,10 @@ materials {
         }
       }
       Kr {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       Kt {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       uroughness {
         float_value: 0.0
@@ -1156,10 +1156,10 @@ materials {
         }
       }
       Kr {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       Kt {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       uroughness {
         float_value: 0.0
@@ -1188,10 +1188,10 @@ materials {
         }
       }
       Kr {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       Kt {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       uroughness {
         float_value: 0.0
@@ -1220,10 +1220,10 @@ materials {
         }
       }
       Kr {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       Kt {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       uroughness {
         float_value: 0.0
@@ -1252,10 +1252,10 @@ materials {
         }
       }
       Kr {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       Kt {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       uroughness {
         float_value: 0.0
@@ -1284,10 +1284,10 @@ materials {
         }
       }
       Kr {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       Kt {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       uroughness {
         float_value: 0.0
@@ -1316,10 +1316,10 @@ materials {
         }
       }
       Kr {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       Kt {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       uroughness {
         float_value: 0.0
@@ -1348,10 +1348,10 @@ materials {
         }
       }
       Kr {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       Kt {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       uroughness {
         float_value: 0.0
@@ -1380,10 +1380,10 @@ materials {
         }
       }
       Kr {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       Kt {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       uroughness {
         float_value: 0.0
@@ -1412,10 +1412,10 @@ materials {
         }
       }
       Kr {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       Kt {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       uroughness {
         float_value: 0.0
@@ -1444,10 +1444,10 @@ materials {
         }
       }
       Kr {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       Kt {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       uroughness {
         float_value: 0.0
@@ -1476,10 +1476,10 @@ materials {
         }
       }
       Kr {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       Kt {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       uroughness {
         float_value: 0.0
@@ -1508,10 +1508,10 @@ materials {
         }
       }
       Kr {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       Kt {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       uroughness {
         float_value: 0.0
@@ -1540,10 +1540,10 @@ materials {
         }
       }
       Kr {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       Kt {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       uroughness {
         float_value: 0.0
@@ -1572,10 +1572,10 @@ materials {
         }
       }
       Kr {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       Kt {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       uroughness {
         float_value: 0.0
@@ -1604,10 +1604,10 @@ materials {
         }
       }
       Kr {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       Kt {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       uroughness {
         float_value: 0.0
@@ -1636,10 +1636,10 @@ materials {
         }
       }
       Kr {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       Kt {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       uroughness {
         float_value: 0.0
@@ -1668,10 +1668,10 @@ materials {
         }
       }
       Kr {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       Kt {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       uroughness {
         float_value: 0.0
@@ -1700,10 +1700,10 @@ materials {
         }
       }
       Kr {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       Kt {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       uroughness {
         float_value: 0.0
@@ -1732,10 +1732,10 @@ materials {
         }
       }
       Kr {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       Kt {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       uroughness {
         float_value: 0.0
@@ -1764,10 +1764,10 @@ materials {
         }
       }
       Kr {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       Kt {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       uroughness {
         float_value: 0.0
@@ -1796,10 +1796,10 @@ materials {
         }
       }
       Kr {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       Kt {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       uroughness {
         float_value: 0.0
@@ -1828,10 +1828,10 @@ materials {
         }
       }
       Kr {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       Kt {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       uroughness {
         float_value: 0.0
@@ -1860,10 +1860,10 @@ materials {
         }
       }
       Kr {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       Kt {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       uroughness {
         float_value: 0.0
@@ -1892,10 +1892,10 @@ materials {
         }
       }
       Kr {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       Kt {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       uroughness {
         float_value: 0.0
@@ -1924,10 +1924,10 @@ materials {
         }
       }
       Kr {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       Kt {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       uroughness {
         float_value: 0.0
@@ -1956,10 +1956,10 @@ materials {
         }
       }
       Kr {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       Kt {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       uroughness {
         float_value: 0.0
@@ -1988,10 +1988,10 @@ materials {
         }
       }
       Kr {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       Kt {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       uroughness {
         float_value: 0.0
@@ -2020,10 +2020,10 @@ materials {
         }
       }
       Kr {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       Kt {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       uroughness {
         float_value: 0.0
@@ -2052,10 +2052,10 @@ materials {
         }
       }
       Kr {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       Kt {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       uroughness {
         float_value: 0.0
@@ -2084,10 +2084,10 @@ materials {
         }
       }
       Kr {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       Kt {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       uroughness {
         float_value: 0.0
@@ -2116,10 +2116,10 @@ materials {
         }
       }
       Kr {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       Kt {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       uroughness {
         float_value: 0.0
@@ -2148,10 +2148,10 @@ materials {
         }
       }
       Kr {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       Kt {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       uroughness {
         float_value: 0.0
@@ -2180,10 +2180,10 @@ materials {
         }
       }
       Kr {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       Kt {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       uroughness {
         float_value: 0.0
@@ -2212,10 +2212,10 @@ materials {
         }
       }
       Kr {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       Kt {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       uroughness {
         float_value: 0.0
@@ -2244,10 +2244,10 @@ materials {
         }
       }
       Kr {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       Kt {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       uroughness {
         float_value: 0.0
@@ -2276,10 +2276,10 @@ materials {
         }
       }
       Kr {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       Kt {
-        uniform_spectrum: 1.0
+        constant_spectrum: 1.0
       }
       uroughness {
         float_value: 0.0
@@ -2291,16 +2291,16 @@ materials {
   }
   translucent {
     Kd {
-      uniform_spectrum: 0.25
+      constant_spectrum: 0.25
     }
     Ks {
-      uniform_spectrum: 0.25
+      constant_spectrum: 0.25
     }
     reflect {
-      uniform_spectrum: 0.5
+      constant_spectrum: 0.5
     }
     transmit {
-      uniform_spectrum: 0.5
+      constant_spectrum: 0.5
     }
     roughness {
       float_value: 0.1
@@ -2308,19 +2308,19 @@ materials {
   }
   uber {
     Kd {
-      uniform_spectrum: 0.25
+      constant_spectrum: 0.25
     }
     Ks {
-      uniform_spectrum: 0.25
+      constant_spectrum: 0.25
     }
     Kr {
-      uniform_spectrum: 0.0
+      constant_spectrum: 0.0
     }
     Kt {
-      uniform_spectrum: 0.0
+      constant_spectrum: 0.0
     }
     opacity {
-      uniform_spectrum: 1.0
+      constant_spectrum: 1.0
     }
     roughness {
       float_value: 0.1
@@ -4838,16 +4838,16 @@ shapes {
 spectrum_textures {
   bilerp {
     v00 {
-      uniform_spectrum: 0.0
+      constant_spectrum: 0.0
     }
     v01 {
-      uniform_spectrum: 1.0
+      constant_spectrum: 1.0
     }
     v10 {
-      uniform_spectrum: 0.0
+      constant_spectrum: 0.0
     }
     v11 {
-      uniform_spectrum: 1.0
+      constant_spectrum: 1.0
     }
     v1 {
       x: 1.0
@@ -4862,10 +4862,10 @@ spectrum_textures {
   }
   checkerboard2d {
     tex1 {
-      uniform_spectrum: 1.0
+      constant_spectrum: 1.0
     }
     tex2 {
-      uniform_spectrum: 0.0
+      constant_spectrum: 0.0
     }
     v1 {
       x: 1.0
@@ -4880,23 +4880,23 @@ spectrum_textures {
   }
   checkerboard3d {
     tex1 {
-      uniform_spectrum: 1.0
+      constant_spectrum: 1.0
     }
     tex2 {
-      uniform_spectrum: 0.0
+      constant_spectrum: 0.0
     }
   }
   constant {
     value {
-      uniform_spectrum: 1.0
+      constant_spectrum: 1.0
     }
   }
   dots {
     inside {
-      uniform_spectrum: 1.0
+      constant_spectrum: 1.0
     }
     outside {
-      uniform_spectrum: 0.0
+      constant_spectrum: 0.0
     }
     v1 {
       x: 1.0
@@ -4923,10 +4923,10 @@ spectrum_textures {
   }
   mix {
     tex1 {
-      uniform_spectrum: 0.0
+      constant_spectrum: 0.0
     }
     tex2 {
-      uniform_spectrum: 1.0
+      constant_spectrum: 1.0
     }
     amount {
       float_value: 0.5
@@ -4934,10 +4934,10 @@ spectrum_textures {
   }
   scale {
     tex1 {
-      uniform_spectrum: 1.0
+      constant_spectrum: 1.0
     }
     tex2 {
-      uniform_spectrum: 1.0
+      constant_spectrum: 1.0
     }
   }
   uv {

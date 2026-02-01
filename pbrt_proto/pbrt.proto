@@ -12,7 +12,12 @@ message BlackbodySpectrum {
   required double temperature = 1;
 
   // A scale applied to the intensity of the spectrum.
-  required double scale = 2;
+  //
+  // NOTE: For simplicity, this type is shared between all PBRT versions;
+  //       however, it's semantics change starting with PBRTv4. In earlier
+  //       versions this parameter is required and in later versions should
+  //       be ignored.
+  optional double scale = 2 [default = 1.0];
 }
 
 // A coordinate in 3D space.
@@ -76,6 +81,86 @@ message Vector {
 
   // The `z` component of the direction.
   required double z = 3;
+}
+
+//
+// Common Variant Data Types
+//
+
+// A spectral power distribution
+message Spectrum {
+  oneof spectrum_type {
+    // A spectral power distribution with a constant value at all wavelengths.
+    //
+    // NOTE: There is no way to directly specify such a spectrum in PBRT. This
+    //       type is only used for expressing default values.
+    double constant_spectrum = 1;
+
+    // A spectral power distribution with a blackbody spectrum.
+    BlackbodySpectrum blackbody_spectrum = 2;
+
+    // A spectral power distribution created out of an RGB tuple.
+    //
+    // NOTE: How to determine the color space of this tuple depends on the PBRT
+    //       version.
+    RgbSpectrum rgb_spectrum = 3;
+
+    // A spectral power distribution created out of an XYZ tuple.
+    XyzSpectrum xyz_spectrum = 4;
+
+    // A spectral power distribution formed from individual spectral samples
+    // that are specified inline.
+    SampledSpectrum sampled_spectrum = 5;
+
+    // A spectral power distribution formed from individual spectral samples
+    // that are specified in the referenced file.
+    string sampled_spectrum_filename = 6;
+  }
+}
+
+// A floating point parameter to a texture.
+message FloatTextureParameter {
+  oneof float_texture_parameter_type {
+    // A constant floating point value.
+    double float_value = 1;
+
+    // The name of an already defined floating point texture.
+    string float_texture_name = 2;
+  }
+}
+
+// A spectral point parameter to a texture.
+message SpectrumTextureParameter {
+  oneof spectrum_texture_parameter_type {
+    // A spectral power distribution with a constant value at all wavelengths.
+    //
+    // NOTE: There is no way to directly specify such a spectrum in PBRT. This
+    //       type is only used for expressing default values.
+    double constant_spectrum = 1;
+
+    // A spectral power distribution with a blackbody spectrum.
+    BlackbodySpectrum blackbody_spectrum = 2;
+
+    // A spectral power distribution created out of an RGB tuple.
+    //
+    // NOTE: How to determine the color space of this tuple depends on the PBRT
+    //       version.
+    RgbSpectrum rgb_spectrum = 3;
+
+    // A spectral power distribution created out of an XYZ tuple.
+    XyzSpectrum xyz_spectrum = 4;
+
+    // A spectral power distribution formed from individual spectral samples
+    // that are specified inline.
+    SampledSpectrum sampled_spectrum = 5;
+
+    // A spectral power distribution formed from individual spectral samples
+    // that are specified in the referenced file.
+    string sampled_spectrum_filename = 6;
+
+    // The name of an already defined spectrum texture.
+    string spectrum_texture_name = 7;
+  }
 }
 
 //

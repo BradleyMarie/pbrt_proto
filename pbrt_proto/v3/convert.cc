@@ -29,120 +29,6 @@ Integrator::LightSampleStrategy ParseLightSampleStrategy(
   return Integrator::SPATIAL;
 }
 
-void TryRemoveSpectrum(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    absl::string_view parameter_name,
-    absl::FunctionRef<Spectrum*()> get_output) {
-  if (std::optional<std::array<double, 2>> value =
-          TryRemoveBlackbodyV1(parameters, parameter_name);
-      value) {
-    get_output()->mutable_blackbody_spectrum()->set_temperature((*value)[0]);
-    get_output()->mutable_blackbody_spectrum()->set_scale((*value)[1]);
-  } else if (std::optional<std::array<double, 3>> value =
-                 TryRemoveRgb(parameters, parameter_name);
-             value) {
-    get_output()->mutable_rgb_spectrum()->set_r((*value)[0]);
-    get_output()->mutable_rgb_spectrum()->set_g((*value)[1]);
-    get_output()->mutable_rgb_spectrum()->set_b((*value)[2]);
-  } else if (std::optional<std::array<double, 3>> value =
-                 TryRemoveXyz(parameters, parameter_name);
-             value) {
-    get_output()->mutable_xyz_spectrum()->set_x((*value)[0]);
-    get_output()->mutable_xyz_spectrum()->set_y((*value)[1]);
-    get_output()->mutable_xyz_spectrum()->set_z((*value)[2]);
-  } else if (std::optional<absl::Span<std::array<double, 2>>> values =
-                 TryRemoveSpectralSamples(parameters, parameter_name);
-             values) {
-    for (const auto [wavelength, intensity] : *values) {
-      auto& sample = *get_output()->mutable_sampled_spectrum()->add_samples();
-      sample.set_wavelength(wavelength);
-      sample.set_intensity(intensity);
-    }
-  } else if (std::optional<absl::string_view> value =
-                 TryRemoveSpectrumFilename(parameters, parameter_name);
-             value) {
-    get_output()->set_sampled_spectrum_filename(*value);
-  }
-}
-
-bool TryRemoveFloatTexture(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    absl::string_view parameter_name,
-    absl::FunctionRef<FloatTextureParameter*()> get_output) {
-  if (std::optional<double> value = TryRemoveFloat(parameters, parameter_name);
-      value) {
-    get_output()->set_float_value(*value);
-    return true;
-  }
-
-  if (std::optional<absl::string_view> texture_name =
-          TryRemoveTexture(parameters, parameter_name);
-      texture_name) {
-    get_output()->set_float_texture_name(*texture_name);
-    return true;
-  }
-
-  return false;
-}
-
-bool TryRemoveSpectrumTexture(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    absl::string_view parameter_name,
-    absl::FunctionRef<SpectrumTextureParameter*()> get_output) {
-  if (std::optional<std::array<double, 2>> value =
-          TryRemoveBlackbodyV1(parameters, parameter_name);
-      value) {
-    get_output()->mutable_blackbody_spectrum()->set_temperature((*value)[0]);
-    get_output()->mutable_blackbody_spectrum()->set_scale((*value)[1]);
-    return true;
-  }
-
-  if (std::optional<std::array<double, 3>> value =
-          TryRemoveRgb(parameters, parameter_name);
-      value) {
-    get_output()->mutable_rgb_spectrum()->set_r((*value)[0]);
-    get_output()->mutable_rgb_spectrum()->set_g((*value)[1]);
-    get_output()->mutable_rgb_spectrum()->set_b((*value)[2]);
-    return true;
-  }
-
-  if (std::optional<std::array<double, 3>> value =
-          TryRemoveXyz(parameters, parameter_name);
-      value) {
-    get_output()->mutable_xyz_spectrum()->set_x((*value)[0]);
-    get_output()->mutable_xyz_spectrum()->set_y((*value)[1]);
-    get_output()->mutable_xyz_spectrum()->set_z((*value)[2]);
-    return true;
-  }
-
-  if (std::optional<absl::Span<std::array<double, 2>>> values =
-          TryRemoveSpectralSamples(parameters, parameter_name);
-      values) {
-    for (const auto [wavelength, intensity] : *values) {
-      auto& sample = *get_output()->mutable_sampled_spectrum()->add_samples();
-      sample.set_wavelength(wavelength);
-      sample.set_intensity(intensity);
-    }
-    return true;
-  }
-
-  if (std::optional<absl::string_view> value =
-          TryRemoveSpectrumFilename(parameters, parameter_name);
-      value) {
-    get_output()->set_sampled_spectrum_filename(*value);
-    return true;
-  }
-
-  if (std::optional<absl::string_view> value =
-          TryRemoveTexture(parameters, parameter_name);
-      value) {
-    get_output()->set_spectrum_texture_name(*value);
-    return true;
-  }
-
-  return false;
-}
-
 static const absl::flat_hash_map<absl::string_view, MeasuredSubsurface>
     kSubsurfaces = {
         {"Apple", MeasuredSubsurface::APPLE},
@@ -205,7 +91,7 @@ Material ParseMaterial(
     // Do Nothing
   } else if (material_type == "disney") {
     auto& disney = *material.mutable_disney();
-    TryRemoveSpectrumTexture(
+    TryRemoveSpectrumTextureV1(
         parameters, "color",
         std::bind(&Material::Disney::mutable_color, &disney));
     TryRemoveFloatTexture(
@@ -225,7 +111,7 @@ Material ParseMaterial(
     TryRemoveFloatTexture(
         parameters, "roughness",
         std::bind(&Material::Disney::mutable_roughness, &disney));
-    TryRemoveSpectrumTexture(
+    TryRemoveSpectrumTextureV1(
         parameters, "scatterdistance",
         std::bind(&Material::Disney::mutable_scatterdistance, &disney));
     TryRemoveFloatTexture(parameters, "sheen",
@@ -267,10 +153,10 @@ Material ParseMaterial(
         std::bind(&Material::Fourier::mutable_bumpmap, &fourier));
   } else if (material_type == "glass") {
     auto& glass = *material.mutable_glass();
-    TryRemoveSpectrumTexture(parameters, "Kr",
-                             std::bind(&Material::Glass::mutable_kr, &glass));
-    TryRemoveSpectrumTexture(parameters, "Kt",
-                             std::bind(&Material::Glass::mutable_kt, &glass));
+    TryRemoveSpectrumTextureV1(parameters, "Kr",
+                               std::bind(&Material::Glass::mutable_kr, &glass));
+    TryRemoveSpectrumTextureV1(parameters, "Kt",
+                               std::bind(&Material::Glass::mutable_kt, &glass));
     TryRemoveFloatTexture(parameters, "eta",
                           std::bind(&Material::Glass::mutable_eta, &glass));
 
@@ -296,11 +182,11 @@ Material ParseMaterial(
                           std::bind(&Material::Glass::mutable_bumpmap, &glass));
   } else if (material_type == "hair") {
     auto& hair = *material.mutable_hair();
-    TryRemoveSpectrumTexture(
+    TryRemoveSpectrumTextureV1(
         parameters, "sigma_a",
         std::bind(&Material::Hair::mutable_sigma_a, &hair));
-    TryRemoveSpectrumTexture(parameters, "color",
-                             std::bind(&Material::Hair::mutable_color, &hair));
+    TryRemoveSpectrumTextureV1(
+        parameters, "color", std::bind(&Material::Hair::mutable_color, &hair));
     TryRemoveFloatTexture(parameters, "eumelanin",
                           std::bind(&Material::Hair::mutable_eumelanin, &hair));
     TryRemoveFloatTexture(
@@ -318,16 +204,16 @@ Material ParseMaterial(
                           std::bind(&Material::Hair::mutable_bumpmap, &hair));
   } else if (material_type == "kdsubsurface") {
     auto& kdsubsurface = *material.mutable_kdsubsurface();
-    TryRemoveSpectrumTexture(
+    TryRemoveSpectrumTextureV1(
         parameters, "Kd",
         std::bind(&Material::KdSubsurface::mutable_kd, &kdsubsurface));
-    TryRemoveSpectrumTexture(
+    TryRemoveSpectrumTextureV1(
         parameters, "Kr",
         std::bind(&Material::KdSubsurface::mutable_kr, &kdsubsurface));
-    TryRemoveSpectrumTexture(
+    TryRemoveSpectrumTextureV1(
         parameters, "Kt",
         std::bind(&Material::KdSubsurface::mutable_kt, &kdsubsurface));
-    TryRemoveSpectrumTexture(
+    TryRemoveSpectrumTextureV1(
         parameters, "mfp",
         std::bind(&Material::KdSubsurface::mutable_mfp, &kdsubsurface));
     TryRemoveFloatTexture(
@@ -361,10 +247,10 @@ Material ParseMaterial(
         std::bind(&Material::KdSubsurface::mutable_bumpmap, &kdsubsurface));
   } else if (material_type == "metal") {
     auto& metal = *material.mutable_metal();
-    TryRemoveSpectrumTexture(parameters, "eta",
-                             std::bind(&Material::Metal::mutable_eta, &metal));
-    TryRemoveSpectrumTexture(parameters, "k",
-                             std::bind(&Material::Metal::mutable_k, &metal));
+    TryRemoveSpectrumTextureV1(
+        parameters, "eta", std::bind(&Material::Metal::mutable_eta, &metal));
+    TryRemoveSpectrumTextureV1(parameters, "k",
+                               std::bind(&Material::Metal::mutable_k, &metal));
     TryRemoveFloatTexture(
         parameters, "roughness",
         std::bind(&Material::Metal::mutable_roughness, &metal));
@@ -385,8 +271,8 @@ Material ParseMaterial(
                           std::bind(&Material::Metal::mutable_bumpmap, &metal));
   } else if (material_type == "mirror") {
     auto& mirror = *material.mutable_mirror();
-    TryRemoveSpectrumTexture(parameters, "Kr",
-                             std::bind(&Material::Mirror::mutable_kr, &mirror));
+    TryRemoveSpectrumTextureV1(
+        parameters, "Kr", std::bind(&Material::Mirror::mutable_kr, &mirror));
     TryRemoveFloatTexture(
         parameters, "bumpmap",
         std::bind(&Material::Mirror::mutable_bumpmap, &mirror));
@@ -396,10 +282,10 @@ Material ParseMaterial(
                           std::bind(&Material::Mix::mutable_sigma, &mix));
     TryRemoveFloatTexture(parameters, "bumpmap",
                           std::bind(&Material::Mix::mutable_bumpmap, &mix));
-    TryRemoveSpectrumTexture(parameters, "amount",
-                             std::bind(&Material::Mix::mutable_amount, &mix));
-    TryRemoveSpectrumTexture(parameters, "Kd",
-                             std::bind(&Material::Mix::mutable_kd, &mix));
+    TryRemoveSpectrumTextureV1(parameters, "amount",
+                               std::bind(&Material::Mix::mutable_amount, &mix));
+    TryRemoveSpectrumTextureV1(parameters, "Kd",
+                               std::bind(&Material::Mix::mutable_kd, &mix));
 
     if (std::optional<absl::string_view> namedmaterial1 =
             TryRemoveString(parameters, "namedmaterial1");
@@ -414,9 +300,9 @@ Material ParseMaterial(
     }
   } else if (material_type == "plastic") {
     auto& plastic = *material.mutable_plastic();
-    TryRemoveSpectrumTexture(
+    TryRemoveSpectrumTextureV1(
         parameters, "Kd", std::bind(&Material::Plastic::mutable_kd, &plastic));
-    TryRemoveSpectrumTexture(
+    TryRemoveSpectrumTextureV1(
         parameters, "Ks", std::bind(&Material::Plastic::mutable_ks, &plastic));
     TryRemoveFloatTexture(
         parameters, "roughness",
@@ -433,10 +319,10 @@ Material ParseMaterial(
         std::bind(&Material::Plastic::mutable_bumpmap, &plastic));
   } else if (material_type == "substrate") {
     auto& substrate = *material.mutable_substrate();
-    TryRemoveSpectrumTexture(
+    TryRemoveSpectrumTextureV1(
         parameters, "Kd",
         std::bind(&Material::Substrate::mutable_kd, &substrate));
-    TryRemoveSpectrumTexture(
+    TryRemoveSpectrumTextureV1(
         parameters, "Ks",
         std::bind(&Material::Substrate::mutable_ks, &substrate));
     TryRemoveFloatTexture(
@@ -467,10 +353,10 @@ Material ParseMaterial(
       }
     }
 
-    TryRemoveSpectrumTexture(
+    TryRemoveSpectrumTextureV1(
         parameters, "sigma_a",
         std::bind(&Material::Subsurface::mutable_sigma_a, &subsurface));
-    TryRemoveSpectrumTexture(
+    TryRemoveSpectrumTextureV1(
         parameters, "sigma_s",
         std::bind(&Material::Subsurface::mutable_sigma_s, &subsurface));
 
@@ -487,10 +373,10 @@ Material ParseMaterial(
       subsurface.set_eta(*eta);
     }
 
-    TryRemoveSpectrumTexture(
+    TryRemoveSpectrumTextureV1(
         parameters, "Kr",
         std::bind(&Material::Subsurface::mutable_kr, &subsurface));
-    TryRemoveSpectrumTexture(
+    TryRemoveSpectrumTextureV1(
         parameters, "Kt",
         std::bind(&Material::Subsurface::mutable_kt, &subsurface));
     TryRemoveFloatTexture(
@@ -511,16 +397,16 @@ Material ParseMaterial(
         std::bind(&Material::Subsurface::mutable_bumpmap, &subsurface));
   } else if (material_type == "translucent") {
     auto& translucent = *material.mutable_translucent();
-    TryRemoveSpectrumTexture(
+    TryRemoveSpectrumTextureV1(
         parameters, "Kd",
         std::bind(&Material::Translucent::mutable_kd, &translucent));
-    TryRemoveSpectrumTexture(
+    TryRemoveSpectrumTextureV1(
         parameters, "Ks",
         std::bind(&Material::Translucent::mutable_ks, &translucent));
-    TryRemoveSpectrumTexture(
+    TryRemoveSpectrumTextureV1(
         parameters, "reflect",
         std::bind(&Material::Translucent::mutable_reflect, &translucent));
-    TryRemoveSpectrumTexture(
+    TryRemoveSpectrumTextureV1(
         parameters, "transmit",
         std::bind(&Material::Translucent::mutable_transmit, &translucent));
 
@@ -539,15 +425,15 @@ Material ParseMaterial(
         std::bind(&Material::Translucent::mutable_bumpmap, &translucent));
   } else if (material_type == "uber") {
     auto& uber = *material.mutable_uber();
-    TryRemoveSpectrumTexture(parameters, "Kd",
-                             std::bind(&Material::Uber::mutable_kd, &uber));
-    TryRemoveSpectrumTexture(parameters, "Ks",
-                             std::bind(&Material::Uber::mutable_ks, &uber));
-    TryRemoveSpectrumTexture(parameters, "Kr",
-                             std::bind(&Material::Uber::mutable_kr, &uber));
-    TryRemoveSpectrumTexture(parameters, "Kt",
-                             std::bind(&Material::Uber::mutable_kt, &uber));
-    TryRemoveSpectrumTexture(
+    TryRemoveSpectrumTextureV1(parameters, "Kd",
+                               std::bind(&Material::Uber::mutable_kd, &uber));
+    TryRemoveSpectrumTextureV1(parameters, "Ks",
+                               std::bind(&Material::Uber::mutable_ks, &uber));
+    TryRemoveSpectrumTextureV1(parameters, "Kr",
+                               std::bind(&Material::Uber::mutable_kr, &uber));
+    TryRemoveSpectrumTextureV1(parameters, "Kt",
+                               std::bind(&Material::Uber::mutable_kt, &uber));
+    TryRemoveSpectrumTextureV1(
         parameters, "opacity",
         std::bind(&Material::Uber::mutable_opacity, &uber));
 
@@ -582,8 +468,8 @@ Material ParseMaterial(
     }
 
     auto& matte = *material.mutable_matte();
-    TryRemoveSpectrumTexture(parameters, "Kd",
-                             std::bind(&Material::Matte::mutable_kd, &matte));
+    TryRemoveSpectrumTextureV1(parameters, "Kd",
+                               std::bind(&Material::Matte::mutable_kd, &matte));
     TryRemoveFloatTexture(parameters, "sigma",
                           std::bind(&Material::Matte::mutable_sigma, &matte));
     TryRemoveFloatTexture(parameters, "bumpmap",
@@ -884,7 +770,7 @@ absl::Status ParserV3::AreaLightSource(
   if (area_light_source_type == "diffuse") {
     auto& diffuse = *area_light_source.mutable_diffuse();
 
-    TryRemoveSpectrum(
+    TryRemoveSpectrumV1(
         parameters, "L",
         std::bind(&AreaLightSource::Diffuse::mutable_l, &diffuse));
 
@@ -905,7 +791,7 @@ absl::Status ParserV3::AreaLightSource(
       diffuse.set_twosided(*twosided);
     }
 
-    TryRemoveSpectrum(
+    TryRemoveSpectrumV1(
         parameters, "scale",
         std::bind(&AreaLightSource::Diffuse::mutable_scale, &diffuse));
   } else {
@@ -1662,8 +1548,8 @@ absl::Status ParserV3::LightSource(
   if (light_source_type == "distant") {
     auto& distant = *light_source.mutable_distant();
 
-    TryRemoveSpectrum(parameters, "L",
-                      std::bind(&LightSource::Distant::mutable_l, &distant));
+    TryRemoveSpectrumV1(parameters, "L",
+                        std::bind(&LightSource::Distant::mutable_l, &distant));
 
     if (std::optional<std::array<double, 3>> from =
             TryRemovePoint3(parameters, "from");
@@ -1681,13 +1567,13 @@ absl::Status ParserV3::LightSource(
       distant.mutable_to()->set_z((*to)[2]);
     }
 
-    TryRemoveSpectrum(
+    TryRemoveSpectrumV1(
         parameters, "scale",
         std::bind(&LightSource::Distant::mutable_scale, &distant));
   } else if (light_source_type == "goniometric") {
     auto& goniometric = *light_source.mutable_goniometric();
 
-    TryRemoveSpectrum(
+    TryRemoveSpectrumV1(
         parameters, "I",
         std::bind(&LightSource::Goniometric::mutable_i, &goniometric));
 
@@ -1697,14 +1583,15 @@ absl::Status ParserV3::LightSource(
       goniometric.set_mapname(*mapname);
     }
 
-    TryRemoveSpectrum(
+    TryRemoveSpectrumV1(
         parameters, "scale",
         std::bind(&LightSource::Goniometric::mutable_scale, &goniometric));
   } else if (light_source_type == "infinite") {
     auto& infinite = *light_source.mutable_infinite();
 
-    TryRemoveSpectrum(parameters, "L",
-                      std::bind(&LightSource::Infinite::mutable_l, &infinite));
+    TryRemoveSpectrumV1(
+        parameters, "L",
+        std::bind(&LightSource::Infinite::mutable_l, &infinite));
 
     if (std::optional<int32_t> samples =
             TryRemoveInteger(parameters, "nsamples");
@@ -1724,14 +1611,14 @@ absl::Status ParserV3::LightSource(
       infinite.set_mapname(*mapname);
     }
 
-    TryRemoveSpectrum(
+    TryRemoveSpectrumV1(
         parameters, "scale",
         std::bind(&LightSource::Infinite::mutable_scale, &infinite));
   } else if (light_source_type == "point") {
     auto& point = *light_source.mutable_point();
 
-    TryRemoveSpectrum(parameters, "I",
-                      std::bind(&LightSource::Point::mutable_i, &point));
+    TryRemoveSpectrumV1(parameters, "I",
+                        std::bind(&LightSource::Point::mutable_i, &point));
 
     if (std::optional<std::array<double, 3>> from =
             TryRemovePoint3(parameters, "from");
@@ -1741,12 +1628,12 @@ absl::Status ParserV3::LightSource(
       point.mutable_from()->set_z((*from)[2]);
     }
 
-    TryRemoveSpectrum(parameters, "scale",
-                      std::bind(&LightSource::Point::mutable_scale, &point));
+    TryRemoveSpectrumV1(parameters, "scale",
+                        std::bind(&LightSource::Point::mutable_scale, &point));
   } else if (light_source_type == "projection") {
     auto& projection = *light_source.mutable_projection();
 
-    TryRemoveSpectrum(
+    TryRemoveSpectrumV1(
         parameters, "I",
         std::bind(&LightSource::Projection::mutable_i, &projection));
 
@@ -1760,14 +1647,14 @@ absl::Status ParserV3::LightSource(
       projection.set_mapname(*mapname);
     }
 
-    TryRemoveSpectrum(
+    TryRemoveSpectrumV1(
         parameters, "scale",
         std::bind(&LightSource::Projection::mutable_scale, &projection));
   } else if (light_source_type == "spot") {
     auto& spot = *light_source.mutable_spot();
 
-    TryRemoveSpectrum(parameters, "I",
-                      std::bind(&LightSource::Spot::mutable_i, &spot));
+    TryRemoveSpectrumV1(parameters, "I",
+                        std::bind(&LightSource::Spot::mutable_i, &spot));
 
     if (std::optional<std::array<double, 3>> from =
             TryRemovePoint3(parameters, "from");
@@ -1797,8 +1684,8 @@ absl::Status ParserV3::LightSource(
       spot.set_conedeltaangle(*conedeltaangle);
     }
 
-    TryRemoveSpectrum(parameters, "scale",
-                      std::bind(&LightSource::Spot::mutable_scale, &spot));
+    TryRemoveSpectrumV1(parameters, "scale",
+                        std::bind(&LightSource::Spot::mutable_scale, &spot));
   } else {
     std::cerr << "Unrecognized LightSource type: \"" << light_source_type
               << "\"" << std::endl;
@@ -1858,12 +1745,14 @@ absl::Status ParserV3::MakeNamedMedium(
       }
     }
 
-    TryRemoveSpectrum(parameters, "sigma_a",
-                      std::bind(&MakeNamedMedium::Homogeneous::mutable_sigma_a,
-                                &homogeneous));
-    TryRemoveSpectrum(parameters, "sigma_s",
-                      std::bind(&MakeNamedMedium::Homogeneous::mutable_sigma_s,
-                                &homogeneous));
+    TryRemoveSpectrumV1(
+        parameters, "sigma_a",
+        std::bind(&MakeNamedMedium::Homogeneous::mutable_sigma_a,
+                  &homogeneous));
+    TryRemoveSpectrumV1(
+        parameters, "sigma_s",
+        std::bind(&MakeNamedMedium::Homogeneous::mutable_sigma_s,
+                  &homogeneous));
 
     if (std::optional<double> g = TryRemoveFloat(parameters, "g");
         g.has_value()) {
@@ -1886,11 +1775,11 @@ absl::Status ParserV3::MakeNamedMedium(
       }
     }
 
-    TryRemoveSpectrum(
+    TryRemoveSpectrumV1(
         parameters, "sigma_a",
         std::bind(&MakeNamedMedium::Heterogeneous::mutable_sigma_a,
                   &heterogeneous));
-    TryRemoveSpectrum(
+    TryRemoveSpectrumV1(
         parameters, "sigma_s",
         std::bind(&MakeNamedMedium::Heterogeneous::mutable_sigma_s,
                   &heterogeneous));
@@ -2946,47 +2835,47 @@ absl::Status ParserV3::Shape(
     }
   }
 
-  overrides_populated |= TryRemoveSpectrumTexture(
+  overrides_populated |= TryRemoveSpectrumTextureV1(
       parameters, "amount",
       std::bind(&Shape::MaterialOverrides::mutable_amount, &overrides));
-  overrides_populated |= TryRemoveSpectrumTexture(
+  overrides_populated |= TryRemoveSpectrumTextureV1(
       parameters, "color",
       std::bind(&Shape::MaterialOverrides::mutable_color, &overrides));
-  overrides_populated |= TryRemoveSpectrumTexture(
+  overrides_populated |= TryRemoveSpectrumTextureV1(
       parameters, "k",
       std::bind(&Shape::MaterialOverrides::mutable_k, &overrides));
-  overrides_populated |= TryRemoveSpectrumTexture(
+  overrides_populated |= TryRemoveSpectrumTextureV1(
       parameters, "Kd",
       std::bind(&Shape::MaterialOverrides::mutable_kd, &overrides));
-  overrides_populated |= TryRemoveSpectrumTexture(
+  overrides_populated |= TryRemoveSpectrumTextureV1(
       parameters, "Kr",
       std::bind(&Shape::MaterialOverrides::mutable_kr, &overrides));
-  overrides_populated |= TryRemoveSpectrumTexture(
+  overrides_populated |= TryRemoveSpectrumTextureV1(
       parameters, "Ks",
       std::bind(&Shape::MaterialOverrides::mutable_ks, &overrides));
-  overrides_populated |= TryRemoveSpectrumTexture(
+  overrides_populated |= TryRemoveSpectrumTextureV1(
       parameters, "Kt",
       std::bind(&Shape::MaterialOverrides::mutable_kt, &overrides));
-  overrides_populated |= TryRemoveSpectrumTexture(
+  overrides_populated |= TryRemoveSpectrumTextureV1(
       parameters, "mfp",
       std::bind(&Shape::MaterialOverrides::mutable_mfp, &overrides));
-  overrides_populated |= TryRemoveSpectrumTexture(
+  overrides_populated |= TryRemoveSpectrumTextureV1(
       parameters, "opacity",
       std::bind(&Shape::MaterialOverrides::mutable_opacity, &overrides));
-  overrides_populated |= TryRemoveSpectrumTexture(
+  overrides_populated |= TryRemoveSpectrumTextureV1(
       parameters, "reflect",
       std::bind(&Shape::MaterialOverrides::mutable_reflect, &overrides));
-  overrides_populated |= TryRemoveSpectrumTexture(
+  overrides_populated |= TryRemoveSpectrumTextureV1(
       parameters, "scatterdistance",
       std::bind(&Shape::MaterialOverrides::mutable_scatterdistance,
                 &overrides));
-  overrides_populated |= TryRemoveSpectrumTexture(
+  overrides_populated |= TryRemoveSpectrumTextureV1(
       parameters, "sigma_a",
       std::bind(&Shape::MaterialOverrides::mutable_sigma_a, &overrides));
-  overrides_populated |= TryRemoveSpectrumTexture(
+  overrides_populated |= TryRemoveSpectrumTextureV1(
       parameters, "sigma_s",
       std::bind(&Shape::MaterialOverrides::mutable_sigma_s, &overrides));
-  overrides_populated |= TryRemoveSpectrumTexture(
+  overrides_populated |= TryRemoveSpectrumTextureV1(
       parameters, "transmit",
       std::bind(&Shape::MaterialOverrides::mutable_transmit, &overrides));
 
@@ -3024,7 +2913,7 @@ absl::Status ParserV3::Shape(
         *eta);
     overrides_populated = true;
   } else {
-    overrides_populated |= TryRemoveSpectrumTexture(
+    overrides_populated |= TryRemoveSpectrumTextureV1(
         parameters, "eta",
         std::bind(&Shape::MaterialOverrides::mutable_eta_as_spectrum_texture,
                   &overrides));
@@ -3049,16 +2938,16 @@ absl::Status ParserV3::SpectrumTexture(
   if (spectrum_texture_type == "bilerp") {
     auto& bilerp = *spectrum_texture.mutable_bilerp();
 
-    TryRemoveSpectrumTexture(
+    TryRemoveSpectrumTextureV1(
         parameters, "v00",
         std::bind(&SpectrumTexture::Bilerp::mutable_v00, &bilerp));
-    TryRemoveSpectrumTexture(
+    TryRemoveSpectrumTextureV1(
         parameters, "v01",
         std::bind(&SpectrumTexture::Bilerp::mutable_v01, &bilerp));
-    TryRemoveSpectrumTexture(
+    TryRemoveSpectrumTextureV1(
         parameters, "v10",
         std::bind(&SpectrumTexture::Bilerp::mutable_v10, &bilerp));
-    TryRemoveSpectrumTexture(
+    TryRemoveSpectrumTextureV1(
         parameters, "v11",
         std::bind(&SpectrumTexture::Bilerp::mutable_v11, &bilerp));
     TryRemoveUVParameters(parameters, bilerp);
@@ -3073,11 +2962,11 @@ absl::Status ParserV3::SpectrumTexture(
         checkerboard.set_aamode(*aamode);
       }
 
-      TryRemoveSpectrumTexture(
+      TryRemoveSpectrumTextureV1(
           parameters, "tex1",
           std::bind(&SpectrumTexture::Checkerboard2D::mutable_tex1,
                     &checkerboard));
-      TryRemoveSpectrumTexture(
+      TryRemoveSpectrumTextureV1(
           parameters, "tex2",
           std::bind(&SpectrumTexture::Checkerboard2D::mutable_tex2,
                     &checkerboard));
@@ -3085,11 +2974,11 @@ absl::Status ParserV3::SpectrumTexture(
     } else {
       auto& checkerboard = *spectrum_texture.mutable_checkerboard3d();
 
-      TryRemoveSpectrumTexture(
+      TryRemoveSpectrumTextureV1(
           parameters, "tex1",
           std::bind(&SpectrumTexture::Checkerboard3D::mutable_tex1,
                     &checkerboard));
-      TryRemoveSpectrumTexture(
+      TryRemoveSpectrumTextureV1(
           parameters, "tex2",
           std::bind(&SpectrumTexture::Checkerboard3D::mutable_tex2,
                     &checkerboard));
@@ -3097,16 +2986,16 @@ absl::Status ParserV3::SpectrumTexture(
   } else if (spectrum_texture_type == "constant") {
     auto& constant = *spectrum_texture.mutable_constant();
 
-    TryRemoveSpectrum(
+    TryRemoveSpectrumV1(
         parameters, "value",
         std::bind(&SpectrumTexture::Constant::mutable_value, &constant));
   } else if (spectrum_texture_type == "dots") {
     auto& dots = *spectrum_texture.mutable_dots();
 
-    TryRemoveSpectrumTexture(
+    TryRemoveSpectrumTextureV1(
         parameters, "inside",
         std::bind(&SpectrumTexture::Dots::mutable_inside, &dots));
-    TryRemoveSpectrumTexture(
+    TryRemoveSpectrumTextureV1(
         parameters, "outside",
         std::bind(&SpectrumTexture::Dots::mutable_outside, &dots));
     TryRemoveUVParameters(parameters, dots);
@@ -3189,10 +3078,10 @@ absl::Status ParserV3::SpectrumTexture(
     TryRemoveFloatTexture(
         parameters, "amount",
         std::bind(&SpectrumTexture::Mix::mutable_amount, &mix));
-    TryRemoveSpectrumTexture(
+    TryRemoveSpectrumTextureV1(
         parameters, "tex1",
         std::bind(&SpectrumTexture::Mix::mutable_tex1, &mix));
-    TryRemoveSpectrumTexture(
+    TryRemoveSpectrumTextureV1(
         parameters, "tex2",
         std::bind(&SpectrumTexture::Mix::mutable_tex2, &mix));
   } else if (spectrum_texture_type == "ptex") {
@@ -3211,10 +3100,10 @@ absl::Status ParserV3::SpectrumTexture(
   } else if (spectrum_texture_type == "scale") {
     auto& scale = *spectrum_texture.mutable_scale();
 
-    TryRemoveSpectrumTexture(
+    TryRemoveSpectrumTextureV1(
         parameters, "tex1",
         std::bind(&SpectrumTexture::Scale::mutable_tex1, &scale));
-    TryRemoveSpectrumTexture(
+    TryRemoveSpectrumTextureV1(
         parameters, "tex2",
         std::bind(&SpectrumTexture::Scale::mutable_tex2, &scale));
   } else if (spectrum_texture_type == "uv") {
