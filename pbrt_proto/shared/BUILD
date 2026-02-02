@@ -11,6 +11,32 @@ package(
 )
 
 cc_library(
+    name = "accelerators",
+    srcs = ["accelerators.cc"],
+    hdrs = ["accelerators.h"],
+    deps = [
+        ":parser",
+        "//pbrt_proto:pbrt_cc_proto",
+        "@abseil-cpp//absl/container:flat_hash_map",
+        "@abseil-cpp//absl/strings:string_view",
+    ],
+)
+
+cc_test(
+    name = "accelerators_test",
+    srcs = ["accelerators_test.cc"],
+    deps = [
+        ":accelerators",
+        ":parser",
+        "//pbrt_proto:pbrt_cc_proto",
+        "//pbrt_proto/testing:proto_matchers",
+        "@abseil-cpp//absl/container:flat_hash_map",
+        "@abseil-cpp//absl/strings:string_view",
+        "@googletest//:gtest_main",
+    ],
+)
+
+cc_library(
     name = "common",
     srcs = ["common.cc"],
     hdrs = ["common.h"],

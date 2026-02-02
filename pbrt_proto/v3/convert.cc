@@ -12,6 +12,7 @@
 #include "absl/status/statusor.h"
 #include "absl/strings/string_view.h"
 #include "absl/types/span.h"
+#include "pbrt_proto/shared/accelerators.h"
 #include "pbrt_proto/shared/common.h"
 #include "pbrt_proto/shared/parser.h"
 #include "pbrt_proto/v3/v3.pb.h"
@@ -683,59 +684,9 @@ absl::Status ParserV3::Accelerator(
   auto& accelerator = *output_.add_directives()->mutable_accelerator();
 
   if (accelerator_type == "bvh") {
-    auto& bvh = *accelerator.mutable_bvh();
-
-    if (std::optional<int32_t> maxnodeprims =
-            TryRemoveInteger(parameters, "maxnodeprims");
-        maxnodeprims.has_value()) {
-      bvh.set_maxnodeprims(std::max(0, *maxnodeprims));
-    }
-
-    if (std::optional<absl::string_view> splitmethod =
-            TryRemoveString(parameters, "splitmethod");
-        splitmethod.has_value()) {
-      if (*splitmethod == "sah") {
-        bvh.set_splitmethod(Accelerator::Bvh::SAH);
-      } else if (*splitmethod == "middle") {
-        bvh.set_splitmethod(Accelerator::Bvh::MIDDLE);
-      } else if (*splitmethod == "equal") {
-        bvh.set_splitmethod(Accelerator::Bvh::EQUAL);
-      } else if (*splitmethod == "hlbvh") {
-        bvh.set_splitmethod(Accelerator::Bvh::HLBVH);
-      }
-    }
+    RemoveBvhAcceleratorV2(parameters, *accelerator.mutable_bvh());
   } else if (accelerator_type == "kdtree") {
-    auto& kdtree = *accelerator.mutable_kdtree();
-
-    if (std::optional<double> emptybonus =
-            TryRemoveFloat(parameters, "emptybonus");
-        emptybonus.has_value()) {
-      kdtree.set_emptybonus(*emptybonus);
-    }
-
-    if (std::optional<int32_t> intersectcost =
-            TryRemoveInteger(parameters, "intersectcost");
-        intersectcost.has_value()) {
-      kdtree.set_intersectcost(*intersectcost);
-    }
-
-    if (std::optional<int32_t> maxdepth =
-            TryRemoveInteger(parameters, "maxdepth");
-        maxdepth.has_value()) {
-      kdtree.set_maxdepth(std::max(0, std::max(0, *maxdepth)));
-    }
-
-    if (std::optional<int32_t> maxprims =
-            TryRemoveInteger(parameters, "maxprims");
-        maxprims.has_value()) {
-      kdtree.set_maxprims(std::max(0, *maxprims));
-    }
-
-    if (std::optional<int32_t> traversalcost =
-            TryRemoveInteger(parameters, "traversalcost");
-        traversalcost.has_value()) {
-      kdtree.set_traversalcost(*traversalcost);
-    }
+    RemoveKdTreeAccelerator(parameters, *accelerator.mutable_kdtree());
   } else {
     std::cerr << "Unrecognized Accelerator type: \"" << accelerator_type << "\""
               << std::endl;

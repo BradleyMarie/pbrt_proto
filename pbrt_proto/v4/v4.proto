@@ -1,0 +1,15 @@
+syntax = "proto2";
+
+import "pbrt_proto/pbrt.proto";
+
+package pbrt_proto.v4;
+
+// A directive which sets the Accelerator to use for rendering.
+message Accelerator {
+  // The type of Accelerator to use. If none are set, then `bvh` should be read
+  // as if it is present.
+  oneof accelerator_type {
+    KdTreeAccelerator kdtree = 2;  // Use a KD-tree accelerator
+    BvhAccelerator bvh = 3;  // Use a BVH accelerator (default)
+  }
+}

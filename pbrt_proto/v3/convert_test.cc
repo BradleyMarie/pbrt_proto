@@ -40,42 +40,6 @@ TEST(Convert, AcceleratorBvhEmpty) {
                   EqualsProto(R"pb(directives { accelerator { bvh {} } })pb")));
 }
 
-TEST(Convert, AcceleratorBvhSAH) {
-  std::stringstream stream(
-      "Accelerator \"bvh\" \"integer maxnodeprims\" 5 \"string splitmethod\" "
-      "\"sah\"");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(
-          R"pb(directives {
-                 accelerator { bvh { maxnodeprims: 5 splitmethod: SAH } }
-               })pb")));
-}
-
-TEST(Convert, AcceleratorBvhMiddle) {
-  std::stringstream stream(
-      "Accelerator \"bvh\" \"integer maxnodeprims\" 5 \"string splitmethod\" "
-      "\"middle\"");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(
-          R"pb(directives {
-                 accelerator { bvh { maxnodeprims: 5 splitmethod: MIDDLE } }
-               })pb")));
-}
-
-TEST(Convert, AcceleratorBvhEqual) {
-  std::stringstream stream(
-      "Accelerator \"bvh\" \"integer maxnodeprims\" 5 \"string splitmethod\" "
-      "\"equal\"");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(
-          R"pb(directives {
-                 accelerator { bvh { maxnodeprims: 5 splitmethod: EQUAL } }
-               })pb")));
-}
-
 TEST(Convert, AcceleratorBvhHlbvh) {
   std::stringstream stream(
       "Accelerator \"bvh\" \"integer maxnodeprims\" 5 \"string splitmethod\" "
@@ -88,41 +52,11 @@ TEST(Convert, AcceleratorBvhHlbvh) {
                })pb")));
 }
 
-TEST(Convert, AcceleratorBvhBad) {
-  std::stringstream stream(
-      "Accelerator \"bvh\" \"integer maxnodeprims\" 5 \"string splitmethod\" "
-      "\"invalid\"");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(R"pb(directives {
-                                      accelerator { bvh { maxnodeprims: 5 } }
-                                    })pb")));
-}
-
 TEST(Convert, AcceleratorKdTreeEmpty) {
   std::stringstream stream("Accelerator \"kdtree\"");
   EXPECT_THAT(Convert(stream),
               IsOkAndHolds(EqualsProto(R"pb(directives {
                                               accelerator { kdtree {} }
-                                            })pb")));
-}
-
-TEST(Convert, AcceleratorKdTree) {
-  std::stringstream stream(
-      "Accelerator \"kdtree\" \"integer intersectcost\" 1 \"integer "
-      "traversalcost\" 2 \"float emptybonus\" 3 \"integer maxprims\" 4 "
-      "\"integer maxdepth\" 5");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives {
-                                              accelerator {
-                                                kdtree {
-                                                  intersectcost: 1
-                                                  traversalcost: 2
-                                                  emptybonus: 3
-                                                  maxprims: 4
-                                                  maxdepth: 5
-                                                }
-                                              }
                                             })pb")));
 }
 

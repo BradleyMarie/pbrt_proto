@@ -489,3 +489,62 @@ enum TextureMapping {
   CYLINDRICAL = 2;
   PLANAR = 3;
 }
+
+//
+// Common Accelerators
+//
+
+// A bounding volume heirarchy (BVH) accelerator.
+message BvhAccelerator {
+  enum SplitMethod {
+    // Split each node using the surface area heuristic.
+    SAH = 0;
+
+    // Split each node node near its midpoint along the split axis.
+    MIDDLE = 1;
+
+    // Split each node so that each node contains an equal number of primitives.
+    EQUAL = 2;
+
+    // Split each node using the HLBVH construction mechanism.
+    //
+    // NOTE: For simplicity, this value is shared between all PBRT versions that
+    //       support BVH; however, it is not supported in PBRTv2 and should be
+    //       ignored when reading PBRTv2 input.
+    HLBVH = 3;
+  }
+
+  // The maximum number of primitives per node for split methods other than
+  // MIDDLE and EQUAL. If zero, the behavior is undefined.
+  optional uint32 maxnodeprims = 1 [default = 4];
+
+  // The method for recursively splitting the geometry into a BVH.
+  optional SplitMethod splitmethod = 2 [default = SAH];
+}
+
+// A voxel-based accelerator.
+message GridAccelerator {
+  // If true, primitives are refined as soon as they are added to the grid.
+  // Otherwise, they are refined when a ray enters the voxel that contains the
+  // primitive.
+  optional bool refineimmediately = 1 [default = false];
+}
+
+// A KD-tree based accelerator.
+message KdTreeAccelerator {
+  // The cost estimate for each intersection.
+  optional double intersectcost = 1 [default = 80.0];
+
+  // The cost estimate for each traversal.
+  optional double traversalcost = 2 [default = 1.0];
+
+  // The bonus factor to give empty nodes.
+  optional double emptybonus = 3 [default = 0.5];
+
+  // The soft maximum number of primitives per node.
+  optional uint32 maxprims = 4 [default = 1];
+
+  // The maximum depth of the tree. If zero, the choice of maximum depth is left
+  // to the renderer.
+  optional uint32 maxdepth = 5 [default = 0];
+}

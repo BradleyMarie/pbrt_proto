@@ -54,44 +54,22 @@ enum MeasuredSubsurface {
   PACIFIC_OCEAN_SURFACE_WATER = 46;
 }
 
+// A directive which sets the Accelerator to use for rendering.
 message Accelerator {
-  message Bvh {
-    enum SplitMethod {
-      SAH = 0;
-      MIDDLE = 1;
-      EQUAL = 2;
-      HLBVH = 3;
-    }
-
-    optional uint32 maxnodeprims = 1 [default = 4];
-    optional SplitMethod splitmethod = 2 [default = SAH];
-  }
-
-  message KdTree {
-    optional double intersectcost = 1 [default = 80.0];
-    optional double traversalcost = 2 [default = 1.0];
-    optional double emptybonus = 3 [default = 0.5];
-    optional uint32 maxprims = 4 [default = 1];
-    optional uint32 maxdepth = 5 [default = 0];
-  }
-
-  // If a directive contains an Accelerator with none of these fields set, the
-  // renderer should treat that as if `bvh` with the default empty value.
-  //
-  // https://github.com/mmp/pbrt-v3/blob/13d871faae88233b327d04cda24022b8bb0093ee/src/core/api.cpp#L1571
-  // https://github.com/mmp/pbrt-v3/blob/13d871faae88233b327d04cda24022b8bb0093ee/src/core/api.cpp#L1654
+  // The type of Accelerator to use. If none are set, then `bvh` should be read
+  // as if it is present.
   oneof accelerator_type {
-    Bvh bvh = 1;
-    KdTree kdtree = 2;
+    KdTreeAccelerator kdtree = 2;  // Use a KD-tree accelerator
+    BvhAccelerator bvh = 3;  // Use a BVH accelerator (default)
   }
 }
 
 message AreaLightSource {
   message Diffuse {
-    optional pbrt_proto.Spectrum L = 1;
+    optional Spectrum L = 1;
     optional bool twosided = 2 [default = false];
     optional uint32 samples = 3 [default = 1];
-    optional pbrt_proto.Spectrum scale = 4;
+    optional Spectrum scale = 4;
   }
 
   // If none of these fields are present, subsequent surfaces are not area
@@ -191,35 +169,35 @@ message FloatTexture {
   required string name = 1;
 
   message Bilerp {
-    optional pbrt_proto.FloatTextureParameter v00 = 1;
-    optional pbrt_proto.FloatTextureParameter v01 = 2;
-    optional pbrt_proto.FloatTextureParameter v10 = 3;
-    optional pbrt_proto.FloatTextureParameter v11 = 4;
-    optional pbrt_proto.TextureMapping mapping = 5 [default = UV];
+    optional FloatTextureParameter v00 = 1;
+    optional FloatTextureParameter v01 = 2;
+    optional FloatTextureParameter v10 = 3;
+    optional FloatTextureParameter v11 = 4;
+    optional TextureMapping mapping = 5 [default = UV];
     optional double uscale = 6 [default = 1.0];
     optional double vscale = 7 [default = 1.0];
     optional double udelta = 8 [default = 0.0];
     optional double vdelta = 9 [default = 0.0];
-    optional pbrt_proto.Vector v1 = 10;
-    optional pbrt_proto.Vector v2 = 11;
+    optional Vector v1 = 10;
+    optional Vector v2 = 11;
   }
 
   message Checkerboard2D {
-    optional pbrt_proto.FloatTextureParameter tex1 = 1;
-    optional pbrt_proto.FloatTextureParameter tex2 = 2;
-    optional pbrt_proto.CheckerboardAntialiasing aamode = 3 [default = CLOSEDFORM];
-    optional pbrt_proto.TextureMapping mapping = 4 [default = UV];
+    optional FloatTextureParameter tex1 = 1;
+    optional FloatTextureParameter tex2 = 2;
+    optional CheckerboardAntialiasing aamode = 3 [default = CLOSEDFORM];
+    optional TextureMapping mapping = 4 [default = UV];
     optional double uscale = 5 [default = 1.0];
     optional double vscale = 6 [default = 1.0];
     optional double udelta = 7 [default = 0.0];
     optional double vdelta = 8 [default = 0.0];
-    optional pbrt_proto.Vector v1 = 9;
-    optional pbrt_proto.Vector v2 = 10;
+    optional Vector v1 = 9;
+    optional Vector v2 = 10;
   }
 
   message Checkerboard3D {
-    optional pbrt_proto.FloatTextureParameter tex1 = 1;
-    optional pbrt_proto.FloatTextureParameter tex2 = 2;
+    optional FloatTextureParameter tex1 = 1;
+    optional FloatTextureParameter tex2 = 2;
   }
 
   message Constant {
@@ -227,15 +205,15 @@ message FloatTexture {
   }
 
   message Dots {
-    optional pbrt_proto.FloatTextureParameter inside = 1;
-    optional pbrt_proto.FloatTextureParameter outside = 2;
-    optional pbrt_proto.TextureMapping mapping = 3 [default = UV];
+    optional FloatTextureParameter inside = 1;
+    optional FloatTextureParameter outside = 2;
+    optional TextureMapping mapping = 3 [default = UV];
     optional double uscale = 4 [default = 1.0];
     optional double vscale = 5 [default = 1.0];
     optional double udelta = 6 [default = 0.0];
     optional double vdelta = 7 [default = 0.0];
-    optional pbrt_proto.Vector v1 = 8;
-    optional pbrt_proto.Vector v2 = 9;
+    optional Vector v1 = 8;
+    optional Vector v2 = 9;
   }
 
   message FBm {
@@ -245,18 +223,18 @@ message FloatTexture {
 
   message ImageMap {
     optional string filename = 1 [default = ""];
-    optional pbrt_proto.ImageWrap wrap = 2 [default = REPEAT];
+    optional ImageWrap wrap = 2 [default = REPEAT];
     optional double maxanisotropy = 3 [default = 8.0];
     optional bool trilinear = 4 [default = false];
     optional double scale = 5 [default = 1.0];
     optional bool gamma = 6;  // Must check, default varies by filetype
-    optional pbrt_proto.TextureMapping mapping = 7 [default = UV];
+    optional TextureMapping mapping = 7 [default = UV];
     optional double uscale = 8 [default = 1.0];
     optional double vscale = 9 [default = 1.0];
     optional double udelta = 10 [default = 0.0];
     optional double vdelta = 11 [default = 0.0];
-    optional pbrt_proto.Vector v1 = 12;
-    optional pbrt_proto.Vector v2 = 13;
+    optional Vector v1 = 12;
+    optional Vector v2 = 13;
   }
 
   message Marble {
@@ -264,9 +242,9 @@ message FloatTexture {
   }
 
   message Mix {
-    optional pbrt_proto.FloatTextureParameter tex1 = 1;
-    optional pbrt_proto.FloatTextureParameter tex2 = 2;
-    optional pbrt_proto.FloatTextureParameter amount = 3;
+    optional FloatTextureParameter tex1 = 1;
+    optional FloatTextureParameter tex2 = 2;
+    optional FloatTextureParameter amount = 3;
   }
 
   message Ptex {
@@ -275,8 +253,8 @@ message FloatTexture {
   }
 
   message Scale {
-    optional pbrt_proto.FloatTextureParameter tex1 = 1;
-    optional pbrt_proto.FloatTextureParameter tex2 = 2;
+    optional FloatTextureParameter tex1 = 1;
+    optional FloatTextureParameter tex2 = 2;
   }
 
   message Windy {
@@ -408,20 +386,20 @@ message MakeNamedMaterial {
 message MakeNamedMedium {
   message Homogeneous {
     optional MeasuredSubsurface preset = 1 [default = WHOLEMILK];
-    optional pbrt_proto.Spectrum sigma_a = 2;
-    optional pbrt_proto.Spectrum sigma_s = 3;
+    optional Spectrum sigma_a = 2;
+    optional Spectrum sigma_s = 3;
     optional double g = 4 [default = 0.0];
     optional double scale = 5 [default = 1.0];
   }
 
   message Heterogeneous {
     optional MeasuredSubsurface preset = 1 [default = WHOLEMILK];
-    optional pbrt_proto.Spectrum sigma_a = 2;
-    optional pbrt_proto.Spectrum sigma_s = 3;
+    optional Spectrum sigma_a = 2;
+    optional Spectrum sigma_s = 3;
     optional double g = 4 [default = 0.0];
     optional double scale = 5 [default = 1.0];
-    optional pbrt_proto.Point p0 = 6;
-    optional pbrt_proto.Point p1 = 7;
+    optional Point p0 = 6;
+    optional Point p1 = 7;
     optional uint32 nx = 8 [default = 1];
     optional uint32 ny = 9 [default = 1];
     optional uint32 nz = 10 [default = 1];
@@ -443,48 +421,48 @@ message MakeNamedMedium {
 message Material {
   message Disney {
     optional bool thin = 2 [default = false];
-    optional pbrt_proto.FloatTextureParameter anisotropic = 7;
-    optional pbrt_proto.FloatTextureParameter bumpmap = 10;
-    optional pbrt_proto.FloatTextureParameter clearcoat = 11;
-    optional pbrt_proto.FloatTextureParameter clearcoatgloss = 12;
-    optional pbrt_proto.FloatTextureParameter difftrans = 13;
-    optional pbrt_proto.FloatTextureParameter eta = 14;
-    optional pbrt_proto.FloatTextureParameter flatness = 16;
-    optional pbrt_proto.FloatTextureParameter metallic = 17;
-    optional pbrt_proto.FloatTextureParameter roughness = 19;
-    optional pbrt_proto.FloatTextureParameter sheen = 20;
-    optional pbrt_proto.FloatTextureParameter sheentint = 21;
-    optional pbrt_proto.FloatTextureParameter spectrans = 23;
-    optional pbrt_proto.FloatTextureParameter speculartint = 24;
-    optional pbrt_proto.SpectrumTextureParameter color = 30;
-    optional pbrt_proto.SpectrumTextureParameter scatterdistance = 39;
+    optional FloatTextureParameter anisotropic = 7;
+    optional FloatTextureParameter bumpmap = 10;
+    optional FloatTextureParameter clearcoat = 11;
+    optional FloatTextureParameter clearcoatgloss = 12;
+    optional FloatTextureParameter difftrans = 13;
+    optional FloatTextureParameter eta = 14;
+    optional FloatTextureParameter flatness = 16;
+    optional FloatTextureParameter metallic = 17;
+    optional FloatTextureParameter roughness = 19;
+    optional FloatTextureParameter sheen = 20;
+    optional FloatTextureParameter sheentint = 21;
+    optional FloatTextureParameter spectrans = 23;
+    optional FloatTextureParameter speculartint = 24;
+    optional SpectrumTextureParameter color = 30;
+    optional SpectrumTextureParameter scatterdistance = 39;
   }
 
   message Fourier {
-    optional pbrt_proto.FloatTextureParameter bumpmap = 10;
+    optional FloatTextureParameter bumpmap = 10;
     optional string bsdffile = 43 [default = ""];
   }
 
   message Glass {
     optional bool remaproughness = 1 [default = true];
-    optional pbrt_proto.FloatTextureParameter bumpmap = 10;
-    optional pbrt_proto.FloatTextureParameter eta = 14;
-    optional pbrt_proto.FloatTextureParameter uroughness = 25;
-    optional pbrt_proto.FloatTextureParameter vroughness = 26;
-    optional pbrt_proto.SpectrumTextureParameter Kr = 33;
-    optional pbrt_proto.SpectrumTextureParameter Kt = 35;
+    optional FloatTextureParameter bumpmap = 10;
+    optional FloatTextureParameter eta = 14;
+    optional FloatTextureParameter uroughness = 25;
+    optional FloatTextureParameter vroughness = 26;
+    optional SpectrumTextureParameter Kr = 33;
+    optional SpectrumTextureParameter Kt = 35;
   }
 
   message Hair {
-    optional pbrt_proto.FloatTextureParameter alpha = 6;
-    optional pbrt_proto.FloatTextureParameter beta_m = 8;
-    optional pbrt_proto.FloatTextureParameter beta_n = 9;
-    optional pbrt_proto.FloatTextureParameter bumpmap = 10;
-    optional pbrt_proto.FloatTextureParameter eta = 14;
-    optional pbrt_proto.FloatTextureParameter eumelanin = 15;
-    optional pbrt_proto.FloatTextureParameter pheomelanin = 18;
-    optional pbrt_proto.SpectrumTextureParameter color = 30; // Must check
-    optional pbrt_proto.SpectrumTextureParameter sigma_a = 40; // Must check
+    optional FloatTextureParameter alpha = 6;
+    optional FloatTextureParameter beta_m = 8;
+    optional FloatTextureParameter beta_n = 9;
+    optional FloatTextureParameter bumpmap = 10;
+    optional FloatTextureParameter eta = 14;
+    optional FloatTextureParameter eumelanin = 15;
+    optional FloatTextureParameter pheomelanin = 18;
+    optional SpectrumTextureParameter color = 30; // Must check
+    optional SpectrumTextureParameter sigma_a = 40; // Must check
   }
 
   message KdSubsurface {
@@ -492,60 +470,60 @@ message Material {
     optional double eta = 3 [default = 1.33];
     optional double g = 4 [default = 0.0];
     optional double scale = 5 [default = 1.0];
-    optional pbrt_proto.FloatTextureParameter bumpmap = 10;
-    optional pbrt_proto.FloatTextureParameter uroughness = 25;
-    optional pbrt_proto.FloatTextureParameter vroughness = 26;
-    optional pbrt_proto.SpectrumTextureParameter Kd = 32;
-    optional pbrt_proto.SpectrumTextureParameter Kr = 33;
-    optional pbrt_proto.SpectrumTextureParameter Kt = 35;
-    optional pbrt_proto.SpectrumTextureParameter mfp = 36;
+    optional FloatTextureParameter bumpmap = 10;
+    optional FloatTextureParameter uroughness = 25;
+    optional FloatTextureParameter vroughness = 26;
+    optional SpectrumTextureParameter Kd = 32;
+    optional SpectrumTextureParameter Kr = 33;
+    optional SpectrumTextureParameter Kt = 35;
+    optional SpectrumTextureParameter mfp = 36;
   }
 
   message Matte {
-    optional pbrt_proto.FloatTextureParameter bumpmap = 10;
-    optional pbrt_proto.FloatTextureParameter sigma = 22;
-    optional pbrt_proto.SpectrumTextureParameter Kd = 32;
+    optional FloatTextureParameter bumpmap = 10;
+    optional FloatTextureParameter sigma = 22;
+    optional SpectrumTextureParameter Kd = 32;
   }
 
   message Metal {
     optional bool remaproughness = 1 [default = true];
-    optional pbrt_proto.FloatTextureParameter bumpmap = 10;
-    optional pbrt_proto.FloatTextureParameter roughness = 19;
-    optional pbrt_proto.FloatTextureParameter uroughness = 25;
-    optional pbrt_proto.FloatTextureParameter vroughness = 26;
-    optional pbrt_proto.SpectrumTextureParameter eta = 29;
-    optional pbrt_proto.SpectrumTextureParameter k = 31;
+    optional FloatTextureParameter bumpmap = 10;
+    optional FloatTextureParameter roughness = 19;
+    optional FloatTextureParameter uroughness = 25;
+    optional FloatTextureParameter vroughness = 26;
+    optional SpectrumTextureParameter eta = 29;
+    optional SpectrumTextureParameter k = 31;
   }
 
   message Mirror {
-    optional pbrt_proto.FloatTextureParameter bumpmap = 10;
-    optional pbrt_proto.SpectrumTextureParameter Kr = 33;
+    optional FloatTextureParameter bumpmap = 10;
+    optional SpectrumTextureParameter Kr = 33;
   }
 
   message Mix {
-    optional pbrt_proto.FloatTextureParameter bumpmap = 10;
-    optional pbrt_proto.FloatTextureParameter sigma = 22;
-    optional pbrt_proto.SpectrumTextureParameter amount = 28;
-    optional pbrt_proto.SpectrumTextureParameter Kd = 32;
+    optional FloatTextureParameter bumpmap = 10;
+    optional FloatTextureParameter sigma = 22;
+    optional SpectrumTextureParameter amount = 28;
+    optional SpectrumTextureParameter Kd = 32;
     optional string namedmaterial1 = 44 [default = ""];
     optional string namedmaterial2 = 45 [default = ""];
   }
 
   message Plastic {
     optional bool remaproughness = 1 [default = true];
-    optional pbrt_proto.FloatTextureParameter bumpmap = 10;
-    optional pbrt_proto.FloatTextureParameter roughness = 19;
-    optional pbrt_proto.SpectrumTextureParameter Kd = 32;
-    optional pbrt_proto.SpectrumTextureParameter Ks = 34;
+    optional FloatTextureParameter bumpmap = 10;
+    optional FloatTextureParameter roughness = 19;
+    optional SpectrumTextureParameter Kd = 32;
+    optional SpectrumTextureParameter Ks = 34;
   }
 
   message Substrate {
     optional bool remaproughness = 1 [default = true];
-    optional pbrt_proto.FloatTextureParameter bumpmap = 10;
-    optional pbrt_proto.FloatTextureParameter uroughness = 25;
-    optional pbrt_proto.FloatTextureParameter vroughness = 26;
-    optional pbrt_proto.SpectrumTextureParameter Kd = 32;
-    optional pbrt_proto.SpectrumTextureParameter Ks = 34;
+    optional FloatTextureParameter bumpmap = 10;
+    optional FloatTextureParameter uroughness = 25;
+    optional FloatTextureParameter vroughness = 26;
+    optional SpectrumTextureParameter Kd = 32;
+    optional SpectrumTextureParameter Ks = 34;
   }
 
   message Subsurface {
@@ -553,38 +531,38 @@ message Material {
     optional double eta = 3 [default = 1.33];
     optional double g = 4 [default = 0.0];  // Must be explicitly cleared if name is set
     optional double scale = 5 [default = 1.0];
-    optional pbrt_proto.FloatTextureParameter bumpmap = 10;
-    optional pbrt_proto.FloatTextureParameter uroughness = 25;
-    optional pbrt_proto.FloatTextureParameter vroughness = 26;
+    optional FloatTextureParameter bumpmap = 10;
+    optional FloatTextureParameter uroughness = 25;
+    optional FloatTextureParameter vroughness = 26;
     optional MeasuredSubsurface name = 27;
-    optional pbrt_proto.SpectrumTextureParameter Kr = 33;
-    optional pbrt_proto.SpectrumTextureParameter Kt = 35;
-    optional pbrt_proto.SpectrumTextureParameter sigma_a = 40;
-    optional pbrt_proto.SpectrumTextureParameter sigma_s = 41;
+    optional SpectrumTextureParameter Kr = 33;
+    optional SpectrumTextureParameter Kt = 35;
+    optional SpectrumTextureParameter sigma_a = 40;
+    optional SpectrumTextureParameter sigma_s = 41;
   }
 
   message Translucent {
     optional bool remaproughness = 1 [default = true];
-    optional pbrt_proto.FloatTextureParameter bumpmap = 10;
-    optional pbrt_proto.FloatTextureParameter roughness = 19;
-    optional pbrt_proto.SpectrumTextureParameter Kd = 32;
-    optional pbrt_proto.SpectrumTextureParameter Ks = 34;
-    optional pbrt_proto.SpectrumTextureParameter reflect = 38;
-    optional pbrt_proto.SpectrumTextureParameter transmit = 42;
+    optional FloatTextureParameter bumpmap = 10;
+    optional FloatTextureParameter roughness = 19;
+    optional SpectrumTextureParameter Kd = 32;
+    optional SpectrumTextureParameter Ks = 34;
+    optional SpectrumTextureParameter reflect = 38;
+    optional SpectrumTextureParameter transmit = 42;
   }
 
   message Uber {
     optional bool remaproughness = 1 [default = true];
-    optional pbrt_proto.FloatTextureParameter bumpmap = 10;
-    optional pbrt_proto.FloatTextureParameter eta = 14;
-    optional pbrt_proto.FloatTextureParameter roughness = 19;
-    optional pbrt_proto.FloatTextureParameter uroughness = 25;  // Must check
-    optional pbrt_proto.FloatTextureParameter vroughness = 26;  // Must check
-    optional pbrt_proto.SpectrumTextureParameter Kd = 32;
-    optional pbrt_proto.SpectrumTextureParameter Kr = 33;
-    optional pbrt_proto.SpectrumTextureParameter Ks = 34;
-    optional pbrt_proto.SpectrumTextureParameter Kt = 35;
-    optional pbrt_proto.SpectrumTextureParameter opacity = 37;
+    optional FloatTextureParameter bumpmap = 10;
+    optional FloatTextureParameter eta = 14;
+    optional FloatTextureParameter roughness = 19;
+    optional FloatTextureParameter uroughness = 25;  // Must check
+    optional FloatTextureParameter vroughness = 26;  // Must check
+    optional SpectrumTextureParameter Kd = 32;
+    optional SpectrumTextureParameter Kr = 33;
+    optional SpectrumTextureParameter Ks = 34;
+    optional SpectrumTextureParameter Kt = 35;
+    optional SpectrumTextureParameter opacity = 37;
   }
 
   // If none of these fields are set, surfaces with this material applied should
@@ -609,45 +587,45 @@ message Material {
 
 message LightSource {
   message Distant {
-    optional pbrt_proto.Spectrum L = 1;
+    optional Spectrum L = 1;
     optional pbrt_proto.Point from = 2;
     optional pbrt_proto.Point to = 3;
-    optional pbrt_proto.Spectrum scale = 4;
+    optional Spectrum scale = 4;
   }
 
   message Goniometric {
-    optional pbrt_proto.Spectrum I = 1;
+    optional Spectrum I = 1;
     optional string mapname = 2 [default = ""];
-    optional pbrt_proto.Spectrum scale = 3;
+    optional Spectrum scale = 3;
   }
 
   message Infinite {
-    optional pbrt_proto.Spectrum L = 1;
+    optional Spectrum L = 1;
     optional uint32 samples = 2 [default = 1];
     optional string mapname = 3 [default = ""];
-    optional pbrt_proto.Spectrum scale = 4;
+    optional Spectrum scale = 4;
   }
 
   message Point {
-    optional pbrt_proto.Spectrum I = 1;
+    optional Spectrum I = 1;
     optional pbrt_proto.Point from = 2;
-    optional pbrt_proto.Spectrum scale = 3;
+    optional Spectrum scale = 3;
   }
 
   message Projection {
-    optional pbrt_proto.Spectrum I = 1;
+    optional Spectrum I = 1;
     optional double fov = 2 [default = 45.0];
     optional string mapname = 3 [default = ""];
-    optional pbrt_proto.Spectrum scale = 4;
+    optional Spectrum scale = 4;
   }
 
   message Spot {
-    optional pbrt_proto.Spectrum I = 1;
+    optional Spectrum I = 1;
     optional pbrt_proto.Point from = 2;
     optional pbrt_proto.Point to = 3;
     optional double coneangle = 4 [default = 30.0];
     optional double conedeltaangle = 5 [default = 5.0];
-    optional pbrt_proto.Spectrum scale = 6;
+    optional Spectrum scale = 6;
   }
 
   // If none of these fields are set, the directive should be ignored and have
@@ -783,11 +761,11 @@ message Shape {
 
     // If using pbrt_proto::v3::Canonicalize, width0 and width1 will be filled
     // with the value from width if not set.
-    repeated pbrt_proto.Point P = 1;
+    repeated Point P = 1;
     optional Basis basis = 2 [default = BEZIER];
     optional Degree degree = 3 [default = THREE];
     optional Type type = 4 [default = FLAT];
-    repeated pbrt_proto.Vector N = 5;
+    repeated Vector N = 5;
     optional double width = 6 [default = 1.0];
     optional double width0 = 7;  // Must check
     optional double width1 = 8;  // Must check
@@ -815,8 +793,8 @@ message Shape {
   }
 
   message Hyperboloid {
-    optional pbrt_proto.Point p1 = 1;
-    optional pbrt_proto.Point p2 = 2;
+    optional Point p1 = 1;
+    optional Point p2 = 2;
     optional double phimax = 3 [default = 360.0];
   }
 
@@ -829,12 +807,12 @@ message Shape {
 
     optional uint32 levels = 1 [default = 3];
     repeated VertexIndices indices = 2;
-    repeated pbrt_proto.Point P = 3;
+    repeated Point P = 3;
   }
 
   message Nurbs {
     message PointWithWeight {
-      required pbrt_proto.Point p = 1;
+      required Point p = 1;
       required double weight = 2;
     }
 
@@ -848,7 +826,7 @@ message Shape {
     optional double v0 = 9;
     optional double u1 = 10;
     optional double v1 = 11;
-    repeated pbrt_proto.Point P = 12;
+    repeated Point P = 12;
     repeated PointWithWeight Pw = 13;
   }
 
@@ -861,8 +839,8 @@ message Shape {
 
   message PlyMesh {
     optional string filename = 1 [default = ""];
-    optional pbrt_proto.FloatTextureParameter alpha = 2;
-    optional pbrt_proto.FloatTextureParameter shadowalpha = 3;
+    optional FloatTextureParameter alpha = 2;
+    optional FloatTextureParameter shadowalpha = 3;
   }
 
   message Sphere {
@@ -885,13 +863,13 @@ message Shape {
     }
 
     repeated VertexIndices indices = 1;
-    repeated pbrt_proto.Point P = 2;
-    repeated pbrt_proto.Vector N = 3;
-    repeated pbrt_proto.Vector S = 4;
+    repeated Point P = 2;
+    repeated Vector N = 3;
+    repeated Vector S = 4;
     repeated UVCoordinate uv = 5;
     repeated int32 faceIndices = 6;
-    optional pbrt_proto.FloatTextureParameter alpha = 7;
-    optional pbrt_proto.FloatTextureParameter shadowalpha = 8;
+    optional FloatTextureParameter alpha = 7;
+    optional FloatTextureParameter shadowalpha = 8;
   }
 
   // If none of these fields are set, the directive should be ignored and have
@@ -920,43 +898,43 @@ message Shape {
     optional double eta_as_value = 3;
     optional double g = 4;
     optional double scale = 5;
-    optional pbrt_proto.FloatTextureParameter alpha = 6;
-    optional pbrt_proto.FloatTextureParameter anisotropic = 7;
-    optional pbrt_proto.FloatTextureParameter beta_m = 8;
-    optional pbrt_proto.FloatTextureParameter beta_n = 9;
-    optional pbrt_proto.FloatTextureParameter bumpmap = 10;
-    optional pbrt_proto.FloatTextureParameter clearcoat = 11;
-    optional pbrt_proto.FloatTextureParameter clearcoatgloss = 12;
-    optional pbrt_proto.FloatTextureParameter difftrans = 13;
-    optional pbrt_proto.FloatTextureParameter eta_as_float_texture = 14;
-    optional pbrt_proto.FloatTextureParameter eumelanin = 15;
-    optional pbrt_proto.FloatTextureParameter flatness = 16;
-    optional pbrt_proto.FloatTextureParameter metallic = 17;
-    optional pbrt_proto.FloatTextureParameter pheomelanin = 18;
-    optional pbrt_proto.FloatTextureParameter roughness = 19;
-    optional pbrt_proto.FloatTextureParameter sheen = 20;
-    optional pbrt_proto.FloatTextureParameter sheentint = 21;
-    optional pbrt_proto.FloatTextureParameter sigma = 22;
-    optional pbrt_proto.FloatTextureParameter spectrans = 23;
-    optional pbrt_proto.FloatTextureParameter speculartint = 24;
-    optional pbrt_proto.FloatTextureParameter uroughness = 25;
-    optional pbrt_proto.FloatTextureParameter vroughness = 26;
+    optional FloatTextureParameter alpha = 6;
+    optional FloatTextureParameter anisotropic = 7;
+    optional FloatTextureParameter beta_m = 8;
+    optional FloatTextureParameter beta_n = 9;
+    optional FloatTextureParameter bumpmap = 10;
+    optional FloatTextureParameter clearcoat = 11;
+    optional FloatTextureParameter clearcoatgloss = 12;
+    optional FloatTextureParameter difftrans = 13;
+    optional FloatTextureParameter eta_as_float_texture = 14;
+    optional FloatTextureParameter eumelanin = 15;
+    optional FloatTextureParameter flatness = 16;
+    optional FloatTextureParameter metallic = 17;
+    optional FloatTextureParameter pheomelanin = 18;
+    optional FloatTextureParameter roughness = 19;
+    optional FloatTextureParameter sheen = 20;
+    optional FloatTextureParameter sheentint = 21;
+    optional FloatTextureParameter sigma = 22;
+    optional FloatTextureParameter spectrans = 23;
+    optional FloatTextureParameter speculartint = 24;
+    optional FloatTextureParameter uroughness = 25;
+    optional FloatTextureParameter vroughness = 26;
     optional MeasuredSubsurface name = 27;
-    optional pbrt_proto.SpectrumTextureParameter amount = 28;
-    optional pbrt_proto.SpectrumTextureParameter eta_as_spectrum_texture = 29;
-    optional pbrt_proto.SpectrumTextureParameter color = 30;
-    optional pbrt_proto.SpectrumTextureParameter k = 31;
-    optional pbrt_proto.SpectrumTextureParameter Kd = 32;
-    optional pbrt_proto.SpectrumTextureParameter Kr = 33;
-    optional pbrt_proto.SpectrumTextureParameter Ks = 34;
-    optional pbrt_proto.SpectrumTextureParameter Kt = 35;
-    optional pbrt_proto.SpectrumTextureParameter mfp = 36;
-    optional pbrt_proto.SpectrumTextureParameter opacity = 37;
-    optional pbrt_proto.SpectrumTextureParameter reflect = 38;
-    optional pbrt_proto.SpectrumTextureParameter scatterdistance = 39;
-    optional pbrt_proto.SpectrumTextureParameter sigma_a = 40;
-    optional pbrt_proto.SpectrumTextureParameter sigma_s = 41;
-    optional pbrt_proto.SpectrumTextureParameter transmit = 42;
+    optional SpectrumTextureParameter amount = 28;
+    optional SpectrumTextureParameter eta_as_spectrum_texture = 29;
+    optional SpectrumTextureParameter color = 30;
+    optional SpectrumTextureParameter k = 31;
+    optional SpectrumTextureParameter Kd = 32;
+    optional SpectrumTextureParameter Kr = 33;
+    optional SpectrumTextureParameter Ks = 34;
+    optional SpectrumTextureParameter Kt = 35;
+    optional SpectrumTextureParameter mfp = 36;
+    optional SpectrumTextureParameter opacity = 37;
+    optional SpectrumTextureParameter reflect = 38;
+    optional SpectrumTextureParameter scatterdistance = 39;
+    optional SpectrumTextureParameter sigma_a = 40;
+    optional SpectrumTextureParameter sigma_s = 41;
+    optional SpectrumTextureParameter transmit = 42;
     optional string bsdffile = 43;
     optional string namedmaterial1 = 44;
     optional string namedmaterial2 = 45;
@@ -972,51 +950,51 @@ message SpectrumTexture {
   required string name = 1;
 
   message Bilerp {
-    optional pbrt_proto.SpectrumTextureParameter v00 = 1;
-    optional pbrt_proto.SpectrumTextureParameter v01 = 2;
-    optional pbrt_proto.SpectrumTextureParameter v10 = 3;
-    optional pbrt_proto.SpectrumTextureParameter v11 = 4;
-    optional pbrt_proto.TextureMapping mapping = 5 [default = UV];
+    optional SpectrumTextureParameter v00 = 1;
+    optional SpectrumTextureParameter v01 = 2;
+    optional SpectrumTextureParameter v10 = 3;
+    optional SpectrumTextureParameter v11 = 4;
+    optional TextureMapping mapping = 5 [default = UV];
     optional double uscale = 6 [default = 1.0];
     optional double vscale = 7 [default = 1.0];
     optional double udelta = 8 [default = 0.0];
     optional double vdelta = 9 [default = 0.0];
-    optional pbrt_proto.Vector v1 = 10;
-    optional pbrt_proto.Vector v2 = 11;
+    optional Vector v1 = 10;
+    optional Vector v2 = 11;
   }
 
   message Checkerboard2D {
-    optional pbrt_proto.SpectrumTextureParameter tex1 = 1;
-    optional pbrt_proto.SpectrumTextureParameter tex2 = 2;
-    optional pbrt_proto.CheckerboardAntialiasing aamode = 3 [default = CLOSEDFORM];
-    optional pbrt_proto.TextureMapping mapping = 4 [default = UV];
+    optional SpectrumTextureParameter tex1 = 1;
+    optional SpectrumTextureParameter tex2 = 2;
+    optional CheckerboardAntialiasing aamode = 3 [default = CLOSEDFORM];
+    optional TextureMapping mapping = 4 [default = UV];
     optional double uscale = 5 [default = 1.0];
     optional double vscale = 6 [default = 1.0];
     optional double udelta = 7 [default = 0.0];
     optional double vdelta = 8 [default = 0.0];
-    optional pbrt_proto.Vector v1 = 9;
-    optional pbrt_proto.Vector v2 = 10;
+    optional Vector v1 = 9;
+    optional Vector v2 = 10;
   }
 
   message Checkerboard3D {
-    optional pbrt_proto.SpectrumTextureParameter tex1 = 1;
-    optional pbrt_proto.SpectrumTextureParameter tex2 = 2;
+    optional SpectrumTextureParameter tex1 = 1;
+    optional SpectrumTextureParameter tex2 = 2;
   }
 
   message Constant {
-    optional pbrt_proto.Spectrum value = 1;
+    optional Spectrum value = 1;
   }
 
   message Dots {
-    optional pbrt_proto.SpectrumTextureParameter inside = 1;
-    optional pbrt_proto.SpectrumTextureParameter outside = 2;
-    optional pbrt_proto.TextureMapping mapping = 3 [default = UV];
+    optional SpectrumTextureParameter inside = 1;
+    optional SpectrumTextureParameter outside = 2;
+    optional TextureMapping mapping = 3 [default = UV];
     optional double uscale = 4 [default = 1.0];
     optional double vscale = 5 [default = 1.0];
     optional double udelta = 6 [default = 0.0];
     optional double vdelta = 7 [default = 0.0];
-    optional pbrt_proto.Vector v1 = 8;
-    optional pbrt_proto.Vector v2 = 9;
+    optional Vector v1 = 8;
+    optional Vector v2 = 9;
   }
 
   message FBm {
@@ -1026,18 +1004,18 @@ message SpectrumTexture {
 
   message ImageMap {
     optional string filename = 1 [default = ""];
-    optional pbrt_proto.ImageWrap wrap = 2 [default = REPEAT];
+    optional ImageWrap wrap = 2 [default = REPEAT];
     optional double maxanisotropy = 3 [default = 8.0];
     optional bool trilinear = 4 [default = false];
     optional double scale = 5 [default = 1.0];
     optional bool gamma = 6;  // Must check, default varies by filetype
-    optional pbrt_proto.TextureMapping mapping = 7 [default = UV];
+    optional TextureMapping mapping = 7 [default = UV];
     optional double uscale = 8 [default = 1.0];
     optional double vscale = 9 [default = 1.0];
     optional double udelta = 10 [default = 0.0];
     optional double vdelta = 11 [default = 0.0];
-    optional pbrt_proto.Vector v1 = 12;
-    optional pbrt_proto.Vector v2 = 13;
+    optional Vector v1 = 12;
+    optional Vector v2 = 13;
   }
 
   message Marble {
@@ -1048,9 +1026,9 @@ message SpectrumTexture {
   }
 
   message Mix {
-    optional pbrt_proto.SpectrumTextureParameter tex1 = 1;
-    optional pbrt_proto.SpectrumTextureParameter tex2 = 2;
-    optional pbrt_proto.FloatTextureParameter amount = 3;
+    optional SpectrumTextureParameter tex1 = 1;
+    optional SpectrumTextureParameter tex2 = 2;
+    optional FloatTextureParameter amount = 3;
   }
 
   message Ptex {
@@ -1059,18 +1037,18 @@ message SpectrumTexture {
   }
 
   message Scale {
-    optional pbrt_proto.SpectrumTextureParameter tex1 = 1;
-    optional pbrt_proto.SpectrumTextureParameter tex2 = 2;
+    optional SpectrumTextureParameter tex1 = 1;
+    optional SpectrumTextureParameter tex2 = 2;
   }
 
   message Uv {
-    optional pbrt_proto.TextureMapping mapping = 1 [default = UV];
+    optional TextureMapping mapping = 1 [default = UV];
     optional double uscale = 2 [default = 1.0];
     optional double vscale = 3 [default = 1.0];
     optional double udelta = 4 [default = 0.0];
     optional double vdelta = 5 [default = 0.0];
-    optional pbrt_proto.Vector v1 = 6;
-    optional pbrt_proto.Vector v2 = 7;
+    optional Vector v1 = 6;
+    optional Vector v2 = 7;
   }
 
   message Windy {
@@ -1107,43 +1085,43 @@ message SpectrumTexture {
 message Directive {
   oneof directive_type {
     Accelerator accelerator = 1;
-    pbrt_proto.ActiveTransform active_transform = 2;
+    ActiveTransform active_transform = 2;
     AreaLightSource area_light_source = 3;
-    pbrt_proto.AttributeBegin attribute_begin = 4;
-    pbrt_proto.AttributeEnd attribute_end = 5;
+    AttributeBegin attribute_begin = 4;
+    AttributeEnd attribute_end = 5;
     Camera camera = 6;
-    pbrt_proto.ConcatTransform concat_transform = 7;
-    pbrt_proto.CoordinateSystem coordinate_system = 8;
-    pbrt_proto.CoordSysTransform coord_sys_transform = 9;
+    ConcatTransform concat_transform = 7;
+    CoordinateSystem coordinate_system = 8;
+    CoordSysTransform coord_sys_transform = 9;
     Film film = 10;
     FloatTexture float_texture = 11;
-    pbrt_proto.Identity identity = 12;
-    pbrt_proto.Include include = 13;
+    Identity identity = 12;
+    Include include = 13;
     Integrator integrator = 14;
     LightSource light_source = 15;
-    pbrt_proto.LookAt look_at = 16;
+    LookAt look_at = 16;
     MakeNamedMaterial make_named_material = 17;
     MakeNamedMedium make_named_medium = 18;
     Material material = 19;
-    pbrt_proto.MediumInterface medium_interface = 20;
-    pbrt_proto.NamedMaterial named_material = 21;
-    pbrt_proto.ObjectBegin object_begin = 22;
-    pbrt_proto.ObjectEnd object_end = 23;
-    pbrt_proto.ObjectInstance object_instance = 24;
+    MediumInterface medium_interface = 20;
+    NamedMaterial named_material = 21;
+    ObjectBegin object_begin = 22;
+    ObjectEnd object_end = 23;
+    ObjectInstance object_instance = 24;
     PixelFilter pixel_filter = 25;
-    pbrt_proto.ReverseOrientation reverse_orientation = 26;
-    pbrt_proto.Rotate rotate = 27;
+    ReverseOrientation reverse_orientation = 26;
+    Rotate rotate = 27;
     Sampler sampler = 28;
     Shape shape = 29;
-    pbrt_proto.Scale scale = 30;
+    Scale scale = 30;
     SpectrumTexture spectrum_texture = 31;
-    pbrt_proto.Transform transform = 32;
-    pbrt_proto.TransformBegin transform_begin = 33;
-    pbrt_proto.TransformEnd transform_end = 34;
-    pbrt_proto.TransformTimes transform_times = 35;
-    pbrt_proto.Translate translate = 36;
-    pbrt_proto.WorldBegin world_begin = 37;
-    pbrt_proto.WorldEnd world_end = 38;
+    Transform transform = 32;
+    TransformBegin transform_begin = 33;
+    TransformEnd transform_end = 34;
+    TransformTimes transform_times = 35;
+    Translate translate = 36;
+    WorldBegin world_begin = 37;
+    WorldEnd world_end = 38;
   }
 }
 
