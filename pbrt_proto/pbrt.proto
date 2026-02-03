@@ -548,3 +548,58 @@ message KdTreeAccelerator {
   // to the renderer.
   optional uint32 maxdepth = 5 [default = 0];
 }
+
+//
+// Common Area Light Sources
+//
+
+// A diffuse area light source as represented from PBRTv1 through PBRTv3.
+message DiffuseAreaLightSourceV1 {
+  // A constant spectral power distribution describing the light. 
+  optional Spectrum L = 1;
+
+  // The suggested number of shadow samples to take from the light. May be
+  // ignored depending on the Integrator used for rendering.
+  //
+  // NOTE: In PBRTv1 and PBRTv2 this field is referred to by the name
+  //       `nsamples`; however, it is referred to here as `samples` which is the
+  //       final name for the parameter that was used in PBRTv3.
+  optional uint32 samples = 2 [default = 1];
+
+  // A scale applied to the spectrum provided in `L`.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported in PBRTv1 and should be ignored when
+  //       reading PBRTv1 input.
+  optional Spectrum scale = 3;
+
+  // If true, light should emit from both sides both side of geometry.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is only supported in PBRTv3 and should be ignored when
+  //       reading input from other versions.
+  optional bool twosided = 4 [default = false];
+}
+
+// A diffuse area light source as represented starting from PBRTv4.
+message DiffuseAreaLightSourceV2 {
+  // The spectral representation for the emitter. If neither is present, the
+  // the default illuminant of the current color space should be used.
+  oneof spectrum_type {
+    // A constant spectral power distribution describing the light.
+    Spectrum L = 1;
+
+    // The path to an image file describing the spatially-varying emissions
+    // over the surface of the light.
+    string filename = 2;
+  }
+
+  // A scale applied to the spectrum of the emitter.
+  optional double scale = 3 [default = 1.0];
+
+  // The desired power of the light.
+  optional double power = 4 [default = -1.0];
+
+  // If true, light should emit from both sides both side of geometry.
+  optional bool twosided = 5 [default = false];
+}

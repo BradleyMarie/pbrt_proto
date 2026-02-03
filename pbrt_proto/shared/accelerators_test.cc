@@ -1,9 +1,6 @@
 #include "pbrt_proto/shared/accelerators.h"
 
-#include <array>
 #include <cstdint>
-#include <functional>
-#include <sstream>
 #include <vector>
 
 #include "absl/container/flat_hash_map.h"
@@ -18,8 +15,6 @@ namespace pbrt_proto {
 namespace {
 
 using ::google::protobuf::EqualsProto;
-using ::testing::Eq;
-using ::testing::Optional;
 
 TEST(RemoveGridAccelerator, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;

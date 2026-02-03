@@ -37,6 +37,35 @@ cc_test(
 )
 
 cc_library(
+    name = "area_light_sources",
+    srcs = ["area_light_sources.cc"],
+    hdrs = ["area_light_sources.h"],
+    deps = [
+        ":common",
+        ":parser",
+        "//pbrt_proto:pbrt_cc_proto",
+        "@abseil-cpp//absl/container:flat_hash_map",
+        "@abseil-cpp//absl/status:status",
+        "@abseil-cpp//absl/strings:string_view",
+    ],
+)
+
+cc_test(
+    name = "area_light_sources_test",
+    srcs = ["area_light_sources_test.cc"],
+    deps = [
+        ":area_light_sources",
+        ":parser",
+        "//pbrt_proto:pbrt_cc_proto",
+        "//pbrt_proto/testing:proto_matchers",
+        "@abseil-cpp//absl/container:flat_hash_map",
+        "@abseil-cpp//absl/status:status_matchers",
+        "@abseil-cpp//absl/strings:string_view",
+        "@googletest//:gtest_main",
+    ],
+)
+
+cc_library(
     name = "common",
     srcs = ["common.cc"],
     hdrs = ["common.h"],

@@ -13,3 +13,12 @@ message Accelerator {
     KdTreeAccelerator kdtree = 2;  // Use a KD-tree accelerator (default)
   }
 }
+
+// A directive which sets the current area light source.
+message AreaLightSource {
+  // The type of AreaLightSource. If none are set, then the current area light
+  // source should be unset.
+  oneof accelerator_type {
+    DiffuseAreaLightSourceV1 area = 1;  // Use a diffuse area light.
+  }
+}

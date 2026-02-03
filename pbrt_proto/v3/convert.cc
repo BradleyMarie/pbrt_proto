@@ -13,6 +13,7 @@
 #include "absl/strings/string_view.h"
 #include "absl/types/span.h"
 #include "pbrt_proto/shared/accelerators.h"
+#include "pbrt_proto/shared/area_light_sources.h"
 #include "pbrt_proto/shared/common.h"
 #include "pbrt_proto/shared/parser.h"
 #include "pbrt_proto/v3/v3.pb.h"
@@ -718,33 +719,9 @@ absl::Status ParserV3::AreaLightSource(
   auto& area_light_source =
       *output_.add_directives()->mutable_area_light_source();
 
-  if (area_light_source_type == "diffuse") {
-    auto& diffuse = *area_light_source.mutable_diffuse();
-
-    TryRemoveSpectrumV1(
-        parameters, "L",
-        std::bind(&AreaLightSource::Diffuse::mutable_l, &diffuse));
-
-    if (std::optional<int32_t> samples =
-            TryRemoveInteger(parameters, "nsamples");
-        samples) {
-      diffuse.set_samples(std::max(0, *samples));
-    }
-
-    if (std::optional<int32_t> samples =
-            TryRemoveInteger(parameters, "samples");
-        samples) {
-      diffuse.set_samples(std::max(0, *samples));
-    }
-
-    if (std::optional<bool> twosided = TryRemoveBool(parameters, "twosided");
-        twosided) {
-      diffuse.set_twosided(*twosided);
-    }
-
-    TryRemoveSpectrumV1(
-        parameters, "scale",
-        std::bind(&AreaLightSource::Diffuse::mutable_scale, &diffuse));
+  if (area_light_source_type == "area" || area_light_source_type == "diffuse") {
+    RemoveDiffuseAreaLightSourceV3(parameters,
+                                   *area_light_source.mutable_diffuse());
   } else {
     std::cerr << "Unrecognized AreaLightSource type: \""
               << area_light_source_type << "\"" << std::endl;

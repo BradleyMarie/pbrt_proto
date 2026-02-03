@@ -113,27 +113,6 @@ TEST(Convert, AreaLightSourceDiffuse) {
                })pb")));
 }
 
-TEST(Convert, AreaLightSourceDiffuseNSamples) {
-  std::stringstream stream(
-      "AreaLightSource \"diffuse\" \"blackbody L\" [1.0 2.0] \"bool twosided\" "
-      "\"true\" \"integer nsamples\" 2 \"blackbody scale\" [11.0 12.0]");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(
-          R"pb(directives {
-                 area_light_source {
-                   diffuse {
-                     L { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
-                     twosided: true
-                     samples: 2
-                     scale {
-                       blackbody_spectrum { temperature: 11.0 scale: 12.0 }
-                     }
-                   }
-                 }
-               })pb")));
-}
-
 TEST(Convert, AttributeBegin) {
   std::stringstream stream("AttributeBegin");
   EXPECT_THAT(

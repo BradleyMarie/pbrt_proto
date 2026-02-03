@@ -1,5 +1,6 @@
 syntax = "proto2";
 
+import "pbrt_proto/pbrt.proto";
 import "pbrt_proto/v3/v3.proto";
 
 package pbrt_proto.v3;
@@ -31,7 +32,7 @@ message Defaults {
   // A container for the default values for every type of AreaLightSource
   message DefaultAreaLightSources {
     // The default "diffuse" AreaLightSource
-    required AreaLightSource.Diffuse diffuse = 1;
+    required DiffuseAreaLightSourceV1 diffuse = 1;
   }
 
   // The default values for every type of AreaLightSource

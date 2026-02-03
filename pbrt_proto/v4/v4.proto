@@ -6,10 +6,19 @@ package pbrt_proto.v4;
 
 // A directive which sets the Accelerator to use for rendering.
 message Accelerator {
-  // The type of Accelerator to use. If none are set, then `bvh` should be read
-  // as if it is present.
+  // The type of Accelerator to use. If none are set, then the renderer should
+  // exit with an error.
   oneof accelerator_type {
     KdTreeAccelerator kdtree = 2;  // Use a KD-tree accelerator
     BvhAccelerator bvh = 3;  // Use a BVH accelerator (default)
+  }
+}
+
+// A directive which sets the current area light source.
+message AreaLightSource {
+  // The type of AreaLightSource. If none are set, then the renderer should exit
+  // with an error.
+  oneof accelerator_type {
+    DiffuseAreaLightSourceV2 diffuse = 1;  // Use a diffuse area light.
   }
 }

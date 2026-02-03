@@ -64,18 +64,12 @@ message Accelerator {
   }
 }
 
+// A directive which sets the current area light source.
 message AreaLightSource {
-  message Diffuse {
-    optional Spectrum L = 1;
-    optional bool twosided = 2 [default = false];
-    optional uint32 samples = 3 [default = 1];
-    optional Spectrum scale = 4;
-  }
-
-  // If none of these fields are present, subsequent surfaces are not area
-  // lights.
-  oneof area_light_source_type {
-    Diffuse diffuse = 1;
+  // The type of AreaLightSource. If none are set, then the current area light
+  // source should be unset.
+  oneof accelerator_type {
+    DiffuseAreaLightSourceV1 diffuse = 1;  // Use a diffuse area light.
   }
 }
 
@@ -147,7 +141,7 @@ message Film {
     };
 
     optional uint32 xresolution = 1 [default = 1280];
-    optional uint32 yresolution = 2  [default = 720];
+    optional uint32 yresolution = 2 [default = 720];
     optional CropWindow cropwindow = 3;
     optional double scale = 4  [default = 1.0];
     optional double maxsampleluminance = 5 [default = inf];
