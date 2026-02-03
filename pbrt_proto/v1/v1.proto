@@ -18,7 +18,7 @@ message Accelerator {
 message AreaLightSource {
   // The type of AreaLightSource. If none are set, then the current area light
   // source should be unset.
-  oneof accelerator_type {
+  oneof area_light_source_type {
     DiffuseAreaLightSourceV1 area = 1;  // Use a diffuse area light.
   }
 }
