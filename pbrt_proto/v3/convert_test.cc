@@ -157,24 +157,6 @@ TEST(Convert, CameraEnvironment) {
                                             })pb")));
 }
 
-TEST(Convert, CameraEnvironmentBadWindow) {
-  std::stringstream stream(
-      "Camera \"environment\" \"float lensradius\" 3.0 \"float "
-      "frameaspectratio\" 4.0 \"float screenwindow\" [1.0 2.0 3.0]  "
-      "\"float shutteropen\" 1.0 \"float shutterclose\" 2.0");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives {
-                                              camera {
-                                                environment {
-                                                  lensradius: 3.0
-                                                  frameaspectratio: 4.0
-                                                  shutteropen: 1.0
-                                                  shutterclose: 2.0
-                                                }
-                                              }
-                                            })pb")));
-}
-
 TEST(Convert, CameraOrthographic) {
   std::stringstream stream(
       "Camera \"orthographic\" \"float lensradius\" 3.0 \"float "
@@ -199,30 +181,11 @@ TEST(Convert, CameraOrthographic) {
                                             })pb")));
 }
 
-TEST(Convert, CameraOrthographicBadWindow) {
-  std::stringstream stream(
-      "Camera \"orthographic\" \"float lensradius\" 3.0 \"float "
-      "frameaspectratio\" 4.0 \"float screenwindow\" [1.0 2.0 3.0]  "
-      "\"float shutteropen\" 1.0 \"float shutterclose\" 2.0");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives {
-                                              camera {
-                                                orthographic {
-                                                  lensradius: 3.0
-                                                  frameaspectratio: 4.0
-                                                  shutteropen: 1.0
-                                                  shutterclose: 2.0
-                                                }
-                                              }
-                                            })pb")));
-}
-
 TEST(Convert, CameraPerspective) {
   std::stringstream stream(
       "Camera \"perspective\" \"float lensradius\" 3.0 \"float "
       "frameaspectratio\" 4.0 \"float screenwindow\" [1.0 2.0 3.0 4.0] \"float "
-      "fov\" 60.0 \"float halffov\" 30.0 \"float shutteropen\" 1.0 \"float "
-      "shutterclose\" 2.0");
+      "halffov\" 30.0 \"float shutteropen\" 1.0 \"float shutterclose\" 2.0");
   EXPECT_THAT(Convert(stream),
               IsOkAndHolds(EqualsProto(R"pb(directives {
                                               camera {
@@ -236,28 +199,6 @@ TEST(Convert, CameraPerspective) {
                                                     y_max: 4.0
                                                   }
                                                   fov: 60
-                                                  halffov: 30
-                                                  shutteropen: 1.0
-                                                  shutterclose: 2.0
-                                                }
-                                              }
-                                            })pb")));
-}
-
-TEST(Convert, CameraPerspectiveBadWindow) {
-  std::stringstream stream(
-      "Camera \"perspective\" \"float lensradius\" 3.0 \"float "
-      "frameaspectratio\" 4.0 \"float screenwindow\" [1.0 2.0 3.0] \"float "
-      "fov\" 60.0 \"float halffov\" 30.0 \"float shutteropen\" 1.0 \"float "
-      "shutterclose\" 2.0");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives {
-                                              camera {
-                                                perspective {
-                                                  lensradius: 3.0
-                                                  frameaspectratio: 4.0
-                                                  fov: 60
-                                                  halffov: 30
                                                   shutteropen: 1.0
                                                   shutterclose: 2.0
                                                 }

@@ -66,6 +66,36 @@ cc_test(
 )
 
 cc_library(
+    name = "cameras",
+    srcs = ["cameras.cc"],
+    hdrs = ["cameras.h"],
+    deps = [
+        ":common",
+        ":parser",
+        "//pbrt_proto:pbrt_cc_proto",
+        "@abseil-cpp//absl/container:flat_hash_map",
+        "@abseil-cpp//absl/functional:function_ref",
+        "@abseil-cpp//absl/status:status",
+        "@abseil-cpp//absl/strings:string_view",
+    ],
+)
+
+cc_test(
+    name = "cameras_test",
+    srcs = ["cameras_test.cc"],
+    deps = [
+        ":cameras",
+        ":parser",
+        "//pbrt_proto:pbrt_cc_proto",
+        "//pbrt_proto/testing:proto_matchers",
+        "@abseil-cpp//absl/container:flat_hash_map",
+        "@abseil-cpp//absl/status:status_matchers",
+        "@abseil-cpp//absl/strings:string_view",
+        "@googletest//:gtest_main",
+    ],
+)
+
+cc_library(
     name = "common",
     srcs = ["common.cc"],
     hdrs = ["common.h"],

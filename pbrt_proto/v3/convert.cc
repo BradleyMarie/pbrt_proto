@@ -14,6 +14,7 @@
 #include "absl/types/span.h"
 #include "pbrt_proto/shared/accelerators.h"
 #include "pbrt_proto/shared/area_light_sources.h"
+#include "pbrt_proto/shared/cameras.h"
 #include "pbrt_proto/shared/common.h"
 #include "pbrt_proto/shared/parser.h"
 #include "pbrt_proto/v3/v3.pb.h"
@@ -746,179 +747,13 @@ absl::Status ParserV3::Camera(
   auto& camera = *output_.add_directives()->mutable_camera();
 
   if (camera_type == "environment") {
-    auto& environment = *camera.mutable_environment();
-
-    if (std::optional<double> lensradius =
-            TryRemoveFloat(parameters, "lensradius");
-        lensradius.has_value()) {
-      environment.set_lensradius(*lensradius);
-    }
-
-    if (std::optional<double> focaldistance =
-            TryRemoveFloat(parameters, "focaldistance");
-        focaldistance.has_value()) {
-      environment.set_focaldistance(*focaldistance);
-    }
-
-    if (std::optional<double> frameaspectratio =
-            TryRemoveFloat(parameters, "frameaspectratio");
-        frameaspectratio.has_value()) {
-      environment.set_frameaspectratio(*frameaspectratio);
-    }
-
-    std::optional<absl::Span<double>> screenwindow;
-    if (absl::Status status =
-            TryRemoveFloats(parameters, "screenwindow", 4, screenwindow);
-        status.ok() && screenwindow.has_value()) {
-      environment.mutable_screenwindow()->set_x_min((*screenwindow)[0]);
-      environment.mutable_screenwindow()->set_x_max((*screenwindow)[1]);
-      environment.mutable_screenwindow()->set_y_min((*screenwindow)[2]);
-      environment.mutable_screenwindow()->set_y_max((*screenwindow)[3]);
-    }
-
-    if (std::optional<double> shutteropen =
-            TryRemoveFloat(parameters, "shutteropen");
-        shutteropen.has_value()) {
-      environment.set_shutteropen(*shutteropen);
-    }
-
-    if (std::optional<double> shutterclose =
-            TryRemoveFloat(parameters, "shutterclose");
-        shutterclose.has_value()) {
-      environment.set_shutterclose(*shutterclose);
-    }
+    RemoveSphericalCameraV2(parameters, *camera.mutable_environment());
   } else if (camera_type == "orthographic") {
-    auto& orthographic = *camera.mutable_orthographic();
-
-    if (std::optional<double> lensradius =
-            TryRemoveFloat(parameters, "lensradius");
-        lensradius.has_value()) {
-      orthographic.set_lensradius(*lensradius);
-    }
-
-    if (std::optional<double> focaldistance =
-            TryRemoveFloat(parameters, "focaldistance");
-        focaldistance.has_value()) {
-      orthographic.set_focaldistance(*focaldistance);
-    }
-
-    if (std::optional<double> frameaspectratio =
-            TryRemoveFloat(parameters, "frameaspectratio");
-        frameaspectratio.has_value()) {
-      orthographic.set_frameaspectratio(*frameaspectratio);
-    }
-
-    std::optional<absl::Span<double>> screenwindow;
-    if (absl::Status status =
-            TryRemoveFloats(parameters, "screenwindow", 4, screenwindow);
-        status.ok() && screenwindow.has_value()) {
-      orthographic.mutable_screenwindow()->set_x_min((*screenwindow)[0]);
-      orthographic.mutable_screenwindow()->set_x_max((*screenwindow)[1]);
-      orthographic.mutable_screenwindow()->set_y_min((*screenwindow)[2]);
-      orthographic.mutable_screenwindow()->set_y_max((*screenwindow)[3]);
-    }
-
-    if (std::optional<double> shutteropen =
-            TryRemoveFloat(parameters, "shutteropen");
-        shutteropen.has_value()) {
-      orthographic.set_shutteropen(*shutteropen);
-    }
-
-    if (std::optional<double> shutterclose =
-            TryRemoveFloat(parameters, "shutterclose");
-        shutterclose.has_value()) {
-      orthographic.set_shutterclose(*shutterclose);
-    }
+    RemoveOrthographicCameraV2(parameters, *camera.mutable_orthographic());
   } else if (camera_type == "perspective") {
-    auto& perspective = *camera.mutable_perspective();
-
-    if (std::optional<double> lensradius =
-            TryRemoveFloat(parameters, "lensradius");
-        lensradius.has_value()) {
-      perspective.set_lensradius(*lensradius);
-    }
-
-    if (std::optional<double> focaldistance =
-            TryRemoveFloat(parameters, "focaldistance");
-        focaldistance.has_value()) {
-      perspective.set_focaldistance(*focaldistance);
-    }
-
-    if (std::optional<double> frameaspectratio =
-            TryRemoveFloat(parameters, "frameaspectratio");
-        frameaspectratio.has_value()) {
-      perspective.set_frameaspectratio(*frameaspectratio);
-    }
-
-    std::optional<absl::Span<double>> screenwindow;
-    if (absl::Status status =
-            TryRemoveFloats(parameters, "screenwindow", 4, screenwindow);
-        status.ok() && screenwindow.has_value()) {
-      perspective.mutable_screenwindow()->set_x_min((*screenwindow)[0]);
-      perspective.mutable_screenwindow()->set_x_max((*screenwindow)[1]);
-      perspective.mutable_screenwindow()->set_y_min((*screenwindow)[2]);
-      perspective.mutable_screenwindow()->set_y_max((*screenwindow)[3]);
-    }
-
-    if (std::optional<double> fov = TryRemoveFloat(parameters, "fov");
-        fov.has_value()) {
-      perspective.set_fov(*fov);
-    }
-
-    if (std::optional<double> halffov = TryRemoveFloat(parameters, "halffov");
-        halffov.has_value()) {
-      perspective.set_halffov(*halffov);
-    }
-
-    if (std::optional<double> shutteropen =
-            TryRemoveFloat(parameters, "shutteropen");
-        shutteropen.has_value()) {
-      perspective.set_shutteropen(*shutteropen);
-    }
-
-    if (std::optional<double> shutterclose =
-            TryRemoveFloat(parameters, "shutterclose");
-        shutterclose.has_value()) {
-      perspective.set_shutterclose(*shutterclose);
-    }
+    RemovePerspectiveCameraV2(parameters, *camera.mutable_perspective());
   } else if (camera_type == "realistic") {
-    auto& realistic = *camera.mutable_realistic();
-
-    if (std::optional<absl::string_view> lensfile =
-            TryRemoveString(parameters, "lensfile");
-        lensfile.has_value()) {
-      realistic.set_lensfile(*lensfile);
-    }
-
-    if (std::optional<double> aperturediameter =
-            TryRemoveFloat(parameters, "aperturediameter");
-        aperturediameter.has_value()) {
-      realistic.set_aperturediameter(*aperturediameter);
-    }
-
-    if (std::optional<double> focusdistance =
-            TryRemoveFloat(parameters, "focusdistance");
-        focusdistance.has_value()) {
-      realistic.set_focusdistance(*focusdistance);
-    }
-
-    if (std::optional<bool> simpleweighting =
-            TryRemoveBool(parameters, "simpleweighting");
-        simpleweighting.has_value()) {
-      realistic.set_simpleweighting(*simpleweighting);
-    }
-
-    if (std::optional<double> shutteropen =
-            TryRemoveFloat(parameters, "shutteropen");
-        shutteropen.has_value()) {
-      realistic.set_shutteropen(*shutteropen);
-    }
-
-    if (std::optional<double> shutterclose =
-            TryRemoveFloat(parameters, "shutterclose");
-        shutterclose.has_value()) {
-      realistic.set_shutterclose(*shutterclose);
-    }
+    RemoveRealisticCameraV1(parameters, *camera.mutable_realistic());
   } else {
     std::cerr << "Unrecognized Camera type: \"" << camera_type << "\""
               << std::endl;

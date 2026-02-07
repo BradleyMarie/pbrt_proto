@@ -18,6 +18,7 @@ cc_library(
         ":v3_cc_proto",
         "//pbrt_proto/shared:accelerators",
         "//pbrt_proto/shared:area_light_sources",
+        "//pbrt_proto/shared:cameras",
         "//pbrt_proto/shared:common",
         "//pbrt_proto/shared:parser",
         "@abseil-cpp//absl/container:flat_hash_map",

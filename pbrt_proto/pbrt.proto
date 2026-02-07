@@ -603,3 +603,227 @@ message DiffuseAreaLightSourceV2 {
   // If true, light should emit from both sides both side of geometry.
   optional bool twosided = 5 [default = false];
 }
+
+//
+// Common Cameras
+//
+
+// The bounds of the film plane in screen space.
+message CameraScreenWindow {
+  // The lower x bound of the film plane.
+  required double x_min = 1;
+
+  // The upper x bound of the film plane.
+  required double x_max = 2;
+
+  // The lower y bound of the film plane.
+  required double y_min = 3;
+
+  // The upper y bound of the film plane.
+  required double y_max = 4;
+}
+
+// A camera that projects an orthographic image onto the film plane.
+message OrthographicCamera {
+  // The time at which the shutter opens.
+  optional double shutteropen = 1 [default = 0.0];
+
+  // The time at which the shutter closes.
+  optional double shutterclose = 2 [default = 1.0];
+
+  // The radius of the lens.
+  optional double lensradius = 3 [default = 0.0];
+
+  // The focal distance of the camera.
+  //
+  // NOTE: The default value for this value varies by PBRT version. In PBRTv1
+  //       and PBRTv2 this value defaults to `1e30`. In PBRTv3 and later the
+  //       default value is `1e6`.
+  optional double focaldistance = 4;
+
+  // The aspect ratio of the film. If unspecified, this value should default to
+  // the x-resolution of the film divided by the y-resolution of the film.
+  optional double frameaspectratio = 5;
+
+  // The bounds of the film plane in screen space. If unspecified, the lower
+  // and upper bounds should be `[-1.0, 1.0]` along the shorter image axis and
+  // set proportionally along the longer image axis.
+  optional CameraScreenWindow screenwindow = 6;
+
+  // The near clipping plane.
+  //
+  // NOTE: For simplicity, this field is shared between all PBRT versions;
+  //       however, it is not supported after PBRTv1 and should be ignored when
+  //       reading later input.
+  optional double hither = 7;
+
+  // The far clipping plane.
+  //
+  // NOTE: For simplicity, this field is shared between all PBRT versions;
+  //       however, it is not supported after PBRTv1 and should be ignored when
+  //       reading later input.
+  optional double yon = 8;
+}
+
+// A camera that projects an perspective image onto the film plane.
+message PerspectiveCamera {
+  // The time at which the shutter opens.
+  optional double shutteropen = 1 [default = 0.0];
+
+  // The time at which the shutter closes.
+  optional double shutterclose = 2 [default = 1.0];
+
+  // The field of view of the camera in degrees.
+  //
+  // NOTE: In PBRTv2 and PBRTv3 there are two parameters that map into this
+  //       field: `fov` and `halffov`. If `halffov` is specified in either of
+  //       these versions the value of `fov` if presnent should be set to half
+  //       the value of `halffov`.
+  optional double fov = 3 [default = 90.0];
+
+  // The radius of the lens.
+  optional double lensradius = 4 [default = 0.0];
+
+  // The focal distance of the camera.
+  //
+  // NOTE: The default value for this value varies by PBRT version. In PBRTv1
+  //       and PBRTv2 this value defaults to `1e30`. In PBRTv3 and later the
+  //       default value is `1e6`.
+  optional double focaldistance = 5;
+
+  // The aspect ratio of the film. If unspecified, this value should default to
+  // the x-resolution of the film divided by the y-resolution of the film.
+  optional double frameaspectratio = 6;
+
+  // The bounds of the film plane in screen space. If unspecified, the lower
+  // and upper bounds should be `[-1.0, 1.0]` along the shorter image axis and
+  // set proportionally along the longer image axis.
+  optional CameraScreenWindow screenwindow = 7;
+
+  // The near clipping plane.
+  //
+  // NOTE: For simplicity, this field is shared between all PBRT versions;
+  //       however, it is not supported after PBRTv1 and should be ignored when
+  //       reading later input.
+  optional double hither = 8;
+
+  // The far clipping plane.
+  //
+  // NOTE: For simplicity, this field is shared between all PBRT versions;
+  //       however, it is not supported after PBRTv1 and should be ignored when
+  //       reading later input.
+  optional double yon = 9;
+}
+
+// A camera which captures the light arriving at a point from all directions.
+// In PBRT versions prior to PBRTv4 this type of camera was referred to as an
+// environmental camera.
+message SphericalCamera {
+  // The mappping used from 2D points on the image to directions in 3D.
+  enum Mapping {
+    // A mapping in which each pixel in the output image covers an equal amount
+    // of solid angle on the sphere of 3D directions based on an octrahedral
+    // encoding.
+    //
+    // This is the default mapping in PBRTv4 and later.
+    EQUALAREA = 0;
+
+    // A mapping which each pixel in the output image covers an equal number of
+    // degrees of longitude and latitude on the sphere of 3D directions.
+    //
+    // This is the default mapping in PBRTv1, PBRTv2, and PBRTv3.
+    EQUIRECTANGULAR = 1;
+  }
+
+  // The time at which the shutter opens.
+  optional double shutteropen = 1 [default = 0.0];
+
+  // The time at which the shutter closes.
+  optional double shutterclose = 2 [default = 1.0];
+
+  // The 2D to 3D direction mapping to use for the image.
+  //
+  // NOTE: For simplicity, this field is shared between all PBRT versions;
+  //       however, it is only supported in PBRTv4 and later. In earlier
+  //       versions an equirectantular mapping is the only supported mapping.
+  optional Mapping mapping = 3;
+
+  // The radius of the lens.
+  optional double lensradius = 4 [default = 0.0];
+
+  // The focal distance of the camera.
+  //
+  // NOTE: This value has a default value of `1e30` in all PBRT versions;
+  //       however, for consistency with the other cameras that default value is
+  //       not specified here. 
+  optional double focaldistance = 5;
+
+  // The aspect ratio of the film. If unspecified, this value should default to
+  // the x-resolution of the film divided by the y-resolution of the film.
+  optional double frameaspectratio = 6;
+
+  // The bounds of the film plane in screen space. If unspecified, the lower
+  // and upper bounds should be `[-1.0, 1.0]` along the shorter image axis and
+  // set proportionally along the longer image axis.
+  optional CameraScreenWindow screenwindow = 7;
+
+  // The near clipping plane.
+  //
+  // NOTE: For simplicity, this field is shared between all PBRT versions;
+  //       however, it is not supported after PBRTv1 and should be ignored when
+  //       reading later input.
+  optional double hither = 8;
+
+  // The far clipping plane.
+  //
+  // NOTE: For simplicity, this field is shared between all PBRT versions;
+  //       however, it is not supported after PBRTv1 and should be ignored when
+  //       reading later input.
+  optional double yon = 9;
+}
+
+// A camera that simulates a ray passing through a complex lens system.
+message RealisticCamera {
+  // The time at which the shutter opens.
+  optional double shutteropen = 1 [default = 0.0];
+
+  // The time at which the shutter closes.
+  optional double shutterclose = 2 [default = 1.0];
+
+  // The path to a lens description file.
+  //
+  // NOTE: This parameter is REQUIRED. In PBRTv3 if this parameter is missing or
+  //       if the file cannot be found the camera should be unset. In PBRTv4 or
+  //       later if parameter is missing or the file is not found the renderer
+  //       should exit with an error.
+  optional string lensfile = 3 [default = ""];
+
+  // The diameter of the aperture of the lens system in millimeters.
+  optional double aperturediameter = 4 [default = 1.0];
+
+  // The shape of the aperture. If missing, the aperture has a circular shape.
+  //
+  // If the value is one of "gaussian", "square", "pentagon", or "star" it
+  // refers to a built-in aperture shape. Otherwise, the string references an
+  // image file that describes the aperture's shape. If this file is not found
+  // then the renderer should exit with an error.
+  //
+  // NOTE: For simplicity, this field is shared between all PBRT versions;
+  //       however, it is only supported in PBRTv4 and should be ignored when
+  //       reading earlier input.
+  optional string aperture = 5;
+
+  // The distance to which the camera is focused in meters.
+  //
+  // NOTE: This value has a default value of `10.0` in all PBRT versions;
+  //       however, for consistency with the other cameras that default value is
+  //       not specified here. 
+  optional double focusdistance = 6;
+
+  // If true, the samples are only weighted by the "cosine-to-the-4th" term.
+  //
+  // NOTE: For simplicity, this field is shared between all PBRT versions;
+  //       however, it is only supported in PBRTv3 and should be ignored when
+  //       reading later input.
+  optional bool simpleweighting = 7;
+}

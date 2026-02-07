@@ -38,6 +38,15 @@ message Defaults {
   // The default values for every type of AreaLightSource
   required DefaultAreaLightSources area_light_sources = 3;
 
+  message DefaultCameras {
+    required SphericalCamera environment = 1;
+    required OrthographicCamera orthographic = 2;
+    required PerspectiveCamera perspective = 3;
+    required RealisticCamera realistic = 4;
+  }
+
+  required DefaultCameras cameras = 4;
+
   // A container for the default values for every type of Film
   message DefaultFilms {
     // The default "image" Film
@@ -45,7 +54,7 @@ message Defaults {
   }
 
   // The default values for every type of Film
-  required DefaultFilms films = 4;
+  required DefaultFilms films = 5;
 
   // A container for the default values for every type of FloatTexture
   message DefaultFloatTextures {
@@ -90,7 +99,7 @@ message Defaults {
   }
 
   // The default values for every type of FloatTexture
-  required DefaultFloatTextures float_textures = 5;
+  required DefaultFloatTextures float_textures = 6;
 
   // A container for the default values for every type of Material
   message DefaultMaterials {
@@ -142,7 +151,7 @@ message Defaults {
   }
 
   // The default values for every type of Material
-  required DefaultMaterials materials = 6;
+  required DefaultMaterials materials = 7;
 
   // A container for the default values for every type of Medium
   message DefaultMedia {
@@ -162,7 +171,7 @@ message Defaults {
   }
 
   // The default values for every type of Medium
-  required DefaultMedia media = 7;
+  required DefaultMedia media = 8;
 
   // A container for the default values for every type of LightSource
   message DefaultLightSources {
@@ -186,7 +195,7 @@ message Defaults {
   }
 
   // The default values for every type of LightSource
-  required DefaultLightSources light_sources = 8;
+  required DefaultLightSources light_sources = 9;
 
   // A container for the default values for every type of Shape
   message DefaultShapes {
@@ -228,7 +237,7 @@ message Defaults {
   }
 
   // The default values for every type of Shape
-  required DefaultShapes shapes = 9;
+  required DefaultShapes shapes = 10;
 
   // A container for the default values for every type of SpectrumTexture
   message DefaultSpectrumTextures {
@@ -277,5 +286,5 @@ message Defaults {
   }
 
   // The default values for every type of SpectrumTexture
-  required DefaultSpectrumTextures spectrum_textures = 10;
+  required DefaultSpectrumTextures spectrum_textures = 11;
 }

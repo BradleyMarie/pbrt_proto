@@ -69,65 +69,20 @@ message AreaLightSource {
   // The type of AreaLightSource. If none are set, then the current area light
   // source should be unset.
   oneof area_light_source_type {
-    DiffuseAreaLightSourceV1 diffuse = 1;  // Use a diffuse area light.
+    DiffuseAreaLightSourceV1 diffuse = 1;  // Use a diffuse area light
   }
 }
 
+// A directive which sets the Camera to use for rendering.
 message Camera {
-  message ScreenWindow {
-    required double x_min = 1;
-    required double x_max = 2;
-    required double y_min = 3;
-    required double y_max = 4;
-  }
-
-  message Environment {
-    optional double lensradius = 1 [default = 0.0];
-    optional double focaldistance = 2 [default = 1e30];
-    optional double frameaspectratio = 3;  // Must check
-    optional ScreenWindow screenwindow = 4;  // Must check
-    optional double shutteropen = 5 [default = 0.0];
-    optional double shutterclose = 6 [default = 1.0];
-  }
-
-  message Orthographic {
-    optional double lensradius = 1 [default = 0.0];
-    optional double focaldistance = 2 [default = 1e6];
-    optional double frameaspectratio = 3;  // Must check
-    optional ScreenWindow screenwindow = 4;  // Must check
-    optional double shutteropen = 5 [default = 0.0];
-    optional double shutterclose = 6 [default = 1.0];
-  }
-
-  message Perspective {
-    optional double lensradius = 1 [default = 0.0];
-    optional double focaldistance = 2 [default = 1e6];
-    optional double frameaspectratio = 3;  // Must check
-    optional ScreenWindow screenwindow = 4;  // Must check
-    optional double fov = 5 [default = 90.0];
-    optional double halffov = 6;  // Must check, overrides fov
-    optional double shutteropen = 7 [default = 0.0];
-    optional double shutterclose = 8 [default = 1.0];
-  }
-
-  message Realistic {
-    optional string lensfile = 1 [default = ""];
-    optional double aperturediameter = 2 [default = 1.0];
-    optional double focusdistance = 3 [default = 10.0];
-    optional bool simpleweighting = 4 [default = true];
-    optional double shutteropen = 5 [default = 0.0];
-    optional double shutterclose = 6 [default = 1.0];
-  }
-
-  // If attempting to render with a Camera that does not have one of these
-  // fields set, the renderer should render a black image.
-  //
-  // https://github.com/mmp/pbrt-v3/blob/13d871faae88233b327d04cda24022b8bb0093ee/src/core/api.cpp#L1664
+  // The type of camera to use. If none are set, then the current camera should
+  // be unset. If no camera is set at the time an image is to be rendered a
+  // black frame should be rendered.
   oneof camera_type {
-    Environment environment = 1;
-    Orthographic orthographic = 2;
-    Perspective perspective = 3;
-    Realistic realistic = 4;
+    SphericalCamera environment = 1;  // Use a spherical camera
+    OrthographicCamera orthographic = 2; // Use an orthographic camera
+    PerspectiveCamera perspective = 3;  // Use a pespective camera
+    RealisticCamera realistic = 4;  // Use a realistic camera
   }
 }
 

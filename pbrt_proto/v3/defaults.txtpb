@@ -61,6 +61,28 @@ area_light_sources {
     }
   }
 }
+cameras {
+  environment {
+    mapping: EQUIRECTANGULAR
+    focaldistance: 1e30
+    hither: 0.0
+    yon: inf
+  }
+  orthographic {
+    focaldistance: 1e6
+    hither: 0.0
+    yon: inf
+  }
+  perspective {
+    focaldistance: 1e6
+    hither: 0.0
+    yon: inf
+  }
+  realistic {
+    focusdistance: 10.0
+    simpleweighting: true
+  }
+}
 films {
   image {
     cropwindow {

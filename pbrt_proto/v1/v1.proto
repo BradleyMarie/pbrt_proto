@@ -19,6 +19,18 @@ message AreaLightSource {
   // The type of AreaLightSource. If none are set, then the current area light
   // source should be unset.
   oneof area_light_source_type {
-    DiffuseAreaLightSourceV1 area = 1;  // Use a diffuse area light.
+    DiffuseAreaLightSourceV1 area = 1;  // Use a diffuse area light
+  }
+}
+
+// A directive which sets the current camera.
+message Camera {
+  // The type of camera to use. If none are set, then the current camera should
+  // be unset. If no camera is set at the time an image is to be rendered a
+  // black frame should be rendered.
+  oneof camera_type {
+    SphericalCamera environment = 1;  // Use a spherical camera
+    OrthographicCamera orthographic = 2; // Use an orthographic camera
+    PerspectiveCamera perspective = 3;  // Use a pespective camera
   }
 }

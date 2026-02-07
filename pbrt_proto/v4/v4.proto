@@ -19,6 +19,18 @@ message AreaLightSource {
   // The type of AreaLightSource. If none are set, then the renderer should exit
   // with an error.
   oneof area_light_source_type {
-    DiffuseAreaLightSourceV2 diffuse = 1;  // Use a diffuse area light.
+    DiffuseAreaLightSourceV2 diffuse = 1;  // Use a diffuse area light
+  }
+}
+
+// A directive which sets the Camera to use for rendering.
+message Camera {
+  // The type of camera to use. If none are set, then the the renderer should
+  // exit with an error.
+  oneof camera_type {
+    SphericalCamera spherical = 1;  // Use a spherical camera
+    OrthographicCamera orthographic = 2; // Use an orthographic camera
+    PerspectiveCamera perspective = 3;  // Use a pespective camera
+    RealisticCamera realistic = 4;  // Use a realistic camera
   }
 }
