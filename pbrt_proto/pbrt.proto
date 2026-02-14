@@ -827,3 +827,90 @@ message RealisticCamera {
   //       reading later input.
   optional bool simpleweighting = 7;
 }
+
+//
+// Common Pixel Filters
+//
+
+// A pixel filter that performs a box filter.
+message BoxPixelFilter {
+  // The width of the filter in the x direction in pixels.
+  //
+  // NOTE: Prior to PBRTv4 this field was named "xwidth".
+  optional double xradius = 1 [default = 0.5];
+
+  // The width of the filter in the y direction in pixels.
+  //
+  // NOTE: Prior to PBRTv4 this field was named "ywidth".
+  optional double yradius = 2 [default = 0.5];
+}
+
+// A pixel filter that performs a Gaussian filter.
+message GaussianPixelFilter {
+  // The width of the filter in the x direction in pixels. The default value of
+  // this value changed from 2.0 to 1.5 starting with PBRTv4.
+  //
+  // NOTE: Prior to PBRTv4 this field was named "xwidth".
+  optional double xradius = 1;
+
+  // The width of the filter in the x direction in pixels. The default value of
+  // this value changed from 2.0 to 1.5 starting with PBRTv4.
+  //
+  // NOTE: Prior to PBRTv4 this field was named "ywidth".
+  optional double yradius = 2;
+
+  // Standard deviation of the Gaussian distribution.
+  //
+  // NOTE: Prior to PBRTv4 this field was named "alpha" and was computed
+  //       differently. The formula to derive `alpha` from this field is
+  //       `1.0 / (2.0 * sigma * sigma).
+  optional double sigma = 3 [default = 0.5];
+}
+
+// A pixel filter that performs a Lanczos filter.
+message LanczosPixelFilter {
+  // The width of the filter in the x direction in pixels.
+  //
+  // NOTE: Prior to PBRTv4 this field was named "xwidth".
+  optional double xradius = 1 [default = 4.0];
+
+  // The width of the filter in the y direction in pixels.
+  //
+  // NOTE: Prior to PBRTv4 this field was named "ywidth".
+  optional double yradius = 2 [default = 4.0];
+
+  // The extent of the sinc function in cycles before it is clamped to zero.
+  optional double tau = 3 [default = 3.0];
+}
+
+// A pixel filter that performs a Mitchell-Netravali filter.
+message MitchellPixelFilter {
+  // The width of the filter in the x direction in pixels.
+  //
+  // NOTE: Prior to PBRTv4 this field was named "xwidth".
+  optional double xradius = 1 [default = 2.0];
+
+  // The width of the filter in the y direction in pixels.
+  //
+  // NOTE: Prior to PBRTv4 this field was named "ywidth".
+  optional double yradius = 2 [default = 2.0];
+
+  // The `B` parameter that controls the shape of the filter.
+  optional double B = 3 [default = 0.333333333333333333];
+
+  // The `C` parameter that controls the shape of the filter.
+  optional double C = 4 [default = 0.333333333333333333];
+}
+
+// A pixel filter that performs a triangle filter.
+message TrianglePixelFilter {
+  // The width of the filter in the x direction in pixels.
+  //
+  // NOTE: Prior to PBRTv4 this field was named "xwidth".
+  optional double xradius = 1 [default = 2.0];
+
+  // The width of the filter in the y direction in pixels.
+  //
+  // NOTE: Prior to PBRTv4 this field was named "ywidth".
+  optional double yradius = 2 [default = 2.0];
+}

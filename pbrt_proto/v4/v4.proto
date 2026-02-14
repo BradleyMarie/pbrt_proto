@@ -34,3 +34,16 @@ message Camera {
     RealisticCamera realistic = 4;  // Use a realistic camera
   }
 }
+
+// A directive which sets the Camera to use for rendering.
+message PixelFilter {
+  // The type of PixelFilter to use. If none are set, then the the renderer
+  // should exit with an error.
+  oneof pixel_filter_type {
+    BoxPixelFilter box = 1;  // Use a box filter
+    GaussianPixelFilter gaussian = 2;  // Use a Gaussian filter
+    MitchellPixelFilter mitchell = 3;  // Use a Mitchell-Netravali filter
+    LanczosPixelFilter sinc = 4;  // Use a Lanczos filter
+    TrianglePixelFilter triangle = 5;  // Use a triangle filter
+  }
+}

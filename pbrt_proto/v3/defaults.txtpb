@@ -2352,6 +2352,129 @@ materials {
     }
   }
 }
+light_sources {
+  distant {
+    L {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    scale {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    from {
+      x: 0.0
+      y: 0.0
+      z: 0.0
+    }
+    to {
+      x: 0.0
+      y: 0.0
+      z: 1.0
+    }
+  }
+  goniometric {
+    I {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    scale {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+  }
+  infinite {
+    L {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    scale {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+  }
+  point {
+    I {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    scale {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    from {
+      x: 0.0
+      y: 0.0
+      z: 0.0
+    }
+  }
+  projection {
+    I {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    scale {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+  }
+  spot {
+    I {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    scale {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    from {
+      x: 0.0
+      y: 0.0
+      z: 0.0
+    }
+    to {
+      x: 0.0
+      y: 0.0
+      z: 1.0
+    }
+  }
+}
 media {
   homogeneous {
     key: 0
@@ -4704,127 +4827,10 @@ media {
     }
   }
 }
-light_sources {
-  distant {
-    L {
-      rgb_spectrum {
-        r: 1.0
-        g: 1.0
-        b: 1.0
-      }
-    }
-    scale {
-      rgb_spectrum {
-        r: 1.0
-        g: 1.0
-        b: 1.0
-      }
-    }
-    from {
-      x: 0.0
-      y: 0.0
-      z: 0.0
-    }
-    to {
-      x: 0.0
-      y: 0.0
-      z: 1.0
-    }
-  }
-  goniometric {
-    I {
-      rgb_spectrum {
-        r: 1.0
-        g: 1.0
-        b: 1.0
-      }
-    }
-    scale {
-      rgb_spectrum {
-        r: 1.0
-        g: 1.0
-        b: 1.0
-      }
-    }
-  }
-  infinite {
-    L {
-      rgb_spectrum {
-        r: 1.0
-        g: 1.0
-        b: 1.0
-      }
-    }
-    scale {
-      rgb_spectrum {
-        r: 1.0
-        g: 1.0
-        b: 1.0
-      }
-    }
-  }
-  point {
-    I {
-      rgb_spectrum {
-        r: 1.0
-        g: 1.0
-        b: 1.0
-      }
-    }
-    scale {
-      rgb_spectrum {
-        r: 1.0
-        g: 1.0
-        b: 1.0
-      }
-    }
-    from {
-      x: 0.0
-      y: 0.0
-      z: 0.0
-    }
-  }
-  projection {
-    I {
-      rgb_spectrum {
-        r: 1.0
-        g: 1.0
-        b: 1.0
-      }
-    }
-    scale {
-      rgb_spectrum {
-        r: 1.0
-        g: 1.0
-        b: 1.0
-      }
-    }
-  }
-  spot {
-    I {
-      rgb_spectrum {
-        r: 1.0
-        g: 1.0
-        b: 1.0
-      }
-    }
-    scale {
-      rgb_spectrum {
-        r: 1.0
-        g: 1.0
-        b: 1.0
-      }
-    }
-    from {
-      x: 0.0
-      y: 0.0
-      z: 0.0
-    }
-    to {
-      x: 0.0
-      y: 0.0
-      z: 1.0
-    }
+pixel_filter {
+  gaussian {
+    xradius: 2.0
+    yradius: 2.0
   }
 }
 shapes {

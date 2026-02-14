@@ -163,6 +163,32 @@ cc_test(
 )
 
 cc_library(
+    name = "pixel_filters",
+    srcs = ["pixel_filters.cc"],
+    hdrs = ["pixel_filters.h"],
+    deps = [
+        ":parser",
+        "//pbrt_proto:pbrt_cc_proto",
+        "@abseil-cpp//absl/container:flat_hash_map",
+        "@abseil-cpp//absl/strings:string_view",
+    ],
+)
+
+cc_test(
+    name = "pixel_filters_test",
+    srcs = ["pixel_filters_test.cc"],
+    deps = [
+        ":parser",
+        ":pixel_filters",
+        "//pbrt_proto:pbrt_cc_proto",
+        "//pbrt_proto/testing:proto_matchers",
+        "@abseil-cpp//absl/container:flat_hash_map",
+        "@abseil-cpp//absl/strings:string_view",
+        "@googletest//:gtest_main",
+    ],
+)
+
+cc_library(
     name = "tokenizer",
     srcs = ["tokenizer.cc"],
     hdrs = ["tokenizer.h"],

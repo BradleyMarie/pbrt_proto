@@ -101,6 +101,30 @@ message Defaults {
   // The default values for every type of FloatTexture
   required DefaultFloatTextures float_textures = 6;
 
+  // A container for the default values for every type of LightSource
+  message DefaultLightSources {
+    // The default "distant" LightSource
+    required LightSource.Distant distant = 1;
+
+    // The default "goniometric" LightSource
+    required LightSource.Goniometric goniometric = 2;
+
+    // The default "infinite" LightSource
+    required LightSource.Infinite infinite = 3;
+
+    // The default "point" LightSource
+    required LightSource.Point point = 4;
+
+    // The default "projection" LightSource
+    required LightSource.Projection projection = 5;
+
+    // The default "spot" LightSource
+    required LightSource.Spot spot = 6;
+  }
+
+  // The default values for every type of LightSource
+  required DefaultLightSources light_sources = 7;
+
   // A container for the default values for every type of Material
   message DefaultMaterials {
     // The default "disney" Material
@@ -151,7 +175,7 @@ message Defaults {
   }
 
   // The default values for every type of Material
-  required DefaultMaterials materials = 7;
+  required DefaultMaterials materials = 8;
 
   // A container for the default values for every type of Medium
   message DefaultMedia {
@@ -171,31 +195,28 @@ message Defaults {
   }
 
   // The default values for every type of Medium
-  required DefaultMedia media = 8;
+  required DefaultMedia media = 9;
 
-  // A container for the default values for every type of LightSource
-  message DefaultLightSources {
-    // The default "distant" LightSource
-    required LightSource.Distant distant = 1;
+  // A container for the default values for every type of PixelFilter
+  message DefaultPixelFilter {
+    // The default "box" PixelFilter is fully captured in its definition
+    reserved 1;
 
-    // The default "goniometric" LightSource
-    required LightSource.Goniometric goniometric = 2;
+    // The default "gaussian" PixelFilter
+    required GaussianPixelFilter gaussian = 2;
 
-    // The default "infinite" LightSource
-    required LightSource.Infinite infinite = 3;
+    // The default "mitchell" PixelFilter is fully captured in its definition
+    reserved 3;
 
-    // The default "point" LightSource
-    required LightSource.Point point = 4;
+    // The default "sinc" PixelFilter is fully captured in its definition
+    reserved 4;
 
-    // The default "projection" LightSource
-    required LightSource.Projection projection = 5;
-
-    // The default "spot" LightSource
-    required LightSource.Spot spot = 6;
+    // The default "triangle" PixelFilter is fully captured in its definition
+    reserved 5;
   }
 
-  // The default values for every type of LightSource
-  required DefaultLightSources light_sources = 9;
+  // The default values for every type of PixelFilter
+  required DefaultPixelFilter pixel_filter = 10;
 
   // A container for the default values for every type of Shape
   message DefaultShapes {
@@ -237,7 +258,7 @@ message Defaults {
   }
 
   // The default values for every type of Shape
-  required DefaultShapes shapes = 10;
+  required DefaultShapes shapes = 11;
 
   // A container for the default values for every type of SpectrumTexture
   message DefaultSpectrumTextures {
@@ -286,5 +307,5 @@ message Defaults {
   }
 
   // The default values for every type of SpectrumTexture
-  required DefaultSpectrumTextures spectrum_textures = 11;
+  required DefaultSpectrumTextures spectrum_textures = 12;
 }

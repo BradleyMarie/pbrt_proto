@@ -591,46 +591,17 @@ message LightSource {
   }
 }
 
-// If attempting to render with a PixelFilter that does not have one of these
-// fields set, the renderer should exit immediately with an error.
-//
-// https://github.com/mmp/pbrt-v3/blob/13d871faae88233b327d04cda24022b8bb0093ee/src/core/api.cpp#L852
+// A directive which sets the Camera to use for rendering.
 message PixelFilter {
-  message Box {
-    optional double xwidth = 1 [default = 0.5];
-    optional double ywidth = 2 [default = 0.5];
-  }
-
-  message Gaussian {
-    optional double xwidth = 1 [default = 2.0];
-    optional double ywidth = 2 [default = 2.0];
-    optional double alpha = 3 [default = 2.0];
-  }
-
-  message Mitchell {
-    optional double xwidth = 1 [default = 0.5];
-    optional double ywidth = 2 [default = 0.5];
-    optional double B = 3 [default = 0.333333333333333333];
-    optional double C = 4 [default = 0.333333333333333333];
-  }
-
-  message Sinc {
-    optional double xwidth = 1 [default = 4.0];
-    optional double ywidth = 2 [default = 4.0];
-    optional double tau = 3 [default = 3.0];
-  }
-
-  message Triangle {
-    optional double xwidth = 1 [default = 2.0];
-    optional double ywidth = 2 [default = 2.0];
-  }
-
+  // The type of PixelFilter to use. If none are set, then the current
+  // PixelFilter should be unset. If no PixelFilter is set at the time an image
+  // is to be rendered the renderer should exit with an error.
   oneof pixel_filter_type {
-    Box box = 1;
-    Gaussian gaussian = 2;
-    Mitchell mitchell = 3;
-    Sinc sinc = 4;
-    Triangle triangle = 5;
+    BoxPixelFilter box = 1;  // Use a box filter
+    GaussianPixelFilter gaussian = 2;  // Use a Gaussian filter
+    MitchellPixelFilter mitchell = 3;  // Use a Mitchell-Netravali filter
+    LanczosPixelFilter sinc = 4;  // Use a Lanczos filter
+    TrianglePixelFilter triangle = 5;  // Use a triangle filter
   }
 }
 

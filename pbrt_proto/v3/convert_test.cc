@@ -1840,7 +1840,7 @@ TEST(Convert, PixelFilterBox) {
   EXPECT_THAT(Convert(stream),
               IsOkAndHolds(EqualsProto(
                   R"pb(directives {
-                         pixel_filter { box { xwidth: 1.0 ywidth: 2.0 } }
+                         pixel_filter { box { xradius: 1.0 yradius: 2.0 } }
                        })pb")));
 }
 
@@ -1848,12 +1848,12 @@ TEST(Convert, PixelFilterGaussian) {
   std::stringstream stream(
       "PixelFilter \"gaussian\" \"float xwidth\" 1.0 \"float ywidth\" 2.0 "
       "\"float "
-      "alpha\" 3.0");
+      "alpha\" 8.0");
   EXPECT_THAT(Convert(stream),
               IsOkAndHolds(EqualsProto(
                   R"pb(directives {
                          pixel_filter {
-                           gaussian { xwidth: 1.0 ywidth: 2.0 alpha: 3.0 }
+                           gaussian { xradius: 1.0 yradius: 2.0 sigma: 0.25 }
                          }
                        })pb")));
 }
@@ -1867,7 +1867,7 @@ TEST(Convert, PixelFilterMitchell) {
               IsOkAndHolds(EqualsProto(
                   R"pb(directives {
                          pixel_filter {
-                           mitchell { xwidth: 1.0 ywidth: 2.0 B: 3.0 C: 4.0 }
+                           mitchell { xradius: 1.0 yradius: 2.0 B: 3.0 C: 4.0 }
                          }
                        })pb")));
 }
@@ -1881,7 +1881,7 @@ TEST(Convert, PixelFilterSinc) {
       Convert(stream),
       IsOkAndHolds(EqualsProto(
           R"pb(directives {
-                 pixel_filter { sinc { xwidth: 1.0 ywidth: 2.0 tau: 3.0 } }
+                 pixel_filter { sinc { xradius: 1.0 yradius: 2.0 tau: 3.0 } }
                })pb")));
 }
 
@@ -1891,7 +1891,7 @@ TEST(Convert, PixelFilterTriangle) {
   EXPECT_THAT(Convert(stream),
               IsOkAndHolds(EqualsProto(
                   R"pb(directives {
-                         pixel_filter { triangle { xwidth: 1.0 ywidth: 3.0 } }
+                         pixel_filter { triangle { xradius: 1.0 yradius: 3.0 } }
                        })pb")));
 }
 

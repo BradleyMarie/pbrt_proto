@@ -17,6 +17,7 @@
 #include "pbrt_proto/shared/cameras.h"
 #include "pbrt_proto/shared/common.h"
 #include "pbrt_proto/shared/parser.h"
+#include "pbrt_proto/shared/pixel_filters.h"
 #include "pbrt_proto/v3/v3.pb.h"
 
 namespace pbrt_proto::v3 {
@@ -1676,85 +1677,15 @@ absl::Status ParserV3::PixelFilter(
   auto& pixel_filter = *output_.add_directives()->mutable_pixel_filter();
 
   if (pixel_filter_type == "box") {
-    auto& box = *pixel_filter.mutable_box();
-
-    if (std::optional<double> xwidth = TryRemoveFloat(parameters, "xwidth");
-        xwidth.has_value()) {
-      box.set_xwidth(*xwidth);
-    }
-
-    if (std::optional<double> ywidth = TryRemoveFloat(parameters, "ywidth");
-        ywidth.has_value()) {
-      box.set_ywidth(*ywidth);
-    }
+    RemoveBoxPixelFilterV1(parameters, *pixel_filter.mutable_box());
   } else if (pixel_filter_type == "gaussian") {
-    auto& gaussian = *pixel_filter.mutable_gaussian();
-
-    if (std::optional<double> xwidth = TryRemoveFloat(parameters, "xwidth");
-        xwidth.has_value()) {
-      gaussian.set_xwidth(*xwidth);
-    }
-
-    if (std::optional<double> ywidth = TryRemoveFloat(parameters, "ywidth");
-        ywidth.has_value()) {
-      gaussian.set_ywidth(*ywidth);
-    }
-
-    if (std::optional<double> alpha = TryRemoveFloat(parameters, "alpha");
-        alpha.has_value()) {
-      gaussian.set_alpha(*alpha);
-    }
+    RemoveGaussianPixelFilterV1(parameters, *pixel_filter.mutable_gaussian());
   } else if (pixel_filter_type == "mitchell") {
-    auto& mitchell = *pixel_filter.mutable_mitchell();
-
-    if (std::optional<double> xwidth = TryRemoveFloat(parameters, "xwidth");
-        xwidth.has_value()) {
-      mitchell.set_xwidth(*xwidth);
-    }
-
-    if (std::optional<double> ywidth = TryRemoveFloat(parameters, "ywidth");
-        ywidth.has_value()) {
-      mitchell.set_ywidth(*ywidth);
-    }
-
-    if (std::optional<double> B = TryRemoveFloat(parameters, "B");
-        B.has_value()) {
-      mitchell.set_b(*B);
-    }
-
-    if (std::optional<double> C = TryRemoveFloat(parameters, "C");
-        C.has_value()) {
-      mitchell.set_c(*C);
-    }
+    RemoveMitchellPixelFilterV1(parameters, *pixel_filter.mutable_mitchell());
   } else if (pixel_filter_type == "sinc") {
-    auto& sinc = *pixel_filter.mutable_sinc();
-
-    if (std::optional<double> xwidth = TryRemoveFloat(parameters, "xwidth");
-        xwidth.has_value()) {
-      sinc.set_xwidth(*xwidth);
-    }
-
-    if (std::optional<double> ywidth = TryRemoveFloat(parameters, "ywidth");
-        ywidth.has_value()) {
-      sinc.set_ywidth(*ywidth);
-    }
-
-    if (std::optional<double> tau = TryRemoveFloat(parameters, "tau");
-        tau.has_value()) {
-      sinc.set_tau(*tau);
-    }
+    RemoveLanczosPixelFilterV1(parameters, *pixel_filter.mutable_sinc());
   } else if (pixel_filter_type == "triangle") {
-    auto& triangle = *pixel_filter.mutable_triangle();
-
-    if (std::optional<double> xwidth = TryRemoveFloat(parameters, "xwidth");
-        xwidth.has_value()) {
-      triangle.set_xwidth(*xwidth);
-    }
-
-    if (std::optional<double> ywidth = TryRemoveFloat(parameters, "ywidth");
-        ywidth.has_value()) {
-      triangle.set_ywidth(*ywidth);
-    }
+    RemoveTrianglePixelFilterV1(parameters, *pixel_filter.mutable_triangle());
   } else {
     std::cerr << "Unrecognized PixelFilter type: \"" << pixel_filter_type
               << "\"" << std::endl;

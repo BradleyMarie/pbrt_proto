@@ -35,3 +35,17 @@ message Camera {
     PerspectiveCamera perspective = 3;  // Use a pespective camera
   }
 }
+
+// A directive which sets the Camera to use for rendering.
+message PixelFilter {
+  // The type of PixelFilter to use. If none are set, then the current
+  // PixelFilter should be unset. If no PixelFilter is set at the time an image
+  // is to be rendered the renderer should exit with an error.
+  oneof pixel_filter_type {
+    BoxPixelFilter box = 1;  // Use a box filter
+    GaussianPixelFilter gaussian = 2;  // Use a Gaussian filter
+    MitchellPixelFilter mitchell = 3;  // Use a Mitchell-Netravali filter
+    LanczosPixelFilter sinc = 4;  // Use a Lanczos filter
+    TrianglePixelFilter triangle = 5;  // Use a triangle filter
+  }
+}
