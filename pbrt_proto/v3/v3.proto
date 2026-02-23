@@ -86,31 +86,13 @@ message Camera {
   }
 }
 
+// A directive which sets the Film to use for rendering
 message Film {
-  message Image {
-    message CropWindow {
-      required double x_min = 1;
-      required double x_max = 2;
-      required double y_min = 3;
-      required double y_max = 4;
-    };
-
-    optional uint32 xresolution = 1 [default = 1280];
-    optional uint32 yresolution = 2 [default = 720];
-    optional CropWindow cropwindow = 3;
-    optional double scale = 4  [default = 1.0];
-    optional double maxsampleluminance = 5 [default = inf];
-    optional double diagonal = 6 [default = 35.0];
-    optional string filename = 7 [default = "pbrt.exr"];
-  }
-
-
-  // If attempting to render to a Film that does not have one of these fields
-  // set, the renderer should render a black image.
-  //
-  // https://github.com/mmp/pbrt-v3/blob/13d871faae88233b327d04cda24022b8bb0093ee/src/core/api.cpp#L1720
+  // The type of film to use. If none are set, then the current film should
+  // be unset. If no camera is set at the time an image is to be rendered a
+  // black frame should be rendered.
   oneof film_type {
-    Image image = 1;
+    RgbFilm image = 1;  // Use an rgb film
   }
 }
 

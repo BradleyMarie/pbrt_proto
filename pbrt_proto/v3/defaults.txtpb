@@ -85,12 +85,8 @@ cameras {
 }
 films {
   image {
-    cropwindow {
-      x_min: 0.0
-      x_max: 1.0
-      y_min: 0.0
-      y_max: 1.0
-    }
+    xresolution: 1280
+    yresolution: 720
   }
 }
 float_textures {

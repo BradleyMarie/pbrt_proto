@@ -16,6 +16,7 @@
 #include "pbrt_proto/shared/area_light_sources.h"
 #include "pbrt_proto/shared/cameras.h"
 #include "pbrt_proto/shared/common.h"
+#include "pbrt_proto/shared/films.h"
 #include "pbrt_proto/shared/parser.h"
 #include "pbrt_proto/shared/pixel_filters.h"
 #include "pbrt_proto/v3/v3.pb.h"
@@ -806,53 +807,7 @@ absl::Status ParserV3::Film(
   auto& film = *output_.add_directives()->mutable_film();
 
   if (film_type == "image") {
-    auto& image = *film.mutable_image();
-
-    if (std::optional<int32_t> xresolution =
-            TryRemoveInteger(parameters, "xresolution");
-        xresolution.has_value()) {
-      image.set_xresolution(std::max(0, *xresolution));
-    }
-
-    if (std::optional<int32_t> yresolution =
-            TryRemoveInteger(parameters, "yresolution");
-        yresolution.has_value()) {
-      image.set_yresolution(std::max(0, *yresolution));
-    }
-
-    std::optional<absl::Span<double>> cropwindow;
-    if (absl::Status status =
-            TryRemoveFloats(parameters, "cropwindow", 4, cropwindow);
-        !status.ok()) {
-      return status;
-    } else if (cropwindow.has_value()) {
-      image.mutable_cropwindow()->set_x_min((*cropwindow)[0]);
-      image.mutable_cropwindow()->set_x_max((*cropwindow)[1]);
-      image.mutable_cropwindow()->set_y_min((*cropwindow)[2]);
-      image.mutable_cropwindow()->set_y_max((*cropwindow)[3]);
-    }
-
-    if (std::optional<double> scale = TryRemoveFloat(parameters, "scale");
-        scale.has_value()) {
-      image.set_scale(*scale);
-    }
-
-    if (std::optional<double> maxsampleluminance =
-            TryRemoveFloat(parameters, "maxsampleluminance");
-        maxsampleluminance.has_value()) {
-      image.set_maxsampleluminance(*maxsampleluminance);
-    }
-
-    if (std::optional<double> diagonal = TryRemoveFloat(parameters, "diagonal");
-        diagonal.has_value()) {
-      image.set_diagonal(*diagonal);
-    }
-
-    if (std::optional<absl::string_view> filename =
-            TryRemoveString(parameters, "filename");
-        filename.has_value()) {
-      image.set_filename(*filename);
-    }
+    RemoveRgbFilmV3(parameters, *film.mutable_image());
   } else {
     std::cerr << "Unrecognized Film type: \"" << film_type << "\"" << std::endl;
   }

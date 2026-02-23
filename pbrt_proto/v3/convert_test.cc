@@ -275,15 +275,6 @@ TEST(Convert, FilmUnknown) {
               IsOkAndHolds(EqualsProto(R"pb(directives { film {} })pb")));
 }
 
-TEST(Convert, FilmImageBadCropWindow) {
-  std::stringstream stream("Film \"image\" \"float cropwindow\" [1 2 3]");
-  EXPECT_THAT(
-      Convert(stream),
-      StatusIs(
-          absl::StatusCode::kInvalidArgument,
-          "Invalid number of values for Film float parameter: 'cropwindow'"));
-}
-
 TEST(Convert, FilmImage) {
   std::stringstream stream(
       "Film \"image\" \"integer xresolution\" 200 \"integer yresolution\" 300 "

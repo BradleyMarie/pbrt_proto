@@ -35,6 +35,17 @@ message Camera {
   }
 }
 
+// A directive which sets the Film to use for rendering
+message Film {
+  // The type of film to use. If none are set, then the the renderer
+  // should exit with an error.
+  oneof film_type {
+    RgbFilm rgb = 1;  // Use an rgb film
+    GBufferFilm gbuffer = 2;  // Use an gbuffer film
+    SpectralFilm spectral = 3;  // Use an spectral film
+  }
+}
+
 // A directive which sets the Camera to use for rendering.
 message PixelFilter {
   // The type of PixelFilter to use. If none are set, then the the renderer

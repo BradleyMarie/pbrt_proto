@@ -36,6 +36,16 @@ message Camera {
   }
 }
 
+// A directive which sets the Film to use for rendering
+message Film {
+  // The type of film to use. If none are set, then the current film should
+  // be unset. If no camera is set at the time an image is to be rendered a
+  // black frame should be rendered.
+  oneof film_type {
+    RgbFilm image = 1;  // Use an rgb film
+  }
+}
+
 // A directive which sets the Camera to use for rendering.
 message PixelFilter {
   // The type of PixelFilter to use. If none are set, then the current

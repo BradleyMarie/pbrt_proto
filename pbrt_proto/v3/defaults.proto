@@ -50,7 +50,7 @@ message Defaults {
   // A container for the default values for every type of Film
   message DefaultFilms {
     // The default "image" Film
-    required Film.Image image = 1;
+    required RgbFilm image = 1;
   }
 
   // The default values for every type of Film
