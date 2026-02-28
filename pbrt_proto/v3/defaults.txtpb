@@ -4829,6 +4829,18 @@ pixel_filter {
     yradius: 2.0
   }
 }
+samplers {
+  halton {
+    pixelsamples: 16
+  }
+  stratified {
+    xsamples: 4
+    ysamples: 4
+  }
+  zerotwosequence {
+    pixelsamples: 16
+  }
+}
 shapes {
   hyperboloid {
     p1 {

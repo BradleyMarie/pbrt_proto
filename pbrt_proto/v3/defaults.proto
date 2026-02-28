@@ -218,6 +218,30 @@ message Defaults {
   // The default values for every type of PixelFilter
   required DefaultPixelFilter pixel_filter = 10;
 
+  // A container for the default values for every type of Sampler
+  message DefaultSamplers {
+    // The default "halton" Shape is fully captured in its definition
+    required HaltonSampler halton = 1;
+
+    // The default "maxmindist" Shape is fully captured in its definition
+    reserved 2;
+
+    // The default "random" Shape is fully captured in its definition
+    reserved 3;
+
+    // The default "sobol" Shape is fully captured in its definition
+    reserved 4;
+
+    // The default "stratified" Shape is fully captured in its definition
+    required StratifiedSampler stratified = 5;
+
+    // The default "zerotwosequence" Shape
+    required ZeroTwoSequenceSampler zerotwosequence = 6;
+  }
+
+  // The default values for every type of Sampler
+  required DefaultSamplers samplers = 11;
+
   // A container for the default values for every type of Shape
   message DefaultShapes {
     // The default "cone" Shape is fully captured in its definition
@@ -258,7 +282,7 @@ message Defaults {
   }
 
   // The default values for every type of Shape
-  required DefaultShapes shapes = 11;
+  required DefaultShapes shapes = 12;
 
   // A container for the default values for every type of SpectrumTexture
   message DefaultSpectrumTextures {
@@ -307,5 +331,5 @@ message Defaults {
   }
 
   // The default values for every type of SpectrumTexture
-  required DefaultSpectrumTextures spectrum_textures = 12;
+  required DefaultSpectrumTextures spectrum_textures = 13;
 }
