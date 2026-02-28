@@ -58,3 +58,18 @@ message PixelFilter {
     TrianglePixelFilter triangle = 5;  // Use a triangle filter
   }
 }
+
+// A directive which sets the Sampler to use for rendering.
+message Sampler {
+  // The type of Sampler to use. If none are set, then the renderer should exit
+  // with an error.
+  oneof sampler_type {
+    StratifiedSampler stratified = 4;  // Use a stratified sampler
+    IndependentSampler independent = 6;  // Use a random sampler
+    HaltonSampler halton = 7;  // Use a Halton seqeuence sampler
+    SobolSampler sobol = 9;  // Use a Sobol sequence sampler
+    PaddedSobolSampler paddedsobol = 10;  // Use a padded Sobol sequence sampler
+    ZSobolSampler zsobol = 11;  // Use a Z Sobol sequence sampler
+    PMJ02BNSampler pmj02bn = 12;  // Use a pmj02bn sequence sampler
+  }
+}

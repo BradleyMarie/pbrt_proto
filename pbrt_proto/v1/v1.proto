@@ -58,3 +58,25 @@ message PixelFilter {
     TrianglePixelFilter triangle = 5;  // Use a triangle filter
   }
 }
+
+// A directive which sets the Sampler to use for rendering.
+message Sampler {
+  // A sampler which stratifies samples in the plane of the image.
+  message Random {
+    // The number of samples in the image `x` axis.
+    optional uint32 xsamples = 5 [default = 2];
+
+    // The number of samples in the image `y` axis.
+    optional uint32 ysamples = 6 [default = 2];
+  }
+
+  // The type of Sampler to use. If none are set, then the current Sampler
+  // should be unset. If no Sampler is set at the time an image is to be
+  // rendered a black frame should be rendered.
+  oneof sampler_type {
+    BestCandidateSampler bestcandidate = 1;  // Use a best candidate sampler
+    ZeroTwoSequenceSampler lowdiscrepancy = 2;  // Use a 02-sequence sampler
+    Random random = 3;  // Use a minimally-stratified sampler
+    StratifiedSampler stratified = 4;  // Use a stratified sampler
+  }
+}

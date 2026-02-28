@@ -199,7 +199,7 @@ std::optional<CheckerboardAntialiasing> TryRemoveAaMode(
     if (*aamode == "closedform") {
       return CheckerboardAntialiasing::CLOSEDFORM;
     } else if (*aamode == "none") {
-      return CheckerboardAntialiasing::NONE;
+      return CheckerboardAntialiasing::NONE_AA;
     }
   }
 

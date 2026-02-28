@@ -19,6 +19,7 @@
 #include "pbrt_proto/shared/films.h"
 #include "pbrt_proto/shared/parser.h"
 #include "pbrt_proto/shared/pixel_filters.h"
+#include "pbrt_proto/shared/samplers.h"
 #include "pbrt_proto/v3/v3.pb.h"
 
 namespace pbrt_proto::v3 {
@@ -1677,88 +1678,19 @@ absl::Status ParserV3::Sampler(
   auto& sampler = *output_.add_directives()->mutable_sampler();
 
   if (sampler_type == "halton") {
-    auto& halton = *sampler.mutable_halton();
-
-    if (std::optional<int32_t> pixelsamples =
-            TryRemoveInteger(parameters, "pixelsamples");
-        pixelsamples.has_value()) {
-      halton.set_pixelsamples(std::max(0, *pixelsamples));
-    }
-
-    if (std::optional<bool> samplepixelcenter =
-            TryRemoveBool(parameters, "samplepixelcenter");
-        samplepixelcenter.has_value()) {
-      halton.set_samplepixelcenter(*samplepixelcenter);
-    }
+    RemoveHaltonSamplerV2(parameters, *sampler.mutable_halton());
   } else if (sampler_type == "maxmindist") {
-    auto& maxmindist = *sampler.mutable_maxmindist();
-
-    if (std::optional<int32_t> pixelsamples =
-            TryRemoveInteger(parameters, "pixelsamples");
-        pixelsamples.has_value()) {
-      maxmindist.set_pixelsamples(std::max(0, *pixelsamples));
-    }
-
-    if (std::optional<int32_t> dimensions =
-            TryRemoveInteger(parameters, "dimensions");
-        dimensions.has_value()) {
-      maxmindist.set_dimensions(std::max(0, *dimensions));
-    }
+    RemovePixelSamples(parameters, *sampler.mutable_maxmindist());
+    RemoveDimension(parameters, *sampler.mutable_maxmindist());
   } else if (sampler_type == "random") {
-    auto& random = *sampler.mutable_random();
-
-    if (std::optional<int32_t> pixelsamples =
-            TryRemoveInteger(parameters, "pixelsamples");
-        pixelsamples.has_value()) {
-      random.set_pixelsamples(std::max(0, *pixelsamples));
-    }
+    RemoveIndependentSamplerV1(parameters, *sampler.mutable_random());
   } else if (sampler_type == "sobol") {
-    auto& sobol = *sampler.mutable_sobol();
-
-    if (std::optional<int32_t> pixelsamples =
-            TryRemoveInteger(parameters, "pixelsamples");
-        pixelsamples.has_value()) {
-      sobol.set_pixelsamples(std::max(0, *pixelsamples));
-    }
+    RemoveSobolSamplerV1(parameters, *sampler.mutable_sobol());
   } else if (sampler_type == "stratified") {
-    auto& stratified = *sampler.mutable_stratified();
-
-    if (std::optional<bool> jitter = TryRemoveBool(parameters, "jitter");
-        jitter.has_value()) {
-      stratified.set_jitter(*jitter);
-    }
-
-    if (std::optional<int32_t> xsamples =
-            TryRemoveInteger(parameters, "xsamples");
-        xsamples.has_value()) {
-      stratified.set_xsamples(std::max(0, *xsamples));
-    }
-
-    if (std::optional<int32_t> ysamples =
-            TryRemoveInteger(parameters, "ysamples");
-        ysamples.has_value()) {
-      stratified.set_ysamples(std::max(0, *ysamples));
-    }
-
-    if (std::optional<int32_t> dimensions =
-            TryRemoveInteger(parameters, "dimensions");
-        dimensions.has_value()) {
-      stratified.set_dimensions(std::max(0, *dimensions));
-    }
+    RemoveStratifiedSamplerV2(parameters, *sampler.mutable_stratified());
   } else if (sampler_type == "02sequence" || sampler_type == "lowdiscrepancy") {
-    auto& zerotwosequence = *sampler.mutable_zerotwosequence();
-
-    if (std::optional<int32_t> pixelsamples =
-            TryRemoveInteger(parameters, "pixelsamples");
-        pixelsamples.has_value()) {
-      zerotwosequence.set_pixelsamples(std::max(0, *pixelsamples));
-    }
-
-    if (std::optional<int32_t> dimensions =
-            TryRemoveInteger(parameters, "dimensions");
-        dimensions.has_value()) {
-      zerotwosequence.set_dimensions(std::max(0, *dimensions));
-    }
+    RemoveZeroTwoSequenceSamplerV2(parameters,
+                                   *sampler.mutable_zerotwosequence());
   } else {
     std::cerr << "Unrecognized Sampler type: \"" << sampler_type << "\""
               << std::endl;

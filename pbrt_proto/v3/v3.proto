@@ -587,48 +587,27 @@ message PixelFilter {
   }
 }
 
+// A directive which sets the Sampler to use for rendering.
 message Sampler {
-  message Halton {
-    optional uint32 pixelsamples = 1 [default = 16];
-    optional bool samplepixelcenter = 2 [default = false];
-  }
-
+  // A sampler which uses the Grunschloss maximized-minimized algorithm.
   message MaxMinDist {
+    // The number of samples to do per pixel.
     optional uint32 pixelsamples = 1 [default = 16];
-    optional uint32 dimensions = 2 [default = 4];
-  }
 
-  message Random {
-    optional uint32 pixelsamples = 1 [default = 4];
-  }
-
-  message Sobol {
-    optional uint32 pixelsamples = 1 [default = 16];
-  }
-
-  message Stratified {
-    optional bool jitter = 1 [default = true];
-    optional uint32 xsamples = 2 [default = 4];
-    optional uint32 ysamples = 3 [default = 4];
+    // The maximum number of sampled dimensions before falling back to a PRNG.
     optional uint32 dimensions = 4 [default = 4];
   }
 
-  message ZeroTwoSequence {
-    optional uint32 pixelsamples = 1 [default = 16];
-    optional uint32 dimensions = 2 [default = 4];
-  }
-
-  // If attempting to render to a Sampler that does not have one of these fields
-  // set, the renderer should render a black image.
-  //
-  // https://github.com/mmp/pbrt-v3/blob/13d871faae88233b327d04cda24022b8bb0093ee/src/core/api.cpp#L1671
+  // The type of Sampler to use. If none are set, then the current Sampler
+  // should be unset. If no Sampler is set at the time an image is to be
+  // rendered a black frame should be rendered.
   oneof sampler_type {
-    Halton halton = 1;
-    MaxMinDist maxmindist = 2;
-    Random random = 3;
-    Sobol sobol = 4;
-    Stratified stratified = 5;
-    ZeroTwoSequence zerotwosequence = 6;
+    ZeroTwoSequenceSampler zerotwosequence = 2;  // Use a 02-sequence sampler
+    StratifiedSampler stratified = 4;  // Use a stratified sampler
+    IndependentSampler random = 6;  // Use a random sampler
+    HaltonSampler halton = 7;  // Use a Halton seqeuence sampler
+    MaxMinDist maxmindist = 8;  // Use a min-max distribution sampler
+    SobolSampler sobol = 9;  // Use a Sobol sequence sampler
   }
 }
 

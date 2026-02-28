@@ -348,7 +348,7 @@ TEST(Convert, FloatTextureCheckerboard2DNone) {
                                             checkerboard2d {
                                               tex1 { float_value: 1.0 }
                                               tex2 { float_value: 2.0 }
-                                              aamode: NONE
+                                              aamode: NONE_AA
                                               mapping: UV
                                               uscale: 5.0
                                               vscale: 6.0
@@ -3010,7 +3010,7 @@ TEST(Convert, SpectrumTextureCheckerboard2DNone) {
                    checkerboard2d {
                      tex1 { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
                      tex2 { blackbody_spectrum { temperature: 3.0 scale: 4.0 } }
-                     aamode: NONE
+                     aamode: NONE_AA
                      mapping: UV
                      uscale: 5.0
                      vscale: 6.0

@@ -59,3 +59,36 @@ message PixelFilter {
     TrianglePixelFilter triangle = 5;  // Use a triangle filter
   }
 }
+
+// A directive which sets the Sampler to use for rendering.
+message Sampler {
+  // A sampler which adaptively varies the number of samples per pixels.
+  message AdaptiveSampler {
+    // The maximum number of samples per pixel.
+    optional uint32 maxsamples = 1 [default = 32];
+
+    // The minimum number of samples per pixel.
+    optional uint32 minsamples = 9 [default = 4];
+
+    // The supported methods for adapting the number of samples per pixel.
+    enum Method {
+      CONTRAST = 0;
+      SHAPEID = 1;
+    }
+
+    // The method to use to determine the number of samples per pixel.
+    optional Method method = 10 [default = CONTRAST];
+  }
+
+  // The type of Sampler to use. If none are set, then the current Sampler
+  // should be unset. If no Sampler is set at the time an image is to be
+  // rendered a black frame should be rendered.
+  oneof sampler_type {
+    BestCandidateSampler bestcandidate = 1;  // Use a best candidate sampler
+    ZeroTwoSequenceSampler lowdiscrepancy = 2;  // Use a 02-sequence sampler
+    StratifiedSampler stratified = 4;  // Use a stratified sampler
+    AdaptiveSampler adaptive = 5;  // Use an adaptive sampler
+    IndependentSampler random = 6;  // Use a random sampler
+    HaltonSampler halton = 7;  // Use a Halton sequence sampler
+  }
+}

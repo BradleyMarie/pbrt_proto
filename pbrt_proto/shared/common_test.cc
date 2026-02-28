@@ -592,7 +592,7 @@ TEST(TryRemoveAaMode, None) {
       {"aamode", parameter}};
 
   EXPECT_THAT(TryRemoveAaMode(parameters),
-              Optional(CheckerboardAntialiasing::NONE));
+              Optional(CheckerboardAntialiasing::NONE_AA));
 }
 
 TEST(TryRemoveMapping, NoValues) {
