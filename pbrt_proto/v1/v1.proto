@@ -19,7 +19,7 @@ message AreaLightSource {
   // The type of AreaLightSource. If none are set, then the current area light
   // source should be unset.
   oneof area_light_source_type {
-    DiffuseAreaLightSourceV1 area = 1;  // Use a diffuse area light
+    DiffuseAreaLightSource area = 1;  // Use a diffuse area light
   }
 }
 
@@ -42,6 +42,21 @@ message Film {
   // black frame should be rendered.
   oneof film_type {
     RgbFilm image = 1;  // Use an rgb film
+  }
+}
+
+// A directive which creates a light source.
+message LightSource {
+  // The type of light source to create. If none of these fields are set, the
+  // directive should have no impact.
+  oneof light_source_type {
+    DistantLightSource distant = 1;  // Create a distant directional light
+    GoniometricLightSource goniometric = 2;  // Create a goniometric point light
+    InfiniteLightSource infinite = 3;  // Create a distant spherical light
+    InfiniteLightSource infinitesample = 4;  // Create a distant spherical light
+    PointLightSource point = 5;  // Create a point light
+    ProjectionLightSource projection = 6;  // Create a projected light
+    SpotLightSource spot = 7;  // Create a spot light
   }
 }
 

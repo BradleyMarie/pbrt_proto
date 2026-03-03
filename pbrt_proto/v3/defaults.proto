@@ -32,7 +32,7 @@ message Defaults {
   // A container for the default values for every type of AreaLightSource
   message DefaultAreaLightSources {
     // The default "diffuse" AreaLightSource
-    required DiffuseAreaLightSourceV1 diffuse = 1;
+    required DiffuseAreaLightSource diffuse = 1;
   }
 
   // The default values for every type of AreaLightSource
@@ -104,22 +104,22 @@ message Defaults {
   // A container for the default values for every type of LightSource
   message DefaultLightSources {
     // The default "distant" LightSource
-    required LightSource.Distant distant = 1;
+    required DistantLightSource distant = 1;
 
     // The default "goniometric" LightSource
-    required LightSource.Goniometric goniometric = 2;
+    required GoniometricLightSource goniometric = 2;
 
     // The default "infinite" LightSource
-    required LightSource.Infinite infinite = 3;
+    required InfiniteLightSource infinite = 3;
 
     // The default "point" LightSource
-    required LightSource.Point point = 4;
+    required PointLightSource point = 4;
 
     // The default "projection" LightSource
-    required LightSource.Projection projection = 5;
+    required ProjectionLightSource projection = 5;
 
     // The default "spot" LightSource
-    required LightSource.Spot spot = 6;
+    required SpotLightSource spot = 6;
   }
 
   // The default values for every type of LightSource

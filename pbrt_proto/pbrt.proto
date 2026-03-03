@@ -568,40 +568,12 @@ message KdTreeAccelerator {
 // Common Area Light Sources
 //
 
-// A diffuse area light source as represented from PBRTv1 through PBRTv3.
-message DiffuseAreaLightSourceV1 {
-  // A constant spectral power distribution describing the light. 
-  optional Spectrum L = 1;
-
-  // The suggested number of shadow samples to take from the light. May be
-  // ignored depending on the Integrator used for rendering.
-  //
-  // NOTE: In PBRTv1 and PBRTv2 this field is referred to by the name
-  //       `nsamples`; however, it is referred to here as `samples` which is the
-  //       final name for the parameter that was used in PBRTv3.
-  optional uint32 samples = 2 [default = 1];
-
-  // A scale applied to the spectrum provided in `L`.
-  //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported in PBRTv1 and should be ignored when
-  //       reading PBRTv1 input.
-  optional Spectrum scale = 3;
-
-  // If true, light should emit from both sides both side of geometry.
-  //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is only supported in PBRTv3 and should be ignored when
-  //       reading input from other versions.
-  optional bool twosided = 4 [default = false];
-}
-
-// A diffuse area light source as represented starting from PBRTv4.
-message DiffuseAreaLightSourceV2 {
+// A diffuse area light source.
+message DiffuseAreaLightSource {
   // The spectral representation for the emitter. If neither is present, the
   // the default illuminant of the current color space should be used.
   oneof spectrum_type {
-    // A constant spectral power distribution describing the light.
+    // A spectral power distribution describing the light.
     Spectrum L = 1;
 
     // The path to an image file describing the spatially-varying emissions
@@ -609,14 +581,43 @@ message DiffuseAreaLightSourceV2 {
     string filename = 2;
   }
 
-  // A scale applied to the spectrum of the emitter.
-  optional double scale = 3 [default = 1.0];
+  // A scale applied to the spectrum provided in `L`.
+  //
+  // NOTE: Starting with PBRTv4 inputs, this field will only ever a Spectrum
+  //       with the `constant_spectrum` field filled out. This is because the
+  //       type of this field changed from a `spectrum` to a `float` starting
+  //       with PBRTv4.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported in PBRTv1 and should be ignored when
+  //       reading PBRTv1 input.
+  optional Spectrum scale = 3;
 
-  // The desired power of the light.
+  // If positive, the desired power of the light.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv4 and should be ignored when
+  //       reading earlier input.
   optional double power = 4 [default = -1.0];
 
   // If true, light should emit from both sides both side of geometry.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is only supported in PBRTv3 and should be ignored when
+  //       reading input from other versions.
   optional bool twosided = 5 [default = false];
+
+  // The suggested number of shadow samples to take from the light. May be
+  // ignored depending on the Integrator used for rendering.
+  //
+  // NOTE: In PBRTv1 and PBRTv2 this field is referred to by the name
+  //       `nsamples`; however, it is referred to here as `samples` which is the
+  //       final name for the parameter that was used in PBRTv3.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported after PBRTv3 and should be ignored when
+  //       reading later input.
+  optional uint32 samples = 6 [default = 1];
 }
 
 //
@@ -1108,6 +1109,224 @@ message SpectralFilm {
 
   // The maximum wavelength of the spectral range.  
   optional double lambdamax = 20 [default = 830.0];
+}
+
+//
+// Common Light Sources
+//
+
+// An infinitely distant directional light source.
+message DistantLightSource {
+  // A spectral power distribution describing the light.
+  optional Spectrum L = 1;
+
+  // A scale applied to the spectrum provided in `L`.
+  //
+  // NOTE: Starting with PBRTv4 inputs, this field will only ever a Spectrum
+  //       with the `constant_spectrum` field filled out. This is because the
+  //       type of this field changed from a `spectrum` to a `float` starting
+  //       with PBRTv4.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported in PBRTv1 and should be ignored when
+  //       reading PBRTv1 input.
+  optional Spectrum scale = 3;
+
+  // If positive, the desired illuminance of the light.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv4 and should be ignored when
+  //       reading earlier input.
+  optional double illuminance = 4 [default = -1.0];
+
+  // The start location of the vector describing the light's direction.
+  optional Point from = 7;
+
+  // The end location of the vector describing the light's direction.
+  optional Point to = 8;
+}
+
+// A local point light source with varying directional intensity.
+message GoniometricLightSource {
+  // A spectral power distribution describing the light.
+  optional Spectrum I = 1;
+
+  // The path to an image file describing the directionally-varying emissions
+  // of the light.
+  //
+  // NOTE: In PBRTv1, PBRTv2, and PBRTv3 this field is referred to by the name
+  //       `mapname`; however, it is referred to here as `samples` which is the
+  //       final name for the parameter that was used in PBRTv4.
+  optional string filename = 2 [default = ""];
+
+  // A scale applied to the spectrum provided in `I`.
+  //
+  // NOTE: Starting with PBRTv4 inputs, this field will only ever a Spectrum
+  //       with the `constant_spectrum` field filled out. This is because the
+  //       type of this field changed from a `spectrum` to a `float` starting
+  //       with PBRTv4.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported in PBRTv1 and should be ignored when
+  //       reading PBRTv1 input.
+  optional Spectrum scale = 3;
+
+  // If positive, the desired power of the light.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv4 and should be ignored when
+  //       reading earlier input.
+  optional double power = 4 [default = -1.0];
+}
+
+// An infinitely distant spherical light source.
+message InfiniteLightSource {
+  // A spectral power distribution describing the light.
+  optional Spectrum L = 1;
+
+  // The path to an image file describing the directionally-varying emissions
+  // of the light.
+  //
+  // NOTE: In PBRTv1, PBRTv2, and PBRTv3 this field is referred to by the name
+  //       `mapname`; however, it is referred to here as `samples` which is the
+  //       final name for the parameter that was used in PBRTv4.
+  optional string filename = 2 [default = ""];
+
+  // A scale applied to the spectrum provided in `L`.
+  //
+  // NOTE: Starting with PBRTv4 inputs, this field will only ever a Spectrum
+  //       with the `constant_spectrum` field filled out. This is because the
+  //       type of this field changed from a `spectrum` to a `float` starting
+  //       with PBRTv4.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported in PBRTv1 and should be ignored when
+  //       reading PBRTv1 input.
+  optional Spectrum scale = 3;
+
+  // If positive, the desired illuminance of the light.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv4 and should be ignored when
+  //       reading earlier input.
+  optional double illuminance = 4 [default = -1.0];
+
+  // The suggested number of shadow samples to take from the light. May be
+  // ignored depending on the Integrator used for rendering.
+  //
+  // NOTE: In PBRTv1 and PBRTv2 this field is referred to by the name
+  //       `nsamples`; however, it is referred to here as `samples` which is the
+  //       final name for the parameter that was used in PBRTv3.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported after PBRTv3 and should be ignored when
+  //       reading later input.
+  optional uint32 samples = 6 [default = 1];
+}
+
+// A local point light source.
+message PointLightSource {
+  // A spectral power distribution describing the light.
+  optional Spectrum I = 1;
+
+  // A scale applied to the spectrum provided in `I`.
+  //
+  // NOTE: Starting with PBRTv4 inputs, this field will only ever a Spectrum
+  //       with the `constant_spectrum` field filled out. This is because the
+  //       type of this field changed from a `spectrum` to a `float` starting
+  //       with PBRTv4.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported in PBRTv1 and should be ignored when
+  //       reading PBRTv1 input.
+  optional Spectrum scale = 3;
+
+  // If positive, the desired power of the light.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv4 and should be ignored when
+  //       reading earlier input.
+  optional double power = 4 [default = -1.0];
+
+  // The location of the light.
+  optional Point from = 7;
+}
+
+// A local projected light source.
+message ProjectionLightSource {
+  // A spectral power distribution describing the light.
+  optional Spectrum I = 1;
+  
+  // The path to an image file describing the directionally-varying emissions
+  // of the light.
+  //
+  // NOTE: In PBRTv1, PBRTv2, and PBRTv3 this field is referred to by the name
+  //       `mapname`; however, it is referred to here as `samples` which is the
+  //       final name for the parameter that was used in PBRTv4.
+  optional string filename = 2 [default = ""];
+
+  // A scale applied to the spectrum provided in `I`.
+  //
+  // NOTE: Starting with PBRTv4 inputs, this field will only ever a Spectrum
+  //       with the `constant_spectrum` field filled out. This is because the
+  //       type of this field changed from a `spectrum` to a `float` starting
+  //       with PBRTv4.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported in PBRTv1 and should be ignored when
+  //       reading PBRTv1 input.
+  optional Spectrum scale = 3;
+
+  // If positive, the desired power of the light.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv4 and should be ignored when
+  //       reading earlier input.
+  optional double power = 4 [default = -1.0];
+
+  // The spread angle of the projected light in degrees.
+  //
+  // NOTE: Starting with PBRTv4 this field now contains the full FOV instead of
+  //       half of the FOV. For consistiency, the PBRTv4 semantics should always
+  //       be used when filling this field regardless of the PBRT version.
+  optional double fov = 9 [default = 90.0];
+}
+
+// A local spotlight source.
+message SpotLightSource {
+  // A spectral power distribution describing the light.
+  optional Spectrum I = 1;
+
+  // A scale applied to the spectrum provided in `I`.
+  //
+  // NOTE: Starting with PBRTv4 inputs, this field will only ever a Spectrum
+  //       with the `constant_spectrum` field filled out. This is because the
+  //       type of this field changed from a `spectrum` to a `float` starting
+  //       with PBRTv4.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported in PBRTv1 and should be ignored when
+  //       reading PBRTv1 input.
+  optional Spectrum scale = 3;
+
+  // If positive, the desired power of the light.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv4 and should be ignored when
+  //       reading earlier input.
+  optional double power = 4 [default = -1.0];
+
+  // The location of the light.
+  optional Point from = 7;
+
+  // The location the light points at.
+  optional Point to = 8;
+
+  // The angle the spotlight cone makes with its primary axis.
+  optional double coneangle = 10 [default = 30.0];
+
+  // The angle at which the spotlight intensity begins to fall off.
+  optional double conedeltaangle = 11 [default = 5.0];
 }
 
 //

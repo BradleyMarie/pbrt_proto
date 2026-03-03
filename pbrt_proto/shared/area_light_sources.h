@@ -11,19 +11,19 @@ namespace pbrt_proto {
 
 void RemoveDiffuseAreaLightSourceV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    DiffuseAreaLightSourceV1& output);
+    DiffuseAreaLightSource& output);
 
 void RemoveDiffuseAreaLightSourceV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    DiffuseAreaLightSourceV1& output);
+    DiffuseAreaLightSource& output);
 
 void RemoveDiffuseAreaLightSourceV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    DiffuseAreaLightSourceV1& output);
+    DiffuseAreaLightSource& output);
 
 absl::Status RemoveDiffuseAreaLightSourceV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    DiffuseAreaLightSourceV2& output);
+    DiffuseAreaLightSource& output);
 
 }  // namespace pbrt_proto
 

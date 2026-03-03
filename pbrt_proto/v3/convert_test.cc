@@ -1029,7 +1029,7 @@ TEST(Convert, LightSourceGoniometric) {
                  light_source {
                    goniometric {
                      I { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
-                     mapname: "a"
+                     filename: "a"
                      scale {
                        blackbody_spectrum { temperature: 9.0 scale: 10.0 }
                      }
@@ -1050,7 +1050,7 @@ TEST(Convert, LightSourceInfinite) {
                    infinite {
                      L { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
                      samples: 3
-                     mapname: "a"
+                     filename: "a"
                      scale {
                        blackbody_spectrum { temperature: 9.0 scale: 10.0 }
                      }
@@ -1071,7 +1071,7 @@ TEST(Convert, LightSourceInfiniteNSamples) {
                    infinite {
                      L { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
                      samples: 3
-                     mapname: "a"
+                     filename: "a"
                      scale {
                        blackbody_spectrum { temperature: 9.0 scale: 10.0 }
                      }
@@ -1111,8 +1111,8 @@ TEST(Convert, LightSourceProjection) {
                  light_source {
                    projection {
                      I { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
-                     fov: 3.0
-                     mapname: "a"
+                     fov: 6.0
+                     filename: "a"
                      scale {
                        blackbody_spectrum { temperature: 9.0 scale: 10.0 }
                      }

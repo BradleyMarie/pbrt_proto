@@ -21,6 +21,7 @@ cc_library(
         "//pbrt_proto/shared:cameras",
         "//pbrt_proto/shared:common",
         "//pbrt_proto/shared:films",
+        "//pbrt_proto/shared:light_sources",
         "//pbrt_proto/shared:parser",
         "//pbrt_proto/shared:pixel_filters",
         "//pbrt_proto/shared:samplers",

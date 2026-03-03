@@ -22,7 +22,7 @@ using ::google::protobuf::EqualsProto;
 TEST(RemoveDiffuseAreaLightSourceV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
-  DiffuseAreaLightSourceV1 actual;
+  DiffuseAreaLightSource actual;
   RemoveDiffuseAreaLightSourceV1(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
@@ -65,7 +65,7 @@ TEST(RemoveDiffuseAreaLightSourceV1, WithValues) {
       {"scale", scale_parameter},
       {"twosided", twosided_parameter}};
 
-  DiffuseAreaLightSourceV1 actual;
+  DiffuseAreaLightSource actual;
   RemoveDiffuseAreaLightSourceV1(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 L { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
@@ -76,7 +76,7 @@ TEST(RemoveDiffuseAreaLightSourceV1, WithValues) {
 TEST(RemoveDiffuseAreaLightSourceV2, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
-  DiffuseAreaLightSourceV1 actual;
+  DiffuseAreaLightSource actual;
   RemoveDiffuseAreaLightSourceV2(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
@@ -119,7 +119,7 @@ TEST(RemoveDiffuseAreaLightSourceV2, WithValues) {
       {"scale", scale_parameter},
       {"twosided", twosided_parameter}};
 
-  DiffuseAreaLightSourceV1 actual;
+  DiffuseAreaLightSource actual;
   RemoveDiffuseAreaLightSourceV2(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 L { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
@@ -131,7 +131,7 @@ TEST(RemoveDiffuseAreaLightSourceV2, WithValues) {
 TEST(RemoveDiffuseAreaLightSourceV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
-  DiffuseAreaLightSourceV1 actual;
+  DiffuseAreaLightSource actual;
   RemoveDiffuseAreaLightSourceV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
@@ -174,7 +174,7 @@ TEST(RemoveDiffuseAreaLightSourceV3, WithValues) {
       {"scale", scale_parameter},
       {"twosided", twosided_parameter}};
 
-  DiffuseAreaLightSourceV1 actual;
+  DiffuseAreaLightSource actual;
   RemoveDiffuseAreaLightSourceV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 L { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
@@ -187,7 +187,7 @@ TEST(RemoveDiffuseAreaLightSourceV3, WithValues) {
 TEST(RemoveDiffuseAreaLightSourceV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
-  DiffuseAreaLightSourceV2 actual;
+  DiffuseAreaLightSource actual;
   ASSERT_TRUE(RemoveDiffuseAreaLightSourceV4(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
@@ -223,11 +223,11 @@ TEST(RemoveDiffuseAreaLightSourceV4, WithL) {
       {"power", power_parameter},
       {"twosided", twosided_parameter}};
 
-  DiffuseAreaLightSourceV2 actual;
+  DiffuseAreaLightSource actual;
   ASSERT_TRUE(RemoveDiffuseAreaLightSourceV4(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 L { blackbody_spectrum { temperature: 1.0 } }
-                scale: 2.0
+                scale { constant_spectrum: 2.0 }
                 power: 3.0
                 twosided: true
               )pb"));
@@ -264,11 +264,11 @@ TEST(RemoveDiffuseAreaLightSourceV4, WithFilename) {
       {"power", power_parameter},
       {"twosided", twosided_parameter}};
 
-  DiffuseAreaLightSourceV2 actual;
+  DiffuseAreaLightSource actual;
   ASSERT_TRUE(RemoveDiffuseAreaLightSourceV4(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 filename: "file"
-                scale: 2.0
+                scale { constant_spectrum: 2.0 }
                 power: 3.0
                 twosided: true
               )pb"));
@@ -290,7 +290,7 @@ TEST(RemoveDiffuseAreaLightSourceV4, LAndFilename) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"L", l_parameter}, {"filename", filename_parameter}};
 
-  DiffuseAreaLightSourceV2 actual;
+  DiffuseAreaLightSource actual;
   EXPECT_THAT(
       RemoveDiffuseAreaLightSourceV4(parameters, actual),
       StatusIs(

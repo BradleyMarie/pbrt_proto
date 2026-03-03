@@ -17,6 +17,7 @@
 #include "pbrt_proto/shared/cameras.h"
 #include "pbrt_proto/shared/common.h"
 #include "pbrt_proto/shared/films.h"
+#include "pbrt_proto/shared/light_sources.h"
 #include "pbrt_proto/shared/parser.h"
 #include "pbrt_proto/shared/pixel_filters.h"
 #include "pbrt_proto/shared/samplers.h"
@@ -1266,146 +1267,19 @@ absl::Status ParserV3::LightSource(
   auto& light_source = *output_.add_directives()->mutable_light_source();
 
   if (light_source_type == "distant") {
-    auto& distant = *light_source.mutable_distant();
-
-    TryRemoveSpectrumV1(parameters, "L",
-                        std::bind(&LightSource::Distant::mutable_l, &distant));
-
-    if (std::optional<std::array<double, 3>> from =
-            TryRemovePoint3(parameters, "from");
-        from) {
-      distant.mutable_from()->set_x((*from)[0]);
-      distant.mutable_from()->set_y((*from)[1]);
-      distant.mutable_from()->set_z((*from)[2]);
-    }
-
-    if (std::optional<std::array<double, 3>> to =
-            TryRemovePoint3(parameters, "to");
-        to) {
-      distant.mutable_to()->set_x((*to)[0]);
-      distant.mutable_to()->set_y((*to)[1]);
-      distant.mutable_to()->set_z((*to)[2]);
-    }
-
-    TryRemoveSpectrumV1(
-        parameters, "scale",
-        std::bind(&LightSource::Distant::mutable_scale, &distant));
+    RemoveDistantLightSourceV2(parameters, *light_source.mutable_distant());
   } else if (light_source_type == "goniometric") {
-    auto& goniometric = *light_source.mutable_goniometric();
-
-    TryRemoveSpectrumV1(
-        parameters, "I",
-        std::bind(&LightSource::Goniometric::mutable_i, &goniometric));
-
-    if (std::optional<absl::string_view> mapname =
-            TryRemoveString(parameters, "mapname");
-        mapname) {
-      goniometric.set_mapname(*mapname);
-    }
-
-    TryRemoveSpectrumV1(
-        parameters, "scale",
-        std::bind(&LightSource::Goniometric::mutable_scale, &goniometric));
+    RemoveGoniometricLightSourceV2(parameters,
+                                   *light_source.mutable_goniometric());
   } else if (light_source_type == "infinite") {
-    auto& infinite = *light_source.mutable_infinite();
-
-    TryRemoveSpectrumV1(
-        parameters, "L",
-        std::bind(&LightSource::Infinite::mutable_l, &infinite));
-
-    if (std::optional<int32_t> samples =
-            TryRemoveInteger(parameters, "nsamples");
-        samples) {
-      infinite.set_samples(std::max(0, *samples));
-    }
-
-    if (std::optional<int32_t> samples =
-            TryRemoveInteger(parameters, "samples");
-        samples) {
-      infinite.set_samples(std::max(0, *samples));
-    }
-
-    if (std::optional<absl::string_view> mapname =
-            TryRemoveString(parameters, "mapname");
-        mapname) {
-      infinite.set_mapname(*mapname);
-    }
-
-    TryRemoveSpectrumV1(
-        parameters, "scale",
-        std::bind(&LightSource::Infinite::mutable_scale, &infinite));
+    RemoveInfiniteLightSourceV3(parameters, *light_source.mutable_infinite());
   } else if (light_source_type == "point") {
-    auto& point = *light_source.mutable_point();
-
-    TryRemoveSpectrumV1(parameters, "I",
-                        std::bind(&LightSource::Point::mutable_i, &point));
-
-    if (std::optional<std::array<double, 3>> from =
-            TryRemovePoint3(parameters, "from");
-        from) {
-      point.mutable_from()->set_x((*from)[0]);
-      point.mutable_from()->set_y((*from)[1]);
-      point.mutable_from()->set_z((*from)[2]);
-    }
-
-    TryRemoveSpectrumV1(parameters, "scale",
-                        std::bind(&LightSource::Point::mutable_scale, &point));
+    RemovePointLightSourceV2(parameters, *light_source.mutable_point());
   } else if (light_source_type == "projection") {
-    auto& projection = *light_source.mutable_projection();
-
-    TryRemoveSpectrumV1(
-        parameters, "I",
-        std::bind(&LightSource::Projection::mutable_i, &projection));
-
-    if (std::optional<double> fov = TryRemoveFloat(parameters, "fov"); fov) {
-      projection.set_fov(*fov);
-    }
-
-    if (std::optional<absl::string_view> mapname =
-            TryRemoveString(parameters, "mapname");
-        mapname) {
-      projection.set_mapname(*mapname);
-    }
-
-    TryRemoveSpectrumV1(
-        parameters, "scale",
-        std::bind(&LightSource::Projection::mutable_scale, &projection));
+    RemoveProjectionLightSourceV2(parameters,
+                                  *light_source.mutable_projection());
   } else if (light_source_type == "spot") {
-    auto& spot = *light_source.mutable_spot();
-
-    TryRemoveSpectrumV1(parameters, "I",
-                        std::bind(&LightSource::Spot::mutable_i, &spot));
-
-    if (std::optional<std::array<double, 3>> from =
-            TryRemovePoint3(parameters, "from");
-        from) {
-      spot.mutable_from()->set_x((*from)[0]);
-      spot.mutable_from()->set_y((*from)[1]);
-      spot.mutable_from()->set_z((*from)[2]);
-    }
-
-    if (std::optional<std::array<double, 3>> to =
-            TryRemovePoint3(parameters, "to");
-        to) {
-      spot.mutable_to()->set_x((*to)[0]);
-      spot.mutable_to()->set_y((*to)[1]);
-      spot.mutable_to()->set_z((*to)[2]);
-    }
-
-    if (std::optional<double> coneangle =
-            TryRemoveFloat(parameters, "coneangle");
-        coneangle) {
-      spot.set_coneangle(*coneangle);
-    }
-
-    if (std::optional<double> conedeltaangle =
-            TryRemoveFloat(parameters, "conedeltaangle");
-        conedeltaangle) {
-      spot.set_conedeltaangle(*conedeltaangle);
-    }
-
-    TryRemoveSpectrumV1(parameters, "scale",
-                        std::bind(&LightSource::Spot::mutable_scale, &spot));
+    RemoveSpotLightSourceV2(parameters, *light_source.mutable_spot());
   } else {
     std::cerr << "Unrecognized LightSource type: \"" << light_source_type
               << "\"" << std::endl;

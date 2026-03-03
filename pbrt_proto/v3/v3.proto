@@ -69,7 +69,7 @@ message AreaLightSource {
   // The type of AreaLightSource. If none are set, then the current area light
   // source should be unset.
   oneof area_light_source_type {
-    DiffuseAreaLightSourceV1 diffuse = 1;  // Use a diffuse area light
+    DiffuseAreaLightSource diffuse = 1;  // Use a diffuse area light
   }
 }
 
@@ -516,60 +516,17 @@ message Material {
   }
 }
 
+// A directive which creates a light source.
 message LightSource {
-  message Distant {
-    optional Spectrum L = 1;
-    optional pbrt_proto.Point from = 2;
-    optional pbrt_proto.Point to = 3;
-    optional Spectrum scale = 4;
-  }
-
-  message Goniometric {
-    optional Spectrum I = 1;
-    optional string mapname = 2 [default = ""];
-    optional Spectrum scale = 3;
-  }
-
-  message Infinite {
-    optional Spectrum L = 1;
-    optional uint32 samples = 2 [default = 1];
-    optional string mapname = 3 [default = ""];
-    optional Spectrum scale = 4;
-  }
-
-  message Point {
-    optional Spectrum I = 1;
-    optional pbrt_proto.Point from = 2;
-    optional Spectrum scale = 3;
-  }
-
-  message Projection {
-    optional Spectrum I = 1;
-    optional double fov = 2 [default = 45.0];
-    optional string mapname = 3 [default = ""];
-    optional Spectrum scale = 4;
-  }
-
-  message Spot {
-    optional Spectrum I = 1;
-    optional pbrt_proto.Point from = 2;
-    optional pbrt_proto.Point to = 3;
-    optional double coneangle = 4 [default = 30.0];
-    optional double conedeltaangle = 5 [default = 5.0];
-    optional Spectrum scale = 6;
-  }
-
-  // If none of these fields are set, the directive should be ignored and have
-  // no impact.
-  //
-  // https://github.com/mmp/pbrt-v3/blob/13d871faae88233b327d04cda24022b8bb0093ee/src/core/api.cpp#L1306
+  // The type of light source to create. If none of these fields are set, the
+  // directive should have no impact.
   oneof light_source_type {
-    Distant distant = 1;
-    Goniometric goniometric = 2;
-    Infinite infinite = 3;
-    Point point = 4;
-    Projection projection = 5;
-    Spot spot = 6;
+    DistantLightSource distant = 1;  // Create a distant directional light
+    GoniometricLightSource goniometric = 2;  // Create a goniometric point light
+    InfiniteLightSource infinite = 3;  // Create a distant spherical light
+    PointLightSource point = 5;  // Create a point light
+    ProjectionLightSource projection = 6;  // Create a projected light
+    SpotLightSource spot = 7;  // Create a spot light
   }
 }
 
