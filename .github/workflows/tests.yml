@@ -16,7 +16,7 @@ jobs:
       with:
         root-reserve-mb: 4096
         swap-size-mb: 1024
-        remove-android: 'true'
+        remove-android: 'false'
         remove-codeql: 'true'
         remove-docker-images: 'true'
         remove-dotnet: 'true'
