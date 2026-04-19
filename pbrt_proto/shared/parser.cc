@@ -1399,6 +1399,16 @@ std::optional<std::array<double, 3>> TryRemoveRgb(
   return result;
 }
 
+std::optional<absl::Span<std::array<double, 3>>> TryRemoveRgbs(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view parameter_name) {
+  std::optional<absl::Span<std::array<double, 3>>> result;
+  TryRemoveValues<ParameterType::RGB>(parameters, parameter_name, std::nullopt,
+                                      result)
+      .IgnoreError();
+  return result;
+}
+
 std::optional<absl::string_view> TryRemoveSpectrumFilename(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     absl::string_view parameter_name) {

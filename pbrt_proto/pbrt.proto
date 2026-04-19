@@ -925,8 +925,8 @@ message GBufferFilm {
   // Clamp pixels with RGB components higher than the maximum provided.
   optional double maxcomponentvalue = 11 [default = inf];
 
-  // If non-zero, this provides the temperature in degrees kelvin that is used
-  // as the reference color temperature used for white.
+  // If non-zero, this provides the temperature in kelvin that is used  as the
+  // reference color temperature used for white.
   optional double whitebalance = 12 [default = 0.0];
 
   // The coordinate system of stored geometric data.
@@ -1019,8 +1019,8 @@ message RgbFilm {
     double maxcomponentvalue = 11 [default = inf];
   }
 
-  // If non-zero, this provides the temperature in degrees kelvin that is used
-  // as the reference color temperature used for white.
+  // If non-zero, this provides the temperature in kelvin that is used as the
+  // reference color temperature used for white.
   //
   // NOTE: For simplicity, this field is shared between all PBRT versions;
   //       however, it is only supported starting with PBRTv4 and should be
@@ -1097,8 +1097,8 @@ message SpectralFilm {
   // Clamp pixels with RGB components higher than the maximum provided.
   optional double maxcomponentvalue = 11 [default = inf];
 
-  // If non-zero, this provides the temperature in degrees kelvin that is used
-  // as the reference color temperature used for white.
+  // If non-zero, this provides the temperature in kelvin that is used as the
+  // reference color temperature used for white.
   optional double whitebalance = 12 [default = 0.0];
 
   // Number of buckets to use to store the spectral data.
@@ -1327,6 +1327,261 @@ message SpotLightSource {
 
   // The angle at which the spotlight intensity begins to fall off.
   optional double conedeltaangle = 11 [default = 5.0];
+}
+
+//
+// Common Participating Media
+//
+
+// A predefined scattering medium known by PBRT.
+enum MeasuredScatteringPreset {
+  UNSPECIFIED = 0;
+  APPLE = 1;
+  CHICKEN1 = 2;
+  CHICKEN2 = 3;
+  CREAM = 4;
+  KETCHUP = 5;
+  MARBLE = 6;
+  POTATO = 7;
+  SKIMMILK = 8;
+  SKIN1 = 9;
+  SKIN2 = 10;
+  SPECTRALON = 11;
+  WHOLEMILK = 12;
+  LOWFAT_MILK = 13;
+  REDUCED_MILK = 14;
+  REGULAR_MILK = 15;
+  ESPRESSO = 16;
+  MINT_MOCHA_COFFEE = 17;
+  LOWFAT_SOY_MILK = 18;
+  REGULAR_SOY_MILK = 19;
+  LOWFAT_CHOCOLATE_MILK = 20;
+  REGULAR_CHOCOLATE_MILK = 21;
+  COKE = 22;
+  PEPSI = 23;
+  SPRITE = 24;
+  GATORADE = 25;
+  CHARDONNAY = 26;
+  WHITE_ZINFANDEL = 27;
+  MERLOT = 28;
+  BUDWEISER_BEER = 29;
+  COORS_LIGHT_BEER = 30;
+  CLOROX = 31;
+  APPLE_JUICE = 32;
+  CRANBERRY_JUICE = 33;
+  GRAPE_JUICE = 34;
+  RUBY_GRAPEFRUIT_JUICE = 35;
+  WHITE_GRAPEFRUIT_JUICE = 36;
+  SHAMPOO = 37;
+  STRAWBERRY_SHAMPOO = 38;
+  HEAD_AND_SHOULDERS_SHAMPOO = 39;
+  LEMON_TEA_POWDER = 40;
+  ORANGE_POWDER = 41;
+  PINK_LEMONADE_POWDER = 42;
+  CAPPUCCINO_POWDER = 43;
+  SALT_POWDER = 44;
+  SUGAR_POWDER = 45;
+  SUISSE_MOCHA_POWDER = 46;
+  PACIFIC_OCEAN_SURFACE_WATER = 47;
+}
+
+// A participating medium that uses Perlin noise to create cloud-like density.
+message CloudMedium {
+  // The absorption cross section.
+  optional Spectrum sigma_a = 1;
+
+  // The scattering cross section.
+  optional Spectrum sigma_s = 2;
+
+  // The phase function asymmetry.
+  optional double g = 4 [default = 0.0];
+
+  // The first corner of the bounding box defining the extents of the medium.
+  optional Point p0 = 7;
+
+  // The second corner of the bounding box defining the extents of the medium.
+  optional Point p1 = 8;
+
+  // Additional scale factor applied to the computed cloud density.
+  optional double density = 13;
+
+  // A parameter that controls the frequency at which the cloud density varies.
+  optional double frequency = 21 [default = 5.0];
+
+  // A parameter that controls how wispy the cloud density is.
+  optional double wispiness = 22 [default = 1.0];
+}
+
+// A participating medium that is uniform throughout its volume.
+message HomogeneousMedium {
+  // The absorption cross section.
+  optional Spectrum sigma_a = 1;
+
+  // The scattering cross section.
+  optional Spectrum sigma_s = 2;
+
+  // Scale factor applied to the absorption and scattering cross sections.
+  optional double scale = 3 [default = 1.0];
+
+  // The phase function asymmetry.
+  optional double g = 4 [default = 0.0];
+
+  // The spectral distribution of the medium's emitted radiance.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv4 and should be ignored when
+  //       reading earlier input.
+  optional Spectrum Le = 5;
+
+  // The scale factor applied to the medium's emitted radiance.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv4 and should be ignored when
+  //       reading earlier input.
+  optional double Lescale = 6 [default = 1.0];
+
+  // The named measured scattering medium properties to use.
+  optional MeasuredScatteringPreset preset = 7;
+}
+
+// A participating medium defined by a NanoVDB input.
+message NanoVdbMedium {
+  // The absorption cross section.
+  optional Spectrum sigma_a = 1;
+
+  // The scattering cross section.
+  optional Spectrum sigma_s = 2;
+
+  // Scale factor applied to the absorption and scattering cross sections.
+  optional double scale = 3 [default = 1.0];
+
+  // The phase function asymmetry.
+  optional double g = 4 [default = 0.0];
+
+  // The scale factor applied to the medium's emitted radiance.
+  optional double Lescale = 6 [default = 1.0];
+
+  // An offset value that is added to the emission temperature.
+  optional double temperatureoffset = 10 [default = 0.0];
+
+ 	// The scale factor applied to the ofsetted emission temperature to get a
+  // temperature in kelvin before the blackbody emission is determined.
+  optional double temperaturescale = 11 [default = 1.0];
+
+  // The filename of the NanoVDB volume.
+  optional string filename = 20;
+}
+
+// A participating medium defined by a uniform grid of points with non-uniform
+// properties defined by RGB color values.
+message RgbGridMedium {
+  // Scale factor applied to the absorption and scattering cross sections.
+  optional double scale = 3 [default = 1.0];
+
+  // The phase function asymmetry.
+  optional double g = 4 [default = 0.0];
+
+  // The scale factor applied to the medium's emitted radiance.
+  optional double Lescale = 6 [default = 1.0];
+
+  // The first corner of the bounding box defining the extents of the medium.
+  optional Point p0 = 7;
+
+  // The second corner of the bounding box defining the extents of the medium.
+  optional Point p1 = 8;
+
+  // The number of voxels in the x direction.
+  optional uint32 nx = 14 [default = 1];
+
+  // The number of voxels in the y direction.
+  optional uint32 ny = 15 [default = 1];
+
+  // The number of voxels in the z direction.
+  optional uint32 nz = 16 [default = 1];
+
+  // The absorption cross section.
+  optional RgbSpectrum sigma_a = 17;
+
+  // The scattering cross section.
+  optional RgbSpectrum sigma_s = 18;
+
+  // The spectral distribution of the medium's emitted radiance for each voxel
+  // in row-major order.
+  repeated RgbSpectrum Le = 19;  // Must check size == nx * ny * nz
+}
+
+// A participating medium defined by a uniform grid of points with non-uniform
+// density.
+message UniformGridMedium {
+  // The absorption cross section.
+  optional Spectrum sigma_a = 1;
+
+  // The scattering cross section.
+  optional Spectrum sigma_s = 2;
+
+  // Scale factor applied to the absorption and scattering cross sections.
+  optional double scale = 3 [default = 1.0];
+
+  // The phase function asymmetry.
+  optional double g = 4 [default = 0.0];
+
+  // The spectral distribution of the medium's emitted radiance.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv4 and should be ignored when
+  //       reading earlier input.
+  optional Spectrum Le = 5;
+
+  // The scale factor applied to the medium's emitted radiance.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv4 and should be ignored when
+  //       reading earlier input.
+  optional double Lescale = 6 [default = 1.0];
+
+  // The first corner of the bounding box defining the extents of the medium.
+  optional Point p0 = 7;
+
+  // The second corner of the bounding box defining the extents of the medium.
+  optional Point p1 = 8;
+
+  // The named measured scattering medium properties to use.
+  optional MeasuredScatteringPreset preset = 9;
+
+  // The offset value that is added to the emission temperature.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv4 and should be ignored when
+  //       reading earlier input.
+  optional double temperatureoffset = 10 [default = 0.0];
+
+ 	// The scale factor applied to the ofsetted emission temperature to get a
+  // temperature in kelvin before the blackbody emission is determined.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv4 and should be ignored when
+  //       reading earlier input.
+  optional double temperaturescale = 11 [default = 1.0];
+
+  // The blackbody temperature values for each voxel in kelvin in row-major
+  // order.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv4 and should be ignored when
+  //       reading earlier input.
+  repeated double temperature = 12;  // If set, must check size == nx * ny * nz
+
+  // The density values for each voxel of the medium in row-major order.
+  repeated double density = 13;  // Must check size == nx * ny * nz
+
+  // The number of voxels in the x direction.
+  optional uint32 nx = 14 [default = 1];
+
+  // The number of voxels in the y direction.
+  optional uint32 ny = 15 [default = 1];
+
+  // The number of voxels in the z direction.
+  optional uint32 nz = 16 [default = 1];
 }
 
 //

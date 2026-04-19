@@ -60,6 +60,22 @@ message LightSource {
   }
 }
 
+// A directive which creates a named participating medium.
+message MakeNamedMedium {
+  // The name to give the created medium.
+  required string name = 1;
+
+  // The type of medium to create. If none are set, then the directive should
+  // have no effect.
+  oneof medium_type {
+    HomogeneousMedium homogeneous = 2;  // Create a homogenous medium
+    UniformGridMedium uniformgrid = 3;  // Create a uniform grid medium
+    CloudMedium cloud = 4;  // Create a cloud medium
+    NanoVdbMedium nanovdb = 5;  // Create a NanoVDB medium
+    RgbGridMedium rgbgrid = 6;  // Create an RGB grid medium.
+  }
+}
+
 // A directive which sets the Camera to use for rendering.
 message PixelFilter {
   // The type of PixelFilter to use. If none are set the the renderer should

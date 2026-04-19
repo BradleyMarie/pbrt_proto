@@ -3335,6 +3335,63 @@ TEST(TryRemoveRgb, Found) {
   EXPECT_THAT(parameters, Not(Contains(Key("name1"))));
 }
 
+TEST(TryRemoveRgbs, WrongType) {
+  std::vector<std::array<double, 3>> values;
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::FLOAT,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  EXPECT_THAT(TryRemoveRgbs(parameters, "name"), Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name")));
+}
+
+TEST(TryRemoveRgbs, WrongStoredType) {
+  std::vector<std::array<double, 2>> values;
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::RGB,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  EXPECT_THAT(TryRemoveRgbs(parameters, "name"), Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name")));
+}
+
+TEST(TryRemoveRgbs, WrongName) {
+  std::vector<std::array<double, 3>> values;
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::RGB,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name1", parameter}};
+
+  EXPECT_THAT(TryRemoveRgbs(parameters, "name2"), Eq(std::nullopt));
+  EXPECT_THAT(parameters, Contains(Key("name1")));
+}
+
+TEST(TryRemoveRgbs, Found) {
+  std::vector<std::array<double, 3>> values = {{1.0, 2.0, 3.0}};
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::RGB,
+                      .type_name = "aaa",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  EXPECT_THAT(TryRemoveRgbs(parameters, "name"),
+              Optional(ElementsAre(ElementsAre(1.0, 2.0, 3.0))));
+  EXPECT_THAT(parameters, Not(Contains(Key("name1"))));
+}
+
 TEST(TryRemoveString, WrongType) {
   std::vector<absl::string_view> values;
   Parameter parameter{.directive = "",

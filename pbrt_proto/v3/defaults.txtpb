@@ -806,367 +806,14 @@ materials {
   subsurfaces {
     key: 0
     value {
-      name: APPLE
-      sigma_a {
-        rgb_spectrum {
-          r: 2.29
-          g: 2.39
-          b: 1.97
-        }
-      }
       sigma_s {
-        rgb_spectrum {
-          r: 0.0030
-          g: 0.0034
-          b: 0.046
-        }
-      }
-      Kr {
-        constant_spectrum: 1.0
-      }
-      Kt {
-        constant_spectrum: 1.0
-      }
-      uroughness {
-        float_value: 0.0
-      }
-      vroughness {
-        float_value: 0.0
-      }
-    }
-  }
-  subsurfaces {
-    key: 1
-    value {
-      name: CHICKEN1
-      sigma_a {
-        rgb_spectrum {
-          r: 0.15
-          g: 0.21
-          b: 0.38
-        }
-      }
-      sigma_s {
-        rgb_spectrum {
-          r: 0.015
-          g: 0.077
-          b: 0.19
-        }
-      }
-      Kr {
-        constant_spectrum: 1.0
-      }
-      Kt {
-        constant_spectrum: 1.0
-      }
-      uroughness {
-        float_value: 0.0
-      }
-      vroughness {
-        float_value: 0.0
-      }
-    }
-  }
-  subsurfaces {
-    key: 2
-    value {
-      name: CHICKEN2
-      sigma_a {
-        rgb_spectrum {
-          r: 0.19
-          g: 0.25
-          b: 0.32
-        }
-      }
-      sigma_s {
-        rgb_spectrum {
-          r: 0.018
-          g: 0.088
-          b: 0.20
-        }
-      }
-      Kr {
-        constant_spectrum: 1.0
-      }
-      Kt {
-        constant_spectrum: 1.0
-      }
-      uroughness {
-        float_value: 0.0
-      }
-      vroughness {
-        float_value: 0.0
-      }
-    }
-  }
-  subsurfaces {
-    key: 3
-    value {
-      name: CREAM
-      sigma_a {
-        rgb_spectrum {
-          r: 7.38
-          g: 5.47
-          b: 3.15
-        }
-      }
-      sigma_s {
-        rgb_spectrum {
-          r: 0.0002
-          g: 0.0028
-          b: 0.0163
-        }
-      }
-      Kr {
-        constant_spectrum: 1.0
-      }
-      Kt {
-        constant_spectrum: 1.0
-      }
-      uroughness {
-        float_value: 0.0
-      }
-      vroughness {
-        float_value: 0.0
-      }
-    }
-  }
-  subsurfaces {
-    key: 4
-    value {
-      name: KETCHUP
-      sigma_a {
-        rgb_spectrum {
-          r: 0.18
-          g: 0.07
-          b: 0.03
-        }
-      }
-      sigma_s {
-        rgb_spectrum {
-          r: 0.061
-          g: 0.97
-          b: 1.45
-        }
-      }
-      Kr {
-        constant_spectrum: 1.0
-      }
-      Kt {
-        constant_spectrum: 1.0
-      }
-      uroughness {
-        float_value: 0.0
-      }
-      vroughness {
-        float_value: 0.0
-      }
-    }
-  }
-  subsurfaces {
-    key: 5
-    value {
-      name: MARBLE
-      sigma_a {
-        rgb_spectrum {
-          r: 2.19
-          g: 2.62
-          b: 3.00
-        }
-      }
-      sigma_s {
-        rgb_spectrum {
-          r: 0.0021
-          g: 0.0041
-          b: 0.0071
-        }
-      }
-      Kr {
-        constant_spectrum: 1.0
-      }
-      Kt {
-        constant_spectrum: 1.0
-      }
-      uroughness {
-        float_value: 0.0
-      }
-      vroughness {
-        float_value: 0.0
-      }
-    }
-  }
-  subsurfaces {
-    key: 6
-    value {
-      name: POTATO
-      sigma_a {
-        rgb_spectrum {
-          r: 0.68
-          g: 0.70
-          b: 0.55
-        }
-      }
-      sigma_s {
-        rgb_spectrum {
-          r: 0.0024
-          g: 0.0090
-          b: 0.12
-        }
-      }
-      Kr {
-        constant_spectrum: 1.0
-      }
-      Kt {
-        constant_spectrum: 1.0
-      }
-      uroughness {
-        float_value: 0.0
-      }
-      vroughness {
-        float_value: 0.0
-      }
-    }
-  }
-  subsurfaces {
-    key: 7
-    value {
-      name: SKIMMILK
-      sigma_a {
-        rgb_spectrum {
-          r: 0.70
-          g: 1.22
-          b: 1.90
-        }
-      }
-      sigma_s {
-        rgb_spectrum {
-          r: 0.0014
-          g: 0.0025
-          b: 0.0142
-        }
-      }
-      Kr {
-        constant_spectrum: 1.0
-      }
-      Kt {
-        constant_spectrum: 1.0
-      }
-      uroughness {
-        float_value: 0.0
-      }
-      vroughness {
-        float_value: 0.0
-      }
-    }
-  }
-  subsurfaces {
-    key: 8
-    value {
-      name: SKIN1
-      sigma_a {
-        rgb_spectrum {
-          r: 0.74
-          g: 0.88
-          b: 1.01
-        }
-      }
-      sigma_s {
-        rgb_spectrum {
-          r: 0.032
-          g: 0.17
-          b: 0.48
-        }
-      }
-      Kr {
-        constant_spectrum: 1.0
-      }
-      Kt {
-        constant_spectrum: 1.0
-      }
-      uroughness {
-        float_value: 0.0
-      }
-      vroughness {
-        float_value: 0.0
-      }
-    }
-  }
-  subsurfaces {
-    key: 9
-    value {
-      name: SKIN2
-      sigma_a {
-        rgb_spectrum {
-          r: 1.09
-          g: 1.59
-          b: 1.79
-        }
-      }
-      sigma_s {
-        rgb_spectrum {
-          r: 0.013
-          g: 0.070
-          b: 0.145
-        }
-      }
-      Kr {
-        constant_spectrum: 1.0
-      }
-      Kt {
-        constant_spectrum: 1.0
-      }
-      uroughness {
-        float_value: 0.0
-      }
-      vroughness {
-        float_value: 0.0
-      }
-    }
-  }
-  subsurfaces {
-    key: 10
-    value {
-      name: SPECTRALON
-      sigma_a {
-        rgb_spectrum {
-          r: 11.6
-          g: 20.4
-          b: 14.9
-        }
-      }
-      sigma_s {
-        rgb_spectrum {
-          r: 0.00
-          g: 0.00
-          b: 0.00
-        }
-      }
-      Kr {
-        constant_spectrum: 1.0
-      }
-      Kt {
-        constant_spectrum: 1.0
-      }
-      uroughness {
-        float_value: 0.0
-      }
-      vroughness {
-        float_value: 0.0
-      }
-    }
-  }
-  subsurfaces {
-    key: 11
-    value {
-      name: WHOLEMILK
-      sigma_a {
         rgb_spectrum {
           r: 2.55
           g: 3.21
           b: 3.77
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.0011
           g: 0.0024
@@ -1188,17 +835,401 @@ materials {
     }
   }
   subsurfaces {
+    key: 1
+    value {
+      name: APPLE
+      sigma_s {
+        rgb_spectrum {
+          r: 2.29
+          g: 2.39
+          b: 1.97
+        }
+      }
+      sigma_a {
+        rgb_spectrum {
+          r: 0.0030
+          g: 0.0034
+          b: 0.046
+        }
+      }
+      Kr {
+        constant_spectrum: 1.0
+      }
+      Kt {
+        constant_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 2
+    value {
+      name: CHICKEN1
+      sigma_s {
+        rgb_spectrum {
+          r: 0.15
+          g: 0.21
+          b: 0.38
+        }
+      }
+      sigma_a {
+        rgb_spectrum {
+          r: 0.015
+          g: 0.077
+          b: 0.19
+        }
+      }
+      Kr {
+        constant_spectrum: 1.0
+      }
+      Kt {
+        constant_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 3
+    value {
+      name: CHICKEN2
+      sigma_s {
+        rgb_spectrum {
+          r: 0.19
+          g: 0.25
+          b: 0.32
+        }
+      }
+      sigma_a {
+        rgb_spectrum {
+          r: 0.018
+          g: 0.088
+          b: 0.20
+        }
+      }
+      Kr {
+        constant_spectrum: 1.0
+      }
+      Kt {
+        constant_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 4
+    value {
+      name: CREAM
+      sigma_s {
+        rgb_spectrum {
+          r: 7.38
+          g: 5.47
+          b: 3.15
+        }
+      }
+      sigma_a {
+        rgb_spectrum {
+          r: 0.0002
+          g: 0.0028
+          b: 0.0163
+        }
+      }
+      Kr {
+        constant_spectrum: 1.0
+      }
+      Kt {
+        constant_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 5
+    value {
+      name: KETCHUP
+      sigma_s {
+        rgb_spectrum {
+          r: 0.18
+          g: 0.07
+          b: 0.03
+        }
+      }
+      sigma_a {
+        rgb_spectrum {
+          r: 0.061
+          g: 0.97
+          b: 1.45
+        }
+      }
+      Kr {
+        constant_spectrum: 1.0
+      }
+      Kt {
+        constant_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 6
+    value {
+      name: MARBLE
+      sigma_s {
+        rgb_spectrum {
+          r: 2.19
+          g: 2.62
+          b: 3.00
+        }
+      }
+      sigma_a {
+        rgb_spectrum {
+          r: 0.0021
+          g: 0.0041
+          b: 0.0071
+        }
+      }
+      Kr {
+        constant_spectrum: 1.0
+      }
+      Kt {
+        constant_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 7
+    value {
+      name: POTATO
+      sigma_s {
+        rgb_spectrum {
+          r: 0.68
+          g: 0.70
+          b: 0.55
+        }
+      }
+      sigma_a {
+        rgb_spectrum {
+          r: 0.0024
+          g: 0.0090
+          b: 0.12
+        }
+      }
+      Kr {
+        constant_spectrum: 1.0
+      }
+      Kt {
+        constant_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 8
+    value {
+      name: SKIMMILK
+      sigma_s {
+        rgb_spectrum {
+          r: 0.70
+          g: 1.22
+          b: 1.90
+        }
+      }
+      sigma_a {
+        rgb_spectrum {
+          r: 0.0014
+          g: 0.0025
+          b: 0.0142
+        }
+      }
+      Kr {
+        constant_spectrum: 1.0
+      }
+      Kt {
+        constant_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 9
+    value {
+      name: SKIN1
+      sigma_s {
+        rgb_spectrum {
+          r: 0.74
+          g: 0.88
+          b: 1.01
+        }
+      }
+      sigma_a {
+        rgb_spectrum {
+          r: 0.032
+          g: 0.17
+          b: 0.48
+        }
+      }
+      Kr {
+        constant_spectrum: 1.0
+      }
+      Kt {
+        constant_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 10
+    value {
+      name: SKIN2
+      sigma_s {
+        rgb_spectrum {
+          r: 1.09
+          g: 1.59
+          b: 1.79
+        }
+      }
+      sigma_a {
+        rgb_spectrum {
+          r: 0.013
+          g: 0.070
+          b: 0.145
+        }
+      }
+      Kr {
+        constant_spectrum: 1.0
+      }
+      Kt {
+        constant_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 11
+    value {
+      name: SPECTRALON
+      sigma_s {
+        rgb_spectrum {
+          r: 11.6
+          g: 20.4
+          b: 14.9
+        }
+      }
+      sigma_a {
+        rgb_spectrum {
+          r: 0.00
+          g: 0.00
+          b: 0.00
+        }
+      }
+      Kr {
+        constant_spectrum: 1.0
+      }
+      Kt {
+        constant_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
     key: 12
     value {
-      name: LOWFAT_MILK
+      name: WHOLEMILK
+      sigma_s {
+        rgb_spectrum {
+          r: 2.55
+          g: 3.21
+          b: 3.77
+        }
+      }
       sigma_a {
+        rgb_spectrum {
+          r: 0.0011
+          g: 0.0024
+          b: 0.014
+        }
+      }
+      Kr {
+        constant_spectrum: 1.0
+      }
+      Kt {
+        constant_spectrum: 1.0
+      }
+      uroughness {
+        float_value: 0.0
+      }
+      vroughness {
+        float_value: 0.0
+      }
+    }
+  }
+  subsurfaces {
+    key: 13
+    value {
+      name: LOWFAT_MILK
+      sigma_s {
         rgb_spectrum {
           r: 0.89187
           g: 1.5136
           b: 2.532
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.002875
           g: 0.00575
@@ -1220,17 +1251,17 @@ materials {
     }
   }
   subsurfaces {
-    key: 13
+    key: 14
     value {
       name: REDUCED_MILK
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 2.4858
           g: 3.1669
           b: 4.5214
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.0025556
           g: 0.0051111
@@ -1252,17 +1283,17 @@ materials {
     }
   }
   subsurfaces {
-    key: 14
+    key: 15
     value {
       name: REGULAR_MILK
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 4.5513
           g: 5.8294
           b: 7.136
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.0015333
           g: 0.0046
@@ -1284,17 +1315,17 @@ materials {
     }
   }
   subsurfaces {
-    key: 15
+    key: 16
     value {
       name: ESPRESSO
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.72378
           g: 0.84557
           b: 1.0247
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 4.7984
           g: 6.5751
@@ -1316,17 +1347,17 @@ materials {
     }
   }
   subsurfaces {
-    key: 16
+    key: 17
     value {
       name: MINT_MOCHA_COFFEE
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.31602
           g: 0.38538
           b: 0.48131
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 3.772
           g: 5.8228
@@ -1348,17 +1379,17 @@ materials {
     }
   }
   subsurfaces {
-    key: 17
+    key: 18
     value {
       name: LOWFAT_SOY_MILK
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.30576
           g: 0.34233
           b: 0.61664
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.0014375
           g: 0.0071875
@@ -1380,17 +1411,17 @@ materials {
     }
   }
   subsurfaces {
-    key: 18
+    key: 19
     value {
       name: REGULAR_SOY_MILK
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.59223
           g: 0.73866
           b: 1.4693
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.0019167
           g: 0.0095833
@@ -1412,17 +1443,17 @@ materials {
     }
   }
   subsurfaces {
-    key: 19
+    key: 20
     value {
       name: LOWFAT_CHOCOLATE_MILK
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.64925
           g: 0.83916
           b: 1.1057
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.0115
           g: 0.0368
@@ -1444,17 +1475,17 @@ materials {
     }
   }
   subsurfaces {
-    key: 20
+    key: 21
     value {
       name: REGULAR_CHOCOLATE_MILK
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 1.4585
           g: 2.1289
           b: 2.9527
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.010063
           g: 0.043125
@@ -1476,17 +1507,17 @@ materials {
     }
   }
   subsurfaces {
-    key: 21
+    key: 22
     value {
       name: COKE
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 8.9053e-05
           g: 8.372e-05
           b: 0
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.10014
           g: 0.16503
@@ -1508,17 +1539,17 @@ materials {
     }
   }
   subsurfaces {
-    key: 22
+    key: 23
     value {
       name: PEPSI
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 6.1697e-05
           g: 4.2564e-05
           b: 0
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.091641
           g: 0.14158
@@ -1540,17 +1571,17 @@ materials {
     }
   }
   subsurfaces {
-    key: 23
+    key: 24
     value {
       name: SPRITE
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 6.0306e-06
           g: 6.4139e-06
           b: 6.5504e-06
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.001886
           g: 0.0018308
@@ -1572,17 +1603,17 @@ materials {
     }
   }
   subsurfaces {
-    key: 24
+    key: 25
     value {
       name: GATORADE
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.0024574
           g: 0.003007
           b: 0.0037325
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.024794
           g: 0.019289
@@ -1604,17 +1635,17 @@ materials {
     }
   }
   subsurfaces {
-    key: 25
+    key: 26
     value {
       name: CHARDONNAY
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 1.7982e-05
           g: 1.3758e-05
           b: 1.2023e-05
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.010782
           g: 0.011855
@@ -1636,17 +1667,17 @@ materials {
     }
   }
   subsurfaces {
-    key: 26
+    key: 27
     value {
       name: WHITE_ZINFANDEL
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 1.7501e-05
           g: 1.9069e-05
           b: 1.288e-05
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.012072
           g: 0.016184
@@ -1668,17 +1699,17 @@ materials {
     }
   }
   subsurfaces {
-    key: 27
+    key: 28
     value {
       name: MERLOT
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 2.1129e-05
           g: 0.0
           b: 0.0
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.11632
           g: 0.25191
@@ -1700,17 +1731,17 @@ materials {
     }
   }
   subsurfaces {
-    key: 28
+    key: 29
     value {
       name: BUDWEISER_BEER
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 2.4356e-05
           g: 2.4079e-05
           b: 1.0564e-05
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.011492
           g: 0.024911
@@ -1732,17 +1763,17 @@ materials {
     }
   }
   subsurfaces {
-    key: 29
+    key: 30
     value {
       name: COORS_LIGHT_BEER
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 5.0922e-05
           g: 4.301e-05
           b: 0
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.006164
           g: 0.013984
@@ -1764,17 +1795,17 @@ materials {
     }
   }
   subsurfaces {
-    key: 30
+    key: 31
     value {
       name: CLOROX
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.0024035
           g: 0.0031373
           b: 0.003991
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.0033542
           g: 0.014892
@@ -1796,17 +1827,17 @@ materials {
     }
   }
   subsurfaces {
-    key: 31
+    key: 32
     value {
       name: APPLE_JUICE
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.00013612
           g: 0.00015836
           b: 0.000227
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.012957
           g: 0.023741
@@ -1828,17 +1859,17 @@ materials {
     }
   }
   subsurfaces {
-    key: 32
+    key: 33
     value {
       name: CRANBERRY_JUICE
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.00010402
           g: 0.00011646
           b: 7.8139e-05
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.039437
           g: 0.094223
@@ -1860,17 +1891,17 @@ materials {
     }
   }
   subsurfaces {
-    key: 33
+    key: 34
     value {
       name: GRAPE_JUICE
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 5.382e-05
           g: 0
           b: 0
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.10404
           g: 0.23958
@@ -1892,17 +1923,17 @@ materials {
     }
   }
   subsurfaces {
-    key: 34
+    key: 35
     value {
       name: RUBY_GRAPEFRUIT_JUICE
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.011002
           g: 0.010927
           b: 0.011036
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.085867
           g: 0.18314
@@ -1924,17 +1955,17 @@ materials {
     }
   }
   subsurfaces {
-    key: 35
+    key: 36
     value {
       name: WHITE_GRAPEFRUIT_JUICE
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.22826
           g: 0.23998
           b: 0.32748
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.0138
           g: 0.018831
@@ -1956,17 +1987,17 @@ materials {
     }
   }
   subsurfaces {
-    key: 36
+    key: 37
     value {
       name: SHAMPOO
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.0007176
           g: 0.0008303
           b: 0.0009016
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.014107
           g: 0.045693
@@ -1988,17 +2019,17 @@ materials {
     }
   }
   subsurfaces {
-    key: 37
+    key: 38
     value {
       name: STRAWBERRY_SHAMPOO
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.00015671
           g: 0.00015947
           b: 1.518e-05
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.01449
           g: 0.05796
@@ -2020,17 +2051,17 @@ materials {
     }
   }
   subsurfaces {
-    key: 38
+    key: 39
     value {
       name: HEAD_AND_SHOULDERS_SHAMPOO
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.023805
           g: 0.028804
           b: 0.034306
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.084621
           g: 0.15688
@@ -2052,17 +2083,17 @@ materials {
     }
   }
   subsurfaces {
-    key: 39
+    key: 40
     value {
       name: LEMON_TEA_POWDER
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.040224
           g: 0.045264
           b: 0.051081
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 2.4288
           g: 4.5757
@@ -2084,17 +2115,17 @@ materials {
     }
   }
   subsurfaces {
-    key: 40
+    key: 41
     value {
       name: ORANGE_POWDER
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.00015617
           g: 0.00017482
           b: 0.0001762
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.001449
           g: 0.003441
@@ -2116,17 +2147,17 @@ materials {
     }
   }
   subsurfaces {
-    key: 41
+    key: 42
     value {
       name: PINK_LEMONADE_POWDER
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.00012103
           g: 0.00013073
           b: 0.00012528
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.001165
           g: 0.002366
@@ -2148,17 +2179,17 @@ materials {
     }
   }
   subsurfaces {
-    key: 42
+    key: 43
     value {
       name: CAPPUCCINO_POWDER
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 1.8436
           g: 2.5851
           b: 2.1662
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 35.844
           g: 49.547
@@ -2180,17 +2211,17 @@ materials {
     }
   }
   subsurfaces {
-    key: 43
+    key: 44
     value {
       name: SALT_POWDER
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.027333
           g: 0.032451
           b: 0.031979
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.28415
           g: 0.3257
@@ -2212,17 +2243,17 @@ materials {
     }
   }
   subsurfaces {
-    key: 44
+    key: 45
     value {
       name: SUGAR_POWDER
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.00022272
           g: 0.00025513
           b: 0.000271
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.012638
           g: 0.031051
@@ -2244,17 +2275,17 @@ materials {
     }
   }
   subsurfaces {
-    key: 45
+    key: 46
     value {
       name: SUISSE_MOCHA_POWDER
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 2.7979
           g: 3.5452
           b: 4.3365
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 17.502
           g: 27.004
@@ -2276,17 +2307,17 @@ materials {
     }
   }
   subsurfaces {
-    key: 46
+    key: 47
     value {
       name: PACIFIC_OCEAN_SURFACE_WATER
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.0001764
           g: 0.00032095
           b: 0.00019617
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.031845
           g: 0.031324
@@ -2475,235 +2506,14 @@ media {
   homogeneous {
     key: 0
     value {
-      preset: APPLE
-      sigma_a {
-        rgb_spectrum {
-          r: 2.29
-          g: 2.39
-          b: 1.97
-        }
-      }
       sigma_s {
-        rgb_spectrum {
-          r: 0.0030
-          g: 0.0034
-          b: 0.046
-        }
-      }
-    }
-  }
-  homogeneous {
-    key: 1
-    value {
-      preset: CHICKEN1
-      sigma_a {
-        rgb_spectrum {
-          r: 0.15
-          g: 0.21
-          b: 0.38
-        }
-      }
-      sigma_s {
-        rgb_spectrum {
-          r: 0.015
-          g: 0.077
-          b: 0.19
-        }
-      }
-    }
-  }
-  homogeneous {
-    key: 2
-    value {
-      preset: CHICKEN2
-      sigma_a {
-        rgb_spectrum {
-          r: 0.19
-          g: 0.25
-          b: 0.32
-        }
-      }
-      sigma_s {
-        rgb_spectrum {
-          r: 0.018
-          g: 0.088
-          b: 0.20
-        }
-      }
-    }
-  }
-  homogeneous {
-    key: 3
-    value {
-      preset: CREAM
-      sigma_a {
-        rgb_spectrum {
-          r: 7.38
-          g: 5.47
-          b: 3.15
-        }
-      }
-      sigma_s {
-        rgb_spectrum {
-          r: 0.0002
-          g: 0.0028
-          b: 0.0163
-        }
-      }
-    }
-  }
-  homogeneous {
-    key: 4
-    value {
-      preset: KETCHUP
-      sigma_a {
-        rgb_spectrum {
-          r: 0.18
-          g: 0.07
-          b: 0.03
-        }
-      }
-      sigma_s {
-        rgb_spectrum {
-          r: 0.061
-          g: 0.97
-          b: 1.45
-        }
-      }
-    }
-  }
-  homogeneous {
-    key: 5
-    value {
-      preset: MARBLE
-      sigma_a {
-        rgb_spectrum {
-          r: 2.19
-          g: 2.62
-          b: 3.00
-        }
-      }
-      sigma_s {
-        rgb_spectrum {
-          r: 0.0021
-          g: 0.0041
-          b: 0.0071
-        }
-      }
-    }
-  }
-  homogeneous {
-    key: 6
-    value {
-      preset: POTATO
-      sigma_a {
-        rgb_spectrum {
-          r: 0.68
-          g: 0.70
-          b: 0.55
-        }
-      }
-      sigma_s {
-        rgb_spectrum {
-          r: 0.0024
-          g: 0.0090
-          b: 0.12
-        }
-      }
-    }
-  }
-  homogeneous {
-    key: 7
-    value {
-      preset: SKIMMILK
-      sigma_a {
-        rgb_spectrum {
-          r: 0.70
-          g: 1.22
-          b: 1.90
-        }
-      }
-      sigma_s {
-        rgb_spectrum {
-          r: 0.0014
-          g: 0.0025
-          b: 0.0142
-        }
-      }
-    }
-  }
-  homogeneous {
-    key: 8
-    value {
-      preset: SKIN1
-      sigma_a {
-        rgb_spectrum {
-          r: 0.74
-          g: 0.88
-          b: 1.01
-        }
-      }
-      sigma_s {
-        rgb_spectrum {
-          r: 0.032
-          g: 0.17
-          b: 0.48
-        }
-      }
-    }
-  }
-  homogeneous {
-    key: 9
-    value {
-      preset: SKIN2
-      sigma_a {
-        rgb_spectrum {
-          r: 1.09
-          g: 1.59
-          b: 1.79
-        }
-      }
-      sigma_s {
-        rgb_spectrum {
-          r: 0.013
-          g: 0.070
-          b: 0.145
-        }
-      }
-    }
-  }
-  homogeneous {
-    key: 10
-    value {
-      preset: SPECTRALON
-      sigma_a {
-        rgb_spectrum {
-          r: 11.6
-          g: 20.4
-          b: 14.9
-        }
-      }
-      sigma_s {
-        rgb_spectrum {
-          r: 0.00
-          g: 0.00
-          b: 0.00
-        }
-      }
-    }
-  }
-  homogeneous {
-    key: 11
-    value {
-      preset: WHOLEMILK
-      sigma_a {
         rgb_spectrum {
           r: 2.55
           g: 3.21
           b: 3.77
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.0011
           g: 0.0024
@@ -2713,17 +2523,257 @@ media {
     }
   }
   homogeneous {
+    key: 1
+    value {
+      preset: APPLE
+      sigma_s {
+        rgb_spectrum {
+          r: 2.29
+          g: 2.39
+          b: 1.97
+        }
+      }
+      sigma_a {
+        rgb_spectrum {
+          r: 0.0030
+          g: 0.0034
+          b: 0.046
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 2
+    value {
+      preset: CHICKEN1
+      sigma_s {
+        rgb_spectrum {
+          r: 0.15
+          g: 0.21
+          b: 0.38
+        }
+      }
+      sigma_a {
+        rgb_spectrum {
+          r: 0.015
+          g: 0.077
+          b: 0.19
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 3
+    value {
+      preset: CHICKEN2
+      sigma_s {
+        rgb_spectrum {
+          r: 0.19
+          g: 0.25
+          b: 0.32
+        }
+      }
+      sigma_a {
+        rgb_spectrum {
+          r: 0.018
+          g: 0.088
+          b: 0.20
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 4
+    value {
+      preset: CREAM
+      sigma_s {
+        rgb_spectrum {
+          r: 7.38
+          g: 5.47
+          b: 3.15
+        }
+      }
+      sigma_a {
+        rgb_spectrum {
+          r: 0.0002
+          g: 0.0028
+          b: 0.0163
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 5
+    value {
+      preset: KETCHUP
+      sigma_s {
+        rgb_spectrum {
+          r: 0.18
+          g: 0.07
+          b: 0.03
+        }
+      }
+      sigma_a {
+        rgb_spectrum {
+          r: 0.061
+          g: 0.97
+          b: 1.45
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 6
+    value {
+      preset: MARBLE
+      sigma_s {
+        rgb_spectrum {
+          r: 2.19
+          g: 2.62
+          b: 3.00
+        }
+      }
+      sigma_a {
+        rgb_spectrum {
+          r: 0.0021
+          g: 0.0041
+          b: 0.0071
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 7
+    value {
+      preset: POTATO
+      sigma_s {
+        rgb_spectrum {
+          r: 0.68
+          g: 0.70
+          b: 0.55
+        }
+      }
+      sigma_a {
+        rgb_spectrum {
+          r: 0.0024
+          g: 0.0090
+          b: 0.12
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 8
+    value {
+      preset: SKIMMILK
+      sigma_s {
+        rgb_spectrum {
+          r: 0.70
+          g: 1.22
+          b: 1.90
+        }
+      }
+      sigma_a {
+        rgb_spectrum {
+          r: 0.0014
+          g: 0.0025
+          b: 0.0142
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 9
+    value {
+      preset: SKIN1
+      sigma_s {
+        rgb_spectrum {
+          r: 0.74
+          g: 0.88
+          b: 1.01
+        }
+      }
+      sigma_a {
+        rgb_spectrum {
+          r: 0.032
+          g: 0.17
+          b: 0.48
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 10
+    value {
+      preset: SKIN2
+      sigma_s {
+        rgb_spectrum {
+          r: 1.09
+          g: 1.59
+          b: 1.79
+        }
+      }
+      sigma_a {
+        rgb_spectrum {
+          r: 0.013
+          g: 0.070
+          b: 0.145
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 11
+    value {
+      preset: SPECTRALON
+      sigma_s {
+        rgb_spectrum {
+          r: 11.6
+          g: 20.4
+          b: 14.9
+        }
+      }
+      sigma_a {
+        rgb_spectrum {
+          r: 0.00
+          g: 0.00
+          b: 0.00
+        }
+      }
+    }
+  }
+  homogeneous {
     key: 12
     value {
-      preset: LOWFAT_MILK
+      preset: WHOLEMILK
+      sigma_s {
+        rgb_spectrum {
+          r: 2.55
+          g: 3.21
+          b: 3.77
+        }
+      }
       sigma_a {
+        rgb_spectrum {
+          r: 0.0011
+          g: 0.0024
+          b: 0.014
+        }
+      }
+    }
+  }
+  homogeneous {
+    key: 13
+    value {
+      preset: LOWFAT_MILK
+      sigma_s {
         rgb_spectrum {
           r: 0.89187
           g: 1.5136
           b: 2.532
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.002875
           g: 0.00575
@@ -2733,17 +2783,17 @@ media {
     }
   }
   homogeneous {
-    key: 13
+    key: 14
     value {
       preset: REDUCED_MILK
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 2.4858
           g: 3.1669
           b: 4.5214
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.0025556
           g: 0.0051111
@@ -2753,17 +2803,17 @@ media {
     }
   }
   homogeneous {
-    key: 14
+    key: 15
     value {
       preset: REGULAR_MILK
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 4.5513
           g: 5.8294
           b: 7.136
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.0015333
           g: 0.0046
@@ -2773,17 +2823,17 @@ media {
     }
   }
   homogeneous {
-    key: 15
+    key: 16
     value {
       preset: ESPRESSO
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.72378
           g: 0.84557
           b: 1.0247
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 4.7984
           g: 6.5751
@@ -2793,17 +2843,17 @@ media {
     }
   }
   homogeneous {
-    key: 16
+    key: 17
     value {
       preset: MINT_MOCHA_COFFEE
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.31602
           g: 0.38538
           b: 0.48131
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 3.772
           g: 5.8228
@@ -2813,17 +2863,17 @@ media {
     }
   }
   homogeneous {
-    key: 17
+    key: 18
     value {
       preset: LOWFAT_SOY_MILK
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.30576
           g: 0.34233
           b: 0.61664
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.0014375
           g: 0.0071875
@@ -2833,17 +2883,17 @@ media {
     }
   }
   homogeneous {
-    key: 18
+    key: 19
     value {
       preset: REGULAR_SOY_MILK
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.59223
           g: 0.73866
           b: 1.4693
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.0019167
           g: 0.0095833
@@ -2853,17 +2903,17 @@ media {
     }
   }
   homogeneous {
-    key: 19
+    key: 20
     value {
       preset: LOWFAT_CHOCOLATE_MILK
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.64925
           g: 0.83916
           b: 1.1057
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.0115
           g: 0.0368
@@ -2873,17 +2923,17 @@ media {
     }
   }
   homogeneous {
-    key: 20
+    key: 21
     value {
       preset: REGULAR_CHOCOLATE_MILK
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 1.4585
           g: 2.1289
           b: 2.9527
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.010063
           g: 0.043125
@@ -2893,17 +2943,17 @@ media {
     }
   }
   homogeneous {
-    key: 21
+    key: 22
     value {
       preset: COKE
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 8.9053e-05
           g: 8.372e-05
           b: 0
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.10014
           g: 0.16503
@@ -2913,17 +2963,17 @@ media {
     }
   }
   homogeneous {
-    key: 22
+    key: 23
     value {
       preset: PEPSI
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 6.1697e-05
           g: 4.2564e-05
           b: 0
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.091641
           g: 0.14158
@@ -2933,17 +2983,17 @@ media {
     }
   }
   homogeneous {
-    key: 23
+    key: 24
     value {
       preset: SPRITE
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 6.0306e-06
           g: 6.4139e-06
           b: 6.5504e-06
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.001886
           g: 0.0018308
@@ -2953,17 +3003,17 @@ media {
     }
   }
   homogeneous {
-    key: 24
+    key: 25
     value {
       preset: GATORADE
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.0024574
           g: 0.003007
           b: 0.0037325
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.024794
           g: 0.019289
@@ -2973,17 +3023,17 @@ media {
     }
   }
   homogeneous {
-    key: 25
+    key: 26
     value {
       preset: CHARDONNAY
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 1.7982e-05
           g: 1.3758e-05
           b: 1.2023e-05
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.010782
           g: 0.011855
@@ -2993,17 +3043,17 @@ media {
     }
   }
   homogeneous {
-    key: 26
+    key: 27
     value {
       preset: WHITE_ZINFANDEL
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 1.7501e-05
           g: 1.9069e-05
           b: 1.288e-05
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.012072
           g: 0.016184
@@ -3013,17 +3063,17 @@ media {
     }
   }
   homogeneous {
-    key: 27
+    key: 28
     value {
       preset: MERLOT
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 2.1129e-05
           g: 0.0
           b: 0.0
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.11632
           g: 0.25191
@@ -3033,17 +3083,17 @@ media {
     }
   }
   homogeneous {
-    key: 28
+    key: 29
     value {
       preset: BUDWEISER_BEER
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 2.4356e-05
           g: 2.4079e-05
           b: 1.0564e-05
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.011492
           g: 0.024911
@@ -3053,17 +3103,17 @@ media {
     }
   }
   homogeneous {
-    key: 29
+    key: 30
     value {
       preset: COORS_LIGHT_BEER
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 5.0922e-05
           g: 4.301e-05
           b: 0
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.006164
           g: 0.013984
@@ -3073,17 +3123,17 @@ media {
     }
   }
   homogeneous {
-    key: 30
+    key: 31
     value {
       preset: CLOROX
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.0024035
           g: 0.0031373
           b: 0.003991
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.0033542
           g: 0.014892
@@ -3093,17 +3143,17 @@ media {
     }
   }
   homogeneous {
-    key: 31
+    key: 32
     value {
       preset: APPLE_JUICE
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.00013612
           g: 0.00015836
           b: 0.000227
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.012957
           g: 0.023741
@@ -3113,17 +3163,17 @@ media {
     }
   }
   homogeneous {
-    key: 32
+    key: 33
     value {
       preset: CRANBERRY_JUICE
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.00010402
           g: 0.00011646
           b: 7.8139e-05
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.039437
           g: 0.094223
@@ -3133,17 +3183,17 @@ media {
     }
   }
   homogeneous {
-    key: 33
+    key: 34
     value {
       preset: GRAPE_JUICE
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 5.382e-05
           g: 0
           b: 0
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.10404
           g: 0.23958
@@ -3153,17 +3203,17 @@ media {
     }
   }
   homogeneous {
-    key: 34
+    key: 35
     value {
       preset: RUBY_GRAPEFRUIT_JUICE
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.011002
           g: 0.010927
           b: 0.011036
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.085867
           g: 0.18314
@@ -3173,17 +3223,17 @@ media {
     }
   }
   homogeneous {
-    key: 35
+    key: 36
     value {
       preset: WHITE_GRAPEFRUIT_JUICE
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.22826
           g: 0.23998
           b: 0.32748
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.0138
           g: 0.018831
@@ -3193,17 +3243,17 @@ media {
     }
   }
   homogeneous {
-    key: 36
+    key: 37
     value {
       preset: SHAMPOO
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.0007176
           g: 0.0008303
           b: 0.0009016
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.014107
           g: 0.045693
@@ -3213,17 +3263,17 @@ media {
     }
   }
   homogeneous {
-    key: 37
+    key: 38
     value {
       preset: STRAWBERRY_SHAMPOO
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.00015671
           g: 0.00015947
           b: 1.518e-05
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.01449
           g: 0.05796
@@ -3233,17 +3283,17 @@ media {
     }
   }
   homogeneous {
-    key: 38
+    key: 39
     value {
       preset: HEAD_AND_SHOULDERS_SHAMPOO
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.023805
           g: 0.028804
           b: 0.034306
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.084621
           g: 0.15688
@@ -3253,17 +3303,17 @@ media {
     }
   }
   homogeneous {
-    key: 39
+    key: 40
     value {
       preset: LEMON_TEA_POWDER
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.040224
           g: 0.045264
           b: 0.051081
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 2.4288
           g: 4.5757
@@ -3273,17 +3323,17 @@ media {
     }
   }
   homogeneous {
-    key: 40
+    key: 41
     value {
       preset: ORANGE_POWDER
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.00015617
           g: 0.00017482
           b: 0.0001762
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.001449
           g: 0.003441
@@ -3293,17 +3343,17 @@ media {
     }
   }
   homogeneous {
-    key: 41
+    key: 42
     value {
       preset: PINK_LEMONADE_POWDER
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.00012103
           g: 0.00013073
           b: 0.00012528
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.001165
           g: 0.002366
@@ -3313,17 +3363,17 @@ media {
     }
   }
   homogeneous {
-    key: 42
+    key: 43
     value {
       preset: CAPPUCCINO_POWDER
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 1.8436
           g: 2.5851
           b: 2.1662
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 35.844
           g: 49.547
@@ -3333,17 +3383,17 @@ media {
     }
   }
   homogeneous {
-    key: 43
+    key: 44
     value {
       preset: SALT_POWDER
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.027333
           g: 0.032451
           b: 0.031979
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.28415
           g: 0.3257
@@ -3353,17 +3403,17 @@ media {
     }
   }
   homogeneous {
-    key: 44
+    key: 45
     value {
       preset: SUGAR_POWDER
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.00022272
           g: 0.00025513
           b: 0.000271
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.012638
           g: 0.031051
@@ -3373,17 +3423,17 @@ media {
     }
   }
   homogeneous {
-    key: 45
+    key: 46
     value {
       preset: SUISSE_MOCHA_POWDER
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 2.7979
           g: 3.5452
           b: 4.3365
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 17.502
           g: 27.004
@@ -3393,17 +3443,17 @@ media {
     }
   }
   homogeneous {
-    key: 46
+    key: 47
     value {
       preset: PACIFIC_OCEAN_SURFACE_WATER
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.0001764
           g: 0.00032095
           b: 0.00019617
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.031845
           g: 0.031324
@@ -3415,345 +3465,14 @@ media {
   heterogeneous {
     key: 0
     value {
-      preset: APPLE
-      sigma_a {
-        rgb_spectrum {
-          r: 2.29
-          g: 2.39
-          b: 1.97
-        }
-      }
       sigma_s {
-        rgb_spectrum {
-          r: 0.0030
-          g: 0.0034
-          b: 0.046
-        }
-      }
-      p0 {
-        x: 0.0
-        y: 0.0
-        z: 0.0
-      }
-      p1 {
-        x: 1.0
-        y: 1.0
-        z: 1.0
-      }
-    }
-  }
-  heterogeneous {
-    key: 1
-    value {
-      preset: CHICKEN1
-      sigma_a {
-        rgb_spectrum {
-          r: 0.15
-          g: 0.21
-          b: 0.38
-        }
-      }
-      sigma_s {
-        rgb_spectrum {
-          r: 0.015
-          g: 0.077
-          b: 0.19
-        }
-      }
-      p0 {
-        x: 0.0
-        y: 0.0
-        z: 0.0
-      }
-      p1 {
-        x: 1.0
-        y: 1.0
-        z: 1.0
-      }
-    }
-  }
-  heterogeneous {
-    key: 2
-    value {
-      preset: CHICKEN2
-      sigma_a {
-        rgb_spectrum {
-          r: 0.19
-          g: 0.25
-          b: 0.32
-        }
-      }
-      sigma_s {
-        rgb_spectrum {
-          r: 0.018
-          g: 0.088
-          b: 0.20
-        }
-      }
-      p0 {
-        x: 0.0
-        y: 0.0
-        z: 0.0
-      }
-      p1 {
-        x: 1.0
-        y: 1.0
-        z: 1.0
-      }
-    }
-  }
-  heterogeneous {
-    key: 3
-    value {
-      preset: CREAM
-      sigma_a {
-        rgb_spectrum {
-          r: 7.38
-          g: 5.47
-          b: 3.15
-        }
-      }
-      sigma_s {
-        rgb_spectrum {
-          r: 0.0002
-          g: 0.0028
-          b: 0.0163
-        }
-      }
-      p0 {
-        x: 0.0
-        y: 0.0
-        z: 0.0
-      }
-      p1 {
-        x: 1.0
-        y: 1.0
-        z: 1.0
-      }
-    }
-  }
-  heterogeneous {
-    key: 4
-    value {
-      preset: KETCHUP
-      sigma_a {
-        rgb_spectrum {
-          r: 0.18
-          g: 0.07
-          b: 0.03
-        }
-      }
-      sigma_s {
-        rgb_spectrum {
-          r: 0.061
-          g: 0.97
-          b: 1.45
-        }
-      }
-      p0 {
-        x: 0.0
-        y: 0.0
-        z: 0.0
-      }
-      p1 {
-        x: 1.0
-        y: 1.0
-        z: 1.0
-      }
-    }
-  }
-  heterogeneous {
-    key: 5
-    value {
-      preset: MARBLE
-      sigma_a {
-        rgb_spectrum {
-          r: 2.19
-          g: 2.62
-          b: 3.00
-        }
-      }
-      sigma_s {
-        rgb_spectrum {
-          r: 0.0021
-          g: 0.0041
-          b: 0.0071
-        }
-      }
-      p0 {
-        x: 0.0
-        y: 0.0
-        z: 0.0
-      }
-      p1 {
-        x: 1.0
-        y: 1.0
-        z: 1.0
-      }
-    }
-  }
-  heterogeneous {
-    key: 6
-    value {
-      preset: POTATO
-      sigma_a {
-        rgb_spectrum {
-          r: 0.68
-          g: 0.70
-          b: 0.55
-        }
-      }
-      sigma_s {
-        rgb_spectrum {
-          r: 0.0024
-          g: 0.0090
-          b: 0.12
-        }
-      }
-      p0 {
-        x: 0.0
-        y: 0.0
-        z: 0.0
-      }
-      p1 {
-        x: 1.0
-        y: 1.0
-        z: 1.0
-      }
-    }
-  }
-  heterogeneous {
-    key: 7
-    value {
-      preset: SKIMMILK
-      sigma_a {
-        rgb_spectrum {
-          r: 0.70
-          g: 1.22
-          b: 1.90
-        }
-      }
-      sigma_s {
-        rgb_spectrum {
-          r: 0.0014
-          g: 0.0025
-          b: 0.0142
-        }
-      }
-      p0 {
-        x: 0.0
-        y: 0.0
-        z: 0.0
-      }
-      p1 {
-        x: 1.0
-        y: 1.0
-        z: 1.0
-      }
-    }
-  }
-  heterogeneous {
-    key: 8
-    value {
-      preset: SKIN1
-      sigma_a {
-        rgb_spectrum {
-          r: 0.74
-          g: 0.88
-          b: 1.01
-        }
-      }
-      sigma_s {
-        rgb_spectrum {
-          r: 0.032
-          g: 0.17
-          b: 0.48
-        }
-      }
-      p0 {
-        x: 0.0
-        y: 0.0
-        z: 0.0
-      }
-      p1 {
-        x: 1.0
-        y: 1.0
-        z: 1.0
-      }
-    }
-  }
-  heterogeneous {
-    key: 9
-    value {
-      preset: SKIN2
-      sigma_a {
-        rgb_spectrum {
-          r: 1.09
-          g: 1.59
-          b: 1.79
-        }
-      }
-      sigma_s {
-        rgb_spectrum {
-          r: 0.013
-          g: 0.070
-          b: 0.145
-        }
-      }
-      p0 {
-        x: 0.0
-        y: 0.0
-        z: 0.0
-      }
-      p1 {
-        x: 1.0
-        y: 1.0
-        z: 1.0
-      }
-    }
-  }
-  heterogeneous {
-    key: 10
-    value {
-      preset: SPECTRALON
-      sigma_a {
-        rgb_spectrum {
-          r: 11.6
-          g: 20.4
-          b: 14.9
-        }
-      }
-      sigma_s {
-        rgb_spectrum {
-          r: 0.00
-          g: 0.00
-          b: 0.00
-        }
-      }
-      p0 {
-        x: 0.0
-        y: 0.0
-        z: 0.0
-      }
-      p1 {
-        x: 1.0
-        y: 1.0
-        z: 1.0
-      }
-    }
-  }
-  heterogeneous {
-    key: 11
-    value {
-      preset: WHOLEMILK
-      sigma_a {
         rgb_spectrum {
           r: 2.55
           g: 3.21
           b: 3.77
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.0011
           g: 0.0024
@@ -3773,17 +3492,377 @@ media {
     }
   }
   heterogeneous {
+    key: 1
+    value {
+      preset: APPLE
+      sigma_s {
+        rgb_spectrum {
+          r: 2.29
+          g: 2.39
+          b: 1.97
+        }
+      }
+      sigma_a {
+        rgb_spectrum {
+          r: 0.0030
+          g: 0.0034
+          b: 0.046
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 2
+    value {
+      preset: CHICKEN1
+      sigma_s {
+        rgb_spectrum {
+          r: 0.15
+          g: 0.21
+          b: 0.38
+        }
+      }
+      sigma_a {
+        rgb_spectrum {
+          r: 0.015
+          g: 0.077
+          b: 0.19
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 3
+    value {
+      preset: CHICKEN2
+      sigma_s {
+        rgb_spectrum {
+          r: 0.19
+          g: 0.25
+          b: 0.32
+        }
+      }
+      sigma_a {
+        rgb_spectrum {
+          r: 0.018
+          g: 0.088
+          b: 0.20
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 4
+    value {
+      preset: CREAM
+      sigma_s {
+        rgb_spectrum {
+          r: 7.38
+          g: 5.47
+          b: 3.15
+        }
+      }
+      sigma_a {
+        rgb_spectrum {
+          r: 0.0002
+          g: 0.0028
+          b: 0.0163
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 5
+    value {
+      preset: KETCHUP
+      sigma_s {
+        rgb_spectrum {
+          r: 0.18
+          g: 0.07
+          b: 0.03
+        }
+      }
+      sigma_a {
+        rgb_spectrum {
+          r: 0.061
+          g: 0.97
+          b: 1.45
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 6
+    value {
+      preset: MARBLE
+      sigma_s {
+        rgb_spectrum {
+          r: 2.19
+          g: 2.62
+          b: 3.00
+        }
+      }
+      sigma_a {
+        rgb_spectrum {
+          r: 0.0021
+          g: 0.0041
+          b: 0.0071
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 7
+    value {
+      preset: POTATO
+      sigma_s {
+        rgb_spectrum {
+          r: 0.68
+          g: 0.70
+          b: 0.55
+        }
+      }
+      sigma_a {
+        rgb_spectrum {
+          r: 0.0024
+          g: 0.0090
+          b: 0.12
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 8
+    value {
+      preset: SKIMMILK
+      sigma_s {
+        rgb_spectrum {
+          r: 0.70
+          g: 1.22
+          b: 1.90
+        }
+      }
+      sigma_a {
+        rgb_spectrum {
+          r: 0.0014
+          g: 0.0025
+          b: 0.0142
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 9
+    value {
+      preset: SKIN1
+      sigma_s {
+        rgb_spectrum {
+          r: 0.74
+          g: 0.88
+          b: 1.01
+        }
+      }
+      sigma_a {
+        rgb_spectrum {
+          r: 0.032
+          g: 0.17
+          b: 0.48
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 10
+    value {
+      preset: SKIN2
+      sigma_s {
+        rgb_spectrum {
+          r: 1.09
+          g: 1.59
+          b: 1.79
+        }
+      }
+      sigma_a {
+        rgb_spectrum {
+          r: 0.013
+          g: 0.070
+          b: 0.145
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 11
+    value {
+      preset: SPECTRALON
+      sigma_s {
+        rgb_spectrum {
+          r: 11.6
+          g: 20.4
+          b: 14.9
+        }
+      }
+      sigma_a {
+        rgb_spectrum {
+          r: 0.00
+          g: 0.00
+          b: 0.00
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
     key: 12
     value {
-      preset: LOWFAT_MILK
+      preset: WHOLEMILK
+      sigma_s {
+        rgb_spectrum {
+          r: 2.55
+          g: 3.21
+          b: 3.77
+        }
+      }
       sigma_a {
+        rgb_spectrum {
+          r: 0.0011
+          g: 0.0024
+          b: 0.014
+        }
+      }
+      p0 {
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      }
+      p1 {
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      }
+    }
+  }
+  heterogeneous {
+    key: 13
+    value {
+      preset: LOWFAT_MILK
+      sigma_s {
         rgb_spectrum {
           r: 0.89187
           g: 1.5136
           b: 2.532
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.002875
           g: 0.00575
@@ -3803,17 +3882,17 @@ media {
     }
   }
   heterogeneous {
-    key: 13
+    key: 14
     value {
       preset: REDUCED_MILK
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 2.4858
           g: 3.1669
           b: 4.5214
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.0025556
           g: 0.0051111
@@ -3833,17 +3912,17 @@ media {
     }
   }
   heterogeneous {
-    key: 14
+    key: 15
     value {
       preset: REGULAR_MILK
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 4.5513
           g: 5.8294
           b: 7.136
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.0015333
           g: 0.0046
@@ -3863,17 +3942,17 @@ media {
     }
   }
   heterogeneous {
-    key: 15
+    key: 16
     value {
       preset: ESPRESSO
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.72378
           g: 0.84557
           b: 1.0247
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 4.7984
           g: 6.5751
@@ -3893,17 +3972,17 @@ media {
     }
   }
   heterogeneous {
-    key: 16
+    key: 17
     value {
       preset: MINT_MOCHA_COFFEE
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.31602
           g: 0.38538
           b: 0.48131
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 3.772
           g: 5.8228
@@ -3923,17 +4002,17 @@ media {
     }
   }
   heterogeneous {
-    key: 17
+    key: 18
     value {
       preset: LOWFAT_SOY_MILK
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.30576
           g: 0.34233
           b: 0.61664
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.0014375
           g: 0.0071875
@@ -3953,17 +4032,17 @@ media {
     }
   }
   heterogeneous {
-    key: 18
+    key: 19
     value {
       preset: REGULAR_SOY_MILK
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.59223
           g: 0.73866
           b: 1.4693
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.0019167
           g: 0.0095833
@@ -3983,17 +4062,17 @@ media {
     }
   }
   heterogeneous {
-    key: 19
+    key: 20
     value {
       preset: LOWFAT_CHOCOLATE_MILK
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.64925
           g: 0.83916
           b: 1.1057
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.0115
           g: 0.0368
@@ -4013,17 +4092,17 @@ media {
     }
   }
   heterogeneous {
-    key: 20
+    key: 21
     value {
       preset: REGULAR_CHOCOLATE_MILK
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 1.4585
           g: 2.1289
           b: 2.9527
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.010063
           g: 0.043125
@@ -4043,17 +4122,17 @@ media {
     }
   }
   heterogeneous {
-    key: 21
+    key: 22
     value {
       preset: COKE
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 8.9053e-05
           g: 8.372e-05
           b: 0
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.10014
           g: 0.16503
@@ -4073,17 +4152,17 @@ media {
     }
   }
   heterogeneous {
-    key: 22
+    key: 23
     value {
       preset: PEPSI
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 6.1697e-05
           g: 4.2564e-05
           b: 0
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.091641
           g: 0.14158
@@ -4103,17 +4182,17 @@ media {
     }
   }
   heterogeneous {
-    key: 23
+    key: 24
     value {
       preset: SPRITE
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 6.0306e-06
           g: 6.4139e-06
           b: 6.5504e-06
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.001886
           g: 0.0018308
@@ -4133,17 +4212,17 @@ media {
     }
   }
   heterogeneous {
-    key: 24
+    key: 25
     value {
       preset: GATORADE
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.0024574
           g: 0.003007
           b: 0.0037325
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.024794
           g: 0.019289
@@ -4163,17 +4242,17 @@ media {
     }
   }
   heterogeneous {
-    key: 25
+    key: 26
     value {
       preset: CHARDONNAY
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 1.7982e-05
           g: 1.3758e-05
           b: 1.2023e-05
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.010782
           g: 0.011855
@@ -4193,17 +4272,17 @@ media {
     }
   }
   heterogeneous {
-    key: 26
+    key: 27
     value {
       preset: WHITE_ZINFANDEL
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 1.7501e-05
           g: 1.9069e-05
           b: 1.288e-05
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.012072
           g: 0.016184
@@ -4223,17 +4302,17 @@ media {
     }
   }
   heterogeneous {
-    key: 27
+    key: 28
     value {
       preset: MERLOT
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 2.1129e-05
           g: 0.0
           b: 0.0
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.11632
           g: 0.25191
@@ -4253,17 +4332,17 @@ media {
     }
   }
   heterogeneous {
-    key: 28
+    key: 29
     value {
       preset: BUDWEISER_BEER
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 2.4356e-05
           g: 2.4079e-05
           b: 1.0564e-05
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.011492
           g: 0.024911
@@ -4283,17 +4362,17 @@ media {
     }
   }
   heterogeneous {
-    key: 29
+    key: 30
     value {
       preset: COORS_LIGHT_BEER
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 5.0922e-05
           g: 4.301e-05
           b: 0
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.006164
           g: 0.013984
@@ -4313,17 +4392,17 @@ media {
     }
   }
   heterogeneous {
-    key: 30
+    key: 31
     value {
       preset: CLOROX
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.0024035
           g: 0.0031373
           b: 0.003991
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.0033542
           g: 0.014892
@@ -4343,17 +4422,17 @@ media {
     }
   }
   heterogeneous {
-    key: 31
+    key: 32
     value {
       preset: APPLE_JUICE
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.00013612
           g: 0.00015836
           b: 0.000227
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.012957
           g: 0.023741
@@ -4373,17 +4452,17 @@ media {
     }
   }
   heterogeneous {
-    key: 32
+    key: 33
     value {
       preset: CRANBERRY_JUICE
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.00010402
           g: 0.00011646
           b: 7.8139e-05
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.039437
           g: 0.094223
@@ -4403,17 +4482,17 @@ media {
     }
   }
   heterogeneous {
-    key: 33
+    key: 34
     value {
       preset: GRAPE_JUICE
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 5.382e-05
           g: 0
           b: 0
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.10404
           g: 0.23958
@@ -4433,17 +4512,17 @@ media {
     }
   }
   heterogeneous {
-    key: 34
+    key: 35
     value {
       preset: RUBY_GRAPEFRUIT_JUICE
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.011002
           g: 0.010927
           b: 0.011036
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.085867
           g: 0.18314
@@ -4463,17 +4542,17 @@ media {
     }
   }
   heterogeneous {
-    key: 35
+    key: 36
     value {
       preset: WHITE_GRAPEFRUIT_JUICE
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.22826
           g: 0.23998
           b: 0.32748
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.0138
           g: 0.018831
@@ -4493,17 +4572,17 @@ media {
     }
   }
   heterogeneous {
-    key: 36
+    key: 37
     value {
       preset: SHAMPOO
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.0007176
           g: 0.0008303
           b: 0.0009016
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.014107
           g: 0.045693
@@ -4523,17 +4602,17 @@ media {
     }
   }
   heterogeneous {
-    key: 37
+    key: 38
     value {
       preset: STRAWBERRY_SHAMPOO
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.00015671
           g: 0.00015947
           b: 1.518e-05
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.01449
           g: 0.05796
@@ -4553,17 +4632,17 @@ media {
     }
   }
   heterogeneous {
-    key: 38
+    key: 39
     value {
       preset: HEAD_AND_SHOULDERS_SHAMPOO
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.023805
           g: 0.028804
           b: 0.034306
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.084621
           g: 0.15688
@@ -4583,17 +4662,17 @@ media {
     }
   }
   heterogeneous {
-    key: 39
+    key: 40
     value {
       preset: LEMON_TEA_POWDER
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.040224
           g: 0.045264
           b: 0.051081
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 2.4288
           g: 4.5757
@@ -4613,17 +4692,17 @@ media {
     }
   }
   heterogeneous {
-    key: 40
+    key: 41
     value {
       preset: ORANGE_POWDER
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.00015617
           g: 0.00017482
           b: 0.0001762
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.001449
           g: 0.003441
@@ -4643,17 +4722,17 @@ media {
     }
   }
   heterogeneous {
-    key: 41
+    key: 42
     value {
       preset: PINK_LEMONADE_POWDER
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.00012103
           g: 0.00013073
           b: 0.00012528
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.001165
           g: 0.002366
@@ -4673,17 +4752,17 @@ media {
     }
   }
   heterogeneous {
-    key: 42
+    key: 43
     value {
       preset: CAPPUCCINO_POWDER
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 1.8436
           g: 2.5851
           b: 2.1662
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 35.844
           g: 49.547
@@ -4703,17 +4782,17 @@ media {
     }
   }
   heterogeneous {
-    key: 43
+    key: 44
     value {
       preset: SALT_POWDER
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.027333
           g: 0.032451
           b: 0.031979
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.28415
           g: 0.3257
@@ -4733,17 +4812,17 @@ media {
     }
   }
   heterogeneous {
-    key: 44
+    key: 45
     value {
       preset: SUGAR_POWDER
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.00022272
           g: 0.00025513
           b: 0.000271
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.012638
           g: 0.031051
@@ -4763,17 +4842,17 @@ media {
     }
   }
   heterogeneous {
-    key: 45
+    key: 46
     value {
       preset: SUISSE_MOCHA_POWDER
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 2.7979
           g: 3.5452
           b: 4.3365
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 17.502
           g: 27.004
@@ -4793,17 +4872,17 @@ media {
     }
   }
   heterogeneous {
-    key: 46
+    key: 47
     value {
       preset: PACIFIC_OCEAN_SURFACE_WATER
-      sigma_a {
+      sigma_s {
         rgb_spectrum {
           r: 0.0001764
           g: 0.00032095
           b: 0.00019617
         }
       }
-      sigma_s {
+      sigma_a {
         rgb_spectrum {
           r: 0.031845
           g: 0.031324

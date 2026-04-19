@@ -18,6 +18,7 @@
 #include "pbrt_proto/shared/common.h"
 #include "pbrt_proto/shared/films.h"
 #include "pbrt_proto/shared/light_sources.h"
+#include "pbrt_proto/shared/media.h"
 #include "pbrt_proto/shared/parser.h"
 #include "pbrt_proto/shared/pixel_filters.h"
 #include "pbrt_proto/shared/samplers.h"
@@ -35,59 +36,6 @@ Integrator::LightSampleStrategy ParseLightSampleStrategy(
   }
   return Integrator::SPATIAL;
 }
-
-static const absl::flat_hash_map<absl::string_view, MeasuredSubsurface>
-    kSubsurfaces = {
-        {"Apple", MeasuredSubsurface::APPLE},
-        {"Chicken1", MeasuredSubsurface::CHICKEN1},
-        {"Chicken2", MeasuredSubsurface::CHICKEN2},
-        {"Cream", MeasuredSubsurface::CREAM},
-        {"Ketchup", MeasuredSubsurface::KETCHUP},
-        {"Marble", MeasuredSubsurface::MARBLE},
-        {"Potato", MeasuredSubsurface::POTATO},
-        {"Skimmilk", MeasuredSubsurface::SKIMMILK},
-        {"Skin1", MeasuredSubsurface::SKIN1},
-        {"Skin2", MeasuredSubsurface::SKIN2},
-        {"Spectralon", MeasuredSubsurface::SPECTRALON},
-        {"Wholemilk", MeasuredSubsurface::WHOLEMILK},
-        {"Lowfat Milk", MeasuredSubsurface::LOWFAT_MILK},
-        {"Reduced Milk", MeasuredSubsurface::REDUCED_MILK},
-        {"Regular Milk", MeasuredSubsurface::REGULAR_MILK},
-        {"Espresso", MeasuredSubsurface::ESPRESSO},
-        {"Mint Mocha Coffee", MeasuredSubsurface::MINT_MOCHA_COFFEE},
-        {"Lowfat Soy Milk", MeasuredSubsurface::LOWFAT_SOY_MILK},
-        {"Regular Soy Milk", MeasuredSubsurface::REGULAR_SOY_MILK},
-        {"Lowfat Chocolate Milk", MeasuredSubsurface::LOWFAT_CHOCOLATE_MILK},
-        {"Regular Chocolate Milk", MeasuredSubsurface::REGULAR_CHOCOLATE_MILK},
-        {"Coke", MeasuredSubsurface::COKE},
-        {"Pepsi", MeasuredSubsurface::PEPSI},
-        {"Sprite", MeasuredSubsurface::SPRITE},
-        {"Gatorade", MeasuredSubsurface::GATORADE},
-        {"Chardonnay", MeasuredSubsurface::CHARDONNAY},
-        {"White Zinfandel", MeasuredSubsurface::WHITE_ZINFANDEL},
-        {"Merlot", MeasuredSubsurface::MERLOT},
-        {"Budweiser Beer", MeasuredSubsurface::BUDWEISER_BEER},
-        {"Coors Light Beer", MeasuredSubsurface::COORS_LIGHT_BEER},
-        {"Clorox", MeasuredSubsurface::CLOROX},
-        {"Apple Juice", MeasuredSubsurface::APPLE_JUICE},
-        {"Cranberry Juice", MeasuredSubsurface::CRANBERRY_JUICE},
-        {"Grape Juice", MeasuredSubsurface::GRAPE_JUICE},
-        {"Ruby Grapefruit Juice", MeasuredSubsurface::RUBY_GRAPEFRUIT_JUICE},
-        {"White Grapefruit Juice", MeasuredSubsurface::WHITE_GRAPEFRUIT_JUICE},
-        {"Shampoo", MeasuredSubsurface::SHAMPOO},
-        {"Strawberry Shampoo", MeasuredSubsurface::STRAWBERRY_SHAMPOO},
-        {"Head & Shoulders Shampoo",
-         MeasuredSubsurface::HEAD_AND_SHOULDERS_SHAMPOO},
-        {"Lemon Tea Powder", MeasuredSubsurface::LEMON_TEA_POWDER},
-        {"Orange Powder", MeasuredSubsurface::ORANGE_POWDER},
-        {"Pink Lemonade Powder", MeasuredSubsurface::PINK_LEMONADE_POWDER},
-        {"Cappuccino Powder", MeasuredSubsurface::CAPPUCCINO_POWDER},
-        {"Salt Powder", MeasuredSubsurface::SALT_POWDER},
-        {"Sugar Powder", MeasuredSubsurface::SUGAR_POWDER},
-        {"Suisse Mocha Powder", MeasuredSubsurface::SUISSE_MOCHA_POWDER},
-        {"Pacific Ocean Surface Water",
-         MeasuredSubsurface::PACIFIC_OCEAN_SURFACE_WATER},
-};
 
 Material ParseMaterial(
     absl::string_view material_type,
@@ -354,8 +302,8 @@ Material ParseMaterial(
     if (std::optional<absl::string_view> name =
             TryRemoveString(parameters, "name");
         name) {
-      auto iter = kSubsurfaces.find(*name);
-      if (iter != kSubsurfaces.end()) {
+      auto iter = kNamedMeasuredScatteringPresets.find(*name);
+      if (iter != kNamedMeasuredScatteringPresets.end()) {
         subsurface.set_name(iter->second);
       }
     }
@@ -1328,133 +1276,13 @@ absl::Status ParserV3::MakeNamedMedium(
   absl::string_view medium_type =
       TryRemoveString(parameters, "type").value_or("");
   if (medium_type == "homogeneous") {
-    auto& homogeneous = *make_named_medium.mutable_homogeneous();
-
-    if (std::optional<absl::string_view> preset =
-            TryRemoveString(parameters, "preset");
-        preset.has_value()) {
-      auto iter = kSubsurfaces.find(*preset);
-      if (iter != kSubsurfaces.end()) {
-        homogeneous.set_preset(iter->second);
-      }
-    }
-
-    TryRemoveSpectrumV1(
-        parameters, "sigma_a",
-        std::bind(&MakeNamedMedium::Homogeneous::mutable_sigma_a,
-                  &homogeneous));
-    TryRemoveSpectrumV1(
-        parameters, "sigma_s",
-        std::bind(&MakeNamedMedium::Homogeneous::mutable_sigma_s,
-                  &homogeneous));
-
-    if (std::optional<double> g = TryRemoveFloat(parameters, "g");
-        g.has_value()) {
-      homogeneous.set_g(*g);
-    }
-
-    if (std::optional<double> scale = TryRemoveFloat(parameters, "scale");
-        scale.has_value()) {
-      homogeneous.set_scale(*scale);
-    }
+    RemoveHomogeneousMediumV1(parameters,
+                              *make_named_medium.mutable_homogeneous());
   } else if (medium_type == "heterogeneous") {
-    auto& heterogeneous = *make_named_medium.mutable_heterogeneous();
-
-    if (std::optional<absl::string_view> preset =
-            TryRemoveString(parameters, "preset");
-        preset.has_value()) {
-      auto iter = kSubsurfaces.find(*preset);
-      if (iter != kSubsurfaces.end()) {
-        heterogeneous.set_preset(iter->second);
-      }
-    }
-
-    TryRemoveSpectrumV1(
-        parameters, "sigma_a",
-        std::bind(&MakeNamedMedium::Heterogeneous::mutable_sigma_a,
-                  &heterogeneous));
-    TryRemoveSpectrumV1(
-        parameters, "sigma_s",
-        std::bind(&MakeNamedMedium::Heterogeneous::mutable_sigma_s,
-                  &heterogeneous));
-
-    if (std::optional<double> g = TryRemoveFloat(parameters, "g");
-        g.has_value()) {
-      heterogeneous.set_g(*g);
-    }
-
-    if (std::optional<double> scale = TryRemoveFloat(parameters, "scale");
-        scale.has_value()) {
-      heterogeneous.set_scale(*scale);
-    }
-
-    if (std::optional<std::array<double, 3>> p0 =
-            TryRemovePoint3(parameters, "p0");
-        p0.has_value()) {
-      heterogeneous.mutable_p0()->set_x((*p0)[0]);
-      heterogeneous.mutable_p0()->set_y((*p0)[1]);
-      heterogeneous.mutable_p0()->set_z((*p0)[2]);
-    }
-
-    if (std::optional<std::array<double, 3>> p1 =
-            TryRemovePoint3(parameters, "p1");
-        p1.has_value()) {
-      heterogeneous.mutable_p1()->set_x((*p1)[0]);
-      heterogeneous.mutable_p1()->set_y((*p1)[1]);
-      heterogeneous.mutable_p1()->set_z((*p1)[2]);
-    }
-
-    if (std::optional<int32_t> nx = TryRemoveInteger(parameters, "nx");
-        nx.has_value()) {
-      if (*nx < 0) {
-        make_named_medium.clear_heterogeneous();
-        return absl::OkStatus();
-      }
-
-      heterogeneous.set_nx(*nx);
-    }
-
-    if (std::optional<int32_t> ny = TryRemoveInteger(parameters, "ny");
-        ny.has_value()) {
-      if (*ny < 0) {
-        make_named_medium.clear_heterogeneous();
-        return absl::OkStatus();
-      }
-
-      heterogeneous.set_ny(*ny);
-    }
-
-    if (std::optional<int32_t> nz = TryRemoveInteger(parameters, "nz");
-        nz.has_value()) {
-      if (*nz < 0) {
-        make_named_medium.clear_heterogeneous();
-        return absl::OkStatus();
-      }
-
-      heterogeneous.set_nz(*nz);
-    }
-
-    int64_t required_size = static_cast<int64_t>(heterogeneous.nx()) *
-                            static_cast<int64_t>(heterogeneous.ny());
-    if (required_size < std::numeric_limits<int32_t>::max()) {
-      required_size *= static_cast<int64_t>(heterogeneous.nz());
-    }
-
-    if (required_size > std::numeric_limits<int32_t>::max()) {
-      return absl::InvalidArgumentError(
-          "Heterogeneous medium is too large to be stored in a 1D proto array");
-    }
-
-    if (std::optional<absl::Span<double>> density =
-            TryRemoveFloats(parameters, "density");
-        density.has_value() &&
-        density->size() == static_cast<size_t>(required_size)) {
-      heterogeneous.mutable_density()->Add(density->begin(), density->end());
-    } else {
-      std::cerr << "Invalid or missing required heterogeneous MakeNamedMedia "
-                   "parameter: 'density'"
-                << std::endl;
-      make_named_medium.clear_heterogeneous();
+    if (absl::Status status = RemoveUniformGridMediumV1(
+            parameters, *make_named_medium.mutable_heterogeneous());
+        !status.ok()) {
+      return status;
     }
   } else {
     std::cerr << "Unrecognized MakeNamedMedium type: \"" << medium_type << "\""
@@ -2283,8 +2111,8 @@ absl::Status ParserV3::Shape(
   if (std::optional<absl::string_view> name =
           TryRemoveString(parameters, "name");
       name.has_value()) {
-    auto iter = kSubsurfaces.find(*name);
-    if (iter != kSubsurfaces.end()) {
+    auto iter = kNamedMeasuredScatteringPresets.find(*name);
+    if (iter != kNamedMeasuredScatteringPresets.end()) {
       overrides.set_name(iter->second);
       overrides_populated = true;
     }

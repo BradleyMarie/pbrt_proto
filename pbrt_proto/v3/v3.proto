@@ -4,56 +4,6 @@ import "pbrt_proto/pbrt.proto";
 
 package pbrt_proto.v3;
 
-enum MeasuredSubsurface {
-  APPLE = 0;
-  CHICKEN1 = 1;
-  CHICKEN2 = 2;
-  CREAM = 3;
-  KETCHUP = 4;
-  MARBLE = 5;
-  POTATO = 6;
-  SKIMMILK = 7;
-  SKIN1 = 8;
-  SKIN2 = 9;
-  SPECTRALON = 10;
-  WHOLEMILK = 11;
-  LOWFAT_MILK = 12;
-  REDUCED_MILK = 13;
-  REGULAR_MILK = 14;
-  ESPRESSO = 15;
-  MINT_MOCHA_COFFEE = 16;
-  LOWFAT_SOY_MILK = 17;
-  REGULAR_SOY_MILK = 18;
-  LOWFAT_CHOCOLATE_MILK = 19;
-  REGULAR_CHOCOLATE_MILK = 20;
-  COKE = 21;
-  PEPSI = 22;
-  SPRITE = 23;
-  GATORADE = 24;
-  CHARDONNAY = 25;
-  WHITE_ZINFANDEL = 26;
-  MERLOT = 27;
-  BUDWEISER_BEER = 28;
-  COORS_LIGHT_BEER = 29;
-  CLOROX = 30;
-  APPLE_JUICE = 31;
-  CRANBERRY_JUICE = 32;
-  GRAPE_JUICE = 33;
-  RUBY_GRAPEFRUIT_JUICE = 34;
-  WHITE_GRAPEFRUIT_JUICE = 35;
-  SHAMPOO = 36;
-  STRAWBERRY_SHAMPOO = 37;
-  HEAD_AND_SHOULDERS_SHAMPOO = 38;
-  LEMON_TEA_POWDER = 39;
-  ORANGE_POWDER = 40;
-  PINK_LEMONADE_POWDER = 41;
-  CAPPUCCINO_POWDER = 42;
-  SALT_POWDER = 43;
-  SUGAR_POWDER = 44;
-  SUISSE_MOCHA_POWDER = 45;
-  PACIFIC_OCEAN_SURFACE_WATER = 46;
-}
-
 // A directive which sets the Accelerator to use for rendering.
 message Accelerator {
   // The type of Accelerator to use. If none are set, then `bvh` should be read
@@ -86,7 +36,7 @@ message Camera {
   }
 }
 
-// A directive which sets the Film to use for rendering
+// A directive which sets the Film to use for rendering.
 message Film {
   // The type of film to use. If none are set, then the current film should
   // be unset. If no camera is set at the time an image is to be rendered a
@@ -314,38 +264,16 @@ message MakeNamedMaterial {
   required Material material = 2;
 }
 
+// A directive which creates a named participating medium.
 message MakeNamedMedium {
-  message Homogeneous {
-    optional MeasuredSubsurface preset = 1 [default = WHOLEMILK];
-    optional Spectrum sigma_a = 2;
-    optional Spectrum sigma_s = 3;
-    optional double g = 4 [default = 0.0];
-    optional double scale = 5 [default = 1.0];
-  }
-
-  message Heterogeneous {
-    optional MeasuredSubsurface preset = 1 [default = WHOLEMILK];
-    optional Spectrum sigma_a = 2;
-    optional Spectrum sigma_s = 3;
-    optional double g = 4 [default = 0.0];
-    optional double scale = 5 [default = 1.0];
-    optional Point p0 = 6;
-    optional Point p1 = 7;
-    optional uint32 nx = 8 [default = 1];
-    optional uint32 ny = 9 [default = 1];
-    optional uint32 nz = 10 [default = 1];
-    repeated double density = 11;  // Must check size == nx * ny * nz
-  }
-
+  // The name to give the created medium.
   required string name = 1;
 
-  // If none of these fields are set, the directive should be ignored and have
-  // no impact.
-  //
-  // https://github.com/mmp/pbrt-v3/blob/13d871faae88233b327d04cda24022b8bb0093ee/src/core/api.cpp#L1097
+  // The type of medium to create. If none are set, then the directive should
+  // have no effect.
   oneof medium_type {
-    Homogeneous homogeneous = 2;
-    Heterogeneous heterogeneous = 3;
+    HomogeneousMedium homogeneous = 2;  // Create a homogenous medium
+    UniformGridMedium heterogeneous = 3;  // Create a heterogeneous medium
   }
 }
 
@@ -465,7 +393,7 @@ message Material {
     optional FloatTextureParameter bumpmap = 10;
     optional FloatTextureParameter uroughness = 25;
     optional FloatTextureParameter vroughness = 26;
-    optional MeasuredSubsurface name = 27;
+    optional MeasuredScatteringPreset name = 27;
     optional SpectrumTextureParameter Kr = 33;
     optional SpectrumTextureParameter Kt = 35;
     optional SpectrumTextureParameter sigma_a = 40;
@@ -757,7 +685,7 @@ message Shape {
     optional FloatTextureParameter speculartint = 24;
     optional FloatTextureParameter uroughness = 25;
     optional FloatTextureParameter vroughness = 26;
-    optional MeasuredSubsurface name = 27;
+    optional MeasuredScatteringPreset name = 27;
     optional SpectrumTextureParameter amount = 28;
     optional SpectrumTextureParameter eta_as_spectrum_texture = 29;
     optional SpectrumTextureParameter color = 30;

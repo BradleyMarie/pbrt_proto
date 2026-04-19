@@ -193,6 +193,34 @@ cc_test(
 )
 
 cc_library(
+    name = "media",
+    srcs = ["media.cc"],
+    hdrs = ["media.h"],
+    deps = [
+        ":common",
+        ":parser",
+        "//pbrt_proto:pbrt_cc_proto",
+        "@abseil-cpp//absl/container:flat_hash_map",
+        "@abseil-cpp//absl/strings:string_view",
+    ],
+)
+
+cc_test(
+    name = "media_test",
+    srcs = ["media_test.cc"],
+    deps = [
+        ":media",
+        ":parser",
+        "//pbrt_proto:pbrt_cc_proto",
+        "//pbrt_proto/testing:proto_matchers",
+        "@abseil-cpp//absl/container:flat_hash_map",
+        "@abseil-cpp//absl/status:status_matchers",
+        "@abseil-cpp//absl/strings:string_view",
+        "@googletest//:gtest_main",
+    ],
+)
+
+cc_library(
     name = "parser",
     srcs = ["parser.cc"],
     hdrs = ["parser.h"],

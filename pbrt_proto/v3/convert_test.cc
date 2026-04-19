@@ -1259,68 +1259,6 @@ TEST(Convert, MakeNamedMediumHeterogeneous) {
                        })pb")));
 }
 
-TEST(Convert, MakeNamedMediumHeterogeneousBadNx) {
-  std::stringstream stream(
-      "MakeNamedMedium \"a\""
-      "\"integer nx\" -1 "
-      "\"integer ny\" 2 "
-      "\"integer nz\" 3 "
-      "\"float density\" [1 2 3 4 5 6] ");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives {
-                                              make_named_medium { name: "a" }
-                                            })pb")));
-}
-
-TEST(Convert, MakeNamedMediumHeterogeneousBadNy) {
-  std::stringstream stream(
-      "MakeNamedMedium \"a\""
-      "\"integer nx\" 1 "
-      "\"integer ny\" -2 "
-      "\"integer nz\" 3 "
-      "\"float density\" [1 2 3 4 5 6] ");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives {
-                                              make_named_medium { name: "a" }
-                                            })pb")));
-}
-
-TEST(Convert, MakeNamedMediumHeterogeneousBadNz) {
-  std::stringstream stream(
-      "MakeNamedMedium \"a\""
-      "\"integer nx\" 1 "
-      "\"integer ny\" 2 "
-      "\"integer nz\" -3 "
-      "\"float density\" [1 2 3 4 5 6] ");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives {
-                                              make_named_medium { name: "a" }
-                                            })pb")));
-}
-
-TEST(Convert, MakeNamedMediumHeterogeneousNoDensity) {
-  std::stringstream stream(
-      "MakeNamedMedium \"a\""
-      "\"string type\" \"heterogeneous\" ");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives {
-                                              make_named_medium { name: "a" }
-                                            })pb")));
-}
-
-TEST(Convert, MakeNamedMediumHeterogeneousDensityWrongSize) {
-  std::stringstream stream(
-      "MakeNamedMedium \"a\""
-      "\"integer nx\" 1 "
-      "\"integer ny\" 2 "
-      "\"integer nz\" 3 "
-      "\"float density\" [1 2 3 4 5] ");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives {
-                                              make_named_medium { name: "a" }
-                                            })pb")));
-}
-
 TEST(Convert, MaterialEmpty) {
   std::stringstream stream("Material \"\"");
   EXPECT_THAT(Convert(stream),

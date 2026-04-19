@@ -243,6 +243,10 @@ std::optional<std::array<double, 3>> TryRemoveRgb(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     absl::string_view parameter_name);
 
+std::optional<absl::Span<std::array<double, 3>>> TryRemoveRgbs(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view parameter_name);
+
 std::optional<absl::Span<std::array<double, 2>>> TryRemoveSpectralSamples(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     absl::string_view parameter_name);
