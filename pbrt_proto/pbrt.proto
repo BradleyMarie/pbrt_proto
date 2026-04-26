@@ -481,31 +481,6 @@ message WorldBegin {}
 message WorldEnd {}
 
 //
-// Common Parameters
-//
-
-// The type of antialiasing to apply to 2D checkerboard textures
-enum CheckerboardAntialiasing {
-  CLOSEDFORM = 0;
-  NONE_AA = 1;
-}
-
-// The type of texture wrapping to apply to 2D image textures
-enum ImageWrap {
-  REPEAT = 0;
-  BLACK = 1;
-  CLAMP = 2;
-}
-
-// The type of texture mapping to apply to 2D textures.
-enum TextureMapping {
-  UV = 0;
-  SPHERICAL = 1;
-  CYLINDRICAL = 2;
-  PLANAR = 3;
-}
-
-//
 // Common Accelerators
 //
 
@@ -1815,6 +1790,7 @@ message ZSobolSampler {
   optional int32 seed = 3;
 }
 
+// A low discrepancy sampler which uses a (0, 2) sequence as its basis.
 message ZeroTwoSequenceSampler {
   // The number of samples to do per pixel.
   optional uint32 pixelsamples = 1;
@@ -1825,4 +1801,628 @@ message ZeroTwoSequenceSampler {
   //       however, it is only supported in PBRTv3 and should be ignored when
   //       reading input from other versions.
   optional uint32 dimensions = 4 [default = 4];
+}
+
+//
+// Common Textures
+//
+
+// The type of antialiasing to apply to 2D checkerboard textures.
+enum CheckerboardAntialiasing {
+  CLOSEDFORM = 0;
+  NONE_AA = 1;
+  SUPERSAMPLE = 2;  // Only supported in PRTv1. 
+}
+
+// The method used for converting 8-bit color values to floating point values.
+enum ImageEncoding {
+  SRGB = 1;
+  LINEAR = 2;
+  GAMMA = 3;
+}
+
+// The type of texture wrapping to apply to 2D image textures
+enum ImageWrap {
+  REPEAT = 0;
+  BLACK = 1;
+  CLAMP = 2;
+}
+
+// The filtering function to apply to texture lookups.
+enum TextureFilter {
+  EWA = 0;
+  TRILINEAR = 1;
+  BILINEAR = 2;  // Only supported in PBRTv4 and later.
+  POINT = 3;  // Only supported in PBRTv4 and later.
+}
+
+// The type of texture mapping to apply to 2D textures.
+enum TextureMapping {
+  UV = 0;
+  SPHERICAL = 1;
+  CYLINDRICAL = 2;
+  PLANAR = 3;
+}
+
+// A texture which bilinearly interpolates between four textures.
+message BilerpFloatTexture {
+  // The first texture to interpolate.
+  optional FloatTextureParameter v00 = 8;
+
+  // The second texture to interpolate.
+  optional FloatTextureParameter v01 = 9;
+
+  // The third texture to interpolate.
+  optional FloatTextureParameter v10 = 10;
+
+  // The fourth texture to interpolate.
+  optional FloatTextureParameter v11 = 11;
+
+  // The type of texture coordinate mapping to use.
+  optional TextureMapping mapping = 24 [default = UV];
+
+  // The scale factor applied to the u texture coordinate.
+  optional double uscale = 25 [default = 1.0];
+
+  // The scale factor applied to the v texture coordinate.
+  optional double vscale = 26 [default = 1.0];
+
+  // The offset applied to the u texture coordinate.
+  optional double udelta = 27 [default = 0.0];
+
+  // The offset applied to the v texture coordinate.
+  optional double vdelta = 28 [default = 0.0];
+
+  // The first vector that defines the planar texture mapping.
+  optional Vector v1 = 29;
+
+  // The second vector that defines the planar texture mapping.
+  optional Vector v2 = 30;
+}
+
+// A texture which bilinearly interpolates between four textures.
+message BilerpSpectrumTexture {
+  // The first texture to interpolate.
+  optional SpectrumTextureParameter v00 = 8;
+
+  // The second texture to interpolate.
+  optional SpectrumTextureParameter v01 = 9;
+
+  // The third texture to interpolate.
+  optional SpectrumTextureParameter v10 = 10;
+
+  // The fourth texture to interpolate.
+  optional SpectrumTextureParameter v11 = 11;
+
+  // The type of texture coordinate mapping to use.
+  optional TextureMapping mapping = 24 [default = UV];
+
+  // The scale factor applied to the u texture coordinate.
+  optional double uscale = 25 [default = 1.0];
+
+  // The scale factor applied to the v texture coordinate.
+  optional double vscale = 26 [default = 1.0];
+
+  // The offset applied to the u texture coordinate.
+  optional double udelta = 27 [default = 0.0];
+
+  // The offset applied to the v texture coordinate.
+  optional double vdelta = 28 [default = 0.0];
+
+  // The first vector that defines the planar texture mapping.
+  optional Vector v1 = 29;
+
+  // The second vector that defines the planar texture mapping.
+  optional Vector v2 = 30;
+}
+
+// A texture which alternates between two textures in a 2D checkerboard pattern.
+message Checkerboard2DFloatTexture {
+  // The texture to use for even checks.
+  optional FloatTextureParameter tex1 = 2;
+
+  // The texture to use for odd checks.
+  optional FloatTextureParameter tex2 = 3;
+
+  // The antialiasing mode to use for the texture lookups.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported after PBRTv3 and should be ignored when
+  //       reading later input.
+  optional CheckerboardAntialiasing aamode = 5 [default = CLOSEDFORM];
+
+  // The type of texture coordinate mapping to use.
+  optional TextureMapping mapping = 24 [default = UV];
+
+  // The scale factor applied to the u texture coordinate.
+  optional double uscale = 25 [default = 1.0];
+
+  // The scale factor applied to the v texture coordinate.
+  optional double vscale = 26 [default = 1.0];
+
+  // The offset applied to the u texture coordinate.
+  optional double udelta = 27 [default = 0.0];
+
+  // The offset applied to the v texture coordinate.
+  optional double vdelta = 28 [default = 0.0];
+
+  // The first vector that defines the planar texture mapping.
+  optional Vector v1 = 29;
+
+  // The second vector that defines the planar texture mapping.
+  optional Vector v2 = 30;
+}
+
+// A texture which alternates between two textures in a 2D checkerboard pattern.
+message Checkerboard2DSpectrumTexture {
+  // The texture to use for even checks.
+  optional SpectrumTextureParameter tex1 = 2;
+
+  // The texture to use for odd checks.
+  optional SpectrumTextureParameter tex2 = 3;
+
+  // The antialiasing mode to use for the texture lookups.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported after PBRTv3 and should be ignored when
+  //       reading later input.
+  optional CheckerboardAntialiasing aamode = 5 [default = CLOSEDFORM];
+
+  // The type of texture coordinate mapping to use.
+  optional TextureMapping mapping = 24 [default = UV];
+
+  // The scale factor applied to the u texture coordinate.
+  optional double uscale = 25 [default = 1.0];
+
+  // The scale factor applied to the v texture coordinate.
+  optional double vscale = 26 [default = 1.0];
+
+  // The offset applied to the u texture coordinate.
+  optional double udelta = 27 [default = 0.0];
+
+  // The offset applied to the v texture coordinate.
+  optional double vdelta = 28 [default = 0.0];
+
+  // The first vector that defines the planar texture mapping.
+  optional Vector v1 = 29;
+
+  // The second vector that defines the planar texture mapping.
+  optional Vector v2 = 30;
+}
+
+// A texture which alternates between two textures in a 3D checkerboard pattern.
+message Checkerboard3DFloatTexture {
+  // The texture to use for even checks.
+  optional FloatTextureParameter tex1 = 2;
+
+  // The texture to use for odd checks.
+  optional FloatTextureParameter tex2 = 3;
+}
+
+// A texture which alternates between two textures in a 3D checkerboard pattern.
+message Checkerboard3DSpectrumTexture {
+  // The texture to use for even checks.
+  optional SpectrumTextureParameter tex1 = 2;
+
+  // The texture to use for odd checks.
+  optional SpectrumTextureParameter tex2 = 3;
+}
+
+// A texture which has a constant value.
+message ConstantFloatTexture {
+  // The value of the texture.
+  optional double value = 1 [default = 1.0];
+}
+
+// A texture which has a constant value.
+message ConstantSpectrumTexture {
+  // The value of the texture.
+  optional Spectrum value = 1;
+}
+
+// A texture which linearly interpolates between two textures using an
+// an interpolant based on the absolute value of the dot product of the surface
+// normal at the texture evaluation point with a specified vector.
+message DirectionMixFloatTexture {
+  // The first texture to interpolate.
+  optional FloatTextureParameter tex1 = 2;
+
+  // The second texture to interpolate.
+  optional FloatTextureParameter tex2 = 3;
+
+  // The direction used to compute the interpolant.
+  optional Vector dir = 23;
+}
+
+// A texture which linearly interpolates between two textures using an
+// an interpolant based on the absolute value of the dot product of the surface
+// normal at the texture evaluation point with a specified vector.
+message DirectionMixSpectrumTexture {
+  // The first texture to interpolate.
+  optional SpectrumTextureParameter tex1 = 2;
+
+  // The second texture to interpolate.
+  optional SpectrumTextureParameter tex2 = 3;
+
+  // The direction used to compute the interpolant.
+  optional Vector dir = 23;
+}
+
+// A texture which alternates between two textures in a dots pattern.
+message DotsFloatTexture {
+  // The texture used for the dots.
+  optional FloatTextureParameter inside = 6;
+
+  // The texture used for the background.
+  optional FloatTextureParameter outside = 7;
+
+  // The type of texture coordinate mapping to use.
+  optional TextureMapping mapping = 24 [default = UV];
+
+  // The scale factor applied to the u texture coordinate.
+  optional double uscale = 25 [default = 1.0];
+
+  // The scale factor applied to the v texture coordinate.
+  optional double vscale = 26 [default = 1.0];
+
+  // The offset applied to the u texture coordinate.
+  optional double udelta = 27 [default = 0.0];
+
+  // The offset applied to the v texture coordinate.
+  optional double vdelta = 28 [default = 0.0];
+
+  // The first vector that defines the planar texture mapping.
+  optional Vector v1 = 29;
+
+  // The second vector that defines the planar texture mapping.
+  optional Vector v2 = 30;
+}
+
+// A texture which alternates between two textures in a dots pattern.
+message DotsSpectrumTexture {
+  // The texture used for the dots.
+  optional SpectrumTextureParameter inside = 6;
+
+  // The texture used for the background.
+  optional SpectrumTextureParameter outside = 7;
+
+  // The type of texture coordinate mapping to use.
+  optional TextureMapping mapping = 24 [default = UV];
+
+  // The scale factor applied to the u texture coordinate.
+  optional double uscale = 25 [default = 1.0];
+
+  // The scale factor applied to the v texture coordinate.
+  optional double vscale = 26 [default = 1.0];
+
+  // The offset applied to the u texture coordinate.
+  optional double udelta = 27 [default = 0.0];
+
+  // The offset applied to the v texture coordinate.
+  optional double vdelta = 28 [default = 0.0];
+
+  // The first vector that defines the planar texture mapping.
+  optional Vector v1 = 29;
+
+  // The second vector that defines the planar texture mapping.
+  optional Vector v2 = 30;
+}
+
+// A texture based on fractional Brownian motion.
+message FBmFloatTexture {
+  // The maximum number of octaves of noise to use.
+  optional uint32 octaves = 12 [default = 8];
+
+  // The bumpiness of the resulting texture.
+  optional double roughness = 13 [default = 0.5];
+}
+
+// A texture based on fractional Brownian motion.
+message FBmSpectrumTexture {
+  // The maximum number of octaves of noise to use.
+  optional uint32 octaves = 12 [default = 8];
+
+  // The bumpiness of the resulting texture.
+  optional double roughness = 13 [default = 0.5];
+}
+
+// A texture based on a specified image file.
+message ImageMapFloatTexture {
+  // The filename of the image to load.
+  optional string filename = 16 [default = ""];
+
+  // The wrapping method to use for texture coordinates that are outside of the
+  // zero to one range.
+  optional ImageWrap wrap = 17 [default = REPEAT];
+
+  // The filter applied to texture lookups.
+  //
+  // NOTE: This parameter maps to the trilinear parameter for PBRTv1, PBRTv2,
+  //       and PBRTv3 inputs.
+  optional TextureFilter filter = 18;
+
+  // The maximum elliptical eccentricity for the EWA texture filter.
+  optional double maxanisotropy = 19 [default = 8.0];
+
+  // The scale factor applied to texture values.
+  //
+  // NOTE: For simplicity, this field is shared between all PBRT versions;
+  //       however, it is not supported before PBRTv3 and should be ignored when
+  //       reading earlier input.
+  optional double scale = 14 [default = 1.0];
+
+  // If true, the returned texture values are inverted.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv4 and should be ignored when
+  //       reading earlier input.
+  optional bool invert = 20 [default = false];
+
+  // The function used to convert 8-bit color values to floating point values.
+  //
+  // NOTE: The default value of this parameter varies by file type.
+  //
+  // NOTE: For PBRTv3 inputs, this value maps to the gamma boolean parameter.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv3 and should be ignored when
+  //       reading earlier input.
+  optional ImageEncoding encoding = 21;
+
+  // The gamma exponent to use if the image is gamma encoded.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is only valid in PBRTv2 and in PBRv4 and later and can be
+  //       ignored when reading any other input.
+  optional double gamma = 22 [default = 1.0];
+
+  // The type of texture coordinate mapping to use.
+  optional TextureMapping mapping = 24 [default = UV];
+
+  // The scale factor applied to the u texture coordinate.
+  optional double uscale = 25 [default = 1.0];
+
+  // The scale factor applied to the v texture coordinate.
+  optional double vscale = 26 [default = 1.0];
+
+  // The offset applied to the u texture coordinate.
+  optional double udelta = 27 [default = 0.0];
+
+  // The offset applied to the v texture coordinate.
+  optional double vdelta = 28 [default = 0.0];
+
+  // The first vector that defines the planar texture mapping.
+  optional Vector v1 = 29;
+
+  // The second vector that defines the planar texture mapping.
+  optional Vector v2 = 30;
+}
+
+// A texture based on a specified image file.
+message ImageMapSpectrumTexture {
+  // The filename of the image to load.
+  optional string filename = 16 [default = ""];
+
+  // The wrapping method to use for texture coordinates that are outside of the
+  // zero to one range.
+  optional ImageWrap wrap = 17 [default = REPEAT];
+
+  // The filter applied to texture lookups.
+  //
+  // NOTE: This parameter maps to the trilinear parameter for PBRTv1, PBRTv2,
+  //       and PBRTv3 inputs.
+  optional TextureFilter filter = 18 [default = BILINEAR];
+
+  // The maximum elliptical eccentricity for the EWA texture filter.
+  optional double maxanisotropy = 19 [default = 8.0];
+
+  // The scale factor applied to texture values.
+  //
+  // NOTE: For simplicity, this field is shared between all PBRT versions;
+  //       however, it is not supported before PBRTv3 and should be ignored when
+  //       reading earlier input.
+  optional double scale = 14 [default = 1.0];
+
+  // If true, the returned texture values are inverted.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv4 and should be ignored when
+  //       reading earlier input.
+  optional bool invert = 20 [default = false];
+
+  // The function used to convert 8-bit color values to floating point values.
+  //
+  // NOTE: The default value of this parameter varies by file type.
+  //
+  // NOTE: For PBRTv3 inputs, this value maps to the gamma boolean parameter.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv3 and should be ignored when
+  //       reading earlier input.
+  optional ImageEncoding encoding = 21;
+
+  // The gamma exponent to use if the image is gamma encoded.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is only valid in PBRTv2 and in PBRv4 and later and can be
+  //       ignored when reading any other input.
+  optional double gamma = 22 [default = 1.0];
+
+  // The type of texture coordinate mapping to use.
+  optional TextureMapping mapping = 24 [default = UV];
+
+  // The scale factor applied to the u texture coordinate.
+  optional double uscale = 25 [default = 1.0];
+
+  // The scale factor applied to the v texture coordinate.
+  optional double vscale = 26 [default = 1.0];
+
+  // The offset applied to the u texture coordinate.
+  optional double udelta = 27 [default = 0.0];
+
+  // The offset applied to the v texture coordinate.
+  optional double vdelta = 28 [default = 0.0];
+
+  // The first vector that defines the planar texture mapping.
+  optional Vector v1 = 29;
+
+  // The second vector that defines the planar texture mapping.
+  optional Vector v2 = 30;
+}
+
+// A texture which uses Perlin noise to replicate marble.
+message MarbleSpectrumTexture {
+  // The maximum number of octaves of noise to use.
+  optional uint32 octaves = 12 [default = 8];
+
+  // The bumpiness of the resulting texture.
+  optional double roughness = 13 [default = 0.5];
+
+  // A scale factor to apply to the noise function inputs.
+  optional double scale = 14 [default = 1.0];
+
+  // A scale factor to apply to the noise function output.
+  optional double variation = 15 [default = 0.2];
+}
+
+// A texture which linearly interpolates between two textures based on a third
+// texture.
+message MixFloatTexture {
+  // The first texture to interpolate.
+  optional FloatTextureParameter tex1 = 2;
+
+  // The second texture to interpolate.
+  optional FloatTextureParameter tex2 = 3;
+
+  // The texture containing the interpolant.
+  optional FloatTextureParameter amount = 4;
+}
+
+// A texture which linearly interpolates between two textures based on a third
+// texture.
+message MixSpectrumTexture {
+  // The first texture to interpolate.
+  optional SpectrumTextureParameter tex1 = 2;
+
+  // The second texture to interpolate.
+  optional SpectrumTextureParameter tex2 = 3;
+
+  // The texture containing the interpolant.
+  optional FloatTextureParameter amount = 4;
+}
+
+// A texture based on a Ptex image.
+message PtexFloatTexture {
+  // The filename of the image to load.
+  optional string filename = 16 [default = ""];
+
+  // The function used to convert 8-bit color values to floating point values.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv4 and should be ignored when
+  //       reading earlier input.
+  optional ImageEncoding encoding = 21 [default = GAMMA];
+
+  // The gamma exponent to use if the image is gamma encoded.
+  //
+  // NOTE: In PBRTv3 this is a standalone parameter while in PBRTv4 it is part
+  //       of the encoding. Regardless, the gamma exponent is always ends up
+  //       in this field.
+  optional double gamma = 22 [default = 2.2];
+
+  // The scale factor applied to texture values.
+  optional double scale = 14 [default = 1.0];
+}
+
+// A texture based on a Ptex image.
+message PtexSpectrumTexture {
+  // The filename of the image to load.
+  optional string filename = 16 [default = ""];
+
+  // The function used to convert 8-bit color values to floating point values.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv4 and should be ignored when
+  //       reading earlier input.
+  optional ImageEncoding encoding = 21 [default = GAMMA];
+
+  // The gamma exponent to use if the image is gamma encoded.
+  //
+  // NOTE: In PBRTv3 this is a standalone parameter while in PBRTv4 it is part
+  //       of the encoding. Regardless, the gamma exponent is always ends up
+  //       in this field.
+  optional double gamma = 22 [default = 2.2];
+
+  // The scale factor applied to texture values.
+  optional double scale = 14 [default = 1.0];
+}
+
+// A texture which multiples two textures together and returns the product.
+message ScaleFloatTexture {
+  // The first texture to multiply.
+  optional FloatTextureParameter tex1 = 2;
+
+  // The second texture to multiply.
+  optional FloatTextureParameter tex2 = 3;
+}
+
+// A texture which multiples two textures together and returns the product.
+message ScaleSpectrumTexture {
+  // The first texture to multiply.
+  optional SpectrumTextureParameter tex1 = 2;
+
+  // The second texture to multiply.
+  optional SpectrumTextureParameter tex2 = 3;
+}
+
+// A texture which uses Perlin noise to create a wrinkled appearance.
+message WrinkledFloatTexture {
+  // The maximum number of octaves of noise to use.
+  optional uint32 octaves = 12 [default = 8];
+
+  // The bumpiness of the resulting texture.
+  optional double roughness = 13 [default = 0.5];
+}
+
+// A texture which uses Perlin noise to create a wrinkled appearance.
+message WrinkledSpectrumTexture {
+  // The maximum number of octaves of noise to use.
+  optional uint32 octaves = 12 [default = 8];
+
+  // The bumpiness of the resulting texture.
+  optional double roughness = 13 [default = 0.5];
+}
+
+// A texture which visualizes the UV texture of a surface.
+message UvSpectrumTexture {
+  // The type of texture coordinate mapping to use.
+  optional TextureMapping mapping = 24 [default = UV];
+
+  // The scale factor applied to the u texture coordinate.
+  optional double uscale = 25 [default = 1.0];
+
+  // The scale factor applied to the v texture coordinate.
+  optional double vscale = 26 [default = 1.0];
+
+  // The offset applied to the u texture coordinate.
+  optional double udelta = 27 [default = 0.0];
+
+  // The offset applied to the v texture coordinate.
+  optional double vdelta = 28 [default = 0.0];
+
+  // The first vector that defines the planar texture mapping.
+  optional Vector v1 = 29;
+
+  // The second vector that defines the planar texture mapping.
+  optional Vector v2 = 30;
+}
+
+// A texture which uses Perlin noise to create a windy appearance.
+message WindyFloatTexture {
+  // Empty Message
+}
+
+// A texture which uses Perlin noise to create a windy appearance.
+message WindySpectrumTexture {
+  // Empty Message
 }

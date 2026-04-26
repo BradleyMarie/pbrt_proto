@@ -46,6 +46,28 @@ message Film {
   }
 }
 
+// A directive which creates a named FloatTexture.
+message FloatTexture {
+  // The name of the texture.
+  required string name = 1;
+
+  // The type of FloatTexture to create. If none are set this directive should
+  // be ignored.
+  oneof float_texture_type {
+    BilerpFloatTexture bilerp = 2;  // Create a bilerp texture
+    Checkerboard2DFloatTexture checkerboard2d = 3;  // Create a 2D checkerboard
+    Checkerboard3DFloatTexture checkerboard3d = 4;  // Create a 3D checkerboard
+    ConstantFloatTexture constant = 5;  // Create a constant texture
+    DotsFloatTexture dots = 6;  // Create a dots texture
+    FBmFloatTexture fbm = 7;  // Create an FBm texture
+    ImageMapFloatTexture imagemap = 8;  // Create an image map texture
+    MixFloatTexture mix = 9;  // Create a mix texture
+    ScaleFloatTexture scale = 10;  // Create a scale texture
+    WindyFloatTexture windy = 11;  // Create a windy texture
+    WrinkledFloatTexture wrinkled = 12;  // Create a wrinkled texture
+  }
+}
+
 // A directive which creates a light source.
 message LightSource {
   // The type of light source to create. If none of these fields are set, the
@@ -104,5 +126,29 @@ message Sampler {
     AdaptiveSampler adaptive = 5;  // Use an adaptive sampler
     IndependentSampler random = 6;  // Use a random sampler
     HaltonSampler halton = 7;  // Use a Halton sequence sampler
+  }
+}
+
+// A directive which creates a named SpectrumTexture.
+message SpectrumTexture {
+  // The name of the texture.
+  required string name = 1;
+
+  // The type of SpectrumTexture to create. If none are set this directive
+  // should be ignored.
+  oneof spectrum_texture_type {
+    BilerpSpectrumTexture bilerp = 2;  // Create a bilerp texture
+    Checkerboard2DSpectrumTexture checkerboard2d = 3;  // Create a 2D board
+    Checkerboard3DSpectrumTexture checkerboard3d = 4;  // Create a 3D board
+    ConstantSpectrumTexture constant = 5;  // Create a constant texture
+    DotsSpectrumTexture dots = 6;  // Create a dots texture
+    FBmSpectrumTexture fbm = 7;  // Create an FBm texture
+    ImageMapSpectrumTexture imagemap = 8;  // Create an image map texture
+    MarbleSpectrumTexture marble = 9;  // Create an marble texture
+    MixSpectrumTexture mix = 10;  // Create a mix texture
+    ScaleSpectrumTexture scale = 11;  // Create a scale texture
+    UvSpectrumTexture uv = 12;  // Create a UV texture
+    WindySpectrumTexture windy = 13;  // Create a windy texture
+    WrinkledSpectrumTexture wrinkled = 14;  // Create a wrinkled texture
   }
 }

@@ -470,9 +470,9 @@ TEST(Convert, FloatTextureImageMapBlack) {
                                               filename: "a"
                                               wrap: BLACK
                                               maxanisotropy: 1.0
-                                              trilinear: true
+                                              filter: TRILINEAR
                                               scale: 2.0
-                                              gamma: true
+                                              encoding: GAMMA
                                               mapping: UV
                                               uscale: 5.0
                                               vscale: 6.0
@@ -501,9 +501,9 @@ TEST(Convert, FloatTextureImageMapClamp) {
                                               filename: "a"
                                               wrap: CLAMP
                                               maxanisotropy: 1.0
-                                              trilinear: true
+                                              filter: TRILINEAR
                                               scale: 2.0
-                                              gamma: true
+                                              encoding: GAMMA
                                               mapping: UV
                                               uscale: 5.0
                                               vscale: 6.0
@@ -532,9 +532,9 @@ TEST(Convert, FloatTextureImageMapRepeat) {
                                               filename: "a"
                                               wrap: REPEAT
                                               maxanisotropy: 1.0
-                                              trilinear: true
+                                              filter: TRILINEAR
                                               scale: 2.0
-                                              gamma: true
+                                              encoding: GAMMA
                                               mapping: UV
                                               uscale: 5.0
                                               vscale: 6.0
@@ -549,13 +549,10 @@ TEST(Convert, FloatTextureImageMapRepeat) {
 
 TEST(Convert, FloatTextureMarble) {
   std::stringstream stream("Texture \"name\" \"float\" \"marble\"");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives {
-                                          float_texture {
-                                            name: "name"
-                                            marble {}
-                                          }
-                                        })pb")));
+  EXPECT_THAT(Convert(stream),
+              IsOkAndHolds(EqualsProto(R"pb(directives {
+                                              float_texture { name: "name" }
+                                            })pb")));
 }
 
 TEST(Convert, FloatTextureMix) {
@@ -3105,9 +3102,9 @@ TEST(Convert, SpectrumTextureImageMapBlack) {
                                               filename: "a"
                                               wrap: BLACK
                                               maxanisotropy: 1.0
-                                              trilinear: true
+                                              filter: TRILINEAR
                                               scale: 2.0
-                                              gamma: true
+                                              encoding: GAMMA
                                               mapping: UV
                                               uscale: 5.0
                                               vscale: 6.0
@@ -3136,9 +3133,9 @@ TEST(Convert, SpectrumTextureImageMapClamp) {
                                               filename: "a"
                                               wrap: CLAMP
                                               maxanisotropy: 1.0
-                                              trilinear: true
+                                              filter: TRILINEAR
                                               scale: 2.0
-                                              gamma: true
+                                              encoding: GAMMA
                                               mapping: UV
                                               uscale: 5.0
                                               vscale: 6.0
@@ -3167,9 +3164,9 @@ TEST(Convert, SpectrumTextureImageMapRepeat) {
                                               filename: "a"
                                               wrap: REPEAT
                                               maxanisotropy: 1.0
-                                              trilinear: true
+                                              filter: TRILINEAR
                                               scale: 2.0
-                                              gamma: true
+                                              encoding: GAMMA
                                               mapping: UV
                                               uscale: 5.0
                                               vscale: 6.0

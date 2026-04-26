@@ -59,37 +59,37 @@ message Defaults {
   // A container for the default values for every type of FloatTexture
   message DefaultFloatTextures {
     // The default "bilerp" FloatTexture
-    required FloatTexture.Bilerp bilerp = 1;
+    required BilerpFloatTexture bilerp = 1;
 
     // The default 2D "checkerboard" FloatTexture
-    required FloatTexture.Checkerboard2D checkerboard2d = 2;
+    required Checkerboard2DFloatTexture checkerboard2d = 2;
 
     // The default 3D "checkerboard" FloatTexture
-    required FloatTexture.Checkerboard2D checkerboard3d = 3;
+    required Checkerboard2DFloatTexture checkerboard3d = 3;
 
     // The default "constant" FloatTexture is fully captured in its definition
     reserved 4;
 
     // The default "dots" FloatTexture
-    required FloatTexture.Dots dots = 5;
+    required DotsFloatTexture dots = 5;
 
     // The default "fbm" FloatTexture is fully captured in its definition
     reserved 6;
 
     // The default "imagemap" FloatTexture
-    required FloatTexture.ImageMap imagemap = 7;
+    required ImageMapFloatTexture imagemap = 7;
 
     // The default "marble" FloatTexture is fully captured in its definition
     reserved 8;
 
     // The default "mix" FloatTexture
-    required FloatTexture.Mix mix = 9;
+    required MixFloatTexture mix = 9;
 
     // The default "ptex" FloatTexture is fully captured in its definition
     reserved 10;
 
     // The default "scale" FloatTexture
-    required FloatTexture.Scale scale = 11;
+    required ScaleFloatTexture scale = 11;
 
     // The default "windy" FloatTexture is fully captured in its definition
     reserved 12;
@@ -287,40 +287,40 @@ message Defaults {
   // A container for the default values for every type of SpectrumTexture
   message DefaultSpectrumTextures {
     // The default "bilerp" SpectrumTexture
-    required SpectrumTexture.Bilerp bilerp = 1;
+    required BilerpSpectrumTexture bilerp = 1;
 
     // The default 2D "checkerboard" SpectrumTexture
-    required SpectrumTexture.Checkerboard2D checkerboard2d = 2;
+    required Checkerboard2DSpectrumTexture checkerboard2d = 2;
 
     // The default 3D "checkerboard" SpectrumTexture
-    required SpectrumTexture.Checkerboard2D checkerboard3d = 3;
+    required Checkerboard2DSpectrumTexture checkerboard3d = 3;
 
     // The default "constant" SpectrumTexture
-    required SpectrumTexture.Constant constant = 4;
+    required ConstantSpectrumTexture constant = 4;
 
     // The default "dots" SpectrumTexture
-    required SpectrumTexture.Dots dots = 5;
+    required DotsSpectrumTexture dots = 5;
 
     // The default "fbm" SpectrumTexture is fully captured in its definition
     reserved 6;
 
     // The default "imagemap" SpectrumTexture
-    required SpectrumTexture.ImageMap imagemap = 7;
+    required ImageMapSpectrumTexture imagemap = 7;
 
     // The default "marble" SpectrumTexture is fully captured in its definition
     reserved 8;
 
     // The default "mix" SpectrumTexture
-    required SpectrumTexture.Mix mix = 9;
+    required MixSpectrumTexture mix = 9;
 
     // The default "ptex" SpectrumTexture is fully captured in its definition
     reserved 10;
 
     // The default "scale" SpectrumTexture
-    required SpectrumTexture.Scale scale = 11;
+    required ScaleSpectrumTexture scale = 11;
 
     // The default "uv" SpectrumTexture is fully captured in its definition
-    required SpectrumTexture.Uv uv = 12;
+    required UvSpectrumTexture uv = 12;
 
     // The default "windy" SpectrumTexture is fully captured in its definition
     reserved 13;

@@ -26,6 +26,7 @@ cc_library(
         "//pbrt_proto/shared:parser",
         "//pbrt_proto/shared:pixel_filters",
         "//pbrt_proto/shared:samplers",
+        "//pbrt_proto/shared:textures",
         "@abseil-cpp//absl/container:flat_hash_map",
         "@abseil-cpp//absl/functional:function_ref",
         "@abseil-cpp//absl/status:status",
