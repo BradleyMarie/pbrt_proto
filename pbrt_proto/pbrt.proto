@@ -2246,7 +2246,7 @@ message ImageMapSpectrumTexture {
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is only valid in PBRTv2 and in PBRv4 and later and can be
   //       ignored when reading any other input.
-  optional double gamma = 22 [default = 1.0];
+  optional double gamma = 22;
 
   // The type of texture coordinate mapping to use.
   optional TextureMapping mapping = 24 [default = UV];
@@ -2331,6 +2331,10 @@ message PtexFloatTexture {
   optional double gamma = 22 [default = 2.2];
 
   // The scale factor applied to texture values.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv4 and should be ignored when
+  //       reading earlier input.
   optional double scale = 14 [default = 1.0];
 }
 
@@ -2354,6 +2358,10 @@ message PtexSpectrumTexture {
   optional double gamma = 22 [default = 2.2];
 
   // The scale factor applied to texture values.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv4 and should be ignored when
+  //       reading earlier input.
   optional double scale = 14 [default = 1.0];
 }
 

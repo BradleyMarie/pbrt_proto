@@ -1,9 +1,12 @@
 #include "pbrt_proto/shared/textures.h"
 
+#include <cmath>
 #include <functional>
 #include <optional>
+#include <vector>
 
 #include "absl/container/flat_hash_map.h"
+#include "absl/strings/numbers.h"
 #include "absl/strings/str_split.h"
 #include "absl/strings/string_view.h"
 #include "pbrt_proto/pbrt.pb.h"
@@ -65,6 +68,7 @@ absl::Status RemoveEncoding(
             absl::StrCat("Invalid ", type_name, " parameter : 'encoding'"));
       }
 
+      output.set_encoding(ImageEncoding::GAMMA);
       output.set_gamma(gamma);
     }
   }
@@ -466,7 +470,7 @@ absl::Status RemoveImageMapFloatTextureV4(
     output.set_scale(*scale);
   }
 
-  if (std::optional<bool> invert = TryRemoveFloat(parameters, "invert");
+  if (std::optional<bool> invert = TryRemoveBool(parameters, "invert");
       invert) {
     output.set_invert(*invert);
   }
@@ -488,16 +492,16 @@ void RemoveImageMapSpectrumTextureV1(
 void RemoveImageMapSpectrumTextureV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     ImageMapSpectrumTexture& output) {
-  RemoveImageMapBase(parameters, output);
+  RemoveImageMapSpectrumTextureV1(parameters, output);
 
   if (std::optional<double> gamma = TryRemoveFloat(parameters, "gamma");
       gamma) {
     output.set_gamma(*gamma);
   }
 
-  if (std::optional<bool> trilinear = TryRemoveBool(parameters, "trilinear");
-      trilinear) {
-    output.set_filter(TextureFilter::TRILINEAR);
+  if (std::optional<double> scale = TryRemoveFloat(parameters, "scale");
+      scale) {
+    output.set_scale(*scale);
   }
 }
 
@@ -528,7 +532,7 @@ absl::Status RemoveImageMapSpectrumTextureV4(
     output.set_scale(*scale);
   }
 
-  if (std::optional<bool> invert = TryRemoveFloat(parameters, "invert");
+  if (std::optional<bool> invert = TryRemoveBool(parameters, "invert");
       invert) {
     output.set_invert(*invert);
   }
