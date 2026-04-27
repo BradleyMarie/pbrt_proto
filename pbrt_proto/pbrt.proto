@@ -506,10 +506,10 @@ message BvhAccelerator {
 
   // The maximum number of primitives per node for split methods other than
   // MIDDLE and EQUAL. If zero, the behavior is undefined.
-  optional uint32 maxnodeprims = 1 [default = 4];
+  optional uint32 maxnodeprims = 7 [default = 4];
 
   // The method for recursively splitting the geometry into a BVH.
-  optional SplitMethod splitmethod = 2 [default = SAH];
+  optional SplitMethod splitmethod = 8 [default = SAH];
 }
 
 // A voxel-based accelerator.
@@ -523,20 +523,20 @@ message GridAccelerator {
 // A KD-tree based accelerator.
 message KdTreeAccelerator {
   // The cost estimate for each intersection.
-  optional double intersectcost = 1 [default = 80.0];
+  optional double intersectcost = 2 [default = 80.0];
 
   // The cost estimate for each traversal.
-  optional double traversalcost = 2 [default = 1.0];
+  optional double traversalcost = 3 [default = 1.0];
 
   // The bonus factor to give empty nodes.
-  optional double emptybonus = 3 [default = 0.5];
+  optional double emptybonus = 4 [default = 0.5];
 
   // The soft maximum number of primitives per node.
-  optional uint32 maxprims = 4 [default = 1];
+  optional uint32 maxprims = 5 [default = 1];
 
   // The maximum depth of the tree. If zero, the choice of maximum depth is left
   // to the renderer.
-  optional uint32 maxdepth = 5 [default = 0];
+  optional uint32 maxdepth = 6 [default = 0];
 }
 
 //
@@ -670,40 +670,40 @@ message PerspectiveCamera {
   //       field: `fov` and `halffov`. If `halffov` is specified in either of
   //       these versions the value of `fov` if presnent should be set to half
   //       the value of `halffov`.
-  optional double fov = 3 [default = 90.0];
+  optional double fov = 9 [default = 90.0];
 
   // The radius of the lens.
-  optional double lensradius = 4 [default = 0.0];
+  optional double lensradius = 3 [default = 0.0];
 
   // The focal distance of the camera.
   //
   // NOTE: The default value for this value varies by PBRT version. In PBRTv1
   //       and PBRTv2 this value defaults to `1e30`. In PBRTv3 and later the
   //       default value is `1e6`.
-  optional double focaldistance = 5;
+  optional double focaldistance = 4;
 
   // The aspect ratio of the film. If unspecified, this value should default to
   // the x-resolution of the film divided by the y-resolution of the film.
-  optional double frameaspectratio = 6;
+  optional double frameaspectratio = 5;
 
   // The bounds of the film plane in screen space. If unspecified, the lower
   // and upper bounds should be `[-1.0, 1.0]` along the shorter image axis and
   // set proportionally along the longer image axis.
-  optional CameraScreenWindow screenwindow = 7;
+  optional CameraScreenWindow screenwindow = 6;
 
   // The near clipping plane.
   //
   // NOTE: For simplicity, this field is shared between all PBRT versions;
   //       however, it is not supported after PBRTv1 and should be ignored when
   //       reading later input.
-  optional double hither = 8;
+  optional double hither = 7;
 
   // The far clipping plane.
   //
   // NOTE: For simplicity, this field is shared between all PBRT versions;
   //       however, it is not supported after PBRTv1 and should be ignored when
   //       reading later input.
-  optional double yon = 9;
+  optional double yon = 8;
 }
 
 // A camera which captures the light arriving at a point from all directions.
@@ -737,40 +737,40 @@ message SphericalCamera {
   // NOTE: For simplicity, this field is shared between all PBRT versions;
   //       however, it is only supported in PBRTv4 and later. In earlier
   //       versions an equirectantular mapping is the only supported mapping.
-  optional Mapping mapping = 3;
+  optional Mapping mapping = 10;
 
   // The radius of the lens.
-  optional double lensradius = 4 [default = 0.0];
+  optional double lensradius = 3 [default = 0.0];
 
   // The focal distance of the camera.
   //
   // NOTE: This value has a default value of `1e30` in all PBRT versions;
   //       however, for consistency with the other cameras that default value is
   //       not specified here. 
-  optional double focaldistance = 5;
+  optional double focaldistance = 4;
 
   // The aspect ratio of the film. If unspecified, this value should default to
   // the x-resolution of the film divided by the y-resolution of the film.
-  optional double frameaspectratio = 6;
+  optional double frameaspectratio = 5;
 
   // The bounds of the film plane in screen space. If unspecified, the lower
   // and upper bounds should be `[-1.0, 1.0]` along the shorter image axis and
   // set proportionally along the longer image axis.
-  optional CameraScreenWindow screenwindow = 7;
+  optional CameraScreenWindow screenwindow = 6;
 
   // The near clipping plane.
   //
   // NOTE: For simplicity, this field is shared between all PBRT versions;
   //       however, it is not supported after PBRTv1 and should be ignored when
   //       reading later input.
-  optional double hither = 8;
+  optional double hither = 7;
 
   // The far clipping plane.
   //
   // NOTE: For simplicity, this field is shared between all PBRT versions;
   //       however, it is not supported after PBRTv1 and should be ignored when
   //       reading later input.
-  optional double yon = 9;
+  optional double yon = 8;
 }
 
 // A camera that simulates a ray passing through a complex lens system.
@@ -787,10 +787,10 @@ message RealisticCamera {
   //       if the file cannot be found the camera should be unset. In PBRTv4 or
   //       later if parameter is missing or the file is not found the renderer
   //       should exit with an error.
-  optional string lensfile = 3 [default = ""];
+  optional string lensfile = 11 [default = ""];
 
   // The diameter of the aperture of the lens system in millimeters.
-  optional double aperturediameter = 4 [default = 1.0];
+  optional double aperturediameter = 12 [default = 1.0];
 
   // The shape of the aperture. If missing, the aperture has a circular shape.
   //
@@ -802,21 +802,21 @@ message RealisticCamera {
   // NOTE: For simplicity, this field is shared between all PBRT versions;
   //       however, it is only supported starting with PBRTv4 and should be
   //       ignored when reading earlier input.
-  optional string aperture = 5;
+  optional string aperture = 13;
 
-  // The distance to which the camera is focused in meters.
+  // The distance to which the lens system is focused in meters.
   //
   // NOTE: This value has a default value of `10.0` in all PBRT versions;
   //       however, for consistency with the other cameras that default value is
   //       not specified here. 
-  optional double focusdistance = 6;
+  optional double focusdistance = 14;
 
   // If true, the samples are only weighted by the "cosine-to-the-4th" term.
   //
   // NOTE: For simplicity, this field is shared between all PBRT versions;
   //       however, it is only supported in PBRTv3 and should be ignored when
   //       reading later input.
-  optional bool simpleweighting = 7;
+  optional bool simpleweighting = 15;
 }
 
 //
@@ -1093,7 +1093,7 @@ message SpectralFilm {
 // An infinitely distant directional light source.
 message DistantLightSource {
   // A spectral power distribution describing the light.
-  optional Spectrum L = 1;
+  optional Spectrum L = 2;
 
   // A scale applied to the spectrum provided in `L`.
   //
@@ -1105,14 +1105,14 @@ message DistantLightSource {
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported in PBRTv1 and should be ignored when
   //       reading PBRTv1 input.
-  optional Spectrum scale = 3;
+  optional Spectrum scale = 4;
 
   // If positive, the desired illuminance of the light.
   //
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported before PBRTv4 and should be ignored when
   //       reading earlier input.
-  optional double illuminance = 4 [default = -1.0];
+  optional double illuminance = 6 [default = -1.0];
 
   // The start location of the vector describing the light's direction.
   optional Point from = 7;
@@ -1132,7 +1132,7 @@ message GoniometricLightSource {
   // NOTE: In PBRTv1, PBRTv2, and PBRTv3 this field is referred to by the name
   //       `mapname`; however, it is referred to here as `samples` which is the
   //       final name for the parameter that was used in PBRTv4.
-  optional string filename = 2 [default = ""];
+  optional string filename = 3 [default = ""];
 
   // A scale applied to the spectrum provided in `I`.
   //
@@ -1144,20 +1144,20 @@ message GoniometricLightSource {
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported in PBRTv1 and should be ignored when
   //       reading PBRTv1 input.
-  optional Spectrum scale = 3;
+  optional Spectrum scale = 4;
 
   // If positive, the desired power of the light.
   //
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported before PBRTv4 and should be ignored when
   //       reading earlier input.
-  optional double power = 4 [default = -1.0];
+  optional double power = 5 [default = -1.0];
 }
 
 // An infinitely distant spherical light source.
 message InfiniteLightSource {
   // A spectral power distribution describing the light.
-  optional Spectrum L = 1;
+  optional Spectrum L = 2;
 
   // The path to an image file describing the directionally-varying emissions
   // of the light.
@@ -1165,7 +1165,7 @@ message InfiniteLightSource {
   // NOTE: In PBRTv1, PBRTv2, and PBRTv3 this field is referred to by the name
   //       `mapname`; however, it is referred to here as `samples` which is the
   //       final name for the parameter that was used in PBRTv4.
-  optional string filename = 2 [default = ""];
+  optional string filename = 3 [default = ""];
 
   // A scale applied to the spectrum provided in `L`.
   //
@@ -1177,14 +1177,14 @@ message InfiniteLightSource {
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported in PBRTv1 and should be ignored when
   //       reading PBRTv1 input.
-  optional Spectrum scale = 3;
+  optional Spectrum scale = 4;
 
   // If positive, the desired illuminance of the light.
   //
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported before PBRTv4 and should be ignored when
   //       reading earlier input.
-  optional double illuminance = 4 [default = -1.0];
+  optional double illuminance = 6 [default = -1.0];
 
   // The suggested number of shadow samples to take from the light. May be
   // ignored depending on the Integrator used for rendering.
@@ -1196,7 +1196,7 @@ message InfiniteLightSource {
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported after PBRTv3 and should be ignored when
   //       reading later input.
-  optional uint32 samples = 6 [default = 1];
+  optional uint32 samples = 12 [default = 1];
 }
 
 // A local point light source.
@@ -1214,14 +1214,14 @@ message PointLightSource {
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported in PBRTv1 and should be ignored when
   //       reading PBRTv1 input.
-  optional Spectrum scale = 3;
+  optional Spectrum scale = 4;
 
   // If positive, the desired power of the light.
   //
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported before PBRTv4 and should be ignored when
   //       reading earlier input.
-  optional double power = 4 [default = -1.0];
+  optional double power = 5 [default = -1.0];
 
   // The location of the light.
   optional Point from = 7;
@@ -1238,7 +1238,7 @@ message ProjectionLightSource {
   // NOTE: In PBRTv1, PBRTv2, and PBRTv3 this field is referred to by the name
   //       `mapname`; however, it is referred to here as `samples` which is the
   //       final name for the parameter that was used in PBRTv4.
-  optional string filename = 2 [default = ""];
+  optional string filename = 3 [default = ""];
 
   // A scale applied to the spectrum provided in `I`.
   //
@@ -1250,14 +1250,14 @@ message ProjectionLightSource {
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported in PBRTv1 and should be ignored when
   //       reading PBRTv1 input.
-  optional Spectrum scale = 3;
+  optional Spectrum scale = 4;
 
   // If positive, the desired power of the light.
   //
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported before PBRTv4 and should be ignored when
   //       reading earlier input.
-  optional double power = 4 [default = -1.0];
+  optional double power = 5 [default = -1.0];
 
   // The spread angle of the projected light in degrees.
   //
@@ -1282,14 +1282,14 @@ message SpotLightSource {
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported in PBRTv1 and should be ignored when
   //       reading PBRTv1 input.
-  optional Spectrum scale = 3;
+  optional Spectrum scale = 4;
 
   // If positive, the desired power of the light.
   //
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported before PBRTv4 and should be ignored when
   //       reading earlier input.
-  optional double power = 4 [default = -1.0];
+  optional double power = 5 [default = -1.0];
 
   // The location of the light.
   optional Point from = 7;
@@ -1416,7 +1416,7 @@ message HomogeneousMedium {
   optional double Lescale = 6 [default = 1.0];
 
   // The named measured scattering medium properties to use.
-  optional MeasuredScatteringPreset preset = 7;
+  optional MeasuredScatteringPreset preset = 9;
 }
 
 // A participating medium defined by a NanoVDB input.
@@ -1611,7 +1611,7 @@ message LanczosPixelFilter {
   optional double yradius = 2 [default = 4.0];
 
   // The extent of the sinc function in cycles before it is clamped to zero.
-  optional double tau = 3 [default = 3.0];
+  optional double tau = 4 [default = 3.0];
 }
 
 // A pixel filter that performs a Mitchell-Netravali filter.
@@ -1627,10 +1627,10 @@ message MitchellPixelFilter {
   optional double yradius = 2 [default = 2.0];
 
   // The `B` parameter that controls the shape of the filter.
-  optional double B = 3 [default = 0.333333333333333333];
+  optional double B = 5 [default = 0.333333333333333333];
 
   // The `C` parameter that controls the shape of the filter.
-  optional double C = 4 [default = 0.333333333333333333];
+  optional double C = 6 [default = 0.333333333333333333];
 }
 
 // A pixel filter that performs a triangle filter.
