@@ -2,6 +2,8 @@
 #include <map>
 #include <set>
 #include <string>
+#include <utility>
+#include <vector>
 
 #include "absl/strings/match.h"
 #include "absl/strings/string_view.h"
@@ -9,19 +11,24 @@
 #include "googlemock/include/gmock/gmock.h"
 #include "googletest/include/gtest/gtest.h"
 #include "pbrt_proto/pbrt.pb.h"
+#include "pbrt_proto/v1/v1.pb.h"
+#include "pbrt_proto/v2/v2.pb.h"
+#include "pbrt_proto/v3/v3.pb.h"
+#include "pbrt_proto/v4/v4.pb.h"
 
 namespace pbrt_proto {
 namespace {
 
 using ::google::protobuf::Descriptor;
 using ::google::protobuf::FieldDescriptor;
+using ::google::protobuf::FileDescriptor;
 using ::testing::Contains;
 using ::testing::Not;
 
 class CommonTypes : public testing::TestWithParam<std::string> {};
 
 TEST_P(CommonTypes, AreBinaryCompatible) {
-  const google::protobuf::FileDescriptor* file_descriptor =
+  const FileDescriptor* file_descriptor =
       BlackbodySpectrum::descriptor()->file();
   ASSERT_TRUE(file_descriptor);
 
@@ -29,8 +36,9 @@ TEST_P(CommonTypes, AreBinaryCompatible) {
   std::set<int> claimed_field_numbers;
   for (int m = 0; m < file_descriptor->message_type_count(); m++) {
     const Descriptor* message_descriptor = file_descriptor->message_type(m);
-    if (!message_descriptor ||
-        !absl::EndsWith(message_descriptor->full_name(), GetParam())) {
+    ASSERT_NE(message_descriptor, nullptr);
+
+    if (!absl::EndsWith(message_descriptor->full_name(), GetParam())) {
       continue;
     }
 
@@ -66,6 +74,84 @@ INSTANTIATE_TEST_CASE_P(AllTypes, CommonTypes,
                                         "Camera", "Film", "LightSource",
                                         "Medium", "PixelFilter", "Sampler",
                                         "FloatTexture", "SpectrumTexture"));
+
+std::vector<std::pair<int, int>> GenerateVersionPairs(int max) {
+  std::vector<std::pair<int, int>> result;
+  for (int i = 1; i < max; i++) {
+    for (int j = i + 1; j <= max; j++) {
+      result.emplace_back(i, j);
+    }
+  }
+  return result;
+}
+
+std::map<std::string, const Descriptor*> GetMessageDescriptors(int version) {
+  static std::vector<const FileDescriptor*> file_descriptors = {
+      v1::Accelerator::GetDescriptor()->file(),
+      v2::Accelerator::GetDescriptor()->file(),
+      v3::Accelerator::GetDescriptor()->file(),
+      v4::Accelerator::GetDescriptor()->file(),
+  };
+
+  const FileDescriptor* file_descriptor = file_descriptors.at(version - 1);
+
+  std::map<std::string, const Descriptor*> result;
+  for (int m = 0; m < file_descriptor->message_type_count(); m++) {
+    const Descriptor* message_descriptor = file_descriptor->message_type(m);
+    result.emplace(message_descriptor->name(), message_descriptor);
+  }
+
+  return result;
+}
+
+void AddAllFields(
+    const Descriptor& descriptor,
+    std::map<int, const FieldDescriptor*>& field_descriptors_by_number) {
+  for (int f = 0; f < descriptor.field_count(); f++) {
+    const FieldDescriptor* field_descriptor = descriptor.field(f);
+    if (!field_descriptor) {
+      continue;
+    }
+
+    if (auto iter =
+            field_descriptors_by_number.find(field_descriptor->number());
+        iter != field_descriptors_by_number.end()) {
+      EXPECT_EQ(iter->second->type(), field_descriptor->type());
+      EXPECT_EQ(iter->second->type_name(), field_descriptor->type_name());
+      continue;
+    }
+
+    field_descriptors_by_number[field_descriptor->number()] = field_descriptor;
+  }
+}
+
+class Directives : public testing::TestWithParam<std::pair<int, int>> {};
+
+TEST_P(Directives, ForwardCompatible) {
+  auto [base, next] = GetParam();
+  std::map<std::string, const Descriptor*> base_descriptors =
+      GetMessageDescriptors(base);
+  std::map<std::string, const Descriptor*> next_descriptors =
+      GetMessageDescriptors(next);
+
+  for (const auto& [name, base_descriptor] : base_descriptors) {
+    auto iter = next_descriptors.find(name);
+    if (iter == next_descriptors.end()) {
+      continue;
+    }
+
+    const Descriptor* next_descriptor = iter->second;
+    ASSERT_TRUE(base_descriptor);
+    ASSERT_TRUE(next_descriptor);
+
+    std::map<int, const FieldDescriptor*> field_descriptors_by_number;
+    AddAllFields(*base_descriptor, field_descriptors_by_number);
+    AddAllFields(*next_descriptor, field_descriptors_by_number);
+  }
+}
+
+INSTANTIATE_TEST_CASE_P(AllDirectives, Directives,
+                        testing::ValuesIn(GenerateVersionPairs(4)));
 
 }  // namespace
 }  // namespace pbrt_proto

@@ -25,6 +25,10 @@ cc_test(
     srcs = ["schema_test.cc"],
     deps = [
         ":pbrt_cc_proto",
+        "//pbrt_proto/v1:v1_cc_proto",
+        "//pbrt_proto/v2:v2_cc_proto",
+        "//pbrt_proto/v3:v3_cc_proto",
+        "//pbrt_proto/v4:v4_cc_proto",
         "@abseil-cpp//absl/strings",
         "@googletest//:gtest_main",
     ],
