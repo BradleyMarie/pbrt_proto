@@ -1315,6 +1315,60 @@ message BuiltInMaterial {
   optional FloatTextureParameter bumpmap = 9;
 }
 
+// A material that approximates glass.
+message GlassMaterial {
+  // The coefficient of specular reflection.
+  optional SpectrumTextureParameter Kr = 3;
+
+  // The coefficient of specular transmission.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv2 and should be ignored when
+  //       reading earlier input.
+  optional SpectrumTextureParameter Kt = 4;
+
+  // Index of refraction of the surface. This value is used in both the
+  // microfacet model for specular reflection as well as for computing a Fresnel
+  // reflection term for perfect specular reflection.
+  //
+  // NOTE: Prior to PBRTv3 this field was named "index".
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv2 and should be ignored when
+  //       reading earlier input.
+  optional FloatTextureParameter eta = 7;
+
+  // The floating-point texture to be used as a bump map.
+  optional FloatTextureParameter bumpmap = 9;
+
+  // Microfacet roughness in the u direction. If zero, perfect specular
+  // reflection is modeled. If unset, falls back to the value from `roughness`.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv3 and should be ignored when
+  //       reading earlier input.
+  optional FloatTextureParameter uroughness = 10;
+
+  // Microfacet roughness in the v direction. If zero, perfect specular
+  // reflection is modeled. If unset, falls back to the value from `roughness`.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv3 and should be ignored when
+  //       reading earlier input.
+  optional FloatTextureParameter vroughness = 11;
+
+  // If true, roughness values are expected to be in the range [0,1], and are
+  // remapped to microfacet distribution function parameter values that range
+  // from near-perfect-specular at 0 to very rough at 1. Otherwise the roughness
+  // parameters are used directly for the alpha parameters of the microfacet
+  // distribution function.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv3 and should be ignored when
+  //       reading earlier input.
+  optional bool remaproughness = 12 [default = true];
+}
+
 // A material with simple Lambertian scattering.
 message MatteMaterial {
   // The coefficient of diffuse reflection.

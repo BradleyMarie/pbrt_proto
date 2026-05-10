@@ -13,6 +13,14 @@ void RemoveBuiltInMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     BuiltInMaterial& output);
 
+void RemoveGlassMaterialV1(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    GlassMaterial& output);
+
+void RemoveGlassMaterialV2(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    GlassMaterial& output);
+
 void RemoveMirrorMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     MirrorMaterial& output);
