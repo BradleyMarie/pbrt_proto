@@ -1391,6 +1391,32 @@ message MirrorMaterial {
   optional FloatTextureParameter bumpmap = 9;
 }
 
+// A material that approximates plastic.
+message PlasticMaterial {
+  // The coefficient of diffuse reflection.
+  optional SpectrumTextureParameter Kd = 1;
+
+  // The coefficient of glossy reflection.
+  optional SpectrumTextureParameter Ks = 2;
+
+  // The roughness of the surface.
+  optional FloatTextureParameter roughness = 6;
+
+  // The floating-point texture to be used as a bump map.
+  optional FloatTextureParameter bumpmap = 9;
+
+  // If true, roughness values are expected to be in the range [0,1], and are
+  // remapped to microfacet distribution function parameter values that range
+  // from near-perfect-specular at 0 to very rough at 1. Otherwise the roughness
+  // parameters are used directly for the alpha parameters of the microfacet
+  // distribution function.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv3 and should be ignored when
+  //       reading earlier input.
+  optional bool remaproughness = 12 [default = true];
+}
+
 // The "kitchen sink" material available in PBRTv1, PBRTv2, and PBRT v3.
 message UberMaterial {
   // The coefficient of diffuse reflection.

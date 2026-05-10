@@ -94,6 +94,32 @@ void RemoveMirrorMaterial(
                         std::bind(&MirrorMaterial::mutable_bumpmap, &output));
 }
 
+void RemovePlasticMaterialV1(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    PlasticMaterial& output) {
+  TryRemoveSpectrumTextureV1(parameters, "Kd",
+                             std::bind(&PlasticMaterial::mutable_kd, &output));
+  TryRemoveSpectrumTextureV1(parameters, "Ks",
+                             std::bind(&PlasticMaterial::mutable_ks, &output));
+  TryRemoveFloatTexture(
+      parameters, "roughness",
+      std::bind(&PlasticMaterial::mutable_roughness, &output));
+  TryRemoveFloatTexture(parameters, "bumpmap",
+                        std::bind(&PlasticMaterial::mutable_bumpmap, &output));
+}
+
+void RemovePlasticMaterialV2(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    PlasticMaterial& output) {
+  RemovePlasticMaterialV1(parameters, output);
+
+  if (std::optional<bool> remaproughness =
+          TryRemoveBool(parameters, "remaproughness");
+      remaproughness) {
+    output.set_remaproughness(*remaproughness);
+  }
+}
+
 void RemoveMatteMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     MatteMaterial& output) {

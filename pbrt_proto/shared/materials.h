@@ -29,6 +29,14 @@ void RemoveMatteMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     MatteMaterial& output);
 
+void RemovePlasticMaterialV1(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    PlasticMaterial& output);
+
+void RemovePlasticMaterialV2(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    PlasticMaterial& output);
+
 void RemoveUberMaterialV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     UberMaterial& output);
