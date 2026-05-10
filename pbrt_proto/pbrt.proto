@@ -1305,6 +1305,106 @@ message SpotLightSource {
 }
 
 //
+// Common Materials
+//
+
+// A built-in material with no parameters other than a bump map. Used to
+// represent multiple materials that were present in PBRTv1.
+message BuiltInMaterial {
+  // The floating-point texture to be used as a bump map.
+  optional FloatTextureParameter bumpmap = 9;
+}
+
+// A material with simple Lambertian scattering.
+message MatteMaterial {
+  // The coefficient of diffuse reflection.
+  optional SpectrumTextureParameter Kd = 1;
+
+  // The sigma parameter for the Oren-Nayar model, in degrees. If this is zero,
+  // the surface exhibits pure Lambertian reflection.
+  optional FloatTextureParameter sigma = 8;
+
+  // The floating-point texture to be used as a bump map.
+  optional FloatTextureParameter bumpmap = 9;
+}
+
+// A material with perfect specular scattering.
+message MirrorMaterial {
+  // The coefficient of specular reflection.
+  optional SpectrumTextureParameter Kr = 3;
+
+  // The floating-point texture to be used as a bump map.
+  optional FloatTextureParameter bumpmap = 9;
+}
+
+// The "kitchen sink" material available in PBRTv1, PBRTv2, and PBRT v3.
+message UberMaterial {
+  // The coefficient of diffuse reflection.
+  optional SpectrumTextureParameter Kd = 1;
+
+  // The coefficient of glossy reflection.
+  optional SpectrumTextureParameter Ks = 2;
+
+  // The coefficient of specular reflection.
+  optional SpectrumTextureParameter Kr = 3;
+
+  // The coefficient of specular transmission.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv2 and should be ignored when
+  //       reading earlier input.
+  optional SpectrumTextureParameter Kt = 4;
+
+  // The opacity of the surface. If less than one, the surface transmits light
+  // without refraction.
+  optional SpectrumTextureParameter opacity = 5;
+
+  // The roughness of the surface.
+  optional FloatTextureParameter roughness = 6;
+
+  // Index of refraction of the surface. This value is used in both the
+  // microfacet model for specular reflection as well as for computing a Fresnel
+  // reflection term for perfect specular reflection.
+  //
+  // NOTE: Prior to PBRTv3 this field was named "index".
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv2 and should be ignored when
+  //       reading earlier input.
+  optional FloatTextureParameter eta = 7;
+
+  // The floating-point texture to be used as a bump map.
+  optional FloatTextureParameter bumpmap = 9;
+
+  // Microfacet roughness in the u direction. If zero, perfect specular
+  // reflection is modeled. If unset, falls back to the value from `roughness`.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv3 and should be ignored when
+  //       reading earlier input.
+  optional FloatTextureParameter uroughness = 10;
+
+  // Microfacet roughness in the v direction. If zero, perfect specular
+  // reflection is modeled. If unset, falls back to the value from `roughness`.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv3 and should be ignored when
+  //       reading earlier input.
+  optional FloatTextureParameter vroughness = 11;
+
+  // If true, roughness values are expected to be in the range [0,1], and are
+  // remapped to microfacet distribution function parameter values that range
+  // from near-perfect-specular at 0 to very rough at 1. Otherwise the roughness
+  // parameters are used directly for the alpha parameters of the microfacet
+  // distribution function.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv3 and should be ignored when
+  //       reading earlier input.
+  optional bool remaproughness = 12 [default = true];
+}
+
+//
 // Common Participating Media
 //
 

@@ -193,6 +193,33 @@ cc_test(
 )
 
 cc_library(
+    name = "materials",
+    srcs = ["materials.cc"],
+    hdrs = ["materials.h"],
+    deps = [
+        ":common",
+        ":parser",
+        "//pbrt_proto:pbrt_cc_proto",
+        "@abseil-cpp//absl/status:status",
+        "@abseil-cpp//absl/strings:string_view",
+    ],
+)
+
+cc_test(
+    name = "materials_test",
+    srcs = ["materials_test.cc"],
+    deps = [
+        ":materials",
+        ":parser",
+        "//pbrt_proto:pbrt_cc_proto",
+        "//pbrt_proto/testing:proto_matchers",
+        "@abseil-cpp//absl/status:status_matchers",
+        "@abseil-cpp//absl/strings:string_view",
+        "@googletest//:gtest_main",
+    ],
+)
+
+cc_library(
     name = "media",
     srcs = ["media.cc"],
     hdrs = ["media.h"],

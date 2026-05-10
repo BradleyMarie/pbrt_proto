@@ -397,6 +397,22 @@ message Sampler {
   }
 }
 
+// TODO
+message MaterialOverrides {
+  optional SpectrumTextureParameter Kd = 1;
+  optional SpectrumTextureParameter Ks = 2;
+  optional SpectrumTextureParameter Kr = 3;
+  optional SpectrumTextureParameter Kt = 4;
+  optional SpectrumTextureParameter opacity = 5;
+  optional FloatTextureParameter roughness = 6;
+  optional FloatTextureParameter eta = 7;
+  optional FloatTextureParameter sigma = 8;
+  optional FloatTextureParameter bumpmap = 9;
+  optional FloatTextureParameter uroughness = 10;
+  optional FloatTextureParameter vroughness = 11;
+  optional bool remaproughness = 12;
+}
+
 message Shape {
   message Cone {
     optional double radius = 1 [default = 1.0];
