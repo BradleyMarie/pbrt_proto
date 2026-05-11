@@ -82,6 +82,36 @@ message LightSource {
   }
 }
 
+// A directive which creates a named material.
+message MakeNamedMaterial {
+  // The name to give the created medium.
+  required string name = 1;
+
+  // The material to create.
+  required Material material = 2;
+}
+
+// A directive which creates a material.
+message Material {
+  // The type of material to create. If none of these fields are set, program
+  // the behavior is undefined and the renderer may crash.
+  oneof light_source_type {
+    BuiltInMaterial bluepaint = 1;  // Create a blue paint material
+    BuiltInMaterial brushedmetal = 2;  // Create a brushed paint material
+    BuiltInMaterial clay = 3;  // Create a clay material
+    BuiltInMaterial felt = 4;  // Create a felt material
+    GlassMaterial glass = 5;  // Create a glass material
+    MirrorMaterial mirror = 6;  // Create a mirror material
+    PlasticMaterial plastic = 7;  // Create a plastic material
+    BuiltInMaterial primer = 8;  // Create a primer material
+    ShinyMetalMaterial shinymetal = 9;  // Create a shiny metal material
+    BuiltInMaterial skin = 10;  // Create a skin material
+    SubstrateMaterial substrate = 11;  // Create a substrate material
+    TranslucentMaterial translucent = 12;  // Create a translucent material
+    UberMaterial uber = 13;  // Create a uber material
+  }
+}
+
 // A directive which sets the Camera to use for rendering.
 message PixelFilter {
   // The type of PixelFilter to use. If none are set, then the current
@@ -124,11 +154,15 @@ message MaterialOverrides {
   optional SpectrumTextureParameter Ks = 2;
   optional SpectrumTextureParameter Kr = 3;
   optional SpectrumTextureParameter Kt = 4;
-  optional SpectrumTextureParameter opacity = 5;
-  optional FloatTextureParameter roughness = 6;
-  optional FloatTextureParameter eta = 7;
-  optional FloatTextureParameter sigma = 8;
-  optional FloatTextureParameter bumpmap = 9;
+  optional SpectrumTextureParameter reflect = 5;
+  optional SpectrumTextureParameter transmit = 6;
+  optional SpectrumTextureParameter opacity = 7;
+  optional FloatTextureParameter roughness = 8;
+  optional FloatTextureParameter uroughness = 9;
+  optional FloatTextureParameter vroughness = 10;
+  optional FloatTextureParameter eta = 11;
+  optional FloatTextureParameter sigma = 12;
+  optional FloatTextureParameter bumpmap = 13;
 }
 
 // A directive which creates a named SpectrumTexture.

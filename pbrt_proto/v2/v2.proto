@@ -135,11 +135,15 @@ message MaterialOverrides {
   optional SpectrumTextureParameter Ks = 2;
   optional SpectrumTextureParameter Kr = 3;
   optional SpectrumTextureParameter Kt = 4;
-  optional SpectrumTextureParameter opacity = 5;
-  optional FloatTextureParameter roughness = 6;
-  optional FloatTextureParameter eta = 7;
-  optional FloatTextureParameter sigma = 8;
-  optional FloatTextureParameter bumpmap = 9;
+  optional SpectrumTextureParameter reflect = 5;
+  optional SpectrumTextureParameter transmit = 6;
+  optional SpectrumTextureParameter opacity = 7;
+  optional FloatTextureParameter roughness = 8;
+  optional FloatTextureParameter uroughness = 9;
+  optional FloatTextureParameter vroughness = 10;
+  optional FloatTextureParameter eta = 11;
+  optional FloatTextureParameter sigma = 12;
+  optional FloatTextureParameter bumpmap = 13;
 }
 
 // A directive which creates a named SpectrumTexture.
