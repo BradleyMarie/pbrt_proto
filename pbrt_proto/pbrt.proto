@@ -1366,7 +1366,7 @@ message GlassMaterial {
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported before PBRTv3 and should be ignored when
   //       reading earlier input.
-  optional bool remaproughness = 14 [default = true];
+  optional bool remaproughness = 99 [default = true];
 }
 
 // A material with simple Lambertian scattering.
@@ -1382,7 +1382,48 @@ message MatteMaterial {
   optional FloatTextureParameter bumpmap = 13;
 }
 
-// A material with perfect specular scattering.
+message MetalMaterial {
+  // The roughness of the surface.
+  optional FloatTextureParameter roughness = 8;
+
+  // Microfacet roughness in the u direction. If zero, perfect specular
+  // reflection is modeled. If unset, falls back to the value from `roughness`.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv3 and should be ignored when
+  //       reading earlier input.
+  optional FloatTextureParameter uroughness = 9;
+
+  // Microfacet roughness in the v direction. If zero, perfect specular
+  // reflection is modeled. If unset, falls back to the value from `roughness`.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv3 and should be ignored when
+  //       reading earlier input.
+  optional FloatTextureParameter vroughness = 10;
+
+  // The floating-point texture to be used as a bump map.
+  optional FloatTextureParameter bumpmap = 13;
+
+  // The index of refraction to use in computing the material's reflectance.
+  optional SpectrumTextureParameter eta = 15;
+
+  // The absorption coefficient to use in computing the material's reflectance.
+  optional SpectrumTextureParameter k = 16;
+
+  // If true, roughness values are expected to be in the range [0,1], and are
+  // remapped to microfacet distribution function parameter values that range
+  // from near-perfect-specular at 0 to very rough at 1. Otherwise the roughness
+  // parameters are used directly for the alpha parameters of the microfacet
+  // distribution function.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv3 and should be ignored when
+  //       reading earlier input.
+  optional bool remaproughness = 99 [default = true];
+}
+
+// A material which mixes two different materials.
 message MirrorMaterial {
   // The coefficient of specular reflection.
   optional SpectrumTextureParameter Kr = 3;
@@ -1414,7 +1455,35 @@ message PlasticMaterial {
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported before PBRTv3 and should be ignored when
   //       reading earlier input.
-  optional bool remaproughness = 14 [default = true];
+  optional bool remaproughness = 99 [default = true];
+}
+
+// A material which mixes between two named materials.
+message MixMaterial {
+  // The `Kd` parameter used to create the fallback matte material if a lookup
+  // fails.
+  optional SpectrumTextureParameter Kd = 1;
+
+  // The `sigma` parameter used to create the fallback matte material if a
+  // lookup fails.
+  optional FloatTextureParameter sigma = 12;
+
+  // The `bumpmap` parameter used to create the fallback matte material if a
+  // lookup fails.
+  optional FloatTextureParameter bumpmap = 13;
+
+  // Weighting factor for the blend between materials. A value of one
+  // corresponds to just `namedmaterial1`, a value of zero corresponds to just
+  // `namedmaterial2`, and values in between interpolate linearly.
+  optional SpectrumTextureParameter amount = 14;
+
+  // The name of the first texture to mix. If not found, create a matte material
+  // using the parameters in place of this one.
+  optional string namedmaterial1 = 17;
+
+  // The name of the second texture to mix. If not found, create a matte
+  // material using the parameters in place of this one.
+  optional string namedmaterial2 = 18;
 }
 
 // A material that approximates a shiny metal surface.
@@ -1460,7 +1529,7 @@ message SubstrateMaterial {
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported before PBRTv3 and should be ignored when
   //       reading earlier input.
-  optional bool remaproughness = 14 [default = true];
+  optional bool remaproughness = 99 [default = true];
 }
 
 // A simple translucent material with diffuse and specular compoents.
@@ -1492,7 +1561,7 @@ message TranslucentMaterial {
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported before PBRTv3 and should be ignored when
   //       reading earlier input.
-  optional bool remaproughness = 14 [default = true];
+  optional bool remaproughness = 99 [default = true];
 }
 
 // The "kitchen sink" material available in PBRTv1, PBRTv2, and PBRT v3.
@@ -1559,7 +1628,7 @@ message UberMaterial {
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported before PBRTv3 and should be ignored when
   //       reading earlier input.
-  optional bool remaproughness = 14 [default = true];
+  optional bool remaproughness = 99 [default = true];
 }
 
 //

@@ -113,6 +113,11 @@ void AddAllFields(
       continue;
     }
 
+    if (field_descriptor->name() == "eta" ||
+        field_descriptor->name() == "eta_as_spectrum_texture") {
+      continue;
+    }
+
     if (auto iter =
             field_descriptors_by_number.find(field_descriptor->number());
         iter != field_descriptors_by_number.end()) {

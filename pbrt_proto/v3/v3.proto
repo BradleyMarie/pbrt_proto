@@ -412,7 +412,12 @@ message MaterialOverrides {
   optional FloatTextureParameter eta = 11;
   optional FloatTextureParameter sigma = 12;
   optional FloatTextureParameter bumpmap = 13;
-  optional bool remaproughness = 14;
+  optional SpectrumTextureParameter amount = 14;
+  optional SpectrumTextureParameter eta_as_spectrum_texture = 15;
+  optional SpectrumTextureParameter k = 16;
+  optional string namedmaterial1 = 17;
+  optional string namedmaterial2 = 18;
+  optional bool remaproughness = 99;
 }
 
 message Shape {

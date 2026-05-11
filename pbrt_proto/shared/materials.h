@@ -21,13 +21,25 @@ void RemoveGlassMaterialV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     GlassMaterial& output);
 
+void RemoveMatteMaterial(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    MatteMaterial& output);
+
+void RemoveMetalMaterialV1(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    MetalMaterial& output);
+
+void RemoveMetalMaterialV2(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    MetalMaterial& output);
+
 void RemoveMirrorMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     MirrorMaterial& output);
 
-void RemoveMatteMaterial(
+void RemoveMixMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    MatteMaterial& output);
+    MixMaterial& output);
 
 void RemovePlasticMaterialV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
