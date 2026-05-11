@@ -60,7 +60,7 @@ void RemoveKdSubsurfaceMaterial(
       output.mutable_eta()->set_float_value(*eta);
     }
 
-    TryRemoveFloatTexture(
+    TryRemoveSpectrumTextureV1(
         parameters, "mfp",
         std::bind(&KdSubsurfaceMaterial::mutable_mfp, &output));
   } else {
@@ -69,7 +69,7 @@ void RemoveKdSubsurfaceMaterial(
         std::bind(&KdSubsurfaceMaterial::mutable_eta, &output));
     TryRemoveFloatTexture(
         parameters, "meanfreepath",
-        std::bind(&KdSubsurfaceMaterial::mutable_mfp, &output));
+        std::bind(&KdSubsurfaceMaterial::mutable_meanfreepath, &output));
   }
 
   TryRemoveFloatTexture(
@@ -210,6 +210,12 @@ void RemoveKdSubsurfaceMaterialV2(
   if (std::optional<double> g = TryRemoveFloat(parameters, "g"); g) {
     output.set_g(*g);
   }
+
+  if (std::optional<bool> remaproughness =
+          TryRemoveBool(parameters, "remaproughness");
+      remaproughness) {
+    output.set_remaproughness(*remaproughness);
+  }
 }
 
 void RemoveMatteMaterial(
@@ -231,7 +237,7 @@ void RemoveMeasuredFourierMaterial(
       std::bind(&MeasuredFourierMaterial::mutable_bumpmap, &output));
 
   if (std::optional<absl::string_view> filename =
-          TryRemoveString(parameters, "filename");
+          TryRemoveString(parameters, "bsdffile");
       filename) {
     output.set_filename(*filename);
   }

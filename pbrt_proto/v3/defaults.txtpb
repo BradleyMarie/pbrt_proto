@@ -283,6 +283,9 @@ materials {
     Kt {
       constant_spectrum: 1.0
     }
+    eta {
+      float_value: 1.33
+    }
     mfp {
       constant_spectrum: 1.0
     }

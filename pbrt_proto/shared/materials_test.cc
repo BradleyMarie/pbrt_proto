@@ -520,7 +520,7 @@ TEST(KdSubsurfaceMaterialV1, WithData) {
                 Kd { spectrum_texture_name: "kd" }
                 Kr { spectrum_texture_name: "kr" }
                 eta { float_texture_name: "eta" }
-                mfp { float_texture_name: "mfp" }
+                meanfreepath { float_texture_name: "mfp" }
                 bumpmap { float_texture_name: "bump" }
               )pb"));
 }
@@ -616,7 +616,7 @@ TEST(KdSubsurfaceMaterialV2, WithData) {
                 eta { float_value: 2.0 }
                 uroughness { float_texture_name: "uroughness" }
                 vroughness { float_texture_name: "vroughness" }
-                mfp { float_texture_name: "mfp" }
+                mfp { spectrum_texture_name: "mfp" }
                 bumpmap { float_texture_name: "bump" }
                 g: 1.0
                 scale: 0.0
@@ -687,7 +687,7 @@ TEST(MeasuredFourierMaterial, WithData) {
                               .values = absl::MakeSpan(bumpmap)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
-      {"filename", filename_parameter},
+      {"bsdffile", filename_parameter},
       {"bumpmap", bumpmap_parameter},
   };
 

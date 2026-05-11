@@ -18,6 +18,7 @@
 #include "pbrt_proto/shared/common.h"
 #include "pbrt_proto/shared/films.h"
 #include "pbrt_proto/shared/light_sources.h"
+#include "pbrt_proto/shared/materials.h"
 #include "pbrt_proto/shared/media.h"
 #include "pbrt_proto/shared/parser.h"
 #include "pbrt_proto/shared/pixel_filters.h"
@@ -46,390 +47,38 @@ Material ParseMaterial(
   if (material_type == "" || material_type == "none") {
     // Do Nothing
   } else if (material_type == "disney") {
-    auto& disney = *material.mutable_disney();
-    TryRemoveSpectrumTextureV1(
-        parameters, "color",
-        std::bind(&Material::Disney::mutable_color, &disney));
-    TryRemoveFloatTexture(
-        parameters, "anisotropic",
-        std::bind(&Material::Disney::mutable_anisotropic, &disney));
-    TryRemoveFloatTexture(
-        parameters, "clearcoat",
-        std::bind(&Material::Disney::mutable_clearcoat, &disney));
-    TryRemoveFloatTexture(
-        parameters, "clearcoatgloss",
-        std::bind(&Material::Disney::mutable_clearcoatgloss, &disney));
-    TryRemoveFloatTexture(parameters, "eta",
-                          std::bind(&Material::Disney::mutable_eta, &disney));
-    TryRemoveFloatTexture(
-        parameters, "metallic",
-        std::bind(&Material::Disney::mutable_metallic, &disney));
-    TryRemoveFloatTexture(
-        parameters, "roughness",
-        std::bind(&Material::Disney::mutable_roughness, &disney));
-    TryRemoveSpectrumTextureV1(
-        parameters, "scatterdistance",
-        std::bind(&Material::Disney::mutable_scatterdistance, &disney));
-    TryRemoveFloatTexture(parameters, "sheen",
-                          std::bind(&Material::Disney::mutable_sheen, &disney));
-    TryRemoveFloatTexture(
-        parameters, "sheentint",
-        std::bind(&Material::Disney::mutable_sheentint, &disney));
-    TryRemoveFloatTexture(
-        parameters, "spectrans",
-        std::bind(&Material::Disney::mutable_spectrans, &disney));
-    TryRemoveFloatTexture(
-        parameters, "speculartint",
-        std::bind(&Material::Disney::mutable_speculartint, &disney));
-
-    if (std::optional<bool> thin = TryRemoveBool(parameters, "thin"); thin) {
-      disney.set_thin(*thin);
-    }
-
-    TryRemoveFloatTexture(
-        parameters, "difftrans",
-        std::bind(&Material::Disney::mutable_difftrans, &disney));
-    TryRemoveFloatTexture(
-        parameters, "flatness",
-        std::bind(&Material::Disney::mutable_flatness, &disney));
-    TryRemoveFloatTexture(
-        parameters, "bumpmap",
-        std::bind(&Material::Disney::mutable_bumpmap, &disney));
+    RemoveDisneyMaterial(parameters, *material.mutable_disney());
   } else if (material_type == "fourier") {
-    auto& fourier = *material.mutable_fourier();
-
-    if (std::optional<absl::string_view> bsdffile =
-            TryRemoveString(parameters, "bsdffile");
-        bsdffile) {
-      fourier.set_bsdffile(*bsdffile);
-    }
-
-    TryRemoveFloatTexture(
-        parameters, "bumpmap",
-        std::bind(&Material::Fourier::mutable_bumpmap, &fourier));
+    RemoveMeasuredFourierMaterial(parameters, *material.mutable_fourier());
   } else if (material_type == "glass") {
-    auto& glass = *material.mutable_glass();
-    TryRemoveSpectrumTextureV1(parameters, "Kr",
-                               std::bind(&Material::Glass::mutable_kr, &glass));
-    TryRemoveSpectrumTextureV1(parameters, "Kt",
-                               std::bind(&Material::Glass::mutable_kt, &glass));
-    TryRemoveFloatTexture(parameters, "eta",
-                          std::bind(&Material::Glass::mutable_eta, &glass));
-
-    if (!glass.has_eta()) {
-      TryRemoveFloatTexture(parameters, "index",
-                            std::bind(&Material::Glass::mutable_eta, &glass));
-    }
-
-    TryRemoveFloatTexture(
-        parameters, "uroughness",
-        std::bind(&Material::Glass::mutable_uroughness, &glass));
-    TryRemoveFloatTexture(
-        parameters, "vroughness",
-        std::bind(&Material::Glass::mutable_vroughness, &glass));
-
-    if (std::optional<bool> remaproughness =
-            TryRemoveBool(parameters, "remaproughness");
-        remaproughness) {
-      glass.set_remaproughness(*remaproughness);
-    }
-
-    TryRemoveFloatTexture(parameters, "bumpmap",
-                          std::bind(&Material::Glass::mutable_bumpmap, &glass));
+    RemoveGlassMaterialV2(parameters, *material.mutable_glass());
   } else if (material_type == "hair") {
-    auto& hair = *material.mutable_hair();
-    TryRemoveSpectrumTextureV1(
-        parameters, "sigma_a",
-        std::bind(&Material::Hair::mutable_sigma_a, &hair));
-    TryRemoveSpectrumTextureV1(
-        parameters, "color", std::bind(&Material::Hair::mutable_color, &hair));
-    TryRemoveFloatTexture(parameters, "eumelanin",
-                          std::bind(&Material::Hair::mutable_eumelanin, &hair));
-    TryRemoveFloatTexture(
-        parameters, "pheomelanin",
-        std::bind(&Material::Hair::mutable_pheomelanin, &hair));
-    TryRemoveFloatTexture(parameters, "eta",
-                          std::bind(&Material::Hair::mutable_eta, &hair));
-    TryRemoveFloatTexture(parameters, "beta_m",
-                          std::bind(&Material::Hair::mutable_beta_m, &hair));
-    TryRemoveFloatTexture(parameters, "beta_n",
-                          std::bind(&Material::Hair::mutable_beta_n, &hair));
-    TryRemoveFloatTexture(parameters, "alpha",
-                          std::bind(&Material::Hair::mutable_alpha, &hair));
-    TryRemoveFloatTexture(parameters, "bumpmap",
-                          std::bind(&Material::Hair::mutable_bumpmap, &hair));
+    RemoveHairMaterial(parameters, *material.mutable_hair());
   } else if (material_type == "kdsubsurface") {
-    auto& kdsubsurface = *material.mutable_kdsubsurface();
-    TryRemoveSpectrumTextureV1(
-        parameters, "Kd",
-        std::bind(&Material::KdSubsurface::mutable_kd, &kdsubsurface));
-    TryRemoveSpectrumTextureV1(
-        parameters, "Kr",
-        std::bind(&Material::KdSubsurface::mutable_kr, &kdsubsurface));
-    TryRemoveSpectrumTextureV1(
-        parameters, "Kt",
-        std::bind(&Material::KdSubsurface::mutable_kt, &kdsubsurface));
-    TryRemoveSpectrumTextureV1(
-        parameters, "mfp",
-        std::bind(&Material::KdSubsurface::mutable_mfp, &kdsubsurface));
-    TryRemoveFloatTexture(
-        parameters, "uroughness",
-        std::bind(&Material::KdSubsurface::mutable_uroughness, &kdsubsurface));
-    TryRemoveFloatTexture(
-        parameters, "vroughness",
-        std::bind(&Material::KdSubsurface::mutable_vroughness, &kdsubsurface));
-
-    if (std::optional<double> eta = TryRemoveFloat(parameters, "eta"); eta) {
-      kdsubsurface.set_eta(*eta);
-    }
-
-    if (std::optional<double> scale = TryRemoveFloat(parameters, "scale");
-        scale) {
-      kdsubsurface.set_scale(*scale);
-    }
-
-    if (std::optional<double> g = TryRemoveFloat(parameters, "g"); g) {
-      kdsubsurface.set_g(*g);
-    }
-
-    if (std::optional<bool> remaproughness =
-            TryRemoveBool(parameters, "remaproughness");
-        remaproughness) {
-      kdsubsurface.set_remaproughness(*remaproughness);
-    }
-
-    TryRemoveFloatTexture(
-        parameters, "bumpmap",
-        std::bind(&Material::KdSubsurface::mutable_bumpmap, &kdsubsurface));
+    RemoveKdSubsurfaceMaterialV2(parameters, *material.mutable_kdsubsurface());
   } else if (material_type == "metal") {
-    auto& metal = *material.mutable_metal();
-    TryRemoveSpectrumTextureV1(
-        parameters, "eta", std::bind(&Material::Metal::mutable_eta, &metal));
-    TryRemoveSpectrumTextureV1(parameters, "k",
-                               std::bind(&Material::Metal::mutable_k, &metal));
-    TryRemoveFloatTexture(
-        parameters, "roughness",
-        std::bind(&Material::Metal::mutable_roughness, &metal));
-    TryRemoveFloatTexture(
-        parameters, "uroughness",
-        std::bind(&Material::Metal::mutable_uroughness, &metal));
-    TryRemoveFloatTexture(
-        parameters, "vroughness",
-        std::bind(&Material::Metal::mutable_vroughness, &metal));
-
-    if (std::optional<bool> remaproughness =
-            TryRemoveBool(parameters, "remaproughness");
-        remaproughness) {
-      metal.set_remaproughness(*remaproughness);
-    }
-
-    TryRemoveFloatTexture(parameters, "bumpmap",
-                          std::bind(&Material::Metal::mutable_bumpmap, &metal));
+    RemoveMetalMaterialV2(parameters, *material.mutable_metal());
   } else if (material_type == "mirror") {
-    auto& mirror = *material.mutable_mirror();
-    TryRemoveSpectrumTextureV1(
-        parameters, "Kr", std::bind(&Material::Mirror::mutable_kr, &mirror));
-    TryRemoveFloatTexture(
-        parameters, "bumpmap",
-        std::bind(&Material::Mirror::mutable_bumpmap, &mirror));
+    RemoveMirrorMaterial(parameters, *material.mutable_mirror());
   } else if (material_type == "mix") {
-    auto& mix = *material.mutable_mix();
-    TryRemoveFloatTexture(parameters, "sigma",
-                          std::bind(&Material::Mix::mutable_sigma, &mix));
-    TryRemoveFloatTexture(parameters, "bumpmap",
-                          std::bind(&Material::Mix::mutable_bumpmap, &mix));
-    TryRemoveSpectrumTextureV1(parameters, "amount",
-                               std::bind(&Material::Mix::mutable_amount, &mix));
-    TryRemoveSpectrumTextureV1(parameters, "Kd",
-                               std::bind(&Material::Mix::mutable_kd, &mix));
-
-    if (std::optional<absl::string_view> namedmaterial1 =
-            TryRemoveString(parameters, "namedmaterial1");
-        namedmaterial1) {
-      mix.set_namedmaterial1(*namedmaterial1);
-    }
-
-    if (std::optional<absl::string_view> namedmaterial2 =
-            TryRemoveString(parameters, "namedmaterial2");
-        namedmaterial2) {
-      mix.set_namedmaterial2(*namedmaterial2);
-    }
+    RemoveMixMaterial(parameters, *material.mutable_mix());
   } else if (material_type == "plastic") {
-    auto& plastic = *material.mutable_plastic();
-    TryRemoveSpectrumTextureV1(
-        parameters, "Kd", std::bind(&Material::Plastic::mutable_kd, &plastic));
-    TryRemoveSpectrumTextureV1(
-        parameters, "Ks", std::bind(&Material::Plastic::mutable_ks, &plastic));
-    TryRemoveFloatTexture(
-        parameters, "roughness",
-        std::bind(&Material::Plastic::mutable_roughness, &plastic));
-
-    if (std::optional<bool> remaproughness =
-            TryRemoveBool(parameters, "remaproughness");
-        remaproughness) {
-      plastic.set_remaproughness(*remaproughness);
-    }
-
-    TryRemoveFloatTexture(
-        parameters, "bumpmap",
-        std::bind(&Material::Plastic::mutable_bumpmap, &plastic));
+    RemovePlasticMaterialV2(parameters, *material.mutable_plastic());
   } else if (material_type == "substrate") {
-    auto& substrate = *material.mutable_substrate();
-    TryRemoveSpectrumTextureV1(
-        parameters, "Kd",
-        std::bind(&Material::Substrate::mutable_kd, &substrate));
-    TryRemoveSpectrumTextureV1(
-        parameters, "Ks",
-        std::bind(&Material::Substrate::mutable_ks, &substrate));
-    TryRemoveFloatTexture(
-        parameters, "uroughness",
-        std::bind(&Material::Substrate::mutable_uroughness, &substrate));
-    TryRemoveFloatTexture(
-        parameters, "vroughness",
-        std::bind(&Material::Substrate::mutable_vroughness, &substrate));
-
-    if (std::optional<bool> remaproughness =
-            TryRemoveBool(parameters, "remaproughness");
-        remaproughness) {
-      substrate.set_remaproughness(*remaproughness);
-    }
-
-    TryRemoveFloatTexture(
-        parameters, "bumpmap",
-        std::bind(&Material::Substrate::mutable_bumpmap, &substrate));
+    RemoveSubstrateMaterialV2(parameters, *material.mutable_substrate());
   } else if (material_type == "subsurface") {
-    auto& subsurface = *material.mutable_subsurface();
-
-    if (std::optional<absl::string_view> name =
-            TryRemoveString(parameters, "name");
-        name) {
-      auto iter = kNamedMeasuredScatteringPresets.find(*name);
-      if (iter != kNamedMeasuredScatteringPresets.end()) {
-        subsurface.set_name(iter->second);
-      }
-    }
-
-    TryRemoveSpectrumTextureV1(
-        parameters, "sigma_a",
-        std::bind(&Material::Subsurface::mutable_sigma_a, &subsurface));
-    TryRemoveSpectrumTextureV1(
-        parameters, "sigma_s",
-        std::bind(&Material::Subsurface::mutable_sigma_s, &subsurface));
-
-    if (std::optional<double> g = TryRemoveFloat(parameters, "g"); g) {
-      subsurface.set_g(*g);
-    }
-
-    if (std::optional<double> scale = TryRemoveFloat(parameters, "scale");
-        scale) {
-      subsurface.set_scale(*scale);
-    }
-
-    if (std::optional<double> eta = TryRemoveFloat(parameters, "eta"); eta) {
-      subsurface.set_eta(*eta);
-    }
-
-    TryRemoveSpectrumTextureV1(
-        parameters, "Kr",
-        std::bind(&Material::Subsurface::mutable_kr, &subsurface));
-    TryRemoveSpectrumTextureV1(
-        parameters, "Kt",
-        std::bind(&Material::Subsurface::mutable_kt, &subsurface));
-    TryRemoveFloatTexture(
-        parameters, "uroughness",
-        std::bind(&Material::Subsurface::mutable_uroughness, &subsurface));
-    TryRemoveFloatTexture(
-        parameters, "vroughness",
-        std::bind(&Material::Subsurface::mutable_vroughness, &subsurface));
-
-    if (std::optional<bool> remaproughness =
-            TryRemoveBool(parameters, "remaproughness");
-        remaproughness) {
-      subsurface.set_remaproughness(*remaproughness);
-    }
-
-    TryRemoveFloatTexture(
-        parameters, "bumpmap",
-        std::bind(&Material::Subsurface::mutable_bumpmap, &subsurface));
+    RemoveSubsurfaceMaterial(parameters, *material.mutable_subsurface());
   } else if (material_type == "translucent") {
-    auto& translucent = *material.mutable_translucent();
-    TryRemoveSpectrumTextureV1(
-        parameters, "Kd",
-        std::bind(&Material::Translucent::mutable_kd, &translucent));
-    TryRemoveSpectrumTextureV1(
-        parameters, "Ks",
-        std::bind(&Material::Translucent::mutable_ks, &translucent));
-    TryRemoveSpectrumTextureV1(
-        parameters, "reflect",
-        std::bind(&Material::Translucent::mutable_reflect, &translucent));
-    TryRemoveSpectrumTextureV1(
-        parameters, "transmit",
-        std::bind(&Material::Translucent::mutable_transmit, &translucent));
-
-    TryRemoveFloatTexture(
-        parameters, "roughness",
-        std::bind(&Material::Translucent::mutable_roughness, &translucent));
-
-    if (std::optional<bool> remaproughness =
-            TryRemoveBool(parameters, "remaproughness");
-        remaproughness) {
-      translucent.set_remaproughness(*remaproughness);
-    }
-
-    TryRemoveFloatTexture(
-        parameters, "bumpmap",
-        std::bind(&Material::Translucent::mutable_bumpmap, &translucent));
+    RemoveTranslucentMaterialV2(parameters, *material.mutable_translucent());
   } else if (material_type == "uber") {
-    auto& uber = *material.mutable_uber();
-    TryRemoveSpectrumTextureV1(parameters, "Kd",
-                               std::bind(&Material::Uber::mutable_kd, &uber));
-    TryRemoveSpectrumTextureV1(parameters, "Ks",
-                               std::bind(&Material::Uber::mutable_ks, &uber));
-    TryRemoveSpectrumTextureV1(parameters, "Kr",
-                               std::bind(&Material::Uber::mutable_kr, &uber));
-    TryRemoveSpectrumTextureV1(parameters, "Kt",
-                               std::bind(&Material::Uber::mutable_kt, &uber));
-    TryRemoveSpectrumTextureV1(
-        parameters, "opacity",
-        std::bind(&Material::Uber::mutable_opacity, &uber));
-
-    TryRemoveFloatTexture(parameters, "roughness",
-                          std::bind(&Material::Uber::mutable_roughness, &uber));
-    TryRemoveFloatTexture(
-        parameters, "uroughness",
-        std::bind(&Material::Uber::mutable_uroughness, &uber));
-    TryRemoveFloatTexture(
-        parameters, "vroughness",
-        std::bind(&Material::Uber::mutable_vroughness, &uber));
-
-    TryRemoveFloatTexture(parameters, "eta",
-                          std::bind(&Material::Uber::mutable_eta, &uber));
-    if (!uber.has_eta()) {
-      TryRemoveFloatTexture(parameters, "index",
-                            std::bind(&Material::Uber::mutable_eta, &uber));
-    }
-
-    if (std::optional<bool> remaproughness =
-            TryRemoveBool(parameters, "remaproughness");
-        remaproughness) {
-      uber.set_remaproughness(*remaproughness);
-    }
-
-    TryRemoveFloatTexture(parameters, "bumpmap",
-                          std::bind(&Material::Uber::mutable_bumpmap, &uber));
+    RemoveUberMaterialV3(parameters, *material.mutable_uber());
   } else {
     if (material_type != "matte") {
       std::cerr << "Unrecognized Material type: \"" << material_type << "\""
                 << std::endl;
     }
 
-    auto& matte = *material.mutable_matte();
-    TryRemoveSpectrumTextureV1(parameters, "Kd",
-                               std::bind(&Material::Matte::mutable_kd, &matte));
-    TryRemoveFloatTexture(parameters, "sigma",
-                          std::bind(&Material::Matte::mutable_sigma, &matte));
-    TryRemoveFloatTexture(parameters, "bumpmap",
-                          std::bind(&Material::Matte::mutable_bumpmap, &matte));
+    RemoveMatteMaterial(parameters, *material.mutable_matte());
   }
 
   return material;
@@ -2035,7 +1684,7 @@ absl::Status ParserV3::Shape(
   if (std::optional<absl::string_view> bsdffile =
           TryRemoveString(parameters, "bsdffile");
       bsdffile.has_value()) {
-    overrides.set_bsdffile(*bsdffile);
+    overrides.set_filename(*bsdffile);
     overrides_populated = true;
   }
 
@@ -2056,12 +1705,12 @@ absl::Status ParserV3::Shape(
   if (std::optional<double> eta = TryRemoveFloat(parameters, "eta");
       eta.has_value()) {
     overrides.set_eta_as_value(*eta);
-    overrides.mutable_eta_as_float_texture()->set_float_value(*eta);
+    overrides.mutable_eta()->set_float_value(*eta);
     overrides_populated = true;
   } else if (std::optional<absl::string_view> eta =
                  TryRemoveTexture(parameters, "eta");
              eta.has_value()) {
-    overrides.mutable_eta_as_float_texture()->set_float_texture_name(*eta);
+    overrides.mutable_eta()->set_float_texture_name(*eta);
     overrides.mutable_eta_as_spectrum_texture()->set_spectrum_texture_name(
         *eta);
     overrides_populated = true;

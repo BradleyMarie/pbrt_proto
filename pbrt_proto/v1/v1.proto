@@ -95,20 +95,21 @@ message MakeNamedMaterial {
 message Material {
   // The type of material to create. If none of these fields are set, program
   // the behavior is undefined and the renderer may crash.
-  oneof light_source_type {
+  oneof material_type {
     BuiltInMaterial bluepaint = 1;  // Create a blue paint material
     BuiltInMaterial brushedmetal = 2;  // Create a brushed paint material
     BuiltInMaterial clay = 3;  // Create a clay material
     BuiltInMaterial felt = 4;  // Create a felt material
     GlassMaterial glass = 5;  // Create a glass material
-    MirrorMaterial mirror = 6;  // Create a mirror material
-    PlasticMaterial plastic = 7;  // Create a plastic material
-    BuiltInMaterial primer = 8;  // Create a primer material
-    ShinyMetalMaterial shinymetal = 9;  // Create a shiny metal material
-    BuiltInMaterial skin = 10;  // Create a skin material
-    SubstrateMaterial substrate = 11;  // Create a substrate material
-    TranslucentMaterial translucent = 12;  // Create a translucent material
-    UberMaterial uber = 13;  // Create a uber material
+    MatteMaterial matte = 6;  // Create a mirror material
+    MirrorMaterial mirror = 7;  // Create a mirror material
+    PlasticMaterial plastic = 8;  // Create a plastic material
+    BuiltInMaterial primer = 9;  // Create a primer material
+    ShinyMetalMaterial shinymetal = 10;  // Create a shiny metal material
+    BuiltInMaterial skin = 11;  // Create a skin material
+    SubstrateMaterial substrate = 12;  // Create a substrate material
+    TranslucentMaterial translucent = 13;  // Create a translucent material
+    UberMaterial uber = 14;  // Create a uber material
   }
 }
 

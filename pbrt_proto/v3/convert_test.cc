@@ -1329,7 +1329,7 @@ TEST(Convert, MaterialFourier) {
                                    R"pb(directives {
                                           material {
                                             fourier {
-                                              bsdffile: "a"
+                                              filename: "a"
                                               bumpmap { float_value: 1.0 }
                                             }
                                           }
@@ -1396,8 +1396,7 @@ TEST(Convert, MaterialHair) {
       "\"float eta\" 3.0 "
       "\"float beta_m\" 4.0 "
       "\"float beta_n\" 5.0 "
-      "\"float alpha\" 6.0 "
-      "\"float bumpmap\" 7.0 ");
+      "\"float alpha\" 6.0 ");
   EXPECT_THAT(Convert(stream),
               IsOkAndHolds(EqualsProto(
                   R"pb(directives {
@@ -1411,7 +1410,6 @@ TEST(Convert, MaterialHair) {
                              beta_m { float_value: 4.0 }
                              beta_n { float_value: 5.0 }
                              alpha { float_value: 6.0 }
-                             bumpmap { float_value: 7.0 }
                            }
                          }
                        })pb")));
@@ -1441,7 +1439,7 @@ TEST(Convert, MaterialKdSubsurface) {
                                               mfp { spectrum_texture_name: "d" }
                                               uroughness { float_value: 2.0 }
                                               vroughness { float_value: 3.0 }
-                                              eta: 4.0
+                                              eta { float_value: 4.0 }
                                               scale: 5.0
                                               g: 6.0
                                               remaproughness: false
@@ -2846,11 +2844,11 @@ TEST(Convert, ShapeOverrides) {
                              sigma_a { spectrum_texture_name: "l" }
                              sigma_s { spectrum_texture_name: "m" }
                              transmit { spectrum_texture_name: "n" }
-                             bsdffile: "o"
+                             filename: "o"
                              namedmaterial1: "p"
                              namedmaterial2: "q"
                              eta_as_value: 25.0
-                             eta_as_float_texture { float_value: 25.0 }
+                             eta { float_value: 25.0 }
                            }
                          }
                        })pb")));
@@ -2867,7 +2865,7 @@ TEST(Convert, ShapeOverridesEtaTexture) {
                  shape {
                    sphere {}
                    overrides {
-                     eta_as_float_texture { float_texture_name: "a" }
+                     eta { float_texture_name: "a" }
                      eta_as_spectrum_texture { spectrum_texture_name: "a" }
                    }
                  }

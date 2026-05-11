@@ -128,50 +128,50 @@ message Defaults {
   // A container for the default values for every type of Material
   message DefaultMaterials {
     // The default "disney" Material
-    required Material.Disney disney = 1;
+    required DisneyMaterial disney = 1;
 
     // The default "fourier" Material is fully captured in its definition
     reserved 2;
 
     // The default "glass" Material
-    required Material.Glass glass = 3;
+    required GlassMaterial glass = 3;
 
     // The default "hair" Material
-    required Material.Hair hair = 4;
+    required HairMaterial hair = 4;
 
     // The default "kdsubsurface" Material
-    required Material.KdSubsurface kdsubsurface = 5;
+    required KdSubsurfaceMaterial kdsubsurface = 5;
 
     // The default "matte" Material
-    required Material.Matte matte = 6;
+    required MatteMaterial matte = 6;
 
     // The default "metal" Material
-    required Material.Metal metal = 7;
+    required MetalMaterial metal = 7;
 
     // The default "mirror" Material
-    required Material.Mirror mirror = 8;
+    required MirrorMaterial mirror = 8;
 
     // The default "mix" Material
-    required Material.Mix mix = 9;
+    required MixMaterial mix = 9;
 
     // The default "plastic" Material
-    required Material.Plastic plastic = 10;
+    required PlasticMaterial plastic = 10;
 
     // The default "substrate" Material
-    required Material.Substrate substrate = 11;
+    required SubstrateMaterial substrate = 11;
   
     // The default "subsurface" Material for every MeasuredSubsurfacePreset
     // 
     // NOTE: Protocol Buffers do not allow enums to be used directly as map
     //       keys, so int32 is used here as the key type instead. Every value in
     //       MeasuredSubsurfacePreset is guaranteed to be present in this map.
-    map<int32, Material.Subsurface> subsurfaces = 12;
+    map<int32, SubsurfaceMaterial> subsurfaces = 12;
 
     // The default "translucent" Material
-    required Material.Translucent translucent = 13;
+    required TranslucentMaterial translucent = 13;
 
     // The default "uber" Material
-    required Material.Uber uber = 14;
+    required UberMaterial uber = 14;
   }
 
   // The default values for every type of Material

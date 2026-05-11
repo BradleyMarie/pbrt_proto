@@ -95,18 +95,19 @@ message MakeNamedMaterial {
 message Material {
   // The type of material to create. If none of these fields are set, program
   // the behavior is undefined and the renderer may crash.
-  oneof light_source_type {
+  oneof material_type {
     GlassMaterial glass = 5;  // Create a glass material
-    MirrorMaterial mirror = 6;  // Create a mirror material
-    PlasticMaterial plastic = 7;  // Create a plastic material
-    ShinyMetalMaterial shinymetal = 9;  // Create a shiny metal material
-    SubstrateMaterial substrate = 11;  // Create a substrate material
-    TranslucentMaterial translucent = 12;  // Create a translucent material
-    UberMaterial uber = 13;  // Create a uber material
-    KdSubsurfaceMaterial kdsubsurface = 14;  // Create a Kd subsurface material
-    MeasuredMerlMaterial measured = 15;  // Create a measured BRDF material
-    MetalMaterial metal = 16; // Create a metal material
-    MixMaterial mix = 17;  // Create a mix material
+    MatteMaterial matte = 6;  // Create a mirror material
+    MirrorMaterial mirror = 7;  // Create a mirror material
+    PlasticMaterial plastic = 8;  // Create a plastic material
+    ShinyMetalMaterial shinymetal = 10;  // Create a shiny metal material
+    SubstrateMaterial substrate = 12;  // Create a substrate material
+    TranslucentMaterial translucent = 13;  // Create a translucent material
+    UberMaterial uber = 14;  // Create a uber material
+    KdSubsurfaceMaterial kdsubsurface = 15;  // Create a Kd subsurface material
+    MeasuredMerlMaterial measured = 16;  // Create a measured BRDF material
+    MetalMaterial metal = 17; // Create a metal material
+    MixMaterial mix = 18;  // Create a mix material
   }
 }
 
@@ -175,7 +176,7 @@ message MaterialOverrides {
   optional SpectrumTextureParameter amount = 14;
   optional SpectrumTextureParameter eta_as_spectrum_texture = 15;
   optional SpectrumTextureParameter k = 16;
-  optional FloatTextureParameter mfp = 17;
+  optional FloatTextureParameter meanfreepath = 17;
   optional string filename = 18;
   optional string namedmaterial1 = 19;
   optional string namedmaterial2 = 20;
