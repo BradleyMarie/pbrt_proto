@@ -1369,10 +1369,44 @@ message GlassMaterial {
   optional bool remaproughness = 99 [default = true];
 }
 
-// The "kitchen sink" material available in PBRTv1, PBRTv2, and PBRT v3.
+// A material that approximates hair.
+message HairMaterial {
+  // The index of refraction of the scattering volume.
+  optional FloatTextureParameter eta = 11;
+
+  // The absorption coefficient of the volume.
+  optional SpectrumTextureParameter sigma_a = 103;
+
+  // If specified, a value of the absorption coefficient is computed using an
+  // approximation that leads to the hair having roughly this color, after
+  // multiple scattering in the hair during rendering.
+  optional SpectrumTextureParameter color = 106;
+
+  // Concentration of the eumelanin pigment in the hair. Blonde hair has
+  // concentrations around 0.3, brown around 1.3, and black around 8.0.
+  optional FloatTextureParameter eumelanin = 107;
+
+  // Concentration of the pheomelanin pigment in the hair. Pheomelanin makes
+  // red hair red.
+  optional FloatTextureParameter pheomelanin = 108;
+
+  // The longitudinal roughness of the hair surface.
+  optional FloatTextureParameter beta_m = 109;
+
+  // The azimuthal roughness of the hair surface.
+  optional FloatTextureParameter beta_n = 110;
+
+  // This represents the tilt angle of the cuticle scales on the hair surface.
+  optional FloatTextureParameter alpha = 111;
+}
+
+// A material with subsurface scattering where Kd is main parameter.
 message KdSubsurfaceMaterial {
   // The coefficient of diffuse reflection.
   optional SpectrumTextureParameter Kd = 1;
+
+  // The coefficient of specular reflection.
+  optional SpectrumTextureParameter Kr = 3;
 
   // The coefficient of specular transmission.
   //
@@ -1380,9 +1414,6 @@ message KdSubsurfaceMaterial {
   //       however, it is not supported before PBRTv3 and should be ignored when
   //       reading earlier input.
   optional SpectrumTextureParameter Kt = 4;
-
-  // The coefficient of specular reflection.
-  optional SpectrumTextureParameter Kr = 3;
 
   // Microfacet roughness in the u direction. If zero, perfect specular
   // reflection is modeled.
@@ -1400,9 +1431,7 @@ message KdSubsurfaceMaterial {
   //       reading earlier input.
   optional FloatTextureParameter vroughness = 10;
 
-  // Index of refraction of the surface. This value is used in both the
-  // microfacet model for specular reflection as well as for computing a Fresnel
-  // reflection term for perfect specular reflection.
+  // The index of refraction of the scattering volume.
   //
   // NOTE: Prior to PBRTv3 this field was named "index".
   //
@@ -1459,6 +1488,18 @@ message MatteMaterial {
 
   // The floating-point texture to be used as a bump map.
   optional FloatTextureParameter bumpmap = 13;
+}
+
+// A material with a measured BRDF using the Fourier representation.
+message MeasuredFourierMaterial {
+  // The floating-point texture to be used as a bump map.
+  optional FloatTextureParameter bumpmap = 13;
+
+  // The file that stores the BRDF description.
+  //
+  // NOTE: This field is named "bsdffile" in PBRTv3; however, for consistiency
+  //       with the other measured materials it is renamed here to "filename".
+  optional string filename = 18;
 }
 
 // A material with a measured BRDF using the MERL representation.
@@ -1618,6 +1659,78 @@ message SubstrateMaterial {
   //       however, it is not supported before PBRTv3 and should be ignored when
   //       reading earlier input.
   optional bool remaproughness = 99 [default = true];
+}
+
+// A material with subsurface scattering.
+message SubsurfaceMaterial {
+  // The coefficient of specular reflection.
+  optional SpectrumTextureParameter Kr = 3;
+
+  // The coefficient of specular transmission.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv3 and should be ignored when
+  //       reading earlier input.
+  optional SpectrumTextureParameter Kt = 4;
+
+  // Microfacet roughness in the u direction. If zero, perfect specular
+  // reflection is modeled.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv3 and should be ignored when
+  //       reading earlier input.
+  optional FloatTextureParameter uroughness = 9;
+
+  // Microfacet roughness in the v direction. If zero, perfect specular
+  // reflection is modeled.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv3 and should be ignored when
+  //       reading earlier input.
+  optional FloatTextureParameter vroughness = 10;
+
+  // The floating-point texture to be used as a bump map.
+  optional FloatTextureParameter bumpmap = 13;
+
+  // If true, roughness values are expected to be in the range [0,1], and are
+  // remapped to microfacet distribution function parameter values that range
+  // from near-perfect-specular at 0 to very rough at 1. Otherwise the roughness
+  // parameters are used directly for the alpha parameters of the microfacet
+  // distribution function.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv3 and should be ignored when
+  //       reading earlier input.
+  optional bool remaproughness = 99 [default = true];
+
+  // The asymmetry factor of the material's phase function. A value of zero
+  // represents isotropic scattering, a value less than zero represents
+  // backwards scattering, and a value greater than one represents forward
+  // scattering.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv3 and should be ignored when
+  //       reading earlier input.
+  optional double g = 100 [default = 0.0];
+
+  // A scale factor applied to the mean free path.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv3 and should be ignored when
+  //       reading earlier input.
+  optional double scale = 101 [default = 1.0];
+
+  // The index of refraction of the scattering volume.
+  optional double eta = 102 [default = 1.33];
+
+  // The absorption coefficient of the volume.
+  optional SpectrumTextureParameter sigma_a = 103;
+
+  // The reduced scattering coefficient of the volume.
+  optional SpectrumTextureParameter sigma_s = 104;
+
+  // The name of measured subsurface scattering coefficients.
+  optional MeasuredScatteringPreset name = 105;
 }
 
 // A simple translucent material with diffuse and specular compoents.

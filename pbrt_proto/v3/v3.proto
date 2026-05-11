@@ -422,6 +422,16 @@ message MaterialOverrides {
   optional bool remaproughness = 99;
   optional double g = 100;
   optional double scale = 101;
+  optional double eta_as_value = 102;
+  optional SpectrumTextureParameter sigma_a = 103;
+  optional SpectrumTextureParameter sigma_s = 104;
+  optional MeasuredScatteringPreset name = 105;
+  optional SpectrumTextureParameter color = 106;
+  optional FloatTextureParameter eumelanin = 107;
+  optional FloatTextureParameter pheomelanin = 108;
+  optional FloatTextureParameter beta_m = 109;
+  optional FloatTextureParameter beta_n = 110;
+  optional FloatTextureParameter alpha = 111;
 }
 
 message Shape {

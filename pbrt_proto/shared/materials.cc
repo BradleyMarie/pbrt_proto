@@ -115,6 +115,28 @@ void RemoveGlassMaterialV2(
   RemoveUVRoughness(parameters, output);
 }
 
+void RemoveHairMaterial(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    HairMaterial& output) {
+  TryRemoveFloatTexture(parameters, "eta",
+                        std::bind(&HairMaterial::mutable_eta, &output));
+  TryRemoveSpectrumTextureV1(
+      parameters, "sigma_a",
+      std::bind(&HairMaterial::mutable_sigma_a, &output));
+  TryRemoveSpectrumTextureV1(parameters, "color",
+                             std::bind(&HairMaterial::mutable_color, &output));
+  TryRemoveFloatTexture(parameters, "eumelanin",
+                        std::bind(&HairMaterial::mutable_eumelanin, &output));
+  TryRemoveFloatTexture(parameters, "pheomelanin",
+                        std::bind(&HairMaterial::mutable_pheomelanin, &output));
+  TryRemoveFloatTexture(parameters, "beta_m",
+                        std::bind(&HairMaterial::mutable_beta_m, &output));
+  TryRemoveFloatTexture(parameters, "beta_n",
+                        std::bind(&HairMaterial::mutable_beta_n, &output));
+  TryRemoveFloatTexture(parameters, "alpha",
+                        std::bind(&HairMaterial::mutable_alpha, &output));
+}
+
 void RemoveKdSubsurfaceMaterialV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     KdSubsurfaceMaterial& output) {
@@ -156,6 +178,20 @@ void RemoveMatteMaterial(
                         std::bind(&MatteMaterial::mutable_sigma, &output));
   TryRemoveFloatTexture(parameters, "bumpmap",
                         std::bind(&MatteMaterial::mutable_bumpmap, &output));
+}
+
+void RemoveMeasuredFourierMaterial(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    MeasuredFourierMaterial& output) {
+  TryRemoveFloatTexture(
+      parameters, "bumpmap",
+      std::bind(&MeasuredFourierMaterial::mutable_bumpmap, &output));
+
+  if (std::optional<absl::string_view> filename =
+          TryRemoveString(parameters, "filename");
+      filename) {
+    output.set_filename(*filename);
+  }
 }
 
 void RemoveMeasuredMerlMaterial(
@@ -294,6 +330,60 @@ void RemoveSubstrateMaterialV2(
           TryRemoveBool(parameters, "remaproughness");
       remaproughness) {
     output.set_remaproughness(*remaproughness);
+  }
+}
+
+void RemoveSubsurfaceMaterial(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    SubsurfaceMaterial& output) {
+  TryRemoveSpectrumTextureV1(
+      parameters, "Kr", std::bind(&SubsurfaceMaterial::mutable_kr, &output));
+  TryRemoveSpectrumTextureV1(
+      parameters, "Kt", std::bind(&SubsurfaceMaterial::mutable_kt, &output));
+  TryRemoveFloatTexture(
+      parameters, "bumpmap",
+      std::bind(&SubsurfaceMaterial::mutable_bumpmap, &output));
+  TryRemoveFloatTexture(
+      parameters, "uroughness",
+      std::bind(&SubsurfaceMaterial::mutable_uroughness, &output));
+  TryRemoveFloatTexture(
+      parameters, "vroughness",
+      std::bind(&SubsurfaceMaterial::mutable_vroughness, &output));
+
+  if (std::optional<bool> remaproughness =
+          TryRemoveBool(parameters, "remaproughness");
+      remaproughness) {
+    output.set_remaproughness(*remaproughness);
+  }
+
+  if (std::optional<double> g = TryRemoveFloat(parameters, "g"); g) {
+    output.set_g(*g);
+  }
+
+  if (std::optional<double> scale = TryRemoveFloat(parameters, "scale");
+      scale) {
+    output.set_scale(*scale);
+  }
+
+  if (std::optional<double> eta = TryRemoveFloat(parameters, "eta"); eta) {
+    output.set_eta(*eta);
+  }
+
+  TryRemoveSpectrumTextureV1(
+      parameters, "sigma_a",
+      std::bind(&SubsurfaceMaterial::mutable_sigma_a, &output));
+
+  TryRemoveSpectrumTextureV1(
+      parameters, "sigma_s",
+      std::bind(&SubsurfaceMaterial::mutable_sigma_s, &output));
+
+  if (std::optional<absl::string_view> name =
+          TryRemoveString(parameters, "name");
+      name.has_value()) {
+    auto iter = kNamedMeasuredScatteringPresets.find(*name);
+    if (iter != kNamedMeasuredScatteringPresets.end()) {
+      output.set_name(iter->second);
+    }
   }
 }
 

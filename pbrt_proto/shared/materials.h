@@ -21,6 +21,10 @@ void RemoveGlassMaterialV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     GlassMaterial& output);
 
+void RemoveHairMaterial(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    HairMaterial& output);
+
 void RemoveKdSubsurfaceMaterialV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     KdSubsurfaceMaterial& output);
@@ -32,6 +36,10 @@ void RemoveKdSubsurfaceMaterialV2(
 void RemoveMatteMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     MatteMaterial& output);
+
+void RemoveMeasuredFourierMaterial(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    MeasuredFourierMaterial& output);
 
 void RemoveMeasuredMerlMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
@@ -72,6 +80,10 @@ void RemoveSubstrateMaterialV1(
 void RemoveSubstrateMaterialV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     SubstrateMaterial& output);
+
+void RemoveSubsurfaceMaterial(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    SubsurfaceMaterial& output);
 
 void RemoveTranslucentMaterialV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,

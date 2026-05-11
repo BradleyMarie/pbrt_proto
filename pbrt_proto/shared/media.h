@@ -9,9 +9,6 @@
 
 namespace pbrt_proto {
 
-extern const absl::flat_hash_map<absl::string_view, MeasuredScatteringPreset>
-    kNamedMeasuredScatteringPresets;
-
 void RemoveCloudMediumV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     CloudMedium& output);

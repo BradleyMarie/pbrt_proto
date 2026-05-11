@@ -103,7 +103,7 @@ message Material {
     SubstrateMaterial substrate = 11;  // Create a substrate material
     TranslucentMaterial translucent = 12;  // Create a translucent material
     UberMaterial uber = 13;  // Create a uber material
-    KdSubsurfaceMaterial kdsubsurface = 14;  // Create a KD-subsurface material
+    KdSubsurfaceMaterial kdsubsurface = 14;  // Create a Kd subsurface material
     MeasuredMerlMaterial measured = 15;  // Create a measured BRDF material
     MetalMaterial metal = 16; // Create a metal material
     MixMaterial mix = 17;  // Create a mix material
