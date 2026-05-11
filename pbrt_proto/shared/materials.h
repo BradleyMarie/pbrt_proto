@@ -13,6 +13,10 @@ void RemoveBuiltInMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     BuiltInMaterial& output);
 
+void RemoveDisneyMaterial(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    DisneyMaterial& output);
+
 void RemoveGlassMaterialV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     GlassMaterial& output);

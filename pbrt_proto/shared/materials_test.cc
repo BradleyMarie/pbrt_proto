@@ -43,6 +43,153 @@ TEST(BuiltInMaterial, WithData) {
               )pb"));
 }
 
+TEST(DisneyMaterial, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  DisneyMaterial actual;
+  RemoveDisneyMaterial(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(DisneyMaterial, WithData) {
+  std::vector<std::string_view> roughness = {"roughness"};
+  Parameter roughness_parameter{.directive = "",
+                                .type = ParameterType::TEXTURE,
+                                .type_name = "",
+                                .values = absl::MakeSpan(roughness)};
+
+  std::vector<std::string_view> eta = {"eta"};
+  Parameter eta_parameter{.directive = "",
+                          .type = ParameterType::TEXTURE,
+                          .type_name = "",
+                          .values = absl::MakeSpan(eta)};
+
+  std::vector<std::string_view> bumpmap = {"bump"};
+  Parameter bumpmap_parameter{.directive = "",
+                              .type = ParameterType::TEXTURE,
+                              .type_name = "",
+                              .values = absl::MakeSpan(bumpmap)};
+
+  std::vector<std::string_view> color = {"color"};
+  Parameter color_parameter{.directive = "",
+                            .type = ParameterType::TEXTURE,
+                            .type_name = "",
+                            .values = absl::MakeSpan(color)};
+
+  std::vector<std::string_view> scatterdistance = {"scatterdistance"};
+  Parameter scatterdistance_parameter{
+      .directive = "",
+      .type = ParameterType::TEXTURE,
+      .type_name = "",
+      .values = absl::MakeSpan(scatterdistance)};
+
+  std::vector<std::string_view> anisotropic = {"anisotropic"};
+  Parameter anisotropic_parameter{.directive = "",
+                                  .type = ParameterType::TEXTURE,
+                                  .type_name = "",
+                                  .values = absl::MakeSpan(anisotropic)};
+
+  std::vector<std::string_view> clearcoat = {"clearcoat"};
+  Parameter clearcoat_parameter{.directive = "",
+                                .type = ParameterType::TEXTURE,
+                                .type_name = "",
+                                .values = absl::MakeSpan(clearcoat)};
+
+  std::vector<std::string_view> clearcoatgloss = {"clearcoatgloss"};
+  Parameter clearcoatgloss_parameter{.directive = "",
+                                     .type = ParameterType::TEXTURE,
+                                     .type_name = "",
+                                     .values = absl::MakeSpan(clearcoatgloss)};
+
+  std::vector<std::string_view> difftrans = {"difftrans"};
+  Parameter difftrans_parameter{.directive = "",
+                                .type = ParameterType::TEXTURE,
+                                .type_name = "",
+                                .values = absl::MakeSpan(difftrans)};
+
+  std::vector<std::string_view> flatness = {"flatness"};
+  Parameter flatness_parameter{.directive = "",
+                               .type = ParameterType::TEXTURE,
+                               .type_name = "",
+                               .values = absl::MakeSpan(flatness)};
+
+  std::vector<std::string_view> metallic = {"metallic"};
+  Parameter metallic_parameter{.directive = "",
+                               .type = ParameterType::TEXTURE,
+                               .type_name = "",
+                               .values = absl::MakeSpan(metallic)};
+
+  std::vector<std::string_view> spectrans = {"spectrans"};
+  Parameter spectrans_parameter{.directive = "",
+                                .type = ParameterType::TEXTURE,
+                                .type_name = "",
+                                .values = absl::MakeSpan(spectrans)};
+
+  std::vector<std::string_view> speculartint = {"speculartint"};
+  Parameter speculartint_parameter{.directive = "",
+                                   .type = ParameterType::TEXTURE,
+                                   .type_name = "",
+                                   .values = absl::MakeSpan(speculartint)};
+
+  std::vector<std::string_view> sheen = {"sheen"};
+  Parameter sheen_parameter{.directive = "",
+                            .type = ParameterType::TEXTURE,
+                            .type_name = "",
+                            .values = absl::MakeSpan(sheen)};
+
+  std::vector<std::string_view> sheentint = {"sheentint"};
+  Parameter sheentint_parameter{.directive = "",
+                                .type = ParameterType::TEXTURE,
+                                .type_name = "",
+                                .values = absl::MakeSpan(sheentint)};
+
+  bool thin[] = {true};
+  Parameter thin_parameter{.directive = "",
+                           .type = ParameterType::BOOL,
+                           .type_name = "",
+                           .values = absl::MakeSpan(thin)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"roughness", roughness_parameter},
+      {"eta", eta_parameter},
+      {"bumpmap", bumpmap_parameter},
+      {"color", color_parameter},
+      {"scatterdistance", scatterdistance_parameter},
+      {"anisotropic", anisotropic_parameter},
+      {"clearcoat", clearcoat_parameter},
+      {"clearcoatgloss", clearcoatgloss_parameter},
+      {"difftrans", difftrans_parameter},
+      {"flatness", flatness_parameter},
+      {"metallic", metallic_parameter},
+      {"spectrans", spectrans_parameter},
+      {"speculartint", speculartint_parameter},
+      {"sheen", sheen_parameter},
+      {"sheentint", sheentint_parameter},
+      {"thin", thin_parameter},
+  };
+
+  DisneyMaterial actual;
+  RemoveDisneyMaterial(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                roughness { float_texture_name: "roughness" }
+                eta { float_texture_name: "eta" }
+                bumpmap { float_texture_name: "bump" }
+                color { spectrum_texture_name: "color" }
+                scatterdistance { spectrum_texture_name: "scatterdistance" }
+                anisotropic { float_texture_name: "anisotropic" }
+                clearcoat { float_texture_name: "clearcoat" }
+                clearcoatgloss { float_texture_name: "clearcoatgloss" }
+                difftrans { float_texture_name: "difftrans" }
+                flatness { float_texture_name: "flatness" }
+                metallic { float_texture_name: "metallic" }
+                spectrans { float_texture_name: "spectrans" }
+                speculartint { float_texture_name: "speculartint" }
+                sheen { float_texture_name: "sheen" }
+                sheentint { float_texture_name: "sheentint" }
+                thin: true
+              )pb"));
+}
+
 TEST(GlassMaterialV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 

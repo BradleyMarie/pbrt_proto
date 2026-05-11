@@ -95,6 +95,49 @@ void RemoveBuiltInMaterial(
                         std::bind(&BuiltInMaterial::mutable_bumpmap, &output));
 }
 
+void RemoveDisneyMaterial(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    DisneyMaterial& output) {
+  TryRemoveFloatTexture(parameters, "roughness",
+                        std::bind(&DisneyMaterial::mutable_roughness, &output));
+  TryRemoveFloatTexture(parameters, "eta",
+                        std::bind(&DisneyMaterial::mutable_eta, &output));
+  TryRemoveFloatTexture(parameters, "bumpmap",
+                        std::bind(&DisneyMaterial::mutable_bumpmap, &output));
+  TryRemoveSpectrumTextureV1(
+      parameters, "color", std::bind(&DisneyMaterial::mutable_color, &output));
+  TryRemoveSpectrumTextureV1(
+      parameters, "scatterdistance",
+      std::bind(&DisneyMaterial::mutable_scatterdistance, &output));
+  TryRemoveFloatTexture(
+      parameters, "anisotropic",
+      std::bind(&DisneyMaterial::mutable_anisotropic, &output));
+  TryRemoveFloatTexture(parameters, "clearcoat",
+                        std::bind(&DisneyMaterial::mutable_clearcoat, &output));
+  TryRemoveFloatTexture(
+      parameters, "clearcoatgloss",
+      std::bind(&DisneyMaterial::mutable_clearcoatgloss, &output));
+  TryRemoveFloatTexture(parameters, "difftrans",
+                        std::bind(&DisneyMaterial::mutable_difftrans, &output));
+  TryRemoveFloatTexture(parameters, "flatness",
+                        std::bind(&DisneyMaterial::mutable_flatness, &output));
+  TryRemoveFloatTexture(parameters, "metallic",
+                        std::bind(&DisneyMaterial::mutable_metallic, &output));
+  TryRemoveFloatTexture(parameters, "spectrans",
+                        std::bind(&DisneyMaterial::mutable_spectrans, &output));
+  TryRemoveFloatTexture(
+      parameters, "speculartint",
+      std::bind(&DisneyMaterial::mutable_speculartint, &output));
+  TryRemoveFloatTexture(parameters, "sheen",
+                        std::bind(&DisneyMaterial::mutable_sheen, &output));
+  TryRemoveFloatTexture(parameters, "sheentint",
+                        std::bind(&DisneyMaterial::mutable_sheentint, &output));
+
+  if (std::optional<bool> thin = TryRemoveBool(parameters, "thin"); thin) {
+    output.set_thin(*thin);
+  }
+}
+
 void RemoveGlassMaterialV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     GlassMaterial& output) {

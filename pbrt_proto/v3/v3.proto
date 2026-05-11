@@ -419,19 +419,31 @@ message MaterialOverrides {
   optional string filename = 18;
   optional string namedmaterial1 = 19;
   optional string namedmaterial2 = 20;
-  optional bool remaproughness = 99;
-  optional double g = 100;
-  optional double scale = 101;
-  optional double eta_as_value = 102;
-  optional SpectrumTextureParameter sigma_a = 103;
-  optional SpectrumTextureParameter sigma_s = 104;
-  optional MeasuredScatteringPreset name = 105;
-  optional SpectrumTextureParameter color = 106;
-  optional FloatTextureParameter eumelanin = 107;
-  optional FloatTextureParameter pheomelanin = 108;
-  optional FloatTextureParameter beta_m = 109;
-  optional FloatTextureParameter beta_n = 110;
-  optional FloatTextureParameter alpha = 111;
+  optional MeasuredScatteringPreset name = 21;
+  optional SpectrumTextureParameter color = 22;
+  optional SpectrumTextureParameter sigma_a = 23;
+  optional SpectrumTextureParameter sigma_s = 24;
+  optional SpectrumTextureParameter scatterdistance = 25;
+  optional FloatTextureParameter alpha = 26;
+  optional FloatTextureParameter anisotropic = 27;
+  optional FloatTextureParameter beta_m = 28;
+  optional FloatTextureParameter beta_n = 29;
+  optional FloatTextureParameter clearcoat = 30;
+  optional FloatTextureParameter clearcoatgloss = 31;
+  optional FloatTextureParameter difftrans = 32;
+  optional FloatTextureParameter eumelanin = 33;
+  optional FloatTextureParameter flatness = 34;
+  optional FloatTextureParameter metallic = 35;
+  optional FloatTextureParameter pheomelanin = 36;
+  optional FloatTextureParameter spectrans = 37;
+  optional FloatTextureParameter speculartint = 38;
+  optional FloatTextureParameter sheen = 39;
+  optional FloatTextureParameter sheentint = 40;
+  optional double g = 41;
+  optional double eta_as_value = 42;
+  optional double scale = 43;
+  optional bool remaproughness = 44;
+  optional bool thin = 45;
 }
 
 message Shape {
