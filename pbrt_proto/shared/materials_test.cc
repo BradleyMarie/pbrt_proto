@@ -240,6 +240,160 @@ TEST(GlassMaterialV2, WithDataEta) {
               )pb"));
 }
 
+TEST(KdSubsurfaceMaterialV1, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  KdSubsurfaceMaterial actual;
+  RemoveKdSubsurfaceMaterialV1(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(KdSubsurfaceMaterialV1, WithData) {
+  std::vector<std::string_view> kd = {"kd"};
+  Parameter kd_parameter{.directive = "",
+                         .type = ParameterType::TEXTURE,
+                         .type_name = "",
+                         .values = absl::MakeSpan(kd)};
+
+  std::vector<std::string_view> kr = {"kr"};
+  Parameter kr_parameter{.directive = "",
+                         .type = ParameterType::TEXTURE,
+                         .type_name = "",
+                         .values = absl::MakeSpan(kr)};
+
+  std::vector<std::string_view> eta = {"eta"};
+  Parameter eta_parameter{.directive = "",
+                          .type = ParameterType::TEXTURE,
+                          .type_name = "",
+                          .values = absl::MakeSpan(eta)};
+
+  std::vector<std::string_view> mfp = {"mfp"};
+  Parameter mfp_parameter{.directive = "",
+                          .type = ParameterType::TEXTURE,
+                          .type_name = "",
+                          .values = absl::MakeSpan(mfp)};
+
+  std::vector<std::string_view> bumpmap = {"bump"};
+  Parameter bumpmap_parameter{.directive = "",
+                              .type = ParameterType::TEXTURE,
+                              .type_name = "",
+                              .values = absl::MakeSpan(bumpmap)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"Kd", kd_parameter},           {"Kr", kr_parameter},
+      {"index", eta_parameter},       {"meanfreepath", mfp_parameter},
+      {"bumpmap", bumpmap_parameter},
+  };
+
+  KdSubsurfaceMaterial actual;
+  RemoveKdSubsurfaceMaterialV1(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                Kd { spectrum_texture_name: "kd" }
+                Kr { spectrum_texture_name: "kr" }
+                eta { float_texture_name: "eta" }
+                mfp { float_texture_name: "mfp" }
+                bumpmap { float_texture_name: "bump" }
+              )pb"));
+}
+
+TEST(KdSubsurfaceMaterialV2, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  KdSubsurfaceMaterial actual;
+  RemoveKdSubsurfaceMaterialV2(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(KdSubsurfaceMaterialV2, WithData) {
+  std::vector<std::string_view> kd = {"kd"};
+  Parameter kd_parameter{.directive = "",
+                         .type = ParameterType::TEXTURE,
+                         .type_name = "",
+                         .values = absl::MakeSpan(kd)};
+
+  std::vector<std::string_view> kr = {"kr"};
+  Parameter kr_parameter{.directive = "",
+                         .type = ParameterType::TEXTURE,
+                         .type_name = "",
+                         .values = absl::MakeSpan(kr)};
+
+  std::vector<std::string_view> kt = {"kt"};
+  Parameter kt_parameter{.directive = "",
+                         .type = ParameterType::TEXTURE,
+                         .type_name = "",
+                         .values = absl::MakeSpan(kt)};
+
+  std::vector<double> eta = {2.0};
+  Parameter eta_parameter{.directive = "",
+                          .type = ParameterType::FLOAT,
+                          .type_name = "",
+                          .values = absl::MakeSpan(eta)};
+
+  std::vector<std::string_view> uroughness = {"uroughness"};
+  Parameter uroughness_parameter{.directive = "",
+                                 .type = ParameterType::TEXTURE,
+                                 .type_name = "",
+                                 .values = absl::MakeSpan(uroughness)};
+
+  std::vector<std::string_view> vroughness = {"vroughness"};
+  Parameter vroughness_parameter{.directive = "",
+                                 .type = ParameterType::TEXTURE,
+                                 .type_name = "",
+                                 .values = absl::MakeSpan(vroughness)};
+
+  std::vector<std::string_view> mfp = {"mfp"};
+  Parameter mfp_parameter{.directive = "",
+                          .type = ParameterType::TEXTURE,
+                          .type_name = "",
+                          .values = absl::MakeSpan(mfp)};
+
+  std::vector<std::string_view> bumpmap = {"bump"};
+  Parameter bumpmap_parameter{.directive = "",
+                              .type = ParameterType::TEXTURE,
+                              .type_name = "",
+                              .values = absl::MakeSpan(bumpmap)};
+
+  std::vector<double> g = {1.0};
+  Parameter g_parameter{.directive = "",
+                        .type = ParameterType::FLOAT,
+                        .type_name = "",
+                        .values = absl::MakeSpan(g)};
+
+  std::vector<double> scale = {0.0};
+  Parameter scale_parameter{.directive = "",
+                            .type = ParameterType::FLOAT,
+                            .type_name = "",
+                            .values = absl::MakeSpan(scale)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"Kd", kd_parameter},
+      {"Kr", kr_parameter},
+      {"Kt", kt_parameter},
+      {"eta", eta_parameter},
+      {"uroughness", uroughness_parameter},
+      {"vroughness", vroughness_parameter},
+      {"mfp", mfp_parameter},
+      {"bumpmap", bumpmap_parameter},
+      {"g", g_parameter},
+      {"scale", scale_parameter},
+  };
+
+  KdSubsurfaceMaterial actual;
+  RemoveKdSubsurfaceMaterialV2(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                Kd { spectrum_texture_name: "kd" }
+                Kr { spectrum_texture_name: "kr" }
+                Kt { spectrum_texture_name: "kt" }
+                eta { float_value: 2.0 }
+                uroughness { float_texture_name: "uroughness" }
+                vroughness { float_texture_name: "vroughness" }
+                mfp { float_texture_name: "mfp" }
+                bumpmap { float_texture_name: "bump" }
+                g: 1.0
+                scale: 0.0
+              )pb"));
+}
+
 TEST(MatteMaterial, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
@@ -278,6 +432,40 @@ TEST(MatteMaterial, WithData) {
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 Kd { spectrum_texture_name: "kd" }
                 sigma { float_texture_name: "sigma" }
+                bumpmap { float_texture_name: "bump" }
+              )pb"));
+}
+
+TEST(MeasuredMerlMaterial, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  MeasuredMerlMaterial actual;
+  RemoveMeasuredMerlMaterial(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(MeasuredMerlMaterial, WithData) {
+  std::vector<std::string_view> filename = {"filename"};
+  Parameter filename_parameter{.directive = "",
+                               .type = ParameterType::STRING,
+                               .type_name = "",
+                               .values = absl::MakeSpan(filename)};
+
+  std::vector<std::string_view> bumpmap = {"bump"};
+  Parameter bumpmap_parameter{.directive = "",
+                              .type = ParameterType::TEXTURE,
+                              .type_name = "",
+                              .values = absl::MakeSpan(bumpmap)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"filename", filename_parameter},
+      {"bumpmap", bumpmap_parameter},
+  };
+
+  MeasuredMerlMaterial actual;
+  RemoveMeasuredMerlMaterial(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                filename: "filename"
                 bumpmap { float_texture_name: "bump" }
               )pb"));
 }

@@ -415,9 +415,13 @@ message MaterialOverrides {
   optional SpectrumTextureParameter amount = 14;
   optional SpectrumTextureParameter eta_as_spectrum_texture = 15;
   optional SpectrumTextureParameter k = 16;
-  optional string namedmaterial1 = 17;
-  optional string namedmaterial2 = 18;
+  optional FloatTextureParameter mfp = 17;
+  optional string filename = 18;
+  optional string namedmaterial1 = 19;
+  optional string namedmaterial2 = 20;
   optional bool remaproughness = 99;
+  optional double g = 100;
+  optional double scale = 101;
 }
 
 message Shape {

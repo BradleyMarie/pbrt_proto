@@ -82,6 +82,34 @@ message LightSource {
   }
 }
 
+// A directive which creates a named material.
+message MakeNamedMaterial {
+  // The name to give the created medium.
+  required string name = 1;
+
+  // The material to create.
+  required Material material = 2;
+}
+
+// A directive which creates a material.
+message Material {
+  // The type of material to create. If none of these fields are set, program
+  // the behavior is undefined and the renderer may crash.
+  oneof light_source_type {
+    GlassMaterial glass = 5;  // Create a glass material
+    MirrorMaterial mirror = 6;  // Create a mirror material
+    PlasticMaterial plastic = 7;  // Create a plastic material
+    ShinyMetalMaterial shinymetal = 9;  // Create a shiny metal material
+    SubstrateMaterial substrate = 11;  // Create a substrate material
+    TranslucentMaterial translucent = 12;  // Create a translucent material
+    UberMaterial uber = 13;  // Create a uber material
+    KdSubsurfaceMaterial kdsubsurface = 14;  // Create a KD-subsurface material
+    MeasuredMerlMaterial measured = 15;  // Create a measured BRDF material
+    MetalMaterial metal = 16; // Create a metal material
+    MixMaterial mix = 17;  // Create a mix material
+  }
+}
+
 // A directive which sets the Camera to use for rendering.
 message PixelFilter {
   // The type of PixelFilter to use. If none are set, then the current
@@ -147,8 +175,10 @@ message MaterialOverrides {
   optional SpectrumTextureParameter amount = 14;
   optional SpectrumTextureParameter eta_as_spectrum_texture = 15;
   optional SpectrumTextureParameter k = 16;
-  optional string namedmaterial1 = 17;
-  optional string namedmaterial2 = 18;
+  optional FloatTextureParameter mfp = 17;
+  optional string filename = 18;
+  optional string namedmaterial1 = 19;
+  optional string namedmaterial2 = 20;
 }
 
 // A directive which creates a named SpectrumTexture.

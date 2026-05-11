@@ -47,6 +47,36 @@ void RemoveGlassMaterial(
   RemoveEta(parameters, output, pbrt_v3);
 }
 
+void RemoveKdSubsurfaceMaterial(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    KdSubsurfaceMaterial& output, bool pbrt_v3) {
+  TryRemoveSpectrumTextureV1(
+      parameters, "Kd", std::bind(&KdSubsurfaceMaterial::mutable_kd, &output));
+  TryRemoveSpectrumTextureV1(
+      parameters, "Kr", std::bind(&KdSubsurfaceMaterial::mutable_kr, &output));
+
+  if (pbrt_v3) {
+    if (std::optional<double> eta = TryRemoveFloat(parameters, "eta"); eta) {
+      output.mutable_eta()->set_float_value(*eta);
+    }
+
+    TryRemoveFloatTexture(
+        parameters, "mfp",
+        std::bind(&KdSubsurfaceMaterial::mutable_mfp, &output));
+  } else {
+    TryRemoveFloatTexture(
+        parameters, "index",
+        std::bind(&KdSubsurfaceMaterial::mutable_eta, &output));
+    TryRemoveFloatTexture(
+        parameters, "meanfreepath",
+        std::bind(&KdSubsurfaceMaterial::mutable_mfp, &output));
+  }
+
+  TryRemoveFloatTexture(
+      parameters, "bumpmap",
+      std::bind(&KdSubsurfaceMaterial::mutable_bumpmap, &output));
+}
+
 void RemoveUberMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     UberMaterial& output, bool pbrt_v3) {
@@ -85,6 +115,38 @@ void RemoveGlassMaterialV2(
   RemoveUVRoughness(parameters, output);
 }
 
+void RemoveKdSubsurfaceMaterialV1(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    KdSubsurfaceMaterial& output) {
+  RemoveKdSubsurfaceMaterial(parameters, output, /*pbrt_v3=*/false);
+}
+
+void RemoveKdSubsurfaceMaterialV2(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    KdSubsurfaceMaterial& output) {
+  RemoveKdSubsurfaceMaterial(parameters, output, /*pbrt_v3=*/true);
+
+  TryRemoveSpectrumTextureV1(
+      parameters, "Kt", std::bind(&KdSubsurfaceMaterial::mutable_kt, &output));
+
+  TryRemoveFloatTexture(
+      parameters, "uroughness",
+      std::bind(&KdSubsurfaceMaterial::mutable_uroughness, &output));
+
+  TryRemoveFloatTexture(
+      parameters, "vroughness",
+      std::bind(&KdSubsurfaceMaterial::mutable_vroughness, &output));
+
+  if (std::optional<double> scale = TryRemoveFloat(parameters, "scale");
+      scale) {
+    output.set_scale(*scale);
+  }
+
+  if (std::optional<double> g = TryRemoveFloat(parameters, "g"); g) {
+    output.set_g(*g);
+  }
+}
+
 void RemoveMatteMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     MatteMaterial& output) {
@@ -94,6 +156,20 @@ void RemoveMatteMaterial(
                         std::bind(&MatteMaterial::mutable_sigma, &output));
   TryRemoveFloatTexture(parameters, "bumpmap",
                         std::bind(&MatteMaterial::mutable_bumpmap, &output));
+}
+
+void RemoveMeasuredMerlMaterial(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    MeasuredMerlMaterial& output) {
+  TryRemoveFloatTexture(
+      parameters, "bumpmap",
+      std::bind(&MeasuredMerlMaterial::mutable_bumpmap, &output));
+
+  if (std::optional<absl::string_view> filename =
+          TryRemoveString(parameters, "filename");
+      filename) {
+    output.set_filename(*filename);
+  }
 }
 
 void RemoveMetalMaterialV1(
