@@ -25,6 +25,71 @@ using ::google::protobuf::FileDescriptor;
 using ::testing::Contains;
 using ::testing::Not;
 
+void AddAllFieldsByNameAndNumber(
+    const Descriptor& descriptor,
+    std::map<absl::string_view, const FieldDescriptor*>&
+        field_descriptors_by_name,
+    std::set<int>& claimed_field_numbers) {
+  for (int f = 0; f < descriptor.field_count(); f++) {
+    const FieldDescriptor* field_descriptor = descriptor.field(f);
+    if (!field_descriptor) {
+      continue;
+    }
+
+    if (absl::EndsWith(descriptor.name(), "Material") &&
+        field_descriptor->name() == "eta") {
+      continue;
+    }
+
+    if (absl::EndsWith(descriptor.name(), "Medium") &&
+        (field_descriptor->name() == "sigma_a" ||
+         field_descriptor->name() == "sigma_s" ||
+         field_descriptor->name() == "Le")) {
+      continue;
+    }
+
+    if (auto iter = field_descriptors_by_name.find(field_descriptor->name());
+        iter != field_descriptors_by_name.end()) {
+      EXPECT_EQ(iter->second->type(), field_descriptor->type());
+      EXPECT_EQ(iter->second->type_name(), field_descriptor->type_name());
+      EXPECT_EQ(iter->second->number(), field_descriptor->number());
+      continue;
+    }
+
+    EXPECT_THAT(claimed_field_numbers,
+                Not(Contains(field_descriptor->number())));
+
+    field_descriptors_by_name[field_descriptor->name()] = field_descriptor;
+    claimed_field_numbers.insert(field_descriptor->number());
+  }
+}
+
+void AddAllFieldsByNumber(
+    const Descriptor& descriptor,
+    std::map<int, const FieldDescriptor*>& field_descriptors_by_number) {
+  for (int f = 0; f < descriptor.field_count(); f++) {
+    const FieldDescriptor* field_descriptor = descriptor.field(f);
+    if (!field_descriptor) {
+      continue;
+    }
+
+    if (absl::StartsWith(field_descriptor->name(), "eta")) {
+      continue;
+    }
+
+    if (auto iter =
+            field_descriptors_by_number.find(field_descriptor->number());
+        iter != field_descriptors_by_number.end()) {
+      EXPECT_EQ(iter->second->type(), field_descriptor->type());
+      EXPECT_EQ(iter->second->type_name(), field_descriptor->type_name());
+      EXPECT_EQ(iter->second->number(), field_descriptor->number());
+      continue;
+    }
+
+    field_descriptors_by_number[field_descriptor->number()] = field_descriptor;
+  }
+}
+
 class CommonTypes : public testing::TestWithParam<std::string> {};
 
 TEST_P(CommonTypes, AreBinaryCompatible) {
@@ -47,33 +112,22 @@ TEST_P(CommonTypes, AreBinaryCompatible) {
       continue;
     }
 
-    for (int f = 0; f < message_descriptor->field_count(); f++) {
-      const FieldDescriptor* field_descriptor = message_descriptor->field(f);
-      if (!field_descriptor) {
-        continue;
-      }
-
-      if (auto iter = field_descriptors_by_name.find(field_descriptor->name());
-          iter != field_descriptors_by_name.end()) {
-        EXPECT_EQ(iter->second->type(), field_descriptor->type());
-        EXPECT_EQ(iter->second->type_name(), field_descriptor->type_name());
-        continue;
-      }
-
-      EXPECT_THAT(claimed_field_numbers,
-                  Not(Contains(field_descriptor->number())));
-
-      field_descriptors_by_name[field_descriptor->name()] = field_descriptor;
-      claimed_field_numbers.insert(field_descriptor->number());
+    if (GetParam() == "Material" &&
+        absl::EndsWith(message_descriptor->full_name(), "NamedMaterial")) {
+      continue;
     }
+
+    AddAllFieldsByNameAndNumber(*message_descriptor, field_descriptors_by_name,
+                                claimed_field_numbers);
   }
 }
 
 INSTANTIATE_TEST_CASE_P(AllTypes, CommonTypes,
                         testing::Values("Accelerator", "AreaLightSource",
                                         "Camera", "Film", "LightSource",
-                                        "Medium", "PixelFilter", "Sampler",
-                                        "FloatTexture", "SpectrumTexture"));
+                                        "Material", "Medium", "PixelFilter",
+                                        "Sampler", "FloatTexture",
+                                        "SpectrumTexture"));
 
 std::vector<std::pair<int, int>> GenerateVersionPairs(int max) {
   std::vector<std::pair<int, int>> result;
@@ -104,32 +158,6 @@ std::map<std::string, const Descriptor*> GetMessageDescriptors(int version) {
   return result;
 }
 
-void AddAllFields(
-    const Descriptor& descriptor,
-    std::map<int, const FieldDescriptor*>& field_descriptors_by_number) {
-  for (int f = 0; f < descriptor.field_count(); f++) {
-    const FieldDescriptor* field_descriptor = descriptor.field(f);
-    if (!field_descriptor) {
-      continue;
-    }
-
-    if (field_descriptor->name() == "eta" ||
-        field_descriptor->name() == "eta_as_spectrum_texture") {
-      continue;
-    }
-
-    if (auto iter =
-            field_descriptors_by_number.find(field_descriptor->number());
-        iter != field_descriptors_by_number.end()) {
-      EXPECT_EQ(iter->second->type(), field_descriptor->type());
-      EXPECT_EQ(iter->second->type_name(), field_descriptor->type_name());
-      continue;
-    }
-
-    field_descriptors_by_number[field_descriptor->number()] = field_descriptor;
-  }
-}
-
 class Directives : public testing::TestWithParam<std::pair<int, int>> {};
 
 TEST_P(Directives, ForwardCompatible) {
@@ -150,13 +178,41 @@ TEST_P(Directives, ForwardCompatible) {
     ASSERT_TRUE(next_descriptor);
 
     std::map<int, const FieldDescriptor*> field_descriptors_by_number;
-    AddAllFields(*base_descriptor, field_descriptors_by_number);
-    AddAllFields(*next_descriptor, field_descriptors_by_number);
+    AddAllFieldsByNumber(*base_descriptor, field_descriptors_by_number);
+    AddAllFieldsByNumber(*next_descriptor, field_descriptors_by_number);
   }
 }
 
 INSTANTIATE_TEST_CASE_P(AllDirectives, Directives,
                         testing::ValuesIn(GenerateVersionPairs(4)));
+
+TEST(MaterialOverrides, AreBinaryCompatible) {
+  const FileDescriptor* file_descriptor =
+      BlackbodySpectrum::descriptor()->file();
+  ASSERT_TRUE(file_descriptor);
+
+  std::map<absl::string_view, const FieldDescriptor*> field_descriptors_by_name;
+  std::set<int> claimed_field_numbers;
+  AddAllFieldsByNameAndNumber(*v1::Shape::MaterialOverrides::GetDescriptor(),
+                              field_descriptors_by_name, claimed_field_numbers);
+  AddAllFieldsByNameAndNumber(*v2::Shape::MaterialOverrides::GetDescriptor(),
+                              field_descriptors_by_name, claimed_field_numbers);
+  AddAllFieldsByNameAndNumber(*v3::Shape::MaterialOverrides::GetDescriptor(),
+                              field_descriptors_by_name, claimed_field_numbers);
+
+  for (int m = 0; m < file_descriptor->message_type_count(); m++) {
+    const Descriptor* message_descriptor = file_descriptor->message_type(m);
+    ASSERT_NE(message_descriptor, nullptr);
+
+    if (!absl::EndsWith(message_descriptor->full_name(), "Material") ||
+        absl::EndsWith(message_descriptor->full_name(), "NamedMaterial")) {
+      continue;
+    }
+
+    AddAllFieldsByNameAndNumber(*message_descriptor, field_descriptors_by_name,
+                                claimed_field_numbers);
+  }
+}
 
 }  // namespace
 }  // namespace pbrt_proto

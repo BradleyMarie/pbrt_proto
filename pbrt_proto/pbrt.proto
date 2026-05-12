@@ -1511,17 +1511,6 @@ message KdSubsurfaceMaterial {
     SpectrumTextureParameter mfp = 23;
   }
 
-  // If true, roughness values are expected to be in the range [0,1], and are
-  // remapped to microfacet distribution function parameter values that range
-  // from near-perfect-specular at 0 to very rough at 1. Otherwise the roughness
-  // parameters are used directly for the alpha parameters of the microfacet
-  // distribution function.
-  //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv3 and should be ignored when
-  //       reading earlier input.
-  optional bool remaproughness = 55 [default = true];
-
   // The asymmetry factor of the material's phase function. A value of zero
   // represents isotropic scattering, a value less than zero represents
   // backwards scattering, and a value greater than one represents forward
@@ -1538,6 +1527,17 @@ message KdSubsurfaceMaterial {
   //       however, it is not supported before PBRTv3 and should be ignored when
   //       reading earlier input.
   optional double scale = 44 [default = 1.0];
+
+  // If true, roughness values are expected to be in the range [0,1], and are
+  // remapped to microfacet distribution function parameter values that range
+  // from near-perfect-specular at 0 to very rough at 1. Otherwise the roughness
+  // parameters are used directly for the alpha parameters of the microfacet
+  // distribution function.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv3 and should be ignored when
+  //       reading earlier input.
+  optional bool remaproughness = 45 [default = true];
 }
 
 // A material with simple Lambertian scattering.

@@ -159,27 +159,29 @@ message Sampler {
 }
 
 // TODO
-message MaterialOverrides {
-  optional SpectrumTextureParameter Kd = 1;
-  optional SpectrumTextureParameter Ks = 2;
-  optional SpectrumTextureParameter Kr = 3;
-  optional SpectrumTextureParameter Kt = 4;
-  optional SpectrumTextureParameter reflect = 5;
-  optional SpectrumTextureParameter transmit = 6;
-  optional SpectrumTextureParameter opacity = 7;
-  optional FloatTextureParameter roughness = 8;
-  optional FloatTextureParameter uroughness = 9;
-  optional FloatTextureParameter vroughness = 10;
-  optional FloatTextureParameter eta = 11;
-  optional FloatTextureParameter sigma = 12;
-  optional FloatTextureParameter bumpmap = 13;
-  optional SpectrumTextureParameter amount = 14;
-  optional SpectrumTextureParameter eta_as_spectrum_texture = 15;
-  optional SpectrumTextureParameter k = 16;
-  optional FloatTextureParameter meanfreepath = 17;
-  optional string filename = 18;
-  optional string namedmaterial1 = 19;
-  optional string namedmaterial2 = 20;
+message Shape {
+  message MaterialOverrides {
+    optional SpectrumTextureParameter Kd = 1;
+    optional SpectrumTextureParameter Ks = 2;
+    optional SpectrumTextureParameter Kr = 3;
+    optional SpectrumTextureParameter Kt = 4;
+    optional SpectrumTextureParameter reflect = 5;
+    optional SpectrumTextureParameter transmit = 6;
+    optional SpectrumTextureParameter opacity = 7;
+    optional FloatTextureParameter roughness = 8;
+    optional FloatTextureParameter uroughness = 9;
+    optional FloatTextureParameter vroughness = 10;
+    optional FloatTextureParameter eta = 11;
+    optional FloatTextureParameter sigma = 12;
+    optional FloatTextureParameter bumpmap = 13;
+    optional SpectrumTextureParameter amount = 14;
+    optional SpectrumTextureParameter eta_as_spectrum_texture = 15;
+    optional SpectrumTextureParameter k = 16;
+    optional FloatTextureParameter meanfreepath = 17;
+    optional string filename = 18;
+    optional string namedmaterial1 = 19;
+    optional string namedmaterial2 = 20;
+  }
 }
 
 // A directive which creates a named SpectrumTexture.
