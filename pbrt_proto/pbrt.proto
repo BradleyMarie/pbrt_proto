@@ -1113,13 +1113,13 @@ message DebugIntegrator {
   }
 
   // The value to use to populate the `r` channel of the output.
-  optional ChannelValue red = 1 [default = U];
+  optional ChannelValue red = 25 [default = U];
 
   // The value to use to populate the `g` channel of the output.
-  optional ChannelValue green = 2 [default = V];
+  optional ChannelValue green = 26 [default = V];
 
   // The value to use to populate the `b` channel of the output.
-  optional ChannelValue blue = 3 [default = ZERO];
+  optional ChannelValue blue = 27 [default = ZERO];
 }
 
 // An integrator which only integrates over the direct lighting.
@@ -1150,22 +1150,22 @@ message DirectLightingIntegrator {
 
 // An integrator which performs instant global illumination.
 message IgiIntegrator {
-  // The maximum recursion depth for specular reflection and transmission.
-	optional uint32 nlights = 1 [default = 64];
-
-  // The number of independent virtual light sets to compute.
-	optional uint32 nsets = 2 [default = 4];
-
   // Russian roulette threshold for terminating shadow rays that connect the
   // point being shaded to a virtual light source.
-	optional double rrthreshold = 3;
+	optional double rrthreshold = 9;
+
+  // The maximum recursion depth for specular reflection and transmission.
+	optional uint32 nlights = 14 [default = 64];
+
+  // The number of independent virtual light sets to compute.
+	optional uint32 nsets = 15 [default = 4];
 
   // A scalar applied to indirect lighting.
   //
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported after PBRTv1 and should be ignored
   //       when reading later input.
-	optional double indirectscale = 4 [default = 1.0];
+	optional double indirectscale = 16 [default = 1.0];
 
   // The minimum distance cutoff between the shading point and the virtual
   // point lights.
@@ -1173,38 +1173,38 @@ message IgiIntegrator {
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported after PBRTv1 and should be ignored
   //       when reading later input.
-  optional double mindist = 5 [default = 0.1];
+  optional double mindist = 17 [default = 0.1];
 }
 
 // An integrator which does irradiance caching.
 message IrradianceCacheIntegrator {
+  // Maximum recursion depth for tracing specular reflection and refraction
+  // rays.
+  optional uint32 maxspeculardepth = 18 [default = 5];
+
+  // Maximum recursion depth for tracing paths to compute irradiance estimates.
+  optional uint32 maxindirectdepth = 19 [default = 3];
+
+  // How many rays are used to estimate the irradiance value at a point.
+  optional uint32 nsamples = 20 [default = 4096];
+
   // Minimum weight for the interpolated irradiance samples. If the sum of
   // interpolated sample weights is less than this value, a new sample is
   // computed.
-  optional double minweight = 1 [default= 0.5];
+  optional double minweight = 21 [default= 0.5];
 
   // Minimum distance, in pixels, between irradiance samples. No samples nearer
   // this distance will be generated.
-  optional double minpixelspacing = 2 [default = 2.5];
+  optional double minpixelspacing = 22 [default = 2.5];
 
   // Maximum distance, in pixels, between irradiance samples. Even if the other
   // error terms indicate that a sample can be used at a point being shaded, if
   // it is more than this many pixels away on the image plane, it is ignored.
-  optional double maxpixelspacing = 3 [default = 15.0];
+  optional double maxpixelspacing = 23 [default = 15.0];
 
   // Maximum allowed difference in the angle between the surface normal at an
   // irradiance lookup point and the surface normal of an irradiance sample.
-  optional double maxangledifference = 4 [default = 10.0];
-
-  // Maximum recursion depth for tracing specular reflection and refraction
-  // rays.
-  optional uint32 maxspeculardepth = 5 [default = 5];
-
-  // Maximum recursion depth for tracing paths to compute irradiance estimates.
-  optional uint32 maxindirectdepth = 6 [default = 3];
-
-  // How many rays are used to estimate the irradiance value at a point.
-  optional uint32 nsamples = 7 [default = 4096];
+  optional double maxangledifference = 24 [default = 10.0];
 }
 
 // An integrator which performs path tracing.
@@ -1215,49 +1215,44 @@ message PathIntegrator {
 
 // An integrator which performs photon mapping.
 message PhotonMapIntegrator {
-  // The number of photons required to build the caustic photon map. The more
-  // caustic photons traced, the more accurately caustics will be represented in
-  // the scene, though the more memory will be required to store them.
-  optional uint32 causticphotons = 1 [default = 20000];
-
-  // The number of photons required to build the direct illumination map. As
-  // with caustic photons, increasing the number of photons improves the result
-  // at the cost of more memory.
-  //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported after PBRTv1 and should be ignored
-  //       when reading later input.
-  optional uint32 directphotons = 2 [default = 100000];
-
-  // The number of photons required to build the indirect illumination map. As
-  // with caustic photons, increasing the number of photons improves the result
-  // at the cost of more memory.
-  optional uint32 indirectphotons = 3 [default = 100000];
-
-  // The number of photons to use in density estimation.
-  optional uint32 nused = 4 [default = 50];
-
   // The maximum length of a light-carrying path sampled by the integrator.
   //
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported after PBRTv1 and should be ignored
   //       when reading later input.
-  optional uint32 maxdepth = 5 [default = 5];
+  optional uint32 maxdepth = 1 [default = 5];
+
+  // The number of photons required to build the caustic photon map. The more
+  // caustic photons traced, the more accurately caustics will be represented in
+  // the scene, though the more memory will be required to store them.
+  optional uint32 causticphotons = 3 [default = 20000];
+
+  // The number of photons required to build the indirect illumination map. As
+  // with caustic photons, increasing the number of photons improves the result
+  // at the cost of more memory.
+  optional uint32 indirectphotons = 5 [default = 100000];
+
+  // The number of photons to use in density estimation.
+  optional uint32 nused = 6 [default = 50];
 
   // Number of samples to use when performing the final gather. In general, a
   // few thousand or so final gather samples are needed in each pixel area to
   // give good results. However, it's the product of the number of pixel samples
   // and the number of final gather samples that matters; for 32 or 64 pixel
   // samples at each pixel, this default generlaly works well.
-  optional uint32 finalgathersamples = 6 [default = 32];
+  optional uint32 finalgathersamples = 7 [default = 32];
 
   // The maximum distance between a point being shaded and a photon that can
   // contribute to that point.
-  optional double maxdist = 7 [default = 0.1];
+  optional double maxdist = 8 [default = 0.1];
+
+  // Russian roulette threshold for terminating shadow rays that connect the
+  // point being shaded to a virtual light source.
+	optional double rrthreshold = 9 [default = 0.05];
 
   // If true, do a final gather when estimating the indirect illumination.
   // Otherwise, just use the photon map at the hit point.
-  optional bool finalgather = 8 [default = true];
+  optional bool finalgather = 10 [default = true];
 
   // If true, the direct illumination is also done with photon mapping.
   //
@@ -1266,9 +1261,14 @@ message PhotonMapIntegrator {
   //       when reading later input.
   optional bool directwithphotons = 11 [default = false];
 
-  // Russian roulette threshold for terminating shadow rays that connect the
-  // point being shaded to a virtual light source.
-	optional double rrthreshold = 12 [default = 0.05];
+  // The number of photons required to build the direct illumination map. As
+  // with caustic photons, increasing the number of photons improves the result
+  // at the cost of more memory.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported after PBRTv1 and should be ignored
+  //       when reading later input.
+  optional uint32 directphotons = 12 [default = 100000];
 
   // The maximum allowable angle between the surface normal of the surface being
   // shaded and the surface normal of the surface where the photon was

@@ -124,10 +124,10 @@ TEST_P(CommonTypes, AreBinaryCompatible) {
 
 INSTANTIATE_TEST_CASE_P(AllTypes, CommonTypes,
                         testing::Values("Accelerator", "AreaLightSource",
-                                        "Camera", "Film", "LightSource",
-                                        "Material", "Medium", "PixelFilter",
-                                        "Sampler", "FloatTexture",
-                                        "SpectrumTexture"));
+                                        "Camera", "Film", "Integrator",
+                                        "LightSource", "Material", "Medium",
+                                        "PixelFilter", "Sampler",
+                                        "FloatTexture", "SpectrumTexture"));
 
 std::vector<std::pair<int, int>> GenerateVersionPairs(int max) {
   std::vector<std::pair<int, int>> result;
