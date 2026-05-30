@@ -168,6 +168,7 @@ cc_library(
     srcs = ["integrators.cc"],
     hdrs = ["integrators.h"],
     deps = [
+        ":common",
         ":parser",
         "//pbrt_proto:pbrt_cc_proto",
         "@abseil-cpp//absl/container:flat_hash_map",

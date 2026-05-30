@@ -16,6 +16,39 @@ namespace {
 
 using ::google::protobuf::EqualsProto;
 
+TEST(RemoveAmbientOcclusionIntegratorV1, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  AmbientOcclusionIntegrator actual;
+  RemoveAmbientOcclusionIntegratorV1(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveAmbientOcclusionIntegratorV1, WithData) {
+  std::vector<double> maxdist = {0.1};
+  Parameter maxdist_parameter{.directive = "",
+                              .type = ParameterType::FLOAT,
+                              .type_name = "",
+                              .values = absl::MakeSpan(maxdist)};
+
+  std::vector<int32_t> nsamples = {2};
+  Parameter nsamples_parameter{.directive = "",
+                               .type = ParameterType::INTEGER,
+                               .type_name = "",
+                               .values = absl::MakeSpan(nsamples)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"maxdist", maxdist_parameter},
+      {"nsamples", nsamples_parameter},
+  };
+
+  AmbientOcclusionIntegrator actual;
+  RemoveAmbientOcclusionIntegratorV1(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                maxdist: 0.1 nsamples: 2
+              )pb"));
+}
+
 TEST(RemoveBdptIntegratorV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
@@ -157,6 +190,90 @@ TEST(RemoveDebugIntegratorV1, FourthWithData) {
   RemoveDebugIntegratorV1(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 red: U green: V blue: ZERO
+              )pb"));
+}
+
+TEST(RemoveDiffusePrtIntegratorV1, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  DiffusePrtIntegrator actual;
+  RemoveDiffusePrtIntegratorV1(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveDiffusePrtIntegratorV1, WithData) {
+  std::vector<int32_t> lmax = {1};
+  Parameter lmax_parameter{.directive = "",
+                           .type = ParameterType::INTEGER,
+                           .type_name = "",
+                           .values = absl::MakeSpan(lmax)};
+
+  std::vector<int32_t> nsamples = {2};
+  Parameter nsamples_parameter{.directive = "",
+                               .type = ParameterType::INTEGER,
+                               .type_name = "",
+                               .values = absl::MakeSpan(nsamples)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"lmax", lmax_parameter},
+      {"nsamples", nsamples_parameter},
+  };
+
+  DiffusePrtIntegrator actual;
+  RemoveDiffusePrtIntegratorV1(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                lmax: 1 nsamples: 2
+              )pb"));
+}
+
+TEST(RemoveDipoleSubsurfaceIntegratorV1, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  DipoleSubsurfaceIntegrator actual;
+  RemoveDipoleSubsurfaceIntegratorV1(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveDipoleSubsurfaceIntegratorV1, WithData) {
+  std::vector<int32_t> maxdepth = {1};
+  Parameter maxdepth_parameter{.directive = "",
+                               .type = ParameterType::INTEGER,
+                               .type_name = "",
+                               .values = absl::MakeSpan(maxdepth)};
+
+  std::vector<double> maxerror = {0.2};
+  Parameter maxerror_parameter{.directive = "",
+                               .type = ParameterType::FLOAT,
+                               .type_name = "",
+                               .values = absl::MakeSpan(maxerror)};
+
+  std::vector<double> minsampledistance = {0.3};
+  Parameter minsampledistance_parameter{
+      .directive = "",
+      .type = ParameterType::FLOAT,
+      .type_name = "",
+      .values = absl::MakeSpan(minsampledistance)};
+
+  std::vector<absl::string_view> pointsfile = {"file"};
+  Parameter pointsfile_parameter{.directive = "",
+                                 .type = ParameterType::STRING,
+                                 .type_name = "",
+                                 .values = absl::MakeSpan(pointsfile)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"maxdepth", maxdepth_parameter},
+      {"maxerror", maxerror_parameter},
+      {"minsampledistance", minsampledistance_parameter},
+      {"pointsfile", pointsfile_parameter},
+  };
+
+  DipoleSubsurfaceIntegrator actual;
+  RemoveDipoleSubsurfaceIntegratorV1(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                maxdepth: 1
+                maxerror: 0.2
+                minsampledistance: 0.3
+                pointsfile: "file"
               )pb"));
 }
 
@@ -314,6 +431,64 @@ TEST(RemoveDirectLightingIntegratorV2, WithDataWeighted) {
               )pb"));
 }
 
+TEST(RemoveGlossyPrtIntegratorV1, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  GlossyPrtIntegrator actual;
+  RemoveGlossyPrtIntegratorV1(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveGlossyPrtIntegratorV1, WithData) {
+  std::vector<int32_t> lmax = {1};
+  Parameter lmax_parameter{.directive = "",
+                           .type = ParameterType::INTEGER,
+                           .type_name = "",
+                           .values = absl::MakeSpan(lmax)};
+
+  std::vector<int32_t> nsamples = {2};
+  Parameter nsamples_parameter{.directive = "",
+                               .type = ParameterType::INTEGER,
+                               .type_name = "",
+                               .values = absl::MakeSpan(nsamples)};
+
+  std::vector<double> roughness = {0.3};
+  Parameter roughness_parameter{.directive = "",
+                                .type = ParameterType::FLOAT,
+                                .type_name = "",
+                                .values = absl::MakeSpan(roughness)};
+
+  std::vector<absl::string_view> kd = {"kd"};
+  Parameter kd_parameter{.directive = "",
+                         .type = ParameterType::SPECTRUM,
+                         .type_name = "",
+                         .values = absl::MakeSpan(kd)};
+
+  std::vector<absl::string_view> ks = {"ks"};
+  Parameter ks_parameter{.directive = "",
+                         .type = ParameterType::SPECTRUM,
+                         .type_name = "",
+                         .values = absl::MakeSpan(ks)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"lmax", lmax_parameter},
+      {"nsamples", nsamples_parameter},
+      {"roughness", roughness_parameter},
+      {"Kd", kd_parameter},
+      {"Ks", ks_parameter},
+  };
+
+  GlossyPrtIntegrator actual;
+  RemoveGlossyPrtIntegratorV1(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                lmax: 1
+                nsamples: 2
+                roughness: 0.3
+                Kd { sampled_spectrum_filename: "kd" }
+                Ks { sampled_spectrum_filename: "ks" }
+              )pb"));
+}
+
 TEST(RemoveIgiIntegratorV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
@@ -368,6 +543,71 @@ TEST(RemoveIgiIntegratorV1, WithData) {
                 rrthreshold: 0.3
                 indirectscale: 0.4
                 mindist: 0.5
+              )pb"));
+}
+
+TEST(RemoveIgiIntegratorV2, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  IgiIntegrator actual;
+  RemoveIgiIntegratorV2(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveIgiIntegratorV2, WithData) {
+  std::vector<int32_t> maxdepth = {1};
+  Parameter maxdepth_parameter{.directive = "",
+                               .type = ParameterType::INTEGER,
+                               .type_name = "",
+                               .values = absl::MakeSpan(maxdepth)};
+
+  std::vector<int32_t> nlights = {2};
+  Parameter nlights_parameter{.directive = "",
+                              .type = ParameterType::INTEGER,
+                              .type_name = "",
+                              .values = absl::MakeSpan(nlights)};
+
+  std::vector<int32_t> nsets = {3};
+  Parameter nsets_parameter{.directive = "",
+                            .type = ParameterType::INTEGER,
+                            .type_name = "",
+                            .values = absl::MakeSpan(nsets)};
+
+  std::vector<double> rrthreshold = {0.4};
+  Parameter rrthreshold_parameter{.directive = "",
+                                  .type = ParameterType::FLOAT,
+                                  .type_name = "",
+                                  .values = absl::MakeSpan(rrthreshold)};
+
+  std::vector<double> glimit = {0.5};
+  Parameter glimit_parameter{.directive = "",
+                             .type = ParameterType::FLOAT,
+                             .type_name = "",
+                             .values = absl::MakeSpan(glimit)};
+
+  std::vector<int32_t> gathersamples = {6};
+  Parameter gathersamples_parameter{.directive = "",
+                                    .type = ParameterType::INTEGER,
+                                    .type_name = "",
+                                    .values = absl::MakeSpan(gathersamples)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"maxdepth", maxdepth_parameter},
+      {"nlights", nlights_parameter},
+      {"nsets", nsets_parameter},
+      {"rrthreshold", rrthreshold_parameter},
+      {"glimit", glimit_parameter},
+      {"gathersamples", gathersamples_parameter}};
+
+  IgiIntegrator actual;
+  RemoveIgiIntegratorV2(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                maxdepth: 1
+                nlights: 2
+                nsets: 3
+                rrthreshold: 0.4
+                glimit: 0.5
+                gathersamples: 6
               )pb"));
 }
 
@@ -663,6 +903,123 @@ TEST(RemoveExPhotonMapIntegratorV1, WithData) {
                 directwithphotons: true
                 rrthreshold: 0.7
                 gatherangle: 0.8
+              )pb"));
+}
+
+TEST(RemovePhotonMapIntegratorV2, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  PhotonMapIntegrator actual;
+  RemovePhotonMapIntegratorV2(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemovePhotonMapIntegratorV2, WithData) {
+  std::vector<int32_t> causticphotons = {1};
+  Parameter causticphotons_parameter{.directive = "",
+                                     .type = ParameterType::INTEGER,
+                                     .type_name = "",
+                                     .values = absl::MakeSpan(causticphotons)};
+
+  std::vector<int32_t> indirectphotons = {2};
+  Parameter indirectphotons_parameter{
+      .directive = "",
+      .type = ParameterType::INTEGER,
+      .type_name = "",
+      .values = absl::MakeSpan(indirectphotons)};
+
+  std::vector<int32_t> finalgathersamples = {3};
+  Parameter finalgathersamples_parameter{
+      .directive = "",
+      .type = ParameterType::INTEGER,
+      .type_name = "",
+      .values = absl::MakeSpan(finalgathersamples)};
+
+  std::vector<int32_t> maxspeculardepth = {4};
+  Parameter maxspeculardepth_parameter{
+      .directive = "",
+      .type = ParameterType::INTEGER,
+      .type_name = "",
+      .values = absl::MakeSpan(maxspeculardepth)};
+
+  std::vector<int32_t> maxphotondepth = {5};
+  Parameter maxphotondepth_parameter{.directive = "",
+                                     .type = ParameterType::INTEGER,
+                                     .type_name = "",
+                                     .values = absl::MakeSpan(maxphotondepth)};
+
+  std::vector<double> maxdist = {0.6};
+  Parameter maxdist_parameter{.directive = "",
+                              .type = ParameterType::FLOAT,
+                              .type_name = "",
+                              .values = absl::MakeSpan(maxdist)};
+
+  bool finalgather[] = {true};
+  Parameter finalgather_parameter{.directive = "",
+                                  .type = ParameterType::BOOL,
+                                  .type_name = "",
+                                  .values = absl::MakeSpan(finalgather)};
+
+  std::vector<double> rrthreshold = {0.7};
+  Parameter rrthreshold_parameter{.directive = "",
+                                  .type = ParameterType::FLOAT,
+                                  .type_name = "",
+                                  .values = absl::MakeSpan(rrthreshold)};
+
+  std::vector<double> gatherangle = {0.8};
+  Parameter gatherangle_parameter{.directive = "",
+                                  .type = ParameterType::FLOAT,
+                                  .type_name = "",
+                                  .values = absl::MakeSpan(gatherangle)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"causticphotons", causticphotons_parameter},
+      {"indirectphotons", indirectphotons_parameter},
+      {"finalgathersamples", finalgathersamples_parameter},
+      {"maxspeculardepth", maxspeculardepth_parameter},
+      {"maxphotondepth", maxphotondepth_parameter},
+      {"maxdist", maxdist_parameter},
+      {"finalgather", finalgather_parameter},
+      {"rrthreshold", rrthreshold_parameter},
+      {"gatherangle", gatherangle_parameter}};
+
+  PhotonMapIntegrator actual;
+  RemovePhotonMapIntegratorV2(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                causticphotons: 1
+                indirectphotons: 2
+                finalgathersamples: 3
+                maxspeculardepth: 4
+                maxphotondepth: 5
+                maxdist: 0.6
+                finalgather: true
+                rrthreshold: 0.7
+                gatherangle: 0.8
+              )pb"));
+}
+
+TEST(RemoveUseProbesIntegratorV1, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  UseProbesIntegrator actual;
+  RemoveUseProbesIntegratorV1(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveUseProbesIntegratorV1, WithData) {
+  std::vector<absl::string_view> filename = {"file"};
+  Parameter filename_parameter{.directive = "",
+                               .type = ParameterType::STRING,
+                               .type_name = "",
+                               .values = absl::MakeSpan(filename)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"filename", filename_parameter}};
+
+  UseProbesIntegrator actual;
+  RemoveUseProbesIntegratorV1(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                filename: "file"
               )pb"));
 }
 
