@@ -191,3 +191,21 @@ message SpectrumTexture {
     WrinkledSpectrumTexture wrinkled = 14;  // Create a wrinkled texture
   }
 }
+
+// A directive which sets the SurfaceIntegrator to use for rendering.
+message SurfaceIntegrator {
+  // The type of integrator to use. If none are set, then the current integrator
+  // should be unset. If no integrator is set at the time an image is to be
+  // rendered the renderer should exit with an error.
+  oneof surface_integrator_type {
+    BdptIntegrator bidirectional = 1;  // Create a bidirectional integrator
+    DebugIntegrator debug = 2;  // Create a debug integrator
+    DirectLightingIntegrator directlighting = 3;  // Create a direct integrator
+    PhotonMapIntegrator exphotonmap = 4;  // Create an EX photon map integrator
+    IgiIntegrator igi = 5;  // Create an instant global illumination integrator
+    IrradianceCacheIntegrator irradiancecache = 6; // Create an IC integrator
+    PathIntegrator path = 7;  // Create a path integrator
+    PhotonMapIntegrator photonmap = 8;  // Create a photon map integrator
+    WhittedIntegrator whitted = 9;  // Create a Whitted integrator
+  }
+}

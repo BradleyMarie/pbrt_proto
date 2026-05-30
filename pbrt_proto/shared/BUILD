@@ -164,6 +164,32 @@ cc_test(
 )
 
 cc_library(
+    name = "integrators",
+    srcs = ["integrators.cc"],
+    hdrs = ["integrators.h"],
+    deps = [
+        ":parser",
+        "//pbrt_proto:pbrt_cc_proto",
+        "@abseil-cpp//absl/container:flat_hash_map",
+        "@abseil-cpp//absl/strings:string_view",
+    ],
+)
+
+cc_test(
+    name = "integrators_test",
+    srcs = ["integrators_test.cc"],
+    deps = [
+        ":integrators",
+        ":parser",
+        "//pbrt_proto:pbrt_cc_proto",
+        "//pbrt_proto/testing:proto_matchers",
+        "@abseil-cpp//absl/container:flat_hash_map",
+        "@abseil-cpp//absl/strings:string_view",
+        "@googletest//:gtest_main",
+    ],
+)
+
+cc_library(
     name = "light_sources",
     srcs = ["light_sources.cc"],
     hdrs = ["light_sources.h"],
