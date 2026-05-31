@@ -102,11 +102,11 @@ void RemoveLightSampleStrategy(
           TryRemoveString(parameters, "lightsamplestrategy");
       lightsamplestrategy.has_value()) {
     if (*lightsamplestrategy == "power") {
-      output.set_lightsamplestrategy(LightSampleStrategy::POWER);
+      output.set_lightsampler(LightSampler::POWER);
     } else if (*lightsamplestrategy == "uniform") {
-      output.set_lightsamplestrategy(LightSampleStrategy::UNIFORM);
+      output.set_lightsampler(LightSampler::UNIFORM);
     } else {
-      output.set_lightsamplestrategy(LightSampleStrategy::SPATIAL);
+      output.set_lightsampler(LightSampler::BVH);
     }
   }
 }
@@ -118,7 +118,7 @@ void RemoveAmbientOcclusionIntegratorV1(
     AmbientOcclusionIntegrator& output) {
   if (std::optional<double> maxdist = TryRemoveFloat(parameters, "maxdist");
       maxdist.has_value()) {
-    output.set_maxdist(*maxdist);
+    output.set_maxdistance(*maxdist);
   }
 
   if (std::optional<int32_t> nsamples =

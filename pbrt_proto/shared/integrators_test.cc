@@ -45,7 +45,7 @@ TEST(RemoveAmbientOcclusionIntegratorV1, WithData) {
   AmbientOcclusionIntegrator actual;
   RemoveAmbientOcclusionIntegratorV1(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
-                maxdist: 0.1 nsamples: 2
+                maxdistance: 0.1 nsamples: 2
               )pb"));
 }
 
@@ -154,7 +154,7 @@ TEST(RemoveBdptIntegratorV2, WithData) {
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 maxdepth: 1
                 pixelbounds { x_min: 2 x_max: 3 y_min: 4 y_max: 5 }
-                lightsamplestrategy: SPATIAL
+                lightsampler: BVH
                 visualizestrategies: true
                 visualizeweights: true
               )pb"));
@@ -175,7 +175,7 @@ TEST(RemoveBdptIntegratorV2, Uniform) {
   BdptIntegrator actual;
   RemoveBdptIntegratorV2(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
-                lightsamplestrategy: UNIFORM
+                lightsampler: UNIFORM
               )pb"));
 }
 
@@ -194,7 +194,7 @@ TEST(RemoveBdptIntegratorV2, Power) {
   BdptIntegrator actual;
   RemoveBdptIntegratorV2(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
-                lightsamplestrategy: POWER
+                lightsampler: POWER
               )pb"));
 }
 
@@ -213,7 +213,7 @@ TEST(RemoveBdptIntegratorV2, Spatial) {
   BdptIntegrator actual;
   RemoveBdptIntegratorV2(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
-                lightsamplestrategy: SPATIAL
+                lightsampler: BVH
               )pb"));
 }
 
@@ -1090,7 +1090,7 @@ TEST(RemovePathIntegratorV2, WithData) {
                 maxdepth: 1
                 rrthreshold: 0.2
                 pixelbounds { x_min: 3 x_max: 4 y_min: 5 y_max: 6 }
-                lightsamplestrategy: SPATIAL
+                lightsampler: BVH
               )pb"));
 }
 
@@ -1109,7 +1109,7 @@ TEST(RemovePathIntegratorV2, Uniform) {
   PathIntegrator actual;
   RemovePathIntegratorV2(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
-                lightsamplestrategy: UNIFORM
+                lightsampler: UNIFORM
               )pb"));
 }
 
@@ -1128,7 +1128,7 @@ TEST(RemovePathIntegratorV2, Power) {
   PathIntegrator actual;
   RemovePathIntegratorV2(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
-                lightsamplestrategy: POWER
+                lightsampler: POWER
               )pb"));
 }
 
@@ -1147,7 +1147,7 @@ TEST(RemovePathIntegratorV2, Spatial) {
   PathIntegrator actual;
   RemovePathIntegratorV2(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
-                lightsamplestrategy: SPATIAL
+                lightsampler: BVH
               )pb"));
 }
 
@@ -1557,7 +1557,7 @@ TEST(RemoveVolPathIntegratorV1, WithData) {
                 maxdepth: 1
                 rrthreshold: 0.2
                 pixelbounds { x_min: 3 x_max: 4 y_min: 5 y_max: 6 }
-                lightsamplestrategy: SPATIAL
+                lightsampler: BVH
               )pb"));
 }
 
@@ -1576,7 +1576,7 @@ TEST(RemoveVolPathIntegratorV1, Uniform) {
   VolPathIntegrator actual;
   RemoveVolPathIntegratorV1(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
-                lightsamplestrategy: UNIFORM
+                lightsampler: UNIFORM
               )pb"));
 }
 
@@ -1595,7 +1595,7 @@ TEST(RemoveVolPathIntegratorV1, Power) {
   VolPathIntegrator actual;
   RemoveVolPathIntegratorV1(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
-                lightsamplestrategy: POWER
+                lightsampler: POWER
               )pb"));
 }
 
@@ -1614,7 +1614,7 @@ TEST(RemoveVolPathIntegratorV1, Spatial) {
   VolPathIntegrator actual;
   RemoveVolPathIntegratorV1(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
-                lightsamplestrategy: SPATIAL
+                lightsampler: BVH
               )pb"));
 }
 

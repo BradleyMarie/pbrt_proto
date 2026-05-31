@@ -651,7 +651,7 @@ TEST(Convert, IntegratorSpatialLighting) {
   EXPECT_THAT(Convert(stream),
               IsOkAndHolds(EqualsProto(
                   R"pb(directives {
-                         integrator { path { lightsamplestrategy: SPATIAL } }
+                         integrator { path { lightsampler: BVH } }
                        })pb")));
 }
 
@@ -661,7 +661,7 @@ TEST(Convert, IntegratorPowerLighting) {
   EXPECT_THAT(Convert(stream),
               IsOkAndHolds(EqualsProto(
                   R"pb(directives {
-                         integrator { path { lightsamplestrategy: POWER } }
+                         integrator { path { lightsampler: POWER } }
                        })pb")));
 }
 
@@ -671,7 +671,7 @@ TEST(Convert, IntegratorUniformLighting) {
   EXPECT_THAT(Convert(stream),
               IsOkAndHolds(EqualsProto(
                   R"pb(directives {
-                         integrator { path { lightsamplestrategy: UNIFORM } }
+                         integrator { path { lightsampler: UNIFORM } }
                        })pb")));
 }
 
@@ -681,7 +681,7 @@ TEST(Convert, IntegratorUnknownLighting) {
   EXPECT_THAT(Convert(stream),
               IsOkAndHolds(EqualsProto(
                   R"pb(directives {
-                         integrator { path { lightsamplestrategy: SPATIAL } }
+                         integrator { path { lightsampler: BVH } }
                        })pb")));
 }
 
@@ -715,7 +715,7 @@ TEST(Convert, IntegratorBdpt) {
                              maxdepth: 1
                              visualizestrategies: true
                              visualizeweights: true
-                             lightsamplestrategy: UNIFORM
+                             lightsampler: UNIFORM
                              pixelbounds { x_min: 1 x_max: 2 y_min: 3 y_max: 4 }
                            }
                          }
@@ -735,7 +735,7 @@ TEST(Convert, IntegratorBdptUnknown) {
                              maxdepth: 1
                              visualizestrategies: true
                              visualizeweights: true
-                             lightsamplestrategy: SPATIAL
+                             lightsampler: BVH
                              pixelbounds { x_min: 1 x_max: 2 y_min: 3 y_max: 4 }
                            }
                          }
@@ -837,7 +837,7 @@ TEST(Convert, IntegratorPath) {
                            path {
                              maxdepth: 1
                              rrthreshold: 2.0
-                             lightsamplestrategy: UNIFORM
+                             lightsampler: UNIFORM
                              pixelbounds { x_min: 1 x_max: 2 y_min: 3 y_max: 4 }
                            }
                          }
@@ -855,7 +855,7 @@ TEST(Convert, IntegratorPathBadPixelBounds) {
                                             path {
                                               maxdepth: 1
                                               rrthreshold: 2.0
-                                              lightsamplestrategy: UNIFORM
+                                              lightsampler: UNIFORM
                                             }
                                           }
                                         })pb")));
@@ -873,7 +873,7 @@ TEST(Convert, IntegratorPathUnknown) {
                            path {
                              maxdepth: 1
                              rrthreshold: 2.0
-                             lightsamplestrategy: SPATIAL
+                             lightsampler: BVH
                              pixelbounds { x_min: 1 x_max: 2 y_min: 3 y_max: 4 }
                            }
                          }
@@ -911,7 +911,7 @@ TEST(Convert, IntegratorVolPath) {
                            volpath {
                              maxdepth: 1
                              rrthreshold: 2.0
-                             lightsamplestrategy: UNIFORM
+                             lightsampler: UNIFORM
                              pixelbounds { x_min: 1 x_max: 2 y_min: 3 y_max: 4 }
                            }
                          }
@@ -929,7 +929,7 @@ TEST(Convert, IntegratorVolPathBadPixelBounds) {
                                             volpath {
                                               maxdepth: 1
                                               rrthreshold: 2.0
-                                              lightsamplestrategy: UNIFORM
+                                              lightsampler: UNIFORM
                                             }
                                           }
                                         })pb")));
@@ -947,7 +947,7 @@ TEST(Convert, IntegratorVolPathUnknown) {
                            volpath {
                              maxdepth: 1
                              rrthreshold: 2.0
-                             lightsamplestrategy: SPATIAL
+                             lightsampler: BVH
                              pixelbounds { x_min: 1 x_max: 2 y_min: 3 y_max: 4 }
                            }
                          }

@@ -1091,10 +1091,10 @@ message SpectralFilm {
 //
 
 // The strategy used to sample direct lighting.
-enum LightSampleStrategy {
-  SPATIAL = 0;  // Sample spatially
+enum LightSampler {
+  UNIFORM = 0;  // Sample the lights uniformly
   POWER = 1;  // Sample based on the lights' power
-  UNIFORM = 2;  // Sample the lights uniformly
+  BVH = 2;  // Sample spatially using a BVH, called SPATIAL prior to PBRTv4
 }
 
 // An integrator which computes the amount of ambient occlusion at a pixel.
@@ -1105,7 +1105,11 @@ message AmbientOcclusionIntegrator {
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported after PBRTv2 and should be ignored
   //       when reading later input.
-  optional double maxdist = 8 [default = inf];
+  //
+  // NOTE: In PBRTv 2 and PBRTv3 this field is referred to by the name
+  //       `maxdist`; however, it is referred to here as `maxdistance` which is
+  //       the final name for the parameter that was used in PBRTv4.
+  optional double maxdistance = 8 [default = inf];
 
   // How many rays are used to estimate the occlusion value at a point.
   optional uint32 nsamples = 20;
@@ -1146,11 +1150,16 @@ message BdptIntegrator {
   optional PixelBounds pixelbounds = 39;
 
   // The technique used for sampling light sources.
-    //
-    // NOTE: For simplicity, this field is shared between all PBRT versions;
-    //       however, it is only supported in PBRTv3 and should be ignored when
-    //       reading all other input.
-  optional LightSampleStrategy lightsamplestrategy = 41 [default = POWER];
+  //
+  // NOTE: For simplicity, this field is shared between all PBRT versions;
+  //       however, it is only supported in PBRTv3 and should be ignored when
+  //       reading all other input.
+  //
+  // NOTE: In PBRTv3 this field is referred to by the name
+  //       `lightsamplestrategy`; however, it is referred to here as
+  //       `lightsampler` which is the final name for the parameter that was
+  //       used in PBRTv4.
+  optional LightSampler lightsampler = 41 [default = POWER];
 
   // If true, an image is saved for each (s,t) bidirectional path generation
   // strategy used by the integrator. These images can be helpful for
@@ -1425,7 +1434,12 @@ message PathIntegrator {
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported before PBRTv3 and should be ignored when
   //       reading earlier input.
-  optional LightSampleStrategy lightsamplestrategy = 41 [default = SPATIAL];
+  //
+  // NOTE: In PBRTv3 this field is referred to by the name
+  //       `lightsamplestrategy`; however, it is referred to here as
+  //       `lightsampler` which is the final name for the parameter that was
+  //       used in PBRTv4.
+  optional LightSampler lightsampler = 41 [default = BVH];
 }
 
 // An integrator which performs photon mapping.
@@ -1576,7 +1590,12 @@ message VolPathIntegrator {
   optional PixelBounds pixelbounds = 39;
 
   // The technique used for sampling light sources.
-  optional LightSampleStrategy lightsamplestrategy = 41 [default = SPATIAL];
+  //
+  // NOTE: In PBRTv3 this field is referred to by the name
+  //       `lightsamplestrategy`; however, it is referred to here as
+  //       `lightsampler` which is the final name for the parameter that was
+  //       used in PBRTv4.
+  optional LightSampler lightsampler = 41 [default = BVH];
 }
 
 // An integrator which performs Whitted-style tracing.
