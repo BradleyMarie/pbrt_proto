@@ -158,8 +158,9 @@ message Sampler {
   }
 }
 
-// TODO
+// A directive which creates a shape.
 message Shape {
+  // The overrides for the materials applied to the shape.
   message MaterialOverrides {
     optional SpectrumTextureParameter Kd = 1;
     optional SpectrumTextureParameter Ks = 2;
@@ -182,6 +183,9 @@ message Shape {
     optional string namedmaterial1 = 19;
     optional string namedmaterial2 = 20;
   }
+
+  // The overrides for the materials applied to the shape.
+  optional MaterialOverrides overrides = 1;
 }
 
 // A directive which creates a named SpectrumTexture.

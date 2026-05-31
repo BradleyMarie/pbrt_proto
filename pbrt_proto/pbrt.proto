@@ -2922,6 +2922,208 @@ message ZeroTwoSequenceSampler {
 }
 
 //
+// Common Shapes
+//
+
+// A tuple of three vertex indicies.
+message VertexIndices {
+  // The first vertex index.
+  required uint32 v0 = 1;
+
+  // The second vertex index.
+  required uint32 v1 = 2;
+
+  // The third vertex index.
+  required uint32 v2 = 3;
+}
+
+// Creates a cone
+message ConeShape {
+  // The cone's radius.
+  optional double radius = 1 [default = 1.0];
+
+  // The height of the cone along the z axis.
+  optional double height = 2 [default = 1.0];
+
+  // The maximum extent of the cone in phi in spherical coordinates.
+  optional double phimax = 3 [default = 360.0];
+}
+
+// Creates a cylinder
+message CylinderShape {
+  // The cylinder's radius.
+  optional double radius = 1 [default = 1.0];
+
+  // The maximum extent of the cylinder in phi in spherical coordinates.
+  optional double phimax = 3 [default = 360.0];
+
+  // The height of the cylinder's bottom along the z axis.
+  optional double zmin = 4 [default = -1.0];
+
+  // The height of the cylinder's top along the z axis.
+  optional double zmax = 5 [default = 1.0];
+}
+
+// Creates a disk
+message DiskShape {
+  // The outer radius of the disk.
+  optional double radius = 1 [default = 1.0];
+
+  // The location of the disk along the z axis.
+  optional double height = 2 [default = 0.0];
+
+  // The maximum extent of the disk in phi in spherical coordinates.
+  optional double phimax = 3 [default = 360.0];
+
+  // The inner radius of the disk (if nonzero, the disk is an annulus).
+  optional double innerradius = 6 [default = 0.0];
+}
+
+// Creates a heightfield
+message HeightFieldShape {
+  // The number of sample values in the u direction.
+  optional uint32 nu = 1;
+
+  // The number of sample values in the v direction.
+  optional uint32 nv = 2;
+
+  // The array of values that define the heightfield.
+  repeated double Pz = 3;
+}
+
+// Creates a hyperboloid
+message HyperboloidShape {
+  // The maximum extent of the hyperboloid in phi in spherical coordinates.
+  optional double phimax = 3 [default = 360.0];
+
+  // The first end point of the hyperboloid's line of revolution.
+  optional Point p1 = 7;
+
+  // The second end point of the hyperboloid's line of revolution.
+  optional Point p2 = 8;
+}
+
+// Creates a Loop subdivision surface.
+message LoopSubdivShape {
+  // The vertex positions for the base mesh.
+  repeated Point P = 9;
+
+  // The indices for the base mesh.
+  repeated VertexIndices indices = 10;
+
+  // The number of levels of refinement to compute in the subdivision algorithm.
+  //
+  // NOTE: Prior to PBRTv3 this field was named "nlevels".
+  optional uint32 levels = 11 [default = 3];
+}
+
+// Creates a NURBS patch.
+message NurbsShape {
+  // A point with a weight.
+  message PointWithWeight {
+    required Point p = 1;  // The point
+    required double weight = 2;  // The weight
+  }
+
+  // Number of control points for NURBS patch in the u parametric directions.
+  optional uint32 nu = 12;
+
+  // Number of control points for NURBS patch in the v parametric directions.
+  optional uint32 nv = 13;
+
+  // The order of NURBS surface in the u direction.
+  optional uint32 uorder = 14;
+
+  // The order of NURBS surface in the v direction.
+  optional uint32 vorder = 15;
+
+  // The knot vector for NURBS in the u direction.
+  repeated float uknots = 16;
+
+  // The knot vector for NURBS in the v direction.
+  repeated float vknots = 17;
+
+  // The starting u parametric coordinates at which to evaluate NURBS.
+  optional double u0 = 18;
+
+  // The starting v parametric coordinates at which to evaluate NURBS.
+  optional double v0 = 19;
+
+  // The ending u parametric coordinates at which to evaluate NURBS.
+  optional double u1 = 20;
+
+  // The ending v parametric coordinates at which to evaluate NURBS.
+  optional double v1 = 21;
+
+  // The control points.
+  //
+  // NOTE: Should be preferred over Pw if both are present.
+  repeated Point P = 9;
+
+  // The control points with an additional weight.
+  repeated PointWithWeight Pw = 22;
+}
+
+// Creates a paraboloid
+message ParaboloidShape {
+  // The paraboloid's radius.
+  optional double radius = 1 [default = 1.0];
+
+  // The maximum extent of the paraboloid in phi in spherical coordinates.
+  optional double phimax = 3 [default = 360.0];
+
+  // The height of the lower clipping plane along the z axis.
+  optional double zmin = 4 [default = 0.0];
+
+  // The height of the upper clipping plane along the z axis.
+  optional double zmax = 5 [default = 1.0];
+}
+
+// Creates a sphere
+message SphereShape {
+  // The sphere's radius.
+  optional double radius = 1 [default = 1.0];
+
+  // The maximum extent of the paraboloid in phi in spherical coordinates.
+  optional double phimax = 3 [default = 360.0];
+
+  // The height of the lower clipping plane along the z axis.
+  //
+  // NOTE: Defined to be -radius if not set.
+  optional double zmin = 4;
+
+  // The height of the upper clipping plane along the z axis.
+  //
+  // NOTE: Defined to be +radius if not set.
+  optional double zmax = 5;
+}
+
+// Creates a triangle mesh
+message TriangleMeshShape {
+  // A pair of UV coordinates.
+  message UVCoordinate {
+    required double u = 1;  // The u coordinate.
+    required double v = 2;  // The v coordinate.
+  }
+
+  // The vertex positions of the triangle mesh.
+  repeated Point P = 9;
+
+  // The array of integer offsets into the per-vertex data arrays.
+  repeated VertexIndices indices = 10;
+
+  // The per-vertex normals. If present, shading normals will be computed from
+  // these values.
+  repeated Vector N = 23;
+
+  // The per-vertex tangents.
+  repeated Vector S = 24;
+
+  // The per-vertex texture coordinates.
+  repeated UVCoordinate uv = 25;
+}
+
+//
 // Common Textures
 //
 

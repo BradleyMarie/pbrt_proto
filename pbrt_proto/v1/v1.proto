@@ -149,8 +149,9 @@ message Sampler {
   }
 }
 
-// TODO
+// A directive which creates a shape.
 message Shape {
+  // The overrides for the materials applied to the shape.
   message MaterialOverrides {
     optional SpectrumTextureParameter Kd = 1;
     optional SpectrumTextureParameter Ks = 2;
@@ -165,6 +166,24 @@ message Shape {
     optional FloatTextureParameter eta = 11;
     optional FloatTextureParameter sigma = 12;
     optional FloatTextureParameter bumpmap = 13;
+  }
+
+  // The overrides for the materials applied to the shape.
+  optional MaterialOverrides overrides = 1;
+
+  // The type of shape to create. If none of these fields are set, the directive
+  // should be ignored.
+  oneof shape_type {
+    ConeShape cone = 2;  // Create a cone
+    CylinderShape cylinder = 3;  // Create a cylinder
+    DiskShape disk = 4;  // Create a disk
+    HeightFieldShape heightfield = 5;  // Create a heightfield
+    HyperboloidShape hyperboloid = 6;  // Create a hyperboloid
+    LoopSubdivShape loopsubdiv = 7;  // Create a Loop subdivision surface
+    NurbsShape nurbs = 8;  // Create a NURBS patch
+    ParaboloidShape paraboloid = 9;  // Create a paraboloid
+    SphereShape sphere = 10;  // Create a sphere
+    TriangleMeshShape trianglemesh = 11;  // Create a triangle mesh
   }
 }
 

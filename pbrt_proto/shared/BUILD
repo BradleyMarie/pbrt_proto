@@ -354,6 +354,34 @@ cc_test(
 )
 
 cc_library(
+    name = "shapes",
+    srcs = ["shapes.cc"],
+    hdrs = ["shapes.h"],
+    deps = [
+        ":parser",
+        "//pbrt_proto:pbrt_cc_proto",
+        "@abseil-cpp//absl/container:flat_hash_map",
+        "@abseil-cpp//absl/status:status",
+        "@abseil-cpp//absl/strings:string_view",
+    ],
+)
+
+cc_test(
+    name = "shapes_test",
+    srcs = ["shapes_test.cc"],
+    deps = [
+        ":parser",
+        ":shapes",
+        "//pbrt_proto:pbrt_cc_proto",
+        "//pbrt_proto/testing:proto_matchers",
+        "@abseil-cpp//absl/container:flat_hash_map",
+        "@abseil-cpp//absl/status:status_matchers",
+        "@abseil-cpp//absl/strings:string_view",
+        "@googletest//:gtest_main",
+    ],
+)
+
+cc_library(
     name = "textures",
     srcs = ["textures.cc"],
     hdrs = ["textures.h"],
