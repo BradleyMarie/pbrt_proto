@@ -81,8 +81,11 @@ void AddAllFieldsByNumber(
             field_descriptors_by_number.find(field_descriptor->number());
         iter != field_descriptors_by_number.end()) {
       EXPECT_EQ(iter->second->type(), field_descriptor->type());
-      EXPECT_EQ(iter->second->type_name(), field_descriptor->type_name());
       EXPECT_EQ(iter->second->number(), field_descriptor->number());
+      if (iter->second->type() == FieldDescriptor::TYPE_MESSAGE) {
+        EXPECT_EQ(iter->second->message_type()->name(),
+                  field_descriptor->message_type()->name());
+      }
       continue;
     }
 
@@ -168,7 +171,12 @@ TEST_P(Directives, ForwardCompatible) {
       GetMessageDescriptors(next);
 
   for (const auto& [name, base_descriptor] : base_descriptors) {
-    auto iter = next_descriptors.find(name);
+    std::string next_name = name;
+    if (name == "SurfaceIntegrator" && next >= 3) {
+      next_name = "Integrator";
+    }
+
+    auto iter = next_descriptors.find(next_name);
     if (iter == next_descriptors.end()) {
       continue;
     }

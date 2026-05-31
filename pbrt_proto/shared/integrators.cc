@@ -81,6 +81,36 @@ void RemovePhotonMapIntegrator(
   }
 }
 
+template <typename T>
+void RemovePixelBounds(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters, T& output) {
+  std::optional<absl::Span<int32_t>> pixelbounds;
+  if (absl::Status status =
+          TryRemoveIntegers(parameters, "pixelbounds", 4, pixelbounds);
+      status.ok() && pixelbounds.has_value()) {
+    output.mutable_pixelbounds()->set_x_min((std::max(0, (*pixelbounds)[0])));
+    output.mutable_pixelbounds()->set_x_max((std::max(0, (*pixelbounds)[1])));
+    output.mutable_pixelbounds()->set_y_min((std::max(0, (*pixelbounds)[2])));
+    output.mutable_pixelbounds()->set_y_max((std::max(0, (*pixelbounds)[3])));
+  }
+}
+
+template <typename T>
+void RemoveLightSampleStrategy(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters, T& output) {
+  if (std::optional<absl::string_view> lightsamplestrategy =
+          TryRemoveString(parameters, "lightsamplestrategy");
+      lightsamplestrategy.has_value()) {
+    if (*lightsamplestrategy == "power") {
+      output.set_lightsamplestrategy(LightSampleStrategy::POWER);
+    } else if (*lightsamplestrategy == "uniform") {
+      output.set_lightsamplestrategy(LightSampleStrategy::UNIFORM);
+    } else {
+      output.set_lightsamplestrategy(LightSampleStrategy::SPATIAL);
+    }
+  }
+}
+
 }  // namespace
 
 void RemoveAmbientOcclusionIntegratorV1(
@@ -98,10 +128,50 @@ void RemoveAmbientOcclusionIntegratorV1(
   }
 }
 
+void RemoveAmbientOcclusionIntegratorV2(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    AmbientOcclusionIntegrator& output) {
+  if (std::optional<int32_t> nsamples =
+          TryRemoveInteger(parameters, "nsamples");
+      nsamples.has_value()) {
+    output.set_nsamples(std::max(0, *nsamples));
+  }
+
+  if (std::optional<bool> cossample = TryRemoveBool(parameters, "cossample");
+      cossample.has_value()) {
+    output.set_cossample(*cossample);
+  }
+
+  RemovePixelBounds(parameters, output);
+}
+
 void RemoveBdptIntegratorV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    BdptIntegrator& output) {}
+
+void RemoveBdptIntegratorV2(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     BdptIntegrator& output) {
-  // Empty
+  if (std::optional<int32_t> maxdepth =
+          TryRemoveInteger(parameters, "maxdepth");
+      maxdepth.has_value()) {
+    output.set_maxdepth(std::max(0, *maxdepth));
+  }
+
+  if (std::optional<bool> visualizestrategies =
+          TryRemoveBool(parameters, "visualizestrategies");
+      visualizestrategies.has_value()) {
+    output.set_visualizestrategies(*visualizestrategies);
+  }
+
+  if (std::optional<bool> visualizeweights =
+          TryRemoveBool(parameters, "visualizeweights");
+      visualizeweights.has_value()) {
+    output.set_visualizeweights(*visualizeweights);
+  }
+
+  RemoveLightSampleStrategy(parameters, output);
+  RemovePixelBounds(parameters, output);
 }
 
 void RemoveDebugIntegratorV1(
@@ -200,6 +270,13 @@ void RemoveDirectLightingIntegratorV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     DirectLightingIntegrator& output) {
   RemoveDirectLightingIntegrator(parameters, output, /*pbrt_v1=*/false);
+}
+
+void RemoveDirectLightingIntegratorV3(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    DirectLightingIntegrator& output) {
+  RemoveDirectLightingIntegrator(parameters, output, /*pbrt_v1=*/false);
+  RemovePixelBounds(parameters, output);
 }
 
 void RemoveGlossyPrtIntegratorV1(
@@ -340,6 +417,44 @@ void RemoveIrradianceCacheIntegratorV1(
   }
 }
 
+void RemoveMltIntegratorV1(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    MltIntegrator& output) {
+  if (std::optional<int32_t> maxdepth =
+          TryRemoveInteger(parameters, "maxdepth");
+      maxdepth.has_value()) {
+    output.set_maxdepth(std::max(0, *maxdepth));
+  }
+
+  if (std::optional<int32_t> bootstrapsamples =
+          TryRemoveInteger(parameters, "bootstrapsamples");
+      bootstrapsamples.has_value()) {
+    output.set_bootstrapsamples(std::max(0, *bootstrapsamples));
+  }
+
+  if (std::optional<int32_t> chains = TryRemoveInteger(parameters, "chains");
+      chains.has_value()) {
+    output.set_chains(std::max(0, *chains));
+  }
+
+  if (std::optional<int32_t> mutationsperpixel =
+          TryRemoveInteger(parameters, "mutationsperpixel");
+      mutationsperpixel.has_value()) {
+    output.set_mutationsperpixel(std::max(0, *mutationsperpixel));
+  }
+
+  if (std::optional<double> largestepprobability =
+          TryRemoveFloat(parameters, "largestepprobability");
+      largestepprobability.has_value()) {
+    output.set_largestepprobability(*largestepprobability);
+  }
+
+  if (std::optional<double> sigma = TryRemoveFloat(parameters, "sigma");
+      sigma.has_value()) {
+    output.set_sigma(*sigma);
+  }
+}
+
 void RemovePathIntegratorV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     PathIntegrator& output) {
@@ -348,6 +463,21 @@ void RemovePathIntegratorV1(
       maxdepth.has_value()) {
     output.set_maxdepth(std::max(0, *maxdepth));
   }
+}
+
+void RemovePathIntegratorV2(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    PathIntegrator& output) {
+  RemovePathIntegratorV1(parameters, output);
+
+  if (std::optional<double> rrthreshold =
+          TryRemoveFloat(parameters, "rrthreshold");
+      rrthreshold.has_value()) {
+    output.set_rrthreshold(*rrthreshold);
+  }
+
+  RemoveLightSampleStrategy(parameters, output);
+  RemovePixelBounds(parameters, output);
 }
 
 void RemovePhotonMapIntegratorV1(
@@ -410,6 +540,39 @@ void RemovePhotonMapIntegratorV2(
   }
 }
 
+void RemoveSppmIntegratorV1(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    SppmIntegrator& output) {
+  if (std::optional<int32_t> maxdepth =
+          TryRemoveInteger(parameters, "maxdepth");
+      maxdepth.has_value()) {
+    output.set_maxdepth(std::max(0, *maxdepth));
+  }
+
+  if (std::optional<int32_t> numiterations =
+          TryRemoveInteger(parameters, "numiterations");
+      numiterations.has_value()) {
+    output.set_numiterations(std::max(0, *numiterations));
+  }
+
+  if (std::optional<int32_t> photonsperiteration =
+          TryRemoveInteger(parameters, "photonsperiteration");
+      photonsperiteration.has_value()) {
+    output.set_photonsperiteration(std::max(0, *photonsperiteration));
+  }
+
+  if (std::optional<int32_t> imagewritefrequency =
+          TryRemoveInteger(parameters, "imagewritefrequency");
+      imagewritefrequency.has_value()) {
+    output.set_imagewritefrequency(std::max(0, *imagewritefrequency));
+  }
+
+  if (std::optional<double> radius = TryRemoveFloat(parameters, "radius");
+      radius.has_value()) {
+    output.set_radius(*radius);
+  }
+}
+
 void RemoveUseProbesIntegratorV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     UseProbesIntegrator& output) {
@@ -420,6 +583,25 @@ void RemoveUseProbesIntegratorV1(
   }
 }
 
+void RemoveVolPathIntegratorV1(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    VolPathIntegrator& output) {
+  if (std::optional<int32_t> maxdepth =
+          TryRemoveInteger(parameters, "maxdepth");
+      maxdepth.has_value()) {
+    output.set_maxdepth(std::max(0, *maxdepth));
+  }
+
+  if (std::optional<double> rrthreshold =
+          TryRemoveFloat(parameters, "rrthreshold");
+      rrthreshold.has_value()) {
+    output.set_rrthreshold(*rrthreshold);
+  }
+
+  RemoveLightSampleStrategy(parameters, output);
+  RemovePixelBounds(parameters, output);
+}
+
 void RemoveWhittedIntegratorV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     WhittedIntegrator& output) {
@@ -428,6 +610,13 @@ void RemoveWhittedIntegratorV1(
       maxdepth.has_value()) {
     output.set_maxdepth(std::max(0, *maxdepth));
   }
+}
+
+void RemoveWhittedIntegratorV2(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    WhittedIntegrator& output) {
+  RemoveWhittedIntegratorV1(parameters, output);
+  RemovePixelBounds(parameters, output);
 }
 
 }  // namespace pbrt_proto

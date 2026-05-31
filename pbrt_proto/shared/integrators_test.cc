@@ -49,12 +49,172 @@ TEST(RemoveAmbientOcclusionIntegratorV1, WithData) {
               )pb"));
 }
 
+TEST(RemoveAmbientOcclusionIntegratorV2, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  AmbientOcclusionIntegrator actual;
+  RemoveAmbientOcclusionIntegratorV2(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveAmbientOcclusionIntegratorV2, WithData) {
+  std::vector<int32_t> nsamples = {1};
+  Parameter nsamples_parameter{.directive = "",
+                               .type = ParameterType::INTEGER,
+                               .type_name = "",
+                               .values = absl::MakeSpan(nsamples)};
+
+  bool cossample[] = {true};
+  Parameter cossample_parameter{.directive = "",
+                                .type = ParameterType::BOOL,
+                                .type_name = "",
+                                .values = absl::MakeSpan(cossample)};
+
+  std::vector<int32_t> pixelbounds = {2, 3, 4, 5};
+  Parameter pixelbounds_parameter{.directive = "",
+                                  .type = ParameterType::INTEGER,
+                                  .type_name = "",
+                                  .values = absl::MakeSpan(pixelbounds)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"nsamples", nsamples_parameter},
+      {"cossample", cossample_parameter},
+      {"pixelbounds", pixelbounds_parameter},
+  };
+
+  AmbientOcclusionIntegrator actual;
+  RemoveAmbientOcclusionIntegratorV2(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                nsamples: 1
+                cossample: true
+                pixelbounds { x_min: 2 x_max: 3 y_min: 4 y_max: 5 }
+              )pb"));
+}
+
 TEST(RemoveBdptIntegratorV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   BdptIntegrator actual;
   RemoveBdptIntegratorV1(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveBdptIntegratorV2, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  BdptIntegrator actual;
+  RemoveBdptIntegratorV2(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveBdptIntegratorV2, WithData) {
+  std::vector<int32_t> maxdepth = {1};
+  Parameter maxdepth_parameter{.directive = "",
+                               .type = ParameterType::INTEGER,
+                               .type_name = "",
+                               .values = absl::MakeSpan(maxdepth)};
+
+  std::vector<int32_t> pixelbounds = {2, 3, 4, 5};
+  Parameter pixelbounds_parameter{.directive = "",
+                                  .type = ParameterType::INTEGER,
+                                  .type_name = "",
+                                  .values = absl::MakeSpan(pixelbounds)};
+
+  std::vector<absl::string_view> lightsamplestrategy = {"unknown"};
+  Parameter lightsamplestrategy_parameter{
+      .directive = "",
+      .type = ParameterType::STRING,
+      .type_name = "",
+      .values = absl::MakeSpan(lightsamplestrategy)};
+
+  bool visualizestrategies[] = {true};
+  Parameter visualizestrategies_parameter{
+      .directive = "",
+      .type = ParameterType::BOOL,
+      .type_name = "",
+      .values = absl::MakeSpan(visualizestrategies)};
+
+  bool visualizeweights[] = {true};
+  Parameter visualizeweights_parameter{
+      .directive = "",
+      .type = ParameterType::BOOL,
+      .type_name = "",
+      .values = absl::MakeSpan(visualizeweights)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"maxdepth", maxdepth_parameter},
+      {"pixelbounds", pixelbounds_parameter},
+      {"lightsamplestrategy", lightsamplestrategy_parameter},
+      {"visualizestrategies", visualizestrategies_parameter},
+      {"visualizeweights", visualizeweights_parameter},
+  };
+
+  BdptIntegrator actual;
+  RemoveBdptIntegratorV2(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                maxdepth: 1
+                pixelbounds { x_min: 2 x_max: 3 y_min: 4 y_max: 5 }
+                lightsamplestrategy: SPATIAL
+                visualizestrategies: true
+                visualizeweights: true
+              )pb"));
+}
+
+TEST(RemoveBdptIntegratorV2, Uniform) {
+  std::vector<absl::string_view> lightsamplestrategy = {"uniform"};
+  Parameter lightsamplestrategy_parameter{
+      .directive = "",
+      .type = ParameterType::STRING,
+      .type_name = "",
+      .values = absl::MakeSpan(lightsamplestrategy)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"lightsamplestrategy", lightsamplestrategy_parameter},
+  };
+
+  BdptIntegrator actual;
+  RemoveBdptIntegratorV2(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                lightsamplestrategy: UNIFORM
+              )pb"));
+}
+
+TEST(RemoveBdptIntegratorV2, Power) {
+  std::vector<absl::string_view> lightsamplestrategy = {"power"};
+  Parameter lightsamplestrategy_parameter{
+      .directive = "",
+      .type = ParameterType::STRING,
+      .type_name = "",
+      .values = absl::MakeSpan(lightsamplestrategy)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"lightsamplestrategy", lightsamplestrategy_parameter},
+  };
+
+  BdptIntegrator actual;
+  RemoveBdptIntegratorV2(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                lightsamplestrategy: POWER
+              )pb"));
+}
+
+TEST(RemoveBdptIntegratorV2, Spatial) {
+  std::vector<absl::string_view> lightsamplestrategy = {"spatial"};
+  Parameter lightsamplestrategy_parameter{
+      .directive = "",
+      .type = ParameterType::STRING,
+      .type_name = "",
+      .values = absl::MakeSpan(lightsamplestrategy)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"lightsamplestrategy", lightsamplestrategy_parameter},
+  };
+
+  BdptIntegrator actual;
+  RemoveBdptIntegratorV2(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                lightsamplestrategy: SPATIAL
+              )pb"));
 }
 
 TEST(RemoveDebugIntegratorV1, Empty) {
@@ -285,7 +445,7 @@ TEST(RemoveDirectLightingIntegratorV1, Empty) {
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveDirectLightingIntegratorV1, WithDataAll) {
+TEST(RemoveDirectLightingIntegratorV1, WithData) {
   std::vector<int32_t> maxdepth = {1};
   Parameter maxdepth_parameter{.directive = "",
                                .type = ParameterType::INTEGER,
@@ -308,13 +468,24 @@ TEST(RemoveDirectLightingIntegratorV1, WithDataAll) {
               )pb"));
 }
 
-TEST(RemoveDirectLightingIntegratorV1, WithDataOne) {
-  std::vector<int32_t> maxdepth = {1};
-  Parameter maxdepth_parameter{.directive = "",
-                               .type = ParameterType::INTEGER,
+TEST(RemoveDirectLightingIntegratorV1, All) {
+  std::vector<absl::string_view> strategy = {"all"};
+  Parameter strategy_parameter{.directive = "",
+                               .type = ParameterType::STRING,
                                .type_name = "",
-                               .values = absl::MakeSpan(maxdepth)};
+                               .values = absl::MakeSpan(strategy)};
 
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"strategy", strategy_parameter}};
+
+  DirectLightingIntegrator actual;
+  RemoveDirectLightingIntegratorV1(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                strategy: ALL
+              )pb"));
+}
+
+TEST(RemoveDirectLightingIntegratorV1, One) {
   std::vector<absl::string_view> strategy = {"one"};
   Parameter strategy_parameter{.directive = "",
                                .type = ParameterType::STRING,
@@ -322,22 +493,16 @@ TEST(RemoveDirectLightingIntegratorV1, WithDataOne) {
                                .values = absl::MakeSpan(strategy)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
-      {"maxdepth", maxdepth_parameter}, {"strategy", strategy_parameter}};
+      {"strategy", strategy_parameter}};
 
   DirectLightingIntegrator actual;
   RemoveDirectLightingIntegratorV1(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
-                maxdepth: 1 strategy: ONE
+                strategy: ONE
               )pb"));
 }
 
-TEST(RemoveDirectLightingIntegratorV1, WithDataWeighted) {
-  std::vector<int32_t> maxdepth = {1};
-  Parameter maxdepth_parameter{.directive = "",
-                               .type = ParameterType::INTEGER,
-                               .type_name = "",
-                               .values = absl::MakeSpan(maxdepth)};
-
+TEST(RemoveDirectLightingIntegratorV1, Weighted) {
   std::vector<absl::string_view> strategy = {"weighted"};
   Parameter strategy_parameter{.directive = "",
                                .type = ParameterType::STRING,
@@ -345,12 +510,12 @@ TEST(RemoveDirectLightingIntegratorV1, WithDataWeighted) {
                                .values = absl::MakeSpan(strategy)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
-      {"maxdepth", maxdepth_parameter}, {"strategy", strategy_parameter}};
+      {"strategy", strategy_parameter}};
 
   DirectLightingIntegrator actual;
   RemoveDirectLightingIntegratorV1(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
-                maxdepth: 1 strategy: WEIGHTED
+                strategy: WEIGHTED
               )pb"));
 }
 
@@ -362,7 +527,7 @@ TEST(RemoveDirectLightingIntegratorV2, Empty) {
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveDirectLightingIntegratorV2, WithDataAll) {
+TEST(RemoveDirectLightingIntegratorV2, WithData) {
   std::vector<int32_t> maxdepth = {1};
   Parameter maxdepth_parameter{.directive = "",
                                .type = ParameterType::INTEGER,
@@ -385,13 +550,24 @@ TEST(RemoveDirectLightingIntegratorV2, WithDataAll) {
               )pb"));
 }
 
-TEST(RemoveDirectLightingIntegratorV2, WithDataOne) {
-  std::vector<int32_t> maxdepth = {1};
-  Parameter maxdepth_parameter{.directive = "",
-                               .type = ParameterType::INTEGER,
+TEST(RemoveDirectLightingIntegratorV2, All) {
+  std::vector<absl::string_view> strategy = {"all"};
+  Parameter strategy_parameter{.directive = "",
+                               .type = ParameterType::STRING,
                                .type_name = "",
-                               .values = absl::MakeSpan(maxdepth)};
+                               .values = absl::MakeSpan(strategy)};
 
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"strategy", strategy_parameter}};
+
+  DirectLightingIntegrator actual;
+  RemoveDirectLightingIntegratorV2(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                strategy: ALL
+              )pb"));
+}
+
+TEST(RemoveDirectLightingIntegratorV2, One) {
   std::vector<absl::string_view> strategy = {"one"};
   Parameter strategy_parameter{.directive = "",
                                .type = ParameterType::STRING,
@@ -399,22 +575,16 @@ TEST(RemoveDirectLightingIntegratorV2, WithDataOne) {
                                .values = absl::MakeSpan(strategy)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
-      {"maxdepth", maxdepth_parameter}, {"strategy", strategy_parameter}};
+      {"strategy", strategy_parameter}};
 
   DirectLightingIntegrator actual;
   RemoveDirectLightingIntegratorV2(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
-                maxdepth: 1 strategy: ONE
+                strategy: ONE
               )pb"));
 }
 
-TEST(RemoveDirectLightingIntegratorV2, WithDataWeighted) {
-  std::vector<int32_t> maxdepth = {1};
-  Parameter maxdepth_parameter{.directive = "",
-                               .type = ParameterType::INTEGER,
-                               .type_name = "",
-                               .values = absl::MakeSpan(maxdepth)};
-
+TEST(RemoveDirectLightingIntegratorV2, Weighted) {
   std::vector<absl::string_view> strategy = {"weighted"};
   Parameter strategy_parameter{.directive = "",
                                .type = ParameterType::STRING,
@@ -422,12 +592,104 @@ TEST(RemoveDirectLightingIntegratorV2, WithDataWeighted) {
                                .values = absl::MakeSpan(strategy)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
-      {"maxdepth", maxdepth_parameter}, {"strategy", strategy_parameter}};
+      {"strategy", strategy_parameter}};
 
   DirectLightingIntegrator actual;
   RemoveDirectLightingIntegratorV2(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
-                maxdepth: 1 strategy: ALL
+                strategy: ALL
+              )pb"));
+}
+
+TEST(RemoveDirectLightingIntegratorV3, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  DirectLightingIntegrator actual;
+  RemoveDirectLightingIntegratorV3(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveDirectLightingIntegratorV3, WithData) {
+  std::vector<int32_t> maxdepth = {1};
+  Parameter maxdepth_parameter{.directive = "",
+                               .type = ParameterType::INTEGER,
+                               .type_name = "",
+                               .values = absl::MakeSpan(maxdepth)};
+
+  std::vector<absl::string_view> strategy = {"all"};
+  Parameter strategy_parameter{.directive = "",
+                               .type = ParameterType::STRING,
+                               .type_name = "",
+                               .values = absl::MakeSpan(strategy)};
+
+  std::vector<int32_t> pixelbounds = {2, 3, 4, 5};
+  Parameter pixelbounds_parameter{.directive = "",
+                                  .type = ParameterType::INTEGER,
+                                  .type_name = "",
+                                  .values = absl::MakeSpan(pixelbounds)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"maxdepth", maxdepth_parameter},
+      {"strategy", strategy_parameter},
+      {"pixelbounds", pixelbounds_parameter}};
+
+  DirectLightingIntegrator actual;
+  RemoveDirectLightingIntegratorV3(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                maxdepth: 1
+                strategy: ALL
+                pixelbounds { x_min: 2 x_max: 3 y_min: 4 y_max: 5 }
+              )pb"));
+}
+
+TEST(RemoveDirectLightingIntegratorV3, All) {
+  std::vector<absl::string_view> strategy = {"all"};
+  Parameter strategy_parameter{.directive = "",
+                               .type = ParameterType::STRING,
+                               .type_name = "",
+                               .values = absl::MakeSpan(strategy)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"strategy", strategy_parameter}};
+
+  DirectLightingIntegrator actual;
+  RemoveDirectLightingIntegratorV3(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                strategy: ALL
+              )pb"));
+}
+
+TEST(RemoveDirectLightingIntegratorV3, One) {
+  std::vector<absl::string_view> strategy = {"one"};
+  Parameter strategy_parameter{.directive = "",
+                               .type = ParameterType::STRING,
+                               .type_name = "",
+                               .values = absl::MakeSpan(strategy)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"strategy", strategy_parameter}};
+
+  DirectLightingIntegrator actual;
+  RemoveDirectLightingIntegratorV3(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                strategy: ONE
+              )pb"));
+}
+
+TEST(RemoveDirectLightingIntegratorV3, Weighted) {
+  std::vector<absl::string_view> strategy = {"weighted"};
+  Parameter strategy_parameter{.directive = "",
+                               .type = ParameterType::STRING,
+                               .type_name = "",
+                               .values = absl::MakeSpan(strategy)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"strategy", strategy_parameter}};
+
+  DirectLightingIntegrator actual;
+  RemoveDirectLightingIntegratorV3(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                strategy: ALL
               )pb"));
 }
 
@@ -689,6 +951,74 @@ TEST(RemoveIrradianceCacheIntegratorV1, WithData) {
               )pb"));
 }
 
+TEST(RemoveMltIntegratorV1, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  MltIntegrator actual;
+  RemoveMltIntegratorV1(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveMltIntegratorV1, WithData) {
+  std::vector<int32_t> maxdepth = {1};
+  Parameter maxdepth_parameter{.directive = "",
+                               .type = ParameterType::INTEGER,
+                               .type_name = "",
+                               .values = absl::MakeSpan(maxdepth)};
+
+  std::vector<int32_t> bootstrapsamples = {2};
+  Parameter bootstrapsamples_parameter{
+      .directive = "",
+      .type = ParameterType::INTEGER,
+      .type_name = "",
+      .values = absl::MakeSpan(bootstrapsamples)};
+
+  std::vector<int32_t> chains = {3};
+  Parameter chains_parameter{.directive = "",
+                             .type = ParameterType::INTEGER,
+                             .type_name = "",
+                             .values = absl::MakeSpan(chains)};
+
+  std::vector<int32_t> mutationsperpixel = {4};
+  Parameter mutationsperpixel_parameter{
+      .directive = "",
+      .type = ParameterType::INTEGER,
+      .type_name = "",
+      .values = absl::MakeSpan(mutationsperpixel)};
+
+  std::vector<double> largestepprobability = {0.5};
+  Parameter largestepprobability_parameter{
+      .directive = "",
+      .type = ParameterType::FLOAT,
+      .type_name = "",
+      .values = absl::MakeSpan(largestepprobability)};
+
+  std::vector<double> sigma = {0.6};
+  Parameter sigma_parameter{.directive = "",
+                            .type = ParameterType::FLOAT,
+                            .type_name = "",
+                            .values = absl::MakeSpan(sigma)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"maxdepth", maxdepth_parameter},
+      {"bootstrapsamples", bootstrapsamples_parameter},
+      {"chains", chains_parameter},
+      {"mutationsperpixel", mutationsperpixel_parameter},
+      {"largestepprobability", largestepprobability_parameter},
+      {"sigma", sigma_parameter}};
+
+  MltIntegrator actual;
+  RemoveMltIntegratorV1(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                maxdepth: 1
+                bootstrapsamples: 2
+                chains: 3
+                mutationsperpixel: 4
+                largestepprobability: 0.5
+                sigma: 0.6
+              )pb"));
+}
+
 TEST(RemovePathIntegratorV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
@@ -711,6 +1041,113 @@ TEST(RemovePathIntegratorV1, WithData) {
   RemovePathIntegratorV1(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 maxdepth: 1
+              )pb"));
+}
+
+TEST(RemovePathIntegratorV2, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  PathIntegrator actual;
+  RemovePathIntegratorV2(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemovePathIntegratorV2, WithData) {
+  std::vector<int32_t> maxdepth = {1};
+  Parameter maxdepth_parameter{.directive = "",
+                               .type = ParameterType::INTEGER,
+                               .type_name = "",
+                               .values = absl::MakeSpan(maxdepth)};
+
+  std::vector<double> rrthreshold = {0.2};
+  Parameter rrthreshold_parameter{.directive = "",
+                                  .type = ParameterType::FLOAT,
+                                  .type_name = "",
+                                  .values = absl::MakeSpan(rrthreshold)};
+
+  std::vector<int32_t> pixelbounds = {3, 4, 5, 6};
+  Parameter pixelbounds_parameter{.directive = "",
+                                  .type = ParameterType::INTEGER,
+                                  .type_name = "",
+                                  .values = absl::MakeSpan(pixelbounds)};
+
+  std::vector<absl::string_view> lightsamplestrategy = {"unknown"};
+  Parameter lightsamplestrategy_parameter{
+      .directive = "",
+      .type = ParameterType::STRING,
+      .type_name = "",
+      .values = absl::MakeSpan(lightsamplestrategy)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"maxdepth", maxdepth_parameter},
+      {"rrthreshold", rrthreshold_parameter},
+      {"pixelbounds", pixelbounds_parameter},
+      {"lightsamplestrategy", lightsamplestrategy_parameter}};
+
+  PathIntegrator actual;
+  RemovePathIntegratorV2(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                maxdepth: 1
+                rrthreshold: 0.2
+                pixelbounds { x_min: 3 x_max: 4 y_min: 5 y_max: 6 }
+                lightsamplestrategy: SPATIAL
+              )pb"));
+}
+
+TEST(RemovePathIntegratorV2, Uniform) {
+  std::vector<absl::string_view> lightsamplestrategy = {"uniform"};
+  Parameter lightsamplestrategy_parameter{
+      .directive = "",
+      .type = ParameterType::STRING,
+      .type_name = "",
+      .values = absl::MakeSpan(lightsamplestrategy)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"lightsamplestrategy", lightsamplestrategy_parameter},
+  };
+
+  PathIntegrator actual;
+  RemovePathIntegratorV2(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                lightsamplestrategy: UNIFORM
+              )pb"));
+}
+
+TEST(RemovePathIntegratorV2, Power) {
+  std::vector<absl::string_view> lightsamplestrategy = {"power"};
+  Parameter lightsamplestrategy_parameter{
+      .directive = "",
+      .type = ParameterType::STRING,
+      .type_name = "",
+      .values = absl::MakeSpan(lightsamplestrategy)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"lightsamplestrategy", lightsamplestrategy_parameter},
+  };
+
+  PathIntegrator actual;
+  RemovePathIntegratorV2(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                lightsamplestrategy: POWER
+              )pb"));
+}
+
+TEST(RemovePathIntegratorV2, Spatial) {
+  std::vector<absl::string_view> lightsamplestrategy = {"spatial"};
+  Parameter lightsamplestrategy_parameter{
+      .directive = "",
+      .type = ParameterType::STRING,
+      .type_name = "",
+      .values = absl::MakeSpan(lightsamplestrategy)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"lightsamplestrategy", lightsamplestrategy_parameter},
+  };
+
+  PathIntegrator actual;
+  RemovePathIntegratorV2(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                lightsamplestrategy: SPATIAL
               )pb"));
 }
 
@@ -998,6 +1435,65 @@ TEST(RemovePhotonMapIntegratorV2, WithData) {
               )pb"));
 }
 
+TEST(RemoveSppmIntegratorV1, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  SppmIntegrator actual;
+  RemoveSppmIntegratorV1(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveSppmIntegratorV1, WithData) {
+  std::vector<int32_t> maxdepth = {1};
+  Parameter maxdepth_parameter{.directive = "",
+                               .type = ParameterType::INTEGER,
+                               .type_name = "",
+                               .values = absl::MakeSpan(maxdepth)};
+
+  std::vector<int32_t> numiterations = {2};
+  Parameter numiterations_parameter{.directive = "",
+                                    .type = ParameterType::INTEGER,
+                                    .type_name = "",
+                                    .values = absl::MakeSpan(numiterations)};
+
+  std::vector<int32_t> photonsperiteration = {3};
+  Parameter photonsperiteration_parameter{
+      .directive = "",
+      .type = ParameterType::INTEGER,
+      .type_name = "",
+      .values = absl::MakeSpan(photonsperiteration)};
+
+  std::vector<int32_t> imagewritefrequency = {4};
+  Parameter imagewritefrequency_parameter{
+      .directive = "",
+      .type = ParameterType::INTEGER,
+      .type_name = "",
+      .values = absl::MakeSpan(imagewritefrequency)};
+
+  std::vector<double> radius = {0.5};
+  Parameter radius_parameter{.directive = "",
+                             .type = ParameterType::FLOAT,
+                             .type_name = "",
+                             .values = absl::MakeSpan(radius)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"maxdepth", maxdepth_parameter},
+      {"numiterations", numiterations_parameter},
+      {"photonsperiteration", photonsperiteration_parameter},
+      {"imagewritefrequency", imagewritefrequency_parameter},
+      {"radius", radius_parameter}};
+
+  SppmIntegrator actual;
+  RemoveSppmIntegratorV1(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                maxdepth: 1
+                numiterations: 2
+                photonsperiteration: 3
+                imagewritefrequency: 4
+                radius: 0.5
+              )pb"));
+}
+
 TEST(RemoveUseProbesIntegratorV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
@@ -1023,6 +1519,105 @@ TEST(RemoveUseProbesIntegratorV1, WithData) {
               )pb"));
 }
 
+TEST(RemoveVolPathIntegratorV1, WithData) {
+  std::vector<int32_t> maxdepth = {1};
+  Parameter maxdepth_parameter{.directive = "",
+                               .type = ParameterType::INTEGER,
+                               .type_name = "",
+                               .values = absl::MakeSpan(maxdepth)};
+
+  std::vector<double> rrthreshold = {0.2};
+  Parameter rrthreshold_parameter{.directive = "",
+                                  .type = ParameterType::FLOAT,
+                                  .type_name = "",
+                                  .values = absl::MakeSpan(rrthreshold)};
+
+  std::vector<int32_t> pixelbounds = {3, 4, 5, 6};
+  Parameter pixelbounds_parameter{.directive = "",
+                                  .type = ParameterType::INTEGER,
+                                  .type_name = "",
+                                  .values = absl::MakeSpan(pixelbounds)};
+
+  std::vector<absl::string_view> lightsamplestrategy = {"unknown"};
+  Parameter lightsamplestrategy_parameter{
+      .directive = "",
+      .type = ParameterType::STRING,
+      .type_name = "",
+      .values = absl::MakeSpan(lightsamplestrategy)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"maxdepth", maxdepth_parameter},
+      {"rrthreshold", rrthreshold_parameter},
+      {"pixelbounds", pixelbounds_parameter},
+      {"lightsamplestrategy", lightsamplestrategy_parameter}};
+
+  VolPathIntegrator actual;
+  RemoveVolPathIntegratorV1(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                maxdepth: 1
+                rrthreshold: 0.2
+                pixelbounds { x_min: 3 x_max: 4 y_min: 5 y_max: 6 }
+                lightsamplestrategy: SPATIAL
+              )pb"));
+}
+
+TEST(RemoveVolPathIntegratorV1, Uniform) {
+  std::vector<absl::string_view> lightsamplestrategy = {"uniform"};
+  Parameter lightsamplestrategy_parameter{
+      .directive = "",
+      .type = ParameterType::STRING,
+      .type_name = "",
+      .values = absl::MakeSpan(lightsamplestrategy)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"lightsamplestrategy", lightsamplestrategy_parameter},
+  };
+
+  VolPathIntegrator actual;
+  RemoveVolPathIntegratorV1(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                lightsamplestrategy: UNIFORM
+              )pb"));
+}
+
+TEST(RemoveVolPathIntegratorV1, Power) {
+  std::vector<absl::string_view> lightsamplestrategy = {"power"};
+  Parameter lightsamplestrategy_parameter{
+      .directive = "",
+      .type = ParameterType::STRING,
+      .type_name = "",
+      .values = absl::MakeSpan(lightsamplestrategy)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"lightsamplestrategy", lightsamplestrategy_parameter},
+  };
+
+  VolPathIntegrator actual;
+  RemoveVolPathIntegratorV1(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                lightsamplestrategy: POWER
+              )pb"));
+}
+
+TEST(RemoveVolPathIntegratorV1, Spatial) {
+  std::vector<absl::string_view> lightsamplestrategy = {"spatial"};
+  Parameter lightsamplestrategy_parameter{
+      .directive = "",
+      .type = ParameterType::STRING,
+      .type_name = "",
+      .values = absl::MakeSpan(lightsamplestrategy)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"lightsamplestrategy", lightsamplestrategy_parameter},
+  };
+
+  VolPathIntegrator actual;
+  RemoveVolPathIntegratorV1(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                lightsamplestrategy: SPATIAL
+              )pb"));
+}
+
 TEST(RemoveWhittedIntegratorV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
@@ -1045,6 +1640,40 @@ TEST(RemoveWhittedIntegratorV1, WithData) {
   RemoveWhittedIntegratorV1(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 maxdepth: 1
+              )pb"));
+}
+
+TEST(RemoveWhittedIntegratorV2, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  WhittedIntegrator actual;
+  RemoveWhittedIntegratorV2(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveWhittedIntegratorV2, WithData) {
+  std::vector<int32_t> maxdepth = {1};
+  Parameter maxdepth_parameter{.directive = "",
+                               .type = ParameterType::INTEGER,
+                               .type_name = "",
+                               .values = absl::MakeSpan(maxdepth)};
+
+  std::vector<int32_t> pixelbounds = {3, 4, 5, 6};
+  Parameter pixelbounds_parameter{.directive = "",
+                                  .type = ParameterType::INTEGER,
+                                  .type_name = "",
+                                  .values = absl::MakeSpan(pixelbounds)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"maxdepth", maxdepth_parameter},
+      {"pixelbounds", pixelbounds_parameter},
+  };
+
+  WhittedIntegrator actual;
+  RemoveWhittedIntegratorV2(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                maxdepth: 1
+                pixelbounds { x_min: 3 x_max: 4 y_min: 5 y_max: 6 }
               )pb"));
 }
 

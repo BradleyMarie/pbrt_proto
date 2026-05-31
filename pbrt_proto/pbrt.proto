@@ -1090,19 +1090,87 @@ message SpectralFilm {
 // Common Integrators
 //
 
+// The strategy used to sample direct lighting.
+enum LightSampleStrategy {
+  SPATIAL = 0;  // Sample spatially
+  POWER = 1;  // Sample based on the lights' power
+  UNIFORM = 2;  // Sample the lights uniformly
+}
+
 // An integrator which computes the amount of ambient occlusion at a pixel.
 message AmbientOcclusionIntegrator {
   // The maximum distance between a point being shaded and an occluding
   // surface.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported after PBRTv2 and should be ignored
+  //       when reading later input.
   optional double maxdist = 8 [default = inf];
 
   // How many rays are used to estimate the occlusion value at a point.
-  optional uint32 nsamples = 20 [default = 2048];
+  optional uint32 nsamples = 20;
+
+  // Subset of image to sample during rendering; in order, values given specify
+  // the starting and ending x coordinates and then starting and ending y
+  // coordinates.
+  //
+  // NOTE: For simplicity, this field is shared between all PBRT versions;
+  //       however, it is only supported in PBRTv3 and should be ignored when
+  //       reading all other input.
+  optional PixelBounds pixelbounds = 39;
+
+  // If true, the samples are taken using a cosine-weighted distribution.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv3 and should be ignored when
+  //       reading earlier input.
+  optional bool cossample = 40 [default = true];
 }
 
 // An integrator which performs bidirectional path tracing.
 message BdptIntegrator {
+  // The maximum length of a light-carrying path sampled by the integrator.
   //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv3 and should be ignored when
+  //       reading earlier input.
+  optional uint32 maxdepth = 1 [default = 5];
+
+  // Subset of image to sample during rendering; in order, values given specify
+  // the starting and ending x coordinates and then starting and ending y
+  // coordinates.
+  //
+  // NOTE: For simplicity, this field is shared between all PBRT versions;
+  //       however, it is only supported in PBRTv3 and should be ignored when
+  //       reading all other input.
+  optional PixelBounds pixelbounds = 39;
+
+  // The technique used for sampling light sources.
+    //
+    // NOTE: For simplicity, this field is shared between all PBRT versions;
+    //       however, it is only supported in PBRTv3 and should be ignored when
+    //       reading all other input.
+  optional LightSampleStrategy lightsamplestrategy = 41 [default = POWER];
+
+  // If true, an image is saved for each (s,t) bidirectional path generation
+  // strategy used by the integrator. These images can be helpful for
+  // understanding which sampling strategies are effective for sampling various
+  // types of light transport paths.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv3 and should be ignored when
+  //       reading earlier input.
+  optional bool visualizestrategies = 42 [default = false];
+
+  // If true, an image is saved for each (s,t) bidirectional path generation
+  // strategy used by the integrator. These images can be helpful for
+  // understanding which sampling strategies are effective for sampling various
+  // types of light transport paths.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv3 and should be ignored when
+  //       reading earlier input.
+  optional bool visualizeweights = 43 [default = false];
 }
 
 // An integrator used for debugging in PBRTv1.
@@ -1188,7 +1256,17 @@ message DirectLightingIntegrator {
     WEIGHTED = 2;
   }
 
+  // The strategy to use for sampling direct lighting.
   optional Strategy strategy = 2 [default = ALL];
+
+  // Subset of image to sample during rendering; in order, values given specify
+  // the starting and ending x coordinates and then starting and ending y
+  // coordinates.
+  //
+  // NOTE: For simplicity, this field is shared between all PBRT versions;
+  //       however, it is only supported in PBRTv3 and should be ignored when
+  //       reading all other input.
+  optional PixelBounds pixelbounds = 39;
 }
 
 // An integrator which performs precomputed radiance transfer.
@@ -1294,10 +1372,60 @@ message IrradianceCacheIntegrator {
   optional double maxangledifference = 24 [default = 10.0];
 }
 
+// An integrator which does Metropolis light transport.
+message MltIntegrator {
+  // The maximum length of a light-carrying path sampled by the integrator.
+  optional uint32 maxdepth = 1 [default = 5];
+
+  // Number of samples to take during the bootstrap phase; some of these samples
+  // are used for initial light-carrying paths for the Metropolis algorithm.
+  optional uint32 bootstrapsamples = 44 [default = 100000];
+
+  // Number of unique Markov chains chains to follow with the Metropolis
+  // algorithm.
+  optional uint32 chains = 45 [default = 1000];
+
+  // Number of path mutations to apply per pixel in the image.
+  optional uint32 mutationsperpixel = 46 [default = 100];
+
+  // Probability of discarding the current path and generating a new random
+  // path.  For scenes with very difficult-to-sample light transport paths,
+  // reducing this probability may be worthwhile.
+  optional double largestepprobability = 47 [default = 0.3];
+
+  // Standard deviation of the perturbation applied to random samples in [0,1]
+  // used for small path mutations.
+  optional double sigma = 48 [default = 0.01];
+}
+
 // An integrator which performs path tracing.
 message PathIntegrator {
   // The maximum length of a light-carrying path sampled by the integrator.
   optional uint32 maxdepth = 1 [default = 5];
+
+  // Russian roulette threshold for terminating shadow rays that connect the
+  // point being shaded to a virtual light source.
+  //
+  // NOTE: For simplicity, this field is shared between all PBRT versions;
+  //       however, it is only supported in PBRTv3 and should be ignored when
+  //       reading all other input.
+	optional double rrthreshold = 9 [default = 1.0];
+
+  // Subset of image to sample during rendering; in order, values given specify
+  // the starting and ending x coordinates and then starting and ending y
+  // coordinates.
+  //
+  // NOTE: For simplicity, this field is shared between all PBRT versions;
+  //       however, it is only supported in PBRTv3 and should be ignored when
+  //       reading all other input.
+  optional PixelBounds pixelbounds = 39;
+
+  // The technique used for sampling light sources.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv3 and should be ignored when
+  //       reading earlier input.
+  optional LightSampleStrategy lightsamplestrategy = 41 [default = SPATIAL];
 }
 
 // An integrator which performs photon mapping.
@@ -1385,16 +1513,85 @@ message PhotonMapIntegrator {
   optional uint32 maxphotondepth = 37 [default = 5];
 }
 
+// An integrator which implements stochastic progressive photon mapping.
+message SppmIntegrator {
+  // The maximum length of a light-carrying path sampled by the integrator.
+  optional uint32 maxdepth = 1 [default = 5];
+
+  // The total number of iterations of photon shooting from light sources.
+  //
+  // NOTE: For simplicity, this field is shared between all PBRT versions;
+  //       however, it is only supported in PBRTv3 and should be ignored when
+  //       reading all other input.
+  optional uint32 numiterations = 49 [default = 64];
+
+  // The number of photons to shoot from light sources in each iteration. With
+  // the default value the number should automatically be set to be equal to the
+  // number of pixels in the image.
+  //
+  // NOTE: The default value is different than the one in PBRT. In PBRT, this
+  //       value defaults to -1; however, since pbrt_proto uses unsigned
+  //       unsigned integers. Since 0 is a degenerate case for this integrator,
+  //       implementers should treat 0 as -1.
+  optional uint32 photonsperiteration = 50 [default = 0];
+
+  // The frequency at which to write out the current image, in photon shooting
+  // iterations.
+  //
+  // NOTE: For simplicity, this field is shared between all PBRT versions;
+  //       however, it is only supported in PBRTv3 and should be ignored when
+  //       reading all other input.
+  optional uint32 imagewritefrequency = 51 [default = 2147483648];
+
+  // The initial photon search radius.
+  optional double radius = 52 [default = 1.0];
+}
+
 // An integrator which uses radiance probes encoded in spherical harmonics.
 message UseProbesIntegrator {
   // The output filename.
   optional string filename = 38 [default = "probes.out"];
 }
 
+// An integrator which integrates volumes as well as surfaces.
+message VolPathIntegrator {
+  // The maximum length of a light-carrying path sampled by the integrator.
+  optional uint32 maxdepth = 1 [default = 5];
+
+  // Russian roulette threshold for terminating shadow rays that connect the
+  // point being shaded to a virtual light source.
+  //
+  // NOTE: For simplicity, this field is shared between all PBRT versions;
+  //       however, it is only supported in PBRTv3 and should be ignored when
+  //       reading all other input.
+	optional double rrthreshold = 9 [default = 1.0];
+
+  // Subset of image to sample during rendering; in order, values given specify
+  // the starting and ending x coordinates and then starting and ending y
+  // coordinates.
+  //
+  // NOTE: For simplicity, this field is shared between all PBRT versions;
+  //       however, it is only supported in PBRTv3 and should be ignored when
+  //       reading all other input.
+  optional PixelBounds pixelbounds = 39;
+
+  // The technique used for sampling light sources.
+  optional LightSampleStrategy lightsamplestrategy = 41 [default = SPATIAL];
+}
+
 // An integrator which performs Whitted-style tracing.
 message WhittedIntegrator {
   // The maximum length of a light-carrying path sampled by the integrator.
   optional uint32 maxdepth = 1 [default = 5];
+
+  // Subset of image to sample during rendering; in order, values given specify
+  // the starting and ending x coordinates and then starting and ending y
+  // coordinates.
+  //
+  // NOTE: For simplicity, this field is shared between all PBRT versions;
+  //       however, it is only supported in PBRTv3 and should be ignored when
+  //       reading all other input.
+  optional PixelBounds pixelbounds = 39;
 }
 
 //

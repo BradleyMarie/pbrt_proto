@@ -101,6 +101,37 @@ message Defaults {
   // The default values for every type of FloatTexture
   required DefaultFloatTextures float_textures = 6;
 
+  // A container for the default values for every type of Integrator
+  message DefaultIntegrators {
+    // The default "ao" Integrator
+    required AmbientOcclusionIntegrator ambientocclusion = 1;
+
+    // The default "bdpt" Integrator is fully captured in its definition
+    reserved 2;
+
+    // The default "directlighting" Integrator is fully captured in its
+    // definition
+    reserved 3;
+
+    // The default "mlt" Integrator is fully captured in its definition
+    reserved 4;
+
+    // The default "path" Integrator is fully captured in its definition
+    reserved 5;
+
+    // The default "sppm" Integrator is fully captured in its definition
+    reserved 6;
+
+    // The default "volpath" Integrator is fully captured in its definition
+    reserved 7;
+
+    // The default "whitted" Integrator is fully captured in its definition
+    reserved 8;
+  }
+
+  // The default values for every type of Integrator
+  required DefaultIntegrators integrators = 7;
+
   // A container for the default values for every type of LightSource
   message DefaultLightSources {
     // The default "distant" LightSource
@@ -123,7 +154,7 @@ message Defaults {
   }
 
   // The default values for every type of LightSource
-  required DefaultLightSources light_sources = 7;
+  required DefaultLightSources light_sources = 8;
 
   // A container for the default values for every type of Material
   message DefaultMaterials {
@@ -175,7 +206,7 @@ message Defaults {
   }
 
   // The default values for every type of Material
-  required DefaultMaterials materials = 8;
+  required DefaultMaterials materials = 9;
 
   // A container for the default values for every type of Medium
   message DefaultMedia {
@@ -195,7 +226,7 @@ message Defaults {
   }
 
   // The default values for every type of Medium
-  required DefaultMedia media = 9;
+  required DefaultMedia media = 10;
 
   // A container for the default values for every type of PixelFilter
   message DefaultPixelFilter {
@@ -216,7 +247,7 @@ message Defaults {
   }
 
   // The default values for every type of PixelFilter
-  required DefaultPixelFilter pixel_filter = 10;
+  required DefaultPixelFilter pixel_filter = 11;
 
   // A container for the default values for every type of Sampler
   message DefaultSamplers {
@@ -240,7 +271,7 @@ message Defaults {
   }
 
   // The default values for every type of Sampler
-  required DefaultSamplers samplers = 11;
+  required DefaultSamplers samplers = 12;
 
   // A container for the default values for every type of Shape
   message DefaultShapes {
@@ -282,7 +313,7 @@ message Defaults {
   }
 
   // The default values for every type of Shape
-  required DefaultShapes shapes = 12;
+  required DefaultShapes shapes = 13;
 
   // A container for the default values for every type of SpectrumTexture
   message DefaultSpectrumTextures {
@@ -331,5 +362,5 @@ message Defaults {
   }
 
   // The default values for every type of SpectrumTexture
-  required DefaultSpectrumTextures spectrum_textures = 13;
+  required DefaultSpectrumTextures spectrum_textures = 14;
 }

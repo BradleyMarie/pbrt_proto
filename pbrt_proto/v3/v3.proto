@@ -69,94 +69,20 @@ message FloatTexture {
   }
 }
 
+// A directive which sets the Integrator to use for rendering.
 message Integrator {
-  enum LightSampleStrategy {
-    SPATIAL = 0;
-    POWER = 1;
-    UNIFORM = 2;
-  }
-
-  message PixelBounds {
-    required uint32 x_min = 1;
-    required uint32 x_max = 2;
-    required uint32 y_min = 3;
-    required uint32 y_max = 4;
-  }
-
-  message AmbientOcclusion {
-    optional bool cossample = 1 [default = true];
-    optional uint32 nsamples = 2 [default = 64];
-    optional PixelBounds pixelbounds = 3;
-  }
-
-  message Bdpt {
-    optional uint32 maxdepth = 1 [default = 5];
-    optional bool visualizestrategies = 2 [default = false];
-    optional bool visualizeweights = 3 [default = false];
-    optional LightSampleStrategy lightsamplestrategy = 4 [default = POWER];
-    optional PixelBounds pixelbounds = 5;
-  }
-
-  message DirectLighting {
-    enum Strategy {
-      ALL = 0;
-      ONE = 1;
-    }
-
-    optional uint32 maxdepth = 1 [default = 5];
-    optional Strategy strategy = 2 [default = ALL];
-    optional PixelBounds pixelbounds = 3;
-  }
-
-  message Mlt {
-    optional uint32 maxdepth = 1 [default = 5];
-    optional uint32 bootstrapsamples = 2 [default = 100000];
-    optional uint32 chains = 3 [default = 1000];
-    optional uint32 mutationsperpixel = 4 [default = 100];
-    optional double largestepprobability = 5 [default = 0.3];
-    optional double sigma = 6 [default = 0.01];
-  }
-
-  message Path {
-    optional uint32 maxdepth = 1 [default = 5];
-    optional double rrthreshold = 2 [default = 1.0];
-    optional LightSampleStrategy lightsamplestrategy = 3 [default = SPATIAL];
-    optional PixelBounds pixelbounds = 4;
-  }
-
-  message Sppm {
-    optional uint32 maxdepth = 1 [default = 5];
-    optional uint32 numiterations = 2 [default = 64];
-    optional uint32 photonsperiteration = 3 [default = 0];
-    optional uint32 imagewritefrequency = 4 [default = 2147483648];
-    optional double radius = 5 [default = 1.0];
-  }
-
-  message VolPath {
-    optional uint32 maxdepth = 1 [default = 5];
-    optional double rrthreshold = 2 [default = 1.0];
-    optional LightSampleStrategy lightsamplestrategy = 3 [default = SPATIAL];
-    optional PixelBounds pixelbounds = 4;
-  }
-
-  message Whitted {
-    optional uint32 maxdepth = 1 [default = 5];
-    optional PixelBounds pixelbounds = 2;
-  }
-
-  // If attempting to render to a Film that does not have one of these fields
-  // set, the renderer should render a black image.
-  //
-  // https://github.com/mmp/pbrt-v3/blob/13d871faae88233b327d04cda24022b8bb0093ee/src/core/api.cpp#L1619
+  // The type of integrator to use. If none are set, then the current integrator
+  // should be unset. If no integrator is set at the time an image is to be
+  // rendered the renderer should exit with an error.
   oneof integrator_type {
-    AmbientOcclusion ambientocclusion = 1;
-    Bdpt bdpt = 2;
-    DirectLighting directlighting = 3;
-    Mlt mlt = 4;
-    Path path = 5;
-    Sppm sppm = 6;
-    VolPath volpath = 7;
-    Whitted whitted = 8;
+    BdptIntegrator bdpt = 1;  // Create a bidirectional integrator
+    DirectLightingIntegrator directlighting = 3;  // Create a direct integrator
+    PathIntegrator path = 7;  // Create a path integrator
+    WhittedIntegrator whitted = 9;  // Create a Whitted integrator
+    AmbientOcclusionIntegrator ambientocclusion = 10;  // Create a AO integrator
+    MltIntegrator mlt = 15;  // Creates an MLT integrator
+    SppmIntegrator sppm = 16;  // Creates an SPPM integrator
+    VolPathIntegrator volpath = 17;  // Creates a volumetric path integrator
   }
 }
 

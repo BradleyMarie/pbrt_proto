@@ -89,6 +89,11 @@ films {
     yresolution: 720
   }
 }
+integrators {
+  ambientocclusion {
+    nsamples: 64
+  }
+}
 float_textures {
   bilerp {
     v00 {
