@@ -6,6 +6,7 @@
 #include "absl/status/status.h"
 #include "absl/strings/string_view.h"
 #include "pbrt_proto/pbrt.pb.h"
+#include "pbrt_proto/shared/common.h"
 #include "pbrt_proto/shared/parser.h"
 
 namespace pbrt_proto {
@@ -430,6 +431,23 @@ absl::Status RemoveTriangleMeshShapeV1(
       dest.set_v((*st)[2 * i + 1]);
     }
   }
+
+  return absl::OkStatus();
+}
+
+absl::Status RemoveTriangleMeshShapeV2(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    TriangleMeshShape& output) {
+  RemoveTriangleMeshShapeV1(parameters, output);
+
+  if (std::optional<bool> discarddegenerateuvs =
+          TryRemoveBool(parameters, "discarddegenerateUVs");
+      discarddegenerateuvs.has_value()) {
+    output.set_discarddegenerateuvs(*discarddegenerateuvs);
+  }
+
+  TryRemoveFloatTexture(parameters, "alpha",
+                        std::bind(&TriangleMeshShape::mutable_alpha, &output));
 
   return absl::OkStatus();
 }

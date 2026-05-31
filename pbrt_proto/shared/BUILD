@@ -358,6 +358,7 @@ cc_library(
     srcs = ["shapes.cc"],
     hdrs = ["shapes.h"],
     deps = [
+        ":common",
         ":parser",
         "//pbrt_proto:pbrt_cc_proto",
         "@abseil-cpp//absl/container:flat_hash_map",

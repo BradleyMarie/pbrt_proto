@@ -567,5 +567,79 @@ TEST(RemoveTriangleMeshShapeV1, St) {
               )pb"));
 }
 
+TEST(RemoveTriangleMeshShapeV2, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  TriangleMeshShape actual;
+  EXPECT_TRUE(RemoveTriangleMeshShapeV2(parameters, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveTriangleMeshShapeV2, WithData) {
+  std::vector<std::array<double, 3>> p = {{1.0, 2.0, 3.0}};
+  Parameter p_parameter{.directive = "",
+                        .type = ParameterType::POINT3,
+                        .type_name = "",
+                        .values = absl::MakeSpan(p)};
+
+  std::vector<int32_t> indices = {4, 5, 6};
+  Parameter indices_parameter{.directive = "",
+                              .type = ParameterType::INTEGER,
+                              .type_name = "",
+                              .values = absl::MakeSpan(indices)};
+
+  std::vector<std::array<double, 3>> n = {{7.0, 8.0, 9.0}};
+  Parameter n_parameter{.directive = "",
+                        .type = ParameterType::NORMAL3,
+                        .type_name = "",
+                        .values = absl::MakeSpan(n)};
+
+  std::vector<std::array<double, 3>> s = {{10.0, 11.0, 12.0}};
+  Parameter s_parameter{.directive = "",
+                        .type = ParameterType::VECTOR3,
+                        .type_name = "",
+                        .values = absl::MakeSpan(s)};
+
+  std::vector<double> uv = {13.0, 14.0};
+  Parameter uv_parameter{.directive = "",
+                         .type = ParameterType::FLOAT,
+                         .type_name = "",
+                         .values = absl::MakeSpan(uv)};
+
+  bool discarddegenerateuvs[] = {true};
+  Parameter discarddegenerateuvs_parameter{
+      .directive = "",
+      .type = ParameterType::BOOL,
+      .type_name = "",
+      .values = absl::MakeSpan(discarddegenerateuvs)};
+
+  std::vector<double> alpha = {1.0};
+  Parameter alpha_parameter{.directive = "",
+                            .type = ParameterType::FLOAT,
+                            .type_name = "",
+                            .values = absl::MakeSpan(alpha)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"P", p_parameter},
+      {"indices", indices_parameter},
+      {"N", n_parameter},
+      {"S", s_parameter},
+      {"uv", uv_parameter},
+      {"discarddegenerateUVs", discarddegenerateuvs_parameter},
+      {"alpha", alpha_parameter}};
+
+  TriangleMeshShape actual;
+  EXPECT_TRUE(RemoveTriangleMeshShapeV2(parameters, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                P { x: 1.0 y: 2.0 z: 3.0 }
+                indices { v0: 4 v1: 5 v2: 6 }
+                N { x: 7.0 y: 8.0 z: 9.0 }
+                S { x: 10.0 y: 11.0 z: 12.0 }
+                uv { u: 13.0 v: 14.0 }
+                discarddegenerateUVs: true
+                alpha { float_value: 1.0 }
+              )pb"));
+}
+
 }  // namespace
 }  // namespace pbrt_proto

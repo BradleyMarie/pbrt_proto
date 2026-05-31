@@ -49,6 +49,10 @@ absl::Status RemoveTriangleMeshShapeV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     TriangleMeshShape& output);
 
+absl::Status RemoveTriangleMeshShapeV2(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    TriangleMeshShape& output);
+
 }  // namespace pbrt_proto
 
 #endif  // _PBRT_PROTO_SHARED_SHAPES_

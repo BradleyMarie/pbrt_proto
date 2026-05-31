@@ -983,7 +983,7 @@ message RgbFilm {
     //
     // NOTE: For simplicity, this field is shared between all PBRT versions;
     //       however, it is only supported in PBRTv3 and should be ignored when
-    //       reading all other input.  
+    //       reading all other input.
     double maxsampleluminance = 10 [default = inf];
   
     // Clamp pixels with RGB components higher than the maximum provided.
@@ -3121,6 +3121,15 @@ message TriangleMeshShape {
 
   // The per-vertex texture coordinates.
   repeated UVCoordinate uv = 25;
+
+  // If true, degenerate UV values are ignored.
+  //
+  // NOTE: For simplicity, this field is shared between all PBRT versions;
+  //       however, it is only supported in PBRTv2 and should be ignored when
+  //       reading all other input.
+  optional bool discarddegenerateUVs = 26 [default = false];
+
+  optional FloatTextureParameter alpha = 27;
 }
 
 //
