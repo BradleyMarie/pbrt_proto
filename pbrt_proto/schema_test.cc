@@ -89,6 +89,11 @@ void AddAllFieldsByNumber(
       EXPECT_EQ(iter->second->type(), field_descriptor->type());
       EXPECT_EQ(iter->second->number(), field_descriptor->number());
       if (iter->second->type() == FieldDescriptor::TYPE_MESSAGE) {
+        if (iter->second->message_type()->name() == "SurfaceIntegrator" &&
+            field_descriptor->message_type()->name() == "Integrator") {
+          continue;
+        }
+
         EXPECT_EQ(iter->second->message_type()->name(),
                   field_descriptor->message_type()->name());
       }
@@ -133,10 +138,10 @@ TEST_P(CommonTypes, AreBinaryCompatible) {
 
 INSTANTIATE_TEST_CASE_P(AllTypes, CommonTypes,
                         testing::Values("Accelerator", "AreaLightSource",
-                                        "Camera", "Film", "Integrator",
-                                        "LightSource", "Material", "Medium",
-                                        "PixelFilter", "Sampler",
-                                        "FloatTexture", "SpectrumTexture"));
+                                        "Camera", "Film", "FloatTexture",
+                                        "Integrator", "LightSource", "Material",
+                                        "Medium", "PixelFilter", "Sampler",
+                                        "Shape", "SpectrumTexture"));
 
 std::vector<std::pair<int, int>> GenerateVersionPairs(int max) {
   std::vector<std::pair<int, int>> result;

@@ -2973,38 +2973,38 @@ message CurveShape {
 
   // Control points for the cubic Bezier spline that goes along the center of
   // the curve shape.
-  repeated Point P = 1;
-
-  // The curve spline basis.
-  optional Basis basis = 2 [default = BEZIER];
-
-  // The degree of the curve's spline.
-  optional Degree degree = 3 [default = THREE];
-
-  // Determines which curve variant is used.
-  optional Type type = 4 [default = FLAT];
+  repeated Point P = 12;
 
   // The normals that are used for "ribbon" curves, these normals are
   // respectively used at endpoints of the curve to orient the surface there.
   // Intermediate normals are interpolated using spherical linear interpolation. 
-  repeated Vector N = 5;
+  repeated Vector N = 24;
+
+  // The curve spline basis.
+  optional Basis basis = 32 [default = BEZIER];
+
+  // The degree of the curve's spline.
+  optional Degree degree = 33 [default = THREE];
+
+  // Determines which curve variant is used.
+  optional Type type = 34 [default = FLAT];
 
   // The width of the curve.
-  optional double width = 6 [default = 1.0];
+  optional double width = 35 [default = 1.0];
 
   // The width of the curve at the start point. If set, this overrides the value
   // set in `width`.
-  optional double width0 = 7;
+  optional double width0 = 36;
 
   // The width of the curve at the end point. If set, this overrides the value
   // set in `width`.
-  optional double width1 = 8;
+  optional double width1 = 37;
 
   // The number of times the curve is split in half into sub-curves at startup
   // time. Splitting curves increases memory use but can improve ray
   // intersection performance, as the sub-curves generally have tighter bounding
   // boxes than the entire curve extent.
-  optional uint32 splitdepth = 9 [default = 3];
+  optional uint32 splitdepth = 38 [default = 3];
 }
 
 // Creates a cylinder
@@ -3040,13 +3040,13 @@ message DiskShape {
 // Creates a heightfield
 message HeightFieldShape {
   // The number of sample values in the u direction.
-  optional uint32 nu = 1;
+  optional uint32 nu = 7;
 
   // The number of sample values in the v direction.
-  optional uint32 nv = 2;
+  optional uint32 nv = 8;
 
   // The array of values that define the heightfield.
-  repeated double Pz = 3;
+  repeated double Pz = 9;
 }
 
 // Creates a hyperboloid
@@ -3055,24 +3055,24 @@ message HyperboloidShape {
   optional double phimax = 3 [default = 360.0];
 
   // The first end point of the hyperboloid's line of revolution.
-  optional Point p1 = 7;
+  optional Point p1 = 10;
 
   // The second end point of the hyperboloid's line of revolution.
-  optional Point p2 = 8;
+  optional Point p2 = 11;
 }
 
 // Creates a Loop subdivision surface.
 message LoopSubdivShape {
   // The vertex positions for the base mesh.
-  repeated Point P = 9;
+  repeated Point P = 12;
 
   // The indices for the base mesh.
-  repeated VertexIndices indices = 10;
+  repeated VertexIndices indices = 13;
 
   // The number of levels of refinement to compute in the subdivision algorithm.
   //
   // NOTE: Prior to PBRTv3 this field was named "nlevels".
-  optional uint32 levels = 11 [default = 3];
+  optional uint32 levels = 14 [default = 3];
 }
 
 // Creates a NURBS patch.
@@ -3084,42 +3084,42 @@ message NurbsShape {
   }
 
   // Number of control points for NURBS patch in the u parametric directions.
-  optional uint32 nu = 12;
+  optional uint32 nu = 7;
 
   // Number of control points for NURBS patch in the v parametric directions.
-  optional uint32 nv = 13;
-
-  // The order of NURBS surface in the u direction.
-  optional uint32 uorder = 14;
-
-  // The order of NURBS surface in the v direction.
-  optional uint32 vorder = 15;
-
-  // The knot vector for NURBS in the u direction.
-  repeated float uknots = 16;
-
-  // The knot vector for NURBS in the v direction.
-  repeated float vknots = 17;
-
-  // The starting u parametric coordinates at which to evaluate NURBS.
-  optional double u0 = 18;
-
-  // The starting v parametric coordinates at which to evaluate NURBS.
-  optional double v0 = 19;
-
-  // The ending u parametric coordinates at which to evaluate NURBS.
-  optional double u1 = 20;
-
-  // The ending v parametric coordinates at which to evaluate NURBS.
-  optional double v1 = 21;
+  optional uint32 nv = 8;
 
   // The control points.
   //
   // NOTE: Should be preferred over Pw if both are present.
-  repeated Point P = 9;
+  repeated Point P = 12;
+
+  // The order of NURBS surface in the u direction.
+  optional uint32 uorder = 15;
+
+  // The order of NURBS surface in the v direction.
+  optional uint32 vorder = 16;
+
+  // The knot vector for NURBS in the u direction.
+  repeated float uknots = 17;
+
+  // The knot vector for NURBS in the v direction.
+  repeated float vknots = 18;
+
+  // The starting u parametric coordinates at which to evaluate NURBS.
+  optional double u0 = 19;
+
+  // The starting v parametric coordinates at which to evaluate NURBS.
+  optional double v0 = 20;
+
+  // The ending u parametric coordinates at which to evaluate NURBS.
+  optional double u1 = 21;
+
+  // The ending v parametric coordinates at which to evaluate NURBS.
+  optional double v1 = 22;
 
   // The control points with an additional weight.
-  repeated PointWithWeight Pw = 22;
+  repeated PointWithWeight Pw = 23;
 }
 
 // Creates a paraboloid
@@ -3142,7 +3142,7 @@ message PlyMeshShape {
   // When provided, at any point on the triangle where the alpha texture
   // evaluates to have the value zero, the triangle is cut away and any ray
   // intersection is ignored.
-  optional FloatTextureParameter alpha = 27;
+  optional FloatTextureParameter alpha = 28;
 
   // When provided, intersections at any points on the triangle where the alpha
   // texture evaluates to zero are ignored.
@@ -3150,10 +3150,10 @@ message PlyMeshShape {
   // NOTE: For simplicity, this field is shared between all PBRT versions;
   //       however, it is only supported in PBRTv3 and should be ignored when
   //       reading all other input.
-  optional FloatTextureParameter shadowalpha = 28;
+  optional FloatTextureParameter shadowalpha = 29;
 
   // File from which the PLY-format mesh is loaded. 
-  optional string filename = 30 [default = ""];
+  optional string filename = 31 [default = ""];
 }
 
 // Creates a sphere
@@ -3184,27 +3184,27 @@ message TriangleMeshShape {
   }
 
   // The vertex positions of the triangle mesh.
-  repeated Point P = 9;
+  repeated Point P = 12;
 
   // The array of integer offsets into the per-vertex data arrays.
-  repeated VertexIndices indices = 10;
+  repeated VertexIndices indices = 13;
 
   // The per-vertex normals. If present, shading normals will be computed from
   // these values.
-  repeated Vector N = 23;
+  repeated Vector N = 24;
 
   // The per-vertex tangents.
-  repeated Vector S = 24;
+  repeated Vector S = 25;
 
   // The per-vertex texture coordinates.
-  repeated UVCoordinate uv = 25;
+  repeated UVCoordinate uv = 26;
 
   // If true, degenerate UV values are ignored.
   //
   // NOTE: For simplicity, this field is shared between all PBRT versions;
   //       however, it is only supported in PBRTv2 and should be ignored when
   //       reading all other input.
-  optional bool discarddegenerateUVs = 26 [default = false];
+  optional bool discarddegenerateUVs = 27 [default = false];
 
   // When provided, at any point on the triangle where the alpha texture
   // evaluates to have the value zero, the triangle is cut away and any ray
@@ -3213,7 +3213,7 @@ message TriangleMeshShape {
   // NOTE: For simplicity, this field is shared between all PBRT versions;
   //       however, it is not supported before PBRTv2 and should be ignored when
   //       reading earlier input.
-  optional FloatTextureParameter alpha = 27;
+  optional FloatTextureParameter alpha = 28;
 
   // When provided, intersections at any points on the triangle where the alpha
   // texture evaluates to zero are ignored.
@@ -3221,14 +3221,14 @@ message TriangleMeshShape {
   // NOTE: For simplicity, this field is shared between all PBRT versions;
   //       however, it is only supported in PBRTv3 and should be ignored when
   //       reading all other input.
-  optional FloatTextureParameter shadowalpha = 28;
+  optional FloatTextureParameter shadowalpha = 29;
 
   // Provides a list of numeric identifiers for each face.
   //
   // NOTE: For simplicity, this field is shared between all PBRT versions;
   //       however, it is not supported before PBRTv3 and should be ignored when
   //       reading earlier input.
-  repeated int32 faceIndices = 29;
+  repeated int32 faceIndices = 30;
 }
 
 //

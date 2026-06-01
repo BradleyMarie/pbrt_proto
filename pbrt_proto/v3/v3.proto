@@ -280,49 +280,51 @@ message SpectrumTexture {
   }
 }
 
+// A PBRTv3 directive.
 message Directive {
   oneof directive_type {
     Accelerator accelerator = 1;
-    ActiveTransform active_transform = 2;
-    AreaLightSource area_light_source = 3;
-    AttributeBegin attribute_begin = 4;
-    AttributeEnd attribute_end = 5;
-    Camera camera = 6;
-    ConcatTransform concat_transform = 7;
-    CoordinateSystem coordinate_system = 8;
-    CoordSysTransform coord_sys_transform = 9;
-    Film film = 10;
-    FloatTexture float_texture = 11;
-    Identity identity = 12;
-    Include include = 13;
-    Integrator integrator = 14;
-    LightSource light_source = 15;
-    LookAt look_at = 16;
-    MakeNamedMaterial make_named_material = 17;
-    MakeNamedMedium make_named_medium = 18;
-    Material material = 19;
-    MediumInterface medium_interface = 20;
-    NamedMaterial named_material = 21;
-    ObjectBegin object_begin = 22;
-    ObjectEnd object_end = 23;
-    ObjectInstance object_instance = 24;
-    PixelFilter pixel_filter = 25;
-    ReverseOrientation reverse_orientation = 26;
-    Rotate rotate = 27;
-    Sampler sampler = 28;
-    Shape shape = 29;
-    Scale scale = 30;
-    SpectrumTexture spectrum_texture = 31;
-    Transform transform = 32;
-    TransformBegin transform_begin = 33;
-    TransformEnd transform_end = 34;
-    TransformTimes transform_times = 35;
-    Translate translate = 36;
-    WorldBegin world_begin = 37;
-    WorldEnd world_end = 38;
+    AreaLightSource area_light_source = 2;
+    AttributeBegin attribute_begin = 3;
+    AttributeEnd attribute_end = 4;
+    Camera camera = 5;
+    ConcatTransform concat_transform = 6;
+    CoordinateSystem coordinate_system = 7;
+    CoordSysTransform coord_sys_transform = 8;
+    Film film = 9;
+    FloatTexture float_texture = 10;
+    Identity identity = 11;
+    Include include = 12;
+    LightSource light_source = 13;
+    LookAt look_at = 14;
+    Material material = 15;
+    ObjectBegin object_begin = 16;
+    ObjectEnd object_end = 17;
+    ObjectInstance object_instance = 18;
+    PixelFilter pixel_filter = 19;
+    ReverseOrientation reverse_orientation = 20;
+    Rotate rotate = 21;
+    Sampler sampler = 22;
+    Scale scale = 24;
+    Shape shape = 25;
+    Integrator integrator = 26;
+    SpectrumTexture spectrum_texture = 27;
+    TransformBegin transform_begin = 28;
+    TransformEnd transform_end = 29;
+    Transform transform = 30;
+    Translate translate = 31;
+    WorldBegin world_begin = 34;
+    WorldEnd world_end = 35;
+    ActiveTransform active_transform = 36;
+    MakeNamedMaterial make_named_material = 39;
+    NamedMaterial named_material = 40;
+    TransformTimes transform_times = 43;
+    MakeNamedMedium make_named_medium = 44;
+    MediumInterface medium_interface = 45;
   }
 }
 
+// A list of PBRTv3 directives.
 message PbrtProto {
   repeated Directive directives = 1;
 }
