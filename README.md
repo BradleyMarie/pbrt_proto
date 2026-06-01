@@ -65,7 +65,7 @@ following roughly ordered set of principles was used to guide the process.
 ## Conversion Process
 
 1) The conversion may validate, clamp, drop data, and otherwise sanitize the
-   invalid input as long as those changes have no impact on the rendered output.
+   input as long as those changes have no impact on the rendered output.
 2) The conversion is only permitted to fail if PBRT would have failed to render,
    otherwise the conversion must succeed.
 3) The conversion only is required to support the range of inputs supported by
