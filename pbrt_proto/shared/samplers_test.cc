@@ -16,6 +16,97 @@ namespace {
 
 using ::google::protobuf::EqualsProto;
 
+TEST(RemoveAdaptiveSamplerV1, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  AdaptiveSampler actual;
+  RemoveAdaptiveSamplerV1(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveAdaptiveSamplerV1, Contrast) {
+  std::vector<absl::string_view> method = {"contrast"};
+  Parameter method_parameter{.directive = "",
+                             .type = ParameterType::STRING,
+                             .type_name = "",
+                             .values = absl::MakeSpan(method)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"method", method_parameter}};
+
+  AdaptiveSampler actual;
+  RemoveAdaptiveSamplerV1(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                method: CONTRAST
+              )pb"));
+}
+
+TEST(RemoveAdaptiveSamplerV1, ShapeId) {
+  std::vector<absl::string_view> method = {"shapeid"};
+  Parameter method_parameter{.directive = "",
+                             .type = ParameterType::STRING,
+                             .type_name = "",
+                             .values = absl::MakeSpan(method)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"method", method_parameter}};
+
+  AdaptiveSampler actual;
+  RemoveAdaptiveSamplerV1(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                method: SHAPEID
+              )pb"));
+}
+
+TEST(RemoveAdaptiveSamplerV1, Unknown) {
+  std::vector<absl::string_view> method = {"unknown"};
+  Parameter method_parameter{.directive = "",
+                             .type = ParameterType::STRING,
+                             .type_name = "",
+                             .values = absl::MakeSpan(method)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"method", method_parameter}};
+
+  AdaptiveSampler actual;
+  RemoveAdaptiveSamplerV1(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                method: CONTRAST
+              )pb"));
+}
+
+TEST(RemoveAdaptiveSamplerV1, WithData) {
+  std::vector<int32_t> minsamples = {1};
+  Parameter minsamples_parameter{.directive = "",
+                                 .type = ParameterType::INTEGER,
+                                 .type_name = "",
+                                 .values = absl::MakeSpan(minsamples)};
+
+  std::vector<int32_t> maxsamples = {2};
+  Parameter maxsamples_parameter{.directive = "",
+                                 .type = ParameterType::INTEGER,
+                                 .type_name = "",
+                                 .values = absl::MakeSpan(maxsamples)};
+
+  std::vector<absl::string_view> method = {"contrast"};
+  Parameter method_parameter{.directive = "",
+                             .type = ParameterType::STRING,
+                             .type_name = "",
+                             .values = absl::MakeSpan(method)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"minsamples", minsamples_parameter},
+      {"maxsamples", maxsamples_parameter},
+      {"method", method_parameter}};
+
+  AdaptiveSampler actual;
+  RemoveAdaptiveSamplerV1(parameters, actual);
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(
+                minsamples: 1 maxsamples: 2 method: CONTRAST
+              )pb"));
+}
+
 TEST(RemoveBestCandidateSampler, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
@@ -186,6 +277,38 @@ TEST(RemoveIndependentSamplerV2, WithData) {
               )pb"));
 }
 
+TEST(RemoveMaxMinDistSamplerV1, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  MaxMinDistSampler actual;
+  RemoveMaxMinDistSamplerV1(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveMaxMinDistSamplerV1, WithData) {
+  std::vector<int32_t> pixelsamples = {1};
+  Parameter pixelsamples_parameter{.directive = "",
+                                   .type = ParameterType::INTEGER,
+                                   .type_name = "",
+                                   .values = absl::MakeSpan(pixelsamples)};
+
+  std::vector<int32_t> dimensions = {2};
+  Parameter dimensions_parameter{.directive = "",
+                                 .type = ParameterType::INTEGER,
+                                 .type_name = "",
+                                 .values = absl::MakeSpan(dimensions)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"pixelsamples", pixelsamples_parameter},
+      {"dimensions", dimensions_parameter}};
+
+  MaxMinDistSampler actual;
+  RemoveMaxMinDistSamplerV1(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                pixelsamples: 1 dimensions: 2
+              )pb"));
+}
+
 TEST(RemovePaddedSobolSampler, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
@@ -335,6 +458,37 @@ TEST(RemovePMJ02BNSampler, WithData) {
   PMJ02BNSampler actual;
   RemovePMJ02BNSampler(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(pixelsamples: 1 seed: 2)pb"));
+}
+
+TEST(RemoveRandomSamplerV1, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  RandomSampler actual;
+  RemoveRandomSamplerV1(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveRandomSamplerV1, WithData) {
+  std::vector<int32_t> xsamples = {1};
+  Parameter xsamples_parameter{.directive = "",
+                               .type = ParameterType::INTEGER,
+                               .type_name = "",
+                               .values = absl::MakeSpan(xsamples)};
+
+  std::vector<int32_t> ysamples = {2};
+  Parameter ysamples_parameter{.directive = "",
+                               .type = ParameterType::INTEGER,
+                               .type_name = "",
+                               .values = absl::MakeSpan(ysamples)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"xsamples", xsamples_parameter}, {"ysamples", ysamples_parameter}};
+
+  RandomSampler actual;
+  RemoveRandomSamplerV1(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                xsamples: 1 ysamples: 2
+              )pb"));
 }
 
 TEST(RemoveSobolSamplerV1, Empty) {

@@ -54,6 +54,11 @@ void AddAllFieldsByNameAndNumber(
       continue;
     }
 
+    if (descriptor.name() == "AdaptiveSampler" &&
+        (field_descriptor->name() == "maxsamples")) {
+      continue;
+    }
+
     if (auto iter = field_descriptors_by_name.find(field_descriptor->name());
         iter != field_descriptors_by_name.end()) {
       EXPECT_EQ(iter->second->type(), field_descriptor->type());

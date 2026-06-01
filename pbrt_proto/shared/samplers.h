@@ -9,6 +9,10 @@
 
 namespace pbrt_proto {
 
+void RemoveAdaptiveSamplerV1(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    AdaptiveSampler& output);
+
 void RemoveBestCandidateSampler(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     BestCandidateSampler& output);
@@ -33,6 +37,10 @@ void RemoveIndependentSamplerV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     IndependentSampler& output);
 
+void RemoveMaxMinDistSamplerV1(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    MaxMinDistSampler& output);
+
 absl::Status RemovePaddedSobolSampler(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     PaddedSobolSampler& output);
@@ -40,6 +48,10 @@ absl::Status RemovePaddedSobolSampler(
 void RemovePMJ02BNSampler(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     PMJ02BNSampler& output);
+
+void RemoveRandomSamplerV1(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    RandomSampler& output);
 
 void RemoveSobolSamplerV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
@@ -72,50 +84,6 @@ void RemoveZeroTwoSequenceSamplerV2(
 absl::Status RemoveZSobolSampler(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     ZSobolSampler& output);
-
-//
-// Parameters
-//
-
-template <typename T>
-void RemovePixelSamples(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters, T& output) {
-  if (std::optional<int32_t> pixelsamples =
-          TryRemoveInteger(parameters, "pixelsamples");
-      pixelsamples.has_value()) {
-    output.set_pixelsamples(std::max(0, *pixelsamples));
-  }
-}
-
-template <typename T>
-void RemoveDimension(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters, T& output) {
-  if (std::optional<int32_t> dimensions =
-          TryRemoveInteger(parameters, "dimensions");
-      dimensions.has_value()) {
-    output.set_dimensions(std::max(0, *dimensions));
-  }
-}
-
-template <typename T>
-void RemoveXSamples(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters, T& output) {
-  if (std::optional<int32_t> xsamples =
-          TryRemoveInteger(parameters, "xsamples");
-      xsamples.has_value()) {
-    output.set_xsamples(std::max(0, *xsamples));
-  }
-}
-
-template <typename T>
-void RemoveYSamples(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters, T& output) {
-  if (std::optional<int32_t> ysamples =
-          TryRemoveInteger(parameters, "ysamples");
-      ysamples.has_value()) {
-    output.set_ysamples(std::max(0, *ysamples));
-  }
-}
 
 }  // namespace pbrt_proto
 

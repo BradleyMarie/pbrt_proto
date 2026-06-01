@@ -10,6 +10,46 @@ namespace pbrt_proto {
 namespace {
 
 template <typename T>
+void RemovePixelSamples(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters, T& output) {
+  if (std::optional<int32_t> pixelsamples =
+          TryRemoveInteger(parameters, "pixelsamples");
+      pixelsamples.has_value()) {
+    output.set_pixelsamples(std::max(0, *pixelsamples));
+  }
+}
+
+template <typename T>
+void RemoveDimension(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters, T& output) {
+  if (std::optional<int32_t> dimensions =
+          TryRemoveInteger(parameters, "dimensions");
+      dimensions.has_value()) {
+    output.set_dimensions(std::max(0, *dimensions));
+  }
+}
+
+template <typename T>
+void RemoveXSamples(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters, T& output) {
+  if (std::optional<int32_t> xsamples =
+          TryRemoveInteger(parameters, "xsamples");
+      xsamples.has_value()) {
+    output.set_xsamples(std::max(0, *xsamples));
+  }
+}
+
+template <typename T>
+void RemoveYSamples(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters, T& output) {
+  if (std::optional<int32_t> ysamples =
+          TryRemoveInteger(parameters, "ysamples");
+      ysamples.has_value()) {
+    output.set_ysamples(std::max(0, *ysamples));
+  }
+}
+
+template <typename T>
 void RemoveJitter(absl::flat_hash_map<absl::string_view, Parameter>& parameters,
                   T& output) {
   if (std::optional<bool> jitter = TryRemoveBool(parameters, "jitter");
@@ -51,6 +91,37 @@ void RemoveSeed(absl::flat_hash_map<absl::string_view, Parameter>& parameters,
 }
 
 }  // namespace
+
+void RemoveAdaptiveSamplerV1(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    AdaptiveSampler& output) {
+  if (std::optional<int32_t> minsamples =
+          TryRemoveInteger(parameters, "minsamples");
+      minsamples.has_value()) {
+    output.set_minsamples(std::max(0, *minsamples));
+  }
+
+  if (std::optional<int32_t> maxsamples =
+          TryRemoveInteger(parameters, "maxsamples");
+      maxsamples.has_value()) {
+    output.set_maxsamples(std::max(0, *maxsamples));
+  }
+
+  if (std::optional<absl::string_view> method =
+          TryRemoveString(parameters, "method");
+      method.has_value()) {
+    if (*method == "contrast") {
+      output.set_method(AdaptiveSampler::CONTRAST);
+    } else if (*method == "shapeid") {
+      output.set_method(AdaptiveSampler::SHAPEID);
+    } else {
+      std::cerr
+          << "Unsupported value for 'adaptive' Sampler parameter 'method': \""
+          << *method << "\"" << std::endl;
+      output.set_method(AdaptiveSampler::CONTRAST);
+    }
+  }
+}
 
 void RemoveBestCandidateSampler(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
@@ -97,6 +168,13 @@ void RemoveIndependentSamplerV2(
   RemoveSeed(parameters, output);
 }
 
+void RemoveMaxMinDistSamplerV1(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    MaxMinDistSampler& output) {
+  RemovePixelSamples(parameters, output);
+  RemoveDimension(parameters, output);
+}
+
 absl::Status RemovePaddedSobolSampler(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     PaddedSobolSampler& output) {
@@ -110,6 +188,13 @@ void RemovePMJ02BNSampler(
     PMJ02BNSampler& output) {
   RemovePixelSamples(parameters, output);
   RemoveSeed(parameters, output);
+}
+
+void RemoveRandomSamplerV1(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    RandomSampler& output) {
+  RemoveXSamples(parameters, output);
+  RemoveYSamples(parameters, output);
 }
 
 void RemoveSobolSamplerV1(

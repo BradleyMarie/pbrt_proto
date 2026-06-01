@@ -672,8 +672,7 @@ absl::Status ParserV3::Sampler(
   if (sampler_type == "halton") {
     RemoveHaltonSamplerV2(parameters, *sampler.mutable_halton());
   } else if (sampler_type == "maxmindist") {
-    RemovePixelSamples(parameters, *sampler.mutable_maxmindist());
-    RemoveDimension(parameters, *sampler.mutable_maxmindist());
+    RemoveMaxMinDistSamplerV1(parameters, *sampler.mutable_maxmindist());
   } else if (sampler_type == "random") {
     RemoveIndependentSamplerV1(parameters, *sampler.mutable_random());
   } else if (sampler_type == "sobol") {

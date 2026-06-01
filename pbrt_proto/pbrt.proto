@@ -2776,6 +2776,24 @@ enum SamplerRandomizationMethod {
   FASTOWEN = 3;
 }
 
+// A sampler which adaptively varies the number of samples per pixels.
+message AdaptiveSampler {
+  // The maximum number of samples per pixel.
+  optional uint32 maxsamples = 1 [default = 32];
+
+  // The minimum number of samples per pixel.
+  optional uint32 minsamples = 5 [default = 4];
+
+  // The supported methods for adapting the number of samples per pixel.
+  enum Method {
+    CONTRAST = 0;
+    SHAPEID = 1;
+  }
+
+  // The method to use to determine the number of samples per pixel.
+  optional Method method = 6 [default = CONTRAST];
+}
+
 // A sampler which uses the best canididate algorithm.
 message BestCandidateSampler {
   // The number of samples to do per pixel.
@@ -2787,27 +2805,27 @@ message HaltonSampler {
   // The number of samples to do per pixel.
   optional uint32 pixelsamples = 1;
 
-  // The method used to scramble the sequence to reduce the appearance of 
-  // visual artifacts from poor sample selection.
-  //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is only supported starting with PBRTv4 and should be
-  //       ignored when reading earlier input.
-  optional SamplerRandomizationMethod randomization = 2;
-
-  // The seed used to scramble the distribution as part of the randomization.
-  //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is only supported starting with PBRTv4 and should be
-  //       ignored when reading earlier input.
-  optional int32 seed = 3;
-
   // If true, samples are placed at the center of each pixel.
   //
   // NOTE: For simplicity, this field is shared between all PBRT versions;
   //       however, it is only supported in PBRTv3 and should be ignored when
   //       reading all other input.
   optional bool samplepixelcenter = 8 [default = false];
+
+  // The seed used to scramble the distribution as part of the randomization.
+  //
+  // NOTE: For simplicity, this field is shared between all PBRT versions;
+  //       however, it is only supported starting with PBRTv4 and should be
+  //       ignored when reading earlier input.
+  optional int32 seed = 9;
+
+  // The method used to scramble the sequence to reduce the appearance of 
+  // visual artifacts from poor sample selection.
+  //
+  // NOTE: For simplicity, this field is shared between all PBRT versions;
+  //       however, it is only supported starting with PBRTv4 and should be
+  //       ignored when reading earlier input.
+  optional SamplerRandomizationMethod randomization = 10;
 }
 
 // A sampler which uses an RNG and samples all dimensions independently.
@@ -2820,7 +2838,16 @@ message IndependentSampler {
   // NOTE: For simplicity, this field is shared between all PBRT versions;
   //       however, it is only supported starting with PBRTv4 and should be
   //       ignored when reading earlier input.
-  optional int32 seed = 3;
+  optional int32 seed = 9;
+}
+
+// A sampler which uses the Grunschloss maximized-minimized algorithm.
+message MaxMinDistSampler {
+  // The number of samples to do per pixel.
+  optional uint32 pixelsamples = 1 [default = 16];
+
+  // The maximum number of sampled dimensions before falling back to a PRNG.
+  optional uint32 dimensions = 7 [default = 4];
 }
 
 // A low discrepancy sampler which uses a stratified Sobol sequence as its
@@ -2829,12 +2856,12 @@ message PaddedSobolSampler {
   // The number of samples to do per pixel.
   optional uint32 pixelsamples = 1 [default = 16];
 
+  // The seed used to scramble the distribution as part of the randomization.
+  optional int32 seed = 9;
+
   // The method used to scramble the sequence to reduce the appearance of 
   // visual artifacts from poor sample selection.
-  optional SamplerRandomizationMethod randomization = 2;
-
-  // The seed used to scramble the distribution as part of the randomization.
-  optional int32 seed = 3;
+  optional SamplerRandomizationMethod randomization = 10;
 }
 
 // A low discrepancy sampler which uses Pixar's progressive multi-jittered
@@ -2844,7 +2871,16 @@ message PMJ02BNSampler {
   optional uint32 pixelsamples = 1 [default = 16];
 
   // The seed used to scramble the distribution as part of the randomization.
-  optional int32 seed = 3;
+  optional int32 seed = 9;
+}
+
+// A sampler which stratifies samples in the plane of the image.
+message RandomSampler {
+  // The number of samples in the image `x` axis.
+  optional uint32 xsamples = 2 [default = 2];
+
+  // The number of samples in the image `y` axis.
+  optional uint32 ysamples = 3 [default = 2];
 }
 
 // A low discrepancy sampler which uses a Sobol sequence as its basis.
@@ -2852,46 +2888,46 @@ message SobolSampler {
   // The number of samples to do per pixel.
   optional uint32 pixelsamples = 1 [default = 16];
 
+  // The seed used to scramble the distribution as part of the randomization.
+  //
+  // NOTE: For simplicity, this field is shared between all PBRT versions;
+  //       however, it is only supported starting with PBRTv4 and should be
+  //       ignored when reading earlier input.
+  optional int32 seed = 9;
+
   // The method used to scramble the sequence to reduce the appearance of 
   // visual artifacts from poor sample selection.
   //
   // NOTE: For simplicity, this field is shared between all PBRT versions;
   //       however, it is only supported starting with PBRTv4 and should be
   //       ignored when reading earlier input.
-  optional SamplerRandomizationMethod randomization = 2;
-
-  // The seed used to scramble the distribution as part of the randomization.
-  //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is only supported starting with PBRTv4 and should be
-  //       ignored when reading earlier input.
-  optional int32 seed = 3;
+  optional SamplerRandomizationMethod randomization = 10;
 }
 
 // A sampler which stratifies samples generated by an RNG.
 message StratifiedSampler {
-  // The seed used to initiate the RNG.
-  //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is only supported starting with PBRTv4 and should be
-  //       ignored when reading earlier input.
-  optional int32 seed = 3;
+  // The number of samples in the image `x` axis.
+  optional uint32 xsamples = 2;
+
+  // The number of samples in the image `y` axis.
+  optional uint32 ysamples = 3;
+
+  // If true, the samples are jittered based on the RNG.
+  optional bool jitter = 4 [default = true];
 
   // The maximum number of sampled dimensions before falling back to an RNG.
   //
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is only supported in PBRTv3 and should be ignored when
   //       reading input from other versions.
-  optional uint32 dimensions = 4 [default = 4];
+  optional uint32 dimensions = 7 [default = 4];
 
-  // The number of samples in the image `x` axis.
-  optional uint32 xsamples = 5;
-
-  // The number of samples in the image `y` axis.
-  optional uint32 ysamples = 6;
-
-  // If true, the samples are jittered based on the RNG.
-  optional bool jitter = 7 [default = true];
+  // The seed used to initiate the RNG.
+  //
+  // NOTE: For simplicity, this field is shared between all PBRT versions;
+  //       however, it is only supported starting with PBRTv4 and should be
+  //       ignored when reading earlier input.
+  optional int32 seed = 9;
 }
 
 // A low discrepancy sampler which uses a Sobol sequence with blue noise as its
@@ -2900,12 +2936,12 @@ message ZSobolSampler {
   // The number of samples to do per pixel.
   optional uint32 pixelsamples = 1 [default = 16];
 
+  // The seed used to scramble the distribution as part of the randomization.
+  optional int32 seed = 9;
+
   // The method used to scramble the sequence to reduce the appearance of 
   // visual artifacts from poor sample selection.
-  optional SamplerRandomizationMethod randomization = 2;
-
-  // The seed used to scramble the distribution as part of the randomization.
-  optional int32 seed = 3;
+  optional SamplerRandomizationMethod randomization = 10;
 }
 
 // A low discrepancy sampler which uses a (0, 2) sequence as its basis.
@@ -2918,7 +2954,7 @@ message ZeroTwoSequenceSampler {
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is only supported in PBRTv3 and should be ignored when
   //       reading input from other versions.
-  optional uint32 dimensions = 4 [default = 4];
+  optional uint32 dimensions = 7 [default = 4];
 }
 
 //
