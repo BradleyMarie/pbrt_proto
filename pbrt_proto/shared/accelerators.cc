@@ -1,5 +1,7 @@
 #include "pbrt_proto/shared/accelerators.h"
 
+#include <iostream>
+
 #include "absl/container/flat_hash_map.h"
 #include "absl/strings/string_view.h"
 #include "pbrt_proto/pbrt.pb.h"
@@ -28,13 +30,18 @@ void RemoveBvhAccelerator(
       output.set_splitmethod(BvhAccelerator::EQUAL);
     } else if (allow_hlbvh && *splitmethod == "hlbvh") {
       output.set_splitmethod(BvhAccelerator::HLBVH);
+    } else {
+      std::cerr << "Unsupported value for 'bvh' Accelerator parameter "
+                   "'splitmethod': \""
+                << *splitmethod << "\"" << std::endl;
+      output.set_splitmethod(BvhAccelerator::SAH);
     }
   }
 }
 
 }  // namespace
 
-void RemoveGridAccelerator(
+void RemoveGridAcceleratorV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     GridAccelerator& output) {
   if (std::optional<bool> refineimmediately =
@@ -44,7 +51,7 @@ void RemoveGridAccelerator(
   }
 }
 
-void RemoveKdTreeAccelerator(
+void RemoveKdTreeAcceleratorV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     KdTreeAccelerator& output) {
   if (std::optional<double> emptybonus =
@@ -78,13 +85,13 @@ void RemoveKdTreeAccelerator(
   }
 }
 
-void RemoveBvhAcceleratorV1(
+void RemoveBvhAcceleratorV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     BvhAccelerator& output) {
   RemoveBvhAccelerator(parameters, /*allow_hlbvh=*/false, output);
 }
 
-void RemoveBvhAcceleratorV2(
+void RemoveBvhAcceleratorV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     BvhAccelerator& output) {
   RemoveBvhAccelerator(parameters, /*allow_hlbvh=*/true, output);

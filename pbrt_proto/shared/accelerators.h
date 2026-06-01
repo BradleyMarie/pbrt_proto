@@ -8,19 +8,19 @@
 
 namespace pbrt_proto {
 
-void RemoveGridAccelerator(
+void RemoveGridAcceleratorV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     GridAccelerator& output);
 
-void RemoveKdTreeAccelerator(
+void RemoveKdTreeAcceleratorV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     KdTreeAccelerator& output);
 
-void RemoveBvhAcceleratorV1(
+void RemoveBvhAcceleratorV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     BvhAccelerator& output);
 
-void RemoveBvhAcceleratorV2(
+void RemoveBvhAcceleratorV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     BvhAccelerator& output);
 

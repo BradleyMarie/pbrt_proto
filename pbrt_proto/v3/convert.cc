@@ -280,9 +280,9 @@ absl::Status ParserV3::Accelerator(
   auto& accelerator = *output_.add_directives()->mutable_accelerator();
 
   if (accelerator_type == "bvh") {
-    RemoveBvhAcceleratorV2(parameters, *accelerator.mutable_bvh());
+    RemoveBvhAcceleratorV3(parameters, *accelerator.mutable_bvh());
   } else if (accelerator_type == "kdtree") {
-    RemoveKdTreeAccelerator(parameters, *accelerator.mutable_kdtree());
+    RemoveKdTreeAcceleratorV1(parameters, *accelerator.mutable_kdtree());
   } else {
     std::cerr << "Unrecognized Accelerator type: \"" << accelerator_type << "\""
               << std::endl;

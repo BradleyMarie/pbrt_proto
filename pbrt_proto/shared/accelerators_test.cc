@@ -16,15 +16,15 @@ namespace {
 
 using ::google::protobuf::EqualsProto;
 
-TEST(RemoveGridAccelerator, Empty) {
+TEST(RemoveGridAcceleratorV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   GridAccelerator actual;
-  RemoveGridAccelerator(parameters, actual);
+  RemoveGridAcceleratorV1(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveGridAccelerator, RefineImmediately) {
+TEST(RemoveGridAcceleratorV1, RefineImmediately) {
   bool values[] = {true};
   Parameter parameter{.directive = "",
                       .type = ParameterType::BOOL,
@@ -35,21 +35,21 @@ TEST(RemoveGridAccelerator, RefineImmediately) {
       {"refineimmediately", parameter}};
 
   GridAccelerator actual;
-  RemoveGridAccelerator(parameters, actual);
+  RemoveGridAcceleratorV1(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 refineimmediately: true
               )pb"));
 }
 
-TEST(RemoveKdTreeAccelerator, Empty) {
+TEST(RemoveKdTreeAcceleratorV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   KdTreeAccelerator actual;
-  RemoveKdTreeAccelerator(parameters, actual);
+  RemoveKdTreeAcceleratorV1(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveKdTreeAccelerator, EmptyBonus) {
+TEST(RemoveKdTreeAcceleratorV1, EmptyBonus) {
   std::vector<double> values = {1.0};
   Parameter parameter{.directive = "",
                       .type = ParameterType::FLOAT,
@@ -60,13 +60,13 @@ TEST(RemoveKdTreeAccelerator, EmptyBonus) {
       {"emptybonus", parameter}};
 
   KdTreeAccelerator actual;
-  RemoveKdTreeAccelerator(parameters, actual);
+  RemoveKdTreeAcceleratorV1(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 emptybonus: 1.0
               )pb"));
 }
 
-TEST(RemoveKdTreeAccelerator, IntersectCost) {
+TEST(RemoveKdTreeAcceleratorV1, IntersectCost) {
   std::vector<int32_t> values = {1};
   Parameter parameter{.directive = "",
                       .type = ParameterType::INTEGER,
@@ -77,13 +77,13 @@ TEST(RemoveKdTreeAccelerator, IntersectCost) {
       {"intersectcost", parameter}};
 
   KdTreeAccelerator actual;
-  RemoveKdTreeAccelerator(parameters, actual);
+  RemoveKdTreeAcceleratorV1(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 intersectcost: 1
               )pb"));
 }
 
-TEST(RemoveKdTreeAccelerator, MaxDepth) {
+TEST(RemoveKdTreeAcceleratorV1, MaxDepth) {
   std::vector<int32_t> values = {1};
   Parameter parameter{.directive = "",
                       .type = ParameterType::INTEGER,
@@ -94,13 +94,13 @@ TEST(RemoveKdTreeAccelerator, MaxDepth) {
       {"maxdepth", parameter}};
 
   KdTreeAccelerator actual;
-  RemoveKdTreeAccelerator(parameters, actual);
+  RemoveKdTreeAcceleratorV1(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 maxdepth: 1
               )pb"));
 }
 
-TEST(RemoveKdTreeAccelerator, MaxPrims) {
+TEST(RemoveKdTreeAcceleratorV1, MaxPrims) {
   std::vector<int32_t> values = {1};
   Parameter parameter{.directive = "",
                       .type = ParameterType::INTEGER,
@@ -111,13 +111,13 @@ TEST(RemoveKdTreeAccelerator, MaxPrims) {
       {"maxprims", parameter}};
 
   KdTreeAccelerator actual;
-  RemoveKdTreeAccelerator(parameters, actual);
+  RemoveKdTreeAcceleratorV1(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 maxprims: 1
               )pb"));
 }
 
-TEST(RemoveKdTreeAccelerator, TraversalCost) {
+TEST(RemoveKdTreeAcceleratorV1, TraversalCost) {
   std::vector<int32_t> values = {1};
   Parameter parameter{.directive = "",
                       .type = ParameterType::INTEGER,
@@ -128,84 +128,9 @@ TEST(RemoveKdTreeAccelerator, TraversalCost) {
       {"traversalcost", parameter}};
 
   KdTreeAccelerator actual;
-  RemoveKdTreeAccelerator(parameters, actual);
+  RemoveKdTreeAcceleratorV1(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 traversalcost: 1
-              )pb"));
-}
-
-TEST(RemoveBvhAcceleratorV1, Empty) {
-  absl::flat_hash_map<absl::string_view, Parameter> parameters;
-
-  BvhAccelerator actual;
-  RemoveBvhAcceleratorV1(parameters, actual);
-  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
-}
-
-TEST(RemoveBvhAcceleratorV1, MaxNodePrims) {
-  std::vector<int32_t> values = {1};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::INTEGER,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
-
-  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
-      {"maxnodeprims", parameter}};
-
-  BvhAccelerator actual;
-  RemoveBvhAcceleratorV1(parameters, actual);
-  EXPECT_THAT(actual, EqualsProto(R"pb(
-                maxnodeprims: 1
-              )pb"));
-}
-
-TEST(RemoveBvhAcceleratorV1, Middle) {
-  std::vector<absl::string_view> values = {"middle"};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::STRING,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
-
-  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
-      {"splitmethod", parameter}};
-
-  BvhAccelerator actual;
-  RemoveBvhAcceleratorV1(parameters, actual);
-  EXPECT_THAT(actual, EqualsProto(R"pb(
-                splitmethod: MIDDLE
-              )pb"));
-}
-
-TEST(RemoveBvhAcceleratorV1, Equal) {
-  std::vector<absl::string_view> values = {"equal"};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::STRING,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
-
-  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
-      {"splitmethod", parameter}};
-
-  BvhAccelerator actual;
-  RemoveBvhAcceleratorV1(parameters, actual);
-  EXPECT_THAT(actual, EqualsProto(R"pb(
-                splitmethod: EQUAL
-              )pb"));
-}
-
-TEST(RemoveBvhAcceleratorV1, Hlbvh) {
-  std::vector<absl::string_view> values = {"hlbvh"};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::STRING,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
-
-  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
-      {"splitmethod", parameter}};
-
-  BvhAccelerator actual;
-  RemoveBvhAcceleratorV1(parameters, actual);
-  EXPECT_THAT(actual, EqualsProto(R"pb(
               )pb"));
 }
 
@@ -281,11 +206,87 @@ TEST(RemoveBvhAcceleratorV2, Hlbvh) {
   BvhAccelerator actual;
   RemoveBvhAcceleratorV2(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
+                splitmethod: SAH
+              )pb"));
+}
+
+TEST(RemoveBvhAcceleratorV3, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  BvhAccelerator actual;
+  RemoveBvhAcceleratorV3(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveBvhAcceleratorV3, MaxNodePrims) {
+  std::vector<int32_t> values = {1};
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::INTEGER,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"maxnodeprims", parameter}};
+
+  BvhAccelerator actual;
+  RemoveBvhAcceleratorV3(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                maxnodeprims: 1
+              )pb"));
+}
+
+TEST(RemoveBvhAcceleratorV3, Middle) {
+  std::vector<absl::string_view> values = {"middle"};
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::STRING,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"splitmethod", parameter}};
+
+  BvhAccelerator actual;
+  RemoveBvhAcceleratorV3(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                splitmethod: MIDDLE
+              )pb"));
+}
+
+TEST(RemoveBvhAcceleratorV3, Equal) {
+  std::vector<absl::string_view> values = {"equal"};
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::STRING,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"splitmethod", parameter}};
+
+  BvhAccelerator actual;
+  RemoveBvhAcceleratorV3(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                splitmethod: EQUAL
+              )pb"));
+}
+
+TEST(RemoveBvhAcceleratorV3, Hlbvh) {
+  std::vector<absl::string_view> values = {"hlbvh"};
+  Parameter parameter{.directive = "",
+                      .type = ParameterType::STRING,
+                      .type_name = "",
+                      .values = absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"splitmethod", parameter}};
+
+  BvhAccelerator actual;
+  RemoveBvhAcceleratorV3(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb(
                 splitmethod: HLBVH
               )pb"));
 }
 
-TEST(RemoveBvhAcceleratorV2, Unknown) {
+TEST(RemoveBvhAcceleratorV3, Unknown) {
   std::vector<absl::string_view> values = {"unknown"};
   Parameter parameter{.directive = "",
                       .type = ParameterType::STRING,
@@ -296,8 +297,9 @@ TEST(RemoveBvhAcceleratorV2, Unknown) {
       {"splitmethod", parameter}};
 
   BvhAccelerator actual;
-  RemoveBvhAcceleratorV2(parameters, actual);
+  RemoveBvhAcceleratorV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
+                splitmethod: SAH
               )pb"));
 }
 
