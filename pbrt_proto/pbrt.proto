@@ -553,8 +553,24 @@ message DiffuseAreaLightSource {
 
     // The path to an image file describing the spatially-varying emissions
     // over the surface of the light.
-    string filename = 2;
+    //
+    // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+    //       however, it is not supported before PBRTv4 and should be ignored
+    //       when reading earlier input.
+    string filename = 5;
   }
+
+  // The suggested number of shadow samples to take from the light. May be
+  // ignored depending on the Integrator used for rendering.
+  //
+  // NOTE: In PBRTv1 and PBRTv2 this field is referred to by the name
+  //       `nsamples`; however, it is referred to here as `samples` which is the
+  //       final name for the parameter that was used in PBRTv3.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported after PBRTv3 and should be ignored when
+  //       reading later input.
+  optional uint32 samples = 2 [default = 1];
 
   // A scale applied to the spectrum provided in `L`.
   //
@@ -568,31 +584,19 @@ message DiffuseAreaLightSource {
   //       reading PBRTv1 input.
   optional Spectrum scale = 3;
 
-  // If positive, the desired power of the light.
-  //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv4 and should be ignored when
-  //       reading earlier input.
-  optional double power = 4 [default = -1.0];
-
   // If true, light should emit from both sides both side of geometry.
   //
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is only supported in PBRTv3 and should be ignored when
   //       reading input from other versions.
-  optional bool twosided = 5 [default = false];
+  optional bool twosided = 4 [default = false];
 
-  // The suggested number of shadow samples to take from the light. May be
-  // ignored depending on the Integrator used for rendering.
-  //
-  // NOTE: In PBRTv1 and PBRTv2 this field is referred to by the name
-  //       `nsamples`; however, it is referred to here as `samples` which is the
-  //       final name for the parameter that was used in PBRTv3.
+  // If positive, the desired power of the light.
   //
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported after PBRTv3 and should be ignored when
-  //       reading later input.
-  optional uint32 samples = 6 [default = 1];
+  //       however, it is not supported before PBRTv4 and should be ignored when
+  //       reading earlier input.
+  optional double power = 6 [default = -1.0];
 }
 
 //
