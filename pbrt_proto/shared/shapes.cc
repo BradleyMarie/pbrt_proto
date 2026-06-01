@@ -1,9 +1,11 @@
 #include "pbrt_proto/shared/shapes.h"
 
 #include <algorithm>
+#include <utility>
 
 #include "absl/container/flat_hash_map.h"
 #include "absl/status/status.h"
+#include "absl/strings/str_cat.h"
 #include "absl/strings/string_view.h"
 #include "pbrt_proto/pbrt.pb.h"
 #include "pbrt_proto/shared/common.h"
@@ -28,6 +30,115 @@ void RemoveConeShapeV1(
       phimax.has_value()) {
     output.set_phimax(*phimax);
   }
+}
+
+absl::Status TryRemoveCurveShapeV3(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::FunctionRef<CurveShape*()> get_output) {
+  CurveShape output;
+
+  bool write_output = true;
+  if (std::optional<int32_t> degree = TryRemoveInteger(parameters, "degree");
+      degree.has_value()) {
+    if (*degree == 3) {
+      output.set_degree(CurveShape::THREE);
+    } else if (*degree == 2) {
+      output.set_degree(CurveShape::TWO);
+    } else {
+      std::cerr << "Unsupported value for 'curve' Shape parameter 'degree': \""
+                << *degree << "\"" << std::endl;
+      write_output = false;
+    }
+  }
+
+  if (std::optional<absl::string_view> basis =
+          TryRemoveString(parameters, "basis");
+      basis.has_value()) {
+    if (*basis == "bezier") {
+      output.set_basis(CurveShape::BEZIER);
+    } else if (*basis == "bspline") {
+      output.set_basis(CurveShape::BSPLINE);
+    } else {
+      std::cerr << "Unrecognized value for 'curve' Shape parameter 'basis': \""
+                << *basis << "\"" << std::endl;
+      write_output = false;
+    }
+  }
+
+  if (std::optional<absl::string_view> type =
+          TryRemoveString(parameters, "type");
+      type.has_value()) {
+    if (*type == "cylinder") {
+      output.set_type(CurveShape::CYLINDER);
+    } else if (*type == "flat") {
+      output.set_type(CurveShape::FLAT);
+    } else if (*type == "ribbon") {
+      output.set_type(CurveShape::RIBBON);
+    } else {
+      std::cerr << "Unrecognized value for 'curve' Shape parameter 'type': \""
+                << *type << "\"" << std::endl;
+      output.set_type(CurveShape::CYLINDER);
+    }
+  }
+
+  if (std::optional<double> width = TryRemoveFloat(parameters, "width");
+      width.has_value()) {
+    output.set_width(*width);
+  }
+
+  if (std::optional<double> width0 = TryRemoveFloat(parameters, "width0");
+      width0.has_value()) {
+    output.set_width0(*width0);
+  }
+
+  if (std::optional<double> width1 = TryRemoveFloat(parameters, "width1");
+      width1.has_value()) {
+    output.set_width1(*width1);
+  }
+
+  if (std::optional<absl::Span<std::array<double, 3>>> p =
+          TryRemovePoint3s(parameters, "P");
+      p.has_value()) {
+    if (p->size() > std::numeric_limits<int32_t>::max()) {
+      return absl::ResourceExhaustedError(
+          "Curve shape has too many points to be stored in a 1D proto array");
+    }
+
+    for (const std::array<double, 3>& src : *p) {
+      Point& dest = *output.add_p();
+      dest.set_x(src[0]);
+      dest.set_y(src[1]);
+      dest.set_z(src[2]);
+    }
+  }
+
+  if (std::optional<absl::Span<std::array<double, 3>>> n =
+          TryRemoveNormals(parameters, "N");
+      n.has_value()) {
+    if (n->size() > std::numeric_limits<int32_t>::max()) {
+      return absl::ResourceExhaustedError(
+          "Curve shape has too many normals to be stored in a 1D proto array");
+    }
+
+    for (const std::array<double, 3>& src : *n) {
+      Vector& dest = *output.add_n();
+      dest.set_x(src[0]);
+      dest.set_y(src[1]);
+      dest.set_z(src[2]);
+    }
+  }
+
+  if (std::optional<int32_t> splitdepth =
+          TryRemoveInteger(parameters, "splitdepth");
+      splitdepth.has_value()) {
+    output.set_splitdepth(std::max(0, *splitdepth));
+  }
+
+  if (write_output) {
+    *get_output() = std::move(output);
+  }
+
+  return absl::OkStatus();
 }
 
 void RemoveCylinderShapeV1(
@@ -95,7 +206,7 @@ absl::Status RemoveHeightFieldShapeV1(
   uint64_t required_size =
       static_cast<uint64_t>(output.nu()) * static_cast<uint64_t>(output.nv());
   if (required_size > std::numeric_limits<int32_t>::max()) {
-    return absl::InvalidArgumentError(
+    return absl::ResourceExhaustedError(
         "Heighfield shape is too large to be stored in a 1D proto array");
   }
 
@@ -147,7 +258,7 @@ absl::Status RemoveLoopSubdivShapeV1(
       p.has_value()) {
     p->remove_suffix(p->size() % 3);
     if (p->size() > std::numeric_limits<int32_t>::max()) {
-      return absl::InvalidArgumentError(
+      return absl::ResourceExhaustedError(
           "LoopSubdiv shape has too many indices to be stored in a 1D proto "
           "array");
     }
@@ -165,7 +276,7 @@ absl::Status RemoveLoopSubdivShapeV1(
       indices.has_value()) {
     indices->remove_suffix(indices->size() % 3);
     if (indices->size() / 3 > std::numeric_limits<int32_t>::max()) {
-      return absl::InvalidArgumentError(
+      return absl::ResourceExhaustedError(
           "LoopSubdiv shape has too many indices to be stored in a 1D proto "
           "array");
     }
@@ -176,6 +287,22 @@ absl::Status RemoveLoopSubdivShapeV1(
       face.set_v1(std::max(0, (*indices)[3u * i + 1]));
       face.set_v2(std::max(0, (*indices)[3u * i + 2]));
     }
+  }
+
+  return absl::OkStatus();
+}
+
+absl::Status RemoveLoopSubdivShapeV3(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    LoopSubdivShape& output) {
+  if (absl::Status status = RemoveLoopSubdivShapeV1(parameters, output);
+      !status.ok()) {
+    return status;
+  }
+
+  if (std::optional<int32_t> levels = TryRemoveInteger(parameters, "levels");
+      levels.has_value()) {
+    output.set_levels(std::max(0, *levels));
   }
 
   return absl::OkStatus();
@@ -239,7 +366,7 @@ absl::Status RemoveNurbsShapeV1(
   int64_t required_points =
       static_cast<int64_t>(output.nu()) * static_cast<int64_t>(output.nv());
   if (required_points > std::numeric_limits<int32_t>::max()) {
-    return absl::InvalidArgumentError(
+    return absl::ResourceExhaustedError(
         "Nurbs shape has too many points to be stored in a 1D proto array");
   }
 
@@ -247,7 +374,7 @@ absl::Status RemoveNurbsShapeV1(
           TryRemovePoint3s(parameters, "P");
       p.has_value()) {
     if (p->size() > std::numeric_limits<int32_t>::max()) {
-      return absl::InvalidArgumentError(
+      return absl::ResourceExhaustedError(
           "Nurbs shape has too many points to be stored in a 1D proto "
           "array");
     }
@@ -264,7 +391,7 @@ absl::Status RemoveNurbsShapeV1(
       pw.has_value()) {
     pw->remove_suffix(pw->size() % 4);
     if (pw->size() / 4 > std::numeric_limits<int32_t>::max()) {
-      return absl::InvalidArgumentError(
+      return absl::ResourceExhaustedError(
           "Nurbs shape has too many points to be stored in a 1D proto "
           "array");
     }
@@ -305,6 +432,22 @@ void RemoveParaboloidShapeV1(
   }
 }
 
+void RemovePlyMeshShapeV3(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    PlyMeshShape& output) {
+  if (std::optional<absl::string_view> filename =
+          TryRemoveString(parameters, "filename");
+      filename) {
+    output.set_filename(*filename);
+  }
+
+  TryRemoveFloatTexture(parameters, "alpha",
+                        std::bind(&PlyMeshShape::mutable_alpha, &output));
+
+  TryRemoveFloatTexture(parameters, "shadowalpha",
+                        std::bind(&PlyMeshShape::mutable_shadowalpha, &output));
+}
+
 void RemoveSphereShapeV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     SphereShape& output) {
@@ -336,7 +479,7 @@ absl::Status RemoveTriangleMeshShapeV1(
           TryRemovePoint3s(parameters, "P");
       p.has_value()) {
     if (p->size() > std::numeric_limits<int32_t>::max()) {
-      return absl::InvalidArgumentError(
+      return absl::ResourceExhaustedError(
           "Trianglemesh shape has too many points to be stored in a 1D proto "
           "array");
     }
@@ -354,7 +497,7 @@ absl::Status RemoveTriangleMeshShapeV1(
       indices.has_value()) {
     indices->remove_suffix(indices->size() % 3);
     if (indices->size() / 3 > std::numeric_limits<int32_t>::max()) {
-      return absl::InvalidArgumentError(
+      return absl::ResourceExhaustedError(
           "Trianglemesh shape has too many indices to be stored in a 1D proto "
           "array");
     }
@@ -371,7 +514,7 @@ absl::Status RemoveTriangleMeshShapeV1(
           TryRemoveNormals(parameters, "N");
       n.has_value()) {
     if (n->size() > std::numeric_limits<int32_t>::max()) {
-      return absl::InvalidArgumentError(
+      return absl::ResourceExhaustedError(
           "Trianglemesh shape has too many normals to be stored in a 1D proto "
           "array");
     }
@@ -388,7 +531,7 @@ absl::Status RemoveTriangleMeshShapeV1(
           TryRemoveVector3s(parameters, "S");
       s.has_value()) {
     if (s->size() > std::numeric_limits<int32_t>::max()) {
-      return absl::InvalidArgumentError(
+      return absl::ResourceExhaustedError(
           "Trianglemesh shape has too many tangents to be stored in a 1D proto "
           "array");
     }
@@ -405,7 +548,7 @@ absl::Status RemoveTriangleMeshShapeV1(
       uv.has_value()) {
     uv->remove_suffix(uv->size() % 2);
     if (uv->size() / 2 > std::numeric_limits<int32_t>::max()) {
-      return absl::InvalidArgumentError(
+      return absl::ResourceExhaustedError(
           "Trianglemesh shape has too many texture coordinates to be stored in "
           "a 1D proto array");
     }
@@ -420,7 +563,7 @@ absl::Status RemoveTriangleMeshShapeV1(
              st.has_value()) {
     st->remove_suffix(st->size() % 2);
     if (st->size() / 2 > std::numeric_limits<int32_t>::max()) {
-      return absl::InvalidArgumentError(
+      return absl::ResourceExhaustedError(
           "Trianglemesh shape has too many texture coordinates to be stored in "
           "a 1D proto array");
     }
@@ -448,6 +591,47 @@ absl::Status RemoveTriangleMeshShapeV2(
 
   TryRemoveFloatTexture(parameters, "alpha",
                         std::bind(&TriangleMeshShape::mutable_alpha, &output));
+
+  return absl::OkStatus();
+}
+
+absl::Status RemoveTriangleMeshShapeV3(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    TriangleMeshShape& output) {
+  if (absl::Status status = RemoveTriangleMeshShapeV1(parameters, output);
+      !status.ok()) {
+    return status;
+  }
+
+  if (std::optional<absl::Span<int32_t>> faceIndices =
+          TryRemoveIntegers(parameters, "faceIndices");
+      faceIndices.has_value()) {
+    output.mutable_faceindices()->Add(faceIndices->begin(), faceIndices->end());
+  }
+
+  if (std::optional<absl::Span<std::array<double, 2>>> uv =
+          TryRemovePoint2s(parameters, "uv");
+      uv.has_value()) {
+    for (const std::array<double, 2>& src : *uv) {
+      TriangleMeshShape::UVCoordinate& dest = *output.add_uv();
+      dest.set_u(src[0]);
+      dest.set_v(src[1]);
+    }
+  } else if (std::optional<absl::Span<std::array<double, 2>>> st =
+                 TryRemovePoint2s(parameters, "st");
+             st.has_value()) {
+    for (const std::array<double, 2>& src : *st) {
+      TriangleMeshShape::UVCoordinate& dest = *output.add_uv();
+      dest.set_u(src[0]);
+      dest.set_v(src[1]);
+    }
+  }
+
+  TryRemoveFloatTexture(parameters, "alpha",
+                        std::bind(&TriangleMeshShape::mutable_alpha, &output));
+  TryRemoveFloatTexture(
+      parameters, "shadowalpha",
+      std::bind(&TriangleMeshShape::mutable_shadowalpha, &output));
 
   return absl::OkStatus();
 }

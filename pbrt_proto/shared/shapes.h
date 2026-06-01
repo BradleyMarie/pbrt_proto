@@ -2,6 +2,7 @@
 #define _PBRT_PROTO_SHARED_SHAPES_
 
 #include "absl/container/flat_hash_map.h"
+#include "absl/functional/function_ref.h"
 #include "absl/status/status.h"
 #include "absl/strings/string_view.h"
 #include "pbrt_proto/pbrt.pb.h"
@@ -12,6 +13,10 @@ namespace pbrt_proto {
 void RemoveConeShapeV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     ConeShape& output);
+
+absl::Status TryRemoveCurveShapeV3(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::FunctionRef<CurveShape*()> get_output);
 
 void RemoveCylinderShapeV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
@@ -33,6 +38,10 @@ absl::Status RemoveLoopSubdivShapeV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     LoopSubdivShape& output);
 
+absl::Status RemoveLoopSubdivShapeV3(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    LoopSubdivShape& output);
+
 absl::Status RemoveNurbsShapeV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     NurbsShape& output);
@@ -40,6 +49,10 @@ absl::Status RemoveNurbsShapeV1(
 void RemoveParaboloidShapeV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     ParaboloidShape& output);
+
+void RemovePlyMeshShapeV3(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    PlyMeshShape& output);
 
 void RemoveSphereShapeV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
@@ -50,6 +63,10 @@ absl::Status RemoveTriangleMeshShapeV1(
     TriangleMeshShape& output);
 
 absl::Status RemoveTriangleMeshShapeV2(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    TriangleMeshShape& output);
+
+absl::Status RemoveTriangleMeshShapeV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     TriangleMeshShape& output);
 

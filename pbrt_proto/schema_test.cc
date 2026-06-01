@@ -177,11 +177,6 @@ TEST_P(Directives, ForwardCompatible) {
       GetMessageDescriptors(next);
 
   for (const auto& [name, base_descriptor] : base_descriptors) {
-    // Remove once V3 is updated to use new definitions.
-    if (name == "Shape" && (base == 3 || next == 3)) {
-      continue;
-    }
-
     std::string next_name = name;
     if (name == "SurfaceIntegrator" && next >= 3) {
       next_name = "Integrator";

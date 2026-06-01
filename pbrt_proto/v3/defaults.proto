@@ -291,7 +291,7 @@ message Defaults {
     reserved 5;
 
     // The default "heightfield" Shape
-    required Shape.Hyperboloid hyperboloid = 6;
+    required HyperboloidShape hyperboloid = 6;
 
     // The default "loopsubdiv" Shape is fully captured in its definition
     reserved 7;
@@ -303,13 +303,13 @@ message Defaults {
     reserved 9;
 
     // The default "plymesh" Shape
-    required Shape.PlyMesh plymesh = 10;
+    required PlyMeshShape plymesh = 10;
 
     // The default "sphere" Shape is fully captured in its definition
     reserved 11;
 
     // The default "trianglemesh" Shape
-    required Shape.TriangleMesh trianglemesh = 12;
+    required TriangleMeshShape trianglemesh = 12;
   }
 
   // The default values for every type of Shape

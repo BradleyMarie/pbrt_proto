@@ -2949,6 +2949,64 @@ message ConeShape {
   optional double phimax = 3 [default = 360.0];
 }
 
+// Creates a curve
+message CurveShape {
+  // The type of curve.
+  enum Basis {
+    // An unsupported curve type.
+    BEZIER = 0;  // A Bezier curve
+    BSPLINE = 1;  // A B-spline
+  }
+
+  // The degree of the curve's spline.
+  enum Degree {
+    TWO = 0;
+    THREE = 1;
+  }
+
+  // The type of curve variant.
+  enum Type {
+    FLAT = 0;  // Appear to always face the camera
+    CYLINDER = 1;  // Appear cylindrical
+    RIBBON = 2;  // Appear like a ribbon
+  }
+
+  // Control points for the cubic Bezier spline that goes along the center of
+  // the curve shape.
+  repeated Point P = 1;
+
+  // The curve spline basis.
+  optional Basis basis = 2 [default = BEZIER];
+
+  // The degree of the curve's spline.
+  optional Degree degree = 3 [default = THREE];
+
+  // Determines which curve variant is used.
+  optional Type type = 4 [default = FLAT];
+
+  // The normals that are used for "ribbon" curves, these normals are
+  // respectively used at endpoints of the curve to orient the surface there.
+  // Intermediate normals are interpolated using spherical linear interpolation. 
+  repeated Vector N = 5;
+
+  // The width of the curve.
+  optional double width = 6 [default = 1.0];
+
+  // The width of the curve at the start point. If set, this overrides the value
+  // set in `width`.
+  optional double width0 = 7;
+
+  // The width of the curve at the end point. If set, this overrides the value
+  // set in `width`.
+  optional double width1 = 8;
+
+  // The number of times the curve is split in half into sub-curves at startup
+  // time. Splitting curves increases memory use but can improve ray
+  // intersection performance, as the sub-curves generally have tighter bounding
+  // boxes than the entire curve extent.
+  optional uint32 splitdepth = 9 [default = 3];
+}
+
 // Creates a cylinder
 message CylinderShape {
   // The cylinder's radius.
@@ -3079,6 +3137,25 @@ message ParaboloidShape {
   optional double zmax = 5 [default = 1.0];
 }
 
+// Creates a triangle mesh from a PLY file
+message PlyMeshShape {
+  // When provided, at any point on the triangle where the alpha texture
+  // evaluates to have the value zero, the triangle is cut away and any ray
+  // intersection is ignored.
+  optional FloatTextureParameter alpha = 27;
+
+  // When provided, intersections at any points on the triangle where the alpha
+  // texture evaluates to zero are ignored.
+  //
+  // NOTE: For simplicity, this field is shared between all PBRT versions;
+  //       however, it is only supported in PBRTv3 and should be ignored when
+  //       reading all other input.
+  optional FloatTextureParameter shadowalpha = 28;
+
+  // File from which the PLY-format mesh is loaded. 
+  optional string filename = 30 [default = ""];
+}
+
 // Creates a sphere
 message SphereShape {
   // The sphere's radius.
@@ -3129,7 +3206,29 @@ message TriangleMeshShape {
   //       reading all other input.
   optional bool discarddegenerateUVs = 26 [default = false];
 
+  // When provided, at any point on the triangle where the alpha texture
+  // evaluates to have the value zero, the triangle is cut away and any ray
+  // intersection is ignored.
+  //
+  // NOTE: For simplicity, this field is shared between all PBRT versions;
+  //       however, it is not supported before PBRTv2 and should be ignored when
+  //       reading earlier input.
   optional FloatTextureParameter alpha = 27;
+
+  // When provided, intersections at any points on the triangle where the alpha
+  // texture evaluates to zero are ignored.
+  //
+  // NOTE: For simplicity, this field is shared between all PBRT versions;
+  //       however, it is only supported in PBRTv3 and should be ignored when
+  //       reading all other input.
+  optional FloatTextureParameter shadowalpha = 28;
+
+  // Provides a list of numeric identifiers for each face.
+  //
+  // NOTE: For simplicity, this field is shared between all PBRT versions;
+  //       however, it is not supported before PBRTv3 and should be ignored when
+  //       reading earlier input.
+  repeated int32 faceIndices = 29;
 }
 
 //

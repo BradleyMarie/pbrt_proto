@@ -183,168 +183,9 @@ message Sampler {
   }
 }
 
+// A directive which creates a shape.
 message Shape {
-  message Cone {
-    optional double radius = 1 [default = 1.0];
-    optional double height = 2 [default = 1.0];
-    optional double phimax = 3 [default = 360.0];
-  }
-
-  message Curve {
-    enum Basis {
-      BEZIER = 1;
-      BSPLINE = 2;
-    }
-
-    enum Degree {
-      THREE = 1;
-      FOUR = 2;
-    }
-
-    enum Type {
-      CYLINDER = 1;
-      FLAT = 2;
-      RIBBON = 3;
-    }
-
-    message Normals {
-      required Vector n0 = 1;
-      required Vector n1 = 2;
-    }
-
-    // If using pbrt_proto::v3::Canonicalize, width0 and width1 will be filled
-    // with the value from width if not set.
-    repeated Point P = 1;
-    optional Basis basis = 2 [default = BEZIER];
-    optional Degree degree = 3 [default = THREE];
-    optional Type type = 4 [default = FLAT];
-    repeated Vector N = 5;
-    optional double width = 6 [default = 1.0];
-    optional double width0 = 7;  // Must check
-    optional double width1 = 8;  // Must check
-    optional uint32 splitdepth = 9 [default = 3];
-  }
-
-  message Cylinder {
-    optional double radius = 1 [default = 1.0];
-    optional double zmin = 2 [default = -1.0];
-    optional double zmax = 3 [default = 1.0];
-    optional double phimax = 4 [default = 360.0];
-  }
-
-  message Disk {
-    optional double height = 1 [default = 0.0];
-    optional double radius = 2 [default = 1.0];
-    optional double innerradius = 3 [default = 0.0];
-    optional double phimax = 4 [default = 360.0];
-  }
-
-  message HeightField {
-    optional uint32 nu = 1;
-    optional uint32 nv = 2;
-    repeated double Pz = 3;
-  }
-
-  message Hyperboloid {
-    optional Point p1 = 1;
-    optional Point p2 = 2;
-    optional double phimax = 3 [default = 360.0];
-  }
-
-  message LoopSubdiv {
-    message VertexIndices {
-      required uint32 v0 = 1;
-      required uint32 v1 = 2;
-      required uint32 v2 = 3;
-    }
-
-    optional uint32 levels = 1 [default = 3];
-    repeated VertexIndices indices = 2;
-    repeated Point P = 3;
-  }
-
-  message Nurbs {
-    message PointWithWeight {
-      required Point p = 1;
-      required double weight = 2;
-    }
-
-    optional uint32 nu = 1;
-    optional uint32 nv = 2;
-    optional uint32 uorder = 3;
-    optional uint32 vorder = 4;
-    repeated float uknots = 5;
-    repeated float vknots = 6;
-    optional double u0 = 7;
-    optional double v0 = 9;
-    optional double u1 = 10;
-    optional double v1 = 11;
-    repeated Point P = 12;
-    repeated PointWithWeight Pw = 13;
-  }
-
-  message Paraboloid {
-    optional double radius = 1 [default = 1.0];
-    optional double zmin = 2 [default = 0.0];
-    optional double zmax = 3 [default = 1.0];
-    optional double phimax = 4 [default = 360.0];
-  }
-
-  message PlyMesh {
-    optional string filename = 1 [default = ""];
-    optional FloatTextureParameter alpha = 2;
-    optional FloatTextureParameter shadowalpha = 3;
-  }
-
-  message Sphere {
-    optional double radius = 1 [default = 1.0];
-    optional double zmin = 2;  // Must check
-    optional double zmax = 3;  // Must check
-    optional double phimax = 4 [default = 360.0];
-  }
-
-  message TriangleMesh {
-    message VertexIndices {
-      required uint32 v0 = 1;
-      required uint32 v1 = 2;
-      required uint32 v2 = 3;
-    }
-
-    message UVCoordinate {
-      required double u = 1;
-      required double v = 2;
-    }
-
-    repeated VertexIndices indices = 1;
-    repeated Point P = 2;
-    repeated Vector N = 3;
-    repeated Vector S = 4;
-    repeated UVCoordinate uv = 5;
-    repeated int32 faceIndices = 6;
-    optional FloatTextureParameter alpha = 7;
-    optional FloatTextureParameter shadowalpha = 8;
-  }
-
-  // If none of these fields are set, the directive should be ignored and have
-  // no impact.
-  //
-  // https://github.com/mmp/pbrt-v3/blob/13d871faae88233b327d04cda24022b8bb0093ee/src/core/api.cpp#L1345
-  // https://github.com/mmp/pbrt-v3/blob/13d871faae88233b327d04cda24022b8bb0093ee/src/core/api.cpp#L1373
-  oneof shape_type {
-    Cone cone = 1;
-    Curve curve = 2;
-    Cylinder cylinder = 3;
-    Disk disk = 4;
-    HeightField heightfield = 5;
-    Hyperboloid hyperboloid = 6;
-    LoopSubdiv loopsubdiv = 7;
-    Nurbs nurbs = 8;
-    Paraboloid paraboloid = 9;
-    PlyMesh plymesh = 10;
-    Sphere sphere = 11;
-    TriangleMesh trianglemesh = 12;
-  }
-
+  // The overrides for the materials applied to the shape.
   message MaterialOverrides {
     optional SpectrumTextureParameter Kd = 1;
     optional SpectrumTextureParameter Ks = 2;
@@ -394,10 +235,24 @@ message Shape {
     optional bool thin = 46;
   }
 
-  // If your protobuf implementation supports lazy fields, there is no need to
-  // parse this field and it can instead be merged as a string directly onto
-  // whatever material is being applied to this shape.
-  optional MaterialOverrides overrides = 13 [lazy = true];
+  optional MaterialOverrides overrides = 1;
+
+  // The type of shape to create. If none of these fields are set, the directive
+  // should be ignored.
+  oneof shape_type {
+    ConeShape cone = 2;  // Create a cone
+    CylinderShape cylinder = 3;  // Create a cylinder
+    DiskShape disk = 4;  // Create a disk
+    HeightFieldShape heightfield = 5;  // Create a heightfield
+    HyperboloidShape hyperboloid = 6;  // Create a hyperboloid
+    LoopSubdivShape loopsubdiv = 7;  // Create a Loop subdivision surface
+    NurbsShape nurbs = 8;  // Create a NURBS patch
+    ParaboloidShape paraboloid = 9;  // Create a paraboloid
+    SphereShape sphere = 10;  // Create a sphere
+    TriangleMeshShape trianglemesh = 11;  // Create a triangle mesh
+    CurveShape curve = 12;  // Creates a curve
+    PlyMeshShape plymesh = 13;  // Creates a triangle mesh from a PLY file
+  }
 }
 
 // A directive which creates a named SpectrumTexture.
