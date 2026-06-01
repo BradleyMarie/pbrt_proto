@@ -42,7 +42,7 @@ message Point {
 
   // The `y` component of the coordinate.
   required double y = 2;
-  
+
   // The `z` component of the coordinate.
   required double z = 3;
 }
@@ -746,7 +746,7 @@ message SphericalCamera {
   //
   // NOTE: This value has a default value of `1e30` in all PBRT versions;
   //       however, for consistency with the other cameras that default value is
-  //       not specified here. 
+  //       not specified here.
   optional double focaldistance = 4;
 
   // The aspect ratio of the film. If unspecified, this value should default to
@@ -808,7 +808,7 @@ message RealisticCamera {
   //
   // NOTE: This value has a default value of `10.0` in all PBRT versions;
   //       however, for consistency with the other cameras that default value is
-  //       not specified here. 
+  //       not specified here.
   optional double focusdistance = 14;
 
   // If true, the samples are only weighted by the "cosine-to-the-4th" term.
@@ -896,7 +896,7 @@ message GBufferFilm {
   // The film's sensitivity to light normalized to 100. This scaling is applied
   // before clamping.
   optional double iso = 9 [default = 100.0];
-  
+
   // Clamp pixels with RGB components higher than the maximum provided.
   optional double maxcomponentvalue = 11 [default = inf];
 
@@ -985,7 +985,7 @@ message RgbFilm {
     //       however, it is only supported in PBRTv3 and should be ignored when
     //       reading all other input.
     double maxsampleluminance = 10 [default = inf];
-  
+
     // Clamp pixels with RGB components higher than the maximum provided.
     //
     // NOTE: For simplicity, this field is shared between all PBRT versions;
@@ -1029,7 +1029,7 @@ message RgbFilm {
   // NOTE: For simplicity, this field is shared between all PBRT versions;
   //       however, it is only supported in PBRTv3 and should be ignored when
   //       reading all other input.
-  optional double scale = 16  [default = 1.0];
+  optional double scale = 16 [default = 1.0];
 }
 
 // A film which stores the rendered output as an RGB image as well as a
@@ -1068,7 +1068,7 @@ message SpectralFilm {
   // The film's sensitivity to light normalized to 100. This scaling is applied
   // before clamping.
   optional double iso = 9 [default = 100.0];
-  
+
   // Clamp pixels with RGB components higher than the maximum provided.
   optional double maxcomponentvalue = 11 [default = inf];
 
@@ -1079,10 +1079,10 @@ message SpectralFilm {
   // Number of buckets to use to store the spectral data.
   optional uint32 nbuckets = 18 [default = 16];
 
-  // The minimum wavelength of the spectral range.  
+  // The minimum wavelength of the spectral range.
   optional double lambdamin = 19 [default = 360.0];
 
-  // The maximum wavelength of the spectral range.  
+  // The maximum wavelength of the spectral range.
   optional double lambdamax = 20 [default = 830.0];
 }
 
@@ -1093,8 +1093,8 @@ message SpectralFilm {
 // The strategy used to sample direct lighting.
 enum LightSampler {
   UNIFORM = 0;  // Sample the lights uniformly
-  POWER = 1;  // Sample based on the lights' power
-  BVH = 2;  // Sample spatially using a BVH, called SPATIAL prior to PBRTv4
+  POWER = 1;    // Sample based on the lights' power
+  BVH = 2;      // Sample spatially using a BVH, called SPATIAL prior to PBRTv4
 }
 
 // An integrator which computes the amount of ambient occlusion at a pixel.
@@ -1187,16 +1187,16 @@ message DebugIntegrator {
   // The value to use to populate a color channel.
   enum ChannelValue {
     ZERO = 0;  // Set to zero
-    ONE = 1;  // Set to one
-    HIT = 2;  // Set to 1.0 if there is a hit and 0.0 otherwise
-    NX = 3;  // Set to the `x` component of the surface normal in model-space
-    NY = 4;  // Set to the `y` component of the surface normal in model-space
-    NZ = 5;  // Set to the `z` component of the surface normal in model-space
-    SNX = 6;  // Set to the `x` component of the surface normal in world-space
-    SNY = 7;  // Set to the `y` component of the surface normal in world-space
-    SNZ = 8;  // Set to the `z` component of the surface normal in world-space
-    U = 9;  // Set to the `u` texture value of the intersection
-    V = 10;  // Set to the `v` texture value of the intersection
+    ONE = 1;   // Set to one
+    HIT = 2;   // Set to 1.0 if there is a hit and 0.0 otherwise
+    NX = 3;    // Set to the `x` component of the surface normal in model-space
+    NY = 4;    // Set to the `y` component of the surface normal in model-space
+    NZ = 5;    // Set to the `z` component of the surface normal in model-space
+    SNX = 6;   // Set to the `x` component of the surface normal in world-space
+    SNY = 7;   // Set to the `y` component of the surface normal in world-space
+    SNZ = 8;   // Set to the `z` component of the surface normal in world-space
+    U = 9;     // Set to the `u` texture value of the intersection
+    V = 10;    // Set to the `v` texture value of the intersection
   }
 
   // The value to use to populate the `r` channel of the output.
@@ -1309,20 +1309,20 @@ message IgiIntegrator {
 
   // Russian roulette threshold for terminating shadow rays that connect the
   // point being shaded to a virtual light source.
-	optional double rrthreshold = 9;
+  optional double rrthreshold = 9;
 
   // The maximum recursion depth for specular reflection and transmission.
-	optional uint32 nlights = 14 [default = 64];
+  optional uint32 nlights = 14 [default = 64];
 
   // The number of independent virtual light sets to compute.
-	optional uint32 nsets = 15 [default = 4];
+  optional uint32 nsets = 15 [default = 4];
 
   // A scalar applied to indirect lighting.
   //
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported after PBRTv1 and should be ignored
   //       when reading later input.
-	optional double indirectscale = 16 [default = 1.0];
+  optional double indirectscale = 16 [default = 1.0];
 
   // The minimum distance cutoff between the shading point and the virtual
   // point lights.
@@ -1347,7 +1347,7 @@ message IgiIntegrator {
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported before PBRTv2 and should be ignored when
   //       reading earlier input.
-	optional uint32 gathersamples = 36 [default = 16];
+  optional uint32 gathersamples = 36 [default = 16];
 }
 
 // An integrator which does irradiance caching.
@@ -1365,7 +1365,7 @@ message IrradianceCacheIntegrator {
   // Minimum weight for the interpolated irradiance samples. If the sum of
   // interpolated sample weights is less than this value, a new sample is
   // computed.
-  optional double minweight = 21 [default= 0.5];
+  optional double minweight = 21 [default = 0.5];
 
   // Minimum distance, in pixels, between irradiance samples. No samples nearer
   // this distance will be generated.
@@ -1418,7 +1418,7 @@ message PathIntegrator {
   // NOTE: For simplicity, this field is shared between all PBRT versions;
   //       however, it is only supported in PBRTv3 and should be ignored when
   //       reading all other input.
-	optional double rrthreshold = 9 [default = 1.0];
+  optional double rrthreshold = 9 [default = 1.0];
 
   // Subset of image to sample during rendering; in order, values given specify
   // the starting and ending x coordinates and then starting and ending y
@@ -1477,7 +1477,7 @@ message PhotonMapIntegrator {
 
   // Russian roulette threshold for terminating shadow rays that connect the
   // point being shaded to a virtual light source.
-	optional double rrthreshold = 9 [default = 0.05];
+  optional double rrthreshold = 9 [default = 0.05];
 
   // If true, do a final gather when estimating the indirect illumination.
   // Otherwise, just use the photon map at the hit point.
@@ -1509,7 +1509,7 @@ message PhotonMapIntegrator {
   //
   // NOTE: In PBRTv1, this parameter is only used by the "exphotonmap"
   //       implementation and should be ignored by other implementations.
-	optional double gatherangle = 13 [default = 10.0];
+  optional double gatherangle = 13 [default = 10.0];
 
   // The maximum number of levels of specular reflection and refraction.
   //
@@ -1578,7 +1578,7 @@ message VolPathIntegrator {
   // NOTE: For simplicity, this field is shared between all PBRT versions;
   //       however, it is only supported in PBRTv3 and should be ignored when
   //       reading all other input.
-	optional double rrthreshold = 9 [default = 1.0];
+  optional double rrthreshold = 9 [default = 1.0];
 
   // Subset of image to sample during rendering; in order, values given specify
   // the starting and ending x coordinates and then starting and ending y
@@ -1758,7 +1758,7 @@ message PointLightSource {
 message ProjectionLightSource {
   // A spectral power distribution describing the light.
   optional Spectrum I = 1;
-  
+
   // The path to an image file describing the directionally-varying emissions
   // of the light.
   //
@@ -2557,7 +2557,7 @@ message NanoVdbMedium {
   // An offset value that is added to the emission temperature.
   optional double temperatureoffset = 10 [default = 0.0];
 
- 	// The scale factor applied to the ofsetted emission temperature to get a
+  // The scale factor applied to the ofsetted emission temperature to get a
   // temperature in kelvin before the blackbody emission is determined.
   optional double temperaturescale = 11 [default = 1.0];
 
@@ -2648,7 +2648,7 @@ message UniformGridMedium {
   //       reading earlier input.
   optional double temperatureoffset = 10 [default = 0.0];
 
- 	// The scale factor applied to the ofsetted emission temperature to get a
+  // The scale factor applied to the ofsetted emission temperature to get a
   // temperature in kelvin before the blackbody emission is determined.
   //
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
@@ -2819,7 +2819,7 @@ message HaltonSampler {
   //       ignored when reading earlier input.
   optional int32 seed = 9;
 
-  // The method used to scramble the sequence to reduce the appearance of 
+  // The method used to scramble the sequence to reduce the appearance of
   // visual artifacts from poor sample selection.
   //
   // NOTE: For simplicity, this field is shared between all PBRT versions;
@@ -2859,7 +2859,7 @@ message PaddedSobolSampler {
   // The seed used to scramble the distribution as part of the randomization.
   optional int32 seed = 9;
 
-  // The method used to scramble the sequence to reduce the appearance of 
+  // The method used to scramble the sequence to reduce the appearance of
   // visual artifacts from poor sample selection.
   optional SamplerRandomizationMethod randomization = 10;
 }
@@ -2895,7 +2895,7 @@ message SobolSampler {
   //       ignored when reading earlier input.
   optional int32 seed = 9;
 
-  // The method used to scramble the sequence to reduce the appearance of 
+  // The method used to scramble the sequence to reduce the appearance of
   // visual artifacts from poor sample selection.
   //
   // NOTE: For simplicity, this field is shared between all PBRT versions;
@@ -2939,7 +2939,7 @@ message ZSobolSampler {
   // The seed used to scramble the distribution as part of the randomization.
   optional int32 seed = 9;
 
-  // The method used to scramble the sequence to reduce the appearance of 
+  // The method used to scramble the sequence to reduce the appearance of
   // visual artifacts from poor sample selection.
   optional SamplerRandomizationMethod randomization = 10;
 }
@@ -2990,7 +2990,7 @@ message CurveShape {
   // The type of curve.
   enum Basis {
     // An unsupported curve type.
-    BEZIER = 0;  // A Bezier curve
+    BEZIER = 0;   // A Bezier curve
     BSPLINE = 1;  // A B-spline
   }
 
@@ -3002,9 +3002,9 @@ message CurveShape {
 
   // The type of curve variant.
   enum Type {
-    FLAT = 0;  // Appear to always face the camera
+    FLAT = 0;      // Appear to always face the camera
     CYLINDER = 1;  // Appear cylindrical
-    RIBBON = 2;  // Appear like a ribbon
+    RIBBON = 2;    // Appear like a ribbon
   }
 
   // Control points for the cubic Bezier spline that goes along the center of
@@ -3013,7 +3013,7 @@ message CurveShape {
 
   // The normals that are used for "ribbon" curves, these normals are
   // respectively used at endpoints of the curve to orient the surface there.
-  // Intermediate normals are interpolated using spherical linear interpolation. 
+  // Intermediate normals are interpolated using spherical linear interpolation.
   repeated Vector N = 24;
 
   // The curve spline basis.
@@ -3115,7 +3115,7 @@ message LoopSubdivShape {
 message NurbsShape {
   // A point with a weight.
   message PointWithWeight {
-    required Point p = 1;  // The point
+    required Point p = 1;        // The point
     required double weight = 2;  // The weight
   }
 
@@ -3188,7 +3188,7 @@ message PlyMeshShape {
   //       reading all other input.
   optional FloatTextureParameter shadowalpha = 29;
 
-  // File from which the PLY-format mesh is loaded. 
+  // File from which the PLY-format mesh is loaded.
   optional string filename = 31 [default = ""];
 }
 
@@ -3275,7 +3275,7 @@ message TriangleMeshShape {
 enum CheckerboardAntialiasing {
   CLOSEDFORM = 0;
   NONE_AA = 1;
-  SUPERSAMPLE = 2;  // Only supported in PRTv1. 
+  SUPERSAMPLE = 2;  // Only supported in PRTv1.
 }
 
 // The method used for converting 8-bit color values to floating point values.
@@ -3297,7 +3297,7 @@ enum TextureFilter {
   EWA = 0;
   TRILINEAR = 1;
   BILINEAR = 2;  // Only supported in PBRTv4 and later.
-  POINT = 3;  // Only supported in PBRTv4 and later.
+  POINT = 3;     // Only supported in PBRTv4 and later.
 }
 
 // The type of texture mapping to apply to 2D textures.

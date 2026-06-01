@@ -9,7 +9,7 @@ message Accelerator {
   // The type of Accelerator to use. If none are set, then `kdtree` should be
   // read as if it is present.
   oneof accelerator_type {
-    GridAccelerator grid = 1;  // Use a Grid accelerator
+    GridAccelerator grid = 1;      // Use a Grid accelerator
     KdTreeAccelerator kdtree = 2;  // Use a KD-tree accelerator (default)
   }
 }
@@ -29,9 +29,9 @@ message Camera {
   // be unset. If no camera is set at the time an image is to be rendered a
   // black frame should be rendered.
   oneof camera_type {
-    SphericalCamera environment = 1;  // Use a spherical camera
-    OrthographicCamera orthographic = 2; // Use an orthographic camera
-    PerspectiveCamera perspective = 3;  // Use a pespective camera
+    SphericalCamera environment = 1;      // Use a spherical camera
+    OrthographicCamera orthographic = 2;  // Use an orthographic camera
+    PerspectiveCamera perspective = 3;    // Use a pespective camera
   }
 }
 
@@ -53,16 +53,16 @@ message FloatTexture {
   // The type of FloatTexture to create. If none are set this directive should
   // be ignored.
   oneof float_texture_type {
-    BilerpFloatTexture bilerp = 2;  // Create a bilerp texture
+    BilerpFloatTexture bilerp = 2;                  // Create a bilerp texture
     Checkerboard2DFloatTexture checkerboard2d = 3;  // Create a 2D checkerboard
     Checkerboard3DFloatTexture checkerboard3d = 4;  // Create a 3D checkerboard
-    ConstantFloatTexture constant = 5;  // Create a constant texture
-    DotsFloatTexture dots = 6;  // Create a dots texture
-    FBmFloatTexture fbm = 7;  // Create an FBm texture
-    ImageMapFloatTexture imagemap = 8;  // Create an image map texture
-    MixFloatTexture mix = 9;  // Create a mix texture
-    ScaleFloatTexture scale = 10;  // Create a scale texture
-    WindyFloatTexture windy = 11;  // Create a windy texture
+    ConstantFloatTexture constant = 5;              // Create a constant texture
+    DotsFloatTexture dots = 6;                      // Create a dots texture
+    FBmFloatTexture fbm = 7;                        // Create an FBm texture
+    ImageMapFloatTexture imagemap = 8;   // Create an image map texture
+    MixFloatTexture mix = 9;             // Create a mix texture
+    ScaleFloatTexture scale = 10;        // Create a scale texture
+    WindyFloatTexture windy = 11;        // Create a windy texture
     WrinkledFloatTexture wrinkled = 12;  // Create a wrinkled texture
   }
 }
@@ -74,11 +74,11 @@ message LightSource {
   oneof light_source_type {
     DistantLightSource distant = 1;  // Create a distant directional light
     GoniometricLightSource goniometric = 2;  // Create a goniometric point light
-    InfiniteLightSource infinite = 3;  // Create a distant spherical light
+    InfiniteLightSource infinite = 3;        // Create a distant spherical light
     InfiniteLightSource infinitesample = 4;  // Create a distant spherical light
-    PointLightSource point = 5;  // Create a point light
-    ProjectionLightSource projection = 6;  // Create a projected light
-    SpotLightSource spot = 7;  // Create a spot light
+    PointLightSource point = 5;              // Create a point light
+    ProjectionLightSource projection = 6;    // Create a projected light
+    SpotLightSource spot = 7;                // Create a spot light
   }
 }
 
@@ -96,20 +96,20 @@ message Material {
   // The type of material to create. If none of these fields are set, program
   // the behavior is undefined and the renderer may crash.
   oneof material_type {
-    BuiltInMaterial bluepaint = 1;  // Create a blue paint material
-    BuiltInMaterial brushedmetal = 2;  // Create a brushed paint material
-    BuiltInMaterial clay = 3;  // Create a clay material
-    BuiltInMaterial felt = 4;  // Create a felt material
-    GlassMaterial glass = 5;  // Create a glass material
-    MatteMaterial matte = 6;  // Create a mirror material
-    MirrorMaterial mirror = 7;  // Create a mirror material
-    PlasticMaterial plastic = 8;  // Create a plastic material
-    BuiltInMaterial primer = 9;  // Create a primer material
-    ShinyMetalMaterial shinymetal = 10;  // Create a shiny metal material
-    BuiltInMaterial skin = 11;  // Create a skin material
-    SubstrateMaterial substrate = 12;  // Create a substrate material
+    BuiltInMaterial bluepaint = 1;         // Create a blue paint material
+    BuiltInMaterial brushedmetal = 2;      // Create a brushed paint material
+    BuiltInMaterial clay = 3;              // Create a clay material
+    BuiltInMaterial felt = 4;              // Create a felt material
+    GlassMaterial glass = 5;               // Create a glass material
+    MatteMaterial matte = 6;               // Create a mirror material
+    MirrorMaterial mirror = 7;             // Create a mirror material
+    PlasticMaterial plastic = 8;           // Create a plastic material
+    BuiltInMaterial primer = 9;            // Create a primer material
+    ShinyMetalMaterial shinymetal = 10;    // Create a shiny metal material
+    BuiltInMaterial skin = 11;             // Create a skin material
+    SubstrateMaterial substrate = 12;      // Create a substrate material
     TranslucentMaterial translucent = 13;  // Create a translucent material
-    UberMaterial uber = 14;  // Create a uber material
+    UberMaterial uber = 14;                // Create a uber material
   }
 }
 
@@ -119,10 +119,10 @@ message PixelFilter {
   // PixelFilter should be unset. If no PixelFilter is set at the time an image
   // is to be rendered the renderer should exit with an error.
   oneof pixel_filter_type {
-    BoxPixelFilter box = 1;  // Use a box filter
+    BoxPixelFilter box = 1;            // Use a box filter
     GaussianPixelFilter gaussian = 2;  // Use a Gaussian filter
     MitchellPixelFilter mitchell = 3;  // Use a Mitchell-Netravali filter
-    LanczosPixelFilter sinc = 4;  // Use a Lanczos filter
+    LanczosPixelFilter sinc = 4;       // Use a Lanczos filter
     TrianglePixelFilter triangle = 5;  // Use a triangle filter
   }
 }
@@ -133,9 +133,9 @@ message Sampler {
   // should be unset. If no Sampler is set at the time an image is to be
   // rendered a black frame should be rendered.
   oneof sampler_type {
-    BestCandidateSampler bestcandidate = 1;  // Use a best candidate sampler
+    BestCandidateSampler bestcandidate = 1;     // Use a best candidate sampler
     ZeroTwoSequenceSampler lowdiscrepancy = 2;  // Use a 02-sequence sampler
-    RandomSampler random = 3;  // Use a minimally-stratified sampler
+    RandomSampler random = 3;          // Use a minimally-stratified sampler
     StratifiedSampler stratified = 4;  // Use a stratified sampler
   }
 }
@@ -165,15 +165,15 @@ message Shape {
   // The type of shape to create. If none of these fields are set, the directive
   // should be ignored.
   oneof shape_type {
-    ConeShape cone = 2;  // Create a cone
-    CylinderShape cylinder = 3;  // Create a cylinder
-    DiskShape disk = 4;  // Create a disk
-    HeightFieldShape heightfield = 5;  // Create a heightfield
-    HyperboloidShape hyperboloid = 6;  // Create a hyperboloid
-    LoopSubdivShape loopsubdiv = 7;  // Create a Loop subdivision surface
-    NurbsShape nurbs = 8;  // Create a NURBS patch
-    ParaboloidShape paraboloid = 9;  // Create a paraboloid
-    SphereShape sphere = 10;  // Create a sphere
+    ConeShape cone = 2;                   // Create a cone
+    CylinderShape cylinder = 3;           // Create a cylinder
+    DiskShape disk = 4;                   // Create a disk
+    HeightFieldShape heightfield = 5;     // Create a heightfield
+    HyperboloidShape hyperboloid = 6;     // Create a hyperboloid
+    LoopSubdivShape loopsubdiv = 7;       // Create a Loop subdivision surface
+    NurbsShape nurbs = 8;                 // Create a NURBS patch
+    ParaboloidShape paraboloid = 9;       // Create a paraboloid
+    SphereShape sphere = 10;              // Create a sphere
     TriangleMeshShape trianglemesh = 11;  // Create a triangle mesh
   }
 }
@@ -189,15 +189,15 @@ message SpectrumTexture {
     BilerpSpectrumTexture bilerp = 2;  // Create a bilerp texture
     Checkerboard2DSpectrumTexture checkerboard2d = 3;  // Create a 2D board
     Checkerboard3DSpectrumTexture checkerboard3d = 4;  // Create a 3D board
-    ConstantSpectrumTexture constant = 5;  // Create a constant texture
-    DotsSpectrumTexture dots = 6;  // Create a dots texture
-    FBmSpectrumTexture fbm = 7;  // Create an FBm texture
-    ImageMapSpectrumTexture imagemap = 8;  // Create an image map texture
-    MarbleSpectrumTexture marble = 9;  // Create an marble texture
-    MixSpectrumTexture mix = 10;  // Create a mix texture
-    ScaleSpectrumTexture scale = 11;  // Create a scale texture
-    UvSpectrumTexture uv = 12;  // Create a UV texture
-    WindySpectrumTexture windy = 13;  // Create a windy texture
+    ConstantSpectrumTexture constant = 5;   // Create a constant texture
+    DotsSpectrumTexture dots = 6;           // Create a dots texture
+    FBmSpectrumTexture fbm = 7;             // Create an FBm texture
+    ImageMapSpectrumTexture imagemap = 8;   // Create an image map texture
+    MarbleSpectrumTexture marble = 9;       // Create an marble texture
+    MixSpectrumTexture mix = 10;            // Create a mix texture
+    ScaleSpectrumTexture scale = 11;        // Create a scale texture
+    UvSpectrumTexture uv = 12;              // Create a UV texture
+    WindySpectrumTexture windy = 13;        // Create a windy texture
     WrinkledSpectrumTexture wrinkled = 14;  // Create a wrinkled texture
   }
 }
@@ -209,14 +209,14 @@ message SurfaceIntegrator {
   // rendered the renderer should exit with an error.
   oneof surface_integrator_type {
     BdptIntegrator bidirectional = 1;  // Create a bidirectional integrator
-    DebugIntegrator debug = 2;  // Create a debug integrator
+    DebugIntegrator debug = 2;         // Create a debug integrator
     DirectLightingIntegrator directlighting = 3;  // Create a direct integrator
     PhotonMapIntegrator exphotonmap = 4;  // Create an EX photon map integrator
     IgiIntegrator igi = 5;  // Create an instant global illumination integrator
-    IrradianceCacheIntegrator irradiancecache = 6; // Create an IC integrator
-    PathIntegrator path = 7;  // Create a path integrator
+    IrradianceCacheIntegrator irradiancecache = 6;  // Create an IC integrator
+    PathIntegrator path = 7;                        // Create a path integrator
     PhotonMapIntegrator photonmap = 8;  // Create a photon map integrator
-    WhittedIntegrator whitted = 9;  // Create a Whitted integrator
+    WhittedIntegrator whitted = 9;      // Create a Whitted integrator
   }
 }
 
