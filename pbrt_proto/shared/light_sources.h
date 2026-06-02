@@ -17,7 +17,7 @@ void RemoveDistantLightSourceV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     DistantLightSource& output);
 
-void RemoveDistantLightSourceV3(
+void RemoveDistantLightSourceV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     DistantLightSource& output);
 
@@ -29,7 +29,7 @@ void RemoveGoniometricLightSourceV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     GoniometricLightSource& output);
 
-void RemoveGoniometricLightSourceV3(
+void RemoveGoniometricLightSourceV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     GoniometricLightSource& output);
 
@@ -57,7 +57,7 @@ void RemovePointLightSourceV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     PointLightSource& output);
 
-void RemovePointLightSourceV3(
+void RemovePointLightSourceV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     PointLightSource& output);
 
@@ -69,7 +69,7 @@ void RemoveProjectionLightSourceV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     ProjectionLightSource& output);
 
-void RemoveProjectionLightSourceV3(
+void RemoveProjectionLightSourceV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     ProjectionLightSource& output);
 
@@ -81,7 +81,7 @@ void RemoveSpotLightSourceV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     SpotLightSource& output);
 
-void RemoveSpotLightSourceV3(
+void RemoveSpotLightSourceV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     SpotLightSource& output);
 

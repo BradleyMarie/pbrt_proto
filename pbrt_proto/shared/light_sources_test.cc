@@ -111,15 +111,15 @@ TEST(RemoveDistantLightSourceV2, WithData) {
               )pb"));
 }
 
-TEST(RemoveDistantLightSourceV3, Empty) {
+TEST(RemoveDistantLightSourceV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   DistantLightSource actual;
-  RemoveDistantLightSourceV3(parameters, actual);
+  RemoveDistantLightSourceV4(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveDistantLightSourceV3, WithData) {
+TEST(RemoveDistantLightSourceV4, WithData) {
   std::vector<double> l = {1.0};
   Parameter l_parameter{.directive = "",
                         .type = ParameterType::BLACKBODY_V2,
@@ -157,7 +157,7 @@ TEST(RemoveDistantLightSourceV3, WithData) {
   };
 
   DistantLightSource actual;
-  RemoveDistantLightSourceV3(parameters, actual);
+  RemoveDistantLightSourceV4(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 L { blackbody_spectrum { temperature: 1.0 } }
                 from { x: 3.0 y: 4.0 z: 5.0 }
@@ -243,15 +243,15 @@ TEST(RemoveGoniometricLightSourceV2, WithData) {
               )pb"));
 }
 
-TEST(RemoveGoniometricLightSourceV3, Empty) {
+TEST(RemoveGoniometricLightSourceV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   GoniometricLightSource actual;
-  RemoveGoniometricLightSourceV3(parameters, actual);
+  RemoveGoniometricLightSourceV4(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveGoniometricLightSourceV3, WithData) {
+TEST(RemoveGoniometricLightSourceV4, WithData) {
   std::vector<double> i = {1.0};
   Parameter i_parameter{.directive = "",
                         .type = ParameterType::BLACKBODY_V2,
@@ -284,7 +284,7 @@ TEST(RemoveGoniometricLightSourceV3, WithData) {
   };
 
   GoniometricLightSource actual;
-  RemoveGoniometricLightSourceV3(parameters, actual);
+  RemoveGoniometricLightSourceV4(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 I { blackbody_spectrum { temperature: 1.0 } }
                 filename: "file"
@@ -579,15 +579,15 @@ TEST(RemovePointLightSourceV2, WithData) {
               )pb"));
 }
 
-TEST(RemovePointLightSourceV3, Empty) {
+TEST(RemovePointLightSourceV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   PointLightSource actual;
-  RemovePointLightSourceV3(parameters, actual);
+  RemovePointLightSourceV4(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemovePointLightSourceV3, WithData) {
+TEST(RemovePointLightSourceV4, WithData) {
   std::vector<double> i = {1.0};
   Parameter i_parameter{.directive = "",
                         .type = ParameterType::BLACKBODY_V2,
@@ -620,7 +620,7 @@ TEST(RemovePointLightSourceV3, WithData) {
   };
 
   PointLightSource actual;
-  RemovePointLightSourceV3(parameters, actual);
+  RemovePointLightSourceV4(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 I { blackbody_spectrum { temperature: 1.0 } }
                 from { x: 3.0 y: 4.0 z: 5.0 }
@@ -721,15 +721,15 @@ TEST(RemoveProjectionLightSourceV2, WithData) {
               )pb"));
 }
 
-TEST(RemoveProjectionLightSourceV3, Empty) {
+TEST(RemoveProjectionLightSourceV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   ProjectionLightSource actual;
-  RemoveProjectionLightSourceV3(parameters, actual);
+  RemoveProjectionLightSourceV4(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveProjectionLightSourceV3, WithData) {
+TEST(RemoveProjectionLightSourceV4, WithData) {
   std::vector<double> i = {1.0};
   Parameter i_parameter{.directive = "",
                         .type = ParameterType::BLACKBODY_V2,
@@ -767,7 +767,7 @@ TEST(RemoveProjectionLightSourceV3, WithData) {
   };
 
   ProjectionLightSource actual;
-  RemoveProjectionLightSourceV3(parameters, actual);
+  RemoveProjectionLightSourceV4(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 I { blackbody_spectrum { temperature: 1.0 } }
                 filename: "file"
@@ -901,15 +901,15 @@ TEST(RemoveSpotLightSourceV2, WithData) {
               )pb"));
 }
 
-TEST(RemoveSpotLightSourceV3, Empty) {
+TEST(RemoveSpotLightSourceV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   SpotLightSource actual;
-  RemoveSpotLightSourceV3(parameters, actual);
+  RemoveSpotLightSourceV4(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveSpotLightSourceV3, WithData) {
+TEST(RemoveSpotLightSourceV4, WithData) {
   std::vector<double> i = {1.0};
   Parameter i_parameter{.directive = "",
                         .type = ParameterType::BLACKBODY_V2,
@@ -963,7 +963,7 @@ TEST(RemoveSpotLightSourceV3, WithData) {
   };
 
   SpotLightSource actual;
-  RemoveSpotLightSourceV3(parameters, actual);
+  RemoveSpotLightSourceV4(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 I { blackbody_spectrum { temperature: 1.0 } }
                 from { x: 3.0 y: 4.0 z: 5.0 }
