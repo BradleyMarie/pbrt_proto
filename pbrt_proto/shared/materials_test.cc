@@ -17,15 +17,15 @@ namespace {
 using ::absl_testing::StatusIs;
 using ::google::protobuf::EqualsProto;
 
-TEST(BuiltInMaterial, Empty) {
+TEST(RemoveBuiltInMaterialV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   BuiltInMaterial actual;
-  RemoveBuiltInMaterial(parameters, actual);
+  RemoveBuiltInMaterialV1(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(BuiltInMaterial, WithData) {
+TEST(RemoveBuiltInMaterialV1, WithData) {
   std::vector<std::string_view> bumpmap = {"bump"};
   Parameter bumpmap_parameter{.directive = "",
                               .type = ParameterType::TEXTURE,
@@ -37,21 +37,21 @@ TEST(BuiltInMaterial, WithData) {
   };
 
   BuiltInMaterial actual;
-  RemoveBuiltInMaterial(parameters, actual);
+  RemoveBuiltInMaterialV1(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 bumpmap { float_texture_name: "bump" }
               )pb"));
 }
 
-TEST(DisneyMaterial, Empty) {
+TEST(RemoveDisneyMaterialV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   DisneyMaterial actual;
-  RemoveDisneyMaterial(parameters, actual);
+  RemoveDisneyMaterialV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(DisneyMaterial, WithData) {
+TEST(RemoveDisneyMaterialV3, WithData) {
   std::vector<std::string_view> roughness = {"roughness"};
   Parameter roughness_parameter{.directive = "",
                                 .type = ParameterType::TEXTURE,
@@ -169,7 +169,7 @@ TEST(DisneyMaterial, WithData) {
   };
 
   DisneyMaterial actual;
-  RemoveDisneyMaterial(parameters, actual);
+  RemoveDisneyMaterialV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 roughness { float_texture_name: "roughness" }
                 eta { float_texture_name: "eta" }
@@ -190,7 +190,7 @@ TEST(DisneyMaterial, WithData) {
               )pb"));
 }
 
-TEST(GlassMaterialV1, Empty) {
+TEST(RemoveGlassMaterialV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   GlassMaterial actual;
@@ -198,7 +198,7 @@ TEST(GlassMaterialV1, Empty) {
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(GlassMaterialV1, WithData) {
+TEST(RemoveGlassMaterialV1, WithData) {
   std::vector<std::string_view> kr = {"kr"};
   Parameter kr_parameter{.directive = "",
                          .type = ParameterType::TEXTURE,
@@ -240,15 +240,15 @@ TEST(GlassMaterialV1, WithData) {
               )pb"));
 }
 
-TEST(GlassMaterialV2, Empty) {
+TEST(RemoveGlassMaterialV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   GlassMaterial actual;
-  RemoveGlassMaterialV2(parameters, actual);
+  RemoveGlassMaterialV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(GlassMaterialV2, WithDataIndex) {
+TEST(RemoveGlassMaterialV3, WithDataIndex) {
   std::vector<std::string_view> kr = {"kr"};
   Parameter kr_parameter{.directive = "",
                          .type = ParameterType::TEXTURE,
@@ -302,7 +302,7 @@ TEST(GlassMaterialV2, WithDataIndex) {
   };
 
   GlassMaterial actual;
-  RemoveGlassMaterialV2(parameters, actual);
+  RemoveGlassMaterialV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 Kr { spectrum_texture_name: "kr" }
                 Kt { spectrum_texture_name: "kt" }
@@ -314,7 +314,7 @@ TEST(GlassMaterialV2, WithDataIndex) {
               )pb"));
 }
 
-TEST(GlassMaterialV2, WithDataEta) {
+TEST(RemoveGlassMaterialV3, WithDataEta) {
   std::vector<std::string_view> kr = {"kr"};
   Parameter kr_parameter{.directive = "",
                          .type = ParameterType::TEXTURE,
@@ -375,7 +375,7 @@ TEST(GlassMaterialV2, WithDataEta) {
   };
 
   GlassMaterial actual;
-  RemoveGlassMaterialV2(parameters, actual);
+  RemoveGlassMaterialV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 Kr { spectrum_texture_name: "kr" }
                 Kt { spectrum_texture_name: "kt" }
@@ -387,15 +387,15 @@ TEST(GlassMaterialV2, WithDataEta) {
               )pb"));
 }
 
-TEST(HairMaterial, Empty) {
+TEST(RemoveHairMaterialV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   HairMaterial actual;
-  RemoveHairMaterial(parameters, actual);
+  RemoveHairMaterialV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(HairMaterial, WithData) {
+TEST(RemoveHairMaterialV3, WithData) {
   std::vector<std::string_view> eta = {"eta"};
   Parameter eta_parameter{.directive = "",
                           .type = ParameterType::TEXTURE,
@@ -456,7 +456,7 @@ TEST(HairMaterial, WithData) {
   };
 
   HairMaterial actual;
-  RemoveHairMaterial(parameters, actual);
+  RemoveHairMaterialV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 eta { float_texture_name: "eta" }
                 sigma_a { spectrum_texture_name: "sigma_a" }
@@ -469,15 +469,15 @@ TEST(HairMaterial, WithData) {
               )pb"));
 }
 
-TEST(KdSubsurfaceMaterialV1, Empty) {
+TEST(RemoveKdSubsurfaceMaterialV2, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   KdSubsurfaceMaterial actual;
-  RemoveKdSubsurfaceMaterialV1(parameters, actual);
+  RemoveKdSubsurfaceMaterialV2(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(KdSubsurfaceMaterialV1, WithData) {
+TEST(RemoveKdSubsurfaceMaterialV2, WithData) {
   std::vector<std::string_view> kd = {"kd"};
   Parameter kd_parameter{.directive = "",
                          .type = ParameterType::TEXTURE,
@@ -515,7 +515,7 @@ TEST(KdSubsurfaceMaterialV1, WithData) {
   };
 
   KdSubsurfaceMaterial actual;
-  RemoveKdSubsurfaceMaterialV1(parameters, actual);
+  RemoveKdSubsurfaceMaterialV2(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 Kd { spectrum_texture_name: "kd" }
                 Kr { spectrum_texture_name: "kr" }
@@ -525,15 +525,15 @@ TEST(KdSubsurfaceMaterialV1, WithData) {
               )pb"));
 }
 
-TEST(KdSubsurfaceMaterialV2, Empty) {
+TEST(RemoveKdSubsurfaceMaterialV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   KdSubsurfaceMaterial actual;
-  RemoveKdSubsurfaceMaterialV2(parameters, actual);
+  RemoveKdSubsurfaceMaterialV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(KdSubsurfaceMaterialV2, WithData) {
+TEST(RemoveKdSubsurfaceMaterialV3, WithData) {
   std::vector<std::string_view> kd = {"kd"};
   Parameter kd_parameter{.directive = "",
                          .type = ParameterType::TEXTURE,
@@ -608,7 +608,7 @@ TEST(KdSubsurfaceMaterialV2, WithData) {
   };
 
   KdSubsurfaceMaterial actual;
-  RemoveKdSubsurfaceMaterialV2(parameters, actual);
+  RemoveKdSubsurfaceMaterialV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 Kd { spectrum_texture_name: "kd" }
                 Kr { spectrum_texture_name: "kr" }
@@ -623,15 +623,15 @@ TEST(KdSubsurfaceMaterialV2, WithData) {
               )pb"));
 }
 
-TEST(MatteMaterial, Empty) {
+TEST(RemoveMatteMaterialV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   MatteMaterial actual;
-  RemoveMatteMaterial(parameters, actual);
+  RemoveMatteMaterialV1(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(MatteMaterial, WithData) {
+TEST(RemoveMatteMaterialV1, WithData) {
   std::vector<std::string_view> kd = {"kd"};
   Parameter kd_parameter{.directive = "",
                          .type = ParameterType::TEXTURE,
@@ -657,7 +657,7 @@ TEST(MatteMaterial, WithData) {
   };
 
   MatteMaterial actual;
-  RemoveMatteMaterial(parameters, actual);
+  RemoveMatteMaterialV1(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 Kd { spectrum_texture_name: "kd" }
                 sigma { float_texture_name: "sigma" }
@@ -665,15 +665,15 @@ TEST(MatteMaterial, WithData) {
               )pb"));
 }
 
-TEST(MeasuredFourierMaterial, Empty) {
+TEST(RemoveMeasuredFourierMaterialV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   MeasuredFourierMaterial actual;
-  RemoveMeasuredFourierMaterial(parameters, actual);
+  RemoveMeasuredFourierMaterialV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(MeasuredFourierMaterial, WithData) {
+TEST(RemoveMeasuredFourierMaterialV3, WithData) {
   std::vector<std::string_view> filename = {"filename"};
   Parameter filename_parameter{.directive = "",
                                .type = ParameterType::STRING,
@@ -692,22 +692,22 @@ TEST(MeasuredFourierMaterial, WithData) {
   };
 
   MeasuredFourierMaterial actual;
-  RemoveMeasuredFourierMaterial(parameters, actual);
+  RemoveMeasuredFourierMaterialV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 filename: "filename"
                 bumpmap { float_texture_name: "bump" }
               )pb"));
 }
 
-TEST(MeasuredMerlMaterial, Empty) {
+TEST(RemoveMeasuredMerlMaterialV2, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   MeasuredMerlMaterial actual;
-  RemoveMeasuredMerlMaterial(parameters, actual);
+  RemoveMeasuredMerlMaterialV2(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(MeasuredMerlMaterial, WithData) {
+TEST(RemoveMeasuredMerlMaterialV2, WithData) {
   std::vector<std::string_view> filename = {"filename"};
   Parameter filename_parameter{.directive = "",
                                .type = ParameterType::STRING,
@@ -726,22 +726,22 @@ TEST(MeasuredMerlMaterial, WithData) {
   };
 
   MeasuredMerlMaterial actual;
-  RemoveMeasuredMerlMaterial(parameters, actual);
+  RemoveMeasuredMerlMaterialV2(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 filename: "filename"
                 bumpmap { float_texture_name: "bump" }
               )pb"));
 }
 
-TEST(MetalMaterialV1, Empty) {
+TEST(RemoveMetalMaterialV2, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   MetalMaterial actual;
-  RemoveMetalMaterialV1(parameters, actual);
+  RemoveMetalMaterialV2(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(MetalMaterialV1, WithData) {
+TEST(RemoveMetalMaterialV2, WithData) {
   std::vector<std::string_view> k = {"k"};
   Parameter k_parameter{.directive = "",
                         .type = ParameterType::TEXTURE,
@@ -774,7 +774,7 @@ TEST(MetalMaterialV1, WithData) {
   };
 
   MetalMaterial actual;
-  RemoveMetalMaterialV1(parameters, actual);
+  RemoveMetalMaterialV2(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 k { spectrum_texture_name: "k" }
                 eta { spectrum_texture_name: "eta" }
@@ -783,15 +783,15 @@ TEST(MetalMaterialV1, WithData) {
               )pb"));
 }
 
-TEST(MetalMaterialV2, Empty) {
+TEST(RemoveMetalMaterialV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   MetalMaterial actual;
-  RemoveMetalMaterialV2(parameters, actual);
+  RemoveMetalMaterialV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(MetalMaterialV2, WithData) {
+TEST(RemoveMetalMaterialV3, WithData) {
   std::vector<std::string_view> k = {"k"};
   Parameter k_parameter{.directive = "",
                         .type = ParameterType::TEXTURE,
@@ -845,7 +845,7 @@ TEST(MetalMaterialV2, WithData) {
   };
 
   MetalMaterial actual;
-  RemoveMetalMaterialV2(parameters, actual);
+  RemoveMetalMaterialV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 k { spectrum_texture_name: "k" }
                 eta { spectrum_texture_name: "eta" }
@@ -857,15 +857,15 @@ TEST(MetalMaterialV2, WithData) {
               )pb"));
 }
 
-TEST(MirrorMaterial, Empty) {
+TEST(RemoveMirrorMaterialV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   MirrorMaterial actual;
-  RemoveMirrorMaterial(parameters, actual);
+  RemoveMirrorMaterialV1(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(MirrorMaterial, WithData) {
+TEST(RemoveMirrorMaterialV1, WithData) {
   std::vector<std::string_view> kr = {"kr"};
   Parameter kr_parameter{.directive = "",
                          .type = ParameterType::TEXTURE,
@@ -884,22 +884,22 @@ TEST(MirrorMaterial, WithData) {
   };
 
   MirrorMaterial actual;
-  RemoveMirrorMaterial(parameters, actual);
+  RemoveMirrorMaterialV1(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 Kr { spectrum_texture_name: "kr" }
                 bumpmap { float_texture_name: "bump" }
               )pb"));
 }
 
-TEST(MixMaterial, Empty) {
+TEST(RemoveMixMaterialV2, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   MixMaterial actual;
-  RemoveMixMaterial(parameters, actual);
+  RemoveMixMaterialV2(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(MixMaterial, WithData) {
+TEST(RemoveMixMaterialV2, WithData) {
   std::vector<std::string_view> kd = {"kd"};
   Parameter kd_parameter{.directive = "",
                          .type = ParameterType::TEXTURE,
@@ -939,7 +939,7 @@ TEST(MixMaterial, WithData) {
   };
 
   MixMaterial actual;
-  RemoveMixMaterial(parameters, actual);
+  RemoveMixMaterialV2(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 Kd { spectrum_texture_name: "kd" }
                 sigma { float_texture_name: "sigma" }
@@ -947,7 +947,7 @@ TEST(MixMaterial, WithData) {
               )pb"));
 }
 
-TEST(PlasticMaterialV1, Empty) {
+TEST(RemovePlasticMaterialV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   PlasticMaterial actual;
@@ -955,7 +955,7 @@ TEST(PlasticMaterialV1, Empty) {
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(PlasticMaterialV1, WithData) {
+TEST(RemovePlasticMaterialV1, WithData) {
   std::vector<std::string_view> kd = {"kd"};
   Parameter kd_parameter{.directive = "",
                          .type = ParameterType::TEXTURE,
@@ -988,7 +988,7 @@ TEST(PlasticMaterialV1, WithData) {
   };
 
   PlasticMaterial actual;
-  RemovePlasticMaterialV2(parameters, actual);
+  RemovePlasticMaterialV1(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 Kd { spectrum_texture_name: "kd" }
                 Ks { spectrum_texture_name: "ks" }
@@ -997,15 +997,15 @@ TEST(PlasticMaterialV1, WithData) {
               )pb"));
 }
 
-TEST(PlasticMaterialV2, Empty) {
+TEST(RemovePlasticMaterialV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   PlasticMaterial actual;
-  RemovePlasticMaterialV2(parameters, actual);
+  RemovePlasticMaterialV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(PlasticMaterialV2, WithData) {
+TEST(RemovePlasticMaterialV3, WithData) {
   std::vector<std::string_view> kd = {"kd"};
   Parameter kd_parameter{.directive = "",
                          .type = ParameterType::TEXTURE,
@@ -1045,7 +1045,7 @@ TEST(PlasticMaterialV2, WithData) {
   };
 
   PlasticMaterial actual;
-  RemovePlasticMaterialV2(parameters, actual);
+  RemovePlasticMaterialV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 Kd { spectrum_texture_name: "kd" }
                 Ks { spectrum_texture_name: "ks" }
@@ -1055,15 +1055,15 @@ TEST(PlasticMaterialV2, WithData) {
               )pb"));
 }
 
-TEST(ShinyMetalMaterial, Empty) {
+TEST(RemoveShinyMetalMaterialV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   ShinyMetalMaterial actual;
-  RemoveShinyMetalMaterial(parameters, actual);
+  RemoveShinyMetalMaterialV1(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(ShinyMetalMaterial, WithData) {
+TEST(RemoveShinyMetalMaterialV1, WithData) {
   std::vector<std::string_view> ks = {"ks"};
   Parameter ks_parameter{.directive = "",
                          .type = ParameterType::TEXTURE,
@@ -1096,7 +1096,7 @@ TEST(ShinyMetalMaterial, WithData) {
   };
 
   ShinyMetalMaterial actual;
-  RemoveShinyMetalMaterial(parameters, actual);
+  RemoveShinyMetalMaterialV1(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 Ks { spectrum_texture_name: "ks" }
                 Kr { spectrum_texture_name: "kr" }
@@ -1105,7 +1105,7 @@ TEST(ShinyMetalMaterial, WithData) {
               )pb"));
 }
 
-TEST(SubstrateMaterialV1, Empty) {
+TEST(RemoveSubstrateMaterialV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   SubstrateMaterial actual;
@@ -1113,7 +1113,7 @@ TEST(SubstrateMaterialV1, Empty) {
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(SubstrateMaterialV1, WithDataIndex) {
+TEST(RemoveSubstrateMaterialV1, WithDataIndex) {
   std::vector<std::string_view> kd = {"kd"};
   Parameter kd_parameter{.directive = "",
                          .type = ParameterType::TEXTURE,
@@ -1163,15 +1163,15 @@ TEST(SubstrateMaterialV1, WithDataIndex) {
               )pb"));
 }
 
-TEST(SubstrateMaterialV2, Empty) {
+TEST(RemoveSubstrateMaterialV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   SubstrateMaterial actual;
-  RemoveSubstrateMaterialV2(parameters, actual);
+  RemoveSubstrateMaterialV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(SubstrateMaterialV2, WithDataIndex) {
+TEST(RemoveSubstrateMaterialV3, WithDataIndex) {
   std::vector<std::string_view> kd = {"kd"};
   Parameter kd_parameter{.directive = "",
                          .type = ParameterType::TEXTURE,
@@ -1218,7 +1218,7 @@ TEST(SubstrateMaterialV2, WithDataIndex) {
   };
 
   SubstrateMaterial actual;
-  RemoveSubstrateMaterialV2(parameters, actual);
+  RemoveSubstrateMaterialV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 Kd { spectrum_texture_name: "kd" }
                 Ks { spectrum_texture_name: "ks" }
@@ -1229,15 +1229,15 @@ TEST(SubstrateMaterialV2, WithDataIndex) {
               )pb"));
 }
 
-TEST(SubsurfaceMaterial, Empty) {
+TEST(RemoveSubsurfaceMaterialV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   SubsurfaceMaterial actual;
-  RemoveSubsurfaceMaterial(parameters, actual);
+  RemoveSubsurfaceMaterialV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(SubsurfaceMaterial, WithData) {
+TEST(RemoveSubsurfaceMaterialV3, WithData) {
   std::vector<std::string_view> kr = {"kr"};
   Parameter kr_parameter{.directive = "",
                          .type = ParameterType::TEXTURE,
@@ -1326,7 +1326,7 @@ TEST(SubsurfaceMaterial, WithData) {
   };
 
   SubsurfaceMaterial actual;
-  RemoveSubsurfaceMaterial(parameters, actual);
+  RemoveSubsurfaceMaterialV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 Kr { spectrum_texture_name: "kr" }
                 Kt { spectrum_texture_name: "kt" }
@@ -1343,7 +1343,7 @@ TEST(SubsurfaceMaterial, WithData) {
               )pb"));
 }
 
-TEST(TranslucentMaterialV1, Empty) {
+TEST(RemoveTranslucentMaterialV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   TranslucentMaterial actual;
@@ -1351,7 +1351,7 @@ TEST(TranslucentMaterialV1, Empty) {
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(TranslucentMaterialV1, WithData) {
+TEST(RemoveTranslucentMaterialV1, WithData) {
   std::vector<std::string_view> kd = {"kd"};
   Parameter kd_parameter{.directive = "",
                          .type = ParameterType::TEXTURE,
@@ -1409,15 +1409,15 @@ TEST(TranslucentMaterialV1, WithData) {
               )pb"));
 }
 
-TEST(TranslucentMaterialV2, Empty) {
+TEST(RemoveTranslucentMaterialV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   TranslucentMaterial actual;
-  RemoveTranslucentMaterialV2(parameters, actual);
+  RemoveTranslucentMaterialV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(TranslucentMaterialV2, WithData) {
+TEST(RemoveTranslucentMaterialV3, WithData) {
   std::vector<std::string_view> kd = {"kd"};
   Parameter kd_parameter{.directive = "",
                          .type = ParameterType::TEXTURE,
@@ -1471,7 +1471,7 @@ TEST(TranslucentMaterialV2, WithData) {
   };
 
   TranslucentMaterial actual;
-  RemoveTranslucentMaterialV2(parameters, actual);
+  RemoveTranslucentMaterialV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 Kd { spectrum_texture_name: "kd" }
                 Ks { spectrum_texture_name: "ks" }
@@ -1483,7 +1483,7 @@ TEST(TranslucentMaterialV2, WithData) {
               )pb"));
 }
 
-TEST(UberMaterialV1, Empty) {
+TEST(RemoveUberMaterialV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   UberMaterial actual;
@@ -1491,7 +1491,7 @@ TEST(UberMaterialV1, Empty) {
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(UberMaterialV1, WithData) {
+TEST(RemoveUberMaterialV1, WithData) {
   std::vector<std::string_view> kd = {"kd"};
   Parameter kd_parameter{.directive = "",
                          .type = ParameterType::TEXTURE,
@@ -1549,7 +1549,7 @@ TEST(UberMaterialV1, WithData) {
               )pb"));
 }
 
-TEST(UberMaterialV2, Empty) {
+TEST(RemoveUberMaterialV2, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   UberMaterial actual;
@@ -1557,7 +1557,7 @@ TEST(UberMaterialV2, Empty) {
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(UberMaterialV2, WithData) {
+TEST(RemoveUberMaterialV2, WithData) {
   std::vector<std::string_view> kd = {"kd"};
   Parameter kd_parameter{.directive = "",
                          .type = ParameterType::TEXTURE,
@@ -1631,7 +1631,7 @@ TEST(UberMaterialV2, WithData) {
               )pb"));
 }
 
-TEST(UberMaterialV3, Empty) {
+TEST(RemoveUberMaterialV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   UberMaterial actual;
@@ -1639,7 +1639,7 @@ TEST(UberMaterialV3, Empty) {
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(UberMaterialV3, WithDataIndex) {
+TEST(RemoveUberMaterialV3, WithDataIndex) {
   std::vector<std::string_view> kd = {"kd"};
   Parameter kd_parameter{.directive = "",
                          .type = ParameterType::TEXTURE,
@@ -1737,7 +1737,7 @@ TEST(UberMaterialV3, WithDataIndex) {
               )pb"));
 }
 
-TEST(UberMaterialV3, WithDataEta) {
+TEST(RemoveUberMaterialV3, WithDataEta) {
   std::vector<std::string_view> kd = {"kd"};
   Parameter kd_parameter{.directive = "",
                          .type = ParameterType::TEXTURE,

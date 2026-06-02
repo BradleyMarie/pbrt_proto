@@ -9,11 +9,11 @@
 
 namespace pbrt_proto {
 
-void RemoveBuiltInMaterial(
+void RemoveBuiltInMaterialV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     BuiltInMaterial& output);
 
-void RemoveDisneyMaterial(
+void RemoveDisneyMaterialV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     DisneyMaterial& output);
 
@@ -21,47 +21,47 @@ void RemoveGlassMaterialV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     GlassMaterial& output);
 
-void RemoveGlassMaterialV2(
+void RemoveGlassMaterialV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     GlassMaterial& output);
 
-void RemoveHairMaterial(
+void RemoveHairMaterialV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     HairMaterial& output);
-
-void RemoveKdSubsurfaceMaterialV1(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    KdSubsurfaceMaterial& output);
 
 void RemoveKdSubsurfaceMaterialV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     KdSubsurfaceMaterial& output);
 
-void RemoveMatteMaterial(
+void RemoveKdSubsurfaceMaterialV3(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    KdSubsurfaceMaterial& output);
+
+void RemoveMatteMaterialV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     MatteMaterial& output);
 
-void RemoveMeasuredFourierMaterial(
+void RemoveMeasuredFourierMaterialV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     MeasuredFourierMaterial& output);
 
-void RemoveMeasuredMerlMaterial(
+void RemoveMeasuredMerlMaterialV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     MeasuredMerlMaterial& output);
-
-void RemoveMetalMaterialV1(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    MetalMaterial& output);
 
 void RemoveMetalMaterialV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     MetalMaterial& output);
 
-void RemoveMirrorMaterial(
+void RemoveMetalMaterialV3(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    MetalMaterial& output);
+
+void RemoveMirrorMaterialV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     MirrorMaterial& output);
 
-void RemoveMixMaterial(
+void RemoveMixMaterialV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     MixMaterial& output);
 
@@ -69,11 +69,11 @@ void RemovePlasticMaterialV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     PlasticMaterial& output);
 
-void RemovePlasticMaterialV2(
+void RemovePlasticMaterialV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     PlasticMaterial& output);
 
-void RemoveShinyMetalMaterial(
+void RemoveShinyMetalMaterialV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     ShinyMetalMaterial& output);
 
@@ -81,11 +81,11 @@ void RemoveSubstrateMaterialV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     SubstrateMaterial& output);
 
-void RemoveSubstrateMaterialV2(
+void RemoveSubstrateMaterialV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     SubstrateMaterial& output);
 
-void RemoveSubsurfaceMaterial(
+void RemoveSubsurfaceMaterialV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     SubsurfaceMaterial& output);
 
@@ -93,7 +93,7 @@ void RemoveTranslucentMaterialV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     TranslucentMaterial& output);
 
-void RemoveTranslucentMaterialV2(
+void RemoveTranslucentMaterialV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     TranslucentMaterial& output);
 

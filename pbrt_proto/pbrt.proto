@@ -1923,10 +1923,6 @@ message GlassMaterial {
   // reflection term for perfect specular reflection.
   //
   // NOTE: Prior to PBRTv3 this field was named "index".
-  //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv2 and should be ignored when
-  //       reading earlier input.
   optional FloatTextureParameter eta = 11;
 
   // The floating-point texture to be used as a bump map.

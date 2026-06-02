@@ -39,29 +39,29 @@ Material ParseMaterial(
   if (material_type == "" || material_type == "none") {
     // Do Nothing
   } else if (material_type == "disney") {
-    RemoveDisneyMaterial(parameters, *material.mutable_disney());
+    RemoveDisneyMaterialV3(parameters, *material.mutable_disney());
   } else if (material_type == "fourier") {
-    RemoveMeasuredFourierMaterial(parameters, *material.mutable_fourier());
+    RemoveMeasuredFourierMaterialV3(parameters, *material.mutable_fourier());
   } else if (material_type == "glass") {
-    RemoveGlassMaterialV2(parameters, *material.mutable_glass());
+    RemoveGlassMaterialV3(parameters, *material.mutable_glass());
   } else if (material_type == "hair") {
-    RemoveHairMaterial(parameters, *material.mutable_hair());
+    RemoveHairMaterialV3(parameters, *material.mutable_hair());
   } else if (material_type == "kdsubsurface") {
-    RemoveKdSubsurfaceMaterialV2(parameters, *material.mutable_kdsubsurface());
+    RemoveKdSubsurfaceMaterialV3(parameters, *material.mutable_kdsubsurface());
   } else if (material_type == "metal") {
-    RemoveMetalMaterialV2(parameters, *material.mutable_metal());
+    RemoveMetalMaterialV3(parameters, *material.mutable_metal());
   } else if (material_type == "mirror") {
-    RemoveMirrorMaterial(parameters, *material.mutable_mirror());
+    RemoveMirrorMaterialV1(parameters, *material.mutable_mirror());
   } else if (material_type == "mix") {
-    RemoveMixMaterial(parameters, *material.mutable_mix());
+    RemoveMixMaterialV2(parameters, *material.mutable_mix());
   } else if (material_type == "plastic") {
-    RemovePlasticMaterialV2(parameters, *material.mutable_plastic());
+    RemovePlasticMaterialV3(parameters, *material.mutable_plastic());
   } else if (material_type == "substrate") {
-    RemoveSubstrateMaterialV2(parameters, *material.mutable_substrate());
+    RemoveSubstrateMaterialV3(parameters, *material.mutable_substrate());
   } else if (material_type == "subsurface") {
-    RemoveSubsurfaceMaterial(parameters, *material.mutable_subsurface());
+    RemoveSubsurfaceMaterialV3(parameters, *material.mutable_subsurface());
   } else if (material_type == "translucent") {
-    RemoveTranslucentMaterialV2(parameters, *material.mutable_translucent());
+    RemoveTranslucentMaterialV3(parameters, *material.mutable_translucent());
   } else if (material_type == "uber") {
     RemoveUberMaterialV3(parameters, *material.mutable_uber());
   } else {
@@ -70,7 +70,7 @@ Material ParseMaterial(
                 << std::endl;
     }
 
-    RemoveMatteMaterial(parameters, *material.mutable_matte());
+    RemoveMatteMaterialV1(parameters, *material.mutable_matte());
   }
 
   return material;
