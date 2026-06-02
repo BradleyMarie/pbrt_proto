@@ -47,15 +47,15 @@ TEST(RemoveBoxPixelFilterV1, WithData) {
               )pb"));
 }
 
-TEST(RemoveBoxPixelFilterV2, Empty) {
+TEST(RemoveBoxPixelFilterV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   BoxPixelFilter actual;
-  RemoveBoxPixelFilterV2(parameters, actual);
+  RemoveBoxPixelFilterV4(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveBoxPixelFilterV2, WithData) {
+TEST(RemoveBoxPixelFilterV4, WithData) {
   std::vector<double> xradius = {1.0};
   Parameter xradius_parameter{.directive = "",
                               .type = ParameterType::FLOAT,
@@ -72,7 +72,7 @@ TEST(RemoveBoxPixelFilterV2, WithData) {
       {"xradius", xradius_parameter}, {"yradius", yradius_parameter}};
 
   BoxPixelFilter actual;
-  RemoveBoxPixelFilterV2(parameters, actual);
+  RemoveBoxPixelFilterV4(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 xradius: 1.0 yradius: 2.0
               )pb"));
@@ -117,15 +117,15 @@ TEST(RemoveGaussianPixelFilterV1, WithData) {
               )pb"));
 }
 
-TEST(RemoveGaussianPixelFilterV2, Empty) {
+TEST(RemoveGaussianPixelFilterV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   GaussianPixelFilter actual;
-  RemoveGaussianPixelFilterV2(parameters, actual);
+  RemoveGaussianPixelFilterV4(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveGaussianPixelFilterV2, WithData) {
+TEST(RemoveGaussianPixelFilterV4, WithData) {
   std::vector<double> xradius = {1.0};
   Parameter xradius_parameter{.directive = "",
                               .type = ParameterType::FLOAT,
@@ -150,7 +150,7 @@ TEST(RemoveGaussianPixelFilterV2, WithData) {
       {"sigma", sigma_parameter}};
 
   GaussianPixelFilter actual;
-  RemoveGaussianPixelFilterV2(parameters, actual);
+  RemoveGaussianPixelFilterV4(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 xradius: 1.0 yradius: 2.0 sigma: 3.0
               )pb"));
@@ -195,15 +195,15 @@ TEST(RemoveLanczosPixelFilterV1, WithData) {
               )pb"));
 }
 
-TEST(RemoveLanczosPixelFilterV2, Empty) {
+TEST(RemoveLanczosPixelFilterV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   LanczosPixelFilter actual;
-  RemoveLanczosPixelFilterV2(parameters, actual);
+  RemoveLanczosPixelFilterV4(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveLanczosPixelFilterV2, WithData) {
+TEST(RemoveLanczosPixelFilterV4, WithData) {
   std::vector<double> xradius = {1.0};
   Parameter xradius_parameter{.directive = "",
                               .type = ParameterType::FLOAT,
@@ -228,7 +228,7 @@ TEST(RemoveLanczosPixelFilterV2, WithData) {
       {"tau", tau_parameter}};
 
   LanczosPixelFilter actual;
-  RemoveLanczosPixelFilterV2(parameters, actual);
+  RemoveLanczosPixelFilterV4(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 xradius: 1.0 yradius: 2.0 tau: 3.0
               )pb"));
@@ -280,15 +280,15 @@ TEST(RemoveMitchellPixelFilterV1, WithData) {
               )pb"));
 }
 
-TEST(RemoveMitchellPixelFilterV2, Empty) {
+TEST(RemoveMitchellPixelFilterV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   MitchellPixelFilter actual;
-  RemoveMitchellPixelFilterV2(parameters, actual);
+  RemoveMitchellPixelFilterV4(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveMitchellPixelFilterV2, WithData) {
+TEST(RemoveMitchellPixelFilterV4, WithData) {
   std::vector<double> xradius = {1.0};
   Parameter xradius_parameter{.directive = "",
                               .type = ParameterType::FLOAT,
@@ -320,7 +320,7 @@ TEST(RemoveMitchellPixelFilterV2, WithData) {
       {"C", c_parameter}};
 
   MitchellPixelFilter actual;
-  RemoveMitchellPixelFilterV2(parameters, actual);
+  RemoveMitchellPixelFilterV4(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 xradius: 1.0 yradius: 2.0 B: 3.0 C: 4.0
               )pb"));
@@ -357,15 +357,15 @@ TEST(RemoveTrianglePixelFilterV1, WithData) {
               )pb"));
 }
 
-TEST(RemoveTrianglePixelFilterV2, Empty) {
+TEST(RemoveTrianglePixelFilterV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   TrianglePixelFilter actual;
-  RemoveTrianglePixelFilterV2(parameters, actual);
+  RemoveTrianglePixelFilterV4(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveTrianglePixelFilterV2, WithData) {
+TEST(RemoveTrianglePixelFilterV4, WithData) {
   std::vector<double> xradius = {1.0};
   Parameter xradius_parameter{.directive = "",
                               .type = ParameterType::FLOAT,
@@ -382,7 +382,7 @@ TEST(RemoveTrianglePixelFilterV2, WithData) {
       {"xradius", xradius_parameter}, {"yradius", yradius_parameter}};
 
   TrianglePixelFilter actual;
-  RemoveTrianglePixelFilterV2(parameters, actual);
+  RemoveTrianglePixelFilterV4(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 xradius: 1.0 yradius: 2.0
               )pb"));

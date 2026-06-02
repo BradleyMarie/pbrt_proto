@@ -69,7 +69,7 @@ void RemoveBoxPixelFilterV1(
   RemoveWidth(parameters, output);
 }
 
-void RemoveBoxPixelFilterV2(
+void RemoveBoxPixelFilterV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     BoxPixelFilter& output) {
   RemoveRadius(parameters, output);
@@ -86,7 +86,7 @@ void RemoveGaussianPixelFilterV1(
   }
 }
 
-void RemoveGaussianPixelFilterV2(
+void RemoveGaussianPixelFilterV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     GaussianPixelFilter& output) {
   RemoveRadius(parameters, output);
@@ -104,7 +104,7 @@ void RemoveLanczosPixelFilterV1(
   RemoveTau(parameters, output);
 }
 
-void RemoveLanczosPixelFilterV2(
+void RemoveLanczosPixelFilterV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     LanczosPixelFilter& output) {
   RemoveRadius(parameters, output);
@@ -118,7 +118,7 @@ void RemoveMitchellPixelFilterV1(
   RemoveBC(parameters, output);
 }
 
-void RemoveMitchellPixelFilterV2(
+void RemoveMitchellPixelFilterV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     MitchellPixelFilter& output) {
   RemoveRadius(parameters, output);
@@ -131,7 +131,7 @@ void RemoveTrianglePixelFilterV1(
   RemoveWidth(parameters, output);
 }
 
-void RemoveTrianglePixelFilterV2(
+void RemoveTrianglePixelFilterV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     TrianglePixelFilter& output) {
   RemoveRadius(parameters, output);
