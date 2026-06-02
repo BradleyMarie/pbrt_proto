@@ -670,17 +670,17 @@ absl::Status ParserV3::Sampler(
   auto& sampler = *output_.add_directives()->mutable_sampler();
 
   if (sampler_type == "halton") {
-    RemoveHaltonSamplerV2(parameters, *sampler.mutable_halton());
+    RemoveHaltonSamplerV3(parameters, *sampler.mutable_halton());
   } else if (sampler_type == "maxmindist") {
-    RemoveMaxMinDistSamplerV1(parameters, *sampler.mutable_maxmindist());
+    RemoveMaxMinDistSamplerV3(parameters, *sampler.mutable_maxmindist());
   } else if (sampler_type == "random") {
-    RemoveIndependentSamplerV1(parameters, *sampler.mutable_random());
+    RemoveIndependentSamplerV2(parameters, *sampler.mutable_random());
   } else if (sampler_type == "sobol") {
-    RemoveSobolSamplerV1(parameters, *sampler.mutable_sobol());
+    RemoveSobolSamplerV3(parameters, *sampler.mutable_sobol());
   } else if (sampler_type == "stratified") {
-    RemoveStratifiedSamplerV2(parameters, *sampler.mutable_stratified());
+    RemoveStratifiedSamplerV3(parameters, *sampler.mutable_stratified());
   } else if (sampler_type == "02sequence" || sampler_type == "lowdiscrepancy") {
-    RemoveZeroTwoSequenceSamplerV2(parameters,
+    RemoveZeroTwoSequenceSamplerV3(parameters,
                                    *sampler.mutable_zerotwosequence());
   } else {
     std::cerr << "Unrecognized Sampler type: \"" << sampler_type << "\""

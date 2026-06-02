@@ -16,15 +16,15 @@ namespace {
 
 using ::google::protobuf::EqualsProto;
 
-TEST(RemoveAdaptiveSamplerV1, Empty) {
+TEST(RemoveAdaptiveSamplerV2, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   AdaptiveSampler actual;
-  RemoveAdaptiveSamplerV1(parameters, actual);
+  RemoveAdaptiveSamplerV2(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveAdaptiveSamplerV1, Contrast) {
+TEST(RemoveAdaptiveSamplerV2, Contrast) {
   std::vector<absl::string_view> method = {"contrast"};
   Parameter method_parameter{.directive = "",
                              .type = ParameterType::STRING,
@@ -35,13 +35,13 @@ TEST(RemoveAdaptiveSamplerV1, Contrast) {
       {"method", method_parameter}};
 
   AdaptiveSampler actual;
-  RemoveAdaptiveSamplerV1(parameters, actual);
+  RemoveAdaptiveSamplerV2(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 method: CONTRAST
               )pb"));
 }
 
-TEST(RemoveAdaptiveSamplerV1, ShapeId) {
+TEST(RemoveAdaptiveSamplerV2, ShapeId) {
   std::vector<absl::string_view> method = {"shapeid"};
   Parameter method_parameter{.directive = "",
                              .type = ParameterType::STRING,
@@ -52,13 +52,13 @@ TEST(RemoveAdaptiveSamplerV1, ShapeId) {
       {"method", method_parameter}};
 
   AdaptiveSampler actual;
-  RemoveAdaptiveSamplerV1(parameters, actual);
+  RemoveAdaptiveSamplerV2(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 method: SHAPEID
               )pb"));
 }
 
-TEST(RemoveAdaptiveSamplerV1, Unknown) {
+TEST(RemoveAdaptiveSamplerV2, Unknown) {
   std::vector<absl::string_view> method = {"unknown"};
   Parameter method_parameter{.directive = "",
                              .type = ParameterType::STRING,
@@ -69,13 +69,13 @@ TEST(RemoveAdaptiveSamplerV1, Unknown) {
       {"method", method_parameter}};
 
   AdaptiveSampler actual;
-  RemoveAdaptiveSamplerV1(parameters, actual);
+  RemoveAdaptiveSamplerV2(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 method: CONTRAST
               )pb"));
 }
 
-TEST(RemoveAdaptiveSamplerV1, WithData) {
+TEST(RemoveAdaptiveSamplerV2, WithData) {
   std::vector<int32_t> minsamples = {1};
   Parameter minsamples_parameter{.directive = "",
                                  .type = ParameterType::INTEGER,
@@ -100,22 +100,22 @@ TEST(RemoveAdaptiveSamplerV1, WithData) {
       {"method", method_parameter}};
 
   AdaptiveSampler actual;
-  RemoveAdaptiveSamplerV1(parameters, actual);
+  RemoveAdaptiveSamplerV2(parameters, actual);
   EXPECT_THAT(actual,
               EqualsProto(R"pb(
                 minsamples: 1 maxsamples: 2 method: CONTRAST
               )pb"));
 }
 
-TEST(RemoveBestCandidateSampler, Empty) {
+TEST(RemoveBestCandidateSamplerV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   BestCandidateSampler actual;
-  RemoveBestCandidateSampler(parameters, actual);
+  RemoveBestCandidateSamplerV1(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveBestCandidateSampler, WithData) {
+TEST(RemoveBestCandidateSamplerV1, WithData) {
   std::vector<int32_t> pixelsamples = {1};
   Parameter pixelsamples_parameter{.directive = "",
                                    .type = ParameterType::INTEGER,
@@ -126,32 +126,7 @@ TEST(RemoveBestCandidateSampler, WithData) {
       {"pixelsamples", pixelsamples_parameter}};
 
   BestCandidateSampler actual;
-  RemoveBestCandidateSampler(parameters, actual);
-  EXPECT_THAT(actual, EqualsProto(R"pb(
-                pixelsamples: 1
-              )pb"));
-}
-
-TEST(RemoveHaltonSamplerV1, Empty) {
-  absl::flat_hash_map<absl::string_view, Parameter> parameters;
-
-  HaltonSampler actual;
-  RemoveHaltonSamplerV1(parameters, actual);
-  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
-}
-
-TEST(RemoveHaltonSamplerV1, WithData) {
-  std::vector<int32_t> pixelsamples = {1};
-  Parameter pixelsamples_parameter{.directive = "",
-                                   .type = ParameterType::INTEGER,
-                                   .type_name = "",
-                                   .values = absl::MakeSpan(pixelsamples)};
-
-  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
-      {"pixelsamples", pixelsamples_parameter}};
-
-  HaltonSampler actual;
-  RemoveHaltonSamplerV1(parameters, actual);
+  RemoveBestCandidateSamplerV1(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 pixelsamples: 1
               )pb"));
@@ -172,6 +147,31 @@ TEST(RemoveHaltonSamplerV2, WithData) {
                                    .type_name = "",
                                    .values = absl::MakeSpan(pixelsamples)};
 
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"pixelsamples", pixelsamples_parameter}};
+
+  HaltonSampler actual;
+  RemoveHaltonSamplerV2(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                pixelsamples: 1
+              )pb"));
+}
+
+TEST(RemoveHaltonSamplerV3, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  HaltonSampler actual;
+  RemoveHaltonSamplerV3(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveHaltonSamplerV3, WithData) {
+  std::vector<int32_t> pixelsamples = {1};
+  Parameter pixelsamples_parameter{.directive = "",
+                                   .type = ParameterType::INTEGER,
+                                   .type_name = "",
+                                   .values = absl::MakeSpan(pixelsamples)};
+
   bool samplepixelcenter[] = {true};
   Parameter samplepixelcenter_parameter{
       .directive = "",
@@ -184,21 +184,21 @@ TEST(RemoveHaltonSamplerV2, WithData) {
       {"samplepixelcenter", samplepixelcenter_parameter}};
 
   HaltonSampler actual;
-  RemoveHaltonSamplerV2(parameters, actual);
+  RemoveHaltonSamplerV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 pixelsamples: 1 samplepixelcenter: true
               )pb"));
 }
 
-TEST(RemoveHaltonSamplerV3, Empty) {
+TEST(RemoveHaltonSamplerV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   HaltonSampler actual;
-  EXPECT_TRUE(RemoveHaltonSamplerV3(parameters, actual).ok());
+  EXPECT_TRUE(RemoveHaltonSamplerV4(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveHaltonSamplerV3, WithData) {
+TEST(RemoveHaltonSamplerV4, WithData) {
   std::vector<int32_t> pixelsamples = {1};
   Parameter pixelsamples_parameter{.directive = "",
                                    .type = ParameterType::INTEGER,
@@ -215,34 +215,9 @@ TEST(RemoveHaltonSamplerV3, WithData) {
       {"pixelsamples", pixelsamples_parameter}, {"seed", seed_parameter}};
 
   HaltonSampler actual;
-  EXPECT_TRUE(RemoveHaltonSamplerV3(parameters, actual).ok());
+  EXPECT_TRUE(RemoveHaltonSamplerV4(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 pixelsamples: 1 seed: 2
-              )pb"));
-}
-
-TEST(RemoveIndependentSamplerV1, Empty) {
-  absl::flat_hash_map<absl::string_view, Parameter> parameters;
-
-  IndependentSampler actual;
-  RemoveIndependentSamplerV1(parameters, actual);
-  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
-}
-
-TEST(RemoveIndependentSamplerV1, WithData) {
-  std::vector<int32_t> pixelsamples = {1};
-  Parameter pixelsamples_parameter{.directive = "",
-                                   .type = ParameterType::INTEGER,
-                                   .type_name = "",
-                                   .values = absl::MakeSpan(pixelsamples)};
-
-  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
-      {"pixelsamples", pixelsamples_parameter}};
-
-  IndependentSampler actual;
-  RemoveIndependentSamplerV1(parameters, actual);
-  EXPECT_THAT(actual, EqualsProto(R"pb(
-                pixelsamples: 1
               )pb"));
 }
 
@@ -261,6 +236,31 @@ TEST(RemoveIndependentSamplerV2, WithData) {
                                    .type_name = "",
                                    .values = absl::MakeSpan(pixelsamples)};
 
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"pixelsamples", pixelsamples_parameter}};
+
+  IndependentSampler actual;
+  RemoveIndependentSamplerV2(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                pixelsamples: 1
+              )pb"));
+}
+
+TEST(RemoveIndependentSamplerV4, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  IndependentSampler actual;
+  RemoveIndependentSamplerV4(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveIndependentSamplerV4, WithData) {
+  std::vector<int32_t> pixelsamples = {1};
+  Parameter pixelsamples_parameter{.directive = "",
+                                   .type = ParameterType::INTEGER,
+                                   .type_name = "",
+                                   .values = absl::MakeSpan(pixelsamples)};
+
   std::vector<int32_t> seed = {2};
   Parameter seed_parameter{.directive = "",
                            .type = ParameterType::INTEGER,
@@ -271,21 +271,21 @@ TEST(RemoveIndependentSamplerV2, WithData) {
       {"pixelsamples", pixelsamples_parameter}, {"seed", seed_parameter}};
 
   IndependentSampler actual;
-  RemoveIndependentSamplerV2(parameters, actual);
+  RemoveIndependentSamplerV4(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 pixelsamples: 1 seed: 2
               )pb"));
 }
 
-TEST(RemoveMaxMinDistSamplerV1, Empty) {
+TEST(RemoveMaxMinDistSamplerV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   MaxMinDistSampler actual;
-  RemoveMaxMinDistSamplerV1(parameters, actual);
+  RemoveMaxMinDistSamplerV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveMaxMinDistSamplerV1, WithData) {
+TEST(RemoveMaxMinDistSamplerV3, WithData) {
   std::vector<int32_t> pixelsamples = {1};
   Parameter pixelsamples_parameter{.directive = "",
                                    .type = ParameterType::INTEGER,
@@ -303,21 +303,21 @@ TEST(RemoveMaxMinDistSamplerV1, WithData) {
       {"dimensions", dimensions_parameter}};
 
   MaxMinDistSampler actual;
-  RemoveMaxMinDistSamplerV1(parameters, actual);
+  RemoveMaxMinDistSamplerV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 pixelsamples: 1 dimensions: 2
               )pb"));
 }
 
-TEST(RemovePaddedSobolSampler, Empty) {
+TEST(RemovePaddedSobolSamplerV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   PaddedSobolSampler actual;
-  EXPECT_TRUE(RemovePaddedSobolSampler(parameters, actual).ok());
+  EXPECT_TRUE(RemovePaddedSobolSamplerV4(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemovePaddedSobolSampler, BadRandomization) {
+TEST(RemovePaddedSobolSamplerV4, BadRandomization) {
   std::vector<absl::string_view> randomization = {"unknown"};
   Parameter randomization_parameter{.directive = "",
                                     .type = ParameterType::STRING,
@@ -328,10 +328,10 @@ TEST(RemovePaddedSobolSampler, BadRandomization) {
       {"randomization", randomization_parameter}};
 
   PaddedSobolSampler actual;
-  EXPECT_FALSE(RemovePaddedSobolSampler(parameters, actual).ok());
+  EXPECT_FALSE(RemovePaddedSobolSamplerV4(parameters, actual).ok());
 }
 
-TEST(RemovePaddedSobolSampler, NoneRandomization) {
+TEST(RemovePaddedSobolSamplerV4, NoneRandomization) {
   std::vector<absl::string_view> randomization = {"none"};
   Parameter randomization_parameter{.directive = "",
                                     .type = ParameterType::STRING,
@@ -342,13 +342,13 @@ TEST(RemovePaddedSobolSampler, NoneRandomization) {
       {"randomization", randomization_parameter}};
 
   PaddedSobolSampler actual;
-  EXPECT_TRUE(RemovePaddedSobolSampler(parameters, actual).ok());
+  EXPECT_TRUE(RemovePaddedSobolSamplerV4(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 randomization: NONE
               )pb"));
 }
 
-TEST(RemovePaddedSobolSampler, PermuteDigitsRandomization) {
+TEST(RemovePaddedSobolSamplerV4, PermuteDigitsRandomization) {
   std::vector<absl::string_view> randomization = {"permutedigits"};
   Parameter randomization_parameter{.directive = "",
                                     .type = ParameterType::STRING,
@@ -359,13 +359,13 @@ TEST(RemovePaddedSobolSampler, PermuteDigitsRandomization) {
       {"randomization", randomization_parameter}};
 
   PaddedSobolSampler actual;
-  EXPECT_TRUE(RemovePaddedSobolSampler(parameters, actual).ok());
+  EXPECT_TRUE(RemovePaddedSobolSamplerV4(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 randomization: PERMUTEDIGITS
               )pb"));
 }
 
-TEST(RemovePaddedSobolSampler, OwenRandomization) {
+TEST(RemovePaddedSobolSamplerV4, OwenRandomization) {
   std::vector<absl::string_view> randomization = {"owen"};
   Parameter randomization_parameter{.directive = "",
                                     .type = ParameterType::STRING,
@@ -376,13 +376,13 @@ TEST(RemovePaddedSobolSampler, OwenRandomization) {
       {"randomization", randomization_parameter}};
 
   PaddedSobolSampler actual;
-  EXPECT_TRUE(RemovePaddedSobolSampler(parameters, actual).ok());
+  EXPECT_TRUE(RemovePaddedSobolSamplerV4(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 randomization: OWEN
               )pb"));
 }
 
-TEST(RemovePaddedSobolSampler, FastOwenRandomization) {
+TEST(RemovePaddedSobolSamplerV4, FastOwenRandomization) {
   std::vector<absl::string_view> randomization = {"fastowen"};
   Parameter randomization_parameter{.directive = "",
                                     .type = ParameterType::STRING,
@@ -393,13 +393,13 @@ TEST(RemovePaddedSobolSampler, FastOwenRandomization) {
       {"randomization", randomization_parameter}};
 
   PaddedSobolSampler actual;
-  EXPECT_TRUE(RemovePaddedSobolSampler(parameters, actual).ok());
+  EXPECT_TRUE(RemovePaddedSobolSamplerV4(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 randomization: FASTOWEN
               )pb"));
 }
 
-TEST(RemovePaddedSobolSampler, WithData) {
+TEST(RemovePaddedSobolSamplerV4, WithData) {
   std::vector<int32_t> pixelsamples = {1};
   Parameter pixelsamples_parameter{.directive = "",
                                    .type = ParameterType::INTEGER,
@@ -424,22 +424,22 @@ TEST(RemovePaddedSobolSampler, WithData) {
       {"randomization", randomization_parameter}};
 
   PaddedSobolSampler actual;
-  EXPECT_TRUE(RemovePaddedSobolSampler(parameters, actual).ok());
+  EXPECT_TRUE(RemovePaddedSobolSamplerV4(parameters, actual).ok());
   EXPECT_THAT(actual,
               EqualsProto(R"pb(
                 pixelsamples: 1 seed: 2 randomization: FASTOWEN
               )pb"));
 }
 
-TEST(RemovePMJ02BNSampler, Empty) {
+TEST(RemovePMJ02BNSamplerV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   PMJ02BNSampler actual;
-  RemovePMJ02BNSampler(parameters, actual);
+  RemovePMJ02BNSamplerV4(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemovePMJ02BNSampler, WithData) {
+TEST(RemovePMJ02BNSamplerV4, WithData) {
   std::vector<int32_t> pixelsamples = {1};
   Parameter pixelsamples_parameter{.directive = "",
                                    .type = ParameterType::INTEGER,
@@ -456,7 +456,7 @@ TEST(RemovePMJ02BNSampler, WithData) {
       {"pixelsamples", pixelsamples_parameter}, {"seed", seed_parameter}};
 
   PMJ02BNSampler actual;
-  RemovePMJ02BNSampler(parameters, actual);
+  RemovePMJ02BNSamplerV4(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(pixelsamples: 1 seed: 2)pb"));
 }
 
@@ -491,23 +491,23 @@ TEST(RemoveRandomSamplerV1, WithData) {
               )pb"));
 }
 
-TEST(RemoveSobolSamplerV1, Empty) {
+TEST(RemoveSobolSamplerV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   SobolSampler actual;
-  RemoveSobolSamplerV1(parameters, actual);
+  RemoveSobolSamplerV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveSobolSamplerV2, Empty) {
+TEST(RemoveSobolSamplerV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   SobolSampler actual;
-  EXPECT_TRUE(RemoveSobolSamplerV2(parameters, actual).ok());
+  EXPECT_TRUE(RemoveSobolSamplerV4(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveSobolSamplerV2, BadRandomization) {
+TEST(RemoveSobolSamplerV4, BadRandomization) {
   std::vector<absl::string_view> randomization = {"unknown"};
   Parameter randomization_parameter{.directive = "",
                                     .type = ParameterType::STRING,
@@ -518,10 +518,10 @@ TEST(RemoveSobolSamplerV2, BadRandomization) {
       {"randomization", randomization_parameter}};
 
   SobolSampler actual;
-  EXPECT_FALSE(RemoveSobolSamplerV2(parameters, actual).ok());
+  EXPECT_FALSE(RemoveSobolSamplerV4(parameters, actual).ok());
 }
 
-TEST(RemoveSobolSamplerV2, NoneRandomization) {
+TEST(RemoveSobolSamplerV4, NoneRandomization) {
   std::vector<absl::string_view> randomization = {"none"};
   Parameter randomization_parameter{.directive = "",
                                     .type = ParameterType::STRING,
@@ -532,13 +532,13 @@ TEST(RemoveSobolSamplerV2, NoneRandomization) {
       {"randomization", randomization_parameter}};
 
   SobolSampler actual;
-  EXPECT_TRUE(RemoveSobolSamplerV2(parameters, actual).ok());
+  EXPECT_TRUE(RemoveSobolSamplerV4(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 randomization: NONE
               )pb"));
 }
 
-TEST(RemoveSobolSamplerV2, PermuteDigitsRandomization) {
+TEST(RemoveSobolSamplerV4, PermuteDigitsRandomization) {
   std::vector<absl::string_view> randomization = {"permutedigits"};
   Parameter randomization_parameter{.directive = "",
                                     .type = ParameterType::STRING,
@@ -549,13 +549,13 @@ TEST(RemoveSobolSamplerV2, PermuteDigitsRandomization) {
       {"randomization", randomization_parameter}};
 
   SobolSampler actual;
-  EXPECT_TRUE(RemoveSobolSamplerV2(parameters, actual).ok());
+  EXPECT_TRUE(RemoveSobolSamplerV4(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 randomization: PERMUTEDIGITS
               )pb"));
 }
 
-TEST(RemoveSobolSamplerV2, OwenRandomization) {
+TEST(RemoveSobolSamplerV4, OwenRandomization) {
   std::vector<absl::string_view> randomization = {"owen"};
   Parameter randomization_parameter{.directive = "",
                                     .type = ParameterType::STRING,
@@ -566,13 +566,13 @@ TEST(RemoveSobolSamplerV2, OwenRandomization) {
       {"randomization", randomization_parameter}};
 
   SobolSampler actual;
-  EXPECT_TRUE(RemoveSobolSamplerV2(parameters, actual).ok());
+  EXPECT_TRUE(RemoveSobolSamplerV4(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 randomization: OWEN
               )pb"));
 }
 
-TEST(RemoveSobolSamplerV2, FastOwenRandomization) {
+TEST(RemoveSobolSamplerV4, FastOwenRandomization) {
   std::vector<absl::string_view> randomization = {"fastowen"};
   Parameter randomization_parameter{.directive = "",
                                     .type = ParameterType::STRING,
@@ -583,13 +583,13 @@ TEST(RemoveSobolSamplerV2, FastOwenRandomization) {
       {"randomization", randomization_parameter}};
 
   SobolSampler actual;
-  EXPECT_TRUE(RemoveSobolSamplerV2(parameters, actual).ok());
+  EXPECT_TRUE(RemoveSobolSamplerV4(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 randomization: FASTOWEN
               )pb"));
 }
 
-TEST(RemoveSobolSamplerV2, WithData) {
+TEST(RemoveSobolSamplerV4, WithData) {
   std::vector<int32_t> pixelsamples = {1};
   Parameter pixelsamples_parameter{.directive = "",
                                    .type = ParameterType::INTEGER,
@@ -614,7 +614,7 @@ TEST(RemoveSobolSamplerV2, WithData) {
       {"randomization", randomization_parameter}};
 
   SobolSampler actual;
-  EXPECT_TRUE(RemoveSobolSamplerV2(parameters, actual).ok());
+  EXPECT_TRUE(RemoveSobolSamplerV4(parameters, actual).ok());
   EXPECT_THAT(actual,
               EqualsProto(R"pb(
                 pixelsamples: 1 seed: 2 randomization: FASTOWEN
@@ -660,15 +660,15 @@ TEST(RemoveStratifiedSamplerV1, WithData) {
               )pb"));
 }
 
-TEST(RemoveStratifiedSamplerV2, Empty) {
+TEST(RemoveStratifiedSamplerV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   StratifiedSampler actual;
-  RemoveStratifiedSamplerV2(parameters, actual);
+  RemoveStratifiedSamplerV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveStratifiedSamplerV2, WithData) {
+TEST(RemoveStratifiedSamplerV3, WithData) {
   std::vector<int32_t> xsamples = {1};
   Parameter xsamples_parameter{.directive = "",
                                .type = ParameterType::INTEGER,
@@ -700,7 +700,7 @@ TEST(RemoveStratifiedSamplerV2, WithData) {
       {"dimensions", dimensions_parameter}};
 
   StratifiedSampler actual;
-  RemoveStratifiedSamplerV2(parameters, actual);
+  RemoveStratifiedSamplerV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 xsamples: 1
                 ysamples: 2
@@ -709,15 +709,15 @@ TEST(RemoveStratifiedSamplerV2, WithData) {
               )pb"));
 }
 
-TEST(RemoveStratifiedSamplerV3, Empty) {
+TEST(RemoveStratifiedSamplerV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   StratifiedSampler actual;
-  RemoveStratifiedSamplerV3(parameters, actual);
+  RemoveStratifiedSamplerV4(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveStratifiedSamplerV3, WithData) {
+TEST(RemoveStratifiedSamplerV4, WithData) {
   std::vector<int32_t> xsamples = {1};
   Parameter xsamples_parameter{.directive = "",
                                .type = ParameterType::INTEGER,
@@ -749,7 +749,7 @@ TEST(RemoveStratifiedSamplerV3, WithData) {
       {"seed", seed_parameter}};
 
   StratifiedSampler actual;
-  RemoveStratifiedSamplerV3(parameters, actual);
+  RemoveStratifiedSamplerV4(parameters, actual);
   EXPECT_THAT(actual,
               EqualsProto(R"pb(
                 xsamples: 1 ysamples: 2 jitter: true seed: 3
@@ -781,15 +781,15 @@ TEST(RemoveZeroTwoSequenceSamplerV1, WithData) {
               )pb"));
 }
 
-TEST(RemoveZeroTwoSequenceSamplerV2, Empty) {
+TEST(RemoveZeroTwoSequenceSamplerV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   ZeroTwoSequenceSampler actual;
-  RemoveZeroTwoSequenceSamplerV2(parameters, actual);
+  RemoveZeroTwoSequenceSamplerV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveZeroTwoSequenceSamplerV2, WithData) {
+TEST(RemoveZeroTwoSequenceSamplerV3, WithData) {
   std::vector<int32_t> pixelsamples = {1};
   Parameter pixelsamples_parameter{.directive = "",
                                    .type = ParameterType::INTEGER,
@@ -807,21 +807,21 @@ TEST(RemoveZeroTwoSequenceSamplerV2, WithData) {
       {"dimensions", dimensions_parameter}};
 
   ZeroTwoSequenceSampler actual;
-  RemoveZeroTwoSequenceSamplerV2(parameters, actual);
+  RemoveZeroTwoSequenceSamplerV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 pixelsamples: 1 dimensions: 2
               )pb"));
 }
 
-TEST(RemoveZSobolSampler, Empty) {
+TEST(RemoveZSobolSamplerV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   ZSobolSampler actual;
-  EXPECT_TRUE(RemoveZSobolSampler(parameters, actual).ok());
+  EXPECT_TRUE(RemoveZSobolSamplerV4(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveZSobolSampler, BadRandomization) {
+TEST(RemoveZSobolSamplerV4, BadRandomization) {
   std::vector<absl::string_view> randomization = {"unknown"};
   Parameter randomization_parameter{.directive = "",
                                     .type = ParameterType::STRING,
@@ -832,10 +832,10 @@ TEST(RemoveZSobolSampler, BadRandomization) {
       {"randomization", randomization_parameter}};
 
   ZSobolSampler actual;
-  EXPECT_FALSE(RemoveZSobolSampler(parameters, actual).ok());
+  EXPECT_FALSE(RemoveZSobolSamplerV4(parameters, actual).ok());
 }
 
-TEST(RemoveZSobolSampler, NoneRandomization) {
+TEST(RemoveZSobolSamplerV4, NoneRandomization) {
   std::vector<absl::string_view> randomization = {"none"};
   Parameter randomization_parameter{.directive = "",
                                     .type = ParameterType::STRING,
@@ -846,13 +846,13 @@ TEST(RemoveZSobolSampler, NoneRandomization) {
       {"randomization", randomization_parameter}};
 
   ZSobolSampler actual;
-  EXPECT_TRUE(RemoveZSobolSampler(parameters, actual).ok());
+  EXPECT_TRUE(RemoveZSobolSamplerV4(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 randomization: NONE
               )pb"));
 }
 
-TEST(RemoveZSobolSampler, PermuteDigitsRandomization) {
+TEST(RemoveZSobolSamplerV4, PermuteDigitsRandomization) {
   std::vector<absl::string_view> randomization = {"permutedigits"};
   Parameter randomization_parameter{.directive = "",
                                     .type = ParameterType::STRING,
@@ -863,13 +863,13 @@ TEST(RemoveZSobolSampler, PermuteDigitsRandomization) {
       {"randomization", randomization_parameter}};
 
   ZSobolSampler actual;
-  EXPECT_TRUE(RemoveZSobolSampler(parameters, actual).ok());
+  EXPECT_TRUE(RemoveZSobolSamplerV4(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 randomization: PERMUTEDIGITS
               )pb"));
 }
 
-TEST(RemoveZSobolSampler, OwenRandomization) {
+TEST(RemoveZSobolSamplerV4, OwenRandomization) {
   std::vector<absl::string_view> randomization = {"owen"};
   Parameter randomization_parameter{.directive = "",
                                     .type = ParameterType::STRING,
@@ -880,13 +880,13 @@ TEST(RemoveZSobolSampler, OwenRandomization) {
       {"randomization", randomization_parameter}};
 
   ZSobolSampler actual;
-  EXPECT_TRUE(RemoveZSobolSampler(parameters, actual).ok());
+  EXPECT_TRUE(RemoveZSobolSamplerV4(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 randomization: OWEN
               )pb"));
 }
 
-TEST(RemoveZSobolSampler, FastOwenRandomization) {
+TEST(RemoveZSobolSamplerV4, FastOwenRandomization) {
   std::vector<absl::string_view> randomization = {"fastowen"};
   Parameter randomization_parameter{.directive = "",
                                     .type = ParameterType::STRING,
@@ -897,13 +897,13 @@ TEST(RemoveZSobolSampler, FastOwenRandomization) {
       {"randomization", randomization_parameter}};
 
   ZSobolSampler actual;
-  EXPECT_TRUE(RemoveZSobolSampler(parameters, actual).ok());
+  EXPECT_TRUE(RemoveZSobolSamplerV4(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 randomization: FASTOWEN
               )pb"));
 }
 
-TEST(RemoveZSobolSampler, WithData) {
+TEST(RemoveZSobolSamplerV4, WithData) {
   std::vector<int32_t> pixelsamples = {1};
   Parameter pixelsamples_parameter{.directive = "",
                                    .type = ParameterType::INTEGER,
@@ -928,7 +928,7 @@ TEST(RemoveZSobolSampler, WithData) {
       {"randomization", randomization_parameter}};
 
   ZSobolSampler actual;
-  EXPECT_TRUE(RemoveZSobolSampler(parameters, actual).ok());
+  EXPECT_TRUE(RemoveZSobolSamplerV4(parameters, actual).ok());
   EXPECT_THAT(actual,
               EqualsProto(R"pb(
                 pixelsamples: 1 seed: 2 randomization: FASTOWEN

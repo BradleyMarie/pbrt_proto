@@ -92,7 +92,7 @@ void RemoveSeed(absl::flat_hash_map<absl::string_view, Parameter>& parameters,
 
 }  // namespace
 
-void RemoveAdaptiveSamplerV1(
+void RemoveAdaptiveSamplerV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     AdaptiveSampler& output) {
   if (std::optional<int32_t> minsamples =
@@ -123,19 +123,19 @@ void RemoveAdaptiveSamplerV1(
   }
 }
 
-void RemoveBestCandidateSampler(
+void RemoveBestCandidateSamplerV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     BestCandidateSampler& output) {
   RemovePixelSamples(parameters, output);
 }
 
-void RemoveHaltonSamplerV1(
+void RemoveHaltonSamplerV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     HaltonSampler& output) {
   RemovePixelSamples(parameters, output);
 }
 
-void RemoveHaltonSamplerV2(
+void RemoveHaltonSamplerV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     HaltonSampler& output) {
   RemovePixelSamples(parameters, output);
@@ -147,7 +147,7 @@ void RemoveHaltonSamplerV2(
   }
 }
 
-absl::Status RemoveHaltonSamplerV3(
+absl::Status RemoveHaltonSamplerV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     HaltonSampler& output) {
   RemovePixelSamples(parameters, output);
@@ -155,27 +155,27 @@ absl::Status RemoveHaltonSamplerV3(
   return RemoveRandomization(parameters, output);
 }
 
-void RemoveIndependentSamplerV1(
+void RemoveIndependentSamplerV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     IndependentSampler& output) {
   RemovePixelSamples(parameters, output);
 }
 
-void RemoveIndependentSamplerV2(
+void RemoveIndependentSamplerV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     IndependentSampler& output) {
   RemovePixelSamples(parameters, output);
   RemoveSeed(parameters, output);
 }
 
-void RemoveMaxMinDistSamplerV1(
+void RemoveMaxMinDistSamplerV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     MaxMinDistSampler& output) {
   RemovePixelSamples(parameters, output);
   RemoveDimension(parameters, output);
 }
 
-absl::Status RemovePaddedSobolSampler(
+absl::Status RemovePaddedSobolSamplerV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     PaddedSobolSampler& output) {
   RemovePixelSamples(parameters, output);
@@ -183,7 +183,7 @@ absl::Status RemovePaddedSobolSampler(
   return RemoveRandomization(parameters, output);
 }
 
-void RemovePMJ02BNSampler(
+void RemovePMJ02BNSamplerV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     PMJ02BNSampler& output) {
   RemovePixelSamples(parameters, output);
@@ -197,13 +197,13 @@ void RemoveRandomSamplerV1(
   RemoveYSamples(parameters, output);
 }
 
-void RemoveSobolSamplerV1(
+void RemoveSobolSamplerV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     SobolSampler& output) {
   RemovePixelSamples(parameters, output);
 }
 
-absl::Status RemoveSobolSamplerV2(
+absl::Status RemoveSobolSamplerV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     SobolSampler& output) {
   RemovePixelSamples(parameters, output);
@@ -219,7 +219,7 @@ void RemoveStratifiedSamplerV1(
   RemoveYSamples(parameters, output);
 }
 
-void RemoveStratifiedSamplerV2(
+void RemoveStratifiedSamplerV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     StratifiedSampler& output) {
   RemoveJitter(parameters, output);
@@ -228,7 +228,7 @@ void RemoveStratifiedSamplerV2(
   RemoveDimension(parameters, output);
 }
 
-void RemoveStratifiedSamplerV3(
+void RemoveStratifiedSamplerV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     StratifiedSampler& output) {
   RemoveJitter(parameters, output);
@@ -243,14 +243,14 @@ void RemoveZeroTwoSequenceSamplerV1(
   RemovePixelSamples(parameters, output);
 }
 
-void RemoveZeroTwoSequenceSamplerV2(
+void RemoveZeroTwoSequenceSamplerV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     ZeroTwoSequenceSampler& output) {
   RemovePixelSamples(parameters, output);
   RemoveDimension(parameters, output);
 }
 
-absl::Status RemoveZSobolSampler(
+absl::Status RemoveZSobolSamplerV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     ZSobolSampler& output) {
   RemovePixelSamples(parameters, output);
