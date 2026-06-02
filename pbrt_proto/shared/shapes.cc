@@ -581,7 +581,10 @@ absl::Status RemoveTriangleMeshShapeV1(
 absl::Status RemoveTriangleMeshShapeV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     TriangleMeshShape& output) {
-  RemoveTriangleMeshShapeV1(parameters, output);
+  if (absl::Status status = RemoveTriangleMeshShapeV1(parameters, output);
+      !status.ok()) {
+    return status;
+  }
 
   if (std::optional<bool> discarddegenerateuvs =
           TryRemoveBool(parameters, "discarddegenerateUVs");
