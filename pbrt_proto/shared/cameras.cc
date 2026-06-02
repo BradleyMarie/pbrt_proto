@@ -137,7 +137,7 @@ void RemoveOrthographicCameraV2(
 void RemovePerspectiveCameraV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     PerspectiveCamera& output) {
-  RemovePerspectiveCameraV3(parameters, output);
+  RemovePerspectiveCameraV4(parameters, output);
 
   if (std::optional<double> hither = TryRemoveFloat(parameters, "hither");
       hither.has_value()) {
@@ -153,7 +153,7 @@ void RemovePerspectiveCameraV1(
 void RemovePerspectiveCameraV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     PerspectiveCamera& output) {
-  RemovePerspectiveCameraV3(parameters, output);
+  RemovePerspectiveCameraV4(parameters, output);
 
   if (std::optional<double> halffov = TryRemoveFloat(parameters, "halffov");
       halffov.has_value() && *halffov > 0.0) {
@@ -161,7 +161,7 @@ void RemovePerspectiveCameraV2(
   }
 }
 
-void RemovePerspectiveCameraV3(
+void RemovePerspectiveCameraV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     PerspectiveCamera& output) {
   if (std::optional<double> shutteropen =
@@ -256,7 +256,7 @@ void RemoveSphericalCameraV2(
       parameters, std::bind(&SphericalCamera::mutable_screenwindow, &output));
 }
 
-absl::Status RemoveSphericalCameraV3(
+absl::Status RemoveSphericalCameraV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     SphericalCamera& output) {
   RemoveSphericalCameraV2(parameters, output);
@@ -277,14 +277,14 @@ absl::Status RemoveSphericalCameraV3(
   return absl::OkStatus();
 }
 
-void RemoveRealisticCameraV1(
+void RemoveRealisticCameraV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     RealisticCamera& output) {
   RemoveRealisticCamera(parameters, /*parse_simpleweighting=*/true,
                         /*parse_aperture=*/false, output);
 }
 
-void RemoveRealisticCameraV2(
+void RemoveRealisticCameraV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     RealisticCamera& output) {
   RemoveRealisticCamera(parameters, /*parse_simpleweighting=*/false,

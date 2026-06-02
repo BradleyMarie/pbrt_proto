@@ -348,15 +348,15 @@ TEST(RemovePerspectiveCameraV2, ZeroHalfFov) {
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemovePerspectiveCameraV3, Empty) {
+TEST(RemovePerspectiveCameraV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   PerspectiveCamera actual;
-  RemovePerspectiveCameraV3(parameters, actual);
+  RemovePerspectiveCameraV4(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemovePerspectiveCameraV3, WithData) {
+TEST(RemovePerspectiveCameraV4, WithData) {
   std::vector<double> shutteropen = {1.0};
   Parameter shutteropen_parameter{.directive = "",
                                   .type = ParameterType::FLOAT,
@@ -424,7 +424,7 @@ TEST(RemovePerspectiveCameraV3, WithData) {
       {"halffov", halffov_parameter}};
 
   PerspectiveCamera actual;
-  RemovePerspectiveCameraV3(parameters, actual);
+  RemovePerspectiveCameraV4(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 shutteropen: 1.0
                 shutterclose: 2.0
@@ -611,15 +611,15 @@ TEST(RemoveSphericalCameraV2, WithData) {
               )pb"));
 }
 
-TEST(RemoveSphericalCameraV3, Empty) {
+TEST(RemoveSphericalCameraV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   SphericalCamera actual;
-  ASSERT_TRUE(RemoveSphericalCameraV3(parameters, actual).ok());
+  ASSERT_TRUE(RemoveSphericalCameraV4(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveSphericalCameraV3, WithData) {
+TEST(RemoveSphericalCameraV4, WithData) {
   std::vector<double> shutteropen = {1.0};
   Parameter shutteropen_parameter{.directive = "",
                                   .type = ParameterType::FLOAT,
@@ -687,7 +687,7 @@ TEST(RemoveSphericalCameraV3, WithData) {
       {"mapping", mapping_parameter}};
 
   SphericalCamera actual;
-  ASSERT_TRUE(RemoveSphericalCameraV3(parameters, actual).ok());
+  ASSERT_TRUE(RemoveSphericalCameraV4(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 shutteropen: 1.0
                 shutterclose: 2.0
@@ -699,7 +699,7 @@ TEST(RemoveSphericalCameraV3, WithData) {
               )pb"));
 }
 
-TEST(RemoveSphericalCameraV3, Equirectangular) {
+TEST(RemoveSphericalCameraV4, Equirectangular) {
   std::vector<absl::string_view> mapping = {"equirectangular"};
   Parameter mapping_parameter{.directive = "",
                               .type = ParameterType::STRING,
@@ -710,13 +710,13 @@ TEST(RemoveSphericalCameraV3, Equirectangular) {
       {"mapping", mapping_parameter}};
 
   SphericalCamera actual;
-  ASSERT_TRUE(RemoveSphericalCameraV3(parameters, actual).ok());
+  ASSERT_TRUE(RemoveSphericalCameraV4(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 mapping: EQUIRECTANGULAR
               )pb"));
 }
 
-TEST(RemoveSphericalCameraV3, InvalidMapping) {
+TEST(RemoveSphericalCameraV4, InvalidMapping) {
   std::vector<absl::string_view> mapping = {"bad"};
   Parameter mapping_parameter{.directive = "",
                               .type = ParameterType::STRING,
@@ -727,20 +727,20 @@ TEST(RemoveSphericalCameraV3, InvalidMapping) {
       {"mapping", mapping_parameter}};
 
   SphericalCamera actual;
-  EXPECT_THAT(RemoveSphericalCameraV3(parameters, actual),
+  EXPECT_THAT(RemoveSphericalCameraV4(parameters, actual),
               StatusIs(absl::StatusCode::kInvalidArgument,
                        "A spherical Camera specified an invalid 'mapping'"));
 }
 
-TEST(RemoveRealisticCameraV1, Empty) {
+TEST(RemoveRealisticCameraV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   RealisticCamera actual;
-  RemoveRealisticCameraV1(parameters, actual);
+  RemoveRealisticCameraV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveRealisticCameraV1, WithData) {
+TEST(RemoveRealisticCameraV3, WithData) {
   std::vector<double> shutteropen = {1.0};
   Parameter shutteropen_parameter{.directive = "",
                                   .type = ParameterType::FLOAT,
@@ -795,7 +795,7 @@ TEST(RemoveRealisticCameraV1, WithData) {
       {"simpleweighting", simpleweighting_parameter}};
 
   RealisticCamera actual;
-  RemoveRealisticCameraV1(parameters, actual);
+  RemoveRealisticCameraV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 shutteropen: 1.0
                 shutterclose: 2.0
@@ -806,15 +806,15 @@ TEST(RemoveRealisticCameraV1, WithData) {
               )pb"));
 }
 
-TEST(RemoveRealisticCameraV2, Empty) {
+TEST(RemoveRealisticCameraV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   RealisticCamera actual;
-  RemoveRealisticCameraV2(parameters, actual);
+  RemoveRealisticCameraV4(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveRealisticCameraV2, WithData) {
+TEST(RemoveRealisticCameraV4, WithData) {
   std::vector<double> shutteropen = {1.0};
   Parameter shutteropen_parameter{.directive = "",
                                   .type = ParameterType::FLOAT,
@@ -869,7 +869,7 @@ TEST(RemoveRealisticCameraV2, WithData) {
       {"simpleweighting", simpleweighting_parameter}};
 
   RealisticCamera actual;
-  RemoveRealisticCameraV2(parameters, actual);
+  RemoveRealisticCameraV4(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 shutteropen: 1.0
                 shutterclose: 2.0

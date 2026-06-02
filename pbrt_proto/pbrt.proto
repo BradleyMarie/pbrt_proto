@@ -668,14 +668,6 @@ message PerspectiveCamera {
   // The time at which the shutter closes.
   optional double shutterclose = 2 [default = 1.0];
 
-  // The field of view of the camera in degrees.
-  //
-  // NOTE: In PBRTv2 and PBRTv3 there are two parameters that map into this
-  //       field: `fov` and `halffov`. If `halffov` is specified in either of
-  //       these versions the value of `fov` if presnent should be set to half
-  //       the value of `halffov`.
-  optional double fov = 9 [default = 90.0];
-
   // The radius of the lens.
   optional double lensradius = 3 [default = 0.0];
 
@@ -708,6 +700,14 @@ message PerspectiveCamera {
   //       however, it is not supported after PBRTv1 and should be ignored when
   //       reading later input.
   optional double yon = 8;
+
+  // The field of view of the camera in degrees.
+  //
+  // NOTE: In PBRTv2 and PBRTv3 there are two parameters that map into this
+  //       field: `fov` and `halffov`. If `halffov` is specified in either of
+  //       these versions the value of `fov` if presnent should be set to half
+  //       the value of `halffov`.
+  optional double fov = 9 [default = 90.0];
 }
 
 // A camera which captures the light arriving at a point from all directions.
@@ -735,13 +735,6 @@ message SphericalCamera {
 
   // The time at which the shutter closes.
   optional double shutterclose = 2 [default = 1.0];
-
-  // The 2D to 3D direction mapping to use for the image.
-  //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is only supported in PBRTv4 and later. In earlier
-  //       versions an equirectantular mapping is the only supported mapping.
-  optional Mapping mapping = 10;
 
   // The radius of the lens.
   optional double lensradius = 3 [default = 0.0];
@@ -775,6 +768,13 @@ message SphericalCamera {
   //       however, it is not supported after PBRTv1 and should be ignored when
   //       reading later input.
   optional double yon = 8;
+
+  // The 2D to 3D direction mapping to use for the image.
+  //
+  // NOTE: For simplicity, this field is shared between all PBRT versions;
+  //       however, it is only supported in PBRTv4 and later. In earlier
+  //       versions an equirectantular mapping is the only supported mapping.
+  optional Mapping mapping = 14;
 }
 
 // A camera that simulates a ray passing through a complex lens system.
@@ -786,15 +786,24 @@ message RealisticCamera {
   optional double shutterclose = 2 [default = 1.0];
 
   // The path to a lens description file.
-  //
-  // NOTE: This parameter is REQUIRED. In PBRTv3 if this parameter is missing or
-  //       if the file cannot be found the camera should be unset. In PBRTv4 or
-  //       later if parameter is missing or the file is not found the renderer
-  //       should exit with an error.
-  optional string lensfile = 11 [default = ""];
+  optional string lensfile = 10 [default = ""];
 
   // The diameter of the aperture of the lens system in millimeters.
-  optional double aperturediameter = 12 [default = 1.0];
+  optional double aperturediameter = 11 [default = 1.0];
+
+  // The distance to which the lens system is focused in meters.
+  //
+  // NOTE: This value has a default value of `10.0` in all PBRT versions;
+  //       however, for consistency with the other cameras that default value is
+  //       not specified here.
+  optional double focusdistance = 12;
+
+  // If true, the samples are only weighted by the "cosine-to-the-4th" term.
+  //
+  // NOTE: For simplicity, this field is shared between all PBRT versions;
+  //       however, it is only supported in PBRTv3 and should be ignored when
+  //       reading later input.
+  optional bool simpleweighting = 13;
 
   // The shape of the aperture. If missing, the aperture has a circular shape.
   //
@@ -806,21 +815,7 @@ message RealisticCamera {
   // NOTE: For simplicity, this field is shared between all PBRT versions;
   //       however, it is only supported starting with PBRTv4 and should be
   //       ignored when reading earlier input.
-  optional string aperture = 13;
-
-  // The distance to which the lens system is focused in meters.
-  //
-  // NOTE: This value has a default value of `10.0` in all PBRT versions;
-  //       however, for consistency with the other cameras that default value is
-  //       not specified here.
-  optional double focusdistance = 14;
-
-  // If true, the samples are only weighted by the "cosine-to-the-4th" term.
-  //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is only supported in PBRTv3 and should be ignored when
-  //       reading later input.
-  optional bool simpleweighting = 15;
+  optional string aperture = 15;
 }
 
 //

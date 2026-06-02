@@ -347,7 +347,7 @@ absl::Status ParserV3::Camera(
   } else if (camera_type == "perspective") {
     RemovePerspectiveCameraV2(parameters, *camera.mutable_perspective());
   } else if (camera_type == "realistic") {
-    RemoveRealisticCameraV1(parameters, *camera.mutable_realistic());
+    RemoveRealisticCameraV3(parameters, *camera.mutable_realistic());
   } else {
     std::cerr << "Unrecognized Camera type: \"" << camera_type << "\""
               << std::endl;

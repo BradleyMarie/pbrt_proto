@@ -25,7 +25,7 @@ void RemovePerspectiveCameraV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     PerspectiveCamera& output);
 
-void RemovePerspectiveCameraV3(
+void RemovePerspectiveCameraV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     PerspectiveCamera& output);
 
@@ -37,15 +37,15 @@ void RemoveSphericalCameraV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     SphericalCamera& output);
 
-absl::Status RemoveSphericalCameraV3(
+absl::Status RemoveSphericalCameraV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     SphericalCamera& output);
 
-void RemoveRealisticCameraV1(
+void RemoveRealisticCameraV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     RealisticCamera& output);
 
-void RemoveRealisticCameraV2(
+void RemoveRealisticCameraV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     RealisticCamera& output);
 
