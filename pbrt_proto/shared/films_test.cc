@@ -354,15 +354,15 @@ TEST(RemoveRgbFilmV4, WithData) {
               )pb"));
 }
 
-TEST(RemoveGBufferFilmV1, Empty) {
+TEST(RemoveGBufferFilmV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   GBufferFilm actual;
-  ASSERT_TRUE(RemoveGBufferFilmV1(parameters, actual).ok());
+  ASSERT_TRUE(RemoveGBufferFilmV4(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveGBufferFilmV1, CropwindowOverrides) {
+TEST(RemoveGBufferFilmV4, CropwindowOverrides) {
   std::vector<int32_t> pixelbounds = {1, 2, 7, 8};
   Parameter pixelbounds_parameter{.directive = "",
                                   .type = ParameterType::INTEGER,
@@ -380,13 +380,13 @@ TEST(RemoveGBufferFilmV1, CropwindowOverrides) {
       {"cropwindow", cropwindow_parameter}};
 
   GBufferFilm actual;
-  ASSERT_TRUE(RemoveGBufferFilmV1(parameters, actual).ok());
+  ASSERT_TRUE(RemoveGBufferFilmV4(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 cropwindow { x_min: 3.0 x_max: 4.0 y_min: 5.0 y_max: 6.0 }
               )pb"));
 }
 
-TEST(RemoveGBufferFilmV1, BadSensor) {
+TEST(RemoveGBufferFilmV4, BadSensor) {
   std::vector<absl::string_view> filename = {"invalid"};
   Parameter filename_parameter{.directive = "",
                                .type = ParameterType::STRING,
@@ -397,12 +397,12 @@ TEST(RemoveGBufferFilmV1, BadSensor) {
       {"sensor", filename_parameter}};
 
   GBufferFilm actual;
-  EXPECT_THAT(RemoveGBufferFilmV1(parameters, actual),
+  EXPECT_THAT(RemoveGBufferFilmV4(parameters, actual),
               StatusIs(absl::StatusCode::kInvalidArgument,
                        "A Film specified an invalid 'sensor'"));
 }
 
-TEST(RemoveGBufferFilmV1, BadCoordinateSystem) {
+TEST(RemoveGBufferFilmV4, BadCoordinateSystem) {
   std::vector<absl::string_view> filename = {"invalid"};
   Parameter filename_parameter{.directive = "",
                                .type = ParameterType::STRING,
@@ -414,12 +414,12 @@ TEST(RemoveGBufferFilmV1, BadCoordinateSystem) {
 
   GBufferFilm actual;
   EXPECT_THAT(
-      RemoveGBufferFilmV1(parameters, actual),
+      RemoveGBufferFilmV4(parameters, actual),
       StatusIs(absl::StatusCode::kInvalidArgument,
                "A gbuffer Film specified an invalid 'coordinatesystem'"));
 }
 
-TEST(RemoveGBufferFilmV1, WithData) {
+TEST(RemoveGBufferFilmV4, WithData) {
   std::vector<absl::string_view> filename = {"file"};
   Parameter filename_parameter{.directive = "",
                                .type = ParameterType::STRING,
@@ -502,7 +502,7 @@ TEST(RemoveGBufferFilmV1, WithData) {
       {"coordinatesystem", coordinatesystem_parameter}};
 
   GBufferFilm actual;
-  ASSERT_TRUE(RemoveGBufferFilmV1(parameters, actual).ok());
+  ASSERT_TRUE(RemoveGBufferFilmV4(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 filename: "file"
                 xresolution: 1
@@ -518,15 +518,15 @@ TEST(RemoveGBufferFilmV1, WithData) {
               )pb"));
 }
 
-TEST(RemoveSpectralFilmV1, Empty) {
+TEST(RemoveSpectralFilmV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   SpectralFilm actual;
-  ASSERT_TRUE(RemoveSpectralFilmV1(parameters, actual).ok());
+  ASSERT_TRUE(RemoveSpectralFilmV4(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveSpectralFilmV1, CropwindowOverrides) {
+TEST(RemoveSpectralFilmV4, CropwindowOverrides) {
   std::vector<int32_t> pixelbounds = {1, 2, 7, 8};
   Parameter pixelbounds_parameter{.directive = "",
                                   .type = ParameterType::INTEGER,
@@ -544,13 +544,13 @@ TEST(RemoveSpectralFilmV1, CropwindowOverrides) {
       {"cropwindow", cropwindow_parameter}};
 
   SpectralFilm actual;
-  ASSERT_TRUE(RemoveSpectralFilmV1(parameters, actual).ok());
+  ASSERT_TRUE(RemoveSpectralFilmV4(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 cropwindow { x_min: 3.0 x_max: 4.0 y_min: 5.0 y_max: 6.0 }
               )pb"));
 }
 
-TEST(RemoveSpectralFilmV1, BadSensor) {
+TEST(RemoveSpectralFilmV4, BadSensor) {
   std::vector<absl::string_view> filename = {"invalid"};
   Parameter filename_parameter{.directive = "",
                                .type = ParameterType::STRING,
@@ -561,12 +561,12 @@ TEST(RemoveSpectralFilmV1, BadSensor) {
       {"sensor", filename_parameter}};
 
   SpectralFilm actual;
-  EXPECT_THAT(RemoveSpectralFilmV1(parameters, actual),
+  EXPECT_THAT(RemoveSpectralFilmV4(parameters, actual),
               StatusIs(absl::StatusCode::kInvalidArgument,
                        "A Film specified an invalid 'sensor'"));
 }
 
-TEST(RemoveSpectralFilmV1, WithData) {
+TEST(RemoveSpectralFilmV4, WithData) {
   std::vector<absl::string_view> filename = {"file"};
   Parameter filename_parameter{.directive = "",
                                .type = ParameterType::STRING,
@@ -662,7 +662,7 @@ TEST(RemoveSpectralFilmV1, WithData) {
       {"lambdamax", lambdamax_parameter}};
 
   SpectralFilm actual;
-  ASSERT_TRUE(RemoveSpectralFilmV1(parameters, actual).ok());
+  ASSERT_TRUE(RemoveSpectralFilmV4(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 filename: "file"
                 xresolution: 1

@@ -25,11 +25,11 @@ absl::Status RemoveRgbFilmV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     RgbFilm& output);
 
-absl::Status RemoveGBufferFilmV1(
+absl::Status RemoveGBufferFilmV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     GBufferFilm& output);
 
-absl::Status RemoveSpectralFilmV1(
+absl::Status RemoveSpectralFilmV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     SpectralFilm& output);
 

@@ -876,37 +876,37 @@ message GBufferFilm {
   // The size of the image in the `y` direction.
   optional uint32 yresolution = 3 [default = 720];
 
-  // The diagonal of the film in millimeters. Only applies if the image is
-  // rendered using a realistic camera.
-  optional double diagonal = 4 [default = 35.0];
-
   // The bounds of the crop to apply to the image. If none are specified, the
   // image is uncropped.
   oneof crop_bounds {
     // The sub-region of the image to render in normalized device coordinates.
-    FilmCropWindow cropwindow = 5;
+    FilmCropWindow cropwindow = 4;
 
     // The sub-region of the image to render in pixels.
-    PixelBounds pixelbounds = 6;
+    PixelBounds pixelbounds = 12;
   }
 
-  // If true, output 16-bit floating point value when supported by the output
-  // file format.
-  optional bool savefp16 = 7 [default = true];
-
-  // The type of sensor to simulate for the film.
-  optional FilmSensor sensor = 8 [default = CIE_1931];
-
-  // The film's sensitivity to light normalized to 100. This scaling is applied
-  // before clamping.
-  optional double iso = 9 [default = 100.0];
+  // The diagonal of the film in millimeters. Only applies if the image is
+  // rendered using a realistic camera.
+  optional double diagonal = 9 [default = 35.0];
 
   // Clamp pixels with RGB components higher than the maximum provided.
   optional double maxcomponentvalue = 11 [default = inf];
 
+  // The type of sensor to simulate for the film.
+  optional FilmSensor sensor = 13 [default = CIE_1931];
+
+  // The film's sensitivity to light normalized to 100. This scaling is applied
+  // before clamping.
+  optional double iso = 14 [default = 100.0];
+
   // If non-zero, this provides the temperature in kelvin that is used  as the
   // reference color temperature used for white.
-  optional double whitebalance = 12 [default = 0.0];
+  optional double whitebalance = 15 [default = 0.0];
+
+  // If true, output 16-bit floating point value when supported by the output
+  // file format.
+  optional bool savefp16 = 16 [default = true];
 
   // The coordinate system of stored geometric data.
   enum CoordinateSystem {
@@ -935,50 +935,56 @@ message RgbFilm {
   // value of 720 in PBRTv3 and PBRTv4.
   optional uint32 yresolution = 3;
 
-  // The diagonal of the film in millimeters. Only applies if the image is
-  // rendered using a realistic camera.
-  //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is not supported before PBRTv3 and should be ignored when
-  //       reading earlier input.
-  optional double diagonal = 4 [default = 35.0];
-
   // The bounds of the crop to apply to the image. If none are specified, the
   // image is uncropped.
   oneof crop_bounds {
     // The sub-region of the image to render in normalized device coordinates.
-    FilmCropWindow cropwindow = 5;
+    FilmCropWindow cropwindow = 4;
 
     // The sub-region of the image to render in pixels.
     //
     // NOTE: For simplicity, this field is shared between all PBRT versions;
     //       however, it is only supported in PBRTv4 and should be ignored when
     //       reading earlier input.
-    PixelBounds pixelbounds = 6;
+    PixelBounds pixelbounds = 12;
   }
 
-  // If true, output 16-bit floating point value when supported by the output
-  // file format.
+  // Whether or not the alpha channel of the rendered image should be
+  // pre-multiplied with the RGB channels.
   //
   // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is only supported starting with PBRTv4 and should be
-  //       ignored when reading earlier input.
-  optional bool savefp16 = 7 [default = true];
+  //       however, it is only supported in PBRTv1 and should be ignored when
+  //       reading later input.
+  optional bool premultiplyalpha = 5 [default = true];
 
-  // The type of sensor to simulate for the film.
+  // The rate at which to write pixels to the output image.
   //
   // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is only supported starting with PBRTv4 and should be
-  //       ignored when reading earlier input.
-  optional FilmSensor sensor = 8 [default = CIE_1931];
+  //       however, it is only supported in PBRTv1 and should be ignored when
+  //       reading later input.
+  optional uint32 writefrequency = 6 [default = 4294967295];
 
-  // The film's sensitivity to light normalized to 100. This scaling is applied
-  // before clamping.
+  // If true, display the rendered image in a a window when rendering completes.
   //
   // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is only supported starting with PBRTv4 and should be
-  //       ignored when reading earlier input.
-  optional double iso = 9 [default = 100.0];
+  //       however, it is only supported in PBRTv2 and should be ignored when
+  //       reading all other input.
+  optional bool display = 7 [default = false];
+
+  // A scalar output applied to the RGB output after clamping.
+  //
+  // NOTE: For simplicity, this field is shared between all PBRT versions;
+  //       however, it is only supported in PBRTv3 and should be ignored when
+  //       reading all other input.
+  optional double scale = 8 [default = 1.0];
+
+  // The diagonal of the film in millimeters. Only applies if the image is
+  // rendered using a realistic camera.
+  //
+  // NOTE: For simplicity, this field is shared between all PBRT versions;
+  //       however, it is not supported before PBRTv3 and should be ignored when
+  //       reading earlier input.
+  optional double diagonal = 9 [default = 35.0];
 
   // The method for using clamping the pixel values in the rendered output. If
   // none are specified than the values are left unclamped.
@@ -998,42 +1004,36 @@ message RgbFilm {
     double maxcomponentvalue = 11 [default = inf];
   }
 
+  // The type of sensor to simulate for the film.
+  //
+  // NOTE: For simplicity, this field is shared between all PBRT versions;
+  //       however, it is only supported starting with PBRTv4 and should be
+  //       ignored when reading earlier input.
+  optional FilmSensor sensor = 13 [default = CIE_1931];
+
+  // The film's sensitivity to light normalized to 100. This scaling is applied
+  // before clamping.
+  //
+  // NOTE: For simplicity, this field is shared between all PBRT versions;
+  //       however, it is only supported starting with PBRTv4 and should be
+  //       ignored when reading earlier input.
+  optional double iso = 14 [default = 100.0];
+
   // If non-zero, this provides the temperature in kelvin that is used as the
   // reference color temperature used for white.
   //
   // NOTE: For simplicity, this field is shared between all PBRT versions;
   //       however, it is only supported starting with PBRTv4 and should be
   //       ignored when reading earlier input.
-  optional double whitebalance = 12 [default = 0.0];
+  optional double whitebalance = 15 [default = 0.0];
 
-  // Whether or not the alpha channel of the rendered image should be
-  // pre-multiplied with the RGB channels.
+  // If true, output 16-bit floating point value when supported by the output
+  // file format.
   //
   // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is only supported in PBRTv1 and should be ignored when
-  //       reading later input.
-  optional bool premultiplyalpha = 13 [default = true];
-
-  // The rate at which to write pixels to the output image.
-  //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is only supported in PBRTv1 and should be ignored when
-  //       reading later input.
-  optional uint32 writefrequency = 14 [default = 4294967295];
-
-  // If true, display the rendered image in a a window when rendering completes.
-  //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is only supported in PBRTv2 and should be ignored when
-  //       reading all other input.
-  optional bool display = 15 [default = false];
-
-  // A scalar output applied to the RGB output after clamping.
-  //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is only supported in PBRTv3 and should be ignored when
-  //       reading all other input.
-  optional double scale = 16 [default = 1.0];
+  //       however, it is only supported starting with PBRTv4 and should be
+  //       ignored when reading earlier input.
+  optional bool savefp16 = 16 [default = true];
 }
 
 // A film which stores the rendered output as an RGB image as well as a
@@ -1048,37 +1048,37 @@ message SpectralFilm {
   // The size of the image in the `y` direction.
   optional uint32 yresolution = 3 [default = 720];
 
-  // The diagonal of the film in millimeters. Only applies if the image is
-  // rendered using a realistic camera.
-  optional double diagonal = 4 [default = 35.0];
-
   // The bounds of the crop to apply to the image. If none are specified, the
   // image is uncropped.
   oneof crop_bounds {
     // The sub-region of the image to render in normalized device coordinates.
-    FilmCropWindow cropwindow = 5;
+    FilmCropWindow cropwindow = 4;
 
     // The sub-region of the image to render in pixels.
-    PixelBounds pixelbounds = 6;
+    PixelBounds pixelbounds = 12;
   }
 
-  // If true, output 16-bit floating point value when supported by the output
-  // file format.
-  optional bool savefp16 = 7 [default = true];
-
-  // The type of sensor to simulate for the film.
-  optional FilmSensor sensor = 8 [default = CIE_1931];
-
-  // The film's sensitivity to light normalized to 100. This scaling is applied
-  // before clamping.
-  optional double iso = 9 [default = 100.0];
+  // The diagonal of the film in millimeters. Only applies if the image is
+  // rendered using a realistic camera.
+  optional double diagonal = 9 [default = 35.0];
 
   // Clamp pixels with RGB components higher than the maximum provided.
   optional double maxcomponentvalue = 11 [default = inf];
 
+  // The type of sensor to simulate for the film.
+  optional FilmSensor sensor = 13 [default = CIE_1931];
+
+  // The film's sensitivity to light normalized to 100. This scaling is applied
+  // before clamping.
+  optional double iso = 14 [default = 100.0];
+
   // If non-zero, this provides the temperature in kelvin that is used as the
   // reference color temperature used for white.
-  optional double whitebalance = 12 [default = 0.0];
+  optional double whitebalance = 15 [default = 0.0];
+
+  // If true, output 16-bit floating point value when supported by the output
+  // file format.
+  optional bool savefp16 = 16 [default = true];
 
   // Number of buckets to use to store the spectral data.
   optional uint32 nbuckets = 18 [default = 16];

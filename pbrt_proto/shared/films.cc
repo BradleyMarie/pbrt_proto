@@ -189,7 +189,7 @@ absl::Status RemoveRgbFilmV4(
   return RemoveCommonV4(parameters, output);
 }
 
-absl::Status RemoveGBufferFilmV1(
+absl::Status RemoveGBufferFilmV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     GBufferFilm& output) {
   if (absl::Status status = RemoveCommonV4(parameters, output); !status.ok()) {
@@ -212,7 +212,7 @@ absl::Status RemoveGBufferFilmV1(
   return absl::OkStatus();
 }
 
-absl::Status RemoveSpectralFilmV1(
+absl::Status RemoveSpectralFilmV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     SpectralFilm& output) {
   if (absl::Status status = RemoveCommonV4(parameters, output); !status.ok()) {
