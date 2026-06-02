@@ -109,7 +109,7 @@ absl::Status RemoveUniformGridMedium(
           TryRemoveFloats(parameters, "density");
       density.has_value()) {
     if (density->size() > std::numeric_limits<int>::max()) {
-      return absl::InvalidArgumentError(
+      return absl::ResourceExhaustedError(
           "density is too large to be stored in a proto array");
     }
 
@@ -121,7 +121,7 @@ absl::Status RemoveUniformGridMedium(
 
 }  // namespace
 
-void RemoveCloudMediumV1(
+void RemoveCloudMediumV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     CloudMedium& output) {
   RemoveSigma(parameters, output, /*v1=*/false);
@@ -163,13 +163,13 @@ void RemoveCloudMediumV1(
   }
 }
 
-void RemoveHomogeneousMediumV1(
+void RemoveHomogeneousMediumV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     HomogeneousMedium& output) {
   RemoveHomogeneousMedium(parameters, output, /*v1=*/true);
 }
 
-void RemoveHomogeneousMediumV2(
+void RemoveHomogeneousMediumV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     HomogeneousMedium& output) {
   RemoveHomogeneousMedium(parameters, output, /*v1=*/false);
@@ -183,7 +183,7 @@ void RemoveHomogeneousMediumV2(
   }
 }
 
-void RemoveNanoVdbMediumV1(
+void RemoveNanoVdbMediumV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     NanoVdbMedium& output) {
   RemoveSigma(parameters, output, /*v1=*/false);
@@ -222,7 +222,7 @@ void RemoveNanoVdbMediumV1(
   }
 }
 
-absl::Status RemoveRgbGridMediumV1(
+absl::Status RemoveRgbGridMediumV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     RgbGridMedium& output) {
   if (std::optional<std::array<double, 3>> sigma_a =
@@ -250,7 +250,7 @@ absl::Status RemoveRgbGridMediumV1(
           TryRemoveRgbs(parameters, "Le");
       le.has_value()) {
     if (le->size() > std::numeric_limits<int>::max()) {
-      return absl::InvalidArgumentError(
+      return absl::ResourceExhaustedError(
           "le is too large to be stored in a proto array");
     }
 
@@ -306,7 +306,7 @@ absl::Status RemoveRgbGridMediumV1(
   return absl::OkStatus();
 }
 
-absl::Status RemoveUniformGridMediumV1(
+absl::Status RemoveUniformGridMediumV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     UniformGridMedium& output) {
   if (absl::Status status =
@@ -318,7 +318,7 @@ absl::Status RemoveUniformGridMediumV1(
   return absl::OkStatus();
 }
 
-absl::Status RemoveUniformGridMediumV2(
+absl::Status RemoveUniformGridMediumV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     UniformGridMedium& output) {
   if (absl::Status status =
@@ -339,7 +339,7 @@ absl::Status RemoveUniformGridMediumV2(
           TryRemoveFloats(parameters, "temperature");
       temperature.has_value()) {
     if (temperature->size() > std::numeric_limits<int>::max()) {
-      return absl::InvalidArgumentError(
+      return absl::ResourceExhaustedError(
           "temperature is too large to be stored in a proto array");
     }
 

@@ -566,10 +566,10 @@ absl::Status ParserV3::MakeNamedMedium(
   absl::string_view medium_type =
       TryRemoveString(parameters, "type").value_or("");
   if (medium_type == "homogeneous") {
-    RemoveHomogeneousMediumV1(parameters,
+    RemoveHomogeneousMediumV3(parameters,
                               *make_named_medium.mutable_homogeneous());
   } else if (medium_type == "heterogeneous") {
-    if (absl::Status status = RemoveUniformGridMediumV1(
+    if (absl::Status status = RemoveUniformGridMediumV3(
             parameters, *make_named_medium.mutable_heterogeneous());
         !status.ok()) {
       return status;

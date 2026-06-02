@@ -19,15 +19,15 @@ namespace {
 using ::absl_testing::StatusIs;
 using ::google::protobuf::EqualsProto;
 
-TEST(RemoveCloudMediumV1, Empty) {
+TEST(RemoveCloudMediumV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   CloudMedium actual;
-  RemoveCloudMediumV1(parameters, actual);
+  RemoveCloudMediumV4(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveCloudMediumV1, WithData) {
+TEST(RemoveCloudMediumV4, WithData) {
   std::vector<absl::string_view> sigma_a = {"a"};
   Parameter sigma_a_parameter{.directive = "",
                               .type = ParameterType::SPECTRUM,
@@ -87,7 +87,7 @@ TEST(RemoveCloudMediumV1, WithData) {
       {"wispiness", wispiness_parameter}};
 
   CloudMedium actual;
-  RemoveCloudMediumV1(parameters, actual);
+  RemoveCloudMediumV4(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 sigma_a { sampled_spectrum_filename: "a" }
                 sigma_s { sampled_spectrum_filename: "b" }
@@ -100,15 +100,15 @@ TEST(RemoveCloudMediumV1, WithData) {
               )pb"));
 }
 
-TEST(RemoveHomogeneousMediumV1, Empty) {
+TEST(RemoveHomogeneousMediumV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   HomogeneousMedium actual;
-  RemoveHomogeneousMediumV1(parameters, actual);
+  RemoveHomogeneousMediumV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveHomogeneousMediumV1, WithData) {
+TEST(RemoveHomogeneousMediumV3, WithData) {
   std::vector<absl::string_view> sigma_a = {"a"};
   Parameter sigma_a_parameter{.directive = "",
                               .type = ParameterType::SPECTRUM,
@@ -147,7 +147,7 @@ TEST(RemoveHomogeneousMediumV1, WithData) {
       {"preset", preset_parameter}};
 
   HomogeneousMedium actual;
-  RemoveHomogeneousMediumV1(parameters, actual);
+  RemoveHomogeneousMediumV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 sigma_a { sampled_spectrum_filename: "a" }
                 sigma_s { sampled_spectrum_filename: "b" }
@@ -157,15 +157,15 @@ TEST(RemoveHomogeneousMediumV1, WithData) {
               )pb"));
 }
 
-TEST(RemoveHomogeneousMediumV2, Empty) {
+TEST(RemoveHomogeneousMediumV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   HomogeneousMedium actual;
-  RemoveHomogeneousMediumV2(parameters, actual);
+  RemoveHomogeneousMediumV4(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveHomogeneousMediumV2, WithData) {
+TEST(RemoveHomogeneousMediumV4, WithData) {
   std::vector<absl::string_view> sigma_a = {"a"};
   Parameter sigma_a_parameter{.directive = "",
                               .type = ParameterType::SPECTRUM,
@@ -218,7 +218,7 @@ TEST(RemoveHomogeneousMediumV2, WithData) {
       {"Lescale", lescale_parameter}};
 
   HomogeneousMedium actual;
-  RemoveHomogeneousMediumV2(parameters, actual);
+  RemoveHomogeneousMediumV4(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 sigma_a { sampled_spectrum_filename: "a" }
                 sigma_s { sampled_spectrum_filename: "b" }
@@ -230,15 +230,15 @@ TEST(RemoveHomogeneousMediumV2, WithData) {
               )pb"));
 }
 
-TEST(RemoveNanoVdbMediumV1, Empty) {
+TEST(RemoveNanoVdbMediumV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   NanoVdbMedium actual;
-  RemoveNanoVdbMediumV1(parameters, actual);
+  RemoveNanoVdbMediumV4(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveNanoVdbMediumV1, WithData) {
+TEST(RemoveNanoVdbMediumV4, WithData) {
   std::vector<absl::string_view> sigma_a = {"a"};
   Parameter sigma_a_parameter{.directive = "",
                               .type = ParameterType::SPECTRUM,
@@ -300,7 +300,7 @@ TEST(RemoveNanoVdbMediumV1, WithData) {
       {"filename", filename_parameter}};
 
   NanoVdbMedium actual;
-  RemoveNanoVdbMediumV1(parameters, actual);
+  RemoveNanoVdbMediumV4(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 sigma_a { sampled_spectrum_filename: "a" }
                 sigma_s { sampled_spectrum_filename: "b" }
@@ -313,15 +313,15 @@ TEST(RemoveNanoVdbMediumV1, WithData) {
               )pb"));
 }
 
-TEST(RemoveRgbGridMediumV1, Empty) {
+TEST(RemoveRgbGridMediumV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   RgbGridMedium actual;
-  EXPECT_TRUE(RemoveRgbGridMediumV1(parameters, actual).ok());
+  EXPECT_TRUE(RemoveRgbGridMediumV4(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveRgbGridMediumV1, WithData) {
+TEST(RemoveRgbGridMediumV4, WithData) {
   std::vector<std::array<double, 3>> sigma_a = {{1.0, 2.0, 3.0}};
   Parameter sigma_a_parameter{.directive = "",
                               .type = ParameterType::RGB,
@@ -402,7 +402,7 @@ TEST(RemoveRgbGridMediumV1, WithData) {
       {"Le", le_parameter}};
 
   RgbGridMedium actual;
-  EXPECT_TRUE(RemoveRgbGridMediumV1(parameters, actual).ok());
+  EXPECT_TRUE(RemoveRgbGridMediumV4(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 sigma_a { r: 1.0 g: 2.0 b: 3.0 }
                 sigma_s { r: 4.0 g: 5.0 b: 6.0 }
@@ -418,15 +418,15 @@ TEST(RemoveRgbGridMediumV1, WithData) {
               )pb"));
 }
 
-TEST(RemoveUniformGridMediumV1, Empty) {
+TEST(RemoveUniformGridMediumV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   UniformGridMedium actual;
-  EXPECT_TRUE(RemoveUniformGridMediumV1(parameters, actual).ok());
+  EXPECT_TRUE(RemoveUniformGridMediumV3(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveUniformGridMediumV1, WithData) {
+TEST(RemoveUniformGridMediumV3, WithData) {
   std::vector<absl::string_view> sigma_a = {"a"};
   Parameter sigma_a_parameter{.directive = "",
                               .type = ParameterType::SPECTRUM,
@@ -507,7 +507,7 @@ TEST(RemoveUniformGridMediumV1, WithData) {
       {"density", density_parameter}};
 
   UniformGridMedium actual;
-  EXPECT_TRUE(RemoveUniformGridMediumV1(parameters, actual).ok());
+  EXPECT_TRUE(RemoveUniformGridMediumV3(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 sigma_a { sampled_spectrum_filename: "a" }
                 sigma_s { sampled_spectrum_filename: "b" }
@@ -523,15 +523,15 @@ TEST(RemoveUniformGridMediumV1, WithData) {
               )pb"));
 }
 
-TEST(RemoveUniformGridMediumV2, Empty) {
+TEST(RemoveUniformGridMediumV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   UniformGridMedium actual;
-  EXPECT_TRUE(RemoveUniformGridMediumV2(parameters, actual).ok());
+  EXPECT_TRUE(RemoveUniformGridMediumV4(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveUniformGridMediumV2, WithData) {
+TEST(RemoveUniformGridMediumV4, WithData) {
   std::vector<absl::string_view> sigma_a = {"a"};
   Parameter sigma_a_parameter{.directive = "",
                               .type = ParameterType::SPECTRUM,
@@ -642,7 +642,7 @@ TEST(RemoveUniformGridMediumV2, WithData) {
       {"temperature", temperature_parameter}};
 
   UniformGridMedium actual;
-  EXPECT_TRUE(RemoveUniformGridMediumV2(parameters, actual).ok());
+  EXPECT_TRUE(RemoveUniformGridMediumV4(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 sigma_a { sampled_spectrum_filename: "a" }
                 sigma_s { sampled_spectrum_filename: "b" }

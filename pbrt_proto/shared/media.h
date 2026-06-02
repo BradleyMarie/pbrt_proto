@@ -9,31 +9,31 @@
 
 namespace pbrt_proto {
 
-void RemoveCloudMediumV1(
+void RemoveCloudMediumV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     CloudMedium& output);
 
-void RemoveHomogeneousMediumV1(
+void RemoveHomogeneousMediumV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     HomogeneousMedium& output);
 
-void RemoveHomogeneousMediumV2(
+void RemoveHomogeneousMediumV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     HomogeneousMedium& output);
 
-void RemoveNanoVdbMediumV1(
+void RemoveNanoVdbMediumV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     NanoVdbMedium& output);
 
-absl::Status RemoveRgbGridMediumV1(
+absl::Status RemoveRgbGridMediumV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     RgbGridMedium& output);
 
-absl::Status RemoveUniformGridMediumV1(
+absl::Status RemoveUniformGridMediumV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     UniformGridMedium& output);
 
-absl::Status RemoveUniformGridMediumV2(
+absl::Status RemoveUniformGridMediumV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     UniformGridMedium& output);
 
