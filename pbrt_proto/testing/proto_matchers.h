@@ -12,7 +12,7 @@
 #include "absl/memory/memory.h"
 #include "google/protobuf/dynamic_message.h"
 #include "google/protobuf/text_format.h"
-#include "googlemock/include/gmock/gmock.h"
+#include "gmock/gmock.h"
 
 namespace google {
 namespace protobuf {

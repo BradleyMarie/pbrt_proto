@@ -7,8 +7,8 @@
 
 #include "absl/container/flat_hash_map.h"
 #include "absl/strings/string_view.h"
-#include "googlemock/include/gmock/gmock.h"
-#include "googletest/include/gtest/gtest.h"
+#include "gmock/gmock.h"
+#include "gtest/gtest.h"
 #include "pbrt_proto/pbrt.pb.h"
 #include "pbrt_proto/shared/common_test.pb.h"
 #include "pbrt_proto/shared/parser.h"

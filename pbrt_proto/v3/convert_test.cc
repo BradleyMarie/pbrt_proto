@@ -3,8 +3,8 @@
 #include <sstream>
 
 #include "absl/status/status_matchers.h"
-#include "googlemock/include/gmock/gmock.h"
-#include "googletest/include/gtest/gtest.h"
+#include "gmock/gmock.h"
+#include "gtest/gtest.h"
 #include "pbrt_proto/testing/proto_matchers.h"
 #include "pbrt_proto/v3/v3.pb.h"
 

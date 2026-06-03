@@ -6,8 +6,8 @@
 
 #include "absl/container/inlined_vector.h"
 #include "absl/status/status_matchers.h"
-#include "googlemock/include/gmock/gmock.h"
-#include "googletest/include/gtest/gtest.h"
+#include "gmock/gmock.h"
+#include "gtest/gtest.h"
 
 namespace pbrt_proto {
 namespace {

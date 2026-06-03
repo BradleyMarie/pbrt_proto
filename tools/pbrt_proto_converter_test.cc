@@ -10,7 +10,7 @@
 #include <thread>
 #include <vector>
 
-#include "googletest/include/gtest/gtest.h"
+#include "gtest/gtest.h"
 #include "tools/cpp/runfiles/runfiles.h"
 
 namespace {
