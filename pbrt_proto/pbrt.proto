@@ -2275,7 +2275,7 @@ message SubsurfaceMaterial {
   optional FloatTextureParameter bumpmap = 13;
 
   // The name of measured subsurface scattering coefficients.
-  optional MeasuredScatteringPreset name = 21;
+  optional MeasuredScatteringPreset name = 21 [default = DEFAULT];
 
   // The absorption coefficient of the volume.
   optional SpectrumTextureParameter sigma_a = 24;
@@ -2420,7 +2420,7 @@ message UberMaterial {
 
 // A predefined scattering medium known by PBRT.
 enum MeasuredScatteringPreset {
-  UNSPECIFIED = 0;
+  DEFAULT = 0;
   APPLE = 1;
   CHICKEN1 = 2;
   CHICKEN2 = 3;
@@ -2500,7 +2500,7 @@ message CloudMedium {
 // A participating medium that is uniform throughout its volume.
 message HomogeneousMedium {
   // The named measured scattering medium properties to use.
-  optional MeasuredScatteringPreset preset = 1;
+  optional MeasuredScatteringPreset preset = 1 [default = DEFAULT];
 
   // The absorption cross section.
   optional Spectrum sigma_a = 2;
@@ -2599,7 +2599,7 @@ message RgbGridMedium {
 // density.
 message UniformGridMedium {
   // The named measured scattering medium properties to use.
-  optional MeasuredScatteringPreset preset = 1;
+  optional MeasuredScatteringPreset preset = 1 [default = DEFAULT];
 
   // The absorption cross section.
   optional Spectrum sigma_a = 2;

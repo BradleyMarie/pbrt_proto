@@ -814,6 +814,7 @@ materials {
   subsurfaces {
     key: 0
     value {
+      name: WHOLEMILK
       sigma_s {
         rgb_spectrum {
           r: 2.55
@@ -2514,6 +2515,7 @@ media {
   homogeneous {
     key: 0
     value {
+      preset: WHOLEMILK
       sigma_s {
         rgb_spectrum {
           r: 2.55
@@ -3473,6 +3475,7 @@ media {
   heterogeneous {
     key: 0
     value {
+      preset: WHOLEMILK
       sigma_s {
         rgb_spectrum {
           r: 2.55
