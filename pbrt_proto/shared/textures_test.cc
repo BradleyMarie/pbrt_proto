@@ -957,7 +957,7 @@ TEST(RemoveConstantSpectrumTextureV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   ConstantSpectrumTexture actual;
-  RemoveConstantSpectrumTextureV1(parameters, actual);
+  EXPECT_TRUE(RemoveConstantSpectrumTextureV1(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -972,7 +972,7 @@ TEST(RemoveConstantSpectrumTextureV1, WithData) {
       {"value", value_parameter}};
 
   ConstantSpectrumTexture actual;
-  RemoveConstantSpectrumTextureV1(parameters, actual);
+  EXPECT_TRUE(RemoveConstantSpectrumTextureV1(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 value { sampled_spectrum_filename: "value" }
               )pb"));

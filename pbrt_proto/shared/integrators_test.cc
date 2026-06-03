@@ -697,7 +697,7 @@ TEST(RemoveGlossyPrtIntegratorV2, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   GlossyPrtIntegrator actual;
-  RemoveGlossyPrtIntegratorV2(parameters, actual);
+  EXPECT_TRUE(RemoveGlossyPrtIntegratorV2(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -741,7 +741,7 @@ TEST(RemoveGlossyPrtIntegratorV2, WithData) {
   };
 
   GlossyPrtIntegrator actual;
-  RemoveGlossyPrtIntegratorV2(parameters, actual);
+  EXPECT_TRUE(RemoveGlossyPrtIntegratorV2(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 lmax: 1
                 nsamples: 2

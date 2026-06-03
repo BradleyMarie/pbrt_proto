@@ -48,7 +48,7 @@ void RemoveDirectLightingIntegratorV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     DirectLightingIntegrator& output);
 
-void RemoveGlossyPrtIntegratorV2(
+absl::Status RemoveGlossyPrtIntegratorV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     GlossyPrtIntegrator& output);
 

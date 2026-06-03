@@ -357,10 +357,10 @@ void RemoveConstantFloatTextureV1(
   }
 }
 
-void RemoveConstantSpectrumTextureV1(
+absl::Status RemoveConstantSpectrumTextureV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     ConstantSpectrumTexture& output) {
-  TryRemoveSpectrumV1(
+  return TryRemoveSpectrumV1(
       parameters, "value",
       std::bind(&ConstantSpectrumTexture::mutable_value, &output));
 }

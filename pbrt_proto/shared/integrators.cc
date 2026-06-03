@@ -302,7 +302,7 @@ void RemoveDirectLightingIntegratorV3(
   RemovePixelBounds(parameters, output);
 }
 
-void RemoveGlossyPrtIntegratorV2(
+absl::Status RemoveGlossyPrtIntegratorV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     GlossyPrtIntegrator& output) {
   if (std::optional<int32_t> nsamples =
@@ -321,10 +321,21 @@ void RemoveGlossyPrtIntegratorV2(
     output.set_roughness(*roughness);
   }
 
-  TryRemoveSpectrumV1(parameters, "Kd",
-                      std::bind(&GlossyPrtIntegrator::mutable_kd, &output));
-  TryRemoveSpectrumV1(parameters, "Ks",
-                      std::bind(&GlossyPrtIntegrator::mutable_ks, &output));
+  if (absl::Status status = TryRemoveSpectrumV1(
+          parameters, "Kd",
+          std::bind(&GlossyPrtIntegrator::mutable_kd, &output));
+      !status.ok()) {
+    return status;
+  }
+
+  if (absl::Status status = TryRemoveSpectrumV1(
+          parameters, "Ks",
+          std::bind(&GlossyPrtIntegrator::mutable_ks, &output));
+      !status.ok()) {
+    return status;
+  }
+
+  return absl::OkStatus();
 }
 
 void RemoveIgiIntegratorV1(

@@ -36,13 +36,16 @@ void RemoveFrom(absl::flat_hash_map<absl::string_view, Parameter>& parameters,
 }
 
 template <typename T>
-void RemoveI(absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-             T& output, bool pbrt_v4) {
+absl::Status RemoveI(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters, T& output,
+    bool pbrt_v4) {
   if (!pbrt_v4) {
-    TryRemoveSpectrumV1(parameters, "I", std::bind(&T::mutable_i, &output));
-  } else {
-    TryRemoveSpectrumV2(parameters, "I", std::bind(&T::mutable_i, &output));
+    return TryRemoveSpectrumV1(parameters, "I",
+                               std::bind(&T::mutable_i, &output));
   }
+
+  return TryRemoveSpectrumV2(parameters, "I",
+                             std::bind(&T::mutable_i, &output));
 }
 
 template <typename T>
@@ -56,13 +59,16 @@ void RemoveIlluminance(
 }
 
 template <typename T>
-void RemoveL(absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-             T& output, bool pbrt_v4) {
+absl::Status RemoveL(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters, T& output,
+    bool pbrt_v4) {
   if (!pbrt_v4) {
-    TryRemoveSpectrumV1(parameters, "L", std::bind(&T::mutable_l, &output));
-  } else {
-    TryRemoveSpectrumV2(parameters, "L", std::bind(&T::mutable_l, &output));
+    return TryRemoveSpectrumV1(parameters, "L",
+                               std::bind(&T::mutable_l, &output));
   }
+
+  return TryRemoveSpectrumV2(parameters, "L",
+                             std::bind(&T::mutable_l, &output));
 }
 
 template <typename T>
@@ -75,10 +81,10 @@ void RemovePower(absl::flat_hash_map<absl::string_view, Parameter>& parameters,
 }
 
 template <typename T>
-void RemoveScaleV1(
+absl::Status RemoveScaleV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters, T& output) {
-  TryRemoveSpectrumV1(parameters, "scale",
-                      std::bind(&T::mutable_scale, &output));
+  return TryRemoveSpectrumV1(parameters, "scale",
+                             std::bind(&T::mutable_scale, &output));
 }
 
 template <typename T>
@@ -102,39 +108,38 @@ void RemoveTo(absl::flat_hash_map<absl::string_view, Parameter>& parameters,
   }
 }
 
-void RemoveDistantLightSource(
+absl::Status RemoveDistantLightSource(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     DistantLightSource& output, bool pbrt_v4) {
-  RemoveL(parameters, output, pbrt_v4);
   RemoveFrom(parameters, output);
   RemoveTo(parameters, output);
+  return RemoveL(parameters, output, pbrt_v4);
 }
 
-void RemoveGoniometricLightSource(
+absl::Status RemoveGoniometricLightSource(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     GoniometricLightSource& output, bool pbrt_v4) {
-  RemoveI(parameters, output, pbrt_v4);
   RemoveFilename(parameters, output, pbrt_v4);
+  return RemoveI(parameters, output, pbrt_v4);
 }
 
-void RemoveInfiniteLightSource(
+absl::Status RemoveInfiniteLightSource(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     InfiniteLightSource& output, bool pbrt_v4) {
-  RemoveL(parameters, output, pbrt_v4);
   RemoveFilename(parameters, output, pbrt_v4);
+  return RemoveL(parameters, output, pbrt_v4);
 }
 
-void RemovePointLightSource(
+absl::Status RemovePointLightSource(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     PointLightSource& output, bool pbrt_v4) {
-  RemoveI(parameters, output, pbrt_v4);
   RemoveFrom(parameters, output);
+  return RemoveI(parameters, output, pbrt_v4);
 }
 
-void RemoveProjectionLightSource(
+absl::Status RemoveProjectionLightSource(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     ProjectionLightSource& output, bool pbrt_v4) {
-  RemoveI(parameters, output, pbrt_v4);
   RemoveFilename(parameters, output, pbrt_v4);
 
   if (std::optional<double> fov = TryRemoveFloat(parameters, "fov"); fov) {
@@ -144,12 +149,13 @@ void RemoveProjectionLightSource(
 
     output.set_fov(*fov);
   }
+
+  return RemoveI(parameters, output, pbrt_v4);
 }
 
-void RemoveSpotLightSource(
+absl::Status RemoveSpotLightSource(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     SpotLightSource& output, bool pbrt_v4) {
-  RemoveI(parameters, output, pbrt_v4);
   RemoveFrom(parameters, output);
   RemoveTo(parameters, output);
 
@@ -163,150 +169,181 @@ void RemoveSpotLightSource(
       conedeltaangle) {
     output.set_conedeltaangle(*conedeltaangle);
   }
+
+  return RemoveI(parameters, output, pbrt_v4);
 }
 
 }  // namespace
 
-void RemoveDistantLightSourceV1(
+absl::Status RemoveDistantLightSourceV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     DistantLightSource& output) {
-  RemoveDistantLightSource(parameters, output, /*pbrt_v4=*/false);
+  return RemoveDistantLightSource(parameters, output, /*pbrt_v4=*/false);
 }
 
-void RemoveDistantLightSourceV2(
+absl::Status RemoveDistantLightSourceV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     DistantLightSource& output) {
-  RemoveDistantLightSource(parameters, output, /*pbrt_v4=*/false);
-  RemoveScaleV1(parameters, output);
+  if (absl::Status status =
+          RemoveDistantLightSource(parameters, output, /*pbrt_v4=*/false);
+      !status.ok()) {
+    return status;
+  }
+
+  return RemoveScaleV1(parameters, output);
 }
 
-void RemoveDistantLightSourceV4(
+absl::Status RemoveDistantLightSourceV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     DistantLightSource& output) {
-  RemoveDistantLightSource(parameters, output, /*pbrt_v4=*/true);
   RemoveScaleV2(parameters, output);
   RemoveIlluminance(parameters, output);
+  return RemoveDistantLightSource(parameters, output, /*pbrt_v4=*/true);
 }
 
-void RemoveGoniometricLightSourceV1(
+absl::Status RemoveGoniometricLightSourceV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     GoniometricLightSource& output) {
-  RemoveGoniometricLightSource(parameters, output, /*pbrt_v4=*/false);
+  return RemoveGoniometricLightSource(parameters, output, /*pbrt_v4=*/false);
 }
 
-void RemoveGoniometricLightSourceV2(
+absl::Status RemoveGoniometricLightSourceV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     GoniometricLightSource& output) {
-  RemoveGoniometricLightSource(parameters, output, /*pbrt_v4=*/false);
-  RemoveScaleV1(parameters, output);
+  if (absl::Status status =
+          RemoveGoniometricLightSource(parameters, output, /*pbrt_v4=*/false);
+      !status.ok()) {
+    return status;
+  }
+
+  return RemoveScaleV1(parameters, output);
 }
 
-void RemoveGoniometricLightSourceV4(
+absl::Status RemoveGoniometricLightSourceV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     GoniometricLightSource& output) {
-  RemoveGoniometricLightSource(parameters, output, /*pbrt_v4=*/true);
   RemoveScaleV2(parameters, output);
   RemovePower(parameters, output);
+  return RemoveGoniometricLightSource(parameters, output, /*pbrt_v4=*/true);
 }
 
-void RemoveInfiniteLightSourceV1(
+absl::Status RemoveInfiniteLightSourceV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     InfiniteLightSource& output) {
-  RemoveInfiniteLightSource(parameters, output, /*pbrt_v4=*/false);
-
   if (std::optional<int32_t> samples = TryRemoveInteger(parameters, "nsamples");
       samples) {
     output.set_samples(std::max(0, *samples));
   }
+
+  return RemoveInfiniteLightSource(parameters, output, /*pbrt_v4=*/false);
 }
 
-void RemoveInfiniteLightSourceV2(
+absl::Status RemoveInfiniteLightSourceV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     InfiniteLightSource& output) {
-  RemoveInfiniteLightSourceV1(parameters, output);
-  RemoveScaleV1(parameters, output);
+  if (absl::Status status = RemoveInfiniteLightSourceV1(parameters, output);
+      !status.ok()) {
+    return status;
+  }
+
+  return RemoveScaleV1(parameters, output);
 }
 
-void RemoveInfiniteLightSourceV3(
+absl::Status RemoveInfiniteLightSourceV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     InfiniteLightSource& output) {
-  RemoveInfiniteLightSourceV2(parameters, output);
-
   if (std::optional<int32_t> samples = TryRemoveInteger(parameters, "samples");
       samples) {
     output.set_samples(std::max(0, *samples));
   }
+
+  return RemoveInfiniteLightSourceV2(parameters, output);
 }
 
-void RemoveInfiniteLightSourceV4(
+absl::Status RemoveInfiniteLightSourceV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     InfiniteLightSource& output) {
-  RemoveInfiniteLightSource(parameters, output, /*pbrt_v4=*/true);
   RemoveScaleV2(parameters, output);
   RemoveIlluminance(parameters, output);
+  return RemoveInfiniteLightSource(parameters, output, /*pbrt_v4=*/true);
 }
 
-void RemovePointLightSourceV1(
+absl::Status RemovePointLightSourceV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     PointLightSource& output) {
-  RemovePointLightSource(parameters, output, /*pbrt_v4=*/false);
+  return RemovePointLightSource(parameters, output, /*pbrt_v4=*/false);
 }
 
-void RemovePointLightSourceV2(
+absl::Status RemovePointLightSourceV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     PointLightSource& output) {
-  RemovePointLightSource(parameters, output, /*pbrt_v4=*/false);
-  RemoveScaleV1(parameters, output);
+  if (absl::Status status =
+          RemovePointLightSource(parameters, output, /*pbrt_v4=*/false);
+      !status.ok()) {
+    return status;
+  }
+
+  return RemoveScaleV1(parameters, output);
 }
 
-void RemovePointLightSourceV4(
+absl::Status RemovePointLightSourceV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     PointLightSource& output) {
-  RemovePointLightSource(parameters, output, /*pbrt_v4=*/true);
   RemoveScaleV2(parameters, output);
   RemovePower(parameters, output);
+  return RemovePointLightSource(parameters, output, /*pbrt_v4=*/true);
 }
 
-void RemoveProjectionLightSourceV1(
+absl::Status RemoveProjectionLightSourceV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     ProjectionLightSource& output) {
-  RemoveProjectionLightSource(parameters, output, /*pbrt_v4=*/false);
+  return RemoveProjectionLightSource(parameters, output, /*pbrt_v4=*/false);
 }
 
-void RemoveProjectionLightSourceV2(
+absl::Status RemoveProjectionLightSourceV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     ProjectionLightSource& output) {
-  RemoveProjectionLightSource(parameters, output, /*pbrt_v4=*/false);
-  RemoveScaleV1(parameters, output);
+  if (absl::Status status =
+          RemoveProjectionLightSource(parameters, output, /*pbrt_v4=*/false);
+      !status.ok()) {
+    return status;
+  }
+
+  return RemoveScaleV1(parameters, output);
 }
 
-void RemoveProjectionLightSourceV4(
+absl::Status RemoveProjectionLightSourceV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     ProjectionLightSource& output) {
-  RemoveProjectionLightSource(parameters, output, /*pbrt_v4=*/true);
   RemoveScaleV2(parameters, output);
   RemovePower(parameters, output);
+  return RemoveProjectionLightSource(parameters, output, /*pbrt_v4=*/true);
 }
 
-void RemoveSpotLightSourceV1(
+absl::Status RemoveSpotLightSourceV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     SpotLightSource& output) {
-  RemoveSpotLightSource(parameters, output, /*pbrt_v4=*/false);
+  return RemoveSpotLightSource(parameters, output, /*pbrt_v4=*/false);
 }
 
-void RemoveSpotLightSourceV2(
+absl::Status RemoveSpotLightSourceV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     SpotLightSource& output) {
-  RemoveSpotLightSource(parameters, output, /*pbrt_v4=*/false);
-  RemoveScaleV1(parameters, output);
+  if (absl::Status status =
+          RemoveSpotLightSource(parameters, output, /*pbrt_v4=*/false);
+      !status.ok()) {
+    return status;
+  }
+
+  return RemoveScaleV1(parameters, output);
 }
 
-void RemoveSpotLightSourceV4(
+absl::Status RemoveSpotLightSourceV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     SpotLightSource& output) {
-  RemoveSpotLightSource(parameters, output, /*pbrt_v4=*/true);
   RemoveScaleV2(parameters, output);
   RemovePower(parameters, output);
+  return RemoveSpotLightSource(parameters, output, /*pbrt_v4=*/true);
 }
 
 }  // namespace pbrt_proto

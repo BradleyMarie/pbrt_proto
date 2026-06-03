@@ -10,26 +10,33 @@ namespace pbrt_proto {
 namespace {
 
 template <typename T>
-void RemoveSigma(absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-                 T& output, bool v1) {
+absl::Status RemoveSigma(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters, T& output,
+    bool v1) {
   if (v1) {
-    TryRemoveSpectrumV1(parameters, "sigma_a",
-                        std::bind(&T::mutable_sigma_a, &output));
-    TryRemoveSpectrumV1(parameters, "sigma_s",
-                        std::bind(&T::mutable_sigma_s, &output));
-  } else {
-    TryRemoveSpectrumV2(parameters, "sigma_a",
-                        std::bind(&T::mutable_sigma_a, &output));
-    TryRemoveSpectrumV2(parameters, "sigma_s",
-                        std::bind(&T::mutable_sigma_s, &output));
+    if (absl::Status status = TryRemoveSpectrumV1(
+            parameters, "sigma_a", std::bind(&T::mutable_sigma_a, &output));
+        !status.ok()) {
+      return status;
+    }
+
+    return TryRemoveSpectrumV1(parameters, "sigma_s",
+                               std::bind(&T::mutable_sigma_s, &output));
   }
+
+  if (absl::Status status = TryRemoveSpectrumV2(
+          parameters, "sigma_a", std::bind(&T::mutable_sigma_a, &output));
+      !status.ok()) {
+    return status;
+  }
+
+  return TryRemoveSpectrumV2(parameters, "sigma_s",
+                             std::bind(&T::mutable_sigma_s, &output));
 }
 
-void RemoveHomogeneousMedium(
+absl::Status RemoveHomogeneousMedium(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     HomogeneousMedium& output, bool v1) {
-  RemoveSigma(parameters, output, v1);
-
   if (std::optional<absl::string_view> preset =
           TryRemoveString(parameters, "preset");
       preset.has_value()) {
@@ -48,13 +55,13 @@ void RemoveHomogeneousMedium(
       scale.has_value()) {
     output.set_scale(*scale);
   }
+
+  return RemoveSigma(parameters, output, v1);
 }
 
 absl::Status RemoveUniformGridMedium(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     UniformGridMedium& output, bool v1) {
-  RemoveSigma(parameters, output, v1);
-
   if (std::optional<absl::string_view> preset =
           TryRemoveString(parameters, "preset");
       preset.has_value()) {
@@ -116,16 +123,14 @@ absl::Status RemoveUniformGridMedium(
     output.mutable_density()->Add(density->begin(), density->end());
   }
 
-  return absl::OkStatus();
+  return RemoveSigma(parameters, output, v1);
 }
 
 }  // namespace
 
-void RemoveCloudMediumV4(
+absl::Status RemoveCloudMediumV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     CloudMedium& output) {
-  RemoveSigma(parameters, output, /*v1=*/false);
-
   if (std::optional<double> g = TryRemoveFloat(parameters, "g");
       g.has_value()) {
     output.set_g(*g);
@@ -161,33 +166,38 @@ void RemoveCloudMediumV4(
       wispiness.has_value()) {
     output.set_wispiness(*wispiness);
   }
+
+  return RemoveSigma(parameters, output, /*v1=*/false);
+  ;
 }
 
-void RemoveHomogeneousMediumV3(
+absl::Status RemoveHomogeneousMediumV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     HomogeneousMedium& output) {
-  RemoveHomogeneousMedium(parameters, output, /*v1=*/true);
+  return RemoveHomogeneousMedium(parameters, output, /*v1=*/true);
 }
 
-void RemoveHomogeneousMediumV4(
+absl::Status RemoveHomogeneousMediumV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     HomogeneousMedium& output) {
-  RemoveHomogeneousMedium(parameters, output, /*v1=*/false);
-
-  TryRemoveSpectrumV2(parameters, "Le",
-                      std::bind(&HomogeneousMedium::mutable_le, &output));
+  if (absl::Status status =
+          RemoveHomogeneousMedium(parameters, output, /*v1=*/false);
+      !status.ok()) {
+    return status;
+  }
 
   if (std::optional<double> lescale = TryRemoveFloat(parameters, "Lescale");
       lescale.has_value()) {
     output.set_lescale(*lescale);
   }
+
+  return TryRemoveSpectrumV2(
+      parameters, "Le", std::bind(&HomogeneousMedium::mutable_le, &output));
 }
 
-void RemoveNanoVdbMediumV4(
+absl::Status RemoveNanoVdbMediumV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     NanoVdbMedium& output) {
-  RemoveSigma(parameters, output, /*v1=*/false);
-
   if (std::optional<double> g = TryRemoveFloat(parameters, "g");
       g.has_value()) {
     output.set_g(*g);
@@ -220,6 +230,8 @@ void RemoveNanoVdbMediumV4(
       filename) {
     output.set_filename(*filename);
   }
+
+  return RemoveSigma(parameters, output, /*v1=*/false);
 }
 
 absl::Status RemoveRgbGridMediumV4(
@@ -251,7 +263,7 @@ absl::Status RemoveRgbGridMediumV4(
       le.has_value()) {
     if (le->size() > std::numeric_limits<int>::max()) {
       return absl::ResourceExhaustedError(
-          "le is too large to be stored in a proto array");
+          "Le is too large to be stored in a proto array");
     }
 
     for (const auto& src : *le) {
@@ -309,13 +321,7 @@ absl::Status RemoveRgbGridMediumV4(
 absl::Status RemoveUniformGridMediumV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     UniformGridMedium& output) {
-  if (absl::Status status =
-          RemoveUniformGridMedium(parameters, output, /*v1=*/true);
-      !status.ok()) {
-    return status;
-  }
-
-  return absl::OkStatus();
+  return RemoveUniformGridMedium(parameters, output, /*v1=*/true);
 }
 
 absl::Status RemoveUniformGridMediumV4(
@@ -326,9 +332,6 @@ absl::Status RemoveUniformGridMediumV4(
       !status.ok()) {
     return status;
   }
-
-  TryRemoveSpectrumV2(parameters, "Le",
-                      std::bind(&UniformGridMedium::mutable_le, &output));
 
   if (std::optional<double> lescale = TryRemoveFloat(parameters, "Lescale");
       lescale.has_value()) {
@@ -358,7 +361,8 @@ absl::Status RemoveUniformGridMediumV4(
     output.set_temperaturescale(*temperaturescale);
   }
 
-  return absl::OkStatus();
+  return TryRemoveSpectrumV2(
+      parameters, "Le", std::bind(&UniformGridMedium::mutable_le, &output));
 }
 
 }  // namespace pbrt_proto

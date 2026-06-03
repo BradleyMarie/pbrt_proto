@@ -25,9 +25,10 @@ TEST(TryRemoveSpectrumV1, NotFound) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   TestParameterProto actual;
-  TryRemoveSpectrumV1(
-      parameters, "spectrum",
-      std::bind(&TestParameterProto::mutable_spectrum, &actual));
+  EXPECT_TRUE(TryRemoveSpectrumV1(
+                  parameters, "spectrum",
+                  std::bind(&TestParameterProto::mutable_spectrum, &actual))
+                  .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -42,9 +43,10 @@ TEST(TryRemoveSpectrumV1, Blackbody) {
       {"spectrum", parameter}};
 
   TestParameterProto actual;
-  TryRemoveSpectrumV1(
-      parameters, "spectrum",
-      std::bind(&TestParameterProto::mutable_spectrum, &actual));
+  EXPECT_TRUE(TryRemoveSpectrumV1(
+                  parameters, "spectrum",
+                  std::bind(&TestParameterProto::mutable_spectrum, &actual))
+                  .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 spectrum { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
               )pb"));
@@ -61,9 +63,10 @@ TEST(TryRemoveSpectrumV1, Rgb) {
       {"spectrum", parameter}};
 
   TestParameterProto actual;
-  TryRemoveSpectrumV1(
-      parameters, "spectrum",
-      std::bind(&TestParameterProto::mutable_spectrum, &actual));
+  EXPECT_TRUE(TryRemoveSpectrumV1(
+                  parameters, "spectrum",
+                  std::bind(&TestParameterProto::mutable_spectrum, &actual))
+                  .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 spectrum { rgb_spectrum { r: 1.0 g: 2.0 b: 3.0 } }
               )pb"));
@@ -80,9 +83,10 @@ TEST(TryRemoveSpectrumV1, Xyz) {
       {"spectrum", parameter}};
 
   TestParameterProto actual;
-  TryRemoveSpectrumV1(
-      parameters, "spectrum",
-      std::bind(&TestParameterProto::mutable_spectrum, &actual));
+  EXPECT_TRUE(TryRemoveSpectrumV1(
+                  parameters, "spectrum",
+                  std::bind(&TestParameterProto::mutable_spectrum, &actual))
+                  .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 spectrum { xyz_spectrum { x: 1.0 y: 2.0 z: 3.0 } }
               )pb"));
@@ -99,9 +103,10 @@ TEST(TryRemoveSpectrumV1, Sampled) {
       {"spectrum", parameter}};
 
   TestParameterProto actual;
-  TryRemoveSpectrumV1(
-      parameters, "spectrum",
-      std::bind(&TestParameterProto::mutable_spectrum, &actual));
+  EXPECT_TRUE(TryRemoveSpectrumV1(
+                  parameters, "spectrum",
+                  std::bind(&TestParameterProto::mutable_spectrum, &actual))
+                  .ok());
   EXPECT_THAT(
       actual, EqualsProto(R"pb(
         spectrum {
@@ -121,9 +126,10 @@ TEST(TryRemoveSpectrumV1, SpectrumFile) {
       {"spectrum", parameter}};
 
   TestParameterProto actual;
-  TryRemoveSpectrumV1(
-      parameters, "spectrum",
-      std::bind(&TestParameterProto::mutable_spectrum, &actual));
+  EXPECT_TRUE(TryRemoveSpectrumV1(
+                  parameters, "spectrum",
+                  std::bind(&TestParameterProto::mutable_spectrum, &actual))
+                  .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 spectrum { sampled_spectrum_filename: "abc" }
               )pb"));
@@ -133,9 +139,10 @@ TEST(TryRemoveSpectrumV2, NotFound) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   TestParameterProto actual;
-  TryRemoveSpectrumV2(
-      parameters, "spectrum",
-      std::bind(&TestParameterProto::mutable_spectrum, &actual));
+  EXPECT_TRUE(TryRemoveSpectrumV2(
+                  parameters, "spectrum",
+                  std::bind(&TestParameterProto::mutable_spectrum, &actual))
+                  .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -150,9 +157,10 @@ TEST(TryRemoveSpectrumV2, Blackbody) {
       {"spectrum", parameter}};
 
   TestParameterProto actual;
-  TryRemoveSpectrumV2(
-      parameters, "spectrum",
-      std::bind(&TestParameterProto::mutable_spectrum, &actual));
+  EXPECT_TRUE(TryRemoveSpectrumV2(
+                  parameters, "spectrum",
+                  std::bind(&TestParameterProto::mutable_spectrum, &actual))
+                  .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 spectrum { blackbody_spectrum { temperature: 1.0 } }
               )pb"));
@@ -169,9 +177,10 @@ TEST(TryRemoveSpectrumV2, Rgb) {
       {"spectrum", parameter}};
 
   TestParameterProto actual;
-  TryRemoveSpectrumV2(
-      parameters, "spectrum",
-      std::bind(&TestParameterProto::mutable_spectrum, &actual));
+  EXPECT_TRUE(TryRemoveSpectrumV2(
+                  parameters, "spectrum",
+                  std::bind(&TestParameterProto::mutable_spectrum, &actual))
+                  .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 spectrum { rgb_spectrum { r: 1.0 g: 2.0 b: 3.0 } }
               )pb"));
@@ -188,9 +197,10 @@ TEST(TryRemoveSpectrumV2, Xyz) {
       {"spectrum", parameter}};
 
   TestParameterProto actual;
-  TryRemoveSpectrumV2(
-      parameters, "spectrum",
-      std::bind(&TestParameterProto::mutable_spectrum, &actual));
+  EXPECT_TRUE(TryRemoveSpectrumV2(
+                  parameters, "spectrum",
+                  std::bind(&TestParameterProto::mutable_spectrum, &actual))
+                  .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 spectrum { xyz_spectrum { x: 1.0 y: 2.0 z: 3.0 } }
               )pb"));
@@ -207,9 +217,10 @@ TEST(TryRemoveSpectrumV2, Sampled) {
       {"spectrum", parameter}};
 
   TestParameterProto actual;
-  TryRemoveSpectrumV2(
-      parameters, "spectrum",
-      std::bind(&TestParameterProto::mutable_spectrum, &actual));
+  EXPECT_TRUE(TryRemoveSpectrumV2(
+                  parameters, "spectrum",
+                  std::bind(&TestParameterProto::mutable_spectrum, &actual))
+                  .ok());
   EXPECT_THAT(
       actual, EqualsProto(R"pb(
         spectrum {
@@ -229,9 +240,10 @@ TEST(TryRemoveSpectrumV2, SpectrumFile) {
       {"spectrum", parameter}};
 
   TestParameterProto actual;
-  TryRemoveSpectrumV2(
-      parameters, "spectrum",
-      std::bind(&TestParameterProto::mutable_spectrum, &actual));
+  EXPECT_TRUE(TryRemoveSpectrumV2(
+                  parameters, "spectrum",
+                  std::bind(&TestParameterProto::mutable_spectrum, &actual))
+                  .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 spectrum { sampled_spectrum_filename: "abc" }
               )pb"));

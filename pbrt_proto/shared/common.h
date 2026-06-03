@@ -5,6 +5,7 @@
 
 #include "absl/container/flat_hash_map.h"
 #include "absl/functional/function_ref.h"
+#include "absl/status/status.h"
 #include "absl/strings/string_view.h"
 #include "pbrt_proto/pbrt.pb.h"
 #include "pbrt_proto/shared/parser.h"
@@ -22,12 +23,12 @@ extern const absl::flat_hash_map<absl::string_view, MeasuredScatteringPreset>
 // Common Variant Data Types
 //
 
-void TryRemoveSpectrumV1(
+absl::Status TryRemoveSpectrumV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     absl::string_view parameter_name,
     absl::FunctionRef<Spectrum*()> get_output);
 
-void TryRemoveSpectrumV2(
+absl::Status TryRemoveSpectrumV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     absl::string_view parameter_name,
     absl::FunctionRef<Spectrum*()> get_output);

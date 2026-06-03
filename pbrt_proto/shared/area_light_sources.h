@@ -9,15 +9,15 @@
 
 namespace pbrt_proto {
 
-void RemoveDiffuseAreaLightSourceV1(
+absl::Status RemoveDiffuseAreaLightSourceV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     DiffuseAreaLightSource& output);
 
-void RemoveDiffuseAreaLightSourceV2(
+absl::Status RemoveDiffuseAreaLightSourceV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     DiffuseAreaLightSource& output);
 
-void RemoveDiffuseAreaLightSourceV3(
+absl::Status RemoveDiffuseAreaLightSourceV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     DiffuseAreaLightSource& output);
 

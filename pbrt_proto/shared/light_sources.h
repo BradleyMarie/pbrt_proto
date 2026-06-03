@@ -9,79 +9,79 @@
 
 namespace pbrt_proto {
 
-void RemoveDistantLightSourceV1(
+absl::Status RemoveDistantLightSourceV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     DistantLightSource& output);
 
-void RemoveDistantLightSourceV2(
+absl::Status RemoveDistantLightSourceV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     DistantLightSource& output);
 
-void RemoveDistantLightSourceV4(
+absl::Status RemoveDistantLightSourceV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     DistantLightSource& output);
 
-void RemoveGoniometricLightSourceV1(
+absl::Status RemoveGoniometricLightSourceV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     GoniometricLightSource& output);
 
-void RemoveGoniometricLightSourceV2(
+absl::Status RemoveGoniometricLightSourceV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     GoniometricLightSource& output);
 
-void RemoveGoniometricLightSourceV4(
+absl::Status RemoveGoniometricLightSourceV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     GoniometricLightSource& output);
 
-void RemoveInfiniteLightSourceV1(
+absl::Status RemoveInfiniteLightSourceV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     InfiniteLightSource& output);
 
-void RemoveInfiniteLightSourceV2(
+absl::Status RemoveInfiniteLightSourceV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     InfiniteLightSource& output);
 
-void RemoveInfiniteLightSourceV3(
+absl::Status RemoveInfiniteLightSourceV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     InfiniteLightSource& output);
 
-void RemoveInfiniteLightSourceV4(
+absl::Status RemoveInfiniteLightSourceV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     InfiniteLightSource& output);
 
-void RemovePointLightSourceV1(
+absl::Status RemovePointLightSourceV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     PointLightSource& output);
 
-void RemovePointLightSourceV2(
+absl::Status RemovePointLightSourceV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     PointLightSource& output);
 
-void RemovePointLightSourceV4(
+absl::Status RemovePointLightSourceV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     PointLightSource& output);
 
-void RemoveProjectionLightSourceV1(
+absl::Status RemoveProjectionLightSourceV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     ProjectionLightSource& output);
 
-void RemoveProjectionLightSourceV2(
+absl::Status RemoveProjectionLightSourceV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     ProjectionLightSource& output);
 
-void RemoveProjectionLightSourceV4(
+absl::Status RemoveProjectionLightSourceV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     ProjectionLightSource& output);
 
-void RemoveSpotLightSourceV1(
+absl::Status RemoveSpotLightSourceV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     SpotLightSource& output);
 
-void RemoveSpotLightSourceV2(
+absl::Status RemoveSpotLightSourceV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     SpotLightSource& output);
 
-void RemoveSpotLightSourceV4(
+absl::Status RemoveSpotLightSourceV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     SpotLightSource& output);
 

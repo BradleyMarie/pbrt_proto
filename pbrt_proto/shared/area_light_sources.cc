@@ -4,6 +4,7 @@
 #include <functional>
 
 #include "absl/container/flat_hash_map.h"
+#include "absl/status/status.h"
 #include "absl/strings/string_view.h"
 #include "pbrt_proto/pbrt.pb.h"
 #include "pbrt_proto/shared/common.h"
@@ -12,12 +13,16 @@
 namespace pbrt_proto {
 namespace {
 
-void RemoveDiffuseAreaLightSource(
+absl::Status RemoveDiffuseAreaLightSource(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     bool allow_scale, bool allow_samples, bool allow_twosided,
     DiffuseAreaLightSource& output) {
-  TryRemoveSpectrumV1(parameters, "L",
-                      std::bind(&DiffuseAreaLightSource::mutable_l, &output));
+  if (absl::Status status = TryRemoveSpectrumV1(
+          parameters, "L",
+          std::bind(&DiffuseAreaLightSource::mutable_l, &output));
+      !status.ok()) {
+    return status;
+  }
 
   if (std::optional<int32_t> samples = TryRemoveInteger(parameters, "nsamples");
       samples) {
@@ -25,9 +30,12 @@ void RemoveDiffuseAreaLightSource(
   }
 
   if (allow_scale) {
-    TryRemoveSpectrumV1(
-        parameters, "scale",
-        std::bind(&DiffuseAreaLightSource::mutable_scale, &output));
+    if (absl::Status status = TryRemoveSpectrumV1(
+            parameters, "scale",
+            std::bind(&DiffuseAreaLightSource::mutable_scale, &output));
+        !status.ok()) {
+      return status;
+    }
   }
 
   if (allow_samples) {
@@ -44,39 +52,45 @@ void RemoveDiffuseAreaLightSource(
       output.set_twosided(*twosided);
     }
   }
+
+  return absl::OkStatus();
 }
 
 }  // namespace
 
-void RemoveDiffuseAreaLightSourceV1(
+absl::Status RemoveDiffuseAreaLightSourceV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     DiffuseAreaLightSource& output) {
-  RemoveDiffuseAreaLightSource(parameters, /*allow_scale=*/false,
-                               /*allow_samples=*/false,
-                               /*allow_twosided=*/false, output);
+  return RemoveDiffuseAreaLightSource(parameters, /*allow_scale=*/false,
+                                      /*allow_samples=*/false,
+                                      /*allow_twosided=*/false, output);
 }
 
-void RemoveDiffuseAreaLightSourceV2(
+absl::Status RemoveDiffuseAreaLightSourceV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     DiffuseAreaLightSource& output) {
-  RemoveDiffuseAreaLightSource(parameters, /*allow_scale=*/true,
-                               /*allow_samples=*/false,
-                               /*allow_twosided=*/false, output);
+  return RemoveDiffuseAreaLightSource(parameters, /*allow_scale=*/true,
+                                      /*allow_samples=*/false,
+                                      /*allow_twosided=*/false, output);
 }
 
-void RemoveDiffuseAreaLightSourceV3(
+absl::Status RemoveDiffuseAreaLightSourceV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     DiffuseAreaLightSource& output) {
-  RemoveDiffuseAreaLightSource(parameters, /*allow_scale=*/true,
-                               /*allow_samples=*/true,
-                               /*allow_twosided=*/true, output);
+  return RemoveDiffuseAreaLightSource(parameters, /*allow_scale=*/true,
+                                      /*allow_samples=*/true,
+                                      /*allow_twosided=*/true, output);
 }
 
 absl::Status RemoveDiffuseAreaLightSourceV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     DiffuseAreaLightSource& output) {
-  TryRemoveSpectrumV2(parameters, "L",
-                      std::bind(&DiffuseAreaLightSource::mutable_l, &output));
+  if (absl::Status status = TryRemoveSpectrumV2(
+          parameters, "L",
+          std::bind(&DiffuseAreaLightSource::mutable_l, &output));
+      !status.ok()) {
+    return status;
+  }
 
   if (std::optional<absl::string_view> filename =
           TryRemoveString(parameters, "filename");

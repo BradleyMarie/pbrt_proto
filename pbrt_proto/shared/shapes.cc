@@ -259,7 +259,7 @@ absl::Status RemoveLoopSubdivShapeV1(
     p->remove_suffix(p->size() % 3);
     if (p->size() > std::numeric_limits<int32_t>::max()) {
       return absl::ResourceExhaustedError(
-          "LoopSubdiv shape has too many indices to be stored in a 1D proto "
+          "LoopSubdiv shape has too many points to be stored in a 1D proto "
           "array");
     }
 
@@ -334,12 +334,24 @@ absl::Status RemoveNurbsShapeV1(
   if (std::optional<absl::Span<double>> uknots =
           TryRemoveFloats(parameters, "uknots");
       uknots.has_value()) {
+    if (uknots->size() > std::numeric_limits<int32_t>::max()) {
+      return absl::ResourceExhaustedError(
+          "Nurbs shape has too many uknot values to be stored in a 1D proto "
+          "array");
+    }
+
     output.mutable_uknots()->Add(uknots->begin(), uknots->end());
   }
 
   if (std::optional<absl::Span<double>> vknots =
           TryRemoveFloats(parameters, "vknots");
       vknots.has_value()) {
+    if (vknots->size() > std::numeric_limits<int32_t>::max()) {
+      return absl::ResourceExhaustedError(
+          "Nurbs shape has too many vknot values to be stored in a 1D proto "
+          "array");
+    }
+
     output.mutable_vknots()->Add(vknots->begin(), vknots->end());
   }
 
@@ -609,12 +621,24 @@ absl::Status RemoveTriangleMeshShapeV3(
   if (std::optional<absl::Span<int32_t>> faceIndices =
           TryRemoveIntegers(parameters, "faceIndices");
       faceIndices.has_value()) {
+    if (faceIndices->size() > std::numeric_limits<int32_t>::max()) {
+      return absl::ResourceExhaustedError(
+          "Trianglemesh shape has too many face indices to be stored in "
+          "a 1D proto array");
+    }
+
     output.mutable_faceindices()->Add(faceIndices->begin(), faceIndices->end());
   }
 
   if (std::optional<absl::Span<std::array<double, 2>>> uv =
           TryRemovePoint2s(parameters, "uv");
       uv.has_value()) {
+    if (uv->size() > std::numeric_limits<int32_t>::max()) {
+      return absl::ResourceExhaustedError(
+          "Trianglemesh shape has too many texture coordinates to be stored in "
+          "a 1D proto array");
+    }
+
     for (const std::array<double, 2>& src : *uv) {
       TriangleMeshShape::UVCoordinate& dest = *output.add_uv();
       dest.set_u(src[0]);
@@ -623,6 +647,12 @@ absl::Status RemoveTriangleMeshShapeV3(
   } else if (std::optional<absl::Span<std::array<double, 2>>> st =
                  TryRemovePoint2s(parameters, "st");
              st.has_value()) {
+    if (st->size() > std::numeric_limits<int32_t>::max()) {
+      return absl::ResourceExhaustedError(
+          "Trianglemesh shape has too many texture coordinates to be stored in "
+          "a 1D proto array");
+    }
+
     for (const std::array<double, 2>& src : *st) {
       TriangleMeshShape::UVCoordinate& dest = *output.add_uv();
       dest.set_u(src[0]);

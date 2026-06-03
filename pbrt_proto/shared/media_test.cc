@@ -23,7 +23,7 @@ TEST(RemoveCloudMediumV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   CloudMedium actual;
-  RemoveCloudMediumV4(parameters, actual);
+  EXPECT_TRUE(RemoveCloudMediumV4(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -87,7 +87,7 @@ TEST(RemoveCloudMediumV4, WithData) {
       {"wispiness", wispiness_parameter}};
 
   CloudMedium actual;
-  RemoveCloudMediumV4(parameters, actual);
+  EXPECT_TRUE(RemoveCloudMediumV4(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 sigma_a { sampled_spectrum_filename: "a" }
                 sigma_s { sampled_spectrum_filename: "b" }
@@ -104,7 +104,7 @@ TEST(RemoveHomogeneousMediumV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   HomogeneousMedium actual;
-  RemoveHomogeneousMediumV3(parameters, actual);
+  EXPECT_TRUE(RemoveHomogeneousMediumV3(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -147,7 +147,7 @@ TEST(RemoveHomogeneousMediumV3, WithData) {
       {"preset", preset_parameter}};
 
   HomogeneousMedium actual;
-  RemoveHomogeneousMediumV3(parameters, actual);
+  EXPECT_TRUE(RemoveHomogeneousMediumV3(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 sigma_a { sampled_spectrum_filename: "a" }
                 sigma_s { sampled_spectrum_filename: "b" }
@@ -161,7 +161,7 @@ TEST(RemoveHomogeneousMediumV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   HomogeneousMedium actual;
-  RemoveHomogeneousMediumV4(parameters, actual);
+  EXPECT_TRUE(RemoveHomogeneousMediumV4(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -218,7 +218,7 @@ TEST(RemoveHomogeneousMediumV4, WithData) {
       {"Lescale", lescale_parameter}};
 
   HomogeneousMedium actual;
-  RemoveHomogeneousMediumV4(parameters, actual);
+  EXPECT_TRUE(RemoveHomogeneousMediumV4(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 sigma_a { sampled_spectrum_filename: "a" }
                 sigma_s { sampled_spectrum_filename: "b" }
@@ -234,7 +234,7 @@ TEST(RemoveNanoVdbMediumV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   NanoVdbMedium actual;
-  RemoveNanoVdbMediumV4(parameters, actual);
+  EXPECT_TRUE(RemoveNanoVdbMediumV4(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -300,7 +300,7 @@ TEST(RemoveNanoVdbMediumV4, WithData) {
       {"filename", filename_parameter}};
 
   NanoVdbMedium actual;
-  RemoveNanoVdbMediumV4(parameters, actual);
+  EXPECT_TRUE(RemoveNanoVdbMediumV4(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 sigma_a { sampled_spectrum_filename: "a" }
                 sigma_s { sampled_spectrum_filename: "b" }

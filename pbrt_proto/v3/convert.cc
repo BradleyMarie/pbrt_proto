@@ -315,12 +315,12 @@ absl::Status ParserV3::AreaLightSource(
       *output_.add_directives()->mutable_area_light_source();
 
   if (area_light_source_type == "area" || area_light_source_type == "diffuse") {
-    RemoveDiffuseAreaLightSourceV3(parameters,
-                                   *area_light_source.mutable_diffuse());
-  } else {
-    std::cerr << "Unrecognized AreaLightSource type: \""
-              << area_light_source_type << "\"" << std::endl;
+    return RemoveDiffuseAreaLightSourceV3(parameters,
+                                          *area_light_source.mutable_diffuse());
   }
+
+  std::cerr << "Unrecognized AreaLightSource type: \"" << area_light_source_type
+            << "\"" << std::endl;
 
   return absl::OkStatus();
 }
@@ -505,23 +505,35 @@ absl::Status ParserV3::LightSource(
   auto& light_source = *output_.add_directives()->mutable_light_source();
 
   if (light_source_type == "distant") {
-    RemoveDistantLightSourceV2(parameters, *light_source.mutable_distant());
-  } else if (light_source_type == "goniometric") {
-    RemoveGoniometricLightSourceV2(parameters,
-                                   *light_source.mutable_goniometric());
-  } else if (light_source_type == "infinite") {
-    RemoveInfiniteLightSourceV3(parameters, *light_source.mutable_infinite());
-  } else if (light_source_type == "point") {
-    RemovePointLightSourceV2(parameters, *light_source.mutable_point());
-  } else if (light_source_type == "projection") {
-    RemoveProjectionLightSourceV2(parameters,
-                                  *light_source.mutable_projection());
-  } else if (light_source_type == "spot") {
-    RemoveSpotLightSourceV2(parameters, *light_source.mutable_spot());
-  } else {
-    std::cerr << "Unrecognized LightSource type: \"" << light_source_type
-              << "\"" << std::endl;
+    return RemoveDistantLightSourceV2(parameters,
+                                      *light_source.mutable_distant());
   }
+
+  if (light_source_type == "goniometric") {
+    return RemoveGoniometricLightSourceV2(parameters,
+                                          *light_source.mutable_goniometric());
+  }
+
+  if (light_source_type == "infinite") {
+    return RemoveInfiniteLightSourceV3(parameters,
+                                       *light_source.mutable_infinite());
+  }
+
+  if (light_source_type == "point") {
+    return RemovePointLightSourceV2(parameters, *light_source.mutable_point());
+  }
+
+  if (light_source_type == "projection") {
+    return RemoveProjectionLightSourceV2(parameters,
+                                         *light_source.mutable_projection());
+  }
+
+  if (light_source_type == "spot") {
+    return RemoveSpotLightSourceV2(parameters, *light_source.mutable_spot());
+  }
+
+  std::cerr << "Unrecognized LightSource type: \"" << light_source_type << "\""
+            << std::endl;
 
   return absl::OkStatus();
 }
@@ -565,19 +577,19 @@ absl::Status ParserV3::MakeNamedMedium(
 
   absl::string_view medium_type =
       TryRemoveString(parameters, "type").value_or("");
+
   if (medium_type == "homogeneous") {
-    RemoveHomogeneousMediumV3(parameters,
-                              *make_named_medium.mutable_homogeneous());
-  } else if (medium_type == "heterogeneous") {
-    if (absl::Status status = RemoveUniformGridMediumV3(
-            parameters, *make_named_medium.mutable_heterogeneous());
-        !status.ok()) {
-      return status;
-    }
-  } else {
-    std::cerr << "Unrecognized MakeNamedMedium type: \"" << medium_type << "\""
-              << std::endl;
+    return RemoveHomogeneousMediumV3(parameters,
+                                     *make_named_medium.mutable_homogeneous());
   }
+
+  if (medium_type == "heterogeneous") {
+    return RemoveUniformGridMediumV3(
+        parameters, *make_named_medium.mutable_heterogeneous());
+  }
+
+  std::cerr << "Unrecognized MakeNamedMedium type: \"" << medium_type << "\""
+            << std::endl;
 
   return absl::OkStatus();
 }
@@ -957,8 +969,8 @@ absl::Status ParserV3::SpectrumTexture(
           parameters, *spectrum_texture.mutable_checkerboard3d());
     }
   } else if (spectrum_texture_type == "constant") {
-    RemoveConstantSpectrumTextureV1(parameters,
-                                    *spectrum_texture.mutable_constant());
+    return RemoveConstantSpectrumTextureV1(
+        parameters, *spectrum_texture.mutable_constant());
   } else if (spectrum_texture_type == "dots") {
     RemoveDotsSpectrumTextureV1(parameters, *spectrum_texture.mutable_dots());
   } else if (spectrum_texture_type == "fbm") {

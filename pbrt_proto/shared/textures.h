@@ -53,7 +53,7 @@ void RemoveConstantFloatTextureV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     ConstantFloatTexture& output);
 
-void RemoveConstantSpectrumTextureV1(
+absl::Status RemoveConstantSpectrumTextureV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     ConstantSpectrumTexture& output);
 
