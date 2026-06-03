@@ -30,6 +30,7 @@ cc_test(
         "//pbrt_proto/v3:v3_cc_proto",
         "//pbrt_proto/v4:v4_cc_proto",
         "@abseil-cpp//absl/strings",
+        "@googletest//:gtest",
         "@googletest//:gtest_main",
     ],
 )

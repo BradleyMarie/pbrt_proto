@@ -42,6 +42,7 @@ cc_test(
     ],
     deps = [
         "@bazel_tools//tools/cpp/runfiles",
+        "@googletest//:gtest",
         "@googletest//:gtest_main",
     ],
 )

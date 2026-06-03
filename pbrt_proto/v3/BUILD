@@ -47,6 +47,7 @@ cc_test(
         ":v3_cc_proto",
         "//pbrt_proto/testing:proto_matchers",
         "@abseil-cpp//absl/status:status_matchers",
+        "@googletest//:gtest",
         "@googletest//:gtest_main",
     ],
 )
@@ -108,6 +109,7 @@ cc_test(
         "@abseil-cpp//absl/status:status_matchers",
         "@abseil-cpp//absl/strings:string_view",
         "@bazel_tools//tools/cpp/runfiles",
+        "@googletest//:gtest",
         "@googletest//:gtest_main",
     ],
 )

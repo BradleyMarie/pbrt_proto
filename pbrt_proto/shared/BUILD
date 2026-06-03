@@ -32,6 +32,7 @@ cc_test(
         "//pbrt_proto/testing:proto_matchers",
         "@abseil-cpp//absl/container:flat_hash_map",
         "@abseil-cpp//absl/strings:string_view",
+        "@googletest//:gtest",
         "@googletest//:gtest_main",
     ],
 )
@@ -61,6 +62,7 @@ cc_test(
         "@abseil-cpp//absl/container:flat_hash_map",
         "@abseil-cpp//absl/status:status_matchers",
         "@abseil-cpp//absl/strings:string_view",
+        "@googletest//:gtest",
         "@googletest//:gtest_main",
     ],
 )
@@ -91,6 +93,7 @@ cc_test(
         "@abseil-cpp//absl/container:flat_hash_map",
         "@abseil-cpp//absl/status:status_matchers",
         "@abseil-cpp//absl/strings:string_view",
+        "@googletest//:gtest",
         "@googletest//:gtest_main",
     ],
 )
@@ -133,6 +136,7 @@ cc_test(
         "//pbrt_proto/testing:proto_matchers",
         "@abseil-cpp//absl/container:flat_hash_map",
         "@abseil-cpp//absl/strings:string_view",
+        "@googletest//:gtest",
         "@googletest//:gtest_main",
     ],
 )
@@ -160,6 +164,7 @@ cc_test(
         "@abseil-cpp//absl/container:flat_hash_map",
         "@abseil-cpp//absl/status:status_matchers",
         "@abseil-cpp//absl/strings:string_view",
+        "@googletest//:gtest",
         "@googletest//:gtest_main",
     ],
 )
@@ -187,6 +192,7 @@ cc_test(
         "//pbrt_proto/testing:proto_matchers",
         "@abseil-cpp//absl/container:flat_hash_map",
         "@abseil-cpp//absl/strings:string_view",
+        "@googletest//:gtest",
         "@googletest//:gtest_main",
     ],
 )
@@ -216,6 +222,7 @@ cc_test(
         "@abseil-cpp//absl/container:flat_hash_map",
         "@abseil-cpp//absl/status:status_matchers",
         "@abseil-cpp//absl/strings:string_view",
+        "@googletest//:gtest",
         "@googletest//:gtest_main",
     ],
 )
@@ -243,6 +250,7 @@ cc_test(
         "//pbrt_proto/testing:proto_matchers",
         "@abseil-cpp//absl/status:status_matchers",
         "@abseil-cpp//absl/strings:string_view",
+        "@googletest//:gtest",
         "@googletest//:gtest_main",
     ],
 )
@@ -271,6 +279,7 @@ cc_test(
         "@abseil-cpp//absl/container:flat_hash_map",
         "@abseil-cpp//absl/status:status_matchers",
         "@abseil-cpp//absl/strings:string_view",
+        "@googletest//:gtest",
         "@googletest//:gtest_main",
     ],
 )
@@ -297,6 +306,7 @@ cc_test(
         ":parser",
         "@abseil-cpp//absl/container:inlined_vector",
         "@abseil-cpp//absl/status:status_matchers",
+        "@googletest//:gtest",
         "@googletest//:gtest_main",
     ],
 )
@@ -323,6 +333,7 @@ cc_test(
         "//pbrt_proto/testing:proto_matchers",
         "@abseil-cpp//absl/container:flat_hash_map",
         "@abseil-cpp//absl/strings:string_view",
+        "@googletest//:gtest",
         "@googletest//:gtest_main",
     ],
 )
@@ -350,6 +361,7 @@ cc_test(
         "//pbrt_proto/testing:proto_matchers",
         "@abseil-cpp//absl/container:flat_hash_map",
         "@abseil-cpp//absl/strings:string_view",
+        "@googletest//:gtest",
         "@googletest//:gtest_main",
     ],
 )
@@ -381,6 +393,7 @@ cc_test(
         "@abseil-cpp//absl/container:flat_hash_map",
         "@abseil-cpp//absl/status:status_matchers",
         "@abseil-cpp//absl/strings:string_view",
+        "@googletest//:gtest",
         "@googletest//:gtest_main",
     ],
 )
@@ -411,6 +424,7 @@ cc_test(
         "@abseil-cpp//absl/container:flat_hash_map",
         "@abseil-cpp//absl/status:status_matchers",
         "@abseil-cpp//absl/strings:string_view",
+        "@googletest//:gtest",
         "@googletest//:gtest_main",
     ],
 )
@@ -430,6 +444,7 @@ cc_test(
     srcs = ["tokenizer_test.cc"],
     deps = [
         ":tokenizer",
+        "@googletest//:gtest",
         "@googletest//:gtest_main",
     ],
 )
