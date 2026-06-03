@@ -469,23 +469,23 @@ absl::Status ParserV3::Integrator(
   auto& integrator = *output_.add_directives()->mutable_integrator();
 
   if (integrator_type == "ambientocclusion") {
-    RemoveAmbientOcclusionIntegratorV2(parameters,
+    RemoveAmbientOcclusionIntegratorV3(parameters,
                                        *integrator.mutable_ambientocclusion());
   } else if (integrator_type == "bdpt") {
-    RemoveBdptIntegratorV2(parameters, *integrator.mutable_bdpt());
+    RemoveBdptIntegratorV3(parameters, *integrator.mutable_bdpt());
   } else if (integrator_type == "directlighting") {
     RemoveDirectLightingIntegratorV3(parameters,
                                      *integrator.mutable_directlighting());
   } else if (integrator_type == "mlt") {
-    RemoveMltIntegratorV1(parameters, *integrator.mutable_mlt());
+    RemoveMltIntegratorV3(parameters, *integrator.mutable_mlt());
   } else if (integrator_type == "path") {
-    RemovePathIntegratorV2(parameters, *integrator.mutable_path());
+    RemovePathIntegratorV3(parameters, *integrator.mutable_path());
   } else if (integrator_type == "sppm") {
-    RemoveSppmIntegratorV1(parameters, *integrator.mutable_sppm());
+    RemoveSppmIntegratorV3(parameters, *integrator.mutable_sppm());
   } else if (integrator_type == "volpath") {
-    RemoveVolPathIntegratorV1(parameters, *integrator.mutable_volpath());
+    RemoveVolPathIntegratorV3(parameters, *integrator.mutable_volpath());
   } else if (integrator_type == "whitted") {
-    RemoveWhittedIntegratorV2(parameters, *integrator.mutable_whitted());
+    RemoveWhittedIntegratorV3(parameters, *integrator.mutable_whitted());
   } else {
     std::cerr << "Unrecognized Integrator type: \"" << integrator_type << "\""
               << std::endl;

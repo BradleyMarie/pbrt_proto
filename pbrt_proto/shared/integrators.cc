@@ -113,7 +113,7 @@ void RemoveLightSampleStrategy(
 
 }  // namespace
 
-void RemoveAmbientOcclusionIntegratorV1(
+void RemoveAmbientOcclusionIntegratorV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     AmbientOcclusionIntegrator& output) {
   if (std::optional<double> maxdist = TryRemoveFloat(parameters, "maxdist");
@@ -128,7 +128,7 @@ void RemoveAmbientOcclusionIntegratorV1(
   }
 }
 
-void RemoveAmbientOcclusionIntegratorV2(
+void RemoveAmbientOcclusionIntegratorV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     AmbientOcclusionIntegrator& output) {
   if (std::optional<int32_t> nsamples =
@@ -149,7 +149,7 @@ void RemoveBdptIntegratorV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     BdptIntegrator& output) {}
 
-void RemoveBdptIntegratorV2(
+void RemoveBdptIntegratorV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     BdptIntegrator& output) {
   if (std::optional<int32_t> maxdepth =
@@ -218,7 +218,7 @@ void RemoveDebugIntegratorV1(
   }
 }
 
-void RemoveDiffusePrtIntegratorV1(
+void RemoveDiffusePrtIntegratorV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     DiffusePrtIntegrator& output) {
   if (std::optional<int32_t> nsamples =
@@ -233,7 +233,7 @@ void RemoveDiffusePrtIntegratorV1(
   }
 }
 
-void RemoveDipoleSubsurfaceIntegratorV1(
+void RemoveDipoleSubsurfaceIntegratorV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     DipoleSubsurfaceIntegrator& output) {
   if (std::optional<int32_t> maxdepth =
@@ -279,7 +279,7 @@ void RemoveDirectLightingIntegratorV3(
   RemovePixelBounds(parameters, output);
 }
 
-void RemoveGlossyPrtIntegratorV1(
+void RemoveGlossyPrtIntegratorV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     GlossyPrtIntegrator& output) {
   if (std::optional<int32_t> nsamples =
@@ -417,7 +417,7 @@ void RemoveIrradianceCacheIntegratorV1(
   }
 }
 
-void RemoveMltIntegratorV1(
+void RemoveMltIntegratorV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     MltIntegrator& output) {
   if (std::optional<int32_t> maxdepth =
@@ -465,7 +465,7 @@ void RemovePathIntegratorV1(
   }
 }
 
-void RemovePathIntegratorV2(
+void RemovePathIntegratorV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     PathIntegrator& output) {
   RemovePathIntegratorV1(parameters, output);
@@ -540,7 +540,7 @@ void RemovePhotonMapIntegratorV2(
   }
 }
 
-void RemoveSppmIntegratorV1(
+void RemoveSppmIntegratorV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     SppmIntegrator& output) {
   if (std::optional<int32_t> maxdepth =
@@ -573,7 +573,7 @@ void RemoveSppmIntegratorV1(
   }
 }
 
-void RemoveUseProbesIntegratorV1(
+void RemoveUseProbesIntegratorV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     UseProbesIntegrator& output) {
   if (std::optional<absl::string_view> filename =
@@ -583,7 +583,7 @@ void RemoveUseProbesIntegratorV1(
   }
 }
 
-void RemoveVolPathIntegratorV1(
+void RemoveVolPathIntegratorV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     VolPathIntegrator& output) {
   if (std::optional<int32_t> maxdepth =
@@ -612,7 +612,7 @@ void RemoveWhittedIntegratorV1(
   }
 }
 
-void RemoveWhittedIntegratorV2(
+void RemoveWhittedIntegratorV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     WhittedIntegrator& output) {
   RemoveWhittedIntegratorV1(parameters, output);

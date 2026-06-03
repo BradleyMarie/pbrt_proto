@@ -8,11 +8,11 @@
 
 namespace pbrt_proto {
 
-void RemoveAmbientOcclusionIntegratorV1(
+void RemoveAmbientOcclusionIntegratorV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     AmbientOcclusionIntegrator& output);
 
-void RemoveAmbientOcclusionIntegratorV2(
+void RemoveAmbientOcclusionIntegratorV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     AmbientOcclusionIntegrator& output);
 
@@ -20,7 +20,7 @@ void RemoveBdptIntegratorV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     BdptIntegrator& output);
 
-void RemoveBdptIntegratorV2(
+void RemoveBdptIntegratorV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     BdptIntegrator& output);
 
@@ -28,11 +28,11 @@ void RemoveDebugIntegratorV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     DebugIntegrator& output);
 
-void RemoveDiffusePrtIntegratorV1(
+void RemoveDiffusePrtIntegratorV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     DiffusePrtIntegrator& output);
 
-void RemoveDipoleSubsurfaceIntegratorV1(
+void RemoveDipoleSubsurfaceIntegratorV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     DipoleSubsurfaceIntegrator& output);
 
@@ -48,11 +48,7 @@ void RemoveDirectLightingIntegratorV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     DirectLightingIntegrator& output);
 
-void RemoveDiffusePrtIntegratorV1(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    DiffusePrtIntegrator& output);
-
-void RemoveGlossyPrtIntegratorV1(
+void RemoveGlossyPrtIntegratorV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     GlossyPrtIntegrator& output);
 
@@ -68,7 +64,7 @@ void RemoveIrradianceCacheIntegratorV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     IrradianceCacheIntegrator& output);
 
-void RemoveMltIntegratorV1(
+void RemoveMltIntegratorV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     MltIntegrator& output);
 
@@ -76,7 +72,7 @@ void RemovePathIntegratorV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     PathIntegrator& output);
 
-void RemovePathIntegratorV2(
+void RemovePathIntegratorV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     PathIntegrator& output);
 
@@ -92,15 +88,15 @@ void RemovePhotonMapIntegratorV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     PhotonMapIntegrator& output);
 
-void RemoveSppmIntegratorV1(
+void RemoveSppmIntegratorV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     SppmIntegrator& output);
 
-void RemoveUseProbesIntegratorV1(
+void RemoveUseProbesIntegratorV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     UseProbesIntegrator& output);
 
-void RemoveVolPathIntegratorV1(
+void RemoveVolPathIntegratorV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     VolPathIntegrator& output);
 
@@ -108,7 +104,7 @@ void RemoveWhittedIntegratorV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     WhittedIntegrator& output);
 
-void RemoveWhittedIntegratorV2(
+void RemoveWhittedIntegratorV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     WhittedIntegrator& output);
 

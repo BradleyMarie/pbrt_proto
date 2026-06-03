@@ -16,15 +16,15 @@ namespace {
 
 using ::google::protobuf::EqualsProto;
 
-TEST(RemoveAmbientOcclusionIntegratorV1, Empty) {
+TEST(RemoveAmbientOcclusionIntegratorV2, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   AmbientOcclusionIntegrator actual;
-  RemoveAmbientOcclusionIntegratorV1(parameters, actual);
+  RemoveAmbientOcclusionIntegratorV2(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveAmbientOcclusionIntegratorV1, WithData) {
+TEST(RemoveAmbientOcclusionIntegratorV2, WithData) {
   std::vector<double> maxdist = {0.1};
   Parameter maxdist_parameter{.directive = "",
                               .type = ParameterType::FLOAT,
@@ -43,21 +43,21 @@ TEST(RemoveAmbientOcclusionIntegratorV1, WithData) {
   };
 
   AmbientOcclusionIntegrator actual;
-  RemoveAmbientOcclusionIntegratorV1(parameters, actual);
+  RemoveAmbientOcclusionIntegratorV2(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 maxdistance: 0.1 nsamples: 2
               )pb"));
 }
 
-TEST(RemoveAmbientOcclusionIntegratorV2, Empty) {
+TEST(RemoveAmbientOcclusionIntegratorV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   AmbientOcclusionIntegrator actual;
-  RemoveAmbientOcclusionIntegratorV2(parameters, actual);
+  RemoveAmbientOcclusionIntegratorV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveAmbientOcclusionIntegratorV2, WithData) {
+TEST(RemoveAmbientOcclusionIntegratorV3, WithData) {
   std::vector<int32_t> nsamples = {1};
   Parameter nsamples_parameter{.directive = "",
                                .type = ParameterType::INTEGER,
@@ -83,7 +83,7 @@ TEST(RemoveAmbientOcclusionIntegratorV2, WithData) {
   };
 
   AmbientOcclusionIntegrator actual;
-  RemoveAmbientOcclusionIntegratorV2(parameters, actual);
+  RemoveAmbientOcclusionIntegratorV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 nsamples: 1
                 cossample: true
@@ -99,15 +99,15 @@ TEST(RemoveBdptIntegratorV1, Empty) {
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveBdptIntegratorV2, Empty) {
+TEST(RemoveBdptIntegratorV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   BdptIntegrator actual;
-  RemoveBdptIntegratorV2(parameters, actual);
+  RemoveBdptIntegratorV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveBdptIntegratorV2, WithData) {
+TEST(RemoveBdptIntegratorV3, WithData) {
   std::vector<int32_t> maxdepth = {1};
   Parameter maxdepth_parameter{.directive = "",
                                .type = ParameterType::INTEGER,
@@ -150,7 +150,7 @@ TEST(RemoveBdptIntegratorV2, WithData) {
   };
 
   BdptIntegrator actual;
-  RemoveBdptIntegratorV2(parameters, actual);
+  RemoveBdptIntegratorV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 maxdepth: 1
                 pixelbounds { x_min: 2 x_max: 3 y_min: 4 y_max: 5 }
@@ -160,7 +160,7 @@ TEST(RemoveBdptIntegratorV2, WithData) {
               )pb"));
 }
 
-TEST(RemoveBdptIntegratorV2, Uniform) {
+TEST(RemoveBdptIntegratorV3, Uniform) {
   std::vector<absl::string_view> lightsamplestrategy = {"uniform"};
   Parameter lightsamplestrategy_parameter{
       .directive = "",
@@ -173,13 +173,13 @@ TEST(RemoveBdptIntegratorV2, Uniform) {
   };
 
   BdptIntegrator actual;
-  RemoveBdptIntegratorV2(parameters, actual);
+  RemoveBdptIntegratorV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 lightsampler: UNIFORM
               )pb"));
 }
 
-TEST(RemoveBdptIntegratorV2, Power) {
+TEST(RemoveBdptIntegratorV3, Power) {
   std::vector<absl::string_view> lightsamplestrategy = {"power"};
   Parameter lightsamplestrategy_parameter{
       .directive = "",
@@ -192,13 +192,13 @@ TEST(RemoveBdptIntegratorV2, Power) {
   };
 
   BdptIntegrator actual;
-  RemoveBdptIntegratorV2(parameters, actual);
+  RemoveBdptIntegratorV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 lightsampler: POWER
               )pb"));
 }
 
-TEST(RemoveBdptIntegratorV2, Spatial) {
+TEST(RemoveBdptIntegratorV3, Spatial) {
   std::vector<absl::string_view> lightsamplestrategy = {"spatial"};
   Parameter lightsamplestrategy_parameter{
       .directive = "",
@@ -211,7 +211,7 @@ TEST(RemoveBdptIntegratorV2, Spatial) {
   };
 
   BdptIntegrator actual;
-  RemoveBdptIntegratorV2(parameters, actual);
+  RemoveBdptIntegratorV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 lightsampler: BVH
               )pb"));
@@ -353,15 +353,15 @@ TEST(RemoveDebugIntegratorV1, FourthWithData) {
               )pb"));
 }
 
-TEST(RemoveDiffusePrtIntegratorV1, Empty) {
+TEST(RemoveDiffusePrtIntegratorV2, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   DiffusePrtIntegrator actual;
-  RemoveDiffusePrtIntegratorV1(parameters, actual);
+  RemoveDiffusePrtIntegratorV2(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveDiffusePrtIntegratorV1, WithData) {
+TEST(RemoveDiffusePrtIntegratorV2, WithData) {
   std::vector<int32_t> lmax = {1};
   Parameter lmax_parameter{.directive = "",
                            .type = ParameterType::INTEGER,
@@ -380,21 +380,21 @@ TEST(RemoveDiffusePrtIntegratorV1, WithData) {
   };
 
   DiffusePrtIntegrator actual;
-  RemoveDiffusePrtIntegratorV1(parameters, actual);
+  RemoveDiffusePrtIntegratorV2(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 lmax: 1 nsamples: 2
               )pb"));
 }
 
-TEST(RemoveDipoleSubsurfaceIntegratorV1, Empty) {
+TEST(RemoveDipoleSubsurfaceIntegratorV2, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   DipoleSubsurfaceIntegrator actual;
-  RemoveDipoleSubsurfaceIntegratorV1(parameters, actual);
+  RemoveDipoleSubsurfaceIntegratorV2(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveDipoleSubsurfaceIntegratorV1, WithData) {
+TEST(RemoveDipoleSubsurfaceIntegratorV2, WithData) {
   std::vector<int32_t> maxdepth = {1};
   Parameter maxdepth_parameter{.directive = "",
                                .type = ParameterType::INTEGER,
@@ -428,7 +428,7 @@ TEST(RemoveDipoleSubsurfaceIntegratorV1, WithData) {
   };
 
   DipoleSubsurfaceIntegrator actual;
-  RemoveDipoleSubsurfaceIntegratorV1(parameters, actual);
+  RemoveDipoleSubsurfaceIntegratorV2(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 maxdepth: 1
                 maxerror: 0.2
@@ -693,15 +693,15 @@ TEST(RemoveDirectLightingIntegratorV3, Weighted) {
               )pb"));
 }
 
-TEST(RemoveGlossyPrtIntegratorV1, Empty) {
+TEST(RemoveGlossyPrtIntegratorV2, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   GlossyPrtIntegrator actual;
-  RemoveGlossyPrtIntegratorV1(parameters, actual);
+  RemoveGlossyPrtIntegratorV2(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveGlossyPrtIntegratorV1, WithData) {
+TEST(RemoveGlossyPrtIntegratorV2, WithData) {
   std::vector<int32_t> lmax = {1};
   Parameter lmax_parameter{.directive = "",
                            .type = ParameterType::INTEGER,
@@ -741,7 +741,7 @@ TEST(RemoveGlossyPrtIntegratorV1, WithData) {
   };
 
   GlossyPrtIntegrator actual;
-  RemoveGlossyPrtIntegratorV1(parameters, actual);
+  RemoveGlossyPrtIntegratorV2(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 lmax: 1
                 nsamples: 2
@@ -951,15 +951,15 @@ TEST(RemoveIrradianceCacheIntegratorV1, WithData) {
               )pb"));
 }
 
-TEST(RemoveMltIntegratorV1, Empty) {
+TEST(RemoveMltIntegratorV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   MltIntegrator actual;
-  RemoveMltIntegratorV1(parameters, actual);
+  RemoveMltIntegratorV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveMltIntegratorV1, WithData) {
+TEST(RemoveMltIntegratorV3, WithData) {
   std::vector<int32_t> maxdepth = {1};
   Parameter maxdepth_parameter{.directive = "",
                                .type = ParameterType::INTEGER,
@@ -1008,7 +1008,7 @@ TEST(RemoveMltIntegratorV1, WithData) {
       {"sigma", sigma_parameter}};
 
   MltIntegrator actual;
-  RemoveMltIntegratorV1(parameters, actual);
+  RemoveMltIntegratorV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 maxdepth: 1
                 bootstrapsamples: 2
@@ -1044,15 +1044,15 @@ TEST(RemovePathIntegratorV1, WithData) {
               )pb"));
 }
 
-TEST(RemovePathIntegratorV2, Empty) {
+TEST(RemovePathIntegratorV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   PathIntegrator actual;
-  RemovePathIntegratorV2(parameters, actual);
+  RemovePathIntegratorV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemovePathIntegratorV2, WithData) {
+TEST(RemovePathIntegratorV3, WithData) {
   std::vector<int32_t> maxdepth = {1};
   Parameter maxdepth_parameter{.directive = "",
                                .type = ParameterType::INTEGER,
@@ -1085,7 +1085,7 @@ TEST(RemovePathIntegratorV2, WithData) {
       {"lightsamplestrategy", lightsamplestrategy_parameter}};
 
   PathIntegrator actual;
-  RemovePathIntegratorV2(parameters, actual);
+  RemovePathIntegratorV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 maxdepth: 1
                 rrthreshold: 0.2
@@ -1094,7 +1094,7 @@ TEST(RemovePathIntegratorV2, WithData) {
               )pb"));
 }
 
-TEST(RemovePathIntegratorV2, Uniform) {
+TEST(RemovePathIntegratorV3, Uniform) {
   std::vector<absl::string_view> lightsamplestrategy = {"uniform"};
   Parameter lightsamplestrategy_parameter{
       .directive = "",
@@ -1107,13 +1107,13 @@ TEST(RemovePathIntegratorV2, Uniform) {
   };
 
   PathIntegrator actual;
-  RemovePathIntegratorV2(parameters, actual);
+  RemovePathIntegratorV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 lightsampler: UNIFORM
               )pb"));
 }
 
-TEST(RemovePathIntegratorV2, Power) {
+TEST(RemovePathIntegratorV3, Power) {
   std::vector<absl::string_view> lightsamplestrategy = {"power"};
   Parameter lightsamplestrategy_parameter{
       .directive = "",
@@ -1126,13 +1126,13 @@ TEST(RemovePathIntegratorV2, Power) {
   };
 
   PathIntegrator actual;
-  RemovePathIntegratorV2(parameters, actual);
+  RemovePathIntegratorV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 lightsampler: POWER
               )pb"));
 }
 
-TEST(RemovePathIntegratorV2, Spatial) {
+TEST(RemovePathIntegratorV3, Spatial) {
   std::vector<absl::string_view> lightsamplestrategy = {"spatial"};
   Parameter lightsamplestrategy_parameter{
       .directive = "",
@@ -1145,7 +1145,7 @@ TEST(RemovePathIntegratorV2, Spatial) {
   };
 
   PathIntegrator actual;
-  RemovePathIntegratorV2(parameters, actual);
+  RemovePathIntegratorV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 lightsampler: BVH
               )pb"));
@@ -1435,15 +1435,15 @@ TEST(RemovePhotonMapIntegratorV2, WithData) {
               )pb"));
 }
 
-TEST(RemoveSppmIntegratorV1, Empty) {
+TEST(RemoveSppmIntegratorV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   SppmIntegrator actual;
-  RemoveSppmIntegratorV1(parameters, actual);
+  RemoveSppmIntegratorV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveSppmIntegratorV1, WithData) {
+TEST(RemoveSppmIntegratorV3, WithData) {
   std::vector<int32_t> maxdepth = {1};
   Parameter maxdepth_parameter{.directive = "",
                                .type = ParameterType::INTEGER,
@@ -1484,7 +1484,7 @@ TEST(RemoveSppmIntegratorV1, WithData) {
       {"radius", radius_parameter}};
 
   SppmIntegrator actual;
-  RemoveSppmIntegratorV1(parameters, actual);
+  RemoveSppmIntegratorV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 maxdepth: 1
                 numiterations: 2
@@ -1494,15 +1494,15 @@ TEST(RemoveSppmIntegratorV1, WithData) {
               )pb"));
 }
 
-TEST(RemoveUseProbesIntegratorV1, Empty) {
+TEST(RemoveUseProbesIntegratorV2, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   UseProbesIntegrator actual;
-  RemoveUseProbesIntegratorV1(parameters, actual);
+  RemoveUseProbesIntegratorV2(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveUseProbesIntegratorV1, WithData) {
+TEST(RemoveUseProbesIntegratorV2, WithData) {
   std::vector<absl::string_view> filename = {"file"};
   Parameter filename_parameter{.directive = "",
                                .type = ParameterType::STRING,
@@ -1513,13 +1513,21 @@ TEST(RemoveUseProbesIntegratorV1, WithData) {
       {"filename", filename_parameter}};
 
   UseProbesIntegrator actual;
-  RemoveUseProbesIntegratorV1(parameters, actual);
+  RemoveUseProbesIntegratorV2(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 filename: "file"
               )pb"));
 }
 
-TEST(RemoveVolPathIntegratorV1, WithData) {
+TEST(RemoveVolPathIntegratorV3, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  VolPathIntegrator actual;
+  RemoveVolPathIntegratorV3(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveVolPathIntegratorV3, WithData) {
   std::vector<int32_t> maxdepth = {1};
   Parameter maxdepth_parameter{.directive = "",
                                .type = ParameterType::INTEGER,
@@ -1552,7 +1560,7 @@ TEST(RemoveVolPathIntegratorV1, WithData) {
       {"lightsamplestrategy", lightsamplestrategy_parameter}};
 
   VolPathIntegrator actual;
-  RemoveVolPathIntegratorV1(parameters, actual);
+  RemoveVolPathIntegratorV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 maxdepth: 1
                 rrthreshold: 0.2
@@ -1561,7 +1569,7 @@ TEST(RemoveVolPathIntegratorV1, WithData) {
               )pb"));
 }
 
-TEST(RemoveVolPathIntegratorV1, Uniform) {
+TEST(RemoveVolPathIntegratorV3, Uniform) {
   std::vector<absl::string_view> lightsamplestrategy = {"uniform"};
   Parameter lightsamplestrategy_parameter{
       .directive = "",
@@ -1574,13 +1582,13 @@ TEST(RemoveVolPathIntegratorV1, Uniform) {
   };
 
   VolPathIntegrator actual;
-  RemoveVolPathIntegratorV1(parameters, actual);
+  RemoveVolPathIntegratorV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 lightsampler: UNIFORM
               )pb"));
 }
 
-TEST(RemoveVolPathIntegratorV1, Power) {
+TEST(RemoveVolPathIntegratorV3, Power) {
   std::vector<absl::string_view> lightsamplestrategy = {"power"};
   Parameter lightsamplestrategy_parameter{
       .directive = "",
@@ -1593,13 +1601,13 @@ TEST(RemoveVolPathIntegratorV1, Power) {
   };
 
   VolPathIntegrator actual;
-  RemoveVolPathIntegratorV1(parameters, actual);
+  RemoveVolPathIntegratorV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 lightsampler: POWER
               )pb"));
 }
 
-TEST(RemoveVolPathIntegratorV1, Spatial) {
+TEST(RemoveVolPathIntegratorV3, Spatial) {
   std::vector<absl::string_view> lightsamplestrategy = {"spatial"};
   Parameter lightsamplestrategy_parameter{
       .directive = "",
@@ -1612,7 +1620,7 @@ TEST(RemoveVolPathIntegratorV1, Spatial) {
   };
 
   VolPathIntegrator actual;
-  RemoveVolPathIntegratorV1(parameters, actual);
+  RemoveVolPathIntegratorV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 lightsampler: BVH
               )pb"));
@@ -1643,15 +1651,15 @@ TEST(RemoveWhittedIntegratorV1, WithData) {
               )pb"));
 }
 
-TEST(RemoveWhittedIntegratorV2, Empty) {
+TEST(RemoveWhittedIntegratorV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   WhittedIntegrator actual;
-  RemoveWhittedIntegratorV2(parameters, actual);
+  RemoveWhittedIntegratorV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveWhittedIntegratorV2, WithData) {
+TEST(RemoveWhittedIntegratorV3, WithData) {
   std::vector<int32_t> maxdepth = {1};
   Parameter maxdepth_parameter{.directive = "",
                                .type = ParameterType::INTEGER,
@@ -1670,7 +1678,7 @@ TEST(RemoveWhittedIntegratorV2, WithData) {
   };
 
   WhittedIntegrator actual;
-  RemoveWhittedIntegratorV2(parameters, actual);
+  RemoveWhittedIntegratorV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 maxdepth: 1
                 pixelbounds { x_min: 3 x_max: 4 y_min: 5 y_max: 6 }
