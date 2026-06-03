@@ -240,7 +240,7 @@ void RemoveCheckerboard2DFloatTextureV1(
     output.set_aamode(*aamode);
   }
 
-  RemoveCheckerboard2DFloatTextureV3(parameters, output);
+  RemoveCheckerboard2DFloatTextureV4(parameters, output);
 }
 
 void RemoveCheckerboard2DFloatTextureV2(
@@ -252,10 +252,10 @@ void RemoveCheckerboard2DFloatTextureV2(
     output.set_aamode(*aamode);
   }
 
-  RemoveCheckerboard2DFloatTextureV3(parameters, output);
+  RemoveCheckerboard2DFloatTextureV4(parameters, output);
 }
 
-void RemoveCheckerboard2DFloatTextureV3(
+void RemoveCheckerboard2DFloatTextureV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     Checkerboard2DFloatTexture& output) {
   TryRemoveFloatTexture(
@@ -276,7 +276,7 @@ void RemoveCheckerboard2DSpectrumTextureV1(
     output.set_aamode(*aamode);
   }
 
-  RemoveCheckerboard2DSpectrumTextureV3(parameters, output);
+  RemoveCheckerboard2DSpectrumTextureV4(parameters, output);
 }
 
 void RemoveCheckerboard2DSpectrumTextureV2(
@@ -288,10 +288,10 @@ void RemoveCheckerboard2DSpectrumTextureV2(
     output.set_aamode(*aamode);
   }
 
-  RemoveCheckerboard2DSpectrumTextureV3(parameters, output);
+  RemoveCheckerboard2DSpectrumTextureV4(parameters, output);
 }
 
-void RemoveCheckerboard2DSpectrumTextureV3(
+void RemoveCheckerboard2DSpectrumTextureV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     Checkerboard2DSpectrumTexture& output) {
   TryRemoveSpectrumTextureV1(
@@ -342,7 +342,7 @@ void RemoveConstantSpectrumTextureV1(
       std::bind(&ConstantSpectrumTexture::mutable_value, &output));
 }
 
-void RemoveDirectionMixFloatTextureV1(
+void RemoveDirectionMixFloatTextureV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     DirectionMixFloatTexture& output) {
   TryRemoveFloatTexture(
@@ -354,7 +354,7 @@ void RemoveDirectionMixFloatTextureV1(
   RemoveDir(parameters, output);
 }
 
-void RemoveDirectionMixSpectrumTextureV1(
+void RemoveDirectionMixSpectrumTextureV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     DirectionMixSpectrumTexture& output) {
   TryRemoveSpectrumTextureV1(
@@ -589,7 +589,7 @@ void RemoveMixSpectrumTextureV1(
       std::bind(&MixSpectrumTexture::mutable_tex2, &output));
 }
 
-void RemovePtexFloatTextureV1(
+void RemovePtexFloatTextureV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     PtexFloatTexture& output) {
   if (std::optional<absl::string_view> filename =
@@ -604,7 +604,7 @@ void RemovePtexFloatTextureV1(
   }
 }
 
-absl::Status RemovePtexFloatTextureV2(
+absl::Status RemovePtexFloatTextureV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     PtexFloatTexture& output) {
   if (std::optional<absl::string_view> filename =
@@ -621,7 +621,7 @@ absl::Status RemovePtexFloatTextureV2(
   return RemoveEncoding(parameters, "ptex SpectrumTexture", output);
 }
 
-void RemovePtexSpectrumTextureV1(
+void RemovePtexSpectrumTextureV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     PtexSpectrumTexture& output) {
   if (std::optional<absl::string_view> filename =
@@ -636,7 +636,7 @@ void RemovePtexSpectrumTextureV1(
   }
 }
 
-absl::Status RemovePtexSpectrumTextureV2(
+absl::Status RemovePtexSpectrumTextureV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     PtexSpectrumTexture& output) {
   if (std::optional<absl::string_view> filename =

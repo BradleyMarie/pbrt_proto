@@ -25,7 +25,7 @@ void RemoveCheckerboard2DFloatTextureV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     Checkerboard2DFloatTexture& output);
 
-void RemoveCheckerboard2DFloatTextureV3(
+void RemoveCheckerboard2DFloatTextureV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     Checkerboard2DFloatTexture& output);
 
@@ -37,7 +37,7 @@ void RemoveCheckerboard2DSpectrumTextureV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     Checkerboard2DSpectrumTexture& output);
 
-void RemoveCheckerboard2DSpectrumTextureV3(
+void RemoveCheckerboard2DSpectrumTextureV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     Checkerboard2DSpectrumTexture& output);
 
@@ -57,11 +57,11 @@ void RemoveConstantSpectrumTextureV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     ConstantSpectrumTexture& output);
 
-void RemoveDirectionMixFloatTextureV1(
+void RemoveDirectionMixFloatTextureV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     DirectionMixFloatTexture& output);
 
-void RemoveDirectionMixSpectrumTextureV1(
+void RemoveDirectionMixSpectrumTextureV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     DirectionMixSpectrumTexture& output);
 
@@ -125,19 +125,19 @@ void RemoveMixSpectrumTextureV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     MixSpectrumTexture& output);
 
-void RemovePtexFloatTextureV1(
+void RemovePtexFloatTextureV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     PtexFloatTexture& output);
 
-absl::Status RemovePtexFloatTextureV2(
+absl::Status RemovePtexFloatTextureV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     PtexFloatTexture& output);
 
-void RemovePtexSpectrumTextureV1(
+void RemovePtexSpectrumTextureV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     PtexSpectrumTexture& output);
 
-absl::Status RemovePtexSpectrumTextureV2(
+absl::Status RemovePtexSpectrumTextureV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     PtexSpectrumTexture& output);
 

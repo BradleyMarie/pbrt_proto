@@ -676,15 +676,15 @@ TEST(RemoveCheckerboard2DFloatTextureV2, WithData) {
               )pb"));
 }
 
-TEST(RemoveCheckerboard2DFloatTextureV3, Empty) {
+TEST(RemoveCheckerboard2DFloatTextureV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   Checkerboard2DFloatTexture actual;
-  RemoveCheckerboard2DFloatTextureV3(parameters, actual);
+  RemoveCheckerboard2DFloatTextureV4(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveCheckerboard2DFloatTextureV3, WithData) {
+TEST(RemoveCheckerboard2DFloatTextureV4, WithData) {
   std::vector<absl::string_view> tex1 = {"tex1"};
   Parameter tex1_parameter{.directive = "",
                            .type = ParameterType::TEXTURE,
@@ -709,7 +709,7 @@ TEST(RemoveCheckerboard2DFloatTextureV3, WithData) {
       {"mapping", mapping_parameter}};
 
   Checkerboard2DFloatTexture actual;
-  RemoveCheckerboard2DFloatTextureV3(parameters, actual);
+  RemoveCheckerboard2DFloatTextureV4(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 tex1 { float_texture_name: "tex1" }
                 tex2 { float_texture_name: "tex2" }
@@ -815,15 +815,15 @@ TEST(RemoveCheckerboard2DSpectrumTextureV2, WithData) {
               )pb"));
 }
 
-TEST(RemoveCheckerboard2DSpectrumTextureV3, Empty) {
+TEST(RemoveCheckerboard2DSpectrumTextureV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   Checkerboard2DSpectrumTexture actual;
-  RemoveCheckerboard2DSpectrumTextureV3(parameters, actual);
+  RemoveCheckerboard2DSpectrumTextureV4(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveCheckerboard2DSpectrumTextureV3, WithData) {
+TEST(RemoveCheckerboard2DSpectrumTextureV4, WithData) {
   std::vector<absl::string_view> tex1 = {"tex1"};
   Parameter tex1_parameter{.directive = "",
                            .type = ParameterType::TEXTURE,
@@ -848,7 +848,7 @@ TEST(RemoveCheckerboard2DSpectrumTextureV3, WithData) {
       {"mapping", mapping_parameter}};
 
   Checkerboard2DSpectrumTexture actual;
-  RemoveCheckerboard2DSpectrumTextureV3(parameters, actual);
+  RemoveCheckerboard2DSpectrumTextureV4(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 tex1 { spectrum_texture_name: "tex1" }
                 tex2 { spectrum_texture_name: "tex2" }
@@ -970,15 +970,15 @@ TEST(RemoveConstantSpectrumTextureV1, WithData) {
               )pb"));
 }
 
-TEST(RemoveDirectionMixFloatTextureV1, Empty) {
+TEST(RemoveDirectionMixFloatTextureV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   DirectionMixFloatTexture actual;
-  RemoveDirectionMixFloatTextureV1(parameters, actual);
+  RemoveDirectionMixFloatTextureV4(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveDirectionMixFloatTextureV1, WithData) {
+TEST(RemoveDirectionMixFloatTextureV4, WithData) {
   std::vector<absl::string_view> tex1 = {"tex1"};
   Parameter tex1_parameter{.directive = "",
                            .type = ParameterType::TEXTURE,
@@ -1003,7 +1003,7 @@ TEST(RemoveDirectionMixFloatTextureV1, WithData) {
       {"dir", dir_parameter}};
 
   DirectionMixFloatTexture actual;
-  RemoveDirectionMixFloatTextureV1(parameters, actual);
+  RemoveDirectionMixFloatTextureV4(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 tex1 { float_texture_name: "tex1" }
                 tex2 { float_texture_name: "tex2" }
@@ -1011,15 +1011,15 @@ TEST(RemoveDirectionMixFloatTextureV1, WithData) {
               )pb"));
 }
 
-TEST(RemoveDirectionMixSpectrumTextureV1, Empty) {
+TEST(RemoveDirectionMixSpectrumTextureV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   DirectionMixSpectrumTexture actual;
-  RemoveDirectionMixSpectrumTextureV1(parameters, actual);
+  RemoveDirectionMixSpectrumTextureV4(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveDirectionMixSpectrumTextureV1, WithData) {
+TEST(RemoveDirectionMixSpectrumTextureV4, WithData) {
   std::vector<absl::string_view> tex1 = {"tex1"};
   Parameter tex1_parameter{.directive = "",
                            .type = ParameterType::TEXTURE,
@@ -1044,7 +1044,7 @@ TEST(RemoveDirectionMixSpectrumTextureV1, WithData) {
       {"dir", dir_parameter}};
 
   DirectionMixSpectrumTexture actual;
-  RemoveDirectionMixSpectrumTextureV1(parameters, actual);
+  RemoveDirectionMixSpectrumTextureV4(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 tex1 { spectrum_texture_name: "tex1" }
                 tex2 { spectrum_texture_name: "tex2" }
@@ -1897,15 +1897,15 @@ TEST(RemoveMixSpectrumTextureV1, WithData) {
               )pb"));
 }
 
-TEST(RemovePtexFloatTextureV1, Empty) {
+TEST(RemovePtexFloatTextureV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   PtexFloatTexture actual;
-  RemovePtexFloatTextureV1(parameters, actual);
+  RemovePtexFloatTextureV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemovePtexFloatTextureV1, WithData) {
+TEST(RemovePtexFloatTextureV3, WithData) {
   std::vector<absl::string_view> filename = {"filename"};
   Parameter filename_parameter{.directive = "",
                                .type = ParameterType::STRING,
@@ -1922,21 +1922,21 @@ TEST(RemovePtexFloatTextureV1, WithData) {
       {"filename", filename_parameter}, {"gamma", gamma_parameter}};
 
   PtexFloatTexture actual;
-  RemovePtexFloatTextureV1(parameters, actual);
+  RemovePtexFloatTextureV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 filename: "filename" gamma: 1.0
               )pb"));
 }
 
-TEST(RemovePtexFloatTextureV2, Empty) {
+TEST(RemovePtexFloatTextureV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   PtexFloatTexture actual;
-  EXPECT_TRUE(RemovePtexFloatTextureV2(parameters, actual).ok());
+  EXPECT_TRUE(RemovePtexFloatTextureV4(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemovePtexFloatTextureV2, WithData) {
+TEST(RemovePtexFloatTextureV4, WithData) {
   std::vector<absl::string_view> filename = {"filename"};
   Parameter filename_parameter{.directive = "",
                                .type = ParameterType::STRING,
@@ -1962,7 +1962,7 @@ TEST(RemovePtexFloatTextureV2, WithData) {
       {"encoding", encoding_parameter}};
 
   PtexFloatTexture actual;
-  EXPECT_TRUE(RemovePtexFloatTextureV2(parameters, actual).ok());
+  EXPECT_TRUE(RemovePtexFloatTextureV4(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 filename: "filename"
                 scale: 1.0
@@ -1971,15 +1971,15 @@ TEST(RemovePtexFloatTextureV2, WithData) {
               )pb"));
 }
 
-TEST(RemovePtexSpectrumTextureV1, Empty) {
+TEST(RemovePtexSpectrumTextureV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   PtexSpectrumTexture actual;
-  RemovePtexSpectrumTextureV1(parameters, actual);
+  RemovePtexSpectrumTextureV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemovePtexSpectrumTextureV1, WithData) {
+TEST(RemovePtexSpectrumTextureV3, WithData) {
   std::vector<absl::string_view> filename = {"filename"};
   Parameter filename_parameter{.directive = "",
                                .type = ParameterType::STRING,
@@ -1996,21 +1996,21 @@ TEST(RemovePtexSpectrumTextureV1, WithData) {
       {"filename", filename_parameter}, {"gamma", gamma_parameter}};
 
   PtexSpectrumTexture actual;
-  RemovePtexSpectrumTextureV1(parameters, actual);
+  RemovePtexSpectrumTextureV3(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 filename: "filename" gamma: 1.0
               )pb"));
 }
 
-TEST(RemovePtexSpectrumTextureV2, Empty) {
+TEST(RemovePtexSpectrumTextureV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   PtexSpectrumTexture actual;
-  EXPECT_TRUE(RemovePtexSpectrumTextureV2(parameters, actual).ok());
+  EXPECT_TRUE(RemovePtexSpectrumTextureV4(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemovePtexSpectrumTextureV2, WithData) {
+TEST(RemovePtexSpectrumTextureV4, WithData) {
   std::vector<absl::string_view> filename = {"filename"};
   Parameter filename_parameter{.directive = "",
                                .type = ParameterType::STRING,
@@ -2036,7 +2036,7 @@ TEST(RemovePtexSpectrumTextureV2, WithData) {
       {"encoding", encoding_parameter}};
 
   PtexSpectrumTexture actual;
-  EXPECT_TRUE(RemovePtexSpectrumTextureV2(parameters, actual).ok());
+  EXPECT_TRUE(RemovePtexSpectrumTextureV4(parameters, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 filename: "filename"
                 scale: 1.0

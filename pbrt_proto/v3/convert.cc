@@ -438,7 +438,7 @@ absl::Status ParserV3::FloatTexture(
   } else if (float_texture_type == "mix") {
     RemoveMixFloatTextureV1(parameters, *float_texture.mutable_mix());
   } else if (float_texture_type == "ptex") {
-    RemovePtexFloatTextureV1(parameters, *float_texture.mutable_ptex());
+    RemovePtexFloatTextureV3(parameters, *float_texture.mutable_ptex());
   } else if (float_texture_type == "scale") {
     RemoveScaleFloatTextureV1(parameters, *float_texture.mutable_scale());
   } else if (float_texture_type == "windy") {
@@ -972,7 +972,7 @@ absl::Status ParserV3::SpectrumTexture(
   } else if (spectrum_texture_type == "mix") {
     RemoveMixSpectrumTextureV1(parameters, *spectrum_texture.mutable_mix());
   } else if (spectrum_texture_type == "ptex") {
-    RemovePtexSpectrumTextureV1(parameters, *spectrum_texture.mutable_ptex());
+    RemovePtexSpectrumTextureV3(parameters, *spectrum_texture.mutable_ptex());
   } else if (spectrum_texture_type == "scale") {
     RemoveScaleSpectrumTextureV1(parameters, *spectrum_texture.mutable_scale());
   } else if (spectrum_texture_type == "uv") {
