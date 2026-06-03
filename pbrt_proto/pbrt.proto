@@ -186,9 +186,9 @@ message SpectrumTextureParameter {
 message ActiveTransform {
   // The available transformation matrices.
   enum ActiveTransformation {
-    ALL = 1;
-    START_TIME = 2;
-    END_TIME = 3;
+    ALL = 0;
+    START_TIME = 1;
+    END_TIME = 2;
   };
 
   // The selected transformation matrix.
@@ -3266,15 +3266,15 @@ message TriangleMeshShape {
 // The type of antialiasing to apply to 2D checkerboard textures.
 enum CheckerboardAntialiasing {
   CLOSEDFORM = 0;
-  NONE_AA = 1;
+  DISABLED = 1;     // Maps to "none" since none is already in use
   SUPERSAMPLE = 2;  // Only supported in PRTv1.
 }
 
 // The method used for converting 8-bit color values to floating point values.
 enum ImageEncoding {
-  SRGB = 1;
-  LINEAR = 2;
-  GAMMA = 3;
+  SRGB = 0;
+  LINEAR = 1;
+  GAMMA = 2;
 }
 
 // The type of texture wrapping to apply to 2D image textures

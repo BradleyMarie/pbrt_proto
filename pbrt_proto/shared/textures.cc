@@ -25,9 +25,14 @@ std::optional<CheckerboardAntialiasing> TryRemoveAaMode(
     if (*aamode == "closedform") {
       return CheckerboardAntialiasing::CLOSEDFORM;
     } else if (*aamode == "none") {
-      return CheckerboardAntialiasing::NONE_AA;
+      return CheckerboardAntialiasing::DISABLED;
     } else if (pbrt_v1 && *aamode == "supersample") {
       return CheckerboardAntialiasing::SUPERSAMPLE;
+    } else {
+      std::cerr << "Unsupported value for 'checkerboard' Texture parameter "
+                   "'aamode': \""
+                << *aamode << "\"" << std::endl;
+      return CheckerboardAntialiasing::CLOSEDFORM;
     }
   }
 
@@ -90,12 +95,18 @@ void RemoveFilter(absl::flat_hash_map<absl::string_view, Parameter>& parameters,
       output.set_filter(TextureFilter::EWA);
     } else if (*filter == "point") {
       output.set_filter(TextureFilter::POINT);
+    } else {
+      std::cerr << "Unsupported value for 'imagemap' Texture parameter "
+                   "'filter': \""
+                << *filter << "\"" << std::endl;
+      output.set_filter(TextureFilter::EWA);
     }
   }
 }
 
 std::optional<TextureMapping> TryRemoveMapping(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view type) {
   if (std::optional<absl::string_view> mapping =
           TryRemoveString(parameters, "mapping");
       mapping) {
@@ -107,6 +118,11 @@ std::optional<TextureMapping> TryRemoveMapping(
       return TextureMapping::CYLINDRICAL;
     } else if (*mapping == "planar") {
       return TextureMapping::PLANAR;
+    } else {
+      std::cerr << "Unsupported value for '" << type
+                << "' Texture parameter 'mapping': \"" << *mapping << "\""
+                << std::endl;
+      return TextureMapping::UV;
     }
   }
 
@@ -124,6 +140,11 @@ std::optional<ImageWrap> TryRemoveWrap(
       return ImageWrap::CLAMP;
     } else if (*wrap == "repeat") {
       return ImageWrap::REPEAT;
+    } else {
+      std::cerr
+          << "Unsupported value for 'imagemap' Texture parameter 'wrap': \""
+          << *wrap << "\"" << std::endl;
+      return ImageWrap::REPEAT;
     }
   }
 
@@ -132,8 +153,10 @@ std::optional<ImageWrap> TryRemoveWrap(
 
 template <typename T>
 void TryRemoveUVParameters(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters, T& output) {
-  if (std::optional<TextureMapping> mapping = TryRemoveMapping(parameters);
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view type, T& output) {
+  if (std::optional<TextureMapping> mapping =
+          TryRemoveMapping(parameters, type);
       mapping) {
     output.set_mapping(*mapping);
   }
@@ -194,7 +217,7 @@ void RemoveImageMapBase(
     output.set_wrap(*wrap);
   }
 
-  TryRemoveUVParameters(parameters, output);
+  TryRemoveUVParameters(parameters, "imagemap", output);
 }
 
 }  // namespace
@@ -210,7 +233,7 @@ void RemoveBilerpFloatTextureV1(
                         std::bind(&BilerpFloatTexture::mutable_v10, &output));
   TryRemoveFloatTexture(parameters, "v11",
                         std::bind(&BilerpFloatTexture::mutable_v11, &output));
-  TryRemoveUVParameters(parameters, output);
+  TryRemoveUVParameters(parameters, "bilerp", output);
 }
 
 void RemoveBilerpSpectrumTextureV1(
@@ -228,7 +251,7 @@ void RemoveBilerpSpectrumTextureV1(
   TryRemoveSpectrumTextureV1(
       parameters, "v11",
       std::bind(&BilerpSpectrumTexture::mutable_v11, &output));
-  TryRemoveUVParameters(parameters, output);
+  TryRemoveUVParameters(parameters, "bilerp", output);
 }
 
 void RemoveCheckerboard2DFloatTextureV1(
@@ -264,7 +287,7 @@ void RemoveCheckerboard2DFloatTextureV4(
   TryRemoveFloatTexture(
       parameters, "tex2",
       std::bind(&Checkerboard2DFloatTexture::mutable_tex2, &output));
-  TryRemoveUVParameters(parameters, output);
+  TryRemoveUVParameters(parameters, "checkerboard", output);
 }
 
 void RemoveCheckerboard2DSpectrumTextureV1(
@@ -300,7 +323,7 @@ void RemoveCheckerboard2DSpectrumTextureV4(
   TryRemoveSpectrumTextureV1(
       parameters, "tex2",
       std::bind(&Checkerboard2DSpectrumTexture::mutable_tex2, &output));
-  TryRemoveUVParameters(parameters, output);
+  TryRemoveUVParameters(parameters, "checkerboard", output);
 }
 
 void RemoveCheckerboard3DFloatTextureV1(
@@ -373,7 +396,7 @@ void RemoveDotsFloatTextureV1(
                         std::bind(&DotsFloatTexture::mutable_inside, &output));
   TryRemoveFloatTexture(parameters, "outside",
                         std::bind(&DotsFloatTexture::mutable_outside, &output));
-  TryRemoveUVParameters(parameters, output);
+  TryRemoveUVParameters(parameters, "dots", output);
 }
 
 void RemoveDotsSpectrumTextureV1(
@@ -385,7 +408,7 @@ void RemoveDotsSpectrumTextureV1(
   TryRemoveSpectrumTextureV1(
       parameters, "outside",
       std::bind(&DotsSpectrumTexture::mutable_outside, &output));
-  TryRemoveUVParameters(parameters, output);
+  TryRemoveUVParameters(parameters, "dots", output);
 }
 
 void RemoveFBmFloatTextureV1(
@@ -704,7 +727,7 @@ void RemoveWrinkledSpectrumTextureV1(
 void RemoveUvSpectrumTextureV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     UvSpectrumTexture& output) {
-  TryRemoveUVParameters(parameters, output);
+  TryRemoveUVParameters(parameters, "uv", output);
 }
 
 }  // namespace pbrt_proto

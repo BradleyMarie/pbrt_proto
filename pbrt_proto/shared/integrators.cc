@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <functional>
+#include <iostream>
 #include <optional>
 
 #include "absl/container/flat_hash_map.h"
@@ -32,6 +33,9 @@ void RemoveDirectLightingIntegrator(
     } else if (pbrt_v1 && *strategy == "weighted") {
       output.set_strategy(DirectLightingIntegrator::WEIGHTED);
     } else {
+      std::cerr << "Unsupported value for 'directlighting' Integrator "
+                   "parameter 'strategy': \""
+                << *strategy << "\"" << std::endl;
       output.set_strategy(DirectLightingIntegrator::ALL);
     }
   }
@@ -97,15 +101,24 @@ void RemovePixelBounds(
 
 template <typename T>
 void RemoveLightSampleStrategy(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters, T& output) {
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view type, absl::string_view parameter, bool pbrt_v4,
+    T& output) {
   if (std::optional<absl::string_view> lightsamplestrategy =
-          TryRemoveString(parameters, "lightsamplestrategy");
+          TryRemoveString(parameters, parameter);
       lightsamplestrategy.has_value()) {
     if (*lightsamplestrategy == "power") {
       output.set_lightsampler(LightSampler::POWER);
     } else if (*lightsamplestrategy == "uniform") {
       output.set_lightsampler(LightSampler::UNIFORM);
+    } else if (!pbrt_v4 && *lightsamplestrategy == "spatial") {
+      output.set_lightsampler(LightSampler::BVH);
+    } else if (pbrt_v4 && *lightsamplestrategy == "bvh") {
+      output.set_lightsampler(LightSampler::BVH);
     } else {
+      std::cerr << "Unsupported value for '" << type
+                << "' Integrator parameter '" << parameter << "': \""
+                << *lightsamplestrategy << "\"" << std::endl;
       output.set_lightsampler(LightSampler::BVH);
     }
   }
@@ -170,7 +183,8 @@ void RemoveBdptIntegratorV3(
     output.set_visualizeweights(*visualizeweights);
   }
 
-  RemoveLightSampleStrategy(parameters, output);
+  RemoveLightSampleStrategy(parameters, "bdpt", "lightsamplestrategy",
+                            /*pbrt_v4=*/false, output);
   RemovePixelBounds(parameters, output);
 }
 
@@ -193,6 +207,9 @@ void RemoveDebugIntegratorV1(
     if (auto iter = values.find(*red); iter != values.end()) {
       output.set_red(iter->second);
     } else {
+      std::cerr
+          << "Unsupported value for 'debug' Integrator parameter 'red': \""
+          << *red << "\"" << std::endl;
       output.set_red(DebugIntegrator::ZERO);
     }
   }
@@ -203,6 +220,9 @@ void RemoveDebugIntegratorV1(
     if (auto iter = values.find(*green); iter != values.end()) {
       output.set_green(iter->second);
     } else {
+      std::cerr
+          << "Unsupported value for 'debug' Integrator parameter 'green': \""
+          << *green << "\"" << std::endl;
       output.set_green(DebugIntegrator::ZERO);
     }
   }
@@ -213,6 +233,9 @@ void RemoveDebugIntegratorV1(
     if (auto iter = values.find(*blue); iter != values.end()) {
       output.set_blue(iter->second);
     } else {
+      std::cerr
+          << "Unsupported value for 'debug' Integrator parameter 'blue': \""
+          << *blue << "\"" << std::endl;
       output.set_blue(DebugIntegrator::ZERO);
     }
   }
@@ -476,7 +499,8 @@ void RemovePathIntegratorV3(
     output.set_rrthreshold(*rrthreshold);
   }
 
-  RemoveLightSampleStrategy(parameters, output);
+  RemoveLightSampleStrategy(parameters, "path", "lightsamplestrategy",
+                            /*pbrt_v4=*/false, output);
   RemovePixelBounds(parameters, output);
 }
 
@@ -598,7 +622,8 @@ void RemoveVolPathIntegratorV3(
     output.set_rrthreshold(*rrthreshold);
   }
 
-  RemoveLightSampleStrategy(parameters, output);
+  RemoveLightSampleStrategy(parameters, "volpath", "lightsamplestrategy",
+                            /*pbrt_v4=*/false, output);
   RemovePixelBounds(parameters, output);
 }
 

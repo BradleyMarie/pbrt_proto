@@ -31,7 +31,9 @@ TEST(AaMode, UnknownValue) {
 
   Checkerboard2DFloatTexture actual;
   RemoveCheckerboard2DFloatTextureV1(parameters, actual);
-  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                aamode: CLOSEDFORM
+              )pb"));
 }
 
 TEST(AaMode, ClosedForm) {
@@ -64,7 +66,7 @@ TEST(AaMode, None) {
   Checkerboard2DFloatTexture actual;
   RemoveCheckerboard2DFloatTextureV1(parameters, actual);
   EXPECT_THAT(actual, EqualsProto(R"pb(
-                aamode: NONE_AA
+                aamode: DISABLED
               )pb"));
 }
 
@@ -97,7 +99,9 @@ TEST(AaMode, SupersampleV2) {
 
   Checkerboard2DFloatTexture actual;
   RemoveCheckerboard2DFloatTextureV2(parameters, actual);
-  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                aamode: CLOSEDFORM
+              )pb"));
 }
 
 TEST(Encoding, UnknownValue) {
@@ -262,7 +266,9 @@ TEST(Mapping, UnknownValue) {
 
   BilerpFloatTexture actual;
   RemoveBilerpFloatTextureV1(parameters, actual);
-  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                mapping: UV
+              )pb"));
 }
 
 TEST(Mapping, UV) {
@@ -345,7 +351,9 @@ TEST(Wrap, UnknownValue) {
 
   ImageMapFloatTexture actual;
   RemoveImageMapFloatTextureV1(parameters, actual);
-  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                wrap: REPEAT
+              )pb"));
 }
 
 TEST(Wrap, Black) {
