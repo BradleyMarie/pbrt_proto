@@ -6,8 +6,8 @@
 
 #include "absl/container/inlined_vector.h"
 #include "absl/status/status_matchers.h"
-#include "gmock/gmock.h"
-#include "gtest/gtest.h"
+#include "googlemock/include/gmock/gmock.h"
+#include "googletest/include/gtest/gtest.h"
 
 namespace pbrt_proto {
 namespace {
@@ -195,7 +195,8 @@ class MockParser final : public Parser {
   absl::Status Transform(double m00, double m01, double m02, double m03,
                          double m10, double m11, double m12, double m13,
                          double m20, double m21, double m22, double m23,
-                         double m30, double m31, double m32, double m33) {
+                         double m30, double m31, double m32,
+                         double m33) override {
     return Transform({m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22,
                       m23, m30, m31, m32, m33});
   }
@@ -2869,7 +2870,7 @@ TEST(TryRemoveBlackbodyV2, WrongName) {
 }
 
 TEST(TryRemoveBlackbodyV2, Found) {
-  std::vector<double> values = {{1.0}};
+  std::vector<double> values = {1.0};
   Parameter parameter{.directive = "",
                       .type = ParameterType::BLACKBODY_V2,
                       .type_name = "aaa",
