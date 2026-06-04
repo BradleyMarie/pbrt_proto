@@ -1,6 +1,7 @@
 #include <atomic>
 #include <cstdio>
 #include <cstdlib>
+#include <filesystem>
 #include <fstream>
 #include <functional>
 #include <iostream>
@@ -19,16 +20,30 @@ using ::bazel::tools::cpp::runfiles::Runfiles;
 using ::testing::TestWithParam;
 using ::testing::ValuesIn;
 
-std::string GetRunfilePath(const std::string& path) {
+const static std::filesystem::path kBinaryName = "pbrt_proto_converter";
+const static std::filesystem::path kTestData = "test_data";
+
+std::string GetRunfilePath(const std::filesystem::path& file_path) {
+  std::filesystem::path path =
+      std::filesystem::path("_main/tools/") / file_path;
+
   std::unique_ptr<Runfiles> runfiles(Runfiles::CreateForTest());
-  return runfiles->Rlocation("_main/tools/" + path);
+  return runfiles->Rlocation(path.string());
 }
 
-std::pair<int, std::string> Convert(int version, const std::string& file_name,
+std::pair<int, std::string> Convert(int version,
+                                    const std::filesystem::path& file_name,
                                     bool allow_warnings = false) {
-  std::string binary = GetRunfilePath("pbrt_proto_converter");
-  std::string input_file = GetRunfilePath("test_data/" + file_name);
-  std::string output_file = GetRunfilePath("test_data/" + file_name + ".out");
+  std::filesystem::path binary_name = kBinaryName;
+
+#ifdef _WIN32
+  binary_name /= ".exe";
+#endif
+
+  std::string binary = GetRunfilePath(binary_name);
+  std::string input_file = GetRunfilePath(kTestData / file_name);
+  std::string output_file = input_file + ".out";
+
   std::string command = binary + " --pbrt_version=" + std::to_string(version) +
                         " --recursive " + input_file + " 2> " + output_file;
 
@@ -44,7 +59,7 @@ std::pair<int, std::string> Convert(int version, const std::string& file_name,
 }
 
 struct TestInput {
-  std::string path;
+  std::filesystem::path path;
   bool allow_warnings = false;
 };
 
