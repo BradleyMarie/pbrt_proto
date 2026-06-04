@@ -1,5 +1,6 @@
 #include <cstdint>
 #include <cstdlib>
+#include <cstring>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -94,12 +95,22 @@ void Serialize(std::filesystem::path output_path, size_t file_index,
   if (absl::GetFlag(FLAGS_textproto)) {
     google::protobuf::io::OstreamOutputStream zero_copy_output(&output);
     if (!google::protobuf::TextFormat::Print(proto, &zero_copy_output)) {
-      std::cerr << "ERROR: Could not serialize proto to output" << std::endl;
+      if (output.fail()) {
+        std::cerr << "ERROR: Serialization to output failed with error "
+                  << std::strerror(errno) << std::endl;
+      } else {
+        std::cerr << "ERROR: Could not serialize proto to output" << std::endl;
+      }
       exit(EXIT_FAILURE);
     }
   } else {
     if (!proto.SerializeToOstream(&output)) {
-      std::cerr << "ERROR: Could not serialize proto to output" << std::endl;
+      if (output.fail()) {
+        std::cerr << "ERROR: Serialization to output failed with error "
+                  << std::strerror(errno) << std::endl;
+      } else {
+        std::cerr << "ERROR: Could not serialize proto to output" << std::endl;
+      }
       exit(EXIT_FAILURE);
     }
   }
