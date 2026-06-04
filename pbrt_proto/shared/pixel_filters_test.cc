@@ -26,16 +26,16 @@ TEST(RemoveBoxPixelFilterV1, Empty) {
 
 TEST(RemoveBoxPixelFilterV1, WithData) {
   std::vector<double> xwidth = {1.0};
-  Parameter xwidth_parameter{.directive = "",
-                             .type = ParameterType::FLOAT,
-                             .type_name = "",
-                             .values = absl::MakeSpan(xwidth)};
+  Parameter xwidth_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(xwidth)};
 
   std::vector<double> ywidth = {2.0};
-  Parameter ywidth_parameter{.directive = "",
-                             .type = ParameterType::FLOAT,
-                             .type_name = "",
-                             .values = absl::MakeSpan(ywidth)};
+  Parameter ywidth_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(ywidth)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"xwidth", xwidth_parameter}, {"ywidth", ywidth_parameter}};
@@ -57,16 +57,16 @@ TEST(RemoveBoxPixelFilterV4, Empty) {
 
 TEST(RemoveBoxPixelFilterV4, WithData) {
   std::vector<double> xradius = {1.0};
-  Parameter xradius_parameter{.directive = "",
-                              .type = ParameterType::FLOAT,
-                              .type_name = "",
-                              .values = absl::MakeSpan(xradius)};
+  Parameter xradius_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::FLOAT,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(xradius)};
 
   std::vector<double> yradius = {2.0};
-  Parameter yradius_parameter{.directive = "",
-                              .type = ParameterType::FLOAT,
-                              .type_name = "",
-                              .values = absl::MakeSpan(yradius)};
+  Parameter yradius_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::FLOAT,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(yradius)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"xradius", xradius_parameter}, {"yradius", yradius_parameter}};
@@ -88,22 +88,22 @@ TEST(RemoveGaussianPixelFilterV1, Empty) {
 
 TEST(RemoveGaussianPixelFilterV1, WithData) {
   std::vector<double> xwidth = {1.0};
-  Parameter xwidth_parameter{.directive = "",
-                             .type = ParameterType::FLOAT,
-                             .type_name = "",
-                             .values = absl::MakeSpan(xwidth)};
+  Parameter xwidth_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(xwidth)};
 
   std::vector<double> ywidth = {2.0};
-  Parameter ywidth_parameter{.directive = "",
-                             .type = ParameterType::FLOAT,
-                             .type_name = "",
-                             .values = absl::MakeSpan(ywidth)};
+  Parameter ywidth_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(ywidth)};
 
   std::vector<double> alpha = {8.0};
-  Parameter alpha_parameter{.directive = "",
-                            .type = ParameterType::FLOAT,
-                            .type_name = "",
-                            .values = absl::MakeSpan(alpha)};
+  Parameter alpha_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(alpha)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"xwidth", xwidth_parameter},
@@ -127,22 +127,22 @@ TEST(RemoveGaussianPixelFilterV4, Empty) {
 
 TEST(RemoveGaussianPixelFilterV4, WithData) {
   std::vector<double> xradius = {1.0};
-  Parameter xradius_parameter{.directive = "",
-                              .type = ParameterType::FLOAT,
-                              .type_name = "",
-                              .values = absl::MakeSpan(xradius)};
+  Parameter xradius_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::FLOAT,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(xradius)};
 
   std::vector<double> yradius = {2.0};
-  Parameter yradius_parameter{.directive = "",
-                              .type = ParameterType::FLOAT,
-                              .type_name = "",
-                              .values = absl::MakeSpan(yradius)};
+  Parameter yradius_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::FLOAT,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(yradius)};
 
   std::vector<double> sigma = {3.0};
-  Parameter sigma_parameter{.directive = "",
-                            .type = ParameterType::FLOAT,
-                            .type_name = "",
-                            .values = absl::MakeSpan(sigma)};
+  Parameter sigma_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(sigma)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"xradius", xradius_parameter},
@@ -166,22 +166,22 @@ TEST(RemoveLanczosPixelFilterV1, Empty) {
 
 TEST(RemoveLanczosPixelFilterV1, WithData) {
   std::vector<double> xwidth = {1.0};
-  Parameter xwidth_parameter{.directive = "",
-                             .type = ParameterType::FLOAT,
-                             .type_name = "",
-                             .values = absl::MakeSpan(xwidth)};
+  Parameter xwidth_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(xwidth)};
 
   std::vector<double> ywidth = {2.0};
-  Parameter ywidth_parameter{.directive = "",
-                             .type = ParameterType::FLOAT,
-                             .type_name = "",
-                             .values = absl::MakeSpan(ywidth)};
+  Parameter ywidth_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(ywidth)};
 
   std::vector<double> tau = {3.0};
-  Parameter tau_parameter{.directive = "",
-                          .type = ParameterType::FLOAT,
-                          .type_name = "",
-                          .values = absl::MakeSpan(tau)};
+  Parameter tau_parameter{/*directive=*/"",
+                          /*type=*/ParameterType::FLOAT,
+                          /*type_name=*/"",
+                          /*values=*/absl::MakeSpan(tau)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"xwidth", xwidth_parameter},
@@ -205,22 +205,22 @@ TEST(RemoveLanczosPixelFilterV4, Empty) {
 
 TEST(RemoveLanczosPixelFilterV4, WithData) {
   std::vector<double> xradius = {1.0};
-  Parameter xradius_parameter{.directive = "",
-                              .type = ParameterType::FLOAT,
-                              .type_name = "",
-                              .values = absl::MakeSpan(xradius)};
+  Parameter xradius_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::FLOAT,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(xradius)};
 
   std::vector<double> yradius = {2.0};
-  Parameter yradius_parameter{.directive = "",
-                              .type = ParameterType::FLOAT,
-                              .type_name = "",
-                              .values = absl::MakeSpan(yradius)};
+  Parameter yradius_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::FLOAT,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(yradius)};
 
   std::vector<double> tau = {3.0};
-  Parameter tau_parameter{.directive = "",
-                          .type = ParameterType::FLOAT,
-                          .type_name = "",
-                          .values = absl::MakeSpan(tau)};
+  Parameter tau_parameter{/*directive=*/"",
+                          /*type=*/ParameterType::FLOAT,
+                          /*type_name=*/"",
+                          /*values=*/absl::MakeSpan(tau)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"xradius", xradius_parameter},
@@ -244,28 +244,28 @@ TEST(RemoveMitchellPixelFilterV1, Empty) {
 
 TEST(RemoveMitchellPixelFilterV1, WithData) {
   std::vector<double> xwidth = {1.0};
-  Parameter xwidth_parameter{.directive = "",
-                             .type = ParameterType::FLOAT,
-                             .type_name = "",
-                             .values = absl::MakeSpan(xwidth)};
+  Parameter xwidth_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(xwidth)};
 
   std::vector<double> ywidth = {2.0};
-  Parameter ywidth_parameter{.directive = "",
-                             .type = ParameterType::FLOAT,
-                             .type_name = "",
-                             .values = absl::MakeSpan(ywidth)};
+  Parameter ywidth_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(ywidth)};
 
   std::vector<double> b = {3.0};
-  Parameter b_parameter{.directive = "",
-                        .type = ParameterType::FLOAT,
-                        .type_name = "",
-                        .values = absl::MakeSpan(b)};
+  Parameter b_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::FLOAT,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(b)};
 
   std::vector<double> c = {4.0};
-  Parameter c_parameter{.directive = "",
-                        .type = ParameterType::FLOAT,
-                        .type_name = "",
-                        .values = absl::MakeSpan(c)};
+  Parameter c_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::FLOAT,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(c)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"xwidth", xwidth_parameter},
@@ -290,28 +290,28 @@ TEST(RemoveMitchellPixelFilterV4, Empty) {
 
 TEST(RemoveMitchellPixelFilterV4, WithData) {
   std::vector<double> xradius = {1.0};
-  Parameter xradius_parameter{.directive = "",
-                              .type = ParameterType::FLOAT,
-                              .type_name = "",
-                              .values = absl::MakeSpan(xradius)};
+  Parameter xradius_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::FLOAT,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(xradius)};
 
   std::vector<double> yradius = {2.0};
-  Parameter yradius_parameter{.directive = "",
-                              .type = ParameterType::FLOAT,
-                              .type_name = "",
-                              .values = absl::MakeSpan(yradius)};
+  Parameter yradius_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::FLOAT,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(yradius)};
 
   std::vector<double> b = {3.0};
-  Parameter b_parameter{.directive = "",
-                        .type = ParameterType::FLOAT,
-                        .type_name = "",
-                        .values = absl::MakeSpan(b)};
+  Parameter b_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::FLOAT,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(b)};
 
   std::vector<double> c = {4.0};
-  Parameter c_parameter{.directive = "",
-                        .type = ParameterType::FLOAT,
-                        .type_name = "",
-                        .values = absl::MakeSpan(c)};
+  Parameter c_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::FLOAT,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(c)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"xradius", xradius_parameter},
@@ -336,16 +336,16 @@ TEST(RemoveTrianglePixelFilterV1, Empty) {
 
 TEST(RemoveTrianglePixelFilterV1, WithData) {
   std::vector<double> xwidth = {1.0};
-  Parameter xwidth_parameter{.directive = "",
-                             .type = ParameterType::FLOAT,
-                             .type_name = "",
-                             .values = absl::MakeSpan(xwidth)};
+  Parameter xwidth_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(xwidth)};
 
   std::vector<double> ywidth = {2.0};
-  Parameter ywidth_parameter{.directive = "",
-                             .type = ParameterType::FLOAT,
-                             .type_name = "",
-                             .values = absl::MakeSpan(ywidth)};
+  Parameter ywidth_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(ywidth)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"xwidth", xwidth_parameter}, {"ywidth", ywidth_parameter}};
@@ -367,16 +367,16 @@ TEST(RemoveTrianglePixelFilterV4, Empty) {
 
 TEST(RemoveTrianglePixelFilterV4, WithData) {
   std::vector<double> xradius = {1.0};
-  Parameter xradius_parameter{.directive = "",
-                              .type = ParameterType::FLOAT,
-                              .type_name = "",
-                              .values = absl::MakeSpan(xradius)};
+  Parameter xradius_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::FLOAT,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(xradius)};
 
   std::vector<double> yradius = {2.0};
-  Parameter yradius_parameter{.directive = "",
-                              .type = ParameterType::FLOAT,
-                              .type_name = "",
-                              .values = absl::MakeSpan(yradius)};
+  Parameter yradius_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::FLOAT,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(yradius)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"xradius", xradius_parameter}, {"yradius", yradius_parameter}};

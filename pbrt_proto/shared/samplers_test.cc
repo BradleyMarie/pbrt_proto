@@ -26,10 +26,10 @@ TEST(RemoveAdaptiveSamplerV2, Empty) {
 
 TEST(RemoveAdaptiveSamplerV2, Contrast) {
   std::vector<absl::string_view> method = {"contrast"};
-  Parameter method_parameter{.directive = "",
-                             .type = ParameterType::STRING,
-                             .type_name = "",
-                             .values = absl::MakeSpan(method)};
+  Parameter method_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::STRING,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(method)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"method", method_parameter}};
@@ -43,10 +43,10 @@ TEST(RemoveAdaptiveSamplerV2, Contrast) {
 
 TEST(RemoveAdaptiveSamplerV2, ShapeId) {
   std::vector<absl::string_view> method = {"shapeid"};
-  Parameter method_parameter{.directive = "",
-                             .type = ParameterType::STRING,
-                             .type_name = "",
-                             .values = absl::MakeSpan(method)};
+  Parameter method_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::STRING,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(method)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"method", method_parameter}};
@@ -60,10 +60,10 @@ TEST(RemoveAdaptiveSamplerV2, ShapeId) {
 
 TEST(RemoveAdaptiveSamplerV2, Unknown) {
   std::vector<absl::string_view> method = {"unknown"};
-  Parameter method_parameter{.directive = "",
-                             .type = ParameterType::STRING,
-                             .type_name = "",
-                             .values = absl::MakeSpan(method)};
+  Parameter method_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::STRING,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(method)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"method", method_parameter}};
@@ -77,22 +77,22 @@ TEST(RemoveAdaptiveSamplerV2, Unknown) {
 
 TEST(RemoveAdaptiveSamplerV2, WithData) {
   std::vector<int32_t> minsamples = {1};
-  Parameter minsamples_parameter{.directive = "",
-                                 .type = ParameterType::INTEGER,
-                                 .type_name = "",
-                                 .values = absl::MakeSpan(minsamples)};
+  Parameter minsamples_parameter{/*directive=*/"",
+                                 /*type=*/ParameterType::INTEGER,
+                                 /*type_name=*/"",
+                                 /*values=*/absl::MakeSpan(minsamples)};
 
   std::vector<int32_t> maxsamples = {2};
-  Parameter maxsamples_parameter{.directive = "",
-                                 .type = ParameterType::INTEGER,
-                                 .type_name = "",
-                                 .values = absl::MakeSpan(maxsamples)};
+  Parameter maxsamples_parameter{/*directive=*/"",
+                                 /*type=*/ParameterType::INTEGER,
+                                 /*type_name=*/"",
+                                 /*values=*/absl::MakeSpan(maxsamples)};
 
   std::vector<absl::string_view> method = {"contrast"};
-  Parameter method_parameter{.directive = "",
-                             .type = ParameterType::STRING,
-                             .type_name = "",
-                             .values = absl::MakeSpan(method)};
+  Parameter method_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::STRING,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(method)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"minsamples", minsamples_parameter},
@@ -117,10 +117,10 @@ TEST(RemoveBestCandidateSamplerV1, Empty) {
 
 TEST(RemoveBestCandidateSamplerV1, WithData) {
   std::vector<int32_t> pixelsamples = {1};
-  Parameter pixelsamples_parameter{.directive = "",
-                                   .type = ParameterType::INTEGER,
-                                   .type_name = "",
-                                   .values = absl::MakeSpan(pixelsamples)};
+  Parameter pixelsamples_parameter{/*directive=*/"",
+                                   /*type=*/ParameterType::INTEGER,
+                                   /*type_name=*/"",
+                                   /*values=*/absl::MakeSpan(pixelsamples)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"pixelsamples", pixelsamples_parameter}};
@@ -142,10 +142,10 @@ TEST(RemoveHaltonSamplerV2, Empty) {
 
 TEST(RemoveHaltonSamplerV2, WithData) {
   std::vector<int32_t> pixelsamples = {1};
-  Parameter pixelsamples_parameter{.directive = "",
-                                   .type = ParameterType::INTEGER,
-                                   .type_name = "",
-                                   .values = absl::MakeSpan(pixelsamples)};
+  Parameter pixelsamples_parameter{/*directive=*/"",
+                                   /*type=*/ParameterType::INTEGER,
+                                   /*type_name=*/"",
+                                   /*values=*/absl::MakeSpan(pixelsamples)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"pixelsamples", pixelsamples_parameter}};
@@ -167,17 +167,17 @@ TEST(RemoveHaltonSamplerV3, Empty) {
 
 TEST(RemoveHaltonSamplerV3, WithData) {
   std::vector<int32_t> pixelsamples = {1};
-  Parameter pixelsamples_parameter{.directive = "",
-                                   .type = ParameterType::INTEGER,
-                                   .type_name = "",
-                                   .values = absl::MakeSpan(pixelsamples)};
+  Parameter pixelsamples_parameter{/*directive=*/"",
+                                   /*type=*/ParameterType::INTEGER,
+                                   /*type_name=*/"",
+                                   /*values=*/absl::MakeSpan(pixelsamples)};
 
   bool samplepixelcenter[] = {true};
   Parameter samplepixelcenter_parameter{
-      .directive = "",
-      .type = ParameterType::BOOL,
-      .type_name = "",
-      .values = absl::MakeSpan(samplepixelcenter)};
+      /*directive=*/"",
+      /*type=*/ParameterType::BOOL,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(samplepixelcenter)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"pixelsamples", pixelsamples_parameter},
@@ -200,16 +200,16 @@ TEST(RemoveHaltonSamplerV4, Empty) {
 
 TEST(RemoveHaltonSamplerV4, WithData) {
   std::vector<int32_t> pixelsamples = {1};
-  Parameter pixelsamples_parameter{.directive = "",
-                                   .type = ParameterType::INTEGER,
-                                   .type_name = "",
-                                   .values = absl::MakeSpan(pixelsamples)};
+  Parameter pixelsamples_parameter{/*directive=*/"",
+                                   /*type=*/ParameterType::INTEGER,
+                                   /*type_name=*/"",
+                                   /*values=*/absl::MakeSpan(pixelsamples)};
 
   std::vector<int32_t> seed = {2};
-  Parameter seed_parameter{.directive = "",
-                           .type = ParameterType::INTEGER,
-                           .type_name = "",
-                           .values = absl::MakeSpan(seed)};
+  Parameter seed_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::INTEGER,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(seed)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"pixelsamples", pixelsamples_parameter}, {"seed", seed_parameter}};
@@ -231,10 +231,10 @@ TEST(RemoveIndependentSamplerV2, Empty) {
 
 TEST(RemoveIndependentSamplerV2, WithData) {
   std::vector<int32_t> pixelsamples = {1};
-  Parameter pixelsamples_parameter{.directive = "",
-                                   .type = ParameterType::INTEGER,
-                                   .type_name = "",
-                                   .values = absl::MakeSpan(pixelsamples)};
+  Parameter pixelsamples_parameter{/*directive=*/"",
+                                   /*type=*/ParameterType::INTEGER,
+                                   /*type_name=*/"",
+                                   /*values=*/absl::MakeSpan(pixelsamples)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"pixelsamples", pixelsamples_parameter}};
@@ -256,16 +256,16 @@ TEST(RemoveIndependentSamplerV4, Empty) {
 
 TEST(RemoveIndependentSamplerV4, WithData) {
   std::vector<int32_t> pixelsamples = {1};
-  Parameter pixelsamples_parameter{.directive = "",
-                                   .type = ParameterType::INTEGER,
-                                   .type_name = "",
-                                   .values = absl::MakeSpan(pixelsamples)};
+  Parameter pixelsamples_parameter{/*directive=*/"",
+                                   /*type=*/ParameterType::INTEGER,
+                                   /*type_name=*/"",
+                                   /*values=*/absl::MakeSpan(pixelsamples)};
 
   std::vector<int32_t> seed = {2};
-  Parameter seed_parameter{.directive = "",
-                           .type = ParameterType::INTEGER,
-                           .type_name = "",
-                           .values = absl::MakeSpan(seed)};
+  Parameter seed_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::INTEGER,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(seed)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"pixelsamples", pixelsamples_parameter}, {"seed", seed_parameter}};
@@ -287,16 +287,16 @@ TEST(RemoveMaxMinDistSamplerV3, Empty) {
 
 TEST(RemoveMaxMinDistSamplerV3, WithData) {
   std::vector<int32_t> pixelsamples = {1};
-  Parameter pixelsamples_parameter{.directive = "",
-                                   .type = ParameterType::INTEGER,
-                                   .type_name = "",
-                                   .values = absl::MakeSpan(pixelsamples)};
+  Parameter pixelsamples_parameter{/*directive=*/"",
+                                   /*type=*/ParameterType::INTEGER,
+                                   /*type_name=*/"",
+                                   /*values=*/absl::MakeSpan(pixelsamples)};
 
   std::vector<int32_t> dimensions = {2};
-  Parameter dimensions_parameter{.directive = "",
-                                 .type = ParameterType::INTEGER,
-                                 .type_name = "",
-                                 .values = absl::MakeSpan(dimensions)};
+  Parameter dimensions_parameter{/*directive=*/"",
+                                 /*type=*/ParameterType::INTEGER,
+                                 /*type_name=*/"",
+                                 /*values=*/absl::MakeSpan(dimensions)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"pixelsamples", pixelsamples_parameter},
@@ -319,10 +319,10 @@ TEST(RemovePaddedSobolSamplerV4, Empty) {
 
 TEST(RemovePaddedSobolSamplerV4, BadRandomization) {
   std::vector<absl::string_view> randomization = {"unknown"};
-  Parameter randomization_parameter{.directive = "",
-                                    .type = ParameterType::STRING,
-                                    .type_name = "",
-                                    .values = absl::MakeSpan(randomization)};
+  Parameter randomization_parameter{/*directive=*/"",
+                                    /*type=*/ParameterType::STRING,
+                                    /*type_name=*/"",
+                                    /*values=*/absl::MakeSpan(randomization)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"randomization", randomization_parameter}};
@@ -333,10 +333,10 @@ TEST(RemovePaddedSobolSamplerV4, BadRandomization) {
 
 TEST(RemovePaddedSobolSamplerV4, NoneRandomization) {
   std::vector<absl::string_view> randomization = {"none"};
-  Parameter randomization_parameter{.directive = "",
-                                    .type = ParameterType::STRING,
-                                    .type_name = "",
-                                    .values = absl::MakeSpan(randomization)};
+  Parameter randomization_parameter{/*directive=*/"",
+                                    /*type=*/ParameterType::STRING,
+                                    /*type_name=*/"",
+                                    /*values=*/absl::MakeSpan(randomization)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"randomization", randomization_parameter}};
@@ -350,10 +350,10 @@ TEST(RemovePaddedSobolSamplerV4, NoneRandomization) {
 
 TEST(RemovePaddedSobolSamplerV4, PermuteDigitsRandomization) {
   std::vector<absl::string_view> randomization = {"permutedigits"};
-  Parameter randomization_parameter{.directive = "",
-                                    .type = ParameterType::STRING,
-                                    .type_name = "",
-                                    .values = absl::MakeSpan(randomization)};
+  Parameter randomization_parameter{/*directive=*/"",
+                                    /*type=*/ParameterType::STRING,
+                                    /*type_name=*/"",
+                                    /*values=*/absl::MakeSpan(randomization)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"randomization", randomization_parameter}};
@@ -367,10 +367,10 @@ TEST(RemovePaddedSobolSamplerV4, PermuteDigitsRandomization) {
 
 TEST(RemovePaddedSobolSamplerV4, OwenRandomization) {
   std::vector<absl::string_view> randomization = {"owen"};
-  Parameter randomization_parameter{.directive = "",
-                                    .type = ParameterType::STRING,
-                                    .type_name = "",
-                                    .values = absl::MakeSpan(randomization)};
+  Parameter randomization_parameter{/*directive=*/"",
+                                    /*type=*/ParameterType::STRING,
+                                    /*type_name=*/"",
+                                    /*values=*/absl::MakeSpan(randomization)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"randomization", randomization_parameter}};
@@ -384,10 +384,10 @@ TEST(RemovePaddedSobolSamplerV4, OwenRandomization) {
 
 TEST(RemovePaddedSobolSamplerV4, FastOwenRandomization) {
   std::vector<absl::string_view> randomization = {"fastowen"};
-  Parameter randomization_parameter{.directive = "",
-                                    .type = ParameterType::STRING,
-                                    .type_name = "",
-                                    .values = absl::MakeSpan(randomization)};
+  Parameter randomization_parameter{/*directive=*/"",
+                                    /*type=*/ParameterType::STRING,
+                                    /*type_name=*/"",
+                                    /*values=*/absl::MakeSpan(randomization)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"randomization", randomization_parameter}};
@@ -401,22 +401,22 @@ TEST(RemovePaddedSobolSamplerV4, FastOwenRandomization) {
 
 TEST(RemovePaddedSobolSamplerV4, WithData) {
   std::vector<int32_t> pixelsamples = {1};
-  Parameter pixelsamples_parameter{.directive = "",
-                                   .type = ParameterType::INTEGER,
-                                   .type_name = "",
-                                   .values = absl::MakeSpan(pixelsamples)};
+  Parameter pixelsamples_parameter{/*directive=*/"",
+                                   /*type=*/ParameterType::INTEGER,
+                                   /*type_name=*/"",
+                                   /*values=*/absl::MakeSpan(pixelsamples)};
 
   std::vector<int32_t> seed = {2};
-  Parameter seed_parameter{.directive = "",
-                           .type = ParameterType::INTEGER,
-                           .type_name = "",
-                           .values = absl::MakeSpan(seed)};
+  Parameter seed_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::INTEGER,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(seed)};
 
   std::vector<absl::string_view> randomization = {"fastowen"};
-  Parameter randomization_parameter{.directive = "",
-                                    .type = ParameterType::STRING,
-                                    .type_name = "",
-                                    .values = absl::MakeSpan(randomization)};
+  Parameter randomization_parameter{/*directive=*/"",
+                                    /*type=*/ParameterType::STRING,
+                                    /*type_name=*/"",
+                                    /*values=*/absl::MakeSpan(randomization)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"pixelsamples", pixelsamples_parameter},
@@ -441,16 +441,16 @@ TEST(RemovePMJ02BNSamplerV4, Empty) {
 
 TEST(RemovePMJ02BNSamplerV4, WithData) {
   std::vector<int32_t> pixelsamples = {1};
-  Parameter pixelsamples_parameter{.directive = "",
-                                   .type = ParameterType::INTEGER,
-                                   .type_name = "",
-                                   .values = absl::MakeSpan(pixelsamples)};
+  Parameter pixelsamples_parameter{/*directive=*/"",
+                                   /*type=*/ParameterType::INTEGER,
+                                   /*type_name=*/"",
+                                   /*values=*/absl::MakeSpan(pixelsamples)};
 
   std::vector<int32_t> seed = {2};
-  Parameter seed_parameter{.directive = "",
-                           .type = ParameterType::INTEGER,
-                           .type_name = "",
-                           .values = absl::MakeSpan(seed)};
+  Parameter seed_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::INTEGER,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(seed)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"pixelsamples", pixelsamples_parameter}, {"seed", seed_parameter}};
@@ -470,16 +470,16 @@ TEST(RemoveRandomSamplerV1, Empty) {
 
 TEST(RemoveRandomSamplerV1, WithData) {
   std::vector<int32_t> xsamples = {1};
-  Parameter xsamples_parameter{.directive = "",
-                               .type = ParameterType::INTEGER,
-                               .type_name = "",
-                               .values = absl::MakeSpan(xsamples)};
+  Parameter xsamples_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::INTEGER,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(xsamples)};
 
   std::vector<int32_t> ysamples = {2};
-  Parameter ysamples_parameter{.directive = "",
-                               .type = ParameterType::INTEGER,
-                               .type_name = "",
-                               .values = absl::MakeSpan(ysamples)};
+  Parameter ysamples_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::INTEGER,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(ysamples)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"xsamples", xsamples_parameter}, {"ysamples", ysamples_parameter}};
@@ -509,10 +509,10 @@ TEST(RemoveSobolSamplerV4, Empty) {
 
 TEST(RemoveSobolSamplerV4, BadRandomization) {
   std::vector<absl::string_view> randomization = {"unknown"};
-  Parameter randomization_parameter{.directive = "",
-                                    .type = ParameterType::STRING,
-                                    .type_name = "",
-                                    .values = absl::MakeSpan(randomization)};
+  Parameter randomization_parameter{/*directive=*/"",
+                                    /*type=*/ParameterType::STRING,
+                                    /*type_name=*/"",
+                                    /*values=*/absl::MakeSpan(randomization)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"randomization", randomization_parameter}};
@@ -523,10 +523,10 @@ TEST(RemoveSobolSamplerV4, BadRandomization) {
 
 TEST(RemoveSobolSamplerV4, NoneRandomization) {
   std::vector<absl::string_view> randomization = {"none"};
-  Parameter randomization_parameter{.directive = "",
-                                    .type = ParameterType::STRING,
-                                    .type_name = "",
-                                    .values = absl::MakeSpan(randomization)};
+  Parameter randomization_parameter{/*directive=*/"",
+                                    /*type=*/ParameterType::STRING,
+                                    /*type_name=*/"",
+                                    /*values=*/absl::MakeSpan(randomization)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"randomization", randomization_parameter}};
@@ -540,10 +540,10 @@ TEST(RemoveSobolSamplerV4, NoneRandomization) {
 
 TEST(RemoveSobolSamplerV4, PermuteDigitsRandomization) {
   std::vector<absl::string_view> randomization = {"permutedigits"};
-  Parameter randomization_parameter{.directive = "",
-                                    .type = ParameterType::STRING,
-                                    .type_name = "",
-                                    .values = absl::MakeSpan(randomization)};
+  Parameter randomization_parameter{/*directive=*/"",
+                                    /*type=*/ParameterType::STRING,
+                                    /*type_name=*/"",
+                                    /*values=*/absl::MakeSpan(randomization)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"randomization", randomization_parameter}};
@@ -557,10 +557,10 @@ TEST(RemoveSobolSamplerV4, PermuteDigitsRandomization) {
 
 TEST(RemoveSobolSamplerV4, OwenRandomization) {
   std::vector<absl::string_view> randomization = {"owen"};
-  Parameter randomization_parameter{.directive = "",
-                                    .type = ParameterType::STRING,
-                                    .type_name = "",
-                                    .values = absl::MakeSpan(randomization)};
+  Parameter randomization_parameter{/*directive=*/"",
+                                    /*type=*/ParameterType::STRING,
+                                    /*type_name=*/"",
+                                    /*values=*/absl::MakeSpan(randomization)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"randomization", randomization_parameter}};
@@ -574,10 +574,10 @@ TEST(RemoveSobolSamplerV4, OwenRandomization) {
 
 TEST(RemoveSobolSamplerV4, FastOwenRandomization) {
   std::vector<absl::string_view> randomization = {"fastowen"};
-  Parameter randomization_parameter{.directive = "",
-                                    .type = ParameterType::STRING,
-                                    .type_name = "",
-                                    .values = absl::MakeSpan(randomization)};
+  Parameter randomization_parameter{/*directive=*/"",
+                                    /*type=*/ParameterType::STRING,
+                                    /*type_name=*/"",
+                                    /*values=*/absl::MakeSpan(randomization)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"randomization", randomization_parameter}};
@@ -591,22 +591,22 @@ TEST(RemoveSobolSamplerV4, FastOwenRandomization) {
 
 TEST(RemoveSobolSamplerV4, WithData) {
   std::vector<int32_t> pixelsamples = {1};
-  Parameter pixelsamples_parameter{.directive = "",
-                                   .type = ParameterType::INTEGER,
-                                   .type_name = "",
-                                   .values = absl::MakeSpan(pixelsamples)};
+  Parameter pixelsamples_parameter{/*directive=*/"",
+                                   /*type=*/ParameterType::INTEGER,
+                                   /*type_name=*/"",
+                                   /*values=*/absl::MakeSpan(pixelsamples)};
 
   std::vector<int32_t> seed = {2};
-  Parameter seed_parameter{.directive = "",
-                           .type = ParameterType::INTEGER,
-                           .type_name = "",
-                           .values = absl::MakeSpan(seed)};
+  Parameter seed_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::INTEGER,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(seed)};
 
   std::vector<absl::string_view> randomization = {"fastowen"};
-  Parameter randomization_parameter{.directive = "",
-                                    .type = ParameterType::STRING,
-                                    .type_name = "",
-                                    .values = absl::MakeSpan(randomization)};
+  Parameter randomization_parameter{/*directive=*/"",
+                                    /*type=*/ParameterType::STRING,
+                                    /*type_name=*/"",
+                                    /*values=*/absl::MakeSpan(randomization)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"pixelsamples", pixelsamples_parameter},
@@ -631,22 +631,22 @@ TEST(RemoveStratifiedSamplerV1, Empty) {
 
 TEST(RemoveStratifiedSamplerV1, WithData) {
   std::vector<int32_t> xsamples = {1};
-  Parameter xsamples_parameter{.directive = "",
-                               .type = ParameterType::INTEGER,
-                               .type_name = "",
-                               .values = absl::MakeSpan(xsamples)};
+  Parameter xsamples_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::INTEGER,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(xsamples)};
 
   std::vector<int32_t> ysamples = {2};
-  Parameter ysamples_parameter{.directive = "",
-                               .type = ParameterType::INTEGER,
-                               .type_name = "",
-                               .values = absl::MakeSpan(ysamples)};
+  Parameter ysamples_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::INTEGER,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(ysamples)};
 
   bool jitter[] = {true};
-  Parameter jitter_parameter{.directive = "",
-                             .type = ParameterType::BOOL,
-                             .type_name = "",
-                             .values = absl::MakeSpan(jitter)};
+  Parameter jitter_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::BOOL,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(jitter)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"xsamples", xsamples_parameter},
@@ -670,28 +670,28 @@ TEST(RemoveStratifiedSamplerV3, Empty) {
 
 TEST(RemoveStratifiedSamplerV3, WithData) {
   std::vector<int32_t> xsamples = {1};
-  Parameter xsamples_parameter{.directive = "",
-                               .type = ParameterType::INTEGER,
-                               .type_name = "",
-                               .values = absl::MakeSpan(xsamples)};
+  Parameter xsamples_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::INTEGER,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(xsamples)};
 
   std::vector<int32_t> ysamples = {2};
-  Parameter ysamples_parameter{.directive = "",
-                               .type = ParameterType::INTEGER,
-                               .type_name = "",
-                               .values = absl::MakeSpan(ysamples)};
+  Parameter ysamples_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::INTEGER,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(ysamples)};
 
   bool jitter[] = {true};
-  Parameter jitter_parameter{.directive = "",
-                             .type = ParameterType::BOOL,
-                             .type_name = "",
-                             .values = absl::MakeSpan(jitter)};
+  Parameter jitter_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::BOOL,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(jitter)};
 
   std::vector<int32_t> dimensions = {3};
-  Parameter dimensions_parameter{.directive = "",
-                                 .type = ParameterType::INTEGER,
-                                 .type_name = "",
-                                 .values = absl::MakeSpan(dimensions)};
+  Parameter dimensions_parameter{/*directive=*/"",
+                                 /*type=*/ParameterType::INTEGER,
+                                 /*type_name=*/"",
+                                 /*values=*/absl::MakeSpan(dimensions)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"xsamples", xsamples_parameter},
@@ -719,28 +719,28 @@ TEST(RemoveStratifiedSamplerV4, Empty) {
 
 TEST(RemoveStratifiedSamplerV4, WithData) {
   std::vector<int32_t> xsamples = {1};
-  Parameter xsamples_parameter{.directive = "",
-                               .type = ParameterType::INTEGER,
-                               .type_name = "",
-                               .values = absl::MakeSpan(xsamples)};
+  Parameter xsamples_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::INTEGER,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(xsamples)};
 
   std::vector<int32_t> ysamples = {2};
-  Parameter ysamples_parameter{.directive = "",
-                               .type = ParameterType::INTEGER,
-                               .type_name = "",
-                               .values = absl::MakeSpan(ysamples)};
+  Parameter ysamples_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::INTEGER,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(ysamples)};
 
   bool jitter[] = {true};
-  Parameter jitter_parameter{.directive = "",
-                             .type = ParameterType::BOOL,
-                             .type_name = "",
-                             .values = absl::MakeSpan(jitter)};
+  Parameter jitter_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::BOOL,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(jitter)};
 
   std::vector<int32_t> seed = {3};
-  Parameter seed_parameter{.directive = "",
-                           .type = ParameterType::INTEGER,
-                           .type_name = "",
-                           .values = absl::MakeSpan(seed)};
+  Parameter seed_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::INTEGER,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(seed)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"xsamples", xsamples_parameter},
@@ -766,10 +766,10 @@ TEST(RemoveZeroTwoSequenceSamplerV1, Empty) {
 
 TEST(RemoveZeroTwoSequenceSamplerV1, WithData) {
   std::vector<int32_t> pixelsamples = {1};
-  Parameter pixelsamples_parameter{.directive = "",
-                                   .type = ParameterType::INTEGER,
-                                   .type_name = "",
-                                   .values = absl::MakeSpan(pixelsamples)};
+  Parameter pixelsamples_parameter{/*directive=*/"",
+                                   /*type=*/ParameterType::INTEGER,
+                                   /*type_name=*/"",
+                                   /*values=*/absl::MakeSpan(pixelsamples)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"pixelsamples", pixelsamples_parameter}};
@@ -791,16 +791,16 @@ TEST(RemoveZeroTwoSequenceSamplerV3, Empty) {
 
 TEST(RemoveZeroTwoSequenceSamplerV3, WithData) {
   std::vector<int32_t> pixelsamples = {1};
-  Parameter pixelsamples_parameter{.directive = "",
-                                   .type = ParameterType::INTEGER,
-                                   .type_name = "",
-                                   .values = absl::MakeSpan(pixelsamples)};
+  Parameter pixelsamples_parameter{/*directive=*/"",
+                                   /*type=*/ParameterType::INTEGER,
+                                   /*type_name=*/"",
+                                   /*values=*/absl::MakeSpan(pixelsamples)};
 
   std::vector<int32_t> dimensions = {2};
-  Parameter dimensions_parameter{.directive = "",
-                                 .type = ParameterType::INTEGER,
-                                 .type_name = "",
-                                 .values = absl::MakeSpan(dimensions)};
+  Parameter dimensions_parameter{/*directive=*/"",
+                                 /*type=*/ParameterType::INTEGER,
+                                 /*type_name=*/"",
+                                 /*values=*/absl::MakeSpan(dimensions)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"pixelsamples", pixelsamples_parameter},
@@ -823,10 +823,10 @@ TEST(RemoveZSobolSamplerV4, Empty) {
 
 TEST(RemoveZSobolSamplerV4, BadRandomization) {
   std::vector<absl::string_view> randomization = {"unknown"};
-  Parameter randomization_parameter{.directive = "",
-                                    .type = ParameterType::STRING,
-                                    .type_name = "",
-                                    .values = absl::MakeSpan(randomization)};
+  Parameter randomization_parameter{/*directive=*/"",
+                                    /*type=*/ParameterType::STRING,
+                                    /*type_name=*/"",
+                                    /*values=*/absl::MakeSpan(randomization)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"randomization", randomization_parameter}};
@@ -837,10 +837,10 @@ TEST(RemoveZSobolSamplerV4, BadRandomization) {
 
 TEST(RemoveZSobolSamplerV4, NoneRandomization) {
   std::vector<absl::string_view> randomization = {"none"};
-  Parameter randomization_parameter{.directive = "",
-                                    .type = ParameterType::STRING,
-                                    .type_name = "",
-                                    .values = absl::MakeSpan(randomization)};
+  Parameter randomization_parameter{/*directive=*/"",
+                                    /*type=*/ParameterType::STRING,
+                                    /*type_name=*/"",
+                                    /*values=*/absl::MakeSpan(randomization)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"randomization", randomization_parameter}};
@@ -854,10 +854,10 @@ TEST(RemoveZSobolSamplerV4, NoneRandomization) {
 
 TEST(RemoveZSobolSamplerV4, PermuteDigitsRandomization) {
   std::vector<absl::string_view> randomization = {"permutedigits"};
-  Parameter randomization_parameter{.directive = "",
-                                    .type = ParameterType::STRING,
-                                    .type_name = "",
-                                    .values = absl::MakeSpan(randomization)};
+  Parameter randomization_parameter{/*directive=*/"",
+                                    /*type=*/ParameterType::STRING,
+                                    /*type_name=*/"",
+                                    /*values=*/absl::MakeSpan(randomization)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"randomization", randomization_parameter}};
@@ -871,10 +871,10 @@ TEST(RemoveZSobolSamplerV4, PermuteDigitsRandomization) {
 
 TEST(RemoveZSobolSamplerV4, OwenRandomization) {
   std::vector<absl::string_view> randomization = {"owen"};
-  Parameter randomization_parameter{.directive = "",
-                                    .type = ParameterType::STRING,
-                                    .type_name = "",
-                                    .values = absl::MakeSpan(randomization)};
+  Parameter randomization_parameter{/*directive=*/"",
+                                    /*type=*/ParameterType::STRING,
+                                    /*type_name=*/"",
+                                    /*values=*/absl::MakeSpan(randomization)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"randomization", randomization_parameter}};
@@ -888,10 +888,10 @@ TEST(RemoveZSobolSamplerV4, OwenRandomization) {
 
 TEST(RemoveZSobolSamplerV4, FastOwenRandomization) {
   std::vector<absl::string_view> randomization = {"fastowen"};
-  Parameter randomization_parameter{.directive = "",
-                                    .type = ParameterType::STRING,
-                                    .type_name = "",
-                                    .values = absl::MakeSpan(randomization)};
+  Parameter randomization_parameter{/*directive=*/"",
+                                    /*type=*/ParameterType::STRING,
+                                    /*type_name=*/"",
+                                    /*values=*/absl::MakeSpan(randomization)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"randomization", randomization_parameter}};
@@ -905,22 +905,22 @@ TEST(RemoveZSobolSamplerV4, FastOwenRandomization) {
 
 TEST(RemoveZSobolSamplerV4, WithData) {
   std::vector<int32_t> pixelsamples = {1};
-  Parameter pixelsamples_parameter{.directive = "",
-                                   .type = ParameterType::INTEGER,
-                                   .type_name = "",
-                                   .values = absl::MakeSpan(pixelsamples)};
+  Parameter pixelsamples_parameter{/*directive=*/"",
+                                   /*type=*/ParameterType::INTEGER,
+                                   /*type_name=*/"",
+                                   /*values=*/absl::MakeSpan(pixelsamples)};
 
   std::vector<int32_t> seed = {2};
-  Parameter seed_parameter{.directive = "",
-                           .type = ParameterType::INTEGER,
-                           .type_name = "",
-                           .values = absl::MakeSpan(seed)};
+  Parameter seed_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::INTEGER,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(seed)};
 
   std::vector<absl::string_view> randomization = {"fastowen"};
-  Parameter randomization_parameter{.directive = "",
-                                    .type = ParameterType::STRING,
-                                    .type_name = "",
-                                    .values = absl::MakeSpan(randomization)};
+  Parameter randomization_parameter{/*directive=*/"",
+                                    /*type=*/ParameterType::STRING,
+                                    /*type_name=*/"",
+                                    /*values=*/absl::MakeSpan(randomization)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"pixelsamples", pixelsamples_parameter},

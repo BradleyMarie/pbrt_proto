@@ -29,22 +29,22 @@ TEST(RemoveDistantLightSourceV1, Empty) {
 
 TEST(RemoveDistantLightSourceV1, WithData) {
   std::vector<std::array<double, 2>> l = {{1.0, 2.0}};
-  Parameter l_parameter{.directive = "",
-                        .type = ParameterType::BLACKBODY_V1,
-                        .type_name = "",
-                        .values = absl::MakeSpan(l)};
+  Parameter l_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::BLACKBODY_V1,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(l)};
 
   std::vector<std::array<double, 3>> from = {{3.0, 4.0, 5.0}};
-  Parameter from_parameter{.directive = "",
-                           .type = ParameterType::POINT3,
-                           .type_name = "",
-                           .values = absl::MakeSpan(from)};
+  Parameter from_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::POINT3,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(from)};
 
   std::vector<std::array<double, 3>> to = {{6.0, 7.0, 8.0}};
-  Parameter to_parameter{.directive = "",
-                         .type = ParameterType::POINT3,
-                         .type_name = "",
-                         .values = absl::MakeSpan(to)};
+  Parameter to_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::POINT3,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(to)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"L", l_parameter},
@@ -71,28 +71,28 @@ TEST(RemoveDistantLightSourceV2, Empty) {
 
 TEST(RemoveDistantLightSourceV2, WithData) {
   std::vector<std::array<double, 2>> l = {{1.0, 2.0}};
-  Parameter l_parameter{.directive = "",
-                        .type = ParameterType::BLACKBODY_V1,
-                        .type_name = "",
-                        .values = absl::MakeSpan(l)};
+  Parameter l_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::BLACKBODY_V1,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(l)};
 
   std::vector<std::array<double, 3>> from = {{3.0, 4.0, 5.0}};
-  Parameter from_parameter{.directive = "",
-                           .type = ParameterType::POINT3,
-                           .type_name = "",
-                           .values = absl::MakeSpan(from)};
+  Parameter from_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::POINT3,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(from)};
 
   std::vector<std::array<double, 3>> to = {{6.0, 7.0, 8.0}};
-  Parameter to_parameter{.directive = "",
-                         .type = ParameterType::POINT3,
-                         .type_name = "",
-                         .values = absl::MakeSpan(to)};
+  Parameter to_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::POINT3,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(to)};
 
   std::vector<std::array<double, 2>> scale = {{9.0, 10.0}};
-  Parameter scale_parameter{.directive = "",
-                            .type = ParameterType::BLACKBODY_V1,
-                            .type_name = "",
-                            .values = absl::MakeSpan(scale)};
+  Parameter scale_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::BLACKBODY_V1,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(scale)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"L", l_parameter},
@@ -121,34 +121,34 @@ TEST(RemoveDistantLightSourceV4, Empty) {
 
 TEST(RemoveDistantLightSourceV4, WithData) {
   std::vector<double> l = {1.0};
-  Parameter l_parameter{.directive = "",
-                        .type = ParameterType::BLACKBODY_V2,
-                        .type_name = "",
-                        .values = absl::MakeSpan(l)};
+  Parameter l_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::BLACKBODY_V2,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(l)};
 
   std::vector<std::array<double, 3>> from = {{3.0, 4.0, 5.0}};
-  Parameter from_parameter{.directive = "",
-                           .type = ParameterType::POINT3,
-                           .type_name = "",
-                           .values = absl::MakeSpan(from)};
+  Parameter from_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::POINT3,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(from)};
 
   std::vector<std::array<double, 3>> to = {{6.0, 7.0, 8.0}};
-  Parameter to_parameter{.directive = "",
-                         .type = ParameterType::POINT3,
-                         .type_name = "",
-                         .values = absl::MakeSpan(to)};
+  Parameter to_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::POINT3,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(to)};
 
   std::vector<double> scale = {10.0};
-  Parameter scale_parameter{.directive = "",
-                            .type = ParameterType::FLOAT,
-                            .type_name = "",
-                            .values = absl::MakeSpan(scale)};
+  Parameter scale_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(scale)};
 
   std::vector<double> illuminance = {9.0};
-  Parameter illuminance_parameter{.directive = "",
-                                  .type = ParameterType::FLOAT,
-                                  .type_name = "",
-                                  .values = absl::MakeSpan(illuminance)};
+  Parameter illuminance_parameter{/*directive=*/"",
+                                  /*type=*/ParameterType::FLOAT,
+                                  /*type_name=*/"",
+                                  /*values=*/absl::MakeSpan(illuminance)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"L", l_parameter},         {"from", from_parameter},
@@ -177,16 +177,16 @@ TEST(RemoveGoniometricLightSourceV1, Empty) {
 
 TEST(RemoveGoniometricLightSourceV1, WithData) {
   std::vector<std::array<double, 2>> i = {{1.0, 2.0}};
-  Parameter i_parameter{.directive = "",
-                        .type = ParameterType::BLACKBODY_V1,
-                        .type_name = "",
-                        .values = absl::MakeSpan(i)};
+  Parameter i_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::BLACKBODY_V1,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(i)};
 
   std::vector<absl::string_view> mapname = {"file"};
-  Parameter mapname_parameter{.directive = "",
-                              .type = ParameterType::STRING,
-                              .type_name = "",
-                              .values = absl::MakeSpan(mapname)};
+  Parameter mapname_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::STRING,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(mapname)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"I", i_parameter},
@@ -211,22 +211,22 @@ TEST(RemoveGoniometricLightSourceV2, Empty) {
 
 TEST(RemoveGoniometricLightSourceV2, WithData) {
   std::vector<std::array<double, 2>> i = {{1.0, 2.0}};
-  Parameter i_parameter{.directive = "",
-                        .type = ParameterType::BLACKBODY_V1,
-                        .type_name = "",
-                        .values = absl::MakeSpan(i)};
+  Parameter i_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::BLACKBODY_V1,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(i)};
 
   std::vector<absl::string_view> mapname = {"file"};
-  Parameter mapname_parameter{.directive = "",
-                              .type = ParameterType::STRING,
-                              .type_name = "",
-                              .values = absl::MakeSpan(mapname)};
+  Parameter mapname_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::STRING,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(mapname)};
 
   std::vector<std::array<double, 2>> scale = {{3.0, 4.0}};
-  Parameter scale_parameter{.directive = "",
-                            .type = ParameterType::BLACKBODY_V1,
-                            .type_name = "",
-                            .values = absl::MakeSpan(scale)};
+  Parameter scale_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::BLACKBODY_V1,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(scale)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"I", i_parameter},
@@ -253,28 +253,28 @@ TEST(RemoveGoniometricLightSourceV4, Empty) {
 
 TEST(RemoveGoniometricLightSourceV4, WithData) {
   std::vector<double> i = {1.0};
-  Parameter i_parameter{.directive = "",
-                        .type = ParameterType::BLACKBODY_V2,
-                        .type_name = "",
-                        .values = absl::MakeSpan(i)};
+  Parameter i_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::BLACKBODY_V2,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(i)};
 
   std::vector<absl::string_view> filename = {"file"};
-  Parameter filename_parameter{.directive = "",
-                               .type = ParameterType::STRING,
-                               .type_name = "",
-                               .values = absl::MakeSpan(filename)};
+  Parameter filename_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::STRING,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(filename)};
 
   std::vector<double> scale = {3.0};
-  Parameter scale_parameter{.directive = "",
-                            .type = ParameterType::FLOAT,
-                            .type_name = "",
-                            .values = absl::MakeSpan(scale)};
+  Parameter scale_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(scale)};
 
   std::vector<double> power = {5.0};
-  Parameter power_parameter{.directive = "",
-                            .type = ParameterType::FLOAT,
-                            .type_name = "",
-                            .values = absl::MakeSpan(power)};
+  Parameter power_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(power)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"I", i_parameter},
@@ -303,22 +303,22 @@ TEST(RemoveInfiniteLightSourceV1, Empty) {
 
 TEST(RemoveInfiniteLightSourceV1, WithData) {
   std::vector<std::array<double, 2>> l = {{1.0, 2.0}};
-  Parameter l_parameter{.directive = "",
-                        .type = ParameterType::BLACKBODY_V1,
-                        .type_name = "",
-                        .values = absl::MakeSpan(l)};
+  Parameter l_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::BLACKBODY_V1,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(l)};
 
   std::vector<absl::string_view> mapname = {"file"};
-  Parameter mapname_parameter{.directive = "",
-                              .type = ParameterType::STRING,
-                              .type_name = "",
-                              .values = absl::MakeSpan(mapname)};
+  Parameter mapname_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::STRING,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(mapname)};
 
   std::vector<int32_t> nsamples = {3};
-  Parameter nsamples_parameter{.directive = "",
-                               .type = ParameterType::INTEGER,
-                               .type_name = "",
-                               .values = absl::MakeSpan(nsamples)};
+  Parameter nsamples_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::INTEGER,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(nsamples)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"L", l_parameter},
@@ -345,28 +345,28 @@ TEST(RemoveInfiniteLightSourceV2, Empty) {
 
 TEST(RemoveInfiniteLightSourceV2, WithData) {
   std::vector<std::array<double, 2>> l = {{1.0, 2.0}};
-  Parameter l_parameter{.directive = "",
-                        .type = ParameterType::BLACKBODY_V1,
-                        .type_name = "",
-                        .values = absl::MakeSpan(l)};
+  Parameter l_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::BLACKBODY_V1,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(l)};
 
   std::vector<absl::string_view> mapname = {"file"};
-  Parameter mapname_parameter{.directive = "",
-                              .type = ParameterType::STRING,
-                              .type_name = "",
-                              .values = absl::MakeSpan(mapname)};
+  Parameter mapname_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::STRING,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(mapname)};
 
   std::vector<int32_t> nsamples = {3};
-  Parameter nsamples_parameter{.directive = "",
-                               .type = ParameterType::INTEGER,
-                               .type_name = "",
-                               .values = absl::MakeSpan(nsamples)};
+  Parameter nsamples_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::INTEGER,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(nsamples)};
 
   std::vector<std::array<double, 2>> scale = {{4.0, 5.0}};
-  Parameter scale_parameter{.directive = "",
-                            .type = ParameterType::BLACKBODY_V1,
-                            .type_name = "",
-                            .values = absl::MakeSpan(scale)};
+  Parameter scale_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::BLACKBODY_V1,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(scale)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"L", l_parameter},
@@ -395,10 +395,10 @@ TEST(RemoveInfiniteLightSourceV3, Empty) {
 
 TEST(RemoveInfiniteLightSourceV3, NSamples) {
   std::vector<int32_t> nsamples = {3};
-  Parameter nsamples_parameter{.directive = "",
-                               .type = ParameterType::INTEGER,
-                               .type_name = "",
-                               .values = absl::MakeSpan(nsamples)};
+  Parameter nsamples_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::INTEGER,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(nsamples)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"nsamples", nsamples_parameter},
@@ -413,28 +413,28 @@ TEST(RemoveInfiniteLightSourceV3, NSamples) {
 
 TEST(RemoveInfiniteLightSourceV3, WithData) {
   std::vector<std::array<double, 2>> l = {{1.0, 2.0}};
-  Parameter l_parameter{.directive = "",
-                        .type = ParameterType::BLACKBODY_V1,
-                        .type_name = "",
-                        .values = absl::MakeSpan(l)};
+  Parameter l_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::BLACKBODY_V1,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(l)};
 
   std::vector<absl::string_view> mapname = {"file"};
-  Parameter mapname_parameter{.directive = "",
-                              .type = ParameterType::STRING,
-                              .type_name = "",
-                              .values = absl::MakeSpan(mapname)};
+  Parameter mapname_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::STRING,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(mapname)};
 
   std::vector<int32_t> samples = {3};
-  Parameter samples_parameter{.directive = "",
-                              .type = ParameterType::INTEGER,
-                              .type_name = "",
-                              .values = absl::MakeSpan(samples)};
+  Parameter samples_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::INTEGER,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(samples)};
 
   std::vector<std::array<double, 2>> scale = {{4.0, 5.0}};
-  Parameter scale_parameter{.directive = "",
-                            .type = ParameterType::BLACKBODY_V1,
-                            .type_name = "",
-                            .values = absl::MakeSpan(scale)};
+  Parameter scale_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::BLACKBODY_V1,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(scale)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"L", l_parameter},
@@ -463,28 +463,28 @@ TEST(RemoveInfiniteLightSourceV4, Empty) {
 
 TEST(RemoveInfiniteLightSourceV4, WithData) {
   std::vector<double> l = {1.0};
-  Parameter l_parameter{.directive = "",
-                        .type = ParameterType::BLACKBODY_V2,
-                        .type_name = "",
-                        .values = absl::MakeSpan(l)};
+  Parameter l_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::BLACKBODY_V2,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(l)};
 
   std::vector<absl::string_view> filename = {"file"};
-  Parameter filename_parameter{.directive = "",
-                               .type = ParameterType::STRING,
-                               .type_name = "",
-                               .values = absl::MakeSpan(filename)};
+  Parameter filename_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::STRING,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(filename)};
 
   std::vector<double> scale = {4.0};
-  Parameter scale_parameter{.directive = "",
-                            .type = ParameterType::FLOAT,
-                            .type_name = "",
-                            .values = absl::MakeSpan(scale)};
+  Parameter scale_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(scale)};
 
   std::vector<double> illuminance = {6.0};
-  Parameter illuminance_parameter{.directive = "",
-                                  .type = ParameterType::FLOAT,
-                                  .type_name = "",
-                                  .values = absl::MakeSpan(illuminance)};
+  Parameter illuminance_parameter{/*directive=*/"",
+                                  /*type=*/ParameterType::FLOAT,
+                                  /*type_name=*/"",
+                                  /*values=*/absl::MakeSpan(illuminance)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"L", l_parameter},
@@ -513,16 +513,16 @@ TEST(RemovePointLightSourceV1, Empty) {
 
 TEST(RemovePointLightSourceV1, WithData) {
   std::vector<std::array<double, 2>> i = {{1.0, 2.0}};
-  Parameter i_parameter{.directive = "",
-                        .type = ParameterType::BLACKBODY_V1,
-                        .type_name = "",
-                        .values = absl::MakeSpan(i)};
+  Parameter i_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::BLACKBODY_V1,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(i)};
 
   std::vector<std::array<double, 3>> from = {{3.0, 4.0, 5.0}};
-  Parameter from_parameter{.directive = "",
-                           .type = ParameterType::POINT3,
-                           .type_name = "",
-                           .values = absl::MakeSpan(from)};
+  Parameter from_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::POINT3,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(from)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"I", i_parameter},
@@ -547,22 +547,22 @@ TEST(RemovePointLightSourceV2, Empty) {
 
 TEST(RemovePointLightSourceV2, WithData) {
   std::vector<std::array<double, 2>> i = {{1.0, 2.0}};
-  Parameter i_parameter{.directive = "",
-                        .type = ParameterType::BLACKBODY_V1,
-                        .type_name = "",
-                        .values = absl::MakeSpan(i)};
+  Parameter i_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::BLACKBODY_V1,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(i)};
 
   std::vector<std::array<double, 3>> from = {{3.0, 4.0, 5.0}};
-  Parameter from_parameter{.directive = "",
-                           .type = ParameterType::POINT3,
-                           .type_name = "",
-                           .values = absl::MakeSpan(from)};
+  Parameter from_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::POINT3,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(from)};
 
   std::vector<std::array<double, 2>> scale = {{6.0, 7.0}};
-  Parameter scale_parameter{.directive = "",
-                            .type = ParameterType::BLACKBODY_V1,
-                            .type_name = "",
-                            .values = absl::MakeSpan(scale)};
+  Parameter scale_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::BLACKBODY_V1,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(scale)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"I", i_parameter},
@@ -589,28 +589,28 @@ TEST(RemovePointLightSourceV4, Empty) {
 
 TEST(RemovePointLightSourceV4, WithData) {
   std::vector<double> i = {1.0};
-  Parameter i_parameter{.directive = "",
-                        .type = ParameterType::BLACKBODY_V2,
-                        .type_name = "",
-                        .values = absl::MakeSpan(i)};
+  Parameter i_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::BLACKBODY_V2,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(i)};
 
   std::vector<std::array<double, 3>> from = {{3.0, 4.0, 5.0}};
-  Parameter from_parameter{.directive = "",
-                           .type = ParameterType::POINT3,
-                           .type_name = "",
-                           .values = absl::MakeSpan(from)};
+  Parameter from_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::POINT3,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(from)};
 
   std::vector<double> scale = {6.0};
-  Parameter scale_parameter{.directive = "",
-                            .type = ParameterType::FLOAT,
-                            .type_name = "",
-                            .values = absl::MakeSpan(scale)};
+  Parameter scale_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(scale)};
 
   std::vector<double> power = {8.0};
-  Parameter power_parameter{.directive = "",
-                            .type = ParameterType::FLOAT,
-                            .type_name = "",
-                            .values = absl::MakeSpan(power)};
+  Parameter power_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(power)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"I", i_parameter},
@@ -639,22 +639,22 @@ TEST(RemoveProjectionLightSourceV1, Empty) {
 
 TEST(RemoveProjectionLightSourceV1, WithData) {
   std::vector<std::array<double, 2>> i = {{1.0, 2.0}};
-  Parameter i_parameter{.directive = "",
-                        .type = ParameterType::BLACKBODY_V1,
-                        .type_name = "",
-                        .values = absl::MakeSpan(i)};
+  Parameter i_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::BLACKBODY_V1,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(i)};
 
   std::vector<absl::string_view> mapname = {"file"};
-  Parameter mapname_parameter{.directive = "",
-                              .type = ParameterType::STRING,
-                              .type_name = "",
-                              .values = absl::MakeSpan(mapname)};
+  Parameter mapname_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::STRING,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(mapname)};
 
   std::vector<double> fov = {10.0};
-  Parameter fov_parameter{.directive = "",
-                          .type = ParameterType::FLOAT,
-                          .type_name = "",
-                          .values = absl::MakeSpan(fov)};
+  Parameter fov_parameter{/*directive=*/"",
+                          /*type=*/ParameterType::FLOAT,
+                          /*type_name=*/"",
+                          /*values=*/absl::MakeSpan(fov)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"I", i_parameter},
@@ -681,28 +681,28 @@ TEST(RemoveProjectionLightSourceV2, Empty) {
 
 TEST(RemoveProjectionLightSourceV2, WithData) {
   std::vector<std::array<double, 2>> i = {{1.0, 2.0}};
-  Parameter i_parameter{.directive = "",
-                        .type = ParameterType::BLACKBODY_V1,
-                        .type_name = "",
-                        .values = absl::MakeSpan(i)};
+  Parameter i_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::BLACKBODY_V1,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(i)};
 
   std::vector<absl::string_view> mapname = {"file"};
-  Parameter mapname_parameter{.directive = "",
-                              .type = ParameterType::STRING,
-                              .type_name = "",
-                              .values = absl::MakeSpan(mapname)};
+  Parameter mapname_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::STRING,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(mapname)};
 
   std::vector<double> fov = {10.0};
-  Parameter fov_parameter{.directive = "",
-                          .type = ParameterType::FLOAT,
-                          .type_name = "",
-                          .values = absl::MakeSpan(fov)};
+  Parameter fov_parameter{/*directive=*/"",
+                          /*type=*/ParameterType::FLOAT,
+                          /*type_name=*/"",
+                          /*values=*/absl::MakeSpan(fov)};
 
   std::vector<std::array<double, 2>> scale = {{3.0, 4.0}};
-  Parameter scale_parameter{.directive = "",
-                            .type = ParameterType::BLACKBODY_V1,
-                            .type_name = "",
-                            .values = absl::MakeSpan(scale)};
+  Parameter scale_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::BLACKBODY_V1,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(scale)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"I", i_parameter},
@@ -731,34 +731,34 @@ TEST(RemoveProjectionLightSourceV4, Empty) {
 
 TEST(RemoveProjectionLightSourceV4, WithData) {
   std::vector<double> i = {1.0};
-  Parameter i_parameter{.directive = "",
-                        .type = ParameterType::BLACKBODY_V2,
-                        .type_name = "",
-                        .values = absl::MakeSpan(i)};
+  Parameter i_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::BLACKBODY_V2,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(i)};
 
   std::vector<absl::string_view> filename = {"file"};
-  Parameter filename_parameter{.directive = "",
-                               .type = ParameterType::STRING,
-                               .type_name = "",
-                               .values = absl::MakeSpan(filename)};
+  Parameter filename_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::STRING,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(filename)};
 
   std::vector<double> fov = {10.0};
-  Parameter fov_parameter{.directive = "",
-                          .type = ParameterType::FLOAT,
-                          .type_name = "",
-                          .values = absl::MakeSpan(fov)};
+  Parameter fov_parameter{/*directive=*/"",
+                          /*type=*/ParameterType::FLOAT,
+                          /*type_name=*/"",
+                          /*values=*/absl::MakeSpan(fov)};
 
   std::vector<double> scale = {3.0};
-  Parameter scale_parameter{.directive = "",
-                            .type = ParameterType::FLOAT,
-                            .type_name = "",
-                            .values = absl::MakeSpan(scale)};
+  Parameter scale_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(scale)};
 
   std::vector<double> power = {5.0};
-  Parameter power_parameter{.directive = "",
-                            .type = ParameterType::FLOAT,
-                            .type_name = "",
-                            .values = absl::MakeSpan(power)};
+  Parameter power_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(power)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"I", i_parameter},         {"filename", filename_parameter},
@@ -787,34 +787,34 @@ TEST(RemoveSpotLightSourceV1, Empty) {
 
 TEST(RemoveSpotLightSourceV1, WithData) {
   std::vector<std::array<double, 2>> i = {{1.0, 2.0}};
-  Parameter i_parameter{.directive = "",
-                        .type = ParameterType::BLACKBODY_V1,
-                        .type_name = "",
-                        .values = absl::MakeSpan(i)};
+  Parameter i_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::BLACKBODY_V1,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(i)};
 
   std::vector<std::array<double, 3>> from = {{3.0, 4.0, 5.0}};
-  Parameter from_parameter{.directive = "",
-                           .type = ParameterType::POINT3,
-                           .type_name = "",
-                           .values = absl::MakeSpan(from)};
+  Parameter from_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::POINT3,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(from)};
 
   std::vector<std::array<double, 3>> to = {{6.0, 7.0, 8.0}};
-  Parameter to_parameter{.directive = "",
-                         .type = ParameterType::POINT3,
-                         .type_name = "",
-                         .values = absl::MakeSpan(to)};
+  Parameter to_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::POINT3,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(to)};
 
   std::vector<double> coneangle = {9.0};
-  Parameter coneangle_parameter{.directive = "",
-                                .type = ParameterType::FLOAT,
-                                .type_name = "",
-                                .values = absl::MakeSpan(coneangle)};
+  Parameter coneangle_parameter{/*directive=*/"",
+                                /*type=*/ParameterType::FLOAT,
+                                /*type_name=*/"",
+                                /*values=*/absl::MakeSpan(coneangle)};
 
   std::vector<double> conedeltaangle = {10.0};
-  Parameter conedeltaangle_parameter{.directive = "",
-                                     .type = ParameterType::FLOAT,
-                                     .type_name = "",
-                                     .values = absl::MakeSpan(conedeltaangle)};
+  Parameter conedeltaangle_parameter{/*directive=*/"",
+                                     /*type=*/ParameterType::FLOAT,
+                                     /*type_name=*/"",
+                                     /*values=*/absl::MakeSpan(conedeltaangle)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"I", i_parameter},
@@ -845,40 +845,40 @@ TEST(RemoveSpotLightSourceV2, Empty) {
 
 TEST(RemoveSpotLightSourceV2, WithData) {
   std::vector<std::array<double, 2>> i = {{1.0, 2.0}};
-  Parameter i_parameter{.directive = "",
-                        .type = ParameterType::BLACKBODY_V1,
-                        .type_name = "",
-                        .values = absl::MakeSpan(i)};
+  Parameter i_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::BLACKBODY_V1,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(i)};
 
   std::vector<std::array<double, 3>> from = {{3.0, 4.0, 5.0}};
-  Parameter from_parameter{.directive = "",
-                           .type = ParameterType::POINT3,
-                           .type_name = "",
-                           .values = absl::MakeSpan(from)};
+  Parameter from_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::POINT3,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(from)};
 
   std::vector<std::array<double, 3>> to = {{6.0, 7.0, 8.0}};
-  Parameter to_parameter{.directive = "",
-                         .type = ParameterType::POINT3,
-                         .type_name = "",
-                         .values = absl::MakeSpan(to)};
+  Parameter to_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::POINT3,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(to)};
 
   std::vector<double> coneangle = {9.0};
-  Parameter coneangle_parameter{.directive = "",
-                                .type = ParameterType::FLOAT,
-                                .type_name = "",
-                                .values = absl::MakeSpan(coneangle)};
+  Parameter coneangle_parameter{/*directive=*/"",
+                                /*type=*/ParameterType::FLOAT,
+                                /*type_name=*/"",
+                                /*values=*/absl::MakeSpan(coneangle)};
 
   std::vector<double> conedeltaangle = {10.0};
-  Parameter conedeltaangle_parameter{.directive = "",
-                                     .type = ParameterType::FLOAT,
-                                     .type_name = "",
-                                     .values = absl::MakeSpan(conedeltaangle)};
+  Parameter conedeltaangle_parameter{/*directive=*/"",
+                                     /*type=*/ParameterType::FLOAT,
+                                     /*type_name=*/"",
+                                     /*values=*/absl::MakeSpan(conedeltaangle)};
 
   std::vector<std::array<double, 2>> scale = {{11.0, 12.0}};
-  Parameter scale_parameter{.directive = "",
-                            .type = ParameterType::BLACKBODY_V1,
-                            .type_name = "",
-                            .values = absl::MakeSpan(scale)};
+  Parameter scale_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::BLACKBODY_V1,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(scale)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"I", i_parameter},
@@ -911,46 +911,46 @@ TEST(RemoveSpotLightSourceV4, Empty) {
 
 TEST(RemoveSpotLightSourceV4, WithData) {
   std::vector<double> i = {1.0};
-  Parameter i_parameter{.directive = "",
-                        .type = ParameterType::BLACKBODY_V2,
-                        .type_name = "",
-                        .values = absl::MakeSpan(i)};
+  Parameter i_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::BLACKBODY_V2,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(i)};
 
   std::vector<std::array<double, 3>> from = {{3.0, 4.0, 5.0}};
-  Parameter from_parameter{.directive = "",
-                           .type = ParameterType::POINT3,
-                           .type_name = "",
-                           .values = absl::MakeSpan(from)};
+  Parameter from_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::POINT3,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(from)};
 
   std::vector<std::array<double, 3>> to = {{6.0, 7.0, 8.0}};
-  Parameter to_parameter{.directive = "",
-                         .type = ParameterType::POINT3,
-                         .type_name = "",
-                         .values = absl::MakeSpan(to)};
+  Parameter to_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::POINT3,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(to)};
 
   std::vector<double> coneangle = {9.0};
-  Parameter coneangle_parameter{.directive = "",
-                                .type = ParameterType::FLOAT,
-                                .type_name = "",
-                                .values = absl::MakeSpan(coneangle)};
+  Parameter coneangle_parameter{/*directive=*/"",
+                                /*type=*/ParameterType::FLOAT,
+                                /*type_name=*/"",
+                                /*values=*/absl::MakeSpan(coneangle)};
 
   std::vector<double> conedeltaangle = {10.0};
-  Parameter conedeltaangle_parameter{.directive = "",
-                                     .type = ParameterType::FLOAT,
-                                     .type_name = "",
-                                     .values = absl::MakeSpan(conedeltaangle)};
+  Parameter conedeltaangle_parameter{/*directive=*/"",
+                                     /*type=*/ParameterType::FLOAT,
+                                     /*type_name=*/"",
+                                     /*values=*/absl::MakeSpan(conedeltaangle)};
 
   std::vector<double> scale = {11.0};
-  Parameter scale_parameter{.directive = "",
-                            .type = ParameterType::FLOAT,
-                            .type_name = "",
-                            .values = absl::MakeSpan(scale)};
+  Parameter scale_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(scale)};
 
   std::vector<double> power = {12.0};
-  Parameter power_parameter{.directive = "",
-                            .type = ParameterType::FLOAT,
-                            .type_name = "",
-                            .values = absl::MakeSpan(power)};
+  Parameter power_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(power)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"I", i_parameter},

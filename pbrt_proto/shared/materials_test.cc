@@ -27,10 +27,10 @@ TEST(RemoveBuiltInMaterialV1, Empty) {
 
 TEST(RemoveBuiltInMaterialV1, WithData) {
   std::vector<std::string_view> bumpmap = {"bump"};
-  Parameter bumpmap_parameter{.directive = "",
-                              .type = ParameterType::TEXTURE,
-                              .type_name = "",
-                              .values = absl::MakeSpan(bumpmap)};
+  Parameter bumpmap_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(bumpmap)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"bumpmap", bumpmap_parameter},
@@ -53,101 +53,101 @@ TEST(RemoveDisneyMaterialV3, Empty) {
 
 TEST(RemoveDisneyMaterialV3, WithData) {
   std::vector<std::string_view> roughness = {"roughness"};
-  Parameter roughness_parameter{.directive = "",
-                                .type = ParameterType::TEXTURE,
-                                .type_name = "",
-                                .values = absl::MakeSpan(roughness)};
+  Parameter roughness_parameter{/*directive=*/"",
+                                /*type=*/ParameterType::TEXTURE,
+                                /*type_name=*/"",
+                                /*values=*/absl::MakeSpan(roughness)};
 
   std::vector<std::string_view> eta = {"eta"};
-  Parameter eta_parameter{.directive = "",
-                          .type = ParameterType::TEXTURE,
-                          .type_name = "",
-                          .values = absl::MakeSpan(eta)};
+  Parameter eta_parameter{/*directive=*/"",
+                          /*type=*/ParameterType::TEXTURE,
+                          /*type_name=*/"",
+                          /*values=*/absl::MakeSpan(eta)};
 
   std::vector<std::string_view> bumpmap = {"bump"};
-  Parameter bumpmap_parameter{.directive = "",
-                              .type = ParameterType::TEXTURE,
-                              .type_name = "",
-                              .values = absl::MakeSpan(bumpmap)};
+  Parameter bumpmap_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(bumpmap)};
 
   std::vector<std::string_view> color = {"color"};
-  Parameter color_parameter{.directive = "",
-                            .type = ParameterType::TEXTURE,
-                            .type_name = "",
-                            .values = absl::MakeSpan(color)};
+  Parameter color_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::TEXTURE,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(color)};
 
   std::vector<std::string_view> scatterdistance = {"scatterdistance"};
   Parameter scatterdistance_parameter{
-      .directive = "",
-      .type = ParameterType::TEXTURE,
-      .type_name = "",
-      .values = absl::MakeSpan(scatterdistance)};
+      /*directive=*/"",
+      /*type=*/ParameterType::TEXTURE,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(scatterdistance)};
 
   std::vector<std::string_view> anisotropic = {"anisotropic"};
-  Parameter anisotropic_parameter{.directive = "",
-                                  .type = ParameterType::TEXTURE,
-                                  .type_name = "",
-                                  .values = absl::MakeSpan(anisotropic)};
+  Parameter anisotropic_parameter{/*directive=*/"",
+                                  /*type=*/ParameterType::TEXTURE,
+                                  /*type_name=*/"",
+                                  /*values=*/absl::MakeSpan(anisotropic)};
 
   std::vector<std::string_view> clearcoat = {"clearcoat"};
-  Parameter clearcoat_parameter{.directive = "",
-                                .type = ParameterType::TEXTURE,
-                                .type_name = "",
-                                .values = absl::MakeSpan(clearcoat)};
+  Parameter clearcoat_parameter{/*directive=*/"",
+                                /*type=*/ParameterType::TEXTURE,
+                                /*type_name=*/"",
+                                /*values=*/absl::MakeSpan(clearcoat)};
 
   std::vector<std::string_view> clearcoatgloss = {"clearcoatgloss"};
-  Parameter clearcoatgloss_parameter{.directive = "",
-                                     .type = ParameterType::TEXTURE,
-                                     .type_name = "",
-                                     .values = absl::MakeSpan(clearcoatgloss)};
+  Parameter clearcoatgloss_parameter{/*directive=*/"",
+                                     /*type=*/ParameterType::TEXTURE,
+                                     /*type_name=*/"",
+                                     /*values=*/absl::MakeSpan(clearcoatgloss)};
 
   std::vector<std::string_view> difftrans = {"difftrans"};
-  Parameter difftrans_parameter{.directive = "",
-                                .type = ParameterType::TEXTURE,
-                                .type_name = "",
-                                .values = absl::MakeSpan(difftrans)};
+  Parameter difftrans_parameter{/*directive=*/"",
+                                /*type=*/ParameterType::TEXTURE,
+                                /*type_name=*/"",
+                                /*values=*/absl::MakeSpan(difftrans)};
 
   std::vector<std::string_view> flatness = {"flatness"};
-  Parameter flatness_parameter{.directive = "",
-                               .type = ParameterType::TEXTURE,
-                               .type_name = "",
-                               .values = absl::MakeSpan(flatness)};
+  Parameter flatness_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::TEXTURE,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(flatness)};
 
   std::vector<std::string_view> metallic = {"metallic"};
-  Parameter metallic_parameter{.directive = "",
-                               .type = ParameterType::TEXTURE,
-                               .type_name = "",
-                               .values = absl::MakeSpan(metallic)};
+  Parameter metallic_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::TEXTURE,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(metallic)};
 
   std::vector<std::string_view> spectrans = {"spectrans"};
-  Parameter spectrans_parameter{.directive = "",
-                                .type = ParameterType::TEXTURE,
-                                .type_name = "",
-                                .values = absl::MakeSpan(spectrans)};
+  Parameter spectrans_parameter{/*directive=*/"",
+                                /*type=*/ParameterType::TEXTURE,
+                                /*type_name=*/"",
+                                /*values=*/absl::MakeSpan(spectrans)};
 
   std::vector<std::string_view> speculartint = {"speculartint"};
-  Parameter speculartint_parameter{.directive = "",
-                                   .type = ParameterType::TEXTURE,
-                                   .type_name = "",
-                                   .values = absl::MakeSpan(speculartint)};
+  Parameter speculartint_parameter{/*directive=*/"",
+                                   /*type=*/ParameterType::TEXTURE,
+                                   /*type_name=*/"",
+                                   /*values=*/absl::MakeSpan(speculartint)};
 
   std::vector<std::string_view> sheen = {"sheen"};
-  Parameter sheen_parameter{.directive = "",
-                            .type = ParameterType::TEXTURE,
-                            .type_name = "",
-                            .values = absl::MakeSpan(sheen)};
+  Parameter sheen_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::TEXTURE,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(sheen)};
 
   std::vector<std::string_view> sheentint = {"sheentint"};
-  Parameter sheentint_parameter{.directive = "",
-                                .type = ParameterType::TEXTURE,
-                                .type_name = "",
-                                .values = absl::MakeSpan(sheentint)};
+  Parameter sheentint_parameter{/*directive=*/"",
+                                /*type=*/ParameterType::TEXTURE,
+                                /*type_name=*/"",
+                                /*values=*/absl::MakeSpan(sheentint)};
 
   bool thin[] = {true};
-  Parameter thin_parameter{.directive = "",
-                           .type = ParameterType::BOOL,
-                           .type_name = "",
-                           .values = absl::MakeSpan(thin)};
+  Parameter thin_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::BOOL,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(thin)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"roughness", roughness_parameter},
@@ -200,28 +200,28 @@ TEST(RemoveGlassMaterialV1, Empty) {
 
 TEST(RemoveGlassMaterialV1, WithData) {
   std::vector<std::string_view> kr = {"kr"};
-  Parameter kr_parameter{.directive = "",
-                         .type = ParameterType::TEXTURE,
-                         .type_name = "",
-                         .values = absl::MakeSpan(kr)};
+  Parameter kr_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(kr)};
 
   std::vector<std::string_view> kt = {"kt"};
-  Parameter kt_parameter{.directive = "",
-                         .type = ParameterType::TEXTURE,
-                         .type_name = "",
-                         .values = absl::MakeSpan(kt)};
+  Parameter kt_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(kt)};
 
   std::vector<std::string_view> index = {"index"};
-  Parameter index_parameter{.directive = "",
-                            .type = ParameterType::TEXTURE,
-                            .type_name = "",
-                            .values = absl::MakeSpan(index)};
+  Parameter index_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::TEXTURE,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(index)};
 
   std::vector<std::string_view> bumpmap = {"bump"};
-  Parameter bumpmap_parameter{.directive = "",
-                              .type = ParameterType::TEXTURE,
-                              .type_name = "",
-                              .values = absl::MakeSpan(bumpmap)};
+  Parameter bumpmap_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(bumpmap)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"Kr", kr_parameter},
@@ -250,46 +250,46 @@ TEST(RemoveGlassMaterialV3, Empty) {
 
 TEST(RemoveGlassMaterialV3, WithDataIndex) {
   std::vector<std::string_view> kr = {"kr"};
-  Parameter kr_parameter{.directive = "",
-                         .type = ParameterType::TEXTURE,
-                         .type_name = "",
-                         .values = absl::MakeSpan(kr)};
+  Parameter kr_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(kr)};
 
   std::vector<std::string_view> kt = {"kt"};
-  Parameter kt_parameter{.directive = "",
-                         .type = ParameterType::TEXTURE,
-                         .type_name = "",
-                         .values = absl::MakeSpan(kt)};
+  Parameter kt_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(kt)};
 
   std::vector<std::string_view> index = {"index"};
-  Parameter index_parameter{.directive = "",
-                            .type = ParameterType::TEXTURE,
-                            .type_name = "",
-                            .values = absl::MakeSpan(index)};
+  Parameter index_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::TEXTURE,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(index)};
 
   std::vector<std::string_view> bumpmap = {"bump"};
-  Parameter bumpmap_parameter{.directive = "",
-                              .type = ParameterType::TEXTURE,
-                              .type_name = "",
-                              .values = absl::MakeSpan(bumpmap)};
+  Parameter bumpmap_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(bumpmap)};
 
   std::vector<std::string_view> uroughness = {"uroughness"};
-  Parameter uroughness_parameter{.directive = "",
-                                 .type = ParameterType::TEXTURE,
-                                 .type_name = "",
-                                 .values = absl::MakeSpan(uroughness)};
+  Parameter uroughness_parameter{/*directive=*/"",
+                                 /*type=*/ParameterType::TEXTURE,
+                                 /*type_name=*/"",
+                                 /*values=*/absl::MakeSpan(uroughness)};
 
   std::vector<std::string_view> vroughness = {"vroughness"};
-  Parameter vroughness_parameter{.directive = "",
-                                 .type = ParameterType::TEXTURE,
-                                 .type_name = "",
-                                 .values = absl::MakeSpan(vroughness)};
+  Parameter vroughness_parameter{/*directive=*/"",
+                                 /*type=*/ParameterType::TEXTURE,
+                                 /*type_name=*/"",
+                                 /*values=*/absl::MakeSpan(vroughness)};
 
   bool remaproughness[] = {false};
-  Parameter remaproughness_parameter{.directive = "",
-                                     .type = ParameterType::BOOL,
-                                     .type_name = "",
-                                     .values = absl::MakeSpan(remaproughness)};
+  Parameter remaproughness_parameter{/*directive=*/"",
+                                     /*type=*/ParameterType::BOOL,
+                                     /*type_name=*/"",
+                                     /*values=*/absl::MakeSpan(remaproughness)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"Kr", kr_parameter},
@@ -316,52 +316,52 @@ TEST(RemoveGlassMaterialV3, WithDataIndex) {
 
 TEST(RemoveGlassMaterialV3, WithDataEta) {
   std::vector<std::string_view> kr = {"kr"};
-  Parameter kr_parameter{.directive = "",
-                         .type = ParameterType::TEXTURE,
-                         .type_name = "",
-                         .values = absl::MakeSpan(kr)};
+  Parameter kr_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(kr)};
 
   std::vector<std::string_view> kt = {"kt"};
-  Parameter kt_parameter{.directive = "",
-                         .type = ParameterType::TEXTURE,
-                         .type_name = "",
-                         .values = absl::MakeSpan(kt)};
+  Parameter kt_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(kt)};
 
   std::vector<std::string_view> eta = {"eta"};
-  Parameter eta_parameter{.directive = "",
-                          .type = ParameterType::TEXTURE,
-                          .type_name = "",
-                          .values = absl::MakeSpan(eta)};
+  Parameter eta_parameter{/*directive=*/"",
+                          /*type=*/ParameterType::TEXTURE,
+                          /*type_name=*/"",
+                          /*values=*/absl::MakeSpan(eta)};
 
   std::vector<std::string_view> index = {"index"};
-  Parameter index_parameter{.directive = "",
-                            .type = ParameterType::TEXTURE,
-                            .type_name = "",
-                            .values = absl::MakeSpan(index)};
+  Parameter index_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::TEXTURE,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(index)};
 
   std::vector<std::string_view> bumpmap = {"bump"};
-  Parameter bumpmap_parameter{.directive = "",
-                              .type = ParameterType::TEXTURE,
-                              .type_name = "",
-                              .values = absl::MakeSpan(bumpmap)};
+  Parameter bumpmap_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(bumpmap)};
 
   std::vector<std::string_view> uroughness = {"uroughness"};
-  Parameter uroughness_parameter{.directive = "",
-                                 .type = ParameterType::TEXTURE,
-                                 .type_name = "",
-                                 .values = absl::MakeSpan(uroughness)};
+  Parameter uroughness_parameter{/*directive=*/"",
+                                 /*type=*/ParameterType::TEXTURE,
+                                 /*type_name=*/"",
+                                 /*values=*/absl::MakeSpan(uroughness)};
 
   std::vector<std::string_view> vroughness = {"vroughness"};
-  Parameter vroughness_parameter{.directive = "",
-                                 .type = ParameterType::TEXTURE,
-                                 .type_name = "",
-                                 .values = absl::MakeSpan(vroughness)};
+  Parameter vroughness_parameter{/*directive=*/"",
+                                 /*type=*/ParameterType::TEXTURE,
+                                 /*type_name=*/"",
+                                 /*values=*/absl::MakeSpan(vroughness)};
 
   bool remaproughness[] = {false};
-  Parameter remaproughness_parameter{.directive = "",
-                                     .type = ParameterType::BOOL,
-                                     .type_name = "",
-                                     .values = absl::MakeSpan(remaproughness)};
+  Parameter remaproughness_parameter{/*directive=*/"",
+                                     /*type=*/ParameterType::BOOL,
+                                     /*type_name=*/"",
+                                     /*values=*/absl::MakeSpan(remaproughness)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"Kr", kr_parameter},
@@ -397,52 +397,52 @@ TEST(RemoveHairMaterialV3, Empty) {
 
 TEST(RemoveHairMaterialV3, WithData) {
   std::vector<std::string_view> eta = {"eta"};
-  Parameter eta_parameter{.directive = "",
-                          .type = ParameterType::TEXTURE,
-                          .type_name = "",
-                          .values = absl::MakeSpan(eta)};
+  Parameter eta_parameter{/*directive=*/"",
+                          /*type=*/ParameterType::TEXTURE,
+                          /*type_name=*/"",
+                          /*values=*/absl::MakeSpan(eta)};
 
   std::vector<std::string_view> sigma_a = {"sigma_a"};
-  Parameter sigma_a_parameter{.directive = "",
-                              .type = ParameterType::TEXTURE,
-                              .type_name = "",
-                              .values = absl::MakeSpan(sigma_a)};
+  Parameter sigma_a_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(sigma_a)};
 
   std::vector<std::string_view> color = {"color"};
-  Parameter color_parameter{.directive = "",
-                            .type = ParameterType::TEXTURE,
-                            .type_name = "",
-                            .values = absl::MakeSpan(color)};
+  Parameter color_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::TEXTURE,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(color)};
 
   std::vector<std::string_view> eumelanin = {"eumelanin"};
-  Parameter eumelanin_parameter{.directive = "",
-                                .type = ParameterType::TEXTURE,
-                                .type_name = "",
-                                .values = absl::MakeSpan(eumelanin)};
+  Parameter eumelanin_parameter{/*directive=*/"",
+                                /*type=*/ParameterType::TEXTURE,
+                                /*type_name=*/"",
+                                /*values=*/absl::MakeSpan(eumelanin)};
 
   std::vector<std::string_view> pheomelanin = {"pheomelanin"};
-  Parameter pheomelanin_parameter{.directive = "",
-                                  .type = ParameterType::TEXTURE,
-                                  .type_name = "",
-                                  .values = absl::MakeSpan(pheomelanin)};
+  Parameter pheomelanin_parameter{/*directive=*/"",
+                                  /*type=*/ParameterType::TEXTURE,
+                                  /*type_name=*/"",
+                                  /*values=*/absl::MakeSpan(pheomelanin)};
 
   std::vector<std::string_view> beta_m = {"beta_m"};
-  Parameter beta_m_parameter{.directive = "",
-                             .type = ParameterType::TEXTURE,
-                             .type_name = "",
-                             .values = absl::MakeSpan(beta_m)};
+  Parameter beta_m_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::TEXTURE,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(beta_m)};
 
   std::vector<std::string_view> beta_n = {"beta_n"};
-  Parameter beta_n_parameter{.directive = "",
-                             .type = ParameterType::TEXTURE,
-                             .type_name = "",
-                             .values = absl::MakeSpan(beta_n)};
+  Parameter beta_n_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::TEXTURE,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(beta_n)};
 
   std::vector<std::string_view> alpha = {"alpha"};
-  Parameter alpha_parameter{.directive = "",
-                            .type = ParameterType::TEXTURE,
-                            .type_name = "",
-                            .values = absl::MakeSpan(alpha)};
+  Parameter alpha_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::TEXTURE,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(alpha)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"eta", eta_parameter},
@@ -479,34 +479,34 @@ TEST(RemoveKdSubsurfaceMaterialV2, Empty) {
 
 TEST(RemoveKdSubsurfaceMaterialV2, WithData) {
   std::vector<std::string_view> kd = {"kd"};
-  Parameter kd_parameter{.directive = "",
-                         .type = ParameterType::TEXTURE,
-                         .type_name = "",
-                         .values = absl::MakeSpan(kd)};
+  Parameter kd_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(kd)};
 
   std::vector<std::string_view> kr = {"kr"};
-  Parameter kr_parameter{.directive = "",
-                         .type = ParameterType::TEXTURE,
-                         .type_name = "",
-                         .values = absl::MakeSpan(kr)};
+  Parameter kr_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(kr)};
 
   std::vector<std::string_view> eta = {"eta"};
-  Parameter eta_parameter{.directive = "",
-                          .type = ParameterType::TEXTURE,
-                          .type_name = "",
-                          .values = absl::MakeSpan(eta)};
+  Parameter eta_parameter{/*directive=*/"",
+                          /*type=*/ParameterType::TEXTURE,
+                          /*type_name=*/"",
+                          /*values=*/absl::MakeSpan(eta)};
 
   std::vector<std::string_view> mfp = {"mfp"};
-  Parameter mfp_parameter{.directive = "",
-                          .type = ParameterType::TEXTURE,
-                          .type_name = "",
-                          .values = absl::MakeSpan(mfp)};
+  Parameter mfp_parameter{/*directive=*/"",
+                          /*type=*/ParameterType::TEXTURE,
+                          /*type_name=*/"",
+                          /*values=*/absl::MakeSpan(mfp)};
 
   std::vector<std::string_view> bumpmap = {"bump"};
-  Parameter bumpmap_parameter{.directive = "",
-                              .type = ParameterType::TEXTURE,
-                              .type_name = "",
-                              .values = absl::MakeSpan(bumpmap)};
+  Parameter bumpmap_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(bumpmap)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"Kd", kd_parameter},           {"Kr", kr_parameter},
@@ -535,64 +535,64 @@ TEST(RemoveKdSubsurfaceMaterialV3, Empty) {
 
 TEST(RemoveKdSubsurfaceMaterialV3, WithData) {
   std::vector<std::string_view> kd = {"kd"};
-  Parameter kd_parameter{.directive = "",
-                         .type = ParameterType::TEXTURE,
-                         .type_name = "",
-                         .values = absl::MakeSpan(kd)};
+  Parameter kd_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(kd)};
 
   std::vector<std::string_view> kr = {"kr"};
-  Parameter kr_parameter{.directive = "",
-                         .type = ParameterType::TEXTURE,
-                         .type_name = "",
-                         .values = absl::MakeSpan(kr)};
+  Parameter kr_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(kr)};
 
   std::vector<std::string_view> kt = {"kt"};
-  Parameter kt_parameter{.directive = "",
-                         .type = ParameterType::TEXTURE,
-                         .type_name = "",
-                         .values = absl::MakeSpan(kt)};
+  Parameter kt_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(kt)};
 
   std::vector<double> eta = {2.0};
-  Parameter eta_parameter{.directive = "",
-                          .type = ParameterType::FLOAT,
-                          .type_name = "",
-                          .values = absl::MakeSpan(eta)};
+  Parameter eta_parameter{/*directive=*/"",
+                          /*type=*/ParameterType::FLOAT,
+                          /*type_name=*/"",
+                          /*values=*/absl::MakeSpan(eta)};
 
   std::vector<std::string_view> uroughness = {"uroughness"};
-  Parameter uroughness_parameter{.directive = "",
-                                 .type = ParameterType::TEXTURE,
-                                 .type_name = "",
-                                 .values = absl::MakeSpan(uroughness)};
+  Parameter uroughness_parameter{/*directive=*/"",
+                                 /*type=*/ParameterType::TEXTURE,
+                                 /*type_name=*/"",
+                                 /*values=*/absl::MakeSpan(uroughness)};
 
   std::vector<std::string_view> vroughness = {"vroughness"};
-  Parameter vroughness_parameter{.directive = "",
-                                 .type = ParameterType::TEXTURE,
-                                 .type_name = "",
-                                 .values = absl::MakeSpan(vroughness)};
+  Parameter vroughness_parameter{/*directive=*/"",
+                                 /*type=*/ParameterType::TEXTURE,
+                                 /*type_name=*/"",
+                                 /*values=*/absl::MakeSpan(vroughness)};
 
   std::vector<std::string_view> mfp = {"mfp"};
-  Parameter mfp_parameter{.directive = "",
-                          .type = ParameterType::TEXTURE,
-                          .type_name = "",
-                          .values = absl::MakeSpan(mfp)};
+  Parameter mfp_parameter{/*directive=*/"",
+                          /*type=*/ParameterType::TEXTURE,
+                          /*type_name=*/"",
+                          /*values=*/absl::MakeSpan(mfp)};
 
   std::vector<std::string_view> bumpmap = {"bump"};
-  Parameter bumpmap_parameter{.directive = "",
-                              .type = ParameterType::TEXTURE,
-                              .type_name = "",
-                              .values = absl::MakeSpan(bumpmap)};
+  Parameter bumpmap_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(bumpmap)};
 
   std::vector<double> g = {1.0};
-  Parameter g_parameter{.directive = "",
-                        .type = ParameterType::FLOAT,
-                        .type_name = "",
-                        .values = absl::MakeSpan(g)};
+  Parameter g_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::FLOAT,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(g)};
 
   std::vector<double> scale = {0.0};
-  Parameter scale_parameter{.directive = "",
-                            .type = ParameterType::FLOAT,
-                            .type_name = "",
-                            .values = absl::MakeSpan(scale)};
+  Parameter scale_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(scale)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"Kd", kd_parameter},
@@ -633,22 +633,22 @@ TEST(RemoveMatteMaterialV1, Empty) {
 
 TEST(RemoveMatteMaterialV1, WithData) {
   std::vector<std::string_view> kd = {"kd"};
-  Parameter kd_parameter{.directive = "",
-                         .type = ParameterType::TEXTURE,
-                         .type_name = "",
-                         .values = absl::MakeSpan(kd)};
+  Parameter kd_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(kd)};
 
   std::vector<std::string_view> sigma = {"sigma"};
-  Parameter sigma_parameter{.directive = "",
-                            .type = ParameterType::TEXTURE,
-                            .type_name = "",
-                            .values = absl::MakeSpan(sigma)};
+  Parameter sigma_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::TEXTURE,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(sigma)};
 
   std::vector<std::string_view> bumpmap = {"bump"};
-  Parameter bumpmap_parameter{.directive = "",
-                              .type = ParameterType::TEXTURE,
-                              .type_name = "",
-                              .values = absl::MakeSpan(bumpmap)};
+  Parameter bumpmap_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(bumpmap)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"Kd", kd_parameter},
@@ -675,16 +675,16 @@ TEST(RemoveMeasuredFourierMaterialV3, Empty) {
 
 TEST(RemoveMeasuredFourierMaterialV3, WithData) {
   std::vector<std::string_view> filename = {"filename"};
-  Parameter filename_parameter{.directive = "",
-                               .type = ParameterType::STRING,
-                               .type_name = "",
-                               .values = absl::MakeSpan(filename)};
+  Parameter filename_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::STRING,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(filename)};
 
   std::vector<std::string_view> bumpmap = {"bump"};
-  Parameter bumpmap_parameter{.directive = "",
-                              .type = ParameterType::TEXTURE,
-                              .type_name = "",
-                              .values = absl::MakeSpan(bumpmap)};
+  Parameter bumpmap_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(bumpmap)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"bsdffile", filename_parameter},
@@ -709,16 +709,16 @@ TEST(RemoveMeasuredMerlMaterialV2, Empty) {
 
 TEST(RemoveMeasuredMerlMaterialV2, WithData) {
   std::vector<std::string_view> filename = {"filename"};
-  Parameter filename_parameter{.directive = "",
-                               .type = ParameterType::STRING,
-                               .type_name = "",
-                               .values = absl::MakeSpan(filename)};
+  Parameter filename_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::STRING,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(filename)};
 
   std::vector<std::string_view> bumpmap = {"bump"};
-  Parameter bumpmap_parameter{.directive = "",
-                              .type = ParameterType::TEXTURE,
-                              .type_name = "",
-                              .values = absl::MakeSpan(bumpmap)};
+  Parameter bumpmap_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(bumpmap)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"filename", filename_parameter},
@@ -743,28 +743,28 @@ TEST(RemoveMetalMaterialV2, Empty) {
 
 TEST(RemoveMetalMaterialV2, WithData) {
   std::vector<std::string_view> k = {"k"};
-  Parameter k_parameter{.directive = "",
-                        .type = ParameterType::TEXTURE,
-                        .type_name = "",
-                        .values = absl::MakeSpan(k)};
+  Parameter k_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::TEXTURE,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(k)};
 
   std::vector<std::string_view> eta = {"eta"};
-  Parameter eta_parameter{.directive = "",
-                          .type = ParameterType::TEXTURE,
-                          .type_name = "",
-                          .values = absl::MakeSpan(eta)};
+  Parameter eta_parameter{/*directive=*/"",
+                          /*type=*/ParameterType::TEXTURE,
+                          /*type_name=*/"",
+                          /*values=*/absl::MakeSpan(eta)};
 
   std::vector<std::string_view> roughness = {"roughness"};
-  Parameter roughness_parameter{.directive = "",
-                                .type = ParameterType::TEXTURE,
-                                .type_name = "",
-                                .values = absl::MakeSpan(roughness)};
+  Parameter roughness_parameter{/*directive=*/"",
+                                /*type=*/ParameterType::TEXTURE,
+                                /*type_name=*/"",
+                                /*values=*/absl::MakeSpan(roughness)};
 
   std::vector<std::string_view> bumpmap = {"bump"};
-  Parameter bumpmap_parameter{.directive = "",
-                              .type = ParameterType::TEXTURE,
-                              .type_name = "",
-                              .values = absl::MakeSpan(bumpmap)};
+  Parameter bumpmap_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(bumpmap)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"k", k_parameter},
@@ -793,46 +793,46 @@ TEST(RemoveMetalMaterialV3, Empty) {
 
 TEST(RemoveMetalMaterialV3, WithData) {
   std::vector<std::string_view> k = {"k"};
-  Parameter k_parameter{.directive = "",
-                        .type = ParameterType::TEXTURE,
-                        .type_name = "",
-                        .values = absl::MakeSpan(k)};
+  Parameter k_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::TEXTURE,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(k)};
 
   std::vector<std::string_view> eta = {"eta"};
-  Parameter eta_parameter{.directive = "",
-                          .type = ParameterType::TEXTURE,
-                          .type_name = "",
-                          .values = absl::MakeSpan(eta)};
+  Parameter eta_parameter{/*directive=*/"",
+                          /*type=*/ParameterType::TEXTURE,
+                          /*type_name=*/"",
+                          /*values=*/absl::MakeSpan(eta)};
 
   std::vector<std::string_view> roughness = {"roughness"};
-  Parameter roughness_parameter{.directive = "",
-                                .type = ParameterType::TEXTURE,
-                                .type_name = "",
-                                .values = absl::MakeSpan(roughness)};
+  Parameter roughness_parameter{/*directive=*/"",
+                                /*type=*/ParameterType::TEXTURE,
+                                /*type_name=*/"",
+                                /*values=*/absl::MakeSpan(roughness)};
 
   std::vector<std::string_view> bumpmap = {"bump"};
-  Parameter bumpmap_parameter{.directive = "",
-                              .type = ParameterType::TEXTURE,
-                              .type_name = "",
-                              .values = absl::MakeSpan(bumpmap)};
+  Parameter bumpmap_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(bumpmap)};
 
   std::vector<std::string_view> uroughness = {"uroughness"};
-  Parameter uroughness_parameter{.directive = "",
-                                 .type = ParameterType::TEXTURE,
-                                 .type_name = "",
-                                 .values = absl::MakeSpan(uroughness)};
+  Parameter uroughness_parameter{/*directive=*/"",
+                                 /*type=*/ParameterType::TEXTURE,
+                                 /*type_name=*/"",
+                                 /*values=*/absl::MakeSpan(uroughness)};
 
   std::vector<std::string_view> vroughness = {"vroughness"};
-  Parameter vroughness_parameter{.directive = "",
-                                 .type = ParameterType::TEXTURE,
-                                 .type_name = "",
-                                 .values = absl::MakeSpan(vroughness)};
+  Parameter vroughness_parameter{/*directive=*/"",
+                                 /*type=*/ParameterType::TEXTURE,
+                                 /*type_name=*/"",
+                                 /*values=*/absl::MakeSpan(vroughness)};
 
   bool remaproughness[] = {false};
-  Parameter remaproughness_parameter{.directive = "",
-                                     .type = ParameterType::BOOL,
-                                     .type_name = "",
-                                     .values = absl::MakeSpan(remaproughness)};
+  Parameter remaproughness_parameter{/*directive=*/"",
+                                     /*type=*/ParameterType::BOOL,
+                                     /*type_name=*/"",
+                                     /*values=*/absl::MakeSpan(remaproughness)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"k", k_parameter},
@@ -867,16 +867,16 @@ TEST(RemoveMirrorMaterialV1, Empty) {
 
 TEST(RemoveMirrorMaterialV1, WithData) {
   std::vector<std::string_view> kr = {"kr"};
-  Parameter kr_parameter{.directive = "",
-                         .type = ParameterType::TEXTURE,
-                         .type_name = "",
-                         .values = absl::MakeSpan(kr)};
+  Parameter kr_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(kr)};
 
   std::vector<std::string_view> bumpmap = {"bump"};
-  Parameter bumpmap_parameter{.directive = "",
-                              .type = ParameterType::TEXTURE,
-                              .type_name = "",
-                              .values = absl::MakeSpan(bumpmap)};
+  Parameter bumpmap_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(bumpmap)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"Kr", kr_parameter},
@@ -901,34 +901,34 @@ TEST(RemoveMixMaterialV2, Empty) {
 
 TEST(RemoveMixMaterialV2, WithData) {
   std::vector<std::string_view> kd = {"kd"};
-  Parameter kd_parameter{.directive = "",
-                         .type = ParameterType::TEXTURE,
-                         .type_name = "",
-                         .values = absl::MakeSpan(kd)};
+  Parameter kd_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(kd)};
 
   std::vector<std::string_view> sigma = {"sigma"};
-  Parameter sigma_parameter{.directive = "",
-                            .type = ParameterType::TEXTURE,
-                            .type_name = "",
-                            .values = absl::MakeSpan(sigma)};
+  Parameter sigma_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::TEXTURE,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(sigma)};
 
   std::vector<std::string_view> bumpmap = {"bump"};
-  Parameter bumpmap_parameter{.directive = "",
-                              .type = ParameterType::TEXTURE,
-                              .type_name = "",
-                              .values = absl::MakeSpan(bumpmap)};
+  Parameter bumpmap_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(bumpmap)};
 
   std::vector<std::string_view> namedmaterial1 = {"namedmaterial1"};
-  Parameter namedmaterial1_parameter{.directive = "",
-                                     .type = ParameterType::TEXTURE,
-                                     .type_name = "",
-                                     .values = absl::MakeSpan(namedmaterial1)};
+  Parameter namedmaterial1_parameter{/*directive=*/"",
+                                     /*type=*/ParameterType::TEXTURE,
+                                     /*type_name=*/"",
+                                     /*values=*/absl::MakeSpan(namedmaterial1)};
 
   std::vector<std::string_view> namedmaterial2 = {"namedmaterial2"};
-  Parameter namedmaterial2_parameter{.directive = "",
-                                     .type = ParameterType::TEXTURE,
-                                     .type_name = "",
-                                     .values = absl::MakeSpan(namedmaterial2)};
+  Parameter namedmaterial2_parameter{/*directive=*/"",
+                                     /*type=*/ParameterType::TEXTURE,
+                                     /*type_name=*/"",
+                                     /*values=*/absl::MakeSpan(namedmaterial2)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"Kd", kd_parameter},
@@ -957,28 +957,28 @@ TEST(RemovePlasticMaterialV1, Empty) {
 
 TEST(RemovePlasticMaterialV1, WithData) {
   std::vector<std::string_view> kd = {"kd"};
-  Parameter kd_parameter{.directive = "",
-                         .type = ParameterType::TEXTURE,
-                         .type_name = "",
-                         .values = absl::MakeSpan(kd)};
+  Parameter kd_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(kd)};
 
   std::vector<std::string_view> ks = {"ks"};
-  Parameter ks_parameter{.directive = "",
-                         .type = ParameterType::TEXTURE,
-                         .type_name = "",
-                         .values = absl::MakeSpan(ks)};
+  Parameter ks_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(ks)};
 
   std::vector<std::string_view> roughness = {"roughness"};
-  Parameter roughness_parameter{.directive = "",
-                                .type = ParameterType::TEXTURE,
-                                .type_name = "",
-                                .values = absl::MakeSpan(roughness)};
+  Parameter roughness_parameter{/*directive=*/"",
+                                /*type=*/ParameterType::TEXTURE,
+                                /*type_name=*/"",
+                                /*values=*/absl::MakeSpan(roughness)};
 
   std::vector<std::string_view> bumpmap = {"bump"};
-  Parameter bumpmap_parameter{.directive = "",
-                              .type = ParameterType::TEXTURE,
-                              .type_name = "",
-                              .values = absl::MakeSpan(bumpmap)};
+  Parameter bumpmap_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(bumpmap)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"Kd", kd_parameter},
@@ -1007,34 +1007,34 @@ TEST(RemovePlasticMaterialV3, Empty) {
 
 TEST(RemovePlasticMaterialV3, WithData) {
   std::vector<std::string_view> kd = {"kd"};
-  Parameter kd_parameter{.directive = "",
-                         .type = ParameterType::TEXTURE,
-                         .type_name = "",
-                         .values = absl::MakeSpan(kd)};
+  Parameter kd_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(kd)};
 
   std::vector<std::string_view> ks = {"ks"};
-  Parameter ks_parameter{.directive = "",
-                         .type = ParameterType::TEXTURE,
-                         .type_name = "",
-                         .values = absl::MakeSpan(ks)};
+  Parameter ks_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(ks)};
 
   std::vector<std::string_view> roughness = {"roughness"};
-  Parameter roughness_parameter{.directive = "",
-                                .type = ParameterType::TEXTURE,
-                                .type_name = "",
-                                .values = absl::MakeSpan(roughness)};
+  Parameter roughness_parameter{/*directive=*/"",
+                                /*type=*/ParameterType::TEXTURE,
+                                /*type_name=*/"",
+                                /*values=*/absl::MakeSpan(roughness)};
 
   std::vector<std::string_view> bumpmap = {"bump"};
-  Parameter bumpmap_parameter{.directive = "",
-                              .type = ParameterType::TEXTURE,
-                              .type_name = "",
-                              .values = absl::MakeSpan(bumpmap)};
+  Parameter bumpmap_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(bumpmap)};
 
   bool remaproughness[] = {false};
-  Parameter remaproughness_parameter{.directive = "",
-                                     .type = ParameterType::BOOL,
-                                     .type_name = "",
-                                     .values = absl::MakeSpan(remaproughness)};
+  Parameter remaproughness_parameter{/*directive=*/"",
+                                     /*type=*/ParameterType::BOOL,
+                                     /*type_name=*/"",
+                                     /*values=*/absl::MakeSpan(remaproughness)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"Kd", kd_parameter},
@@ -1065,28 +1065,28 @@ TEST(RemoveShinyMetalMaterialV1, Empty) {
 
 TEST(RemoveShinyMetalMaterialV1, WithData) {
   std::vector<std::string_view> ks = {"ks"};
-  Parameter ks_parameter{.directive = "",
-                         .type = ParameterType::TEXTURE,
-                         .type_name = "",
-                         .values = absl::MakeSpan(ks)};
+  Parameter ks_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(ks)};
 
   std::vector<std::string_view> kr = {"kr"};
-  Parameter kr_parameter{.directive = "",
-                         .type = ParameterType::TEXTURE,
-                         .type_name = "",
-                         .values = absl::MakeSpan(kr)};
+  Parameter kr_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(kr)};
 
   std::vector<std::string_view> roughness = {"roughness"};
-  Parameter roughness_parameter{.directive = "",
-                                .type = ParameterType::TEXTURE,
-                                .type_name = "",
-                                .values = absl::MakeSpan(roughness)};
+  Parameter roughness_parameter{/*directive=*/"",
+                                /*type=*/ParameterType::TEXTURE,
+                                /*type_name=*/"",
+                                /*values=*/absl::MakeSpan(roughness)};
 
   std::vector<std::string_view> bumpmap = {"bump"};
-  Parameter bumpmap_parameter{.directive = "",
-                              .type = ParameterType::TEXTURE,
-                              .type_name = "",
-                              .values = absl::MakeSpan(bumpmap)};
+  Parameter bumpmap_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(bumpmap)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"Ks", ks_parameter},
@@ -1115,34 +1115,34 @@ TEST(RemoveSubstrateMaterialV1, Empty) {
 
 TEST(RemoveSubstrateMaterialV1, WithDataIndex) {
   std::vector<std::string_view> kd = {"kd"};
-  Parameter kd_parameter{.directive = "",
-                         .type = ParameterType::TEXTURE,
-                         .type_name = "",
-                         .values = absl::MakeSpan(kd)};
+  Parameter kd_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(kd)};
 
   std::vector<std::string_view> ks = {"ks"};
-  Parameter ks_parameter{.directive = "",
-                         .type = ParameterType::TEXTURE,
-                         .type_name = "",
-                         .values = absl::MakeSpan(ks)};
+  Parameter ks_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(ks)};
 
   std::vector<std::string_view> bumpmap = {"bump"};
-  Parameter bumpmap_parameter{.directive = "",
-                              .type = ParameterType::TEXTURE,
-                              .type_name = "",
-                              .values = absl::MakeSpan(bumpmap)};
+  Parameter bumpmap_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(bumpmap)};
 
   std::vector<std::string_view> uroughness = {"uroughness"};
-  Parameter uroughness_parameter{.directive = "",
-                                 .type = ParameterType::TEXTURE,
-                                 .type_name = "",
-                                 .values = absl::MakeSpan(uroughness)};
+  Parameter uroughness_parameter{/*directive=*/"",
+                                 /*type=*/ParameterType::TEXTURE,
+                                 /*type_name=*/"",
+                                 /*values=*/absl::MakeSpan(uroughness)};
 
   std::vector<std::string_view> vroughness = {"vroughness"};
-  Parameter vroughness_parameter{.directive = "",
-                                 .type = ParameterType::TEXTURE,
-                                 .type_name = "",
-                                 .values = absl::MakeSpan(vroughness)};
+  Parameter vroughness_parameter{/*directive=*/"",
+                                 /*type=*/ParameterType::TEXTURE,
+                                 /*type_name=*/"",
+                                 /*values=*/absl::MakeSpan(vroughness)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"Kd", kd_parameter},
@@ -1173,40 +1173,40 @@ TEST(RemoveSubstrateMaterialV3, Empty) {
 
 TEST(RemoveSubstrateMaterialV3, WithDataIndex) {
   std::vector<std::string_view> kd = {"kd"};
-  Parameter kd_parameter{.directive = "",
-                         .type = ParameterType::TEXTURE,
-                         .type_name = "",
-                         .values = absl::MakeSpan(kd)};
+  Parameter kd_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(kd)};
 
   std::vector<std::string_view> ks = {"ks"};
-  Parameter ks_parameter{.directive = "",
-                         .type = ParameterType::TEXTURE,
-                         .type_name = "",
-                         .values = absl::MakeSpan(ks)};
+  Parameter ks_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(ks)};
 
   std::vector<std::string_view> bumpmap = {"bump"};
-  Parameter bumpmap_parameter{.directive = "",
-                              .type = ParameterType::TEXTURE,
-                              .type_name = "",
-                              .values = absl::MakeSpan(bumpmap)};
+  Parameter bumpmap_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(bumpmap)};
 
   std::vector<std::string_view> uroughness = {"uroughness"};
-  Parameter uroughness_parameter{.directive = "",
-                                 .type = ParameterType::TEXTURE,
-                                 .type_name = "",
-                                 .values = absl::MakeSpan(uroughness)};
+  Parameter uroughness_parameter{/*directive=*/"",
+                                 /*type=*/ParameterType::TEXTURE,
+                                 /*type_name=*/"",
+                                 /*values=*/absl::MakeSpan(uroughness)};
 
   std::vector<std::string_view> vroughness = {"vroughness"};
-  Parameter vroughness_parameter{.directive = "",
-                                 .type = ParameterType::TEXTURE,
-                                 .type_name = "",
-                                 .values = absl::MakeSpan(vroughness)};
+  Parameter vroughness_parameter{/*directive=*/"",
+                                 /*type=*/ParameterType::TEXTURE,
+                                 /*type_name=*/"",
+                                 /*values=*/absl::MakeSpan(vroughness)};
 
   bool remaproughness[] = {false};
-  Parameter remaproughness_parameter{.directive = "",
-                                     .type = ParameterType::BOOL,
-                                     .type_name = "",
-                                     .values = absl::MakeSpan(remaproughness)};
+  Parameter remaproughness_parameter{/*directive=*/"",
+                                     /*type=*/ParameterType::BOOL,
+                                     /*type_name=*/"",
+                                     /*values=*/absl::MakeSpan(remaproughness)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"Kd", kd_parameter},
@@ -1239,76 +1239,76 @@ TEST(RemoveSubsurfaceMaterialV3, Empty) {
 
 TEST(RemoveSubsurfaceMaterialV3, WithData) {
   std::vector<std::string_view> kr = {"kr"};
-  Parameter kr_parameter{.directive = "",
-                         .type = ParameterType::TEXTURE,
-                         .type_name = "",
-                         .values = absl::MakeSpan(kr)};
+  Parameter kr_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(kr)};
 
   std::vector<std::string_view> kt = {"kt"};
-  Parameter kt_parameter{.directive = "",
-                         .type = ParameterType::TEXTURE,
-                         .type_name = "",
-                         .values = absl::MakeSpan(kt)};
+  Parameter kt_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(kt)};
 
   std::vector<std::string_view> uroughness = {"uroughness"};
-  Parameter uroughness_parameter{.directive = "",
-                                 .type = ParameterType::TEXTURE,
-                                 .type_name = "",
-                                 .values = absl::MakeSpan(uroughness)};
+  Parameter uroughness_parameter{/*directive=*/"",
+                                 /*type=*/ParameterType::TEXTURE,
+                                 /*type_name=*/"",
+                                 /*values=*/absl::MakeSpan(uroughness)};
 
   std::vector<std::string_view> vroughness = {"vroughness"};
-  Parameter vroughness_parameter{.directive = "",
-                                 .type = ParameterType::TEXTURE,
-                                 .type_name = "",
-                                 .values = absl::MakeSpan(vroughness)};
+  Parameter vroughness_parameter{/*directive=*/"",
+                                 /*type=*/ParameterType::TEXTURE,
+                                 /*type_name=*/"",
+                                 /*values=*/absl::MakeSpan(vroughness)};
 
   std::vector<std::string_view> bumpmap = {"bump"};
-  Parameter bumpmap_parameter{.directive = "",
-                              .type = ParameterType::TEXTURE,
-                              .type_name = "",
-                              .values = absl::MakeSpan(bumpmap)};
+  Parameter bumpmap_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(bumpmap)};
 
   bool remaproughness[] = {false};
-  Parameter remaproughness_parameter{.directive = "",
-                                     .type = ParameterType::BOOL,
-                                     .type_name = "",
-                                     .values = absl::MakeSpan(remaproughness)};
+  Parameter remaproughness_parameter{/*directive=*/"",
+                                     /*type=*/ParameterType::BOOL,
+                                     /*type_name=*/"",
+                                     /*values=*/absl::MakeSpan(remaproughness)};
 
   std::vector<double> g = {1.0};
-  Parameter g_parameter{.directive = "",
-                        .type = ParameterType::FLOAT,
-                        .type_name = "",
-                        .values = absl::MakeSpan(g)};
+  Parameter g_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::FLOAT,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(g)};
 
   std::vector<double> scale = {0.0};
-  Parameter scale_parameter{.directive = "",
-                            .type = ParameterType::FLOAT,
-                            .type_name = "",
-                            .values = absl::MakeSpan(scale)};
+  Parameter scale_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(scale)};
 
   std::vector<double> eta = {2.0};
-  Parameter eta_parameter{.directive = "",
-                          .type = ParameterType::FLOAT,
-                          .type_name = "",
-                          .values = absl::MakeSpan(eta)};
+  Parameter eta_parameter{/*directive=*/"",
+                          /*type=*/ParameterType::FLOAT,
+                          /*type_name=*/"",
+                          /*values=*/absl::MakeSpan(eta)};
 
   std::vector<std::string_view> sigma_a = {"sigma_a"};
-  Parameter sigma_a_parameter{.directive = "",
-                              .type = ParameterType::TEXTURE,
-                              .type_name = "",
-                              .values = absl::MakeSpan(sigma_a)};
+  Parameter sigma_a_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(sigma_a)};
 
   std::vector<std::string_view> sigma_s = {"sigma_s"};
-  Parameter sigma_s_parameter{.directive = "",
-                              .type = ParameterType::TEXTURE,
-                              .type_name = "",
-                              .values = absl::MakeSpan(sigma_s)};
+  Parameter sigma_s_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(sigma_s)};
 
   std::vector<std::string_view> name = {"Apple"};
-  Parameter name_parameter{.directive = "",
-                           .type = ParameterType::STRING,
-                           .type_name = "",
-                           .values = absl::MakeSpan(name)};
+  Parameter name_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::STRING,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(name)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"Kr", kr_parameter},
@@ -1353,40 +1353,40 @@ TEST(RemoveTranslucentMaterialV1, Empty) {
 
 TEST(RemoveTranslucentMaterialV1, WithData) {
   std::vector<std::string_view> kd = {"kd"};
-  Parameter kd_parameter{.directive = "",
-                         .type = ParameterType::TEXTURE,
-                         .type_name = "",
-                         .values = absl::MakeSpan(kd)};
+  Parameter kd_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(kd)};
 
   std::vector<std::string_view> ks = {"ks"};
-  Parameter ks_parameter{.directive = "",
-                         .type = ParameterType::TEXTURE,
-                         .type_name = "",
-                         .values = absl::MakeSpan(ks)};
+  Parameter ks_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(ks)};
 
   std::vector<std::string_view> reflect = {"reflect"};
-  Parameter reflect_parameter{.directive = "",
-                              .type = ParameterType::TEXTURE,
-                              .type_name = "",
-                              .values = absl::MakeSpan(reflect)};
+  Parameter reflect_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(reflect)};
 
   std::vector<std::string_view> transmit = {"transmit"};
-  Parameter transmit_parameter{.directive = "",
-                               .type = ParameterType::TEXTURE,
-                               .type_name = "",
-                               .values = absl::MakeSpan(transmit)};
+  Parameter transmit_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::TEXTURE,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(transmit)};
 
   std::vector<std::string_view> roughness = {"roughness"};
-  Parameter roughness_parameter{.directive = "",
-                                .type = ParameterType::TEXTURE,
-                                .type_name = "",
-                                .values = absl::MakeSpan(roughness)};
+  Parameter roughness_parameter{/*directive=*/"",
+                                /*type=*/ParameterType::TEXTURE,
+                                /*type_name=*/"",
+                                /*values=*/absl::MakeSpan(roughness)};
 
   std::vector<std::string_view> bumpmap = {"bump"};
-  Parameter bumpmap_parameter{.directive = "",
-                              .type = ParameterType::TEXTURE,
-                              .type_name = "",
-                              .values = absl::MakeSpan(bumpmap)};
+  Parameter bumpmap_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(bumpmap)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"Kd", kd_parameter},
@@ -1419,46 +1419,46 @@ TEST(RemoveTranslucentMaterialV3, Empty) {
 
 TEST(RemoveTranslucentMaterialV3, WithData) {
   std::vector<std::string_view> kd = {"kd"};
-  Parameter kd_parameter{.directive = "",
-                         .type = ParameterType::TEXTURE,
-                         .type_name = "",
-                         .values = absl::MakeSpan(kd)};
+  Parameter kd_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(kd)};
 
   std::vector<std::string_view> ks = {"ks"};
-  Parameter ks_parameter{.directive = "",
-                         .type = ParameterType::TEXTURE,
-                         .type_name = "",
-                         .values = absl::MakeSpan(ks)};
+  Parameter ks_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(ks)};
 
   std::vector<std::string_view> reflect = {"reflect"};
-  Parameter reflect_parameter{.directive = "",
-                              .type = ParameterType::TEXTURE,
-                              .type_name = "",
-                              .values = absl::MakeSpan(reflect)};
+  Parameter reflect_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(reflect)};
 
   std::vector<std::string_view> transmit = {"transmit"};
-  Parameter transmit_parameter{.directive = "",
-                               .type = ParameterType::TEXTURE,
-                               .type_name = "",
-                               .values = absl::MakeSpan(transmit)};
+  Parameter transmit_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::TEXTURE,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(transmit)};
 
   std::vector<std::string_view> roughness = {"roughness"};
-  Parameter roughness_parameter{.directive = "",
-                                .type = ParameterType::TEXTURE,
-                                .type_name = "",
-                                .values = absl::MakeSpan(roughness)};
+  Parameter roughness_parameter{/*directive=*/"",
+                                /*type=*/ParameterType::TEXTURE,
+                                /*type_name=*/"",
+                                /*values=*/absl::MakeSpan(roughness)};
 
   std::vector<std::string_view> bumpmap = {"bump"};
-  Parameter bumpmap_parameter{.directive = "",
-                              .type = ParameterType::TEXTURE,
-                              .type_name = "",
-                              .values = absl::MakeSpan(bumpmap)};
+  Parameter bumpmap_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(bumpmap)};
 
   bool remaproughness[] = {false};
-  Parameter remaproughness_parameter{.directive = "",
-                                     .type = ParameterType::BOOL,
-                                     .type_name = "",
-                                     .values = absl::MakeSpan(remaproughness)};
+  Parameter remaproughness_parameter{/*directive=*/"",
+                                     /*type=*/ParameterType::BOOL,
+                                     /*type_name=*/"",
+                                     /*values=*/absl::MakeSpan(remaproughness)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"Kd", kd_parameter},
@@ -1493,40 +1493,40 @@ TEST(RemoveUberMaterialV1, Empty) {
 
 TEST(RemoveUberMaterialV1, WithData) {
   std::vector<std::string_view> kd = {"kd"};
-  Parameter kd_parameter{.directive = "",
-                         .type = ParameterType::TEXTURE,
-                         .type_name = "",
-                         .values = absl::MakeSpan(kd)};
+  Parameter kd_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(kd)};
 
   std::vector<std::string_view> ks = {"ks"};
-  Parameter ks_parameter{.directive = "",
-                         .type = ParameterType::TEXTURE,
-                         .type_name = "",
-                         .values = absl::MakeSpan(ks)};
+  Parameter ks_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(ks)};
 
   std::vector<std::string_view> kr = {"kr"};
-  Parameter kr_parameter{.directive = "",
-                         .type = ParameterType::TEXTURE,
-                         .type_name = "",
-                         .values = absl::MakeSpan(kr)};
+  Parameter kr_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(kr)};
 
   std::vector<std::string_view> opacity = {"opacity"};
-  Parameter opacity_parameter{.directive = "",
-                              .type = ParameterType::TEXTURE,
-                              .type_name = "",
-                              .values = absl::MakeSpan(opacity)};
+  Parameter opacity_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(opacity)};
 
   std::vector<std::string_view> roughness = {"roughness"};
-  Parameter roughness_parameter{.directive = "",
-                                .type = ParameterType::TEXTURE,
-                                .type_name = "",
-                                .values = absl::MakeSpan(roughness)};
+  Parameter roughness_parameter{/*directive=*/"",
+                                /*type=*/ParameterType::TEXTURE,
+                                /*type_name=*/"",
+                                /*values=*/absl::MakeSpan(roughness)};
 
   std::vector<std::string_view> bumpmap = {"bump"};
-  Parameter bumpmap_parameter{.directive = "",
-                              .type = ParameterType::TEXTURE,
-                              .type_name = "",
-                              .values = absl::MakeSpan(bumpmap)};
+  Parameter bumpmap_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(bumpmap)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"Kd", kd_parameter},
@@ -1559,52 +1559,52 @@ TEST(RemoveUberMaterialV2, Empty) {
 
 TEST(RemoveUberMaterialV2, WithData) {
   std::vector<std::string_view> kd = {"kd"};
-  Parameter kd_parameter{.directive = "",
-                         .type = ParameterType::TEXTURE,
-                         .type_name = "",
-                         .values = absl::MakeSpan(kd)};
+  Parameter kd_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(kd)};
 
   std::vector<std::string_view> ks = {"ks"};
-  Parameter ks_parameter{.directive = "",
-                         .type = ParameterType::TEXTURE,
-                         .type_name = "",
-                         .values = absl::MakeSpan(ks)};
+  Parameter ks_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(ks)};
 
   std::vector<std::string_view> kr = {"kr"};
-  Parameter kr_parameter{.directive = "",
-                         .type = ParameterType::TEXTURE,
-                         .type_name = "",
-                         .values = absl::MakeSpan(kr)};
+  Parameter kr_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(kr)};
 
   std::vector<std::string_view> kt = {"kt"};
-  Parameter kt_parameter{.directive = "",
-                         .type = ParameterType::TEXTURE,
-                         .type_name = "",
-                         .values = absl::MakeSpan(kt)};
+  Parameter kt_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(kt)};
 
   std::vector<std::string_view> opacity = {"opacity"};
-  Parameter opacity_parameter{.directive = "",
-                              .type = ParameterType::TEXTURE,
-                              .type_name = "",
-                              .values = absl::MakeSpan(opacity)};
+  Parameter opacity_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(opacity)};
 
   std::vector<std::string_view> index = {"index"};
-  Parameter index_parameter{.directive = "",
-                            .type = ParameterType::TEXTURE,
-                            .type_name = "",
-                            .values = absl::MakeSpan(index)};
+  Parameter index_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::TEXTURE,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(index)};
 
   std::vector<std::string_view> roughness = {"roughness"};
-  Parameter roughness_parameter{.directive = "",
-                                .type = ParameterType::TEXTURE,
-                                .type_name = "",
-                                .values = absl::MakeSpan(roughness)};
+  Parameter roughness_parameter{/*directive=*/"",
+                                /*type=*/ParameterType::TEXTURE,
+                                /*type_name=*/"",
+                                /*values=*/absl::MakeSpan(roughness)};
 
   std::vector<std::string_view> bumpmap = {"bump"};
-  Parameter bumpmap_parameter{.directive = "",
-                              .type = ParameterType::TEXTURE,
-                              .type_name = "",
-                              .values = absl::MakeSpan(bumpmap)};
+  Parameter bumpmap_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(bumpmap)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"Kd", kd_parameter},
@@ -1641,70 +1641,70 @@ TEST(RemoveUberMaterialV3, Empty) {
 
 TEST(RemoveUberMaterialV3, WithDataIndex) {
   std::vector<std::string_view> kd = {"kd"};
-  Parameter kd_parameter{.directive = "",
-                         .type = ParameterType::TEXTURE,
-                         .type_name = "",
-                         .values = absl::MakeSpan(kd)};
+  Parameter kd_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(kd)};
 
   std::vector<std::string_view> ks = {"ks"};
-  Parameter ks_parameter{.directive = "",
-                         .type = ParameterType::TEXTURE,
-                         .type_name = "",
-                         .values = absl::MakeSpan(ks)};
+  Parameter ks_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(ks)};
 
   std::vector<std::string_view> kr = {"kr"};
-  Parameter kr_parameter{.directive = "",
-                         .type = ParameterType::TEXTURE,
-                         .type_name = "",
-                         .values = absl::MakeSpan(kr)};
+  Parameter kr_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(kr)};
 
   std::vector<std::string_view> kt = {"kt"};
-  Parameter kt_parameter{.directive = "",
-                         .type = ParameterType::TEXTURE,
-                         .type_name = "",
-                         .values = absl::MakeSpan(kt)};
+  Parameter kt_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(kt)};
 
   std::vector<std::string_view> opacity = {"opacity"};
-  Parameter opacity_parameter{.directive = "",
-                              .type = ParameterType::TEXTURE,
-                              .type_name = "",
-                              .values = absl::MakeSpan(opacity)};
+  Parameter opacity_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(opacity)};
 
   std::vector<std::string_view> index = {"index"};
-  Parameter index_parameter{.directive = "",
-                            .type = ParameterType::TEXTURE,
-                            .type_name = "",
-                            .values = absl::MakeSpan(index)};
+  Parameter index_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::TEXTURE,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(index)};
 
   std::vector<std::string_view> roughness = {"roughness"};
-  Parameter roughness_parameter{.directive = "",
-                                .type = ParameterType::TEXTURE,
-                                .type_name = "",
-                                .values = absl::MakeSpan(roughness)};
+  Parameter roughness_parameter{/*directive=*/"",
+                                /*type=*/ParameterType::TEXTURE,
+                                /*type_name=*/"",
+                                /*values=*/absl::MakeSpan(roughness)};
 
   std::vector<std::string_view> bumpmap = {"bump"};
-  Parameter bumpmap_parameter{.directive = "",
-                              .type = ParameterType::TEXTURE,
-                              .type_name = "",
-                              .values = absl::MakeSpan(bumpmap)};
+  Parameter bumpmap_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(bumpmap)};
 
   std::vector<std::string_view> uroughness = {"uroughness"};
-  Parameter uroughness_parameter{.directive = "",
-                                 .type = ParameterType::TEXTURE,
-                                 .type_name = "",
-                                 .values = absl::MakeSpan(uroughness)};
+  Parameter uroughness_parameter{/*directive=*/"",
+                                 /*type=*/ParameterType::TEXTURE,
+                                 /*type_name=*/"",
+                                 /*values=*/absl::MakeSpan(uroughness)};
 
   std::vector<std::string_view> vroughness = {"vroughness"};
-  Parameter vroughness_parameter{.directive = "",
-                                 .type = ParameterType::TEXTURE,
-                                 .type_name = "",
-                                 .values = absl::MakeSpan(vroughness)};
+  Parameter vroughness_parameter{/*directive=*/"",
+                                 /*type=*/ParameterType::TEXTURE,
+                                 /*type_name=*/"",
+                                 /*values=*/absl::MakeSpan(vroughness)};
 
   bool remaproughness[] = {false};
-  Parameter remaproughness_parameter{.directive = "",
-                                     .type = ParameterType::BOOL,
-                                     .type_name = "",
-                                     .values = absl::MakeSpan(remaproughness)};
+  Parameter remaproughness_parameter{/*directive=*/"",
+                                     /*type=*/ParameterType::BOOL,
+                                     /*type_name=*/"",
+                                     /*values=*/absl::MakeSpan(remaproughness)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"Kd", kd_parameter},
@@ -1739,76 +1739,76 @@ TEST(RemoveUberMaterialV3, WithDataIndex) {
 
 TEST(RemoveUberMaterialV3, WithDataEta) {
   std::vector<std::string_view> kd = {"kd"};
-  Parameter kd_parameter{.directive = "",
-                         .type = ParameterType::TEXTURE,
-                         .type_name = "",
-                         .values = absl::MakeSpan(kd)};
+  Parameter kd_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(kd)};
 
   std::vector<std::string_view> ks = {"ks"};
-  Parameter ks_parameter{.directive = "",
-                         .type = ParameterType::TEXTURE,
-                         .type_name = "",
-                         .values = absl::MakeSpan(ks)};
+  Parameter ks_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(ks)};
 
   std::vector<std::string_view> kr = {"kr"};
-  Parameter kr_parameter{.directive = "",
-                         .type = ParameterType::TEXTURE,
-                         .type_name = "",
-                         .values = absl::MakeSpan(kr)};
+  Parameter kr_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(kr)};
 
   std::vector<std::string_view> kt = {"kt"};
-  Parameter kt_parameter{.directive = "",
-                         .type = ParameterType::TEXTURE,
-                         .type_name = "",
-                         .values = absl::MakeSpan(kt)};
+  Parameter kt_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(kt)};
 
   std::vector<std::string_view> opacity = {"opacity"};
-  Parameter opacity_parameter{.directive = "",
-                              .type = ParameterType::TEXTURE,
-                              .type_name = "",
-                              .values = absl::MakeSpan(opacity)};
+  Parameter opacity_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(opacity)};
 
   std::vector<std::string_view> index = {"index"};
-  Parameter index_parameter{.directive = "",
-                            .type = ParameterType::TEXTURE,
-                            .type_name = "",
-                            .values = absl::MakeSpan(index)};
+  Parameter index_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::TEXTURE,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(index)};
 
   std::vector<std::string_view> eta = {"eta"};
-  Parameter eta_parameter{.directive = "",
-                          .type = ParameterType::TEXTURE,
-                          .type_name = "",
-                          .values = absl::MakeSpan(eta)};
+  Parameter eta_parameter{/*directive=*/"",
+                          /*type=*/ParameterType::TEXTURE,
+                          /*type_name=*/"",
+                          /*values=*/absl::MakeSpan(eta)};
 
   std::vector<std::string_view> roughness = {"roughness"};
-  Parameter roughness_parameter{.directive = "",
-                                .type = ParameterType::TEXTURE,
-                                .type_name = "",
-                                .values = absl::MakeSpan(roughness)};
+  Parameter roughness_parameter{/*directive=*/"",
+                                /*type=*/ParameterType::TEXTURE,
+                                /*type_name=*/"",
+                                /*values=*/absl::MakeSpan(roughness)};
 
   std::vector<std::string_view> bumpmap = {"bump"};
-  Parameter bumpmap_parameter{.directive = "",
-                              .type = ParameterType::TEXTURE,
-                              .type_name = "",
-                              .values = absl::MakeSpan(bumpmap)};
+  Parameter bumpmap_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(bumpmap)};
 
   std::vector<std::string_view> uroughness = {"uroughness"};
-  Parameter uroughness_parameter{.directive = "",
-                                 .type = ParameterType::TEXTURE,
-                                 .type_name = "",
-                                 .values = absl::MakeSpan(uroughness)};
+  Parameter uroughness_parameter{/*directive=*/"",
+                                 /*type=*/ParameterType::TEXTURE,
+                                 /*type_name=*/"",
+                                 /*values=*/absl::MakeSpan(uroughness)};
 
   std::vector<std::string_view> vroughness = {"vroughness"};
-  Parameter vroughness_parameter{.directive = "",
-                                 .type = ParameterType::TEXTURE,
-                                 .type_name = "",
-                                 .values = absl::MakeSpan(vroughness)};
+  Parameter vroughness_parameter{/*directive=*/"",
+                                 /*type=*/ParameterType::TEXTURE,
+                                 /*type_name=*/"",
+                                 /*values=*/absl::MakeSpan(vroughness)};
 
   bool remaproughness[] = {false};
-  Parameter remaproughness_parameter{.directive = "",
-                                     .type = ParameterType::BOOL,
-                                     .type_name = "",
-                                     .values = absl::MakeSpan(remaproughness)};
+  Parameter remaproughness_parameter{/*directive=*/"",
+                                     /*type=*/ParameterType::BOOL,
+                                     /*type_name=*/"",
+                                     /*values=*/absl::MakeSpan(remaproughness)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"Kd", kd_parameter},

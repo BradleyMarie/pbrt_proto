@@ -2432,10 +2432,10 @@ TEST(WorldEnd, Fails) {
 
 TEST(TryRemoveFloats, WrongType) {
   std::vector<double> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::BLACKBODY_V1,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::BLACKBODY_V1,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -2448,10 +2448,10 @@ TEST(TryRemoveFloats, WrongType) {
 
 TEST(TryRemoveFloats, WrongStoredType) {
   std::vector<int32_t> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::FLOAT,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::FLOAT,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name1", parameter}};
@@ -2464,10 +2464,10 @@ TEST(TryRemoveFloats, WrongStoredType) {
 
 TEST(TryRemoveFloats, WrongName) {
   std::vector<double> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::FLOAT,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::FLOAT,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name1", parameter}};
@@ -2480,10 +2480,10 @@ TEST(TryRemoveFloats, WrongName) {
 
 TEST(TryRemoveFloats, WrongCount) {
   std::vector<double> values = {1.0};
-  Parameter parameter{.directive = "Accelerator",
-                      .type = ParameterType::FLOAT,
-                      .type_name = "float",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"Accelerator",
+                      /*type=*/ParameterType::FLOAT,
+                      /*type_name=*/"float",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -2500,10 +2500,10 @@ TEST(TryRemoveFloats, WrongCount) {
 
 TEST(TryRemoveFloats, Found) {
   std::vector<double> values = {1.0, 2.0, 3.0, 4.0};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::FLOAT,
-                      .type_name = "aaa",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::FLOAT,
+                      /*type_name=*/"aaa",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -2516,10 +2516,10 @@ TEST(TryRemoveFloats, Found) {
 
 TEST(TryRemoveIntegers, WrongType) {
   std::vector<int32_t> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::BLACKBODY_V1,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::BLACKBODY_V1,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -2532,10 +2532,10 @@ TEST(TryRemoveIntegers, WrongType) {
 
 TEST(TryRemoveIntegers, WrongStoredType) {
   std::vector<double> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::INTEGER,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::INTEGER,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -2548,10 +2548,10 @@ TEST(TryRemoveIntegers, WrongStoredType) {
 
 TEST(TryRemoveIntegers, WrongName) {
   std::vector<int32_t> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::INTEGER,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::INTEGER,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name1", parameter}};
@@ -2565,10 +2565,10 @@ TEST(TryRemoveIntegers, WrongName) {
 
 TEST(TryRemoveIntegers, WrongCount) {
   std::vector<int32_t> values = {1};
-  Parameter parameter{.directive = "Accelerator",
-                      .type = ParameterType::INTEGER,
-                      .type_name = "integer",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"Accelerator",
+                      /*type=*/ParameterType::INTEGER,
+                      /*type_name=*/"integer",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -2584,10 +2584,10 @@ TEST(TryRemoveIntegers, WrongCount) {
 
 TEST(TryRemoveIntegers, Found) {
   std::vector<int32_t> values = {1, 2, 3, 4};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::INTEGER,
-                      .type_name = "aaa",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::INTEGER,
+                      /*type_name=*/"aaa",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -2600,10 +2600,10 @@ TEST(TryRemoveIntegers, Found) {
 
 TEST(TryRemoveFloats2, WrongType) {
   std::vector<double> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::INTEGER,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::INTEGER,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -2614,10 +2614,10 @@ TEST(TryRemoveFloats2, WrongType) {
 
 TEST(TryRemoveFloats2, WrongStoredType) {
   std::vector<int32_t> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::FLOAT,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::FLOAT,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -2628,10 +2628,10 @@ TEST(TryRemoveFloats2, WrongStoredType) {
 
 TEST(TryRemoveFloats2, WrongName) {
   std::vector<double> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::FLOAT,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::FLOAT,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name1", parameter}};
@@ -2642,10 +2642,10 @@ TEST(TryRemoveFloats2, WrongName) {
 
 TEST(TryRemoveFloats2, Found) {
   std::vector<double> values = {{1.0, 2.0, 3.0}};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::FLOAT,
-                      .type_name = "aaa",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::FLOAT,
+                      /*type_name=*/"aaa",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -2657,10 +2657,10 @@ TEST(TryRemoveFloats2, Found) {
 
 TEST(TryRemoveIntegers2, WrongType) {
   std::vector<int32_t> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::FLOAT,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::FLOAT,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -2671,10 +2671,10 @@ TEST(TryRemoveIntegers2, WrongType) {
 
 TEST(TryRemoveIntegers2, WrongStoredType) {
   std::vector<double> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::INTEGER,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::INTEGER,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -2685,10 +2685,10 @@ TEST(TryRemoveIntegers2, WrongStoredType) {
 
 TEST(TryRemoveIntegers2, WrongName) {
   std::vector<int32_t> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::INTEGER,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::INTEGER,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name1", parameter}};
@@ -2699,10 +2699,10 @@ TEST(TryRemoveIntegers2, WrongName) {
 
 TEST(TryRemoveIntegers2, Found) {
   std::vector<int32_t> values = {{1, 2, 3}};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::INTEGER,
-                      .type_name = "aaa",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::INTEGER,
+                      /*type_name=*/"aaa",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -2714,10 +2714,10 @@ TEST(TryRemoveIntegers2, Found) {
 
 TEST(TryRemoveSpectralSamples, WrongType) {
   std::vector<std::array<double, 2>> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::BLACKBODY_V1,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::BLACKBODY_V1,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -2728,10 +2728,10 @@ TEST(TryRemoveSpectralSamples, WrongType) {
 
 TEST(TryRemoveSpectralSamples, WrongStoredType) {
   std::vector<double> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::SPECTRUM,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::SPECTRUM,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -2742,10 +2742,10 @@ TEST(TryRemoveSpectralSamples, WrongStoredType) {
 
 TEST(TryRemoveSpectralSamples, WrongName) {
   std::vector<std::array<double, 2>> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::SPECTRUM,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::SPECTRUM,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name1", parameter}};
@@ -2756,10 +2756,10 @@ TEST(TryRemoveSpectralSamples, WrongName) {
 
 TEST(TryRemoveSpectralSamples, Found) {
   std::vector<std::array<double, 2>> values = {{1.0, 2.0}, {3.0, 4.0}};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::SPECTRUM,
-                      .type_name = "aaa",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::SPECTRUM,
+                      /*type_name=*/"aaa",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -2772,10 +2772,10 @@ TEST(TryRemoveSpectralSamples, Found) {
 
 TEST(TryRemoveBlackbodyV1, WrongType) {
   std::vector<std::array<double, 2>> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::FLOAT,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::FLOAT,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -2786,10 +2786,10 @@ TEST(TryRemoveBlackbodyV1, WrongType) {
 
 TEST(TryRemoveBlackbodyV1, WrongStoredType) {
   std::vector<double> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::BLACKBODY_V1,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::BLACKBODY_V1,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -2800,10 +2800,10 @@ TEST(TryRemoveBlackbodyV1, WrongStoredType) {
 
 TEST(TryRemoveBlackbodyV1, WrongName) {
   std::vector<std::array<double, 2>> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::BLACKBODY_V1,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::BLACKBODY_V1,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name1", parameter}};
@@ -2814,10 +2814,10 @@ TEST(TryRemoveBlackbodyV1, WrongName) {
 
 TEST(TryRemoveBlackbodyV1, Found) {
   std::vector<std::array<double, 2>> values = {{1.0, 2.0}};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::BLACKBODY_V1,
-                      .type_name = "aaa",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::BLACKBODY_V1,
+                      /*type_name=*/"aaa",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -2829,10 +2829,10 @@ TEST(TryRemoveBlackbodyV1, Found) {
 
 TEST(TryRemoveBlackbodyV2, WrongType) {
   std::vector<double> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::FLOAT,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::FLOAT,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -2843,10 +2843,10 @@ TEST(TryRemoveBlackbodyV2, WrongType) {
 
 TEST(TryRemoveBlackbodyV2, WrongStoredType) {
   std::vector<std::array<double, 2>> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::BLACKBODY_V2,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::BLACKBODY_V2,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -2857,10 +2857,10 @@ TEST(TryRemoveBlackbodyV2, WrongStoredType) {
 
 TEST(TryRemoveBlackbodyV2, WrongName) {
   std::vector<double> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::BLACKBODY_V2,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::BLACKBODY_V2,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name1", parameter}};
@@ -2871,10 +2871,10 @@ TEST(TryRemoveBlackbodyV2, WrongName) {
 
 TEST(TryRemoveBlackbodyV2, Found) {
   std::vector<double> values = {1.0};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::BLACKBODY_V2,
-                      .type_name = "aaa",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::BLACKBODY_V2,
+                      /*type_name=*/"aaa",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -2885,10 +2885,10 @@ TEST(TryRemoveBlackbodyV2, Found) {
 
 TEST(TryRemoveBool, WrongType) {
   absl::InlinedVector<bool, 1> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::BLACKBODY_V1,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::BLACKBODY_V1,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -2899,10 +2899,10 @@ TEST(TryRemoveBool, WrongType) {
 
 TEST(TryRemoveBool, WrongStoredType) {
   std::vector<std::array<double, 2>> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::BOOL,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::BOOL,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -2913,10 +2913,10 @@ TEST(TryRemoveBool, WrongStoredType) {
 
 TEST(TryRemoveBool, WrongName) {
   absl::InlinedVector<bool, 1> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::BOOL,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::BOOL,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name1", parameter}};
@@ -2927,10 +2927,10 @@ TEST(TryRemoveBool, WrongName) {
 
 TEST(TryRemoveBool, Found) {
   absl::InlinedVector<bool, 1> values = {true};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::BOOL,
-                      .type_name = "aaa",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::BOOL,
+                      /*type_name=*/"aaa",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -2941,10 +2941,10 @@ TEST(TryRemoveBool, Found) {
 
 TEST(TryRemoveFloat, WrongType) {
   std::vector<double> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::BLACKBODY_V1,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::BLACKBODY_V1,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -2955,10 +2955,10 @@ TEST(TryRemoveFloat, WrongType) {
 
 TEST(TryRemoveFloat, WrongStoredType) {
   std::vector<int32_t> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::FLOAT,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::FLOAT,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -2969,10 +2969,10 @@ TEST(TryRemoveFloat, WrongStoredType) {
 
 TEST(TryRemoveFloat, WrongName) {
   std::vector<double> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::FLOAT,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::FLOAT,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name1", parameter}};
@@ -2983,10 +2983,10 @@ TEST(TryRemoveFloat, WrongName) {
 
 TEST(TryRemoveFloat, Found) {
   std::vector<double> values = {1.0};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::FLOAT,
-                      .type_name = "aaa",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::FLOAT,
+                      /*type_name=*/"aaa",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -2997,10 +2997,10 @@ TEST(TryRemoveFloat, Found) {
 
 TEST(TryRemoveInteger, WrongType) {
   std::vector<int32_t> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::BLACKBODY_V1,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::BLACKBODY_V1,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -3011,10 +3011,10 @@ TEST(TryRemoveInteger, WrongType) {
 
 TEST(TryRemoveInteger, WrongStoredType) {
   std::vector<double> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::INTEGER,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::INTEGER,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -3025,10 +3025,10 @@ TEST(TryRemoveInteger, WrongStoredType) {
 
 TEST(TryRemoveInteger, WrongName) {
   std::vector<int32_t> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::INTEGER,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::INTEGER,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name1", parameter}};
@@ -3039,10 +3039,10 @@ TEST(TryRemoveInteger, WrongName) {
 
 TEST(TryRemoveInteger, Found) {
   std::vector<int32_t> values = {1};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::INTEGER,
-                      .type_name = "aaa",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::INTEGER,
+                      /*type_name=*/"aaa",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -3053,10 +3053,10 @@ TEST(TryRemoveInteger, Found) {
 
 TEST(TryRemoveNormals, WrongType) {
   std::vector<std::array<double, 3>> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::FLOAT,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::FLOAT,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -3067,10 +3067,10 @@ TEST(TryRemoveNormals, WrongType) {
 
 TEST(TryRemoveNormals, WrongStoredType) {
   std::vector<std::array<double, 2>> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::NORMAL3,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::NORMAL3,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -3081,10 +3081,10 @@ TEST(TryRemoveNormals, WrongStoredType) {
 
 TEST(TryRemoveNormals, WrongName) {
   std::vector<std::array<double, 3>> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::NORMAL3,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::NORMAL3,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name1", parameter}};
@@ -3095,10 +3095,10 @@ TEST(TryRemoveNormals, WrongName) {
 
 TEST(TryRemoveNormals, Found) {
   std::vector<std::array<double, 3>> values = {{1.0, 2.0, 3.0}};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::NORMAL3,
-                      .type_name = "aaa",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::NORMAL3,
+                      /*type_name=*/"aaa",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -3110,10 +3110,10 @@ TEST(TryRemoveNormals, Found) {
 
 TEST(TryRemovePoint2s, WrongType) {
   std::vector<std::array<double, 2>> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::FLOAT,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::FLOAT,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -3124,10 +3124,10 @@ TEST(TryRemovePoint2s, WrongType) {
 
 TEST(TryRemovePoint2s, WrongStoredType) {
   std::vector<std::array<double, 3>> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::POINT2,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::POINT2,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -3138,10 +3138,10 @@ TEST(TryRemovePoint2s, WrongStoredType) {
 
 TEST(TryRemovePoint2s, WrongName) {
   std::vector<std::array<double, 2>> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::POINT2,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::POINT2,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name1", parameter}};
@@ -3152,10 +3152,10 @@ TEST(TryRemovePoint2s, WrongName) {
 
 TEST(TryRemovePoint2s, Found) {
   std::vector<std::array<double, 2>> values = {{1.0, 2.0}};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::POINT2,
-                      .type_name = "aaa",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::POINT2,
+                      /*type_name=*/"aaa",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -3167,10 +3167,10 @@ TEST(TryRemovePoint2s, Found) {
 
 TEST(TryRemovePoint3, WrongType) {
   std::vector<std::array<double, 3>> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::FLOAT,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::FLOAT,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -3181,10 +3181,10 @@ TEST(TryRemovePoint3, WrongType) {
 
 TEST(TryRemovePoint3, WrongStoredType) {
   std::vector<std::array<double, 2>> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::POINT3,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::POINT3,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -3195,10 +3195,10 @@ TEST(TryRemovePoint3, WrongStoredType) {
 
 TEST(TryRemovePoint3, WrongName) {
   std::vector<std::array<double, 3>> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::POINT3,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::POINT3,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name1", parameter}};
@@ -3209,10 +3209,10 @@ TEST(TryRemovePoint3, WrongName) {
 
 TEST(TryRemovePoint3, Found) {
   std::vector<std::array<double, 3>> values = {{1.0, 2.0, 3.0}};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::POINT3,
-                      .type_name = "aaa",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::POINT3,
+                      /*type_name=*/"aaa",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -3224,10 +3224,10 @@ TEST(TryRemovePoint3, Found) {
 
 TEST(TryRemovePoint3s, WrongType) {
   std::vector<std::array<double, 3>> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::FLOAT,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::FLOAT,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -3238,10 +3238,10 @@ TEST(TryRemovePoint3s, WrongType) {
 
 TEST(TryRemovePoint3s, WrongStoredType) {
   std::vector<std::array<double, 2>> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::POINT3,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::POINT3,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -3252,10 +3252,10 @@ TEST(TryRemovePoint3s, WrongStoredType) {
 
 TEST(TryRemovePoint3s, WrongName) {
   std::vector<std::array<double, 3>> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::POINT3,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::POINT3,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name1", parameter}};
@@ -3266,10 +3266,10 @@ TEST(TryRemovePoint3s, WrongName) {
 
 TEST(TryRemovePoint3s, Found) {
   std::vector<std::array<double, 3>> values = {{1.0, 2.0, 3.0}};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::POINT3,
-                      .type_name = "aaa",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::POINT3,
+                      /*type_name=*/"aaa",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -3281,10 +3281,10 @@ TEST(TryRemovePoint3s, Found) {
 
 TEST(TryRemoveRgb, WrongType) {
   std::vector<std::array<double, 3>> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::FLOAT,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::FLOAT,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -3295,10 +3295,10 @@ TEST(TryRemoveRgb, WrongType) {
 
 TEST(TryRemoveRgb, WrongStoredType) {
   std::vector<std::array<double, 2>> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::RGB,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::RGB,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -3309,10 +3309,10 @@ TEST(TryRemoveRgb, WrongStoredType) {
 
 TEST(TryRemoveRgb, WrongName) {
   std::vector<std::array<double, 3>> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::RGB,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::RGB,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name1", parameter}};
@@ -3323,10 +3323,10 @@ TEST(TryRemoveRgb, WrongName) {
 
 TEST(TryRemoveRgb, Found) {
   std::vector<std::array<double, 3>> values = {{1.0, 2.0, 3.0}};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::RGB,
-                      .type_name = "aaa",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::RGB,
+                      /*type_name=*/"aaa",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -3338,10 +3338,10 @@ TEST(TryRemoveRgb, Found) {
 
 TEST(TryRemoveRgbs, WrongType) {
   std::vector<std::array<double, 3>> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::FLOAT,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::FLOAT,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -3352,10 +3352,10 @@ TEST(TryRemoveRgbs, WrongType) {
 
 TEST(TryRemoveRgbs, WrongStoredType) {
   std::vector<std::array<double, 2>> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::RGB,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::RGB,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -3366,10 +3366,10 @@ TEST(TryRemoveRgbs, WrongStoredType) {
 
 TEST(TryRemoveRgbs, WrongName) {
   std::vector<std::array<double, 3>> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::RGB,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::RGB,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name1", parameter}};
@@ -3380,10 +3380,10 @@ TEST(TryRemoveRgbs, WrongName) {
 
 TEST(TryRemoveRgbs, Found) {
   std::vector<std::array<double, 3>> values = {{1.0, 2.0, 3.0}};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::RGB,
-                      .type_name = "aaa",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::RGB,
+                      /*type_name=*/"aaa",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -3395,10 +3395,10 @@ TEST(TryRemoveRgbs, Found) {
 
 TEST(TryRemoveString, WrongType) {
   std::vector<absl::string_view> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::BLACKBODY_V1,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::BLACKBODY_V1,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -3409,10 +3409,10 @@ TEST(TryRemoveString, WrongType) {
 
 TEST(TryRemoveString, WrongStoredType) {
   std::vector<double> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::STRING,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::STRING,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -3423,10 +3423,10 @@ TEST(TryRemoveString, WrongStoredType) {
 
 TEST(TryRemoveString, WrongName) {
   std::vector<absl::string_view> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::STRING,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::STRING,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name1", parameter}};
@@ -3437,10 +3437,10 @@ TEST(TryRemoveString, WrongName) {
 
 TEST(TryRemoveString, Found) {
   std::vector<absl::string_view> values = {"abc"};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::STRING,
-                      .type_name = "aaa",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::STRING,
+                      /*type_name=*/"aaa",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -3451,10 +3451,10 @@ TEST(TryRemoveString, Found) {
 
 TEST(TryRemoveSpectrumFilename, WrongType) {
   std::vector<absl::string_view> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::BLACKBODY_V1,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::BLACKBODY_V1,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -3465,10 +3465,10 @@ TEST(TryRemoveSpectrumFilename, WrongType) {
 
 TEST(TryRemoveSpectrumFilename, WrongStoredType) {
   std::vector<double> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::SPECTRUM,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::SPECTRUM,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -3479,10 +3479,10 @@ TEST(TryRemoveSpectrumFilename, WrongStoredType) {
 
 TEST(TryRemoveSpectrumFilename, WrongName) {
   std::vector<absl::string_view> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::SPECTRUM,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::SPECTRUM,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name1", parameter}};
@@ -3493,10 +3493,10 @@ TEST(TryRemoveSpectrumFilename, WrongName) {
 
 TEST(TryRemoveSpectrumFilename, Found) {
   std::vector<absl::string_view> values = {"abc"};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::SPECTRUM,
-                      .type_name = "aaa",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::SPECTRUM,
+                      /*type_name=*/"aaa",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -3508,10 +3508,10 @@ TEST(TryRemoveSpectrumFilename, Found) {
 
 TEST(TryRemoveTexture, WrongType) {
   std::vector<absl::string_view> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::BLACKBODY_V1,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::BLACKBODY_V1,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -3522,10 +3522,10 @@ TEST(TryRemoveTexture, WrongType) {
 
 TEST(TryRemoveTexture, WrongStoredType) {
   std::vector<double> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::TEXTURE,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::TEXTURE,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -3536,10 +3536,10 @@ TEST(TryRemoveTexture, WrongStoredType) {
 
 TEST(TryRemoveTexture, WrongName) {
   std::vector<absl::string_view> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::TEXTURE,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::TEXTURE,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name1", parameter}};
@@ -3550,10 +3550,10 @@ TEST(TryRemoveTexture, WrongName) {
 
 TEST(TryRemoveTexture, Found) {
   std::vector<absl::string_view> values = {"abc"};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::TEXTURE,
-                      .type_name = "aaa",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::TEXTURE,
+                      /*type_name=*/"aaa",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -3564,10 +3564,10 @@ TEST(TryRemoveTexture, Found) {
 
 TEST(TryRemoveVector3, WrongType) {
   std::vector<std::array<double, 3>> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::BLACKBODY_V1,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::BLACKBODY_V1,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -3578,10 +3578,10 @@ TEST(TryRemoveVector3, WrongType) {
 
 TEST(TryRemoveVector3, WrongStoredType) {
   std::vector<std::array<double, 2>> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::VECTOR3,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::VECTOR3,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -3592,10 +3592,10 @@ TEST(TryRemoveVector3, WrongStoredType) {
 
 TEST(TryRemoveVector3, WrongName) {
   std::vector<std::array<double, 3>> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::VECTOR3,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::VECTOR3,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name1", parameter}};
@@ -3606,10 +3606,10 @@ TEST(TryRemoveVector3, WrongName) {
 
 TEST(TryRemoveVector3, Found) {
   std::vector<std::array<double, 3>> values = {{1.0, 2.0, 3.0}};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::VECTOR3,
-                      .type_name = "aaa",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::VECTOR3,
+                      /*type_name=*/"aaa",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -3621,10 +3621,10 @@ TEST(TryRemoveVector3, Found) {
 
 TEST(TryRemoveVector3s, WrongType) {
   std::vector<std::array<double, 3>> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::FLOAT,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::FLOAT,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -3635,10 +3635,10 @@ TEST(TryRemoveVector3s, WrongType) {
 
 TEST(TryRemoveVector3s, WrongStoredType) {
   std::vector<std::array<double, 2>> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::VECTOR3,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::VECTOR3,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -3649,10 +3649,10 @@ TEST(TryRemoveVector3s, WrongStoredType) {
 
 TEST(TryRemoveVector3s, WrongName) {
   std::vector<std::array<double, 3>> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::VECTOR3,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::VECTOR3,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name1", parameter}};
@@ -3663,10 +3663,10 @@ TEST(TryRemoveVector3s, WrongName) {
 
 TEST(TryRemoveVector3s, Found) {
   std::vector<std::array<double, 3>> values = {{1.0, 2.0, 3.0}};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::VECTOR3,
-                      .type_name = "aaa",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::VECTOR3,
+                      /*type_name=*/"aaa",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -3678,10 +3678,10 @@ TEST(TryRemoveVector3s, Found) {
 
 TEST(TryRemoveXyz, WrongType) {
   std::vector<std::array<double, 3>> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::FLOAT,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::FLOAT,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -3692,10 +3692,10 @@ TEST(TryRemoveXyz, WrongType) {
 
 TEST(TryRemoveXyz, WrongStoredType) {
   std::vector<std::array<double, 2>> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::XYZ,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::XYZ,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};
@@ -3706,10 +3706,10 @@ TEST(TryRemoveXyz, WrongStoredType) {
 
 TEST(TryRemoveXyz, WrongName) {
   std::vector<std::array<double, 3>> values;
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::XYZ,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::XYZ,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name1", parameter}};
@@ -3720,10 +3720,10 @@ TEST(TryRemoveXyz, WrongName) {
 
 TEST(TryRemoveXyz, Found) {
   std::vector<std::array<double, 3>> values = {{1.0, 2.0, 3.0}};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::XYZ,
-                      .type_name = "aaa",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::XYZ,
+                      /*type_name=*/"aaa",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"name", parameter}};

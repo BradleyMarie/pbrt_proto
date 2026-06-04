@@ -21,10 +21,10 @@ using ::google::protobuf::EqualsProto;
 
 TEST(AaMode, UnknownValue) {
   std::vector<absl::string_view> values = {"unknown"};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::STRING,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::STRING,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"aamode", parameter}};
@@ -38,10 +38,10 @@ TEST(AaMode, UnknownValue) {
 
 TEST(AaMode, ClosedForm) {
   std::vector<absl::string_view> values = {"closedform"};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::STRING,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::STRING,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"aamode", parameter}};
@@ -55,10 +55,10 @@ TEST(AaMode, ClosedForm) {
 
 TEST(AaMode, None) {
   std::vector<absl::string_view> values = {"none"};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::STRING,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::STRING,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"aamode", parameter}};
@@ -72,10 +72,10 @@ TEST(AaMode, None) {
 
 TEST(AaMode, Supersample) {
   std::vector<absl::string_view> values = {"supersample"};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::STRING,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::STRING,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"aamode", parameter}};
@@ -89,10 +89,10 @@ TEST(AaMode, Supersample) {
 
 TEST(AaMode, SupersampleV2) {
   std::vector<absl::string_view> values = {"supersample"};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::STRING,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::STRING,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"aamode", parameter}};
@@ -106,10 +106,10 @@ TEST(AaMode, SupersampleV2) {
 
 TEST(Encoding, UnknownValue) {
   std::vector<absl::string_view> values = {"unknown"};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::STRING,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::STRING,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"encoding", parameter}};
@@ -122,10 +122,10 @@ TEST(Encoding, UnknownValue) {
 
 TEST(Encoding, SRGB) {
   std::vector<absl::string_view> values = {"sRGB"};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::STRING,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::STRING,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"encoding", parameter}};
@@ -139,10 +139,10 @@ TEST(Encoding, SRGB) {
 
 TEST(Encoding, Linear) {
   std::vector<absl::string_view> values = {"linear"};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::STRING,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::STRING,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"encoding", parameter}};
@@ -156,10 +156,10 @@ TEST(Encoding, Linear) {
 
 TEST(Encoding, Gamma) {
   std::vector<absl::string_view> values = {"gamma 2.2"};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::STRING,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::STRING,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"encoding", parameter}};
@@ -173,10 +173,10 @@ TEST(Encoding, Gamma) {
 
 TEST(Filter, UnknownValue) {
   std::vector<absl::string_view> values = {"unknown"};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::STRING,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::STRING,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"filter", parameter}};
@@ -188,10 +188,10 @@ TEST(Filter, UnknownValue) {
 
 TEST(Filter, Bilinear) {
   std::vector<absl::string_view> values = {"bilinear"};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::STRING,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::STRING,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"filter", parameter}};
@@ -205,10 +205,10 @@ TEST(Filter, Bilinear) {
 
 TEST(Filter, Trilinear) {
   std::vector<absl::string_view> values = {"trilinear"};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::STRING,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::STRING,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"filter", parameter}};
@@ -222,10 +222,10 @@ TEST(Filter, Trilinear) {
 
 TEST(Filter, EWA) {
   std::vector<absl::string_view> values = {"ewa"};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::STRING,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::STRING,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"filter", parameter}};
@@ -239,10 +239,10 @@ TEST(Filter, EWA) {
 
 TEST(Filter, Point) {
   std::vector<absl::string_view> values = {"point"};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::STRING,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::STRING,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"filter", parameter}};
@@ -256,10 +256,10 @@ TEST(Filter, Point) {
 
 TEST(Mapping, UnknownValue) {
   std::vector<absl::string_view> values = {"unknown"};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::STRING,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::STRING,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"mapping", parameter}};
@@ -273,10 +273,10 @@ TEST(Mapping, UnknownValue) {
 
 TEST(Mapping, UV) {
   std::vector<absl::string_view> values = {"uv"};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::STRING,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::STRING,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"mapping", parameter}};
@@ -290,10 +290,10 @@ TEST(Mapping, UV) {
 
 TEST(Mapping, Spherical) {
   std::vector<absl::string_view> values = {"spherical"};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::STRING,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::STRING,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"mapping", parameter}};
@@ -307,10 +307,10 @@ TEST(Mapping, Spherical) {
 
 TEST(Mapping, Planar) {
   std::vector<absl::string_view> values = {"planar"};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::STRING,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::STRING,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"mapping", parameter}};
@@ -324,10 +324,10 @@ TEST(Mapping, Planar) {
 
 TEST(Mapping, Cylindrical) {
   std::vector<absl::string_view> values = {"cylindrical"};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::STRING,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::STRING,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"mapping", parameter}};
@@ -341,10 +341,10 @@ TEST(Mapping, Cylindrical) {
 
 TEST(Wrap, UnknownValue) {
   std::vector<absl::string_view> values = {"unknown"};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::STRING,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::STRING,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"wrap", parameter}};
@@ -358,10 +358,10 @@ TEST(Wrap, UnknownValue) {
 
 TEST(Wrap, Black) {
   std::vector<absl::string_view> values = {"black"};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::STRING,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::STRING,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"wrap", parameter}};
@@ -375,10 +375,10 @@ TEST(Wrap, Black) {
 
 TEST(Wrap, Clamp) {
   std::vector<absl::string_view> values = {"clamp"};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::STRING,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::STRING,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"wrap", parameter}};
@@ -392,10 +392,10 @@ TEST(Wrap, Clamp) {
 
 TEST(Wrap, Repeat) {
   std::vector<absl::string_view> values = {"repeat"};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::STRING,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::STRING,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"wrap", parameter}};
@@ -409,46 +409,46 @@ TEST(Wrap, Repeat) {
 
 TEST(Mapping, UvParameters) {
   std::vector<absl::string_view> mapping = {"uv"};
-  Parameter mapping_parameter{.directive = "",
-                              .type = ParameterType::STRING,
-                              .type_name = "",
-                              .values = absl::MakeSpan(mapping)};
+  Parameter mapping_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::STRING,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(mapping)};
 
   std::vector<double> uscale = {1.0};
-  Parameter uscale_parameter{.directive = "",
-                             .type = ParameterType::FLOAT,
-                             .type_name = "",
-                             .values = absl::MakeSpan(uscale)};
+  Parameter uscale_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(uscale)};
 
   std::vector<double> vscale = {2.0};
-  Parameter vscale_parameter{.directive = "",
-                             .type = ParameterType::FLOAT,
-                             .type_name = "",
-                             .values = absl::MakeSpan(vscale)};
+  Parameter vscale_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(vscale)};
 
   std::vector<double> udelta = {3.0};
-  Parameter udelta_parameter{.directive = "",
-                             .type = ParameterType::FLOAT,
-                             .type_name = "",
-                             .values = absl::MakeSpan(udelta)};
+  Parameter udelta_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(udelta)};
 
   std::vector<double> vdelta = {4.0};
-  Parameter vdelta_parameter{.directive = "",
-                             .type = ParameterType::FLOAT,
-                             .type_name = "",
-                             .values = absl::MakeSpan(vdelta)};
+  Parameter vdelta_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(vdelta)};
 
   std::vector<std::array<double, 3>> v1 = {{5.0, 6.0, 7.0}};
-  Parameter v1_parameter{.directive = "",
-                         .type = ParameterType::VECTOR3,
-                         .type_name = "",
-                         .values = absl::MakeSpan(v1)};
+  Parameter v1_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::VECTOR3,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(v1)};
 
   std::vector<std::array<double, 3>> v2 = {{8.0, 9.0, 10.0}};
-  Parameter v2_parameter{.directive = "",
-                         .type = ParameterType::VECTOR3,
-                         .type_name = "",
-                         .values = absl::MakeSpan(v2)};
+  Parameter v2_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::VECTOR3,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(v2)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"mapping", mapping_parameter},
@@ -482,34 +482,34 @@ TEST(RemoveBilerpFloatTextureV1, Empty) {
 
 TEST(RemoveBilerpFloatTextureV1, WithData) {
   std::vector<absl::string_view> v00 = {"v00"};
-  Parameter v00_parameter{.directive = "",
-                          .type = ParameterType::TEXTURE,
-                          .type_name = "",
-                          .values = absl::MakeSpan(v00)};
+  Parameter v00_parameter{/*directive=*/"",
+                          /*type=*/ParameterType::TEXTURE,
+                          /*type_name=*/"",
+                          /*values=*/absl::MakeSpan(v00)};
 
   std::vector<absl::string_view> v01 = {"v01"};
-  Parameter v01_parameter{.directive = "",
-                          .type = ParameterType::TEXTURE,
-                          .type_name = "",
-                          .values = absl::MakeSpan(v01)};
+  Parameter v01_parameter{/*directive=*/"",
+                          /*type=*/ParameterType::TEXTURE,
+                          /*type_name=*/"",
+                          /*values=*/absl::MakeSpan(v01)};
 
   std::vector<absl::string_view> v10 = {"v10"};
-  Parameter v10_parameter{.directive = "",
-                          .type = ParameterType::TEXTURE,
-                          .type_name = "",
-                          .values = absl::MakeSpan(v10)};
+  Parameter v10_parameter{/*directive=*/"",
+                          /*type=*/ParameterType::TEXTURE,
+                          /*type_name=*/"",
+                          /*values=*/absl::MakeSpan(v10)};
 
   std::vector<absl::string_view> v11 = {"v11"};
-  Parameter v11_parameter{.directive = "",
-                          .type = ParameterType::TEXTURE,
-                          .type_name = "",
-                          .values = absl::MakeSpan(v11)};
+  Parameter v11_parameter{/*directive=*/"",
+                          /*type=*/ParameterType::TEXTURE,
+                          /*type_name=*/"",
+                          /*values=*/absl::MakeSpan(v11)};
 
   std::vector<absl::string_view> mapping = {"uv"};
-  Parameter mapping_parameter{.directive = "",
-                              .type = ParameterType::STRING,
-                              .type_name = "",
-                              .values = absl::MakeSpan(mapping)};
+  Parameter mapping_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::STRING,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(mapping)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"v00", v00_parameter},
@@ -539,34 +539,34 @@ TEST(RemoveBilerpSpectrumTextureV1, Empty) {
 
 TEST(RemoveBilerpSpectrumTextureV1, WithData) {
   std::vector<absl::string_view> v00 = {"v00"};
-  Parameter v00_parameter{.directive = "",
-                          .type = ParameterType::TEXTURE,
-                          .type_name = "",
-                          .values = absl::MakeSpan(v00)};
+  Parameter v00_parameter{/*directive=*/"",
+                          /*type=*/ParameterType::TEXTURE,
+                          /*type_name=*/"",
+                          /*values=*/absl::MakeSpan(v00)};
 
   std::vector<absl::string_view> v01 = {"v01"};
-  Parameter v01_parameter{.directive = "",
-                          .type = ParameterType::TEXTURE,
-                          .type_name = "",
-                          .values = absl::MakeSpan(v01)};
+  Parameter v01_parameter{/*directive=*/"",
+                          /*type=*/ParameterType::TEXTURE,
+                          /*type_name=*/"",
+                          /*values=*/absl::MakeSpan(v01)};
 
   std::vector<absl::string_view> v10 = {"v10"};
-  Parameter v10_parameter{.directive = "",
-                          .type = ParameterType::TEXTURE,
-                          .type_name = "",
-                          .values = absl::MakeSpan(v10)};
+  Parameter v10_parameter{/*directive=*/"",
+                          /*type=*/ParameterType::TEXTURE,
+                          /*type_name=*/"",
+                          /*values=*/absl::MakeSpan(v10)};
 
   std::vector<absl::string_view> v11 = {"v11"};
-  Parameter v11_parameter{.directive = "",
-                          .type = ParameterType::TEXTURE,
-                          .type_name = "",
-                          .values = absl::MakeSpan(v11)};
+  Parameter v11_parameter{/*directive=*/"",
+                          /*type=*/ParameterType::TEXTURE,
+                          /*type_name=*/"",
+                          /*values=*/absl::MakeSpan(v11)};
 
   std::vector<absl::string_view> mapping = {"uv"};
-  Parameter mapping_parameter{.directive = "",
-                              .type = ParameterType::STRING,
-                              .type_name = "",
-                              .values = absl::MakeSpan(mapping)};
+  Parameter mapping_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::STRING,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(mapping)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"v00", v00_parameter},
@@ -596,28 +596,28 @@ TEST(RemoveCheckerboard2DFloatTextureV1, Empty) {
 
 TEST(RemoveCheckerboard2DFloatTextureV1, WithData) {
   std::vector<absl::string_view> tex1 = {"tex1"};
-  Parameter tex1_parameter{.directive = "",
-                           .type = ParameterType::TEXTURE,
-                           .type_name = "",
-                           .values = absl::MakeSpan(tex1)};
+  Parameter tex1_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::TEXTURE,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(tex1)};
 
   std::vector<absl::string_view> tex2 = {"tex2"};
-  Parameter tex2_parameter{.directive = "",
-                           .type = ParameterType::TEXTURE,
-                           .type_name = "",
-                           .values = absl::MakeSpan(tex2)};
+  Parameter tex2_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::TEXTURE,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(tex2)};
 
   std::vector<absl::string_view> aamode = {"supersample"};
-  Parameter aamode_parameter{.directive = "",
-                             .type = ParameterType::STRING,
-                             .type_name = "",
-                             .values = absl::MakeSpan(aamode)};
+  Parameter aamode_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::STRING,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(aamode)};
 
   std::vector<absl::string_view> mapping = {"uv"};
-  Parameter mapping_parameter{.directive = "",
-                              .type = ParameterType::STRING,
-                              .type_name = "",
-                              .values = absl::MakeSpan(mapping)};
+  Parameter mapping_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::STRING,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(mapping)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"tex1", tex1_parameter},
@@ -645,28 +645,28 @@ TEST(RemoveCheckerboard2DFloatTextureV2, Empty) {
 
 TEST(RemoveCheckerboard2DFloatTextureV2, WithData) {
   std::vector<absl::string_view> tex1 = {"tex1"};
-  Parameter tex1_parameter{.directive = "",
-                           .type = ParameterType::TEXTURE,
-                           .type_name = "",
-                           .values = absl::MakeSpan(tex1)};
+  Parameter tex1_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::TEXTURE,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(tex1)};
 
   std::vector<absl::string_view> tex2 = {"tex2"};
-  Parameter tex2_parameter{.directive = "",
-                           .type = ParameterType::TEXTURE,
-                           .type_name = "",
-                           .values = absl::MakeSpan(tex2)};
+  Parameter tex2_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::TEXTURE,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(tex2)};
 
   std::vector<absl::string_view> aamode = {"closedform"};
-  Parameter aamode_parameter{.directive = "",
-                             .type = ParameterType::STRING,
-                             .type_name = "",
-                             .values = absl::MakeSpan(aamode)};
+  Parameter aamode_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::STRING,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(aamode)};
 
   std::vector<absl::string_view> mapping = {"uv"};
-  Parameter mapping_parameter{.directive = "",
-                              .type = ParameterType::STRING,
-                              .type_name = "",
-                              .values = absl::MakeSpan(mapping)};
+  Parameter mapping_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::STRING,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(mapping)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"tex1", tex1_parameter},
@@ -694,22 +694,22 @@ TEST(RemoveCheckerboard2DFloatTextureV4, Empty) {
 
 TEST(RemoveCheckerboard2DFloatTextureV4, WithData) {
   std::vector<absl::string_view> tex1 = {"tex1"};
-  Parameter tex1_parameter{.directive = "",
-                           .type = ParameterType::TEXTURE,
-                           .type_name = "",
-                           .values = absl::MakeSpan(tex1)};
+  Parameter tex1_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::TEXTURE,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(tex1)};
 
   std::vector<absl::string_view> tex2 = {"tex2"};
-  Parameter tex2_parameter{.directive = "",
-                           .type = ParameterType::TEXTURE,
-                           .type_name = "",
-                           .values = absl::MakeSpan(tex2)};
+  Parameter tex2_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::TEXTURE,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(tex2)};
 
   std::vector<absl::string_view> mapping = {"uv"};
-  Parameter mapping_parameter{.directive = "",
-                              .type = ParameterType::STRING,
-                              .type_name = "",
-                              .values = absl::MakeSpan(mapping)};
+  Parameter mapping_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::STRING,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(mapping)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"tex1", tex1_parameter},
@@ -735,28 +735,28 @@ TEST(RemoveCheckerboard2DSpectrumTextureV1, Empty) {
 
 TEST(RemoveCheckerboard2DSpectrumTextureV1, WithData) {
   std::vector<absl::string_view> tex1 = {"tex1"};
-  Parameter tex1_parameter{.directive = "",
-                           .type = ParameterType::TEXTURE,
-                           .type_name = "",
-                           .values = absl::MakeSpan(tex1)};
+  Parameter tex1_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::TEXTURE,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(tex1)};
 
   std::vector<absl::string_view> tex2 = {"tex2"};
-  Parameter tex2_parameter{.directive = "",
-                           .type = ParameterType::TEXTURE,
-                           .type_name = "",
-                           .values = absl::MakeSpan(tex2)};
+  Parameter tex2_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::TEXTURE,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(tex2)};
 
   std::vector<absl::string_view> aamode = {"supersample"};
-  Parameter aamode_parameter{.directive = "",
-                             .type = ParameterType::STRING,
-                             .type_name = "",
-                             .values = absl::MakeSpan(aamode)};
+  Parameter aamode_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::STRING,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(aamode)};
 
   std::vector<absl::string_view> mapping = {"uv"};
-  Parameter mapping_parameter{.directive = "",
-                              .type = ParameterType::STRING,
-                              .type_name = "",
-                              .values = absl::MakeSpan(mapping)};
+  Parameter mapping_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::STRING,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(mapping)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"tex1", tex1_parameter},
@@ -784,28 +784,28 @@ TEST(RemoveCheckerboard2DSpectrumTextureV2, Empty) {
 
 TEST(RemoveCheckerboard2DSpectrumTextureV2, WithData) {
   std::vector<absl::string_view> tex1 = {"tex1"};
-  Parameter tex1_parameter{.directive = "",
-                           .type = ParameterType::TEXTURE,
-                           .type_name = "",
-                           .values = absl::MakeSpan(tex1)};
+  Parameter tex1_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::TEXTURE,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(tex1)};
 
   std::vector<absl::string_view> tex2 = {"tex2"};
-  Parameter tex2_parameter{.directive = "",
-                           .type = ParameterType::TEXTURE,
-                           .type_name = "",
-                           .values = absl::MakeSpan(tex2)};
+  Parameter tex2_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::TEXTURE,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(tex2)};
 
   std::vector<absl::string_view> aamode = {"closedform"};
-  Parameter aamode_parameter{.directive = "",
-                             .type = ParameterType::STRING,
-                             .type_name = "",
-                             .values = absl::MakeSpan(aamode)};
+  Parameter aamode_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::STRING,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(aamode)};
 
   std::vector<absl::string_view> mapping = {"uv"};
-  Parameter mapping_parameter{.directive = "",
-                              .type = ParameterType::STRING,
-                              .type_name = "",
-                              .values = absl::MakeSpan(mapping)};
+  Parameter mapping_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::STRING,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(mapping)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"tex1", tex1_parameter},
@@ -833,22 +833,22 @@ TEST(RemoveCheckerboard2DSpectrumTextureV4, Empty) {
 
 TEST(RemoveCheckerboard2DSpectrumTextureV4, WithData) {
   std::vector<absl::string_view> tex1 = {"tex1"};
-  Parameter tex1_parameter{.directive = "",
-                           .type = ParameterType::TEXTURE,
-                           .type_name = "",
-                           .values = absl::MakeSpan(tex1)};
+  Parameter tex1_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::TEXTURE,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(tex1)};
 
   std::vector<absl::string_view> tex2 = {"tex2"};
-  Parameter tex2_parameter{.directive = "",
-                           .type = ParameterType::TEXTURE,
-                           .type_name = "",
-                           .values = absl::MakeSpan(tex2)};
+  Parameter tex2_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::TEXTURE,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(tex2)};
 
   std::vector<absl::string_view> mapping = {"uv"};
-  Parameter mapping_parameter{.directive = "",
-                              .type = ParameterType::STRING,
-                              .type_name = "",
-                              .values = absl::MakeSpan(mapping)};
+  Parameter mapping_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::STRING,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(mapping)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"tex1", tex1_parameter},
@@ -874,16 +874,16 @@ TEST(RemoveCheckerboard3DFloatTextureV1, Empty) {
 
 TEST(RemoveCheckerboard3DFloatTextureV1, WithData) {
   std::vector<absl::string_view> tex1 = {"tex1"};
-  Parameter tex1_parameter{.directive = "",
-                           .type = ParameterType::TEXTURE,
-                           .type_name = "",
-                           .values = absl::MakeSpan(tex1)};
+  Parameter tex1_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::TEXTURE,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(tex1)};
 
   std::vector<absl::string_view> tex2 = {"tex2"};
-  Parameter tex2_parameter{.directive = "",
-                           .type = ParameterType::TEXTURE,
-                           .type_name = "",
-                           .values = absl::MakeSpan(tex2)};
+  Parameter tex2_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::TEXTURE,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(tex2)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"tex1", tex1_parameter}, {"tex2", tex2_parameter}};
@@ -906,16 +906,16 @@ TEST(RemoveCheckerboard3DSpectrumTextureV1, Empty) {
 
 TEST(RemoveCheckerboard3DSpectrumTextureV1, WithData) {
   std::vector<absl::string_view> tex1 = {"tex1"};
-  Parameter tex1_parameter{.directive = "",
-                           .type = ParameterType::TEXTURE,
-                           .type_name = "",
-                           .values = absl::MakeSpan(tex1)};
+  Parameter tex1_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::TEXTURE,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(tex1)};
 
   std::vector<absl::string_view> tex2 = {"tex2"};
-  Parameter tex2_parameter{.directive = "",
-                           .type = ParameterType::TEXTURE,
-                           .type_name = "",
-                           .values = absl::MakeSpan(tex2)};
+  Parameter tex2_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::TEXTURE,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(tex2)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"tex1", tex1_parameter}, {"tex2", tex2_parameter}};
@@ -938,10 +938,10 @@ TEST(RemoveConstantFloatTextureV1, Empty) {
 
 TEST(RemoveConstantFloatTextureV1, WithData) {
   std::vector<double> value = {1.0};
-  Parameter value_parameter{.directive = "",
-                            .type = ParameterType::FLOAT,
-                            .type_name = "",
-                            .values = absl::MakeSpan(value)};
+  Parameter value_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(value)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"value", value_parameter}};
@@ -963,10 +963,10 @@ TEST(RemoveConstantSpectrumTextureV1, Empty) {
 
 TEST(RemoveConstantSpectrumTextureV1, WithData) {
   std::vector<absl::string_view> value = {"value"};
-  Parameter value_parameter{.directive = "",
-                            .type = ParameterType::SPECTRUM,
-                            .type_name = "",
-                            .values = absl::MakeSpan(value)};
+  Parameter value_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::SPECTRUM,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(value)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"value", value_parameter}};
@@ -988,22 +988,22 @@ TEST(RemoveDirectionMixFloatTextureV4, Empty) {
 
 TEST(RemoveDirectionMixFloatTextureV4, WithData) {
   std::vector<absl::string_view> tex1 = {"tex1"};
-  Parameter tex1_parameter{.directive = "",
-                           .type = ParameterType::TEXTURE,
-                           .type_name = "",
-                           .values = absl::MakeSpan(tex1)};
+  Parameter tex1_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::TEXTURE,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(tex1)};
 
   std::vector<absl::string_view> tex2 = {"tex2"};
-  Parameter tex2_parameter{.directive = "",
-                           .type = ParameterType::TEXTURE,
-                           .type_name = "",
-                           .values = absl::MakeSpan(tex2)};
+  Parameter tex2_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::TEXTURE,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(tex2)};
 
   std::vector<std::array<double, 3>> dir = {{1.0, 2.0, 3.0}};
-  Parameter dir_parameter{.directive = "",
-                          .type = ParameterType::VECTOR3,
-                          .type_name = "",
-                          .values = absl::MakeSpan(dir)};
+  Parameter dir_parameter{/*directive=*/"",
+                          /*type=*/ParameterType::VECTOR3,
+                          /*type_name=*/"",
+                          /*values=*/absl::MakeSpan(dir)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"tex1", tex1_parameter},
@@ -1029,22 +1029,22 @@ TEST(RemoveDirectionMixSpectrumTextureV4, Empty) {
 
 TEST(RemoveDirectionMixSpectrumTextureV4, WithData) {
   std::vector<absl::string_view> tex1 = {"tex1"};
-  Parameter tex1_parameter{.directive = "",
-                           .type = ParameterType::TEXTURE,
-                           .type_name = "",
-                           .values = absl::MakeSpan(tex1)};
+  Parameter tex1_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::TEXTURE,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(tex1)};
 
   std::vector<absl::string_view> tex2 = {"tex2"};
-  Parameter tex2_parameter{.directive = "",
-                           .type = ParameterType::TEXTURE,
-                           .type_name = "",
-                           .values = absl::MakeSpan(tex2)};
+  Parameter tex2_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::TEXTURE,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(tex2)};
 
   std::vector<std::array<double, 3>> dir = {{1.0, 2.0, 3.0}};
-  Parameter dir_parameter{.directive = "",
-                          .type = ParameterType::VECTOR3,
-                          .type_name = "",
-                          .values = absl::MakeSpan(dir)};
+  Parameter dir_parameter{/*directive=*/"",
+                          /*type=*/ParameterType::VECTOR3,
+                          /*type_name=*/"",
+                          /*values=*/absl::MakeSpan(dir)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"tex1", tex1_parameter},
@@ -1070,22 +1070,22 @@ TEST(RemoveDotsFloatTextureV1, Empty) {
 
 TEST(RemoveDotsFloatTextureV1, WithData) {
   std::vector<absl::string_view> inside = {"inside"};
-  Parameter inside_parameter{.directive = "",
-                             .type = ParameterType::TEXTURE,
-                             .type_name = "",
-                             .values = absl::MakeSpan(inside)};
+  Parameter inside_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::TEXTURE,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(inside)};
 
   std::vector<absl::string_view> outside = {"outside"};
-  Parameter outside_parameter{.directive = "",
-                              .type = ParameterType::TEXTURE,
-                              .type_name = "",
-                              .values = absl::MakeSpan(outside)};
+  Parameter outside_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(outside)};
 
   std::vector<absl::string_view> mapping = {"uv"};
-  Parameter mapping_parameter{.directive = "",
-                              .type = ParameterType::STRING,
-                              .type_name = "",
-                              .values = absl::MakeSpan(mapping)};
+  Parameter mapping_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::STRING,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(mapping)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"inside", inside_parameter},
@@ -1111,22 +1111,22 @@ TEST(RemoveDotsSpectrumTextureV1, Empty) {
 
 TEST(RemoveDotsSpectrumTextureV1, WithData) {
   std::vector<absl::string_view> inside = {"inside"};
-  Parameter inside_parameter{.directive = "",
-                             .type = ParameterType::TEXTURE,
-                             .type_name = "",
-                             .values = absl::MakeSpan(inside)};
+  Parameter inside_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::TEXTURE,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(inside)};
 
   std::vector<absl::string_view> outside = {"outside"};
-  Parameter outside_parameter{.directive = "",
-                              .type = ParameterType::TEXTURE,
-                              .type_name = "",
-                              .values = absl::MakeSpan(outside)};
+  Parameter outside_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(outside)};
 
   std::vector<absl::string_view> mapping = {"uv"};
-  Parameter mapping_parameter{.directive = "",
-                              .type = ParameterType::STRING,
-                              .type_name = "",
-                              .values = absl::MakeSpan(mapping)};
+  Parameter mapping_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::STRING,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(mapping)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"inside", inside_parameter},
@@ -1152,16 +1152,16 @@ TEST(RemoveFBmFloatTextureV1, Empty) {
 
 TEST(RemoveFBmFloatTextureV1, WithData) {
   std::vector<int32_t> octaves = {1};
-  Parameter octaves_parameter{.directive = "",
-                              .type = ParameterType::INTEGER,
-                              .type_name = "",
-                              .values = absl::MakeSpan(octaves)};
+  Parameter octaves_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::INTEGER,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(octaves)};
 
   std::vector<double> roughness = {2.0};
-  Parameter roughness_parameter{.directive = "",
-                                .type = ParameterType::FLOAT,
-                                .type_name = "",
-                                .values = absl::MakeSpan(roughness)};
+  Parameter roughness_parameter{/*directive=*/"",
+                                /*type=*/ParameterType::FLOAT,
+                                /*type_name=*/"",
+                                /*values=*/absl::MakeSpan(roughness)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"octaves", octaves_parameter}, {"roughness", roughness_parameter}};
@@ -1183,16 +1183,16 @@ TEST(RemoveFBmSpectrumTextureV1, Empty) {
 
 TEST(RemoveFBmSpectrumTextureV1, WithData) {
   std::vector<int32_t> octaves = {1};
-  Parameter octaves_parameter{.directive = "",
-                              .type = ParameterType::INTEGER,
-                              .type_name = "",
-                              .values = absl::MakeSpan(octaves)};
+  Parameter octaves_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::INTEGER,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(octaves)};
 
   std::vector<double> roughness = {2.0};
-  Parameter roughness_parameter{.directive = "",
-                                .type = ParameterType::FLOAT,
-                                .type_name = "",
-                                .values = absl::MakeSpan(roughness)};
+  Parameter roughness_parameter{/*directive=*/"",
+                                /*type=*/ParameterType::FLOAT,
+                                /*type_name=*/"",
+                                /*values=*/absl::MakeSpan(roughness)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"octaves", octaves_parameter}, {"roughness", roughness_parameter}};
@@ -1214,34 +1214,34 @@ TEST(RemoveImageMapFloatTextureV1, Empty) {
 
 TEST(RemoveImageMapFloatTextureV1, WithData) {
   std::vector<absl::string_view> filename = {"filename"};
-  Parameter filename_parameter{.directive = "",
-                               .type = ParameterType::STRING,
-                               .type_name = "",
-                               .values = absl::MakeSpan(filename)};
+  Parameter filename_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::STRING,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(filename)};
 
   std::vector<absl::string_view> wrap = {"black"};
-  Parameter wrap_parameter{.directive = "",
-                           .type = ParameterType::STRING,
-                           .type_name = "",
-                           .values = absl::MakeSpan(wrap)};
+  Parameter wrap_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::STRING,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(wrap)};
 
   bool trilinear[] = {true};
-  Parameter trilinear_parameter{.directive = "",
-                                .type = ParameterType::BOOL,
-                                .type_name = "",
-                                .values = absl::MakeSpan(trilinear)};
+  Parameter trilinear_parameter{/*directive=*/"",
+                                /*type=*/ParameterType::BOOL,
+                                /*type_name=*/"",
+                                /*values=*/absl::MakeSpan(trilinear)};
 
   std::vector<double> maxanisotropy = {1.0};
-  Parameter maxanisotropy_parameter{.directive = "",
-                                    .type = ParameterType::FLOAT,
-                                    .type_name = "",
-                                    .values = absl::MakeSpan(maxanisotropy)};
+  Parameter maxanisotropy_parameter{/*directive=*/"",
+                                    /*type=*/ParameterType::FLOAT,
+                                    /*type_name=*/"",
+                                    /*values=*/absl::MakeSpan(maxanisotropy)};
 
   std::vector<absl::string_view> mapping = {"uv"};
-  Parameter mapping_parameter{.directive = "",
-                              .type = ParameterType::STRING,
-                              .type_name = "",
-                              .values = absl::MakeSpan(mapping)};
+  Parameter mapping_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::STRING,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(mapping)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"filename", filename_parameter},
@@ -1271,46 +1271,46 @@ TEST(RemoveImageMapFloatTextureV2, Empty) {
 
 TEST(RemoveImageMapFloatTextureV2, WithData) {
   std::vector<absl::string_view> filename = {"filename"};
-  Parameter filename_parameter{.directive = "",
-                               .type = ParameterType::STRING,
-                               .type_name = "",
-                               .values = absl::MakeSpan(filename)};
+  Parameter filename_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::STRING,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(filename)};
 
   std::vector<absl::string_view> wrap = {"black"};
-  Parameter wrap_parameter{.directive = "",
-                           .type = ParameterType::STRING,
-                           .type_name = "",
-                           .values = absl::MakeSpan(wrap)};
+  Parameter wrap_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::STRING,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(wrap)};
 
   bool trilinear[] = {true};
-  Parameter trilinear_parameter{.directive = "",
-                                .type = ParameterType::BOOL,
-                                .type_name = "",
-                                .values = absl::MakeSpan(trilinear)};
+  Parameter trilinear_parameter{/*directive=*/"",
+                                /*type=*/ParameterType::BOOL,
+                                /*type_name=*/"",
+                                /*values=*/absl::MakeSpan(trilinear)};
 
   std::vector<double> maxanisotropy = {1.0};
-  Parameter maxanisotropy_parameter{.directive = "",
-                                    .type = ParameterType::FLOAT,
-                                    .type_name = "",
-                                    .values = absl::MakeSpan(maxanisotropy)};
+  Parameter maxanisotropy_parameter{/*directive=*/"",
+                                    /*type=*/ParameterType::FLOAT,
+                                    /*type_name=*/"",
+                                    /*values=*/absl::MakeSpan(maxanisotropy)};
 
   std::vector<absl::string_view> mapping = {"uv"};
-  Parameter mapping_parameter{.directive = "",
-                              .type = ParameterType::STRING,
-                              .type_name = "",
-                              .values = absl::MakeSpan(mapping)};
+  Parameter mapping_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::STRING,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(mapping)};
 
   std::vector<double> scale = {2.0};
-  Parameter scale_parameter{.directive = "",
-                            .type = ParameterType::FLOAT,
-                            .type_name = "",
-                            .values = absl::MakeSpan(scale)};
+  Parameter scale_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(scale)};
 
   std::vector<double> gamma = {3.0};
-  Parameter gamma_parameter{.directive = "",
-                            .type = ParameterType::FLOAT,
-                            .type_name = "",
-                            .values = absl::MakeSpan(gamma)};
+  Parameter gamma_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(gamma)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"filename", filename_parameter},
@@ -1344,46 +1344,46 @@ TEST(RemoveImageMapFloatTextureV3, Empty) {
 
 TEST(RemoveImageMapFloatTextureV3, WithData) {
   std::vector<absl::string_view> filename = {"filename"};
-  Parameter filename_parameter{.directive = "",
-                               .type = ParameterType::STRING,
-                               .type_name = "",
-                               .values = absl::MakeSpan(filename)};
+  Parameter filename_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::STRING,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(filename)};
 
   std::vector<absl::string_view> wrap = {"black"};
-  Parameter wrap_parameter{.directive = "",
-                           .type = ParameterType::STRING,
-                           .type_name = "",
-                           .values = absl::MakeSpan(wrap)};
+  Parameter wrap_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::STRING,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(wrap)};
 
   bool trilinear[] = {true};
-  Parameter trilinear_parameter{.directive = "",
-                                .type = ParameterType::BOOL,
-                                .type_name = "",
-                                .values = absl::MakeSpan(trilinear)};
+  Parameter trilinear_parameter{/*directive=*/"",
+                                /*type=*/ParameterType::BOOL,
+                                /*type_name=*/"",
+                                /*values=*/absl::MakeSpan(trilinear)};
 
   std::vector<double> maxanisotropy = {1.0};
-  Parameter maxanisotropy_parameter{.directive = "",
-                                    .type = ParameterType::FLOAT,
-                                    .type_name = "",
-                                    .values = absl::MakeSpan(maxanisotropy)};
+  Parameter maxanisotropy_parameter{/*directive=*/"",
+                                    /*type=*/ParameterType::FLOAT,
+                                    /*type_name=*/"",
+                                    /*values=*/absl::MakeSpan(maxanisotropy)};
 
   std::vector<absl::string_view> mapping = {"uv"};
-  Parameter mapping_parameter{.directive = "",
-                              .type = ParameterType::STRING,
-                              .type_name = "",
-                              .values = absl::MakeSpan(mapping)};
+  Parameter mapping_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::STRING,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(mapping)};
 
   std::vector<double> scale = {2.0};
-  Parameter scale_parameter{.directive = "",
-                            .type = ParameterType::FLOAT,
-                            .type_name = "",
-                            .values = absl::MakeSpan(scale)};
+  Parameter scale_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(scale)};
 
   bool gamma[] = {true};
-  Parameter gamma_parameter{.directive = "",
-                            .type = ParameterType::BOOL,
-                            .type_name = "",
-                            .values = absl::MakeSpan(gamma)};
+  Parameter gamma_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::BOOL,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(gamma)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"filename", filename_parameter},
@@ -1409,52 +1409,52 @@ TEST(RemoveImageMapFloatTextureV3, WithData) {
 
 TEST(RemoveImageMapFloatTextureV4, Empty) {
   std::vector<absl::string_view> filename = {"filename"};
-  Parameter filename_parameter{.directive = "",
-                               .type = ParameterType::STRING,
-                               .type_name = "",
-                               .values = absl::MakeSpan(filename)};
+  Parameter filename_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::STRING,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(filename)};
 
   std::vector<absl::string_view> wrap = {"black"};
-  Parameter wrap_parameter{.directive = "",
-                           .type = ParameterType::STRING,
-                           .type_name = "",
-                           .values = absl::MakeSpan(wrap)};
+  Parameter wrap_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::STRING,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(wrap)};
 
   std::vector<absl::string_view> filter = {"bilinear"};
-  Parameter filter_parameter{.directive = "",
-                             .type = ParameterType::STRING,
-                             .type_name = "",
-                             .values = absl::MakeSpan(filter)};
+  Parameter filter_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::STRING,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(filter)};
 
   std::vector<double> maxanisotropy = {1.0};
-  Parameter maxanisotropy_parameter{.directive = "",
-                                    .type = ParameterType::FLOAT,
-                                    .type_name = "",
-                                    .values = absl::MakeSpan(maxanisotropy)};
+  Parameter maxanisotropy_parameter{/*directive=*/"",
+                                    /*type=*/ParameterType::FLOAT,
+                                    /*type_name=*/"",
+                                    /*values=*/absl::MakeSpan(maxanisotropy)};
 
   std::vector<absl::string_view> mapping = {"uv"};
-  Parameter mapping_parameter{.directive = "",
-                              .type = ParameterType::STRING,
-                              .type_name = "",
-                              .values = absl::MakeSpan(mapping)};
+  Parameter mapping_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::STRING,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(mapping)};
 
   std::vector<double> scale = {2.0};
-  Parameter scale_parameter{.directive = "",
-                            .type = ParameterType::FLOAT,
-                            .type_name = "",
-                            .values = absl::MakeSpan(scale)};
+  Parameter scale_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(scale)};
 
   std::vector<absl::string_view> encoding = {"gamma 2.2"};
-  Parameter encoding_parameter{.directive = "",
-                               .type = ParameterType::STRING,
-                               .type_name = "",
-                               .values = absl::MakeSpan(encoding)};
+  Parameter encoding_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::STRING,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(encoding)};
 
   bool invert[] = {true};
-  Parameter invert_parameter{.directive = "",
-                             .type = ParameterType::BOOL,
-                             .type_name = "",
-                             .values = absl::MakeSpan(invert)};
+  Parameter invert_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::BOOL,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(invert)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"filename", filename_parameter},
@@ -1499,34 +1499,34 @@ TEST(RemoveImageMapSpectrumTextureV1, Empty) {
 
 TEST(RemoveImageMapSpectrumTextureV1, WithData) {
   std::vector<absl::string_view> filename = {"filename"};
-  Parameter filename_parameter{.directive = "",
-                               .type = ParameterType::STRING,
-                               .type_name = "",
-                               .values = absl::MakeSpan(filename)};
+  Parameter filename_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::STRING,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(filename)};
 
   std::vector<absl::string_view> wrap = {"black"};
-  Parameter wrap_parameter{.directive = "",
-                           .type = ParameterType::STRING,
-                           .type_name = "",
-                           .values = absl::MakeSpan(wrap)};
+  Parameter wrap_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::STRING,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(wrap)};
 
   bool trilinear[] = {true};
-  Parameter trilinear_parameter{.directive = "",
-                                .type = ParameterType::BOOL,
-                                .type_name = "",
-                                .values = absl::MakeSpan(trilinear)};
+  Parameter trilinear_parameter{/*directive=*/"",
+                                /*type=*/ParameterType::BOOL,
+                                /*type_name=*/"",
+                                /*values=*/absl::MakeSpan(trilinear)};
 
   std::vector<double> maxanisotropy = {1.0};
-  Parameter maxanisotropy_parameter{.directive = "",
-                                    .type = ParameterType::FLOAT,
-                                    .type_name = "",
-                                    .values = absl::MakeSpan(maxanisotropy)};
+  Parameter maxanisotropy_parameter{/*directive=*/"",
+                                    /*type=*/ParameterType::FLOAT,
+                                    /*type_name=*/"",
+                                    /*values=*/absl::MakeSpan(maxanisotropy)};
 
   std::vector<absl::string_view> mapping = {"uv"};
-  Parameter mapping_parameter{.directive = "",
-                              .type = ParameterType::STRING,
-                              .type_name = "",
-                              .values = absl::MakeSpan(mapping)};
+  Parameter mapping_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::STRING,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(mapping)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"filename", filename_parameter},
@@ -1556,46 +1556,46 @@ TEST(RemoveImageMapSpectrumTextureV2, Empty) {
 
 TEST(RemoveImageMapSpectrumTextureV2, WithData) {
   std::vector<absl::string_view> filename = {"filename"};
-  Parameter filename_parameter{.directive = "",
-                               .type = ParameterType::STRING,
-                               .type_name = "",
-                               .values = absl::MakeSpan(filename)};
+  Parameter filename_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::STRING,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(filename)};
 
   std::vector<absl::string_view> wrap = {"black"};
-  Parameter wrap_parameter{.directive = "",
-                           .type = ParameterType::STRING,
-                           .type_name = "",
-                           .values = absl::MakeSpan(wrap)};
+  Parameter wrap_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::STRING,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(wrap)};
 
   bool trilinear[] = {true};
-  Parameter trilinear_parameter{.directive = "",
-                                .type = ParameterType::BOOL,
-                                .type_name = "",
-                                .values = absl::MakeSpan(trilinear)};
+  Parameter trilinear_parameter{/*directive=*/"",
+                                /*type=*/ParameterType::BOOL,
+                                /*type_name=*/"",
+                                /*values=*/absl::MakeSpan(trilinear)};
 
   std::vector<double> maxanisotropy = {1.0};
-  Parameter maxanisotropy_parameter{.directive = "",
-                                    .type = ParameterType::FLOAT,
-                                    .type_name = "",
-                                    .values = absl::MakeSpan(maxanisotropy)};
+  Parameter maxanisotropy_parameter{/*directive=*/"",
+                                    /*type=*/ParameterType::FLOAT,
+                                    /*type_name=*/"",
+                                    /*values=*/absl::MakeSpan(maxanisotropy)};
 
   std::vector<absl::string_view> mapping = {"uv"};
-  Parameter mapping_parameter{.directive = "",
-                              .type = ParameterType::STRING,
-                              .type_name = "",
-                              .values = absl::MakeSpan(mapping)};
+  Parameter mapping_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::STRING,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(mapping)};
 
   std::vector<double> scale = {2.0};
-  Parameter scale_parameter{.directive = "",
-                            .type = ParameterType::FLOAT,
-                            .type_name = "",
-                            .values = absl::MakeSpan(scale)};
+  Parameter scale_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(scale)};
 
   std::vector<double> gamma = {3.0};
-  Parameter gamma_parameter{.directive = "",
-                            .type = ParameterType::FLOAT,
-                            .type_name = "",
-                            .values = absl::MakeSpan(gamma)};
+  Parameter gamma_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(gamma)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"filename", filename_parameter},
@@ -1629,46 +1629,46 @@ TEST(RemoveImageMapSpectrumTextureV3, Empty) {
 
 TEST(RemoveImageMapSpectrumTextureV3, WithData) {
   std::vector<absl::string_view> filename = {"filename"};
-  Parameter filename_parameter{.directive = "",
-                               .type = ParameterType::STRING,
-                               .type_name = "",
-                               .values = absl::MakeSpan(filename)};
+  Parameter filename_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::STRING,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(filename)};
 
   std::vector<absl::string_view> wrap = {"black"};
-  Parameter wrap_parameter{.directive = "",
-                           .type = ParameterType::STRING,
-                           .type_name = "",
-                           .values = absl::MakeSpan(wrap)};
+  Parameter wrap_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::STRING,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(wrap)};
 
   bool trilinear[] = {true};
-  Parameter trilinear_parameter{.directive = "",
-                                .type = ParameterType::BOOL,
-                                .type_name = "",
-                                .values = absl::MakeSpan(trilinear)};
+  Parameter trilinear_parameter{/*directive=*/"",
+                                /*type=*/ParameterType::BOOL,
+                                /*type_name=*/"",
+                                /*values=*/absl::MakeSpan(trilinear)};
 
   std::vector<double> maxanisotropy = {1.0};
-  Parameter maxanisotropy_parameter{.directive = "",
-                                    .type = ParameterType::FLOAT,
-                                    .type_name = "",
-                                    .values = absl::MakeSpan(maxanisotropy)};
+  Parameter maxanisotropy_parameter{/*directive=*/"",
+                                    /*type=*/ParameterType::FLOAT,
+                                    /*type_name=*/"",
+                                    /*values=*/absl::MakeSpan(maxanisotropy)};
 
   std::vector<absl::string_view> mapping = {"uv"};
-  Parameter mapping_parameter{.directive = "",
-                              .type = ParameterType::STRING,
-                              .type_name = "",
-                              .values = absl::MakeSpan(mapping)};
+  Parameter mapping_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::STRING,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(mapping)};
 
   std::vector<double> scale = {2.0};
-  Parameter scale_parameter{.directive = "",
-                            .type = ParameterType::FLOAT,
-                            .type_name = "",
-                            .values = absl::MakeSpan(scale)};
+  Parameter scale_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(scale)};
 
   bool gamma[] = {true};
-  Parameter gamma_parameter{.directive = "",
-                            .type = ParameterType::BOOL,
-                            .type_name = "",
-                            .values = absl::MakeSpan(gamma)};
+  Parameter gamma_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::BOOL,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(gamma)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"filename", filename_parameter},
@@ -1702,52 +1702,52 @@ TEST(RemoveImageMapSpectrumTextureV4, Empty) {
 
 TEST(RemoveImageMapSpectrumTextureV4, WithData) {
   std::vector<absl::string_view> filename = {"filename"};
-  Parameter filename_parameter{.directive = "",
-                               .type = ParameterType::STRING,
-                               .type_name = "",
-                               .values = absl::MakeSpan(filename)};
+  Parameter filename_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::STRING,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(filename)};
 
   std::vector<absl::string_view> wrap = {"black"};
-  Parameter wrap_parameter{.directive = "",
-                           .type = ParameterType::STRING,
-                           .type_name = "",
-                           .values = absl::MakeSpan(wrap)};
+  Parameter wrap_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::STRING,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(wrap)};
 
   std::vector<absl::string_view> filter = {"bilinear"};
-  Parameter filter_parameter{.directive = "",
-                             .type = ParameterType::STRING,
-                             .type_name = "",
-                             .values = absl::MakeSpan(filter)};
+  Parameter filter_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::STRING,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(filter)};
 
   std::vector<double> maxanisotropy = {1.0};
-  Parameter maxanisotropy_parameter{.directive = "",
-                                    .type = ParameterType::FLOAT,
-                                    .type_name = "",
-                                    .values = absl::MakeSpan(maxanisotropy)};
+  Parameter maxanisotropy_parameter{/*directive=*/"",
+                                    /*type=*/ParameterType::FLOAT,
+                                    /*type_name=*/"",
+                                    /*values=*/absl::MakeSpan(maxanisotropy)};
 
   std::vector<absl::string_view> mapping = {"uv"};
-  Parameter mapping_parameter{.directive = "",
-                              .type = ParameterType::STRING,
-                              .type_name = "",
-                              .values = absl::MakeSpan(mapping)};
+  Parameter mapping_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::STRING,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(mapping)};
 
   std::vector<double> scale = {2.0};
-  Parameter scale_parameter{.directive = "",
-                            .type = ParameterType::FLOAT,
-                            .type_name = "",
-                            .values = absl::MakeSpan(scale)};
+  Parameter scale_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(scale)};
 
   std::vector<absl::string_view> encoding = {"gamma 2.2"};
-  Parameter encoding_parameter{.directive = "",
-                               .type = ParameterType::STRING,
-                               .type_name = "",
-                               .values = absl::MakeSpan(encoding)};
+  Parameter encoding_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::STRING,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(encoding)};
 
   bool invert[] = {true};
-  Parameter invert_parameter{.directive = "",
-                             .type = ParameterType::BOOL,
-                             .type_name = "",
-                             .values = absl::MakeSpan(invert)};
+  Parameter invert_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::BOOL,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(invert)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"filename", filename_parameter},
@@ -1784,28 +1784,28 @@ TEST(RemoveMarbleSpectrumTextureV1, Empty) {
 
 TEST(RemoveMarbleSpectrumTextureV1, WithData) {
   std::vector<int32_t> octaves = {1};
-  Parameter octaves_parameter{.directive = "",
-                              .type = ParameterType::INTEGER,
-                              .type_name = "",
-                              .values = absl::MakeSpan(octaves)};
+  Parameter octaves_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::INTEGER,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(octaves)};
 
   std::vector<double> roughness = {2.0};
-  Parameter roughness_parameter{.directive = "",
-                                .type = ParameterType::FLOAT,
-                                .type_name = "",
-                                .values = absl::MakeSpan(roughness)};
+  Parameter roughness_parameter{/*directive=*/"",
+                                /*type=*/ParameterType::FLOAT,
+                                /*type_name=*/"",
+                                /*values=*/absl::MakeSpan(roughness)};
 
   std::vector<double> scale = {3.0};
-  Parameter scale_parameter{.directive = "",
-                            .type = ParameterType::FLOAT,
-                            .type_name = "",
-                            .values = absl::MakeSpan(scale)};
+  Parameter scale_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(scale)};
 
   std::vector<double> variation = {4.0};
-  Parameter variation_parameter{.directive = "",
-                                .type = ParameterType::FLOAT,
-                                .type_name = "",
-                                .values = absl::MakeSpan(variation)};
+  Parameter variation_parameter{/*directive=*/"",
+                                /*type=*/ParameterType::FLOAT,
+                                /*type_name=*/"",
+                                /*values=*/absl::MakeSpan(variation)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"octaves", octaves_parameter},
@@ -1833,22 +1833,22 @@ TEST(RemoveMixFloatTextureV1, Empty) {
 
 TEST(RemoveMixFloatTextureV1, WithData) {
   std::vector<absl::string_view> tex1 = {"tex1"};
-  Parameter tex1_parameter{.directive = "",
-                           .type = ParameterType::TEXTURE,
-                           .type_name = "",
-                           .values = absl::MakeSpan(tex1)};
+  Parameter tex1_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::TEXTURE,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(tex1)};
 
   std::vector<absl::string_view> tex2 = {"tex2"};
-  Parameter tex2_parameter{.directive = "",
-                           .type = ParameterType::TEXTURE,
-                           .type_name = "",
-                           .values = absl::MakeSpan(tex2)};
+  Parameter tex2_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::TEXTURE,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(tex2)};
 
   std::vector<double> amount = {1.0};
-  Parameter amount_parameter{.directive = "",
-                             .type = ParameterType::FLOAT,
-                             .type_name = "",
-                             .values = absl::MakeSpan(amount)};
+  Parameter amount_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(amount)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"tex1", tex1_parameter},
@@ -1874,22 +1874,22 @@ TEST(RemoveMixSpectrumTextureV1, Empty) {
 
 TEST(RemoveMixSpectrumTextureV1, WithData) {
   std::vector<absl::string_view> tex1 = {"tex1"};
-  Parameter tex1_parameter{.directive = "",
-                           .type = ParameterType::TEXTURE,
-                           .type_name = "",
-                           .values = absl::MakeSpan(tex1)};
+  Parameter tex1_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::TEXTURE,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(tex1)};
 
   std::vector<absl::string_view> tex2 = {"tex2"};
-  Parameter tex2_parameter{.directive = "",
-                           .type = ParameterType::TEXTURE,
-                           .type_name = "",
-                           .values = absl::MakeSpan(tex2)};
+  Parameter tex2_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::TEXTURE,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(tex2)};
 
   std::vector<double> amount = {1.0};
-  Parameter amount_parameter{.directive = "",
-                             .type = ParameterType::FLOAT,
-                             .type_name = "",
-                             .values = absl::MakeSpan(amount)};
+  Parameter amount_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(amount)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"tex1", tex1_parameter},
@@ -1915,16 +1915,16 @@ TEST(RemovePtexFloatTextureV3, Empty) {
 
 TEST(RemovePtexFloatTextureV3, WithData) {
   std::vector<absl::string_view> filename = {"filename"};
-  Parameter filename_parameter{.directive = "",
-                               .type = ParameterType::STRING,
-                               .type_name = "",
-                               .values = absl::MakeSpan(filename)};
+  Parameter filename_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::STRING,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(filename)};
 
   std::vector<double> gamma = {1.0};
-  Parameter gamma_parameter{.directive = "",
-                            .type = ParameterType::FLOAT,
-                            .type_name = "",
-                            .values = absl::MakeSpan(gamma)};
+  Parameter gamma_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(gamma)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"filename", filename_parameter}, {"gamma", gamma_parameter}};
@@ -1946,22 +1946,22 @@ TEST(RemovePtexFloatTextureV4, Empty) {
 
 TEST(RemovePtexFloatTextureV4, WithData) {
   std::vector<absl::string_view> filename = {"filename"};
-  Parameter filename_parameter{.directive = "",
-                               .type = ParameterType::STRING,
-                               .type_name = "",
-                               .values = absl::MakeSpan(filename)};
+  Parameter filename_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::STRING,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(filename)};
 
   std::vector<double> scale = {1.0};
-  Parameter scale_parameter{.directive = "",
-                            .type = ParameterType::FLOAT,
-                            .type_name = "",
-                            .values = absl::MakeSpan(scale)};
+  Parameter scale_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(scale)};
 
   std::vector<absl::string_view> encoding = {"gamma 2.2"};
-  Parameter encoding_parameter{.directive = "",
-                               .type = ParameterType::STRING,
-                               .type_name = "",
-                               .values = absl::MakeSpan(encoding)};
+  Parameter encoding_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::STRING,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(encoding)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"filename", filename_parameter},
@@ -1989,16 +1989,16 @@ TEST(RemovePtexSpectrumTextureV3, Empty) {
 
 TEST(RemovePtexSpectrumTextureV3, WithData) {
   std::vector<absl::string_view> filename = {"filename"};
-  Parameter filename_parameter{.directive = "",
-                               .type = ParameterType::STRING,
-                               .type_name = "",
-                               .values = absl::MakeSpan(filename)};
+  Parameter filename_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::STRING,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(filename)};
 
   std::vector<double> gamma = {1.0};
-  Parameter gamma_parameter{.directive = "",
-                            .type = ParameterType::FLOAT,
-                            .type_name = "",
-                            .values = absl::MakeSpan(gamma)};
+  Parameter gamma_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(gamma)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"filename", filename_parameter}, {"gamma", gamma_parameter}};
@@ -2020,22 +2020,22 @@ TEST(RemovePtexSpectrumTextureV4, Empty) {
 
 TEST(RemovePtexSpectrumTextureV4, WithData) {
   std::vector<absl::string_view> filename = {"filename"};
-  Parameter filename_parameter{.directive = "",
-                               .type = ParameterType::STRING,
-                               .type_name = "",
-                               .values = absl::MakeSpan(filename)};
+  Parameter filename_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::STRING,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(filename)};
 
   std::vector<double> scale = {1.0};
-  Parameter scale_parameter{.directive = "",
-                            .type = ParameterType::FLOAT,
-                            .type_name = "",
-                            .values = absl::MakeSpan(scale)};
+  Parameter scale_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(scale)};
 
   std::vector<absl::string_view> encoding = {"gamma 2.2"};
-  Parameter encoding_parameter{.directive = "",
-                               .type = ParameterType::STRING,
-                               .type_name = "",
-                               .values = absl::MakeSpan(encoding)};
+  Parameter encoding_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::STRING,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(encoding)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"filename", filename_parameter},
@@ -2063,16 +2063,16 @@ TEST(RemoveScaleFloatTextureV1, Empty) {
 
 TEST(RemoveScaleFloatTextureV1, WithData) {
   std::vector<absl::string_view> tex1 = {"tex1"};
-  Parameter tex1_parameter{.directive = "",
-                           .type = ParameterType::TEXTURE,
-                           .type_name = "",
-                           .values = absl::MakeSpan(tex1)};
+  Parameter tex1_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::TEXTURE,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(tex1)};
 
   std::vector<absl::string_view> tex2 = {"tex2"};
-  Parameter tex2_parameter{.directive = "",
-                           .type = ParameterType::TEXTURE,
-                           .type_name = "",
-                           .values = absl::MakeSpan(tex2)};
+  Parameter tex2_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::TEXTURE,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(tex2)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"tex1", tex1_parameter}, {"tex2", tex2_parameter}};
@@ -2095,16 +2095,16 @@ TEST(RemoveScaleSpectrumTextureV1, Empty) {
 
 TEST(RemoveScaleSpectrumTextureV1, WithData) {
   std::vector<absl::string_view> tex1 = {"tex1"};
-  Parameter tex1_parameter{.directive = "",
-                           .type = ParameterType::TEXTURE,
-                           .type_name = "",
-                           .values = absl::MakeSpan(tex1)};
+  Parameter tex1_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::TEXTURE,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(tex1)};
 
   std::vector<absl::string_view> tex2 = {"tex2"};
-  Parameter tex2_parameter{.directive = "",
-                           .type = ParameterType::TEXTURE,
-                           .type_name = "",
-                           .values = absl::MakeSpan(tex2)};
+  Parameter tex2_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::TEXTURE,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(tex2)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"tex1", tex1_parameter}, {"tex2", tex2_parameter}};
@@ -2127,16 +2127,16 @@ TEST(RemoveWrinkledFloatTextureV1, Empty) {
 
 TEST(RemoveWrinkledFloatTextureV1, WithData) {
   std::vector<int32_t> octaves = {1};
-  Parameter octaves_parameter{.directive = "",
-                              .type = ParameterType::INTEGER,
-                              .type_name = "",
-                              .values = absl::MakeSpan(octaves)};
+  Parameter octaves_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::INTEGER,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(octaves)};
 
   std::vector<double> roughness = {2.0};
-  Parameter roughness_parameter{.directive = "",
-                                .type = ParameterType::FLOAT,
-                                .type_name = "",
-                                .values = absl::MakeSpan(roughness)};
+  Parameter roughness_parameter{/*directive=*/"",
+                                /*type=*/ParameterType::FLOAT,
+                                /*type_name=*/"",
+                                /*values=*/absl::MakeSpan(roughness)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"octaves", octaves_parameter}, {"roughness", roughness_parameter}};
@@ -2158,16 +2158,16 @@ TEST(RemoveWrinkledSpectrumTextureV1, Empty) {
 
 TEST(RemoveWrinkledSpectrumTextureV1, WithData) {
   std::vector<int32_t> octaves = {1};
-  Parameter octaves_parameter{.directive = "",
-                              .type = ParameterType::INTEGER,
-                              .type_name = "",
-                              .values = absl::MakeSpan(octaves)};
+  Parameter octaves_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::INTEGER,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(octaves)};
 
   std::vector<double> roughness = {2.0};
-  Parameter roughness_parameter{.directive = "",
-                                .type = ParameterType::FLOAT,
-                                .type_name = "",
-                                .values = absl::MakeSpan(roughness)};
+  Parameter roughness_parameter{/*directive=*/"",
+                                /*type=*/ParameterType::FLOAT,
+                                /*type_name=*/"",
+                                /*values=*/absl::MakeSpan(roughness)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"octaves", octaves_parameter}, {"roughness", roughness_parameter}};
@@ -2189,10 +2189,10 @@ TEST(RemoveUvSpectrumTextureV1, Empty) {
 
 TEST(RemoveUvSpectrumTextureV1, WithData) {
   std::vector<absl::string_view> mapping = {"uv"};
-  Parameter mapping_parameter{.directive = "",
-                              .type = ParameterType::STRING,
-                              .type_name = "",
-                              .values = absl::MakeSpan(mapping)};
+  Parameter mapping_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::STRING,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(mapping)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"mapping", mapping_parameter}};

@@ -26,16 +26,16 @@ TEST(RemoveAmbientOcclusionIntegratorV2, Empty) {
 
 TEST(RemoveAmbientOcclusionIntegratorV2, WithData) {
   std::vector<double> maxdist = {0.1};
-  Parameter maxdist_parameter{.directive = "",
-                              .type = ParameterType::FLOAT,
-                              .type_name = "",
-                              .values = absl::MakeSpan(maxdist)};
+  Parameter maxdist_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::FLOAT,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(maxdist)};
 
   std::vector<int32_t> nsamples = {2};
-  Parameter nsamples_parameter{.directive = "",
-                               .type = ParameterType::INTEGER,
-                               .type_name = "",
-                               .values = absl::MakeSpan(nsamples)};
+  Parameter nsamples_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::INTEGER,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(nsamples)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"maxdist", maxdist_parameter},
@@ -59,22 +59,22 @@ TEST(RemoveAmbientOcclusionIntegratorV3, Empty) {
 
 TEST(RemoveAmbientOcclusionIntegratorV3, WithData) {
   std::vector<int32_t> nsamples = {1};
-  Parameter nsamples_parameter{.directive = "",
-                               .type = ParameterType::INTEGER,
-                               .type_name = "",
-                               .values = absl::MakeSpan(nsamples)};
+  Parameter nsamples_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::INTEGER,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(nsamples)};
 
   bool cossample[] = {true};
-  Parameter cossample_parameter{.directive = "",
-                                .type = ParameterType::BOOL,
-                                .type_name = "",
-                                .values = absl::MakeSpan(cossample)};
+  Parameter cossample_parameter{/*directive=*/"",
+                                /*type=*/ParameterType::BOOL,
+                                /*type_name=*/"",
+                                /*values=*/absl::MakeSpan(cossample)};
 
   std::vector<int32_t> pixelbounds = {2, 3, 4, 5};
-  Parameter pixelbounds_parameter{.directive = "",
-                                  .type = ParameterType::INTEGER,
-                                  .type_name = "",
-                                  .values = absl::MakeSpan(pixelbounds)};
+  Parameter pixelbounds_parameter{/*directive=*/"",
+                                  /*type=*/ParameterType::INTEGER,
+                                  /*type_name=*/"",
+                                  /*values=*/absl::MakeSpan(pixelbounds)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"nsamples", nsamples_parameter},
@@ -109,37 +109,37 @@ TEST(RemoveBdptIntegratorV3, Empty) {
 
 TEST(RemoveBdptIntegratorV3, WithData) {
   std::vector<int32_t> maxdepth = {1};
-  Parameter maxdepth_parameter{.directive = "",
-                               .type = ParameterType::INTEGER,
-                               .type_name = "",
-                               .values = absl::MakeSpan(maxdepth)};
+  Parameter maxdepth_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::INTEGER,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(maxdepth)};
 
   std::vector<int32_t> pixelbounds = {2, 3, 4, 5};
-  Parameter pixelbounds_parameter{.directive = "",
-                                  .type = ParameterType::INTEGER,
-                                  .type_name = "",
-                                  .values = absl::MakeSpan(pixelbounds)};
+  Parameter pixelbounds_parameter{/*directive=*/"",
+                                  /*type=*/ParameterType::INTEGER,
+                                  /*type_name=*/"",
+                                  /*values=*/absl::MakeSpan(pixelbounds)};
 
   std::vector<absl::string_view> lightsamplestrategy = {"unknown"};
   Parameter lightsamplestrategy_parameter{
-      .directive = "",
-      .type = ParameterType::STRING,
-      .type_name = "",
-      .values = absl::MakeSpan(lightsamplestrategy)};
+      /*directive=*/"",
+      /*type=*/ParameterType::STRING,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(lightsamplestrategy)};
 
   bool visualizestrategies[] = {true};
   Parameter visualizestrategies_parameter{
-      .directive = "",
-      .type = ParameterType::BOOL,
-      .type_name = "",
-      .values = absl::MakeSpan(visualizestrategies)};
+      /*directive=*/"",
+      /*type=*/ParameterType::BOOL,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(visualizestrategies)};
 
   bool visualizeweights[] = {true};
   Parameter visualizeweights_parameter{
-      .directive = "",
-      .type = ParameterType::BOOL,
-      .type_name = "",
-      .values = absl::MakeSpan(visualizeweights)};
+      /*directive=*/"",
+      /*type=*/ParameterType::BOOL,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(visualizeweights)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"maxdepth", maxdepth_parameter},
@@ -163,10 +163,10 @@ TEST(RemoveBdptIntegratorV3, WithData) {
 TEST(RemoveBdptIntegratorV3, Uniform) {
   std::vector<absl::string_view> lightsamplestrategy = {"uniform"};
   Parameter lightsamplestrategy_parameter{
-      .directive = "",
-      .type = ParameterType::STRING,
-      .type_name = "",
-      .values = absl::MakeSpan(lightsamplestrategy)};
+      /*directive=*/"",
+      /*type=*/ParameterType::STRING,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(lightsamplestrategy)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"lightsamplestrategy", lightsamplestrategy_parameter},
@@ -182,10 +182,10 @@ TEST(RemoveBdptIntegratorV3, Uniform) {
 TEST(RemoveBdptIntegratorV3, Power) {
   std::vector<absl::string_view> lightsamplestrategy = {"power"};
   Parameter lightsamplestrategy_parameter{
-      .directive = "",
-      .type = ParameterType::STRING,
-      .type_name = "",
-      .values = absl::MakeSpan(lightsamplestrategy)};
+      /*directive=*/"",
+      /*type=*/ParameterType::STRING,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(lightsamplestrategy)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"lightsamplestrategy", lightsamplestrategy_parameter},
@@ -201,10 +201,10 @@ TEST(RemoveBdptIntegratorV3, Power) {
 TEST(RemoveBdptIntegratorV3, Spatial) {
   std::vector<absl::string_view> lightsamplestrategy = {"spatial"};
   Parameter lightsamplestrategy_parameter{
-      .directive = "",
-      .type = ParameterType::STRING,
-      .type_name = "",
-      .values = absl::MakeSpan(lightsamplestrategy)};
+      /*directive=*/"",
+      /*type=*/ParameterType::STRING,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(lightsamplestrategy)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"lightsamplestrategy", lightsamplestrategy_parameter},
@@ -227,22 +227,22 @@ TEST(RemoveDebugIntegratorV1, Empty) {
 
 TEST(RemoveDebugIntegratorV1, FirstWithData) {
   std::vector<absl::string_view> red = {"zero"};
-  Parameter red_parameter{.directive = "",
-                          .type = ParameterType::STRING,
-                          .type_name = "",
-                          .values = absl::MakeSpan(red)};
+  Parameter red_parameter{/*directive=*/"",
+                          /*type=*/ParameterType::STRING,
+                          /*type_name=*/"",
+                          /*values=*/absl::MakeSpan(red)};
 
   std::vector<absl::string_view> green = {"one"};
-  Parameter green_parameter{.directive = "",
-                            .type = ParameterType::STRING,
-                            .type_name = "",
-                            .values = absl::MakeSpan(green)};
+  Parameter green_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::STRING,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(green)};
 
   std::vector<absl::string_view> blue = {"hit"};
-  Parameter blue_parameter{.directive = "",
-                           .type = ParameterType::STRING,
-                           .type_name = "",
-                           .values = absl::MakeSpan(blue)};
+  Parameter blue_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::STRING,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(blue)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"red", red_parameter},
@@ -259,22 +259,22 @@ TEST(RemoveDebugIntegratorV1, FirstWithData) {
 
 TEST(RemoveDebugIntegratorV1, SecondWithData) {
   std::vector<absl::string_view> red = {"nx"};
-  Parameter red_parameter{.directive = "",
-                          .type = ParameterType::STRING,
-                          .type_name = "",
-                          .values = absl::MakeSpan(red)};
+  Parameter red_parameter{/*directive=*/"",
+                          /*type=*/ParameterType::STRING,
+                          /*type_name=*/"",
+                          /*values=*/absl::MakeSpan(red)};
 
   std::vector<absl::string_view> green = {"ny"};
-  Parameter green_parameter{.directive = "",
-                            .type = ParameterType::STRING,
-                            .type_name = "",
-                            .values = absl::MakeSpan(green)};
+  Parameter green_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::STRING,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(green)};
 
   std::vector<absl::string_view> blue = {"nz"};
-  Parameter blue_parameter{.directive = "",
-                           .type = ParameterType::STRING,
-                           .type_name = "",
-                           .values = absl::MakeSpan(blue)};
+  Parameter blue_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::STRING,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(blue)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"red", red_parameter},
@@ -291,22 +291,22 @@ TEST(RemoveDebugIntegratorV1, SecondWithData) {
 
 TEST(RemoveDebugIntegratorV1, ThirdWithData) {
   std::vector<absl::string_view> red = {"snx"};
-  Parameter red_parameter{.directive = "",
-                          .type = ParameterType::STRING,
-                          .type_name = "",
-                          .values = absl::MakeSpan(red)};
+  Parameter red_parameter{/*directive=*/"",
+                          /*type=*/ParameterType::STRING,
+                          /*type_name=*/"",
+                          /*values=*/absl::MakeSpan(red)};
 
   std::vector<absl::string_view> green = {"sny"};
-  Parameter green_parameter{.directive = "",
-                            .type = ParameterType::STRING,
-                            .type_name = "",
-                            .values = absl::MakeSpan(green)};
+  Parameter green_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::STRING,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(green)};
 
   std::vector<absl::string_view> blue = {"snz"};
-  Parameter blue_parameter{.directive = "",
-                           .type = ParameterType::STRING,
-                           .type_name = "",
-                           .values = absl::MakeSpan(blue)};
+  Parameter blue_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::STRING,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(blue)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"red", red_parameter},
@@ -323,22 +323,22 @@ TEST(RemoveDebugIntegratorV1, ThirdWithData) {
 
 TEST(RemoveDebugIntegratorV1, FourthWithData) {
   std::vector<absl::string_view> red = {"u"};
-  Parameter red_parameter{.directive = "",
-                          .type = ParameterType::STRING,
-                          .type_name = "",
-                          .values = absl::MakeSpan(red)};
+  Parameter red_parameter{/*directive=*/"",
+                          /*type=*/ParameterType::STRING,
+                          /*type_name=*/"",
+                          /*values=*/absl::MakeSpan(red)};
 
   std::vector<absl::string_view> green = {"v"};
-  Parameter green_parameter{.directive = "",
-                            .type = ParameterType::STRING,
-                            .type_name = "",
-                            .values = absl::MakeSpan(green)};
+  Parameter green_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::STRING,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(green)};
 
   std::vector<absl::string_view> blue = {"x"};
-  Parameter blue_parameter{.directive = "",
-                           .type = ParameterType::STRING,
-                           .type_name = "",
-                           .values = absl::MakeSpan(blue)};
+  Parameter blue_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::STRING,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(blue)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"red", red_parameter},
@@ -363,16 +363,16 @@ TEST(RemoveDiffusePrtIntegratorV2, Empty) {
 
 TEST(RemoveDiffusePrtIntegratorV2, WithData) {
   std::vector<int32_t> lmax = {1};
-  Parameter lmax_parameter{.directive = "",
-                           .type = ParameterType::INTEGER,
-                           .type_name = "",
-                           .values = absl::MakeSpan(lmax)};
+  Parameter lmax_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::INTEGER,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(lmax)};
 
   std::vector<int32_t> nsamples = {2};
-  Parameter nsamples_parameter{.directive = "",
-                               .type = ParameterType::INTEGER,
-                               .type_name = "",
-                               .values = absl::MakeSpan(nsamples)};
+  Parameter nsamples_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::INTEGER,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(nsamples)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"lmax", lmax_parameter},
@@ -396,29 +396,29 @@ TEST(RemoveDipoleSubsurfaceIntegratorV2, Empty) {
 
 TEST(RemoveDipoleSubsurfaceIntegratorV2, WithData) {
   std::vector<int32_t> maxdepth = {1};
-  Parameter maxdepth_parameter{.directive = "",
-                               .type = ParameterType::INTEGER,
-                               .type_name = "",
-                               .values = absl::MakeSpan(maxdepth)};
+  Parameter maxdepth_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::INTEGER,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(maxdepth)};
 
   std::vector<double> maxerror = {0.2};
-  Parameter maxerror_parameter{.directive = "",
-                               .type = ParameterType::FLOAT,
-                               .type_name = "",
-                               .values = absl::MakeSpan(maxerror)};
+  Parameter maxerror_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::FLOAT,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(maxerror)};
 
   std::vector<double> minsampledistance = {0.3};
   Parameter minsampledistance_parameter{
-      .directive = "",
-      .type = ParameterType::FLOAT,
-      .type_name = "",
-      .values = absl::MakeSpan(minsampledistance)};
+      /*directive=*/"",
+      /*type=*/ParameterType::FLOAT,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(minsampledistance)};
 
   std::vector<absl::string_view> pointsfile = {"file"};
-  Parameter pointsfile_parameter{.directive = "",
-                                 .type = ParameterType::STRING,
-                                 .type_name = "",
-                                 .values = absl::MakeSpan(pointsfile)};
+  Parameter pointsfile_parameter{/*directive=*/"",
+                                 /*type=*/ParameterType::STRING,
+                                 /*type_name=*/"",
+                                 /*values=*/absl::MakeSpan(pointsfile)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"maxdepth", maxdepth_parameter},
@@ -447,16 +447,16 @@ TEST(RemoveDirectLightingIntegratorV1, Empty) {
 
 TEST(RemoveDirectLightingIntegratorV1, WithData) {
   std::vector<int32_t> maxdepth = {1};
-  Parameter maxdepth_parameter{.directive = "",
-                               .type = ParameterType::INTEGER,
-                               .type_name = "",
-                               .values = absl::MakeSpan(maxdepth)};
+  Parameter maxdepth_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::INTEGER,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(maxdepth)};
 
   std::vector<absl::string_view> strategy = {"all"};
-  Parameter strategy_parameter{.directive = "",
-                               .type = ParameterType::STRING,
-                               .type_name = "",
-                               .values = absl::MakeSpan(strategy)};
+  Parameter strategy_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::STRING,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(strategy)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"maxdepth", maxdepth_parameter}, {"strategy", strategy_parameter}};
@@ -470,10 +470,10 @@ TEST(RemoveDirectLightingIntegratorV1, WithData) {
 
 TEST(RemoveDirectLightingIntegratorV1, All) {
   std::vector<absl::string_view> strategy = {"all"};
-  Parameter strategy_parameter{.directive = "",
-                               .type = ParameterType::STRING,
-                               .type_name = "",
-                               .values = absl::MakeSpan(strategy)};
+  Parameter strategy_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::STRING,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(strategy)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"strategy", strategy_parameter}};
@@ -487,10 +487,10 @@ TEST(RemoveDirectLightingIntegratorV1, All) {
 
 TEST(RemoveDirectLightingIntegratorV1, One) {
   std::vector<absl::string_view> strategy = {"one"};
-  Parameter strategy_parameter{.directive = "",
-                               .type = ParameterType::STRING,
-                               .type_name = "",
-                               .values = absl::MakeSpan(strategy)};
+  Parameter strategy_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::STRING,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(strategy)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"strategy", strategy_parameter}};
@@ -504,10 +504,10 @@ TEST(RemoveDirectLightingIntegratorV1, One) {
 
 TEST(RemoveDirectLightingIntegratorV1, Weighted) {
   std::vector<absl::string_view> strategy = {"weighted"};
-  Parameter strategy_parameter{.directive = "",
-                               .type = ParameterType::STRING,
-                               .type_name = "",
-                               .values = absl::MakeSpan(strategy)};
+  Parameter strategy_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::STRING,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(strategy)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"strategy", strategy_parameter}};
@@ -529,16 +529,16 @@ TEST(RemoveDirectLightingIntegratorV2, Empty) {
 
 TEST(RemoveDirectLightingIntegratorV2, WithData) {
   std::vector<int32_t> maxdepth = {1};
-  Parameter maxdepth_parameter{.directive = "",
-                               .type = ParameterType::INTEGER,
-                               .type_name = "",
-                               .values = absl::MakeSpan(maxdepth)};
+  Parameter maxdepth_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::INTEGER,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(maxdepth)};
 
   std::vector<absl::string_view> strategy = {"all"};
-  Parameter strategy_parameter{.directive = "",
-                               .type = ParameterType::STRING,
-                               .type_name = "",
-                               .values = absl::MakeSpan(strategy)};
+  Parameter strategy_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::STRING,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(strategy)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"maxdepth", maxdepth_parameter}, {"strategy", strategy_parameter}};
@@ -552,10 +552,10 @@ TEST(RemoveDirectLightingIntegratorV2, WithData) {
 
 TEST(RemoveDirectLightingIntegratorV2, All) {
   std::vector<absl::string_view> strategy = {"all"};
-  Parameter strategy_parameter{.directive = "",
-                               .type = ParameterType::STRING,
-                               .type_name = "",
-                               .values = absl::MakeSpan(strategy)};
+  Parameter strategy_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::STRING,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(strategy)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"strategy", strategy_parameter}};
@@ -569,10 +569,10 @@ TEST(RemoveDirectLightingIntegratorV2, All) {
 
 TEST(RemoveDirectLightingIntegratorV2, One) {
   std::vector<absl::string_view> strategy = {"one"};
-  Parameter strategy_parameter{.directive = "",
-                               .type = ParameterType::STRING,
-                               .type_name = "",
-                               .values = absl::MakeSpan(strategy)};
+  Parameter strategy_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::STRING,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(strategy)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"strategy", strategy_parameter}};
@@ -586,10 +586,10 @@ TEST(RemoveDirectLightingIntegratorV2, One) {
 
 TEST(RemoveDirectLightingIntegratorV2, Weighted) {
   std::vector<absl::string_view> strategy = {"weighted"};
-  Parameter strategy_parameter{.directive = "",
-                               .type = ParameterType::STRING,
-                               .type_name = "",
-                               .values = absl::MakeSpan(strategy)};
+  Parameter strategy_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::STRING,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(strategy)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"strategy", strategy_parameter}};
@@ -611,22 +611,22 @@ TEST(RemoveDirectLightingIntegratorV3, Empty) {
 
 TEST(RemoveDirectLightingIntegratorV3, WithData) {
   std::vector<int32_t> maxdepth = {1};
-  Parameter maxdepth_parameter{.directive = "",
-                               .type = ParameterType::INTEGER,
-                               .type_name = "",
-                               .values = absl::MakeSpan(maxdepth)};
+  Parameter maxdepth_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::INTEGER,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(maxdepth)};
 
   std::vector<absl::string_view> strategy = {"all"};
-  Parameter strategy_parameter{.directive = "",
-                               .type = ParameterType::STRING,
-                               .type_name = "",
-                               .values = absl::MakeSpan(strategy)};
+  Parameter strategy_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::STRING,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(strategy)};
 
   std::vector<int32_t> pixelbounds = {2, 3, 4, 5};
-  Parameter pixelbounds_parameter{.directive = "",
-                                  .type = ParameterType::INTEGER,
-                                  .type_name = "",
-                                  .values = absl::MakeSpan(pixelbounds)};
+  Parameter pixelbounds_parameter{/*directive=*/"",
+                                  /*type=*/ParameterType::INTEGER,
+                                  /*type_name=*/"",
+                                  /*values=*/absl::MakeSpan(pixelbounds)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"maxdepth", maxdepth_parameter},
@@ -644,10 +644,10 @@ TEST(RemoveDirectLightingIntegratorV3, WithData) {
 
 TEST(RemoveDirectLightingIntegratorV3, All) {
   std::vector<absl::string_view> strategy = {"all"};
-  Parameter strategy_parameter{.directive = "",
-                               .type = ParameterType::STRING,
-                               .type_name = "",
-                               .values = absl::MakeSpan(strategy)};
+  Parameter strategy_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::STRING,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(strategy)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"strategy", strategy_parameter}};
@@ -661,10 +661,10 @@ TEST(RemoveDirectLightingIntegratorV3, All) {
 
 TEST(RemoveDirectLightingIntegratorV3, One) {
   std::vector<absl::string_view> strategy = {"one"};
-  Parameter strategy_parameter{.directive = "",
-                               .type = ParameterType::STRING,
-                               .type_name = "",
-                               .values = absl::MakeSpan(strategy)};
+  Parameter strategy_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::STRING,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(strategy)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"strategy", strategy_parameter}};
@@ -678,10 +678,10 @@ TEST(RemoveDirectLightingIntegratorV3, One) {
 
 TEST(RemoveDirectLightingIntegratorV3, Weighted) {
   std::vector<absl::string_view> strategy = {"weighted"};
-  Parameter strategy_parameter{.directive = "",
-                               .type = ParameterType::STRING,
-                               .type_name = "",
-                               .values = absl::MakeSpan(strategy)};
+  Parameter strategy_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::STRING,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(strategy)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"strategy", strategy_parameter}};
@@ -703,34 +703,34 @@ TEST(RemoveGlossyPrtIntegratorV2, Empty) {
 
 TEST(RemoveGlossyPrtIntegratorV2, WithData) {
   std::vector<int32_t> lmax = {1};
-  Parameter lmax_parameter{.directive = "",
-                           .type = ParameterType::INTEGER,
-                           .type_name = "",
-                           .values = absl::MakeSpan(lmax)};
+  Parameter lmax_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::INTEGER,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(lmax)};
 
   std::vector<int32_t> nsamples = {2};
-  Parameter nsamples_parameter{.directive = "",
-                               .type = ParameterType::INTEGER,
-                               .type_name = "",
-                               .values = absl::MakeSpan(nsamples)};
+  Parameter nsamples_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::INTEGER,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(nsamples)};
 
   std::vector<double> roughness = {0.3};
-  Parameter roughness_parameter{.directive = "",
-                                .type = ParameterType::FLOAT,
-                                .type_name = "",
-                                .values = absl::MakeSpan(roughness)};
+  Parameter roughness_parameter{/*directive=*/"",
+                                /*type=*/ParameterType::FLOAT,
+                                /*type_name=*/"",
+                                /*values=*/absl::MakeSpan(roughness)};
 
   std::vector<absl::string_view> kd = {"kd"};
-  Parameter kd_parameter{.directive = "",
-                         .type = ParameterType::SPECTRUM,
-                         .type_name = "",
-                         .values = absl::MakeSpan(kd)};
+  Parameter kd_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::SPECTRUM,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(kd)};
 
   std::vector<absl::string_view> ks = {"ks"};
-  Parameter ks_parameter{.directive = "",
-                         .type = ParameterType::SPECTRUM,
-                         .type_name = "",
-                         .values = absl::MakeSpan(ks)};
+  Parameter ks_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::SPECTRUM,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(ks)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"lmax", lmax_parameter},
@@ -761,34 +761,34 @@ TEST(RemoveIgiIntegratorV1, Empty) {
 
 TEST(RemoveIgiIntegratorV1, WithData) {
   std::vector<int32_t> nlights = {1};
-  Parameter nlights_parameter{.directive = "",
-                              .type = ParameterType::INTEGER,
-                              .type_name = "",
-                              .values = absl::MakeSpan(nlights)};
+  Parameter nlights_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::INTEGER,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(nlights)};
 
   std::vector<int32_t> nsets = {2};
-  Parameter nsets_parameter{.directive = "",
-                            .type = ParameterType::INTEGER,
-                            .type_name = "",
-                            .values = absl::MakeSpan(nsets)};
+  Parameter nsets_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::INTEGER,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(nsets)};
 
   std::vector<double> rrthreshold = {0.3};
-  Parameter rrthreshold_parameter{.directive = "",
-                                  .type = ParameterType::FLOAT,
-                                  .type_name = "",
-                                  .values = absl::MakeSpan(rrthreshold)};
+  Parameter rrthreshold_parameter{/*directive=*/"",
+                                  /*type=*/ParameterType::FLOAT,
+                                  /*type_name=*/"",
+                                  /*values=*/absl::MakeSpan(rrthreshold)};
 
   std::vector<double> indirectscale = {0.4};
-  Parameter indirectscale_parameter{.directive = "",
-                                    .type = ParameterType::FLOAT,
-                                    .type_name = "",
-                                    .values = absl::MakeSpan(indirectscale)};
+  Parameter indirectscale_parameter{/*directive=*/"",
+                                    /*type=*/ParameterType::FLOAT,
+                                    /*type_name=*/"",
+                                    /*values=*/absl::MakeSpan(indirectscale)};
 
   std::vector<double> mindist = {0.5};
-  Parameter mindist_parameter{.directive = "",
-                              .type = ParameterType::FLOAT,
-                              .type_name = "",
-                              .values = absl::MakeSpan(mindist)};
+  Parameter mindist_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::FLOAT,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(mindist)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"nlights", nlights_parameter},
@@ -818,40 +818,40 @@ TEST(RemoveIgiIntegratorV2, Empty) {
 
 TEST(RemoveIgiIntegratorV2, WithData) {
   std::vector<int32_t> maxdepth = {1};
-  Parameter maxdepth_parameter{.directive = "",
-                               .type = ParameterType::INTEGER,
-                               .type_name = "",
-                               .values = absl::MakeSpan(maxdepth)};
+  Parameter maxdepth_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::INTEGER,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(maxdepth)};
 
   std::vector<int32_t> nlights = {2};
-  Parameter nlights_parameter{.directive = "",
-                              .type = ParameterType::INTEGER,
-                              .type_name = "",
-                              .values = absl::MakeSpan(nlights)};
+  Parameter nlights_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::INTEGER,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(nlights)};
 
   std::vector<int32_t> nsets = {3};
-  Parameter nsets_parameter{.directive = "",
-                            .type = ParameterType::INTEGER,
-                            .type_name = "",
-                            .values = absl::MakeSpan(nsets)};
+  Parameter nsets_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::INTEGER,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(nsets)};
 
   std::vector<double> rrthreshold = {0.4};
-  Parameter rrthreshold_parameter{.directive = "",
-                                  .type = ParameterType::FLOAT,
-                                  .type_name = "",
-                                  .values = absl::MakeSpan(rrthreshold)};
+  Parameter rrthreshold_parameter{/*directive=*/"",
+                                  /*type=*/ParameterType::FLOAT,
+                                  /*type_name=*/"",
+                                  /*values=*/absl::MakeSpan(rrthreshold)};
 
   std::vector<double> glimit = {0.5};
-  Parameter glimit_parameter{.directive = "",
-                             .type = ParameterType::FLOAT,
-                             .type_name = "",
-                             .values = absl::MakeSpan(glimit)};
+  Parameter glimit_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(glimit)};
 
   std::vector<int32_t> gathersamples = {6};
-  Parameter gathersamples_parameter{.directive = "",
-                                    .type = ParameterType::INTEGER,
-                                    .type_name = "",
-                                    .values = absl::MakeSpan(gathersamples)};
+  Parameter gathersamples_parameter{/*directive=*/"",
+                                    /*type=*/ParameterType::INTEGER,
+                                    /*type_name=*/"",
+                                    /*values=*/absl::MakeSpan(gathersamples)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"maxdepth", maxdepth_parameter},
@@ -883,51 +883,51 @@ TEST(RemoveIrradianceCacheIntegratorV1, Empty) {
 
 TEST(RemoveIrradianceCacheIntegratorV1, WithData) {
   std::vector<double> minweight = {0.1};
-  Parameter minweight_parameter{.directive = "",
-                                .type = ParameterType::FLOAT,
-                                .type_name = "",
-                                .values = absl::MakeSpan(minweight)};
+  Parameter minweight_parameter{/*directive=*/"",
+                                /*type=*/ParameterType::FLOAT,
+                                /*type_name=*/"",
+                                /*values=*/absl::MakeSpan(minweight)};
 
   std::vector<double> minpixelspacing = {0.2};
   Parameter minpixelspacing_parameter{
-      .directive = "",
-      .type = ParameterType::FLOAT,
-      .type_name = "",
-      .values = absl::MakeSpan(minpixelspacing)};
+      /*directive=*/"",
+      /*type=*/ParameterType::FLOAT,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(minpixelspacing)};
 
   std::vector<double> maxpixelspacing = {0.3};
   Parameter maxpixelspacing_parameter{
-      .directive = "",
-      .type = ParameterType::FLOAT,
-      .type_name = "",
-      .values = absl::MakeSpan(maxpixelspacing)};
+      /*directive=*/"",
+      /*type=*/ParameterType::FLOAT,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(maxpixelspacing)};
 
   std::vector<double> maxangledifference = {0.4};
   Parameter maxangledifference_parameter{
-      .directive = "",
-      .type = ParameterType::FLOAT,
-      .type_name = "",
-      .values = absl::MakeSpan(maxangledifference)};
+      /*directive=*/"",
+      /*type=*/ParameterType::FLOAT,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(maxangledifference)};
 
   std::vector<int32_t> maxspeculardepth = {5};
   Parameter maxspeculardepth_parameter{
-      .directive = "",
-      .type = ParameterType::INTEGER,
-      .type_name = "",
-      .values = absl::MakeSpan(maxspeculardepth)};
+      /*directive=*/"",
+      /*type=*/ParameterType::INTEGER,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(maxspeculardepth)};
 
   std::vector<int32_t> maxindirectdepth = {6};
   Parameter maxindirectdepth_parameter{
-      .directive = "",
-      .type = ParameterType::INTEGER,
-      .type_name = "",
-      .values = absl::MakeSpan(maxindirectdepth)};
+      /*directive=*/"",
+      /*type=*/ParameterType::INTEGER,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(maxindirectdepth)};
 
   std::vector<int32_t> nsamples = {7};
-  Parameter nsamples_parameter{.directive = "",
-                               .type = ParameterType::INTEGER,
-                               .type_name = "",
-                               .values = absl::MakeSpan(nsamples)};
+  Parameter nsamples_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::INTEGER,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(nsamples)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"minweight", minweight_parameter},
@@ -961,43 +961,43 @@ TEST(RemoveMltIntegratorV3, Empty) {
 
 TEST(RemoveMltIntegratorV3, WithData) {
   std::vector<int32_t> maxdepth = {1};
-  Parameter maxdepth_parameter{.directive = "",
-                               .type = ParameterType::INTEGER,
-                               .type_name = "",
-                               .values = absl::MakeSpan(maxdepth)};
+  Parameter maxdepth_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::INTEGER,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(maxdepth)};
 
   std::vector<int32_t> bootstrapsamples = {2};
   Parameter bootstrapsamples_parameter{
-      .directive = "",
-      .type = ParameterType::INTEGER,
-      .type_name = "",
-      .values = absl::MakeSpan(bootstrapsamples)};
+      /*directive=*/"",
+      /*type=*/ParameterType::INTEGER,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(bootstrapsamples)};
 
   std::vector<int32_t> chains = {3};
-  Parameter chains_parameter{.directive = "",
-                             .type = ParameterType::INTEGER,
-                             .type_name = "",
-                             .values = absl::MakeSpan(chains)};
+  Parameter chains_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::INTEGER,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(chains)};
 
   std::vector<int32_t> mutationsperpixel = {4};
   Parameter mutationsperpixel_parameter{
-      .directive = "",
-      .type = ParameterType::INTEGER,
-      .type_name = "",
-      .values = absl::MakeSpan(mutationsperpixel)};
+      /*directive=*/"",
+      /*type=*/ParameterType::INTEGER,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(mutationsperpixel)};
 
   std::vector<double> largestepprobability = {0.5};
   Parameter largestepprobability_parameter{
-      .directive = "",
-      .type = ParameterType::FLOAT,
-      .type_name = "",
-      .values = absl::MakeSpan(largestepprobability)};
+      /*directive=*/"",
+      /*type=*/ParameterType::FLOAT,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(largestepprobability)};
 
   std::vector<double> sigma = {0.6};
-  Parameter sigma_parameter{.directive = "",
-                            .type = ParameterType::FLOAT,
-                            .type_name = "",
-                            .values = absl::MakeSpan(sigma)};
+  Parameter sigma_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(sigma)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"maxdepth", maxdepth_parameter},
@@ -1029,10 +1029,10 @@ TEST(RemovePathIntegratorV1, Empty) {
 
 TEST(RemovePathIntegratorV1, WithData) {
   std::vector<int32_t> maxdepth = {1};
-  Parameter maxdepth_parameter{.directive = "",
-                               .type = ParameterType::INTEGER,
-                               .type_name = "",
-                               .values = absl::MakeSpan(maxdepth)};
+  Parameter maxdepth_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::INTEGER,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(maxdepth)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"maxdepth", maxdepth_parameter}};
@@ -1054,29 +1054,29 @@ TEST(RemovePathIntegratorV3, Empty) {
 
 TEST(RemovePathIntegratorV3, WithData) {
   std::vector<int32_t> maxdepth = {1};
-  Parameter maxdepth_parameter{.directive = "",
-                               .type = ParameterType::INTEGER,
-                               .type_name = "",
-                               .values = absl::MakeSpan(maxdepth)};
+  Parameter maxdepth_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::INTEGER,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(maxdepth)};
 
   std::vector<double> rrthreshold = {0.2};
-  Parameter rrthreshold_parameter{.directive = "",
-                                  .type = ParameterType::FLOAT,
-                                  .type_name = "",
-                                  .values = absl::MakeSpan(rrthreshold)};
+  Parameter rrthreshold_parameter{/*directive=*/"",
+                                  /*type=*/ParameterType::FLOAT,
+                                  /*type_name=*/"",
+                                  /*values=*/absl::MakeSpan(rrthreshold)};
 
   std::vector<int32_t> pixelbounds = {3, 4, 5, 6};
-  Parameter pixelbounds_parameter{.directive = "",
-                                  .type = ParameterType::INTEGER,
-                                  .type_name = "",
-                                  .values = absl::MakeSpan(pixelbounds)};
+  Parameter pixelbounds_parameter{/*directive=*/"",
+                                  /*type=*/ParameterType::INTEGER,
+                                  /*type_name=*/"",
+                                  /*values=*/absl::MakeSpan(pixelbounds)};
 
   std::vector<absl::string_view> lightsamplestrategy = {"unknown"};
   Parameter lightsamplestrategy_parameter{
-      .directive = "",
-      .type = ParameterType::STRING,
-      .type_name = "",
-      .values = absl::MakeSpan(lightsamplestrategy)};
+      /*directive=*/"",
+      /*type=*/ParameterType::STRING,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(lightsamplestrategy)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"maxdepth", maxdepth_parameter},
@@ -1097,10 +1097,10 @@ TEST(RemovePathIntegratorV3, WithData) {
 TEST(RemovePathIntegratorV3, Uniform) {
   std::vector<absl::string_view> lightsamplestrategy = {"uniform"};
   Parameter lightsamplestrategy_parameter{
-      .directive = "",
-      .type = ParameterType::STRING,
-      .type_name = "",
-      .values = absl::MakeSpan(lightsamplestrategy)};
+      /*directive=*/"",
+      /*type=*/ParameterType::STRING,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(lightsamplestrategy)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"lightsamplestrategy", lightsamplestrategy_parameter},
@@ -1116,10 +1116,10 @@ TEST(RemovePathIntegratorV3, Uniform) {
 TEST(RemovePathIntegratorV3, Power) {
   std::vector<absl::string_view> lightsamplestrategy = {"power"};
   Parameter lightsamplestrategy_parameter{
-      .directive = "",
-      .type = ParameterType::STRING,
-      .type_name = "",
-      .values = absl::MakeSpan(lightsamplestrategy)};
+      /*directive=*/"",
+      /*type=*/ParameterType::STRING,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(lightsamplestrategy)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"lightsamplestrategy", lightsamplestrategy_parameter},
@@ -1135,10 +1135,10 @@ TEST(RemovePathIntegratorV3, Power) {
 TEST(RemovePathIntegratorV3, Spatial) {
   std::vector<absl::string_view> lightsamplestrategy = {"spatial"};
   Parameter lightsamplestrategy_parameter{
-      .directive = "",
-      .type = ParameterType::STRING,
-      .type_name = "",
-      .values = absl::MakeSpan(lightsamplestrategy)};
+      /*directive=*/"",
+      /*type=*/ParameterType::STRING,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(lightsamplestrategy)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"lightsamplestrategy", lightsamplestrategy_parameter},
@@ -1161,61 +1161,61 @@ TEST(RemovePhotonMapIntegratorV1, Empty) {
 
 TEST(RemovePhotonMapIntegratorV1, WithData) {
   std::vector<int32_t> causticphotons = {1};
-  Parameter causticphotons_parameter{.directive = "",
-                                     .type = ParameterType::INTEGER,
-                                     .type_name = "",
-                                     .values = absl::MakeSpan(causticphotons)};
+  Parameter causticphotons_parameter{/*directive=*/"",
+                                     /*type=*/ParameterType::INTEGER,
+                                     /*type_name=*/"",
+                                     /*values=*/absl::MakeSpan(causticphotons)};
 
   std::vector<int32_t> directphotons = {2};
-  Parameter directphotons_parameter{.directive = "",
-                                    .type = ParameterType::INTEGER,
-                                    .type_name = "",
-                                    .values = absl::MakeSpan(directphotons)};
+  Parameter directphotons_parameter{/*directive=*/"",
+                                    /*type=*/ParameterType::INTEGER,
+                                    /*type_name=*/"",
+                                    /*values=*/absl::MakeSpan(directphotons)};
 
   std::vector<int32_t> indirectphotons = {3};
   Parameter indirectphotons_parameter{
-      .directive = "",
-      .type = ParameterType::INTEGER,
-      .type_name = "",
-      .values = absl::MakeSpan(indirectphotons)};
+      /*directive=*/"",
+      /*type=*/ParameterType::INTEGER,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(indirectphotons)};
 
   std::vector<int32_t> maxdepth = {4};
-  Parameter maxdepth_parameter{.directive = "",
-                               .type = ParameterType::INTEGER,
-                               .type_name = "",
-                               .values = absl::MakeSpan(maxdepth)};
+  Parameter maxdepth_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::INTEGER,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(maxdepth)};
 
   std::vector<int32_t> finalgathersamples = {5};
   Parameter finalgathersamples_parameter{
-      .directive = "",
-      .type = ParameterType::INTEGER,
-      .type_name = "",
-      .values = absl::MakeSpan(finalgathersamples)};
+      /*directive=*/"",
+      /*type=*/ParameterType::INTEGER,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(finalgathersamples)};
 
   std::vector<double> maxdist = {0.6};
-  Parameter maxdist_parameter{.directive = "",
-                              .type = ParameterType::FLOAT,
-                              .type_name = "",
-                              .values = absl::MakeSpan(maxdist)};
+  Parameter maxdist_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::FLOAT,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(maxdist)};
 
   bool finalgather[] = {true};
-  Parameter finalgather_parameter{.directive = "",
-                                  .type = ParameterType::BOOL,
-                                  .type_name = "",
-                                  .values = absl::MakeSpan(finalgather)};
+  Parameter finalgather_parameter{/*directive=*/"",
+                                  /*type=*/ParameterType::BOOL,
+                                  /*type_name=*/"",
+                                  /*values=*/absl::MakeSpan(finalgather)};
 
   bool directwithphotons[] = {true};
   Parameter directwithphotons_parameter{
-      .directive = "",
-      .type = ParameterType::BOOL,
-      .type_name = "",
-      .values = absl::MakeSpan(directwithphotons)};
+      /*directive=*/"",
+      /*type=*/ParameterType::BOOL,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(directwithphotons)};
 
   std::vector<double> rrthreshold = {0.7};
-  Parameter rrthreshold_parameter{.directive = "",
-                                  .type = ParameterType::FLOAT,
-                                  .type_name = "",
-                                  .values = absl::MakeSpan(rrthreshold)};
+  Parameter rrthreshold_parameter{/*directive=*/"",
+                                  /*type=*/ParameterType::FLOAT,
+                                  /*type_name=*/"",
+                                  /*values=*/absl::MakeSpan(rrthreshold)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"causticphotons", causticphotons_parameter},
@@ -1253,67 +1253,67 @@ TEST(RemoveExPhotonMapIntegratorV1, Empty) {
 
 TEST(RemoveExPhotonMapIntegratorV1, WithData) {
   std::vector<int32_t> causticphotons = {1};
-  Parameter causticphotons_parameter{.directive = "",
-                                     .type = ParameterType::INTEGER,
-                                     .type_name = "",
-                                     .values = absl::MakeSpan(causticphotons)};
+  Parameter causticphotons_parameter{/*directive=*/"",
+                                     /*type=*/ParameterType::INTEGER,
+                                     /*type_name=*/"",
+                                     /*values=*/absl::MakeSpan(causticphotons)};
 
   std::vector<int32_t> directphotons = {2};
-  Parameter directphotons_parameter{.directive = "",
-                                    .type = ParameterType::INTEGER,
-                                    .type_name = "",
-                                    .values = absl::MakeSpan(directphotons)};
+  Parameter directphotons_parameter{/*directive=*/"",
+                                    /*type=*/ParameterType::INTEGER,
+                                    /*type_name=*/"",
+                                    /*values=*/absl::MakeSpan(directphotons)};
 
   std::vector<int32_t> indirectphotons = {3};
   Parameter indirectphotons_parameter{
-      .directive = "",
-      .type = ParameterType::INTEGER,
-      .type_name = "",
-      .values = absl::MakeSpan(indirectphotons)};
+      /*directive=*/"",
+      /*type=*/ParameterType::INTEGER,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(indirectphotons)};
 
   std::vector<int32_t> maxdepth = {4};
-  Parameter maxdepth_parameter{.directive = "",
-                               .type = ParameterType::INTEGER,
-                               .type_name = "",
-                               .values = absl::MakeSpan(maxdepth)};
+  Parameter maxdepth_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::INTEGER,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(maxdepth)};
 
   std::vector<int32_t> finalgathersamples = {5};
   Parameter finalgathersamples_parameter{
-      .directive = "",
-      .type = ParameterType::INTEGER,
-      .type_name = "",
-      .values = absl::MakeSpan(finalgathersamples)};
+      /*directive=*/"",
+      /*type=*/ParameterType::INTEGER,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(finalgathersamples)};
 
   std::vector<double> maxdist = {0.6};
-  Parameter maxdist_parameter{.directive = "",
-                              .type = ParameterType::FLOAT,
-                              .type_name = "",
-                              .values = absl::MakeSpan(maxdist)};
+  Parameter maxdist_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::FLOAT,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(maxdist)};
 
   bool finalgather[] = {true};
-  Parameter finalgather_parameter{.directive = "",
-                                  .type = ParameterType::BOOL,
-                                  .type_name = "",
-                                  .values = absl::MakeSpan(finalgather)};
+  Parameter finalgather_parameter{/*directive=*/"",
+                                  /*type=*/ParameterType::BOOL,
+                                  /*type_name=*/"",
+                                  /*values=*/absl::MakeSpan(finalgather)};
 
   bool directwithphotons[] = {true};
   Parameter directwithphotons_parameter{
-      .directive = "",
-      .type = ParameterType::BOOL,
-      .type_name = "",
-      .values = absl::MakeSpan(directwithphotons)};
+      /*directive=*/"",
+      /*type=*/ParameterType::BOOL,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(directwithphotons)};
 
   std::vector<double> rrthreshold = {0.7};
-  Parameter rrthreshold_parameter{.directive = "",
-                                  .type = ParameterType::FLOAT,
-                                  .type_name = "",
-                                  .values = absl::MakeSpan(rrthreshold)};
+  Parameter rrthreshold_parameter{/*directive=*/"",
+                                  /*type=*/ParameterType::FLOAT,
+                                  /*type_name=*/"",
+                                  /*values=*/absl::MakeSpan(rrthreshold)};
 
   std::vector<double> gatherangle = {0.8};
-  Parameter gatherangle_parameter{.directive = "",
-                                  .type = ParameterType::FLOAT,
-                                  .type_name = "",
-                                  .values = absl::MakeSpan(gatherangle)};
+  Parameter gatherangle_parameter{/*directive=*/"",
+                                  /*type=*/ParameterType::FLOAT,
+                                  /*type_name=*/"",
+                                  /*values=*/absl::MakeSpan(gatherangle)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"causticphotons", causticphotons_parameter},
@@ -1353,61 +1353,61 @@ TEST(RemovePhotonMapIntegratorV2, Empty) {
 
 TEST(RemovePhotonMapIntegratorV2, WithData) {
   std::vector<int32_t> causticphotons = {1};
-  Parameter causticphotons_parameter{.directive = "",
-                                     .type = ParameterType::INTEGER,
-                                     .type_name = "",
-                                     .values = absl::MakeSpan(causticphotons)};
+  Parameter causticphotons_parameter{/*directive=*/"",
+                                     /*type=*/ParameterType::INTEGER,
+                                     /*type_name=*/"",
+                                     /*values=*/absl::MakeSpan(causticphotons)};
 
   std::vector<int32_t> indirectphotons = {2};
   Parameter indirectphotons_parameter{
-      .directive = "",
-      .type = ParameterType::INTEGER,
-      .type_name = "",
-      .values = absl::MakeSpan(indirectphotons)};
+      /*directive=*/"",
+      /*type=*/ParameterType::INTEGER,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(indirectphotons)};
 
   std::vector<int32_t> finalgathersamples = {3};
   Parameter finalgathersamples_parameter{
-      .directive = "",
-      .type = ParameterType::INTEGER,
-      .type_name = "",
-      .values = absl::MakeSpan(finalgathersamples)};
+      /*directive=*/"",
+      /*type=*/ParameterType::INTEGER,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(finalgathersamples)};
 
   std::vector<int32_t> maxspeculardepth = {4};
   Parameter maxspeculardepth_parameter{
-      .directive = "",
-      .type = ParameterType::INTEGER,
-      .type_name = "",
-      .values = absl::MakeSpan(maxspeculardepth)};
+      /*directive=*/"",
+      /*type=*/ParameterType::INTEGER,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(maxspeculardepth)};
 
   std::vector<int32_t> maxphotondepth = {5};
-  Parameter maxphotondepth_parameter{.directive = "",
-                                     .type = ParameterType::INTEGER,
-                                     .type_name = "",
-                                     .values = absl::MakeSpan(maxphotondepth)};
+  Parameter maxphotondepth_parameter{/*directive=*/"",
+                                     /*type=*/ParameterType::INTEGER,
+                                     /*type_name=*/"",
+                                     /*values=*/absl::MakeSpan(maxphotondepth)};
 
   std::vector<double> maxdist = {0.6};
-  Parameter maxdist_parameter{.directive = "",
-                              .type = ParameterType::FLOAT,
-                              .type_name = "",
-                              .values = absl::MakeSpan(maxdist)};
+  Parameter maxdist_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::FLOAT,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(maxdist)};
 
   bool finalgather[] = {true};
-  Parameter finalgather_parameter{.directive = "",
-                                  .type = ParameterType::BOOL,
-                                  .type_name = "",
-                                  .values = absl::MakeSpan(finalgather)};
+  Parameter finalgather_parameter{/*directive=*/"",
+                                  /*type=*/ParameterType::BOOL,
+                                  /*type_name=*/"",
+                                  /*values=*/absl::MakeSpan(finalgather)};
 
   std::vector<double> rrthreshold = {0.7};
-  Parameter rrthreshold_parameter{.directive = "",
-                                  .type = ParameterType::FLOAT,
-                                  .type_name = "",
-                                  .values = absl::MakeSpan(rrthreshold)};
+  Parameter rrthreshold_parameter{/*directive=*/"",
+                                  /*type=*/ParameterType::FLOAT,
+                                  /*type_name=*/"",
+                                  /*values=*/absl::MakeSpan(rrthreshold)};
 
   std::vector<double> gatherangle = {0.8};
-  Parameter gatherangle_parameter{.directive = "",
-                                  .type = ParameterType::FLOAT,
-                                  .type_name = "",
-                                  .values = absl::MakeSpan(gatherangle)};
+  Parameter gatherangle_parameter{/*directive=*/"",
+                                  /*type=*/ParameterType::FLOAT,
+                                  /*type_name=*/"",
+                                  /*values=*/absl::MakeSpan(gatherangle)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"causticphotons", causticphotons_parameter},
@@ -1445,36 +1445,36 @@ TEST(RemoveSppmIntegratorV3, Empty) {
 
 TEST(RemoveSppmIntegratorV3, WithData) {
   std::vector<int32_t> maxdepth = {1};
-  Parameter maxdepth_parameter{.directive = "",
-                               .type = ParameterType::INTEGER,
-                               .type_name = "",
-                               .values = absl::MakeSpan(maxdepth)};
+  Parameter maxdepth_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::INTEGER,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(maxdepth)};
 
   std::vector<int32_t> numiterations = {2};
-  Parameter numiterations_parameter{.directive = "",
-                                    .type = ParameterType::INTEGER,
-                                    .type_name = "",
-                                    .values = absl::MakeSpan(numiterations)};
+  Parameter numiterations_parameter{/*directive=*/"",
+                                    /*type=*/ParameterType::INTEGER,
+                                    /*type_name=*/"",
+                                    /*values=*/absl::MakeSpan(numiterations)};
 
   std::vector<int32_t> photonsperiteration = {3};
   Parameter photonsperiteration_parameter{
-      .directive = "",
-      .type = ParameterType::INTEGER,
-      .type_name = "",
-      .values = absl::MakeSpan(photonsperiteration)};
+      /*directive=*/"",
+      /*type=*/ParameterType::INTEGER,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(photonsperiteration)};
 
   std::vector<int32_t> imagewritefrequency = {4};
   Parameter imagewritefrequency_parameter{
-      .directive = "",
-      .type = ParameterType::INTEGER,
-      .type_name = "",
-      .values = absl::MakeSpan(imagewritefrequency)};
+      /*directive=*/"",
+      /*type=*/ParameterType::INTEGER,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(imagewritefrequency)};
 
   std::vector<double> radius = {0.5};
-  Parameter radius_parameter{.directive = "",
-                             .type = ParameterType::FLOAT,
-                             .type_name = "",
-                             .values = absl::MakeSpan(radius)};
+  Parameter radius_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(radius)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"maxdepth", maxdepth_parameter},
@@ -1504,10 +1504,10 @@ TEST(RemoveUseProbesIntegratorV2, Empty) {
 
 TEST(RemoveUseProbesIntegratorV2, WithData) {
   std::vector<absl::string_view> filename = {"file"};
-  Parameter filename_parameter{.directive = "",
-                               .type = ParameterType::STRING,
-                               .type_name = "",
-                               .values = absl::MakeSpan(filename)};
+  Parameter filename_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::STRING,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(filename)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"filename", filename_parameter}};
@@ -1529,29 +1529,29 @@ TEST(RemoveVolPathIntegratorV3, Empty) {
 
 TEST(RemoveVolPathIntegratorV3, WithData) {
   std::vector<int32_t> maxdepth = {1};
-  Parameter maxdepth_parameter{.directive = "",
-                               .type = ParameterType::INTEGER,
-                               .type_name = "",
-                               .values = absl::MakeSpan(maxdepth)};
+  Parameter maxdepth_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::INTEGER,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(maxdepth)};
 
   std::vector<double> rrthreshold = {0.2};
-  Parameter rrthreshold_parameter{.directive = "",
-                                  .type = ParameterType::FLOAT,
-                                  .type_name = "",
-                                  .values = absl::MakeSpan(rrthreshold)};
+  Parameter rrthreshold_parameter{/*directive=*/"",
+                                  /*type=*/ParameterType::FLOAT,
+                                  /*type_name=*/"",
+                                  /*values=*/absl::MakeSpan(rrthreshold)};
 
   std::vector<int32_t> pixelbounds = {3, 4, 5, 6};
-  Parameter pixelbounds_parameter{.directive = "",
-                                  .type = ParameterType::INTEGER,
-                                  .type_name = "",
-                                  .values = absl::MakeSpan(pixelbounds)};
+  Parameter pixelbounds_parameter{/*directive=*/"",
+                                  /*type=*/ParameterType::INTEGER,
+                                  /*type_name=*/"",
+                                  /*values=*/absl::MakeSpan(pixelbounds)};
 
   std::vector<absl::string_view> lightsamplestrategy = {"unknown"};
   Parameter lightsamplestrategy_parameter{
-      .directive = "",
-      .type = ParameterType::STRING,
-      .type_name = "",
-      .values = absl::MakeSpan(lightsamplestrategy)};
+      /*directive=*/"",
+      /*type=*/ParameterType::STRING,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(lightsamplestrategy)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"maxdepth", maxdepth_parameter},
@@ -1572,10 +1572,10 @@ TEST(RemoveVolPathIntegratorV3, WithData) {
 TEST(RemoveVolPathIntegratorV3, Uniform) {
   std::vector<absl::string_view> lightsamplestrategy = {"uniform"};
   Parameter lightsamplestrategy_parameter{
-      .directive = "",
-      .type = ParameterType::STRING,
-      .type_name = "",
-      .values = absl::MakeSpan(lightsamplestrategy)};
+      /*directive=*/"",
+      /*type=*/ParameterType::STRING,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(lightsamplestrategy)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"lightsamplestrategy", lightsamplestrategy_parameter},
@@ -1591,10 +1591,10 @@ TEST(RemoveVolPathIntegratorV3, Uniform) {
 TEST(RemoveVolPathIntegratorV3, Power) {
   std::vector<absl::string_view> lightsamplestrategy = {"power"};
   Parameter lightsamplestrategy_parameter{
-      .directive = "",
-      .type = ParameterType::STRING,
-      .type_name = "",
-      .values = absl::MakeSpan(lightsamplestrategy)};
+      /*directive=*/"",
+      /*type=*/ParameterType::STRING,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(lightsamplestrategy)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"lightsamplestrategy", lightsamplestrategy_parameter},
@@ -1610,10 +1610,10 @@ TEST(RemoveVolPathIntegratorV3, Power) {
 TEST(RemoveVolPathIntegratorV3, Spatial) {
   std::vector<absl::string_view> lightsamplestrategy = {"spatial"};
   Parameter lightsamplestrategy_parameter{
-      .directive = "",
-      .type = ParameterType::STRING,
-      .type_name = "",
-      .values = absl::MakeSpan(lightsamplestrategy)};
+      /*directive=*/"",
+      /*type=*/ParameterType::STRING,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(lightsamplestrategy)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"lightsamplestrategy", lightsamplestrategy_parameter},
@@ -1636,10 +1636,10 @@ TEST(RemoveWhittedIntegratorV1, Empty) {
 
 TEST(RemoveWhittedIntegratorV1, WithData) {
   std::vector<int32_t> maxdepth = {1};
-  Parameter maxdepth_parameter{.directive = "",
-                               .type = ParameterType::INTEGER,
-                               .type_name = "",
-                               .values = absl::MakeSpan(maxdepth)};
+  Parameter maxdepth_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::INTEGER,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(maxdepth)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"maxdepth", maxdepth_parameter}};
@@ -1661,16 +1661,16 @@ TEST(RemoveWhittedIntegratorV3, Empty) {
 
 TEST(RemoveWhittedIntegratorV3, WithData) {
   std::vector<int32_t> maxdepth = {1};
-  Parameter maxdepth_parameter{.directive = "",
-                               .type = ParameterType::INTEGER,
-                               .type_name = "",
-                               .values = absl::MakeSpan(maxdepth)};
+  Parameter maxdepth_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::INTEGER,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(maxdepth)};
 
   std::vector<int32_t> pixelbounds = {3, 4, 5, 6};
-  Parameter pixelbounds_parameter{.directive = "",
-                                  .type = ParameterType::INTEGER,
-                                  .type_name = "",
-                                  .values = absl::MakeSpan(pixelbounds)};
+  Parameter pixelbounds_parameter{/*directive=*/"",
+                                  /*type=*/ParameterType::INTEGER,
+                                  /*type_name=*/"",
+                                  /*values=*/absl::MakeSpan(pixelbounds)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"maxdepth", maxdepth_parameter},

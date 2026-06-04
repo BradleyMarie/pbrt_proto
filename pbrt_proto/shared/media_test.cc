@@ -29,52 +29,52 @@ TEST(RemoveCloudMediumV4, Empty) {
 
 TEST(RemoveCloudMediumV4, WithData) {
   std::vector<absl::string_view> sigma_a = {"a"};
-  Parameter sigma_a_parameter{.directive = "",
-                              .type = ParameterType::SPECTRUM,
-                              .type_name = "",
-                              .values = absl::MakeSpan(sigma_a)};
+  Parameter sigma_a_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::SPECTRUM,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(sigma_a)};
 
   std::vector<absl::string_view> sigma_s = {"b"};
-  Parameter sigma_s_parameter{.directive = "",
-                              .type = ParameterType::SPECTRUM,
-                              .type_name = "",
-                              .values = absl::MakeSpan(sigma_s)};
+  Parameter sigma_s_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::SPECTRUM,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(sigma_s)};
 
   std::vector<double> g = {5.0};
-  Parameter g_parameter{.directive = "",
-                        .type = ParameterType::FLOAT,
-                        .type_name = "",
-                        .values = absl::MakeSpan(g)};
+  Parameter g_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::FLOAT,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(g)};
 
   std::vector<std::array<double, 3>> p0 = {{6.0, 7.0, 8.0}};
-  Parameter p0_parameter{.directive = "",
-                         .type = ParameterType::POINT3,
-                         .type_name = "",
-                         .values = absl::MakeSpan(p0)};
+  Parameter p0_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::POINT3,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(p0)};
 
   std::vector<std::array<double, 3>> p1 = {{9.0, 10.0, 11.0}};
-  Parameter p1_parameter{.directive = "",
-                         .type = ParameterType::POINT3,
-                         .type_name = "",
-                         .values = absl::MakeSpan(p1)};
+  Parameter p1_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::POINT3,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(p1)};
 
   std::vector<double> density = {12.0};
-  Parameter density_parameter{.directive = "",
-                              .type = ParameterType::FLOAT,
-                              .type_name = "",
-                              .values = absl::MakeSpan(density)};
+  Parameter density_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::FLOAT,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(density)};
 
   std::vector<double> frequency = {13.0};
-  Parameter frequency_parameter{.directive = "",
-                                .type = ParameterType::FLOAT,
-                                .type_name = "",
-                                .values = absl::MakeSpan(frequency)};
+  Parameter frequency_parameter{/*directive=*/"",
+                                /*type=*/ParameterType::FLOAT,
+                                /*type_name=*/"",
+                                /*values=*/absl::MakeSpan(frequency)};
 
   std::vector<double> wispiness = {14.0};
-  Parameter wispiness_parameter{.directive = "",
-                                .type = ParameterType::FLOAT,
-                                .type_name = "",
-                                .values = absl::MakeSpan(wispiness)};
+  Parameter wispiness_parameter{/*directive=*/"",
+                                /*type=*/ParameterType::FLOAT,
+                                /*type_name=*/"",
+                                /*values=*/absl::MakeSpan(wispiness)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"sigma_a", sigma_a_parameter},
@@ -110,34 +110,34 @@ TEST(RemoveHomogeneousMediumV3, Empty) {
 
 TEST(RemoveHomogeneousMediumV3, WithData) {
   std::vector<absl::string_view> sigma_a = {"a"};
-  Parameter sigma_a_parameter{.directive = "",
-                              .type = ParameterType::SPECTRUM,
-                              .type_name = "",
-                              .values = absl::MakeSpan(sigma_a)};
+  Parameter sigma_a_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::SPECTRUM,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(sigma_a)};
 
   std::vector<absl::string_view> sigma_s = {"b"};
-  Parameter sigma_s_parameter{.directive = "",
-                              .type = ParameterType::SPECTRUM,
-                              .type_name = "",
-                              .values = absl::MakeSpan(sigma_s)};
+  Parameter sigma_s_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::SPECTRUM,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(sigma_s)};
 
   std::vector<double> g = {5.0};
-  Parameter g_parameter{.directive = "",
-                        .type = ParameterType::FLOAT,
-                        .type_name = "",
-                        .values = absl::MakeSpan(g)};
+  Parameter g_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::FLOAT,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(g)};
 
   std::vector<double> scale = {6.0};
-  Parameter scale_parameter{.directive = "",
-                            .type = ParameterType::FLOAT,
-                            .type_name = "",
-                            .values = absl::MakeSpan(scale)};
+  Parameter scale_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(scale)};
 
   std::vector<absl::string_view> preset = {"Apple"};
-  Parameter preset_parameter{.directive = "",
-                             .type = ParameterType::STRING,
-                             .type_name = "",
-                             .values = absl::MakeSpan(preset)};
+  Parameter preset_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::STRING,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(preset)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"sigma_a", sigma_a_parameter},
@@ -167,46 +167,46 @@ TEST(RemoveHomogeneousMediumV4, Empty) {
 
 TEST(RemoveHomogeneousMediumV4, WithData) {
   std::vector<absl::string_view> sigma_a = {"a"};
-  Parameter sigma_a_parameter{.directive = "",
-                              .type = ParameterType::SPECTRUM,
-                              .type_name = "",
-                              .values = absl::MakeSpan(sigma_a)};
+  Parameter sigma_a_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::SPECTRUM,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(sigma_a)};
 
   std::vector<absl::string_view> sigma_s = {"b"};
-  Parameter sigma_s_parameter{.directive = "",
-                              .type = ParameterType::SPECTRUM,
-                              .type_name = "",
-                              .values = absl::MakeSpan(sigma_s)};
+  Parameter sigma_s_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::SPECTRUM,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(sigma_s)};
 
   std::vector<double> g = {5.0};
-  Parameter g_parameter{.directive = "",
-                        .type = ParameterType::FLOAT,
-                        .type_name = "",
-                        .values = absl::MakeSpan(g)};
+  Parameter g_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::FLOAT,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(g)};
 
   std::vector<double> scale = {6.0};
-  Parameter scale_parameter{.directive = "",
-                            .type = ParameterType::FLOAT,
-                            .type_name = "",
-                            .values = absl::MakeSpan(scale)};
+  Parameter scale_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(scale)};
 
   std::vector<absl::string_view> preset = {"Apple"};
-  Parameter preset_parameter{.directive = "",
-                             .type = ParameterType::STRING,
-                             .type_name = "",
-                             .values = absl::MakeSpan(preset)};
+  Parameter preset_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::STRING,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(preset)};
 
   std::vector<absl::string_view> le = {"c"};
-  Parameter le_parameter{.directive = "",
-                         .type = ParameterType::SPECTRUM,
-                         .type_name = "",
-                         .values = absl::MakeSpan(le)};
+  Parameter le_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::SPECTRUM,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(le)};
 
   std::vector<double> lescale = {7.0};
-  Parameter lescale_parameter{.directive = "",
-                              .type = ParameterType::FLOAT,
-                              .type_name = "",
-                              .values = absl::MakeSpan(lescale)};
+  Parameter lescale_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::FLOAT,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(lescale)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"sigma_a", sigma_a_parameter},
@@ -240,54 +240,54 @@ TEST(RemoveNanoVdbMediumV4, Empty) {
 
 TEST(RemoveNanoVdbMediumV4, WithData) {
   std::vector<absl::string_view> sigma_a = {"a"};
-  Parameter sigma_a_parameter{.directive = "",
-                              .type = ParameterType::SPECTRUM,
-                              .type_name = "",
-                              .values = absl::MakeSpan(sigma_a)};
+  Parameter sigma_a_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::SPECTRUM,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(sigma_a)};
 
   std::vector<absl::string_view> sigma_s = {"b"};
-  Parameter sigma_s_parameter{.directive = "",
-                              .type = ParameterType::SPECTRUM,
-                              .type_name = "",
-                              .values = absl::MakeSpan(sigma_s)};
+  Parameter sigma_s_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::SPECTRUM,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(sigma_s)};
 
   std::vector<double> g = {5.0};
-  Parameter g_parameter{.directive = "",
-                        .type = ParameterType::FLOAT,
-                        .type_name = "",
-                        .values = absl::MakeSpan(g)};
+  Parameter g_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::FLOAT,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(g)};
 
   std::vector<double> scale = {6.0};
-  Parameter scale_parameter{.directive = "",
-                            .type = ParameterType::FLOAT,
-                            .type_name = "",
-                            .values = absl::MakeSpan(scale)};
+  Parameter scale_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(scale)};
 
   std::vector<double> lescale = {7.0};
-  Parameter lescale_parameter{.directive = "",
-                              .type = ParameterType::FLOAT,
-                              .type_name = "",
-                              .values = absl::MakeSpan(lescale)};
+  Parameter lescale_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::FLOAT,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(lescale)};
 
   std::vector<double> temperatureoffset = {8.0};
   Parameter temperatureoffset_parameter{
-      .directive = "",
-      .type = ParameterType::FLOAT,
-      .type_name = "",
-      .values = absl::MakeSpan(temperatureoffset)};
+      /*directive=*/"",
+      /*type=*/ParameterType::FLOAT,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(temperatureoffset)};
 
   std::vector<double> temperaturescale = {9.0};
   Parameter temperaturescale_parameter{
-      .directive = "",
-      .type = ParameterType::FLOAT,
-      .type_name = "",
-      .values = absl::MakeSpan(temperaturescale)};
+      /*directive=*/"",
+      /*type=*/ParameterType::FLOAT,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(temperaturescale)};
 
   std::vector<absl::string_view> filename = {"f"};
-  Parameter filename_parameter{.directive = "",
-                               .type = ParameterType::STRING,
-                               .type_name = "",
-                               .values = absl::MakeSpan(filename)};
+  Parameter filename_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::STRING,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(filename)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"sigma_a", sigma_a_parameter},
@@ -323,70 +323,70 @@ TEST(RemoveRgbGridMediumV4, Empty) {
 
 TEST(RemoveRgbGridMediumV4, WithData) {
   std::vector<std::array<double, 3>> sigma_a = {{1.0, 2.0, 3.0}};
-  Parameter sigma_a_parameter{.directive = "",
-                              .type = ParameterType::RGB,
-                              .type_name = "",
-                              .values = absl::MakeSpan(sigma_a)};
+  Parameter sigma_a_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::RGB,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(sigma_a)};
 
   std::vector<std::array<double, 3>> sigma_s = {{4.0, 5.0, 6.0}};
-  Parameter sigma_s_parameter{.directive = "",
-                              .type = ParameterType::RGB,
-                              .type_name = "",
-                              .values = absl::MakeSpan(sigma_s)};
+  Parameter sigma_s_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::RGB,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(sigma_s)};
 
   std::vector<double> g = {7.0};
-  Parameter g_parameter{.directive = "",
-                        .type = ParameterType::FLOAT,
-                        .type_name = "",
-                        .values = absl::MakeSpan(g)};
+  Parameter g_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::FLOAT,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(g)};
 
   std::vector<double> lescale = {8.0};
-  Parameter lescale_parameter{.directive = "",
-                              .type = ParameterType::FLOAT,
-                              .type_name = "",
-                              .values = absl::MakeSpan(lescale)};
+  Parameter lescale_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::FLOAT,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(lescale)};
 
   std::vector<std::array<double, 3>> p0 = {{9.0, 10.0, 11.0}};
-  Parameter p0_parameter{.directive = "",
-                         .type = ParameterType::POINT3,
-                         .type_name = "",
-                         .values = absl::MakeSpan(p0)};
+  Parameter p0_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::POINT3,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(p0)};
 
   std::vector<std::array<double, 3>> p1 = {{12.0, 13.0, 14.0}};
-  Parameter p1_parameter{.directive = "",
-                         .type = ParameterType::POINT3,
-                         .type_name = "",
-                         .values = absl::MakeSpan(p1)};
+  Parameter p1_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::POINT3,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(p1)};
 
   std::vector<double> scale = {15.0};
-  Parameter scale_parameter{.directive = "",
-                            .type = ParameterType::FLOAT,
-                            .type_name = "",
-                            .values = absl::MakeSpan(scale)};
+  Parameter scale_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(scale)};
 
   std::vector<int> nx = {16};
-  Parameter nx_parameter{.directive = "",
-                         .type = ParameterType::INTEGER,
-                         .type_name = "",
-                         .values = absl::MakeSpan(nx)};
+  Parameter nx_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::INTEGER,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(nx)};
 
   std::vector<int> ny = {17};
-  Parameter ny_parameter{.directive = "",
-                         .type = ParameterType::INTEGER,
-                         .type_name = "",
-                         .values = absl::MakeSpan(ny)};
+  Parameter ny_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::INTEGER,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(ny)};
 
   std::vector<int> nz = {18};
-  Parameter nz_parameter{.directive = "",
-                         .type = ParameterType::INTEGER,
-                         .type_name = "",
-                         .values = absl::MakeSpan(nz)};
+  Parameter nz_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::INTEGER,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(nz)};
 
   std::vector<std::array<double, 3>> le = {{19.0, 20.0, 21.0}};
-  Parameter le_parameter{.directive = "",
-                         .type = ParameterType::RGB,
-                         .type_name = "",
-                         .values = absl::MakeSpan(le)};
+  Parameter le_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::RGB,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(le)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"sigma_a", sigma_a_parameter},
@@ -428,70 +428,70 @@ TEST(RemoveUniformGridMediumV3, Empty) {
 
 TEST(RemoveUniformGridMediumV3, WithData) {
   std::vector<absl::string_view> sigma_a = {"a"};
-  Parameter sigma_a_parameter{.directive = "",
-                              .type = ParameterType::SPECTRUM,
-                              .type_name = "",
-                              .values = absl::MakeSpan(sigma_a)};
+  Parameter sigma_a_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::SPECTRUM,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(sigma_a)};
 
   std::vector<absl::string_view> sigma_s = {"b"};
-  Parameter sigma_s_parameter{.directive = "",
-                              .type = ParameterType::SPECTRUM,
-                              .type_name = "",
-                              .values = absl::MakeSpan(sigma_s)};
+  Parameter sigma_s_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::SPECTRUM,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(sigma_s)};
 
   std::vector<double> g = {7.0};
-  Parameter g_parameter{.directive = "",
-                        .type = ParameterType::FLOAT,
-                        .type_name = "",
-                        .values = absl::MakeSpan(g)};
+  Parameter g_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::FLOAT,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(g)};
 
   std::vector<std::array<double, 3>> p0 = {{9.0, 10.0, 11.0}};
-  Parameter p0_parameter{.directive = "",
-                         .type = ParameterType::POINT3,
-                         .type_name = "",
-                         .values = absl::MakeSpan(p0)};
+  Parameter p0_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::POINT3,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(p0)};
 
   std::vector<std::array<double, 3>> p1 = {{12.0, 13.0, 14.0}};
-  Parameter p1_parameter{.directive = "",
-                         .type = ParameterType::POINT3,
-                         .type_name = "",
-                         .values = absl::MakeSpan(p1)};
+  Parameter p1_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::POINT3,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(p1)};
 
   std::vector<double> scale = {15.0};
-  Parameter scale_parameter{.directive = "",
-                            .type = ParameterType::FLOAT,
-                            .type_name = "",
-                            .values = absl::MakeSpan(scale)};
+  Parameter scale_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(scale)};
 
   std::vector<int> nx = {16};
-  Parameter nx_parameter{.directive = "",
-                         .type = ParameterType::INTEGER,
-                         .type_name = "",
-                         .values = absl::MakeSpan(nx)};
+  Parameter nx_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::INTEGER,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(nx)};
 
   std::vector<int> ny = {17};
-  Parameter ny_parameter{.directive = "",
-                         .type = ParameterType::INTEGER,
-                         .type_name = "",
-                         .values = absl::MakeSpan(ny)};
+  Parameter ny_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::INTEGER,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(ny)};
 
   std::vector<int> nz = {18};
-  Parameter nz_parameter{.directive = "",
-                         .type = ParameterType::INTEGER,
-                         .type_name = "",
-                         .values = absl::MakeSpan(nz)};
+  Parameter nz_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::INTEGER,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(nz)};
 
   std::vector<absl::string_view> preset = {"Apple"};
-  Parameter preset_parameter{.directive = "",
-                             .type = ParameterType::STRING,
-                             .type_name = "",
-                             .values = absl::MakeSpan(preset)};
+  Parameter preset_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::STRING,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(preset)};
 
   std::vector<double> density = {19.0};
-  Parameter density_parameter{.directive = "",
-                              .type = ParameterType::FLOAT,
-                              .type_name = "",
-                              .values = absl::MakeSpan(density)};
+  Parameter density_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::FLOAT,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(density)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"sigma_a", sigma_a_parameter},
@@ -533,96 +533,96 @@ TEST(RemoveUniformGridMediumV4, Empty) {
 
 TEST(RemoveUniformGridMediumV4, WithData) {
   std::vector<absl::string_view> sigma_a = {"a"};
-  Parameter sigma_a_parameter{.directive = "",
-                              .type = ParameterType::SPECTRUM,
-                              .type_name = "",
-                              .values = absl::MakeSpan(sigma_a)};
+  Parameter sigma_a_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::SPECTRUM,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(sigma_a)};
 
   std::vector<absl::string_view> sigma_s = {"b"};
-  Parameter sigma_s_parameter{.directive = "",
-                              .type = ParameterType::SPECTRUM,
-                              .type_name = "",
-                              .values = absl::MakeSpan(sigma_s)};
+  Parameter sigma_s_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::SPECTRUM,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(sigma_s)};
 
   std::vector<double> g = {7.0};
-  Parameter g_parameter{.directive = "",
-                        .type = ParameterType::FLOAT,
-                        .type_name = "",
-                        .values = absl::MakeSpan(g)};
+  Parameter g_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::FLOAT,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(g)};
 
   std::vector<double> lescale = {8.0};
-  Parameter lescale_parameter{.directive = "",
-                              .type = ParameterType::FLOAT,
-                              .type_name = "",
-                              .values = absl::MakeSpan(lescale)};
+  Parameter lescale_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::FLOAT,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(lescale)};
 
   std::vector<std::array<double, 3>> p0 = {{9.0, 10.0, 11.0}};
-  Parameter p0_parameter{.directive = "",
-                         .type = ParameterType::POINT3,
-                         .type_name = "",
-                         .values = absl::MakeSpan(p0)};
+  Parameter p0_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::POINT3,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(p0)};
 
   std::vector<std::array<double, 3>> p1 = {{12.0, 13.0, 14.0}};
-  Parameter p1_parameter{.directive = "",
-                         .type = ParameterType::POINT3,
-                         .type_name = "",
-                         .values = absl::MakeSpan(p1)};
+  Parameter p1_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::POINT3,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(p1)};
 
   std::vector<double> scale = {15.0};
-  Parameter scale_parameter{.directive = "",
-                            .type = ParameterType::FLOAT,
-                            .type_name = "",
-                            .values = absl::MakeSpan(scale)};
+  Parameter scale_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(scale)};
 
   std::vector<int> nx = {16};
-  Parameter nx_parameter{.directive = "",
-                         .type = ParameterType::INTEGER,
-                         .type_name = "",
-                         .values = absl::MakeSpan(nx)};
+  Parameter nx_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::INTEGER,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(nx)};
 
   std::vector<int> ny = {17};
-  Parameter ny_parameter{.directive = "",
-                         .type = ParameterType::INTEGER,
-                         .type_name = "",
-                         .values = absl::MakeSpan(ny)};
+  Parameter ny_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::INTEGER,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(ny)};
 
   std::vector<int> nz = {18};
-  Parameter nz_parameter{.directive = "",
-                         .type = ParameterType::INTEGER,
-                         .type_name = "",
-                         .values = absl::MakeSpan(nz)};
+  Parameter nz_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::INTEGER,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(nz)};
 
   std::vector<absl::string_view> preset = {"Apple"};
-  Parameter preset_parameter{.directive = "",
-                             .type = ParameterType::STRING,
-                             .type_name = "",
-                             .values = absl::MakeSpan(preset)};
+  Parameter preset_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::STRING,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(preset)};
 
   std::vector<double> density = {19.0};
-  Parameter density_parameter{.directive = "",
-                              .type = ParameterType::FLOAT,
-                              .type_name = "",
-                              .values = absl::MakeSpan(density)};
+  Parameter density_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::FLOAT,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(density)};
 
   std::vector<double> temperatureoffset = {20.0};
   Parameter temperatureoffset_parameter{
-      .directive = "",
-      .type = ParameterType::FLOAT,
-      .type_name = "",
-      .values = absl::MakeSpan(temperatureoffset)};
+      /*directive=*/"",
+      /*type=*/ParameterType::FLOAT,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(temperatureoffset)};
 
   std::vector<double> temperaturescale = {21};
   Parameter temperaturescale_parameter{
-      .directive = "",
-      .type = ParameterType::FLOAT,
-      .type_name = "",
-      .values = absl::MakeSpan(temperaturescale)};
+      /*directive=*/"",
+      /*type=*/ParameterType::FLOAT,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(temperaturescale)};
 
   std::vector<double> temperature = {22};
-  Parameter temperature_parameter{.directive = "",
-                                  .type = ParameterType::FLOAT,
-                                  .type_name = "",
-                                  .values = absl::MakeSpan(temperature)};
+  Parameter temperature_parameter{/*directive=*/"",
+                                  /*type=*/ParameterType::FLOAT,
+                                  /*type_name=*/"",
+                                  /*values=*/absl::MakeSpan(temperature)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"sigma_a", sigma_a_parameter},

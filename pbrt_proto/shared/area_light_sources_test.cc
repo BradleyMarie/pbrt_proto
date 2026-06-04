@@ -29,34 +29,34 @@ TEST(RemoveDiffuseAreaLightSourceV1, Empty) {
 
 TEST(RemoveDiffuseAreaLightSourceV1, WithValues) {
   std::vector<std::array<double, 2>> l = {{1.0, 2.0}};
-  Parameter l_parameter{.directive = "",
-                        .type = ParameterType::BLACKBODY_V1,
-                        .type_name = "",
-                        .values = absl::MakeSpan(l)};
+  Parameter l_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::BLACKBODY_V1,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(l)};
 
   std::vector<int32_t> nsamples = {3};
-  Parameter nsamples_parameter{.directive = "",
-                               .type = ParameterType::INTEGER,
-                               .type_name = "",
-                               .values = absl::MakeSpan(nsamples)};
+  Parameter nsamples_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::INTEGER,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(nsamples)};
 
   std::vector<int32_t> samples = {4};
-  Parameter samples_parameter{.directive = "",
-                              .type = ParameterType::INTEGER,
-                              .type_name = "",
-                              .values = absl::MakeSpan(samples)};
+  Parameter samples_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::INTEGER,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(samples)};
 
   std::vector<double> scale = {5.0};
-  Parameter scale_parameter{.directive = "",
-                            .type = ParameterType::FLOAT,
-                            .type_name = "",
-                            .values = absl::MakeSpan(scale)};
+  Parameter scale_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(scale)};
 
   bool twosided[] = {true};
-  Parameter twosided_parameter{.directive = "",
-                               .type = ParameterType::BOOL,
-                               .type_name = "",
-                               .values = absl::MakeSpan(twosided)};
+  Parameter twosided_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::BOOL,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(twosided)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"L", l_parameter},
@@ -83,34 +83,34 @@ TEST(RemoveDiffuseAreaLightSourceV2, Empty) {
 
 TEST(RemoveDiffuseAreaLightSourceV2, WithValues) {
   std::vector<std::array<double, 2>> l = {{1.0, 2.0}};
-  Parameter l_parameter{.directive = "",
-                        .type = ParameterType::BLACKBODY_V1,
-                        .type_name = "",
-                        .values = absl::MakeSpan(l)};
+  Parameter l_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::BLACKBODY_V1,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(l)};
 
   std::vector<int32_t> nsamples = {3};
-  Parameter nsamples_parameter{.directive = "",
-                               .type = ParameterType::INTEGER,
-                               .type_name = "",
-                               .values = absl::MakeSpan(nsamples)};
+  Parameter nsamples_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::INTEGER,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(nsamples)};
 
   std::vector<int32_t> samples = {4};
-  Parameter samples_parameter{.directive = "",
-                              .type = ParameterType::INTEGER,
-                              .type_name = "",
-                              .values = absl::MakeSpan(samples)};
+  Parameter samples_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::INTEGER,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(samples)};
 
   std::vector<std::array<double, 2>> scale = {{5.0, 6.0}};
-  Parameter scale_parameter{.directive = "",
-                            .type = ParameterType::BLACKBODY_V1,
-                            .type_name = "",
-                            .values = absl::MakeSpan(scale)};
+  Parameter scale_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::BLACKBODY_V1,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(scale)};
 
   bool twosided[] = {true};
-  Parameter twosided_parameter{.directive = "",
-                               .type = ParameterType::BOOL,
-                               .type_name = "",
-                               .values = absl::MakeSpan(twosided)};
+  Parameter twosided_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::BOOL,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(twosided)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"L", l_parameter},
@@ -138,34 +138,34 @@ TEST(RemoveDiffuseAreaLightSourceV3, Empty) {
 
 TEST(RemoveDiffuseAreaLightSourceV3, WithValues) {
   std::vector<std::array<double, 2>> l = {{1.0, 2.0}};
-  Parameter l_parameter{.directive = "",
-                        .type = ParameterType::BLACKBODY_V1,
-                        .type_name = "",
-                        .values = absl::MakeSpan(l)};
+  Parameter l_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::BLACKBODY_V1,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(l)};
 
   std::vector<int32_t> nsamples = {3};
-  Parameter nsamples_parameter{.directive = "",
-                               .type = ParameterType::INTEGER,
-                               .type_name = "",
-                               .values = absl::MakeSpan(nsamples)};
+  Parameter nsamples_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::INTEGER,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(nsamples)};
 
   std::vector<int32_t> samples = {4};
-  Parameter samples_parameter{.directive = "",
-                              .type = ParameterType::INTEGER,
-                              .type_name = "",
-                              .values = absl::MakeSpan(samples)};
+  Parameter samples_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::INTEGER,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(samples)};
 
   std::vector<std::array<double, 2>> scale = {{5.0, 6.0}};
-  Parameter scale_parameter{.directive = "",
-                            .type = ParameterType::BLACKBODY_V1,
-                            .type_name = "",
-                            .values = absl::MakeSpan(scale)};
+  Parameter scale_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::BLACKBODY_V1,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(scale)};
 
   bool twosided[] = {true};
-  Parameter twosided_parameter{.directive = "",
-                               .type = ParameterType::BOOL,
-                               .type_name = "",
-                               .values = absl::MakeSpan(twosided)};
+  Parameter twosided_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::BOOL,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(twosided)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"L", l_parameter},
@@ -194,28 +194,28 @@ TEST(RemoveDiffuseAreaLightSourceV4, Empty) {
 
 TEST(RemoveDiffuseAreaLightSourceV4, WithL) {
   std::vector<double> l = {1.0};
-  Parameter l_parameter{.directive = "",
-                        .type = ParameterType::BLACKBODY_V2,
-                        .type_name = "",
-                        .values = absl::MakeSpan(l)};
+  Parameter l_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::BLACKBODY_V2,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(l)};
 
   std::vector<double> scale = {2.0};
-  Parameter scale_parameter{.directive = "",
-                            .type = ParameterType::FLOAT,
-                            .type_name = "",
-                            .values = absl::MakeSpan(scale)};
+  Parameter scale_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(scale)};
 
   std::vector<double> power = {3.0};
-  Parameter power_parameter{.directive = "",
-                            .type = ParameterType::FLOAT,
-                            .type_name = "",
-                            .values = absl::MakeSpan(power)};
+  Parameter power_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(power)};
 
   bool twosided[] = {true};
-  Parameter twosided_parameter{.directive = "",
-                               .type = ParameterType::BOOL,
-                               .type_name = "",
-                               .values = absl::MakeSpan(twosided)};
+  Parameter twosided_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::BOOL,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(twosided)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"L", l_parameter},
@@ -235,28 +235,28 @@ TEST(RemoveDiffuseAreaLightSourceV4, WithL) {
 
 TEST(RemoveDiffuseAreaLightSourceV4, WithFilename) {
   std::vector<absl::string_view> filename = {"file"};
-  Parameter filename_parameter{.directive = "",
-                               .type = ParameterType::STRING,
-                               .type_name = "",
-                               .values = absl::MakeSpan(filename)};
+  Parameter filename_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::STRING,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(filename)};
 
   std::vector<double> scale = {2.0};
-  Parameter scale_parameter{.directive = "",
-                            .type = ParameterType::FLOAT,
-                            .type_name = "",
-                            .values = absl::MakeSpan(scale)};
+  Parameter scale_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(scale)};
 
   std::vector<double> power = {3.0};
-  Parameter power_parameter{.directive = "",
-                            .type = ParameterType::FLOAT,
-                            .type_name = "",
-                            .values = absl::MakeSpan(power)};
+  Parameter power_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(power)};
 
   bool twosided[] = {true};
-  Parameter twosided_parameter{.directive = "",
-                               .type = ParameterType::BOOL,
-                               .type_name = "",
-                               .values = absl::MakeSpan(twosided)};
+  Parameter twosided_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::BOOL,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(twosided)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"filename", filename_parameter},
@@ -276,16 +276,16 @@ TEST(RemoveDiffuseAreaLightSourceV4, WithFilename) {
 
 TEST(RemoveDiffuseAreaLightSourceV4, LAndFilename) {
   std::vector<double> l = {1.0};
-  Parameter l_parameter{.directive = "",
-                        .type = ParameterType::BLACKBODY_V2,
-                        .type_name = "",
-                        .values = absl::MakeSpan(l)};
+  Parameter l_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::BLACKBODY_V2,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(l)};
 
   std::vector<absl::string_view> filename = {"file"};
-  Parameter filename_parameter{.directive = "",
-                               .type = ParameterType::STRING,
-                               .type_name = "",
-                               .values = absl::MakeSpan(filename)};
+  Parameter filename_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::STRING,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(filename)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"L", l_parameter}, {"filename", filename_parameter}};

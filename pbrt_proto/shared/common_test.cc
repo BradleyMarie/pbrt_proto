@@ -34,10 +34,10 @@ TEST(TryRemoveSpectrumV1, NotFound) {
 
 TEST(TryRemoveSpectrumV1, Blackbody) {
   std::vector<std::array<double, 2>> values = {{1.0, 2.0}};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::BLACKBODY_V1,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::BLACKBODY_V1,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"spectrum", parameter}};
@@ -54,10 +54,10 @@ TEST(TryRemoveSpectrumV1, Blackbody) {
 
 TEST(TryRemoveSpectrumV1, Rgb) {
   std::vector<std::array<double, 3>> values = {{1.0, 2.0, 3.0}};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::RGB,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::RGB,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"spectrum", parameter}};
@@ -74,10 +74,10 @@ TEST(TryRemoveSpectrumV1, Rgb) {
 
 TEST(TryRemoveSpectrumV1, Xyz) {
   std::vector<std::array<double, 3>> values = {{1.0, 2.0, 3.0}};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::XYZ,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::XYZ,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"spectrum", parameter}};
@@ -94,10 +94,10 @@ TEST(TryRemoveSpectrumV1, Xyz) {
 
 TEST(TryRemoveSpectrumV1, Sampled) {
   std::vector<std::array<double, 2>> values = {{1.0, 2.0}};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::SPECTRUM,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::SPECTRUM,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"spectrum", parameter}};
@@ -117,10 +117,10 @@ TEST(TryRemoveSpectrumV1, Sampled) {
 
 TEST(TryRemoveSpectrumV1, SpectrumFile) {
   std::vector<absl::string_view> values = {"abc"};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::SPECTRUM,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::SPECTRUM,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"spectrum", parameter}};
@@ -148,10 +148,10 @@ TEST(TryRemoveSpectrumV2, NotFound) {
 
 TEST(TryRemoveSpectrumV2, Blackbody) {
   std::vector<double> values = {1.0};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::BLACKBODY_V2,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::BLACKBODY_V2,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"spectrum", parameter}};
@@ -168,10 +168,10 @@ TEST(TryRemoveSpectrumV2, Blackbody) {
 
 TEST(TryRemoveSpectrumV2, Rgb) {
   std::vector<std::array<double, 3>> values = {{1.0, 2.0, 3.0}};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::RGB,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::RGB,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"spectrum", parameter}};
@@ -188,10 +188,10 @@ TEST(TryRemoveSpectrumV2, Rgb) {
 
 TEST(TryRemoveSpectrumV2, Xyz) {
   std::vector<std::array<double, 3>> values = {{1.0, 2.0, 3.0}};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::XYZ,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::XYZ,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"spectrum", parameter}};
@@ -208,10 +208,10 @@ TEST(TryRemoveSpectrumV2, Xyz) {
 
 TEST(TryRemoveSpectrumV2, Sampled) {
   std::vector<std::array<double, 2>> values = {{1.0, 2.0}};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::SPECTRUM,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::SPECTRUM,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"spectrum", parameter}};
@@ -231,10 +231,10 @@ TEST(TryRemoveSpectrumV2, Sampled) {
 
 TEST(TryRemoveSpectrumV2, SpectrumFile) {
   std::vector<absl::string_view> values = {"abc"};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::SPECTRUM,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::SPECTRUM,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"spectrum", parameter}};
@@ -261,10 +261,10 @@ TEST(TryRemoveFloatTexture, NotFound) {
 
 TEST(TryRemoveFloatTexture, FloatValue) {
   std::vector<double> values = {1.0};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::FLOAT,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::FLOAT,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"float_parameter", parameter}};
@@ -280,10 +280,10 @@ TEST(TryRemoveFloatTexture, FloatValue) {
 
 TEST(TryRemoveFloatTexture, FloatTexture) {
   std::vector<absl::string_view> values = {"abc"};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::TEXTURE,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::TEXTURE,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"float_parameter", parameter}};
@@ -319,10 +319,10 @@ TEST(TryRemoveSpectrumTextureV2, NotFound) {
 
 TEST(TryRemoveSpectrumTextureV1, Blackbody) {
   std::vector<std::array<double, 2>> values = {{1.0, 2.0}};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::BLACKBODY_V1,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::BLACKBODY_V1,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"spectrum_parameter", parameter}};
@@ -340,10 +340,10 @@ TEST(TryRemoveSpectrumTextureV1, Blackbody) {
 
 TEST(TryRemoveSpectrumTextureV1, Rgb) {
   std::vector<std::array<double, 3>> values = {{1.0, 2.0, 3.0}};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::RGB,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::RGB,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"spectrum_parameter", parameter}};
@@ -359,10 +359,10 @@ TEST(TryRemoveSpectrumTextureV1, Rgb) {
 
 TEST(TryRemoveSpectrumTextureV1, Xyz) {
   std::vector<std::array<double, 3>> values = {{1.0, 2.0, 3.0}};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::XYZ,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::XYZ,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"spectrum_parameter", parameter}};
@@ -378,10 +378,10 @@ TEST(TryRemoveSpectrumTextureV1, Xyz) {
 
 TEST(TryRemoveSpectrumTextureV1, Sampled) {
   std::vector<std::array<double, 2>> values = {{1.0, 2.0}};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::SPECTRUM,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::SPECTRUM,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"spectrum_parameter", parameter}};
@@ -400,10 +400,10 @@ TEST(TryRemoveSpectrumTextureV1, Sampled) {
 
 TEST(TryRemoveSpectrumTextureV1, SpectrumFile) {
   std::vector<absl::string_view> values = {"abc"};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::SPECTRUM,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::SPECTRUM,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"spectrum_parameter", parameter}};
@@ -419,10 +419,10 @@ TEST(TryRemoveSpectrumTextureV1, SpectrumFile) {
 
 TEST(TryRemoveSpectrumTextureV1, SpectrumTexture) {
   std::vector<absl::string_view> values = {"abc"};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::TEXTURE,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::TEXTURE,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"spectrum_parameter", parameter}};
@@ -438,10 +438,10 @@ TEST(TryRemoveSpectrumTextureV1, SpectrumTexture) {
 
 TEST(TryRemoveSpectrumTextureV2, Blackbody) {
   std::vector<double> values = {1.0};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::BLACKBODY_V2,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::BLACKBODY_V2,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"spectrum_parameter", parameter}};
@@ -457,10 +457,10 @@ TEST(TryRemoveSpectrumTextureV2, Blackbody) {
 
 TEST(TryRemoveSpectrumTextureV2, Rgb) {
   std::vector<std::array<double, 3>> values = {{1.0, 2.0, 3.0}};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::RGB,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::RGB,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"spectrum_parameter", parameter}};
@@ -476,10 +476,10 @@ TEST(TryRemoveSpectrumTextureV2, Rgb) {
 
 TEST(TryRemoveSpectrumTextureV2, Xyz) {
   std::vector<std::array<double, 3>> values = {{1.0, 2.0, 3.0}};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::XYZ,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::XYZ,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"spectrum_parameter", parameter}};
@@ -495,10 +495,10 @@ TEST(TryRemoveSpectrumTextureV2, Xyz) {
 
 TEST(TryRemoveSpectrumTextureV2, Sampled) {
   std::vector<std::array<double, 2>> values = {{1.0, 2.0}};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::SPECTRUM,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::SPECTRUM,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"spectrum_parameter", parameter}};
@@ -517,10 +517,10 @@ TEST(TryRemoveSpectrumTextureV2, Sampled) {
 
 TEST(TryRemoveSpectrumTextureV2, SpectrumFile) {
   std::vector<absl::string_view> values = {"abc"};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::SPECTRUM,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::SPECTRUM,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"spectrum_parameter", parameter}};
@@ -536,10 +536,10 @@ TEST(TryRemoveSpectrumTextureV2, SpectrumFile) {
 
 TEST(TryRemoveSpectrumTextureV2, SpectrumTexture) {
   std::vector<absl::string_view> values = {"abc"};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::TEXTURE,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::TEXTURE,
+                      /*type_name=*/"",
+                      /*values=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"spectrum_parameter", parameter}};

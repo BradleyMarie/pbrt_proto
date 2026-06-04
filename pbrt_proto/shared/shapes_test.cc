@@ -29,22 +29,22 @@ TEST(RemoveConeShapeV1, Empty) {
 
 TEST(RemoveConeShapeV1, WithData) {
   std::vector<double> radius = {0.1};
-  Parameter radius_parameter{.directive = "",
-                             .type = ParameterType::FLOAT,
-                             .type_name = "",
-                             .values = absl::MakeSpan(radius)};
+  Parameter radius_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(radius)};
 
   std::vector<double> height = {0.2};
-  Parameter height_parameter{.directive = "",
-                             .type = ParameterType::FLOAT,
-                             .type_name = "",
-                             .values = absl::MakeSpan(height)};
+  Parameter height_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(height)};
 
   std::vector<double> phimax = {0.3};
-  Parameter phimax_parameter{.directive = "",
-                             .type = ParameterType::FLOAT,
-                             .type_name = "",
-                             .values = absl::MakeSpan(phimax)};
+  Parameter phimax_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(phimax)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"radius", radius_parameter},
@@ -73,10 +73,10 @@ TEST(TryRemoveCurveShapeV3, Empty) {
 
 TEST(TryRemoveCurveShapeV3, InvalidDegree) {
   std::vector<int32_t> degree = {1};
-  Parameter degrees_parameter{.directive = "",
-                              .type = ParameterType::INTEGER,
-                              .type_name = "",
-                              .values = absl::MakeSpan(degree)};
+  Parameter degrees_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::INTEGER,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(degree)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"degree", degrees_parameter}};
@@ -90,10 +90,10 @@ TEST(TryRemoveCurveShapeV3, InvalidDegree) {
 
 TEST(TryRemoveCurveShapeV3, DegreeTwo) {
   std::vector<int32_t> degree = {2};
-  Parameter degrees_parameter{.directive = "",
-                              .type = ParameterType::INTEGER,
-                              .type_name = "",
-                              .values = absl::MakeSpan(degree)};
+  Parameter degrees_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::INTEGER,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(degree)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"degree", degrees_parameter}};
@@ -108,10 +108,10 @@ TEST(TryRemoveCurveShapeV3, DegreeTwo) {
 
 TEST(TryRemoveCurveShapeV3, DegreeThree) {
   std::vector<int32_t> degree = {3};
-  Parameter degrees_parameter{.directive = "",
-                              .type = ParameterType::INTEGER,
-                              .type_name = "",
-                              .values = absl::MakeSpan(degree)};
+  Parameter degrees_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::INTEGER,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(degree)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"degree", degrees_parameter}};
@@ -126,10 +126,10 @@ TEST(TryRemoveCurveShapeV3, DegreeThree) {
 
 TEST(TryRemoveCurveShapeV3, InvalidBasis) {
   std::vector<absl::string_view> basis = {"invalid"};
-  Parameter basis_parameter{.directive = "",
-                            .type = ParameterType::STRING,
-                            .type_name = "",
-                            .values = absl::MakeSpan(basis)};
+  Parameter basis_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::STRING,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(basis)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"basis", basis_parameter}};
@@ -143,10 +143,10 @@ TEST(TryRemoveCurveShapeV3, InvalidBasis) {
 
 TEST(TryRemoveCurveShapeV3, BasisBezier) {
   std::vector<absl::string_view> basis = {"bezier"};
-  Parameter basis_parameter{.directive = "",
-                            .type = ParameterType::STRING,
-                            .type_name = "",
-                            .values = absl::MakeSpan(basis)};
+  Parameter basis_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::STRING,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(basis)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"basis", basis_parameter}};
@@ -161,10 +161,10 @@ TEST(TryRemoveCurveShapeV3, BasisBezier) {
 
 TEST(TryRemoveCurveShapeV3, BasisBspline) {
   std::vector<absl::string_view> basis = {"bspline"};
-  Parameter basis_parameter{.directive = "",
-                            .type = ParameterType::STRING,
-                            .type_name = "",
-                            .values = absl::MakeSpan(basis)};
+  Parameter basis_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::STRING,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(basis)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"basis", basis_parameter}};
@@ -179,10 +179,10 @@ TEST(TryRemoveCurveShapeV3, BasisBspline) {
 
 TEST(TryRemoveCurveShapeV3, InvalidType) {
   std::vector<absl::string_view> type = {"invalid"};
-  Parameter type_parameter{.directive = "",
-                           .type = ParameterType::STRING,
-                           .type_name = "",
-                           .values = absl::MakeSpan(type)};
+  Parameter type_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::STRING,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(type)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"type", type_parameter}};
@@ -197,10 +197,10 @@ TEST(TryRemoveCurveShapeV3, InvalidType) {
 
 TEST(TryRemoveCurveShapeV3, TypeCylinder) {
   std::vector<absl::string_view> type = {"cylinder"};
-  Parameter type_parameter{.directive = "",
-                           .type = ParameterType::STRING,
-                           .type_name = "",
-                           .values = absl::MakeSpan(type)};
+  Parameter type_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::STRING,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(type)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"type", type_parameter}};
@@ -215,10 +215,10 @@ TEST(TryRemoveCurveShapeV3, TypeCylinder) {
 
 TEST(TryRemoveCurveShapeV3, TypeFlat) {
   std::vector<absl::string_view> type = {"flat"};
-  Parameter type_parameter{.directive = "",
-                           .type = ParameterType::STRING,
-                           .type_name = "",
-                           .values = absl::MakeSpan(type)};
+  Parameter type_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::STRING,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(type)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"type", type_parameter}};
@@ -233,10 +233,10 @@ TEST(TryRemoveCurveShapeV3, TypeFlat) {
 
 TEST(TryRemoveCurveShapeV3, TypeRibbon) {
   std::vector<absl::string_view> type = {"ribbon"};
-  Parameter type_parameter{.directive = "",
-                           .type = ParameterType::STRING,
-                           .type_name = "",
-                           .values = absl::MakeSpan(type)};
+  Parameter type_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::STRING,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(type)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"type", type_parameter}};
@@ -251,58 +251,58 @@ TEST(TryRemoveCurveShapeV3, TypeRibbon) {
 
 TEST(TryRemoveCurveShapeV3, WithData) {
   std::vector<std::array<double, 3>> p = {{1.0, 2.0, 3.0}};
-  Parameter p_parameter{.directive = "",
-                        .type = ParameterType::POINT3,
-                        .type_name = "",
-                        .values = absl::MakeSpan(p)};
+  Parameter p_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::POINT3,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(p)};
 
   std::vector<absl::string_view> basis = {"bezier"};
-  Parameter basis_parameter{.directive = "",
-                            .type = ParameterType::STRING,
-                            .type_name = "",
-                            .values = absl::MakeSpan(basis)};
+  Parameter basis_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::STRING,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(basis)};
 
   std::vector<absl::string_view> type = {"flat"};
-  Parameter type_parameter{.directive = "",
-                           .type = ParameterType::STRING,
-                           .type_name = "",
-                           .values = absl::MakeSpan(type)};
+  Parameter type_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::STRING,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(type)};
 
   std::vector<int32_t> degree = {2};
-  Parameter degrees_parameter{.directive = "",
-                              .type = ParameterType::INTEGER,
-                              .type_name = "",
-                              .values = absl::MakeSpan(degree)};
+  Parameter degrees_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::INTEGER,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(degree)};
 
   std::vector<std::array<double, 3>> n = {{4.0, 5.0, 6.0}};
-  Parameter n_parameter{.directive = "",
-                        .type = ParameterType::NORMAL3,
-                        .type_name = "",
-                        .values = absl::MakeSpan(n)};
+  Parameter n_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::NORMAL3,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(n)};
 
   std::vector<double> width = {0.1};
-  Parameter width_parameter{.directive = "",
-                            .type = ParameterType::FLOAT,
-                            .type_name = "",
-                            .values = absl::MakeSpan(width)};
+  Parameter width_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(width)};
 
   std::vector<double> width0 = {0.2};
-  Parameter width0_parameter{.directive = "",
-                             .type = ParameterType::FLOAT,
-                             .type_name = "",
-                             .values = absl::MakeSpan(width0)};
+  Parameter width0_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(width0)};
 
   std::vector<double> width1 = {0.3};
-  Parameter width1_parameter{.directive = "",
-                             .type = ParameterType::FLOAT,
-                             .type_name = "",
-                             .values = absl::MakeSpan(width1)};
+  Parameter width1_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(width1)};
 
   std::vector<int32_t> splitdepth = {10};
-  Parameter splitdepth_parameter{.directive = "",
-                                 .type = ParameterType::INTEGER,
-                                 .type_name = "",
-                                 .values = absl::MakeSpan(splitdepth)};
+  Parameter splitdepth_parameter{/*directive=*/"",
+                                 /*type=*/ParameterType::INTEGER,
+                                 /*type_name=*/"",
+                                 /*values=*/absl::MakeSpan(splitdepth)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"P", p_parameter},
@@ -342,28 +342,28 @@ TEST(RemoveCylinderShapeV1, Empty) {
 
 TEST(RemoveCylinderShapeV1, WithData) {
   std::vector<double> radius = {0.1};
-  Parameter radius_parameter{.directive = "",
-                             .type = ParameterType::FLOAT,
-                             .type_name = "",
-                             .values = absl::MakeSpan(radius)};
+  Parameter radius_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(radius)};
 
   std::vector<double> zmin = {0.2};
-  Parameter zmin_parameter{.directive = "",
-                           .type = ParameterType::FLOAT,
-                           .type_name = "",
-                           .values = absl::MakeSpan(zmin)};
+  Parameter zmin_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::FLOAT,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(zmin)};
 
   std::vector<double> zmax = {0.3};
-  Parameter zmax_parameter{.directive = "",
-                           .type = ParameterType::FLOAT,
-                           .type_name = "",
-                           .values = absl::MakeSpan(zmax)};
+  Parameter zmax_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::FLOAT,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(zmax)};
 
   std::vector<double> phimax = {0.4};
-  Parameter phimax_parameter{.directive = "",
-                             .type = ParameterType::FLOAT,
-                             .type_name = "",
-                             .values = absl::MakeSpan(phimax)};
+  Parameter phimax_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(phimax)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"radius", radius_parameter},
@@ -389,28 +389,28 @@ TEST(RemoveDiskShapeV1, Empty) {
 
 TEST(RemoveDiskShapeV1, WithData) {
   std::vector<double> innerradius = {0.1};
-  Parameter innerradius_parameter{.directive = "",
-                                  .type = ParameterType::FLOAT,
-                                  .type_name = "",
-                                  .values = absl::MakeSpan(innerradius)};
+  Parameter innerradius_parameter{/*directive=*/"",
+                                  /*type=*/ParameterType::FLOAT,
+                                  /*type_name=*/"",
+                                  /*values=*/absl::MakeSpan(innerradius)};
 
   std::vector<double> radius = {0.2};
-  Parameter radius_parameter{.directive = "",
-                             .type = ParameterType::FLOAT,
-                             .type_name = "",
-                             .values = absl::MakeSpan(radius)};
+  Parameter radius_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(radius)};
 
   std::vector<double> height = {0.3};
-  Parameter height_parameter{.directive = "",
-                             .type = ParameterType::FLOAT,
-                             .type_name = "",
-                             .values = absl::MakeSpan(height)};
+  Parameter height_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(height)};
 
   std::vector<double> phimax = {0.4};
-  Parameter phimax_parameter{.directive = "",
-                             .type = ParameterType::FLOAT,
-                             .type_name = "",
-                             .values = absl::MakeSpan(phimax)};
+  Parameter phimax_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(phimax)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"innerradius", innerradius_parameter},
@@ -438,16 +438,16 @@ TEST(RemoveHeightFieldShapeV1, Empty) {
 
 TEST(RemoveHeightFieldShapeV1, TooBig) {
   std::vector<int32_t> nu = {2147483647};
-  Parameter nu_parameter{.directive = "",
-                         .type = ParameterType::INTEGER,
-                         .type_name = "",
-                         .values = absl::MakeSpan(nu)};
+  Parameter nu_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::INTEGER,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(nu)};
 
   std::vector<int32_t> nv = {2147483647};
-  Parameter nv_parameter{.directive = "",
-                         .type = ParameterType::INTEGER,
-                         .type_name = "",
-                         .values = absl::MakeSpan(nv)};
+  Parameter nv_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::INTEGER,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(nv)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"nu", nu_parameter}, {"nv", nv_parameter}};
@@ -462,22 +462,22 @@ TEST(RemoveHeightFieldShapeV1, TooBig) {
 
 TEST(RemoveHeightFieldShapeV1, WithData) {
   std::vector<int32_t> nu = {1};
-  Parameter nu_parameter{.directive = "",
-                         .type = ParameterType::INTEGER,
-                         .type_name = "",
-                         .values = absl::MakeSpan(nu)};
+  Parameter nu_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::INTEGER,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(nu)};
 
   std::vector<int32_t> nv = {1};
-  Parameter nv_parameter{.directive = "",
-                         .type = ParameterType::INTEGER,
-                         .type_name = "",
-                         .values = absl::MakeSpan(nv)};
+  Parameter nv_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::INTEGER,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(nv)};
 
   std::vector<double> pz = {1.0};
-  Parameter pz_parameter{.directive = "",
-                         .type = ParameterType::FLOAT,
-                         .type_name = "",
-                         .values = absl::MakeSpan(pz)};
+  Parameter pz_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::FLOAT,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(pz)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"nu", nu_parameter}, {"nv", nv_parameter}, {"Pz", pz_parameter}};
@@ -499,22 +499,22 @@ TEST(RemoveHyperboloidShapeV1, Empty) {
 
 TEST(RemoveHyperboloidShapeV1, WithData) {
   std::vector<std::array<double, 3>> p1 = {{1.0, 2.0, 3.0}};
-  Parameter p1_parameter{.directive = "",
-                         .type = ParameterType::POINT3,
-                         .type_name = "",
-                         .values = absl::MakeSpan(p1)};
+  Parameter p1_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::POINT3,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(p1)};
 
   std::vector<std::array<double, 3>> p2 = {{4.0, 5.0, 6.0}};
-  Parameter p2_parameter{.directive = "",
-                         .type = ParameterType::POINT3,
-                         .type_name = "",
-                         .values = absl::MakeSpan(p2)};
+  Parameter p2_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::POINT3,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(p2)};
 
   std::vector<double> phimax = {0.7};
-  Parameter phimax_parameter{.directive = "",
-                             .type = ParameterType::FLOAT,
-                             .type_name = "",
-                             .values = absl::MakeSpan(phimax)};
+  Parameter phimax_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(phimax)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"p1", p1_parameter}, {"p2", p2_parameter}, {"phimax", phimax_parameter}};
@@ -539,22 +539,22 @@ TEST(RemoveLoopSubdivShapeV1, Empty) {
 TEST(RemoveLoopSubdivShapeV1, WithData) {
   std::vector<std::array<double, 3>> p = {
       {1.0, 2.0, 3.0}, {4.0, 5.0, 6.0}, {7.0, 8.0, 9.0}};
-  Parameter p_parameter{.directive = "",
-                        .type = ParameterType::POINT3,
-                        .type_name = "",
-                        .values = absl::MakeSpan(p)};
+  Parameter p_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::POINT3,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(p)};
 
   std::vector<int32_t> indices = {0, 1, 2};
-  Parameter indices_parameter{.directive = "",
-                              .type = ParameterType::INTEGER,
-                              .type_name = "",
-                              .values = absl::MakeSpan(indices)};
+  Parameter indices_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::INTEGER,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(indices)};
 
   std::vector<int32_t> levels = {10};
-  Parameter levels_parameter{.directive = "",
-                             .type = ParameterType::INTEGER,
-                             .type_name = "",
-                             .values = absl::MakeSpan(levels)};
+  Parameter levels_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::INTEGER,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(levels)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"P", p_parameter},
@@ -583,22 +583,22 @@ TEST(RemoveLoopSubdivShapeV3, Empty) {
 TEST(RemoveLoopSubdivShapeV3, WithData) {
   std::vector<std::array<double, 3>> p = {
       {1.0, 2.0, 3.0}, {4.0, 5.0, 6.0}, {7.0, 8.0, 9.0}};
-  Parameter p_parameter{.directive = "",
-                        .type = ParameterType::POINT3,
-                        .type_name = "",
-                        .values = absl::MakeSpan(p)};
+  Parameter p_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::POINT3,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(p)};
 
   std::vector<int32_t> indices = {0, 1, 2};
-  Parameter indices_parameter{.directive = "",
-                              .type = ParameterType::INTEGER,
-                              .type_name = "",
-                              .values = absl::MakeSpan(indices)};
+  Parameter indices_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::INTEGER,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(indices)};
 
   std::vector<int32_t> levels = {10};
-  Parameter levels_parameter{.directive = "",
-                             .type = ParameterType::INTEGER,
-                             .type_name = "",
-                             .values = absl::MakeSpan(levels)};
+  Parameter levels_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::INTEGER,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(levels)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"P", p_parameter},
@@ -626,76 +626,76 @@ TEST(RemoveNurbsShapeV1, Empty) {
 
 TEST(RemoveNurbsShapeV1, WithData) {
   std::vector<int32_t> nu = {1};
-  Parameter nu_parameter{.directive = "",
-                         .type = ParameterType::INTEGER,
-                         .type_name = "",
-                         .values = absl::MakeSpan(nu)};
+  Parameter nu_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::INTEGER,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(nu)};
 
   std::vector<int32_t> nv = {2};
-  Parameter nv_parameter{.directive = "",
-                         .type = ParameterType::INTEGER,
-                         .type_name = "",
-                         .values = absl::MakeSpan(nv)};
+  Parameter nv_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::INTEGER,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(nv)};
 
   std::vector<int32_t> uorder = {3};
-  Parameter uorder_parameter{.directive = "",
-                             .type = ParameterType::INTEGER,
-                             .type_name = "",
-                             .values = absl::MakeSpan(uorder)};
+  Parameter uorder_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::INTEGER,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(uorder)};
 
   std::vector<int32_t> vorder = {4};
-  Parameter vorder_parameter{.directive = "",
-                             .type = ParameterType::INTEGER,
-                             .type_name = "",
-                             .values = absl::MakeSpan(vorder)};
+  Parameter vorder_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::INTEGER,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(vorder)};
 
   std::vector<double> uknots = {5.0};
-  Parameter uknots_parameter{.directive = "",
-                             .type = ParameterType::FLOAT,
-                             .type_name = "",
-                             .values = absl::MakeSpan(uknots)};
+  Parameter uknots_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(uknots)};
 
   std::vector<double> vknots = {6.0};
-  Parameter vknots_parameter{.directive = "",
-                             .type = ParameterType::FLOAT,
-                             .type_name = "",
-                             .values = absl::MakeSpan(vknots)};
+  Parameter vknots_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(vknots)};
 
   std::vector<double> u0 = {7.0};
-  Parameter u0_parameter{.directive = "",
-                         .type = ParameterType::FLOAT,
-                         .type_name = "",
-                         .values = absl::MakeSpan(u0)};
+  Parameter u0_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::FLOAT,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(u0)};
 
   std::vector<double> v0 = {8.0};
-  Parameter v0_parameter{.directive = "",
-                         .type = ParameterType::FLOAT,
-                         .type_name = "",
-                         .values = absl::MakeSpan(v0)};
+  Parameter v0_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::FLOAT,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(v0)};
 
   std::vector<double> u1 = {9.0};
-  Parameter u1_parameter{.directive = "",
-                         .type = ParameterType::FLOAT,
-                         .type_name = "",
-                         .values = absl::MakeSpan(u1)};
+  Parameter u1_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::FLOAT,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(u1)};
 
   std::vector<double> v1 = {10.0};
-  Parameter v1_parameter{.directive = "",
-                         .type = ParameterType::FLOAT,
-                         .type_name = "",
-                         .values = absl::MakeSpan(v1)};
+  Parameter v1_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::FLOAT,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(v1)};
 
   std::vector<std::array<double, 3>> p = {{11.0, 12.0, 13.0}};
-  Parameter p_parameter{.directive = "",
-                        .type = ParameterType::POINT3,
-                        .type_name = "",
-                        .values = absl::MakeSpan(p)};
+  Parameter p_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::POINT3,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(p)};
 
   std::vector<double> pw = {14.0, 15.0, 16.0, 17.0};
-  Parameter pw_parameter{.directive = "",
-                         .type = ParameterType::FLOAT,
-                         .type_name = "",
-                         .values = absl::MakeSpan(pw)};
+  Parameter pw_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::FLOAT,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(pw)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"nu", nu_parameter},         {"nv", nv_parameter},
@@ -736,28 +736,28 @@ TEST(RemoveParaboloidShapeV1, Empty) {
 
 TEST(RemoveParaboloidShapeV1, WithData) {
   std::vector<double> radius = {0.1};
-  Parameter radius_parameter{.directive = "",
-                             .type = ParameterType::FLOAT,
-                             .type_name = "",
-                             .values = absl::MakeSpan(radius)};
+  Parameter radius_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(radius)};
 
   std::vector<double> zmin = {0.2};
-  Parameter zmin_parameter{.directive = "",
-                           .type = ParameterType::FLOAT,
-                           .type_name = "",
-                           .values = absl::MakeSpan(zmin)};
+  Parameter zmin_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::FLOAT,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(zmin)};
 
   std::vector<double> zmax = {0.3};
-  Parameter zmax_parameter{.directive = "",
-                           .type = ParameterType::FLOAT,
-                           .type_name = "",
-                           .values = absl::MakeSpan(zmax)};
+  Parameter zmax_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::FLOAT,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(zmax)};
 
   std::vector<double> phimax = {0.4};
-  Parameter phimax_parameter{.directive = "",
-                             .type = ParameterType::FLOAT,
-                             .type_name = "",
-                             .values = absl::MakeSpan(phimax)};
+  Parameter phimax_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(phimax)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"radius", radius_parameter},
@@ -783,22 +783,22 @@ TEST(RemovePlyMeshShapeV3, Empty) {
 
 TEST(RemovePlyMeshShapeV3, WithData) {
   std::vector<absl::string_view> filename = {"file"};
-  Parameter filename_parameter{.directive = "",
-                               .type = ParameterType::STRING,
-                               .type_name = "",
-                               .values = absl::MakeSpan(filename)};
+  Parameter filename_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::STRING,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(filename)};
 
   std::vector<double> alpha = {1.0};
-  Parameter alpha_parameter{.directive = "",
-                            .type = ParameterType::FLOAT,
-                            .type_name = "",
-                            .values = absl::MakeSpan(alpha)};
+  Parameter alpha_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(alpha)};
 
   std::vector<double> shadowalpha = {2.0};
-  Parameter shadowalpha_parameter{.directive = "",
-                                  .type = ParameterType::FLOAT,
-                                  .type_name = "",
-                                  .values = absl::MakeSpan(shadowalpha)};
+  Parameter shadowalpha_parameter{/*directive=*/"",
+                                  /*type=*/ParameterType::FLOAT,
+                                  /*type_name=*/"",
+                                  /*values=*/absl::MakeSpan(shadowalpha)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"filename", filename_parameter},
@@ -824,28 +824,28 @@ TEST(RemoveSphereShapeV1, Empty) {
 
 TEST(RemoveSphereShapeV1, WithData) {
   std::vector<double> radius = {0.1};
-  Parameter radius_parameter{.directive = "",
-                             .type = ParameterType::FLOAT,
-                             .type_name = "",
-                             .values = absl::MakeSpan(radius)};
+  Parameter radius_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(radius)};
 
   std::vector<double> zmin = {0.2};
-  Parameter zmin_parameter{.directive = "",
-                           .type = ParameterType::FLOAT,
-                           .type_name = "",
-                           .values = absl::MakeSpan(zmin)};
+  Parameter zmin_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::FLOAT,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(zmin)};
 
   std::vector<double> zmax = {0.3};
-  Parameter zmax_parameter{.directive = "",
-                           .type = ParameterType::FLOAT,
-                           .type_name = "",
-                           .values = absl::MakeSpan(zmax)};
+  Parameter zmax_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::FLOAT,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(zmax)};
 
   std::vector<double> phimax = {0.4};
-  Parameter phimax_parameter{.directive = "",
-                             .type = ParameterType::FLOAT,
-                             .type_name = "",
-                             .values = absl::MakeSpan(phimax)};
+  Parameter phimax_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(phimax)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"radius", radius_parameter},
@@ -871,34 +871,34 @@ TEST(RemoveTriangleMeshShapeV1, Empty) {
 
 TEST(RemoveTriangleMeshShapeV1, WithData) {
   std::vector<std::array<double, 3>> p = {{1.0, 2.0, 3.0}};
-  Parameter p_parameter{.directive = "",
-                        .type = ParameterType::POINT3,
-                        .type_name = "",
-                        .values = absl::MakeSpan(p)};
+  Parameter p_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::POINT3,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(p)};
 
   std::vector<int32_t> indices = {4, 5, 6};
-  Parameter indices_parameter{.directive = "",
-                              .type = ParameterType::INTEGER,
-                              .type_name = "",
-                              .values = absl::MakeSpan(indices)};
+  Parameter indices_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::INTEGER,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(indices)};
 
   std::vector<std::array<double, 3>> n = {{7.0, 8.0, 9.0}};
-  Parameter n_parameter{.directive = "",
-                        .type = ParameterType::NORMAL3,
-                        .type_name = "",
-                        .values = absl::MakeSpan(n)};
+  Parameter n_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::NORMAL3,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(n)};
 
   std::vector<std::array<double, 3>> s = {{10.0, 11.0, 12.0}};
-  Parameter s_parameter{.directive = "",
-                        .type = ParameterType::VECTOR3,
-                        .type_name = "",
-                        .values = absl::MakeSpan(s)};
+  Parameter s_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::VECTOR3,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(s)};
 
   std::vector<double> uv = {13.0, 14.0};
-  Parameter uv_parameter{.directive = "",
-                         .type = ParameterType::FLOAT,
-                         .type_name = "",
-                         .values = absl::MakeSpan(uv)};
+  Parameter uv_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::FLOAT,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(uv)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"P", p_parameter},
@@ -920,10 +920,10 @@ TEST(RemoveTriangleMeshShapeV1, WithData) {
 
 TEST(RemoveTriangleMeshShapeV1, St) {
   std::vector<double> st = {13.0, 14.0};
-  Parameter st_parameter{.directive = "",
-                         .type = ParameterType::FLOAT,
-                         .type_name = "",
-                         .values = absl::MakeSpan(st)};
+  Parameter st_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::FLOAT,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(st)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"st", st_parameter}};
@@ -945,47 +945,47 @@ TEST(RemoveTriangleMeshShapeV2, Empty) {
 
 TEST(RemoveTriangleMeshShapeV2, WithData) {
   std::vector<std::array<double, 3>> p = {{1.0, 2.0, 3.0}};
-  Parameter p_parameter{.directive = "",
-                        .type = ParameterType::POINT3,
-                        .type_name = "",
-                        .values = absl::MakeSpan(p)};
+  Parameter p_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::POINT3,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(p)};
 
   std::vector<int32_t> indices = {4, 5, 6};
-  Parameter indices_parameter{.directive = "",
-                              .type = ParameterType::INTEGER,
-                              .type_name = "",
-                              .values = absl::MakeSpan(indices)};
+  Parameter indices_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::INTEGER,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(indices)};
 
   std::vector<std::array<double, 3>> n = {{7.0, 8.0, 9.0}};
-  Parameter n_parameter{.directive = "",
-                        .type = ParameterType::NORMAL3,
-                        .type_name = "",
-                        .values = absl::MakeSpan(n)};
+  Parameter n_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::NORMAL3,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(n)};
 
   std::vector<std::array<double, 3>> s = {{10.0, 11.0, 12.0}};
-  Parameter s_parameter{.directive = "",
-                        .type = ParameterType::VECTOR3,
-                        .type_name = "",
-                        .values = absl::MakeSpan(s)};
+  Parameter s_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::VECTOR3,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(s)};
 
   std::vector<double> uv = {13.0, 14.0};
-  Parameter uv_parameter{.directive = "",
-                         .type = ParameterType::FLOAT,
-                         .type_name = "",
-                         .values = absl::MakeSpan(uv)};
+  Parameter uv_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::FLOAT,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(uv)};
 
   bool discarddegenerateuvs[] = {true};
   Parameter discarddegenerateuvs_parameter{
-      .directive = "",
-      .type = ParameterType::BOOL,
-      .type_name = "",
-      .values = absl::MakeSpan(discarddegenerateuvs)};
+      /*directive=*/"",
+      /*type=*/ParameterType::BOOL,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(discarddegenerateuvs)};
 
   std::vector<double> alpha = {1.0};
-  Parameter alpha_parameter{.directive = "",
-                            .type = ParameterType::FLOAT,
-                            .type_name = "",
-                            .values = absl::MakeSpan(alpha)};
+  Parameter alpha_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(alpha)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"P", p_parameter},
@@ -1019,52 +1019,52 @@ TEST(RemoveTriangleMeshShapeV3, Empty) {
 
 TEST(RemoveTriangleMeshShapeV3, WithData) {
   std::vector<std::array<double, 3>> p = {{1.0, 2.0, 3.0}};
-  Parameter p_parameter{.directive = "",
-                        .type = ParameterType::POINT3,
-                        .type_name = "",
-                        .values = absl::MakeSpan(p)};
+  Parameter p_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::POINT3,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(p)};
 
   std::vector<int32_t> indices = {4, 5, 6};
-  Parameter indices_parameter{.directive = "",
-                              .type = ParameterType::INTEGER,
-                              .type_name = "",
-                              .values = absl::MakeSpan(indices)};
+  Parameter indices_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::INTEGER,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(indices)};
 
   std::vector<std::array<double, 3>> n = {{7.0, 8.0, 9.0}};
-  Parameter n_parameter{.directive = "",
-                        .type = ParameterType::NORMAL3,
-                        .type_name = "",
-                        .values = absl::MakeSpan(n)};
+  Parameter n_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::NORMAL3,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(n)};
 
   std::vector<std::array<double, 3>> s = {{10.0, 11.0, 12.0}};
-  Parameter s_parameter{.directive = "",
-                        .type = ParameterType::VECTOR3,
-                        .type_name = "",
-                        .values = absl::MakeSpan(s)};
+  Parameter s_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::VECTOR3,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(s)};
 
   std::vector<double> uv = {13.0, 14.0};
-  Parameter uv_parameter{.directive = "",
-                         .type = ParameterType::FLOAT,
-                         .type_name = "",
-                         .values = absl::MakeSpan(uv)};
+  Parameter uv_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::FLOAT,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(uv)};
 
   std::vector<double> alpha = {1.0};
-  Parameter alpha_parameter{.directive = "",
-                            .type = ParameterType::FLOAT,
-                            .type_name = "",
-                            .values = absl::MakeSpan(alpha)};
+  Parameter alpha_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(alpha)};
 
   std::vector<int32_t> faceindices = {-1};
-  Parameter faceindices_parameter{.directive = "",
-                                  .type = ParameterType::INTEGER,
-                                  .type_name = "",
-                                  .values = absl::MakeSpan(faceindices)};
+  Parameter faceindices_parameter{/*directive=*/"",
+                                  /*type=*/ParameterType::INTEGER,
+                                  /*type_name=*/"",
+                                  /*values=*/absl::MakeSpan(faceindices)};
 
   std::vector<double> shadowalpha = {2.0};
-  Parameter shadowalpha_parameter{.directive = "",
-                                  .type = ParameterType::FLOAT,
-                                  .type_name = "",
-                                  .values = absl::MakeSpan(shadowalpha)};
+  Parameter shadowalpha_parameter{/*directive=*/"",
+                                  /*type=*/ParameterType::FLOAT,
+                                  /*type_name=*/"",
+                                  /*values=*/absl::MakeSpan(shadowalpha)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"P", p_parameter},

@@ -250,6 +250,7 @@ cc_test(
         ":parser",
         "//pbrt_proto:pbrt_cc_proto",
         "//pbrt_proto/testing:proto_matchers",
+        "@abseil-cpp//absl/container:flat_hash_map",
         "@abseil-cpp//absl/status:status_matchers",
         "@abseil-cpp//absl/strings:string_view",
         "@googletest//:gtest",

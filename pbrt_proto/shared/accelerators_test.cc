@@ -26,10 +26,10 @@ TEST(RemoveGridAcceleratorV1, Empty) {
 
 TEST(RemoveGridAcceleratorV1, RefineImmediately) {
   bool values[] = {true};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::BOOL,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::BOOL,
+                      /*type_name=*/"",
+                      /*value=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"refineimmediately", parameter}};
@@ -51,10 +51,10 @@ TEST(RemoveKdTreeAcceleratorV1, Empty) {
 
 TEST(RemoveKdTreeAcceleratorV1, EmptyBonus) {
   std::vector<double> values = {1.0};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::FLOAT,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::FLOAT,
+                      /*type_name=*/"",
+                      /*value=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"emptybonus", parameter}};
@@ -68,10 +68,10 @@ TEST(RemoveKdTreeAcceleratorV1, EmptyBonus) {
 
 TEST(RemoveKdTreeAcceleratorV1, IntersectCost) {
   std::vector<int32_t> values = {1};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::INTEGER,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::INTEGER,
+                      /*type_name=*/"",
+                      /*value=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"intersectcost", parameter}};
@@ -85,10 +85,10 @@ TEST(RemoveKdTreeAcceleratorV1, IntersectCost) {
 
 TEST(RemoveKdTreeAcceleratorV1, MaxDepth) {
   std::vector<int32_t> values = {1};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::INTEGER,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::INTEGER,
+                      /*type_name=*/"",
+                      /*value=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"maxdepth", parameter}};
@@ -102,10 +102,10 @@ TEST(RemoveKdTreeAcceleratorV1, MaxDepth) {
 
 TEST(RemoveKdTreeAcceleratorV1, MaxPrims) {
   std::vector<int32_t> values = {1};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::INTEGER,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::INTEGER,
+                      /*type_name=*/"",
+                      /*value=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"maxprims", parameter}};
@@ -119,10 +119,10 @@ TEST(RemoveKdTreeAcceleratorV1, MaxPrims) {
 
 TEST(RemoveKdTreeAcceleratorV1, TraversalCost) {
   std::vector<int32_t> values = {1};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::INTEGER,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::INTEGER,
+                      /*type_name=*/"",
+                      /*value=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"traversalcost", parameter}};
@@ -144,10 +144,10 @@ TEST(RemoveBvhAcceleratorV2, Empty) {
 
 TEST(RemoveBvhAcceleratorV2, MaxNodePrims) {
   std::vector<int32_t> values = {1};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::INTEGER,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::INTEGER,
+                      /*type_name=*/"",
+                      /*value=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"maxnodeprims", parameter}};
@@ -161,10 +161,10 @@ TEST(RemoveBvhAcceleratorV2, MaxNodePrims) {
 
 TEST(RemoveBvhAcceleratorV2, Middle) {
   std::vector<absl::string_view> values = {"middle"};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::STRING,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::STRING,
+                      /*type_name=*/"",
+                      /*value=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"splitmethod", parameter}};
@@ -178,10 +178,10 @@ TEST(RemoveBvhAcceleratorV2, Middle) {
 
 TEST(RemoveBvhAcceleratorV2, Equal) {
   std::vector<absl::string_view> values = {"equal"};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::STRING,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::STRING,
+                      /*type_name=*/"",
+                      /*value=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"splitmethod", parameter}};
@@ -195,10 +195,10 @@ TEST(RemoveBvhAcceleratorV2, Equal) {
 
 TEST(RemoveBvhAcceleratorV2, Hlbvh) {
   std::vector<absl::string_view> values = {"hlbvh"};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::STRING,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::STRING,
+                      /*type_name=*/"",
+                      /*value=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"splitmethod", parameter}};
@@ -220,10 +220,10 @@ TEST(RemoveBvhAcceleratorV3, Empty) {
 
 TEST(RemoveBvhAcceleratorV3, MaxNodePrims) {
   std::vector<int32_t> values = {1};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::INTEGER,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::INTEGER,
+                      /*type_name=*/"",
+                      /*value=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"maxnodeprims", parameter}};
@@ -237,10 +237,10 @@ TEST(RemoveBvhAcceleratorV3, MaxNodePrims) {
 
 TEST(RemoveBvhAcceleratorV3, Middle) {
   std::vector<absl::string_view> values = {"middle"};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::STRING,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::STRING,
+                      /*type_name=*/"",
+                      /*value=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"splitmethod", parameter}};
@@ -254,10 +254,10 @@ TEST(RemoveBvhAcceleratorV3, Middle) {
 
 TEST(RemoveBvhAcceleratorV3, Equal) {
   std::vector<absl::string_view> values = {"equal"};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::STRING,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::STRING,
+                      /*type_name=*/"",
+                      /*value=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"splitmethod", parameter}};
@@ -271,10 +271,10 @@ TEST(RemoveBvhAcceleratorV3, Equal) {
 
 TEST(RemoveBvhAcceleratorV3, Hlbvh) {
   std::vector<absl::string_view> values = {"hlbvh"};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::STRING,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::STRING,
+                      /*type_name=*/"",
+                      /*value=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"splitmethod", parameter}};
@@ -288,10 +288,10 @@ TEST(RemoveBvhAcceleratorV3, Hlbvh) {
 
 TEST(RemoveBvhAcceleratorV3, Unknown) {
   std::vector<absl::string_view> values = {"unknown"};
-  Parameter parameter{.directive = "",
-                      .type = ParameterType::STRING,
-                      .type_name = "",
-                      .values = absl::MakeSpan(values)};
+  Parameter parameter{/*directive=*/"",
+                      /*type=*/ParameterType::STRING,
+                      /*type_name=*/"",
+                      /*value=*/absl::MakeSpan(values)};
 
   absl::flat_hash_map<absl::string_view, Parameter> parameters = {
       {"splitmethod", parameter}};
