@@ -22,16 +22,16 @@ jobs:
         remove-dotnet: 'true'
         remove-haskell: 'true'
 
+    - uses: actions/checkout@v3
+
+    - name: optimized build
+      run: bazel build -c opt ...
+
     - name: Download island scene
       run: curl -O https://wdas-datasets-disneyanimation-com.s3-us-west-2.amazonaws.com/moanaislandscene/island-pbrt-v1.1.tgz
 
     - name: Extract island scene
       run: tar -xvf island-pbrt-v1.1.tgz && rm island-pbrt-v1.1.tgz
-
-    - uses: actions/checkout@v3
-
-    - name: optimized build
-      run: bazel build -c opt ...
 
     - name: Convert island scene
       run: bazel-bin/tools/pbrt_proto_converter --pbrt_version=3 --recursive island/pbrt/island.pbrt
