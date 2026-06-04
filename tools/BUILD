@@ -28,6 +28,7 @@ cc_binary(
         "@abseil-cpp//absl/status:status",
         "@abseil-cpp//absl/strings:string_view",
         "@protobuf//:protobuf_lite",
+        "@protobuf//src/google/protobuf/io",
     ],
 )
 

@@ -80,12 +80,16 @@ genrule(
         ":defaults.txtpb",
     ],
     outs = ["defaults.binpb"],
-    cmd = "cat $(execpath :defaults.txtpb) | " +
-          "$(execpath @protobuf//:protoc) " +
+    cmd = "$(execpath @protobuf//:protoc) " +
           "--encode=pbrt_proto.v3.Defaults " +
           "--deterministic_output " +
           "--descriptor_set_in=$(execpath :defaults_proto):$(execpath :v3_proto):$(execpath //pbrt_proto) " +
-          "> $@",
+          "< $(execpath :defaults.txtpb) > $@",
+    cmd_bat = "$(execpath @protobuf//:protoc) " +
+              "--encode=pbrt_proto.v3.Defaults " +
+              "--deterministic_output " +
+              "--descriptor_set_in=$(execpath :defaults_proto);$(execpath :v3_proto);$(execpath //pbrt_proto) " +
+              "< $(execpath :defaults.txtpb) > $@",
     tools = [
         ":defaults_proto",
         ":v3_proto",
