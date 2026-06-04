@@ -53,6 +53,15 @@ std::string FileExtension() {
   }
 }
 
+std::string MakePath(std::filesystem::path partial_file_name,
+                     size_t child_index) {
+  partial_file_name += ".";
+  partial_file_name += std::to_string(child_index);
+  partial_file_name += ".pbrt";
+  partial_file_name += FileExtension();
+  return partial_file_name.string();
+}
+
 void Serialize(std::filesystem::path output_path, size_t file_index,
                const pbrt_proto::v3::PbrtProto& proto) {
   std::string prefix;
@@ -85,7 +94,7 @@ void Serialize(std::filesystem::path output_path, size_t file_index,
 
 void ConvertFile(const std::filesystem::path& search_root,
                  const std::filesystem::path& file,
-                 const std::string& partial_file_name,
+                 const std::filesystem::path& partial_file_name,
                  std::vector<std::pair<std::filesystem::path, std::string>>&
                      included_files) {
   ScopedArena arena;
@@ -137,8 +146,7 @@ void ConvertFile(const std::filesystem::path& search_root,
   for (const auto& directive : to_v3->directives()) {
     if (current_size + directive.ByteSizeLong() > kMaxProtoSize) {
       parent->add_directives()->mutable_include()->set_path(
-          partial_file_name + "." + std::to_string(child_index) + ".pbrt" +
-          FileExtension());
+          MakePath(partial_file_name, child_index));
       Serialize(file, child_index++, *child);
 
       child->clear_directives();
@@ -150,8 +158,7 @@ void ConvertFile(const std::filesystem::path& search_root,
   }
 
   parent->add_directives()->mutable_include()->set_path(
-      partial_file_name + "." + std::to_string(child_index) + ".pbrt" +
-      FileExtension());
+      MakePath(partial_file_name, child_index));
   Serialize(file, child_index, *child);
 
   Serialize(file, 0, *parent);
