@@ -10,6 +10,7 @@ jobs:
   island-scene:
     runs-on: macos-latest
 
+    steps:
     - uses: actions/checkout@v3
 
     - name: Build pbrt_proto_converter
