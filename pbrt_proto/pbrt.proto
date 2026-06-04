@@ -3129,10 +3129,10 @@ message NurbsShape {
   optional uint32 vorder = 16;
 
   // The knot vector for NURBS in the u direction.
-  repeated float uknots = 17;
+  repeated double uknots = 17;
 
   // The knot vector for NURBS in the v direction.
-  repeated float vknots = 18;
+  repeated double vknots = 18;
 
   // The starting u parametric coordinates at which to evaluate NURBS.
   optional double u0 = 19;
