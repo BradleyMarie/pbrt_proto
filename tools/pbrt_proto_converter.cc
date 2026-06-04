@@ -23,6 +23,13 @@ ABSL_FLAG(bool, recursive, false,
           "the converted files. If not set, encountering these directives will "
           "not be traversed and will be left as-is.");
 
+ABSL_FLAG(bool, validate_only, false,
+          "If true, serialized files are deleted immediately after they are "
+          "created in order to conserve disk space.");
+
+ABSL_FLAG(bool, write_progress, false,
+          "If true, progress is reported to the console.");
+
 ABSL_FLAG(bool, textproto, false,
           "If true, output a text proto instead of a binary proto");
 
@@ -69,6 +76,10 @@ void Serialize(std::filesystem::path output_path, size_t file_index,
     prefix = "." + std::to_string(file_index);
   }
 
+  if (absl::GetFlag(FLAGS_write_progress)) {
+    std::cout << "Writing output for input: " << output_path << std::endl;
+  }
+
   output_path.replace_extension(prefix + ".pbrt" + FileExtension());
 
   std::ofstream output(output_path, std::ios::binary | std::ios::out);
@@ -89,6 +100,12 @@ void Serialize(std::filesystem::path output_path, size_t file_index,
       std::cerr << "ERROR: Could not serialize proto to output" << std::endl;
       exit(EXIT_FAILURE);
     }
+  }
+
+  output.close();
+
+  if (absl::GetFlag(FLAGS_validate_only)) {
+    std::remove(output_path.c_str());
   }
 }
 

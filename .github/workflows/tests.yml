@@ -23,7 +23,7 @@ jobs:
       run: tar -xvf island-pbrt-v1.1.tgz && rm island-pbrt-v1.1.tgz
 
     - name: Convert island scene
-      run: bazel run -c opt //tools:pbrt_proto_converter -- --pbrt_version=3 --recursive $GITHUB_WORKSPACE/island/pbrt/island.pbrt
+      run: bazel run -c opt //tools:pbrt_proto_converter -- --write_progress --validate_only --pbrt_version=3 --recursive $GITHUB_WORKSPACE/island/pbrt/island.pbrt
 
   build-linux-gcc:
     runs-on: ${{ matrix.os }}
