@@ -8,24 +8,12 @@ on:
 
 jobs:
   island-scene:
-    runs-on: ubuntu-24.04-arm
-
-    steps:
-    - name: Maximize build space
-      uses: easimon/maximize-build-space@master
-      with:
-        root-reserve-mb: 1024
-        swap-size-mb: 1024
-        remove-android: 'true'
-        remove-codeql: 'true'
-        remove-docker-images: 'true'
-        remove-dotnet: 'true'
-        remove-haskell: 'true'
+    runs-on: macos-latest
 
     - uses: actions/checkout@v3
 
     - name: Build pbrt_proto_converter
-      run: bazel --output_base=$GITHUB_WORKSPACE/build build -c opt //tools:pbrt_proto_converter
+      run: bazel build -c opt //tools:pbrt_proto_converter
 
     - name: Download island scene
       run: curl -O https://wdas-datasets-disneyanimation-com.s3-us-west-2.amazonaws.com/moanaislandscene/island-pbrt-v1.1.tgz
@@ -34,7 +22,7 @@ jobs:
       run: tar -xvf island-pbrt-v1.1.tgz && rm island-pbrt-v1.1.tgz
 
     - name: Convert island scene
-      run: bazel --output_base=$GITHUB_WORKSPACE/build run -c opt //tools:pbrt_proto_converter -- --pbrt_version=3 --recursive $GITHUB_WORKSPACE/island/pbrt/island.pbrt
+      run: bazel run -c opt //tools:pbrt_proto_converter -- --pbrt_version=3 --recursive $GITHUB_WORKSPACE/island/pbrt/island.pbrt
 
   build-linux-gcc:
     runs-on: ${{ matrix.os }}
