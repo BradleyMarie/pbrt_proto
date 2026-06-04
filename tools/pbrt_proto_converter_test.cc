@@ -28,7 +28,7 @@ std::string GetRunfilePath(const std::filesystem::path& file_path) {
       std::filesystem::path("_main/tools/") / file_path;
 
   std::unique_ptr<Runfiles> runfiles(Runfiles::CreateForTest());
-  return runfiles->Rlocation(path.string());
+  return runfiles->Rlocation(path.generic_string());
 }
 
 std::pair<int, std::string> Convert(int version,
@@ -44,8 +44,9 @@ std::pair<int, std::string> Convert(int version,
   std::string input_file = GetRunfilePath(kTestData / file_name);
   std::string output_file = input_file + ".out";
 
-  std::string command = binary + " --pbrt_version=" + std::to_string(version) +
-                        " --recursive " + input_file + " 2> " + output_file;
+  std::string command =
+      "\"" + binary + "\" --pbrt_version=" + std::to_string(version) +
+      " --recursive \"" + input_file + "\" 2> \"" + output_file + "\"";
 
   int result = std::system(command.c_str());
   if (allow_warnings) {
