@@ -8,8 +8,7 @@ on:
 
 jobs:
   island-scene:
-    if: false
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
 
     steps:
     - name: Maximize build space
@@ -24,7 +23,7 @@ jobs:
         remove-haskell: 'true'
 
     - name: Download island scene
-      run: wget https://wdas-datasets-disneyanimation-com.s3-us-west-2.amazonaws.com/moanaislandscene/island-pbrt-v1.1.tgz
+      run: curl -O https://wdas-datasets-disneyanimation-com.s3-us-west-2.amazonaws.com/moanaislandscene/island-pbrt-v1.1.tgz
 
     - name: Extract island scene
       run: tar -xvf island-pbrt-v1.1.tgz && rm island-pbrt-v1.1.tgz
@@ -33,6 +32,9 @@ jobs:
 
     - name: optimized build
       run: bazel build -c opt ...
+
+    - name: Convert island scene
+      run: bazel-bin/tools/pbrt_proto_converter --pbrt_version=3 --recursive island/pbrt/island.pbrt
 
   build-linux:
     runs-on: ${{ matrix.os }}
