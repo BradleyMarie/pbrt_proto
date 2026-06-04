@@ -36,7 +36,7 @@ ABSL_FLAG(bool, textproto, false,
 ABSL_FLAG(std::optional<uint16_t>, pbrt_version, std::nullopt,
           "The version of pbrt input specified.");
 
-constexpr int kMaxProtoSize = std::numeric_limits<int32_t>::max() / 2;
+constexpr int kMaxProtoSize = std::numeric_limits<int32_t>::max() / 4;
 
 class ScopedArena {
  public:
@@ -76,10 +76,6 @@ void Serialize(std::filesystem::path output_path, size_t file_index,
     prefix = "." + std::to_string(file_index);
   }
 
-  if (absl::GetFlag(FLAGS_write_progress)) {
-    std::cout << "Writing output for input: " << output_path << std::endl;
-  }
-
   output_path.replace_extension(prefix + ".pbrt" + FileExtension());
 
   std::ofstream output(output_path, std::ios::binary | std::ios::out);
@@ -87,6 +83,10 @@ void Serialize(std::filesystem::path output_path, size_t file_index,
     std::cerr << "ERROR: Could not open output file " << output_path
               << std::endl;
     exit(EXIT_FAILURE);
+  }
+
+  if (absl::GetFlag(FLAGS_write_progress)) {
+    std::cout << "Writing to output: " << output_path.string() << std::endl;
   }
 
   if (absl::GetFlag(FLAGS_textproto)) {
@@ -105,7 +105,11 @@ void Serialize(std::filesystem::path output_path, size_t file_index,
   output.close();
 
   if (absl::GetFlag(FLAGS_validate_only)) {
-    std::remove(output_path.c_str());
+    std::string as_string = output_path.string();
+    if (std::remove(as_string.c_str()) != 0) {
+      std::cerr << "WARNING: Failed to clean up conversion result "
+                << output_path << std::endl;
+    }
   }
 }
 
