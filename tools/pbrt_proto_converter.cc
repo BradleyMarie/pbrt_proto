@@ -36,7 +36,7 @@ ABSL_FLAG(bool, textproto, false,
 ABSL_FLAG(std::optional<uint16_t>, pbrt_version, std::nullopt,
           "The version of pbrt input specified.");
 
-constexpr int kMaxProtoSize = std::numeric_limits<int32_t>::max() / 4;
+constexpr size_t kMaxProtoSize = std::numeric_limits<int32_t>::max() / 16;
 
 class ScopedArena {
  public:
@@ -45,6 +45,8 @@ class ScopedArena {
   pbrt_proto::v3::PbrtProto* Allocate() {
     return google::protobuf::Arena::Create<pbrt_proto::v3::PbrtProto>(&arena_);
   }
+
+  void FreeAll() { arena_.Reset(); }
 
  private:
   static google::protobuf::Arena arena_;
@@ -118,14 +120,13 @@ void ConvertFile(const std::filesystem::path& search_root,
                  const std::filesystem::path& partial_file_name,
                  std::vector<std::pair<std::filesystem::path, std::string>>&
                      included_files) {
-  ScopedArena arena;
-
   std::ifstream input(file.c_str(), std::ios_base::in | std::ios_base::binary);
   if (!input) {
     std::cerr << "ERROR: Could not open file: " << file << std::endl;
     exit(EXIT_FAILURE);
   }
 
+  ScopedArena arena;
   pbrt_proto::v3::PbrtProto* to_v3 = arena.Allocate();
   if (absl::Status error = pbrt_proto::v3::Convert(input, *to_v3);
       !error.ok()) {
@@ -159,18 +160,21 @@ void ConvertFile(const std::filesystem::path& search_root,
     return;
   }
 
-  pbrt_proto::v3::PbrtProto* parent = arena.Allocate();
+  ScopedArena child_arena;
   pbrt_proto::v3::PbrtProto* child = arena.Allocate();
 
+  pbrt_proto::v3::PbrtProto parent;
   size_t current_size = 0;
   size_t child_index = 1;
   for (const auto& directive : to_v3->directives()) {
-    if (current_size + directive.ByteSizeLong() > kMaxProtoSize) {
-      parent->add_directives()->mutable_include()->set_path(
+    if (current_size + directive.ByteSizeLong() > kMaxProtoSize &&
+        current_size != 0) {
+      parent.add_directives()->mutable_include()->set_path(
           MakePath(partial_file_name, child_index));
       Serialize(file, child_index++, *child);
 
-      child->clear_directives();
+      child_arena.FreeAll();
+      child = arena.Allocate();
       current_size = 0;
     }
 
@@ -178,11 +182,11 @@ void ConvertFile(const std::filesystem::path& search_root,
     *child->add_directives() = directive;
   }
 
-  parent->add_directives()->mutable_include()->set_path(
+  parent.add_directives()->mutable_include()->set_path(
       MakePath(partial_file_name, child_index));
   Serialize(file, child_index, *child);
 
-  Serialize(file, 0, *parent);
+  Serialize(file, 0, parent);
 }
 
 int main(int argc, char** argv) {
