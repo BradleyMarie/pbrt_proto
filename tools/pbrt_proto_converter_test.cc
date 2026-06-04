@@ -37,7 +37,7 @@ std::pair<int, std::string> Convert(int version,
   std::filesystem::path binary_name = kBinaryName;
 
 #ifdef _WIN32
-  binary_name /= ".exe";
+  binary_name.replace_extension(".exe");
 #endif
 
   std::string binary = GetRunfilePath(binary_name);
