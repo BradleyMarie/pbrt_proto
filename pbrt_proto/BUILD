@@ -32,5 +32,6 @@ cc_test(
         "@abseil-cpp//absl/strings",
         "@googletest//:gtest",
         "@googletest//:gtest_main",
+        "@protobuf",
     ],
 )
