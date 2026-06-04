@@ -50,10 +50,8 @@ class ScopedArena {
   void FreeAll() { arena_.Reset(); }
 
  private:
-  static google::protobuf::Arena arena_;
+  google::protobuf::Arena arena_;
 };
-
-google::protobuf::Arena ScopedArena::arena_;
 
 std::string FileExtension() {
   if (absl::GetFlag(FLAGS_textproto)) {
@@ -137,8 +135,8 @@ void ConvertFile(const std::filesystem::path& search_root,
     exit(EXIT_FAILURE);
   }
 
-  ScopedArena arena;
-  pbrt_proto::v3::PbrtProto* to_v3 = arena.Allocate();
+  ScopedArena parent_arena;
+  pbrt_proto::v3::PbrtProto* to_v3 = parent_arena.Allocate();
   if (absl::Status error = pbrt_proto::v3::Convert(input, *to_v3);
       !error.ok()) {
     std::cerr << "ERROR: " << error.message() << std::endl;
@@ -172,7 +170,7 @@ void ConvertFile(const std::filesystem::path& search_root,
   }
 
   ScopedArena child_arena;
-  pbrt_proto::v3::PbrtProto* child = arena.Allocate();
+  pbrt_proto::v3::PbrtProto* child = child_arena.Allocate();
 
   pbrt_proto::v3::PbrtProto parent;
   size_t current_size = 0;
@@ -185,7 +183,7 @@ void ConvertFile(const std::filesystem::path& search_root,
       Serialize(file, child_index++, *child);
 
       child_arena.FreeAll();
-      child = arena.Allocate();
+      child = child_arena.Allocate();
       current_size = 0;
     }
 
