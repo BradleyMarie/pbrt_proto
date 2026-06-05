@@ -46,13 +46,15 @@ std::pair<int, std::string> Convert(int version,
   std::string output_file = input_file + ".out";
 
 #ifdef _WIN32
-  std::string command =
-      "\"\"" + binary + "\" --pbrt_version=" + std::to_string(version) +
-      " --recursive \"" + input_file + "\" 2> \"" + output_file + "\"\"";
+  std::string command = "\"\"" + binary +
+                        "\" --pbrt_version=" + std::to_string(version) +
+                        " --validate_only --recursive \"" + input_file +
+                        "\" 2> \"" + output_file + "\"\"";
 #else
-  std::string command =
-      "\"" + binary + "\" --pbrt_version=" + std::to_string(version) +
-      " --recursive \"" + input_file + "\" 2> \"" + output_file + "\"";
+  std::string command = "\"" + binary +
+                        "\" --pbrt_version=" + std::to_string(version) +
+                        " --validate_only --recursive\"" + input_file +
+                        "\" 2> \"" + output_file + "\"";
 #endif
 
   int result = std::system(command.c_str());
