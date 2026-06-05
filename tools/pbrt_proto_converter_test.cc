@@ -53,7 +53,7 @@ std::pair<int, std::string> Convert(int version,
 #else
   std::string command = "\"" + binary +
                         "\" --pbrt_version=" + std::to_string(version) +
-                        " --validate_only --recursive\"" + input_file +
+                        " --validate_only --recursive \"" + input_file +
                         "\" 2> \"" + output_file + "\"";
 #endif
 

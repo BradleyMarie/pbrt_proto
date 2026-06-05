@@ -5,7 +5,9 @@
 #include <fstream>
 #include <iostream>
 #include <limits>
+#include <memory>
 #include <optional>
+#include <streambuf>
 #include <vector>
 
 #include "absl/container/flat_hash_set.h"
@@ -53,12 +55,28 @@ class ScopedArena {
   google::protobuf::Arena arena_;
 };
 
+class NullOstream : public std::ostream, std::streambuf {
+ public:
+  NullOstream() : std::ostream(this) {}
+  int overflow(int c) { return c; }
+};
+
 std::string FileExtension() {
   if (absl::GetFlag(FLAGS_textproto)) {
     return ".v3.txtpb";
   } else {
     return ".v3.binpb";
   }
+}
+
+std::unique_ptr<std::ostream> MakeOstream(
+    const std::filesystem::path& output_path) {
+  if (absl::GetFlag(FLAGS_validate_only)) {
+    return std::make_unique<NullOstream>();
+  }
+
+  return std::make_unique<std::ofstream>(output_path,
+                                         std::ios::binary | std::ios::out);
 }
 
 std::string MakePath(std::filesystem::path partial_file_name,
@@ -79,8 +97,8 @@ void Serialize(std::filesystem::path output_path, size_t file_index,
 
   output_path.replace_extension(prefix + ".pbrt" + FileExtension());
 
-  std::ofstream output(output_path, std::ios::binary | std::ios::out);
-  if (!output) {
+  std::unique_ptr<std::ostream> output = MakeOstream(output_path);
+  if (!*output) {
     std::cerr << "ERROR: Could not open output file " << output_path
               << std::endl;
     exit(EXIT_FAILURE);
@@ -91,35 +109,15 @@ void Serialize(std::filesystem::path output_path, size_t file_index,
   }
 
   if (absl::GetFlag(FLAGS_textproto)) {
-    google::protobuf::io::OstreamOutputStream zero_copy_output(&output);
+    google::protobuf::io::OstreamOutputStream zero_copy_output(output.get());
     if (!google::protobuf::TextFormat::Print(proto, &zero_copy_output)) {
-      if (output.fail()) {
-        std::cerr << "ERROR: Serialization to output failed with error "
-                  << std::strerror(errno) << std::endl;
-      } else {
-        std::cerr << "ERROR: Could not serialize proto to output" << std::endl;
-      }
+      std::cerr << "ERROR: Could not serialize proto to output" << std::endl;
       exit(EXIT_FAILURE);
     }
   } else {
-    if (!proto.SerializeToOstream(&output)) {
-      if (output.fail()) {
-        std::cerr << "ERROR: Serialization to output failed with error "
-                  << std::strerror(errno) << std::endl;
-      } else {
-        std::cerr << "ERROR: Could not serialize proto to output" << std::endl;
-      }
+    if (!proto.SerializeToOstream(output.get())) {
+      std::cerr << "ERROR: Could not serialize proto to output" << std::endl;
       exit(EXIT_FAILURE);
-    }
-  }
-
-  output.close();
-
-  if (absl::GetFlag(FLAGS_validate_only)) {
-    std::string as_string = output_path.string();
-    if (std::remove(as_string.c_str()) != 0) {
-      std::cerr << "WARNING: Failed to clean up conversion result "
-                << output_path << std::endl;
     }
   }
 }
