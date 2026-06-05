@@ -73,10 +73,21 @@ following roughly ordered set of principles was used to guide the process.
 
 ## Defaults
 
-Do not rely on the default values defined in pbrt.proto or the default instance
-of any directive to correctly represent the default state of that directive
-since the default value for any directive can vary by PBRT version. They may be
-correct; however, they should be considered informational at best and may be
-removed in future pbrt_proto versions. The only supported way to get a directive
-in its default state is to use the `defaults.txtpb` and `defaults.binpb` files
-included with each supported PBRT version.
+Do not rely on the default values defined in `pbrt.proto` or the default
+instance of any directive to correctly represent the default state of that
+directive since the default value for any directive can vary by PBRT version.
+They may be correct; however, they should be considered informational at best
+and may be removed in future pbrt_proto versions. The only supported way to get
+a directive in its default state is to use the `defaults.txtpb` and
+`defaults.binpb` files included with each supported PBRT version.
+
+One notable pseudo-exception involves any directive containing a
+`MeasuredScatteringPreset` field. For these directives, the default state
+depends on the specific value chosen in that field. Accordingly, the
+`defaults.txtpb` and `defaults.binpb` files provide multiple default
+configurations for each directive, organized as a map keyed by the
+`MeasuredScatteringPreset` values. Because these fields are guaranteed to always
+initialize to `DEFAULT`, a user-provided directive containing a
+`MeasuredScatteringPreset` can be used directly to look up its corresponding
+default value in the defaults map using the value of the
+`MeasuredScatteringPreset` as the key.
