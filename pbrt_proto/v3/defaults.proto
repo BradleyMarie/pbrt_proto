@@ -39,9 +39,16 @@ message Defaults {
   required DefaultAreaLightSources area_light_sources = 3;
 
   message DefaultCameras {
+    // The default "environment" Camera
     required SphericalCamera environment = 1;
+
+    // The default "orthographic" Camera
     required OrthographicCamera orthographic = 2;
+
+    // The default "perspective" Camera
     required PerspectiveCamera perspective = 3;
+
+    // The default "realistic" Camera
     required RealisticCamera realistic = 4;
   }
 
@@ -67,35 +74,32 @@ message Defaults {
     // The default 3D "checkerboard" FloatTexture
     required Checkerboard2DFloatTexture checkerboard3d = 3;
 
-    // The default "constant" FloatTexture is fully captured in its definition
-    reserved 4;
+    // The default "constant" FloatTexture
+    required ConstantFloatTexture constant = 4;
 
     // The default "dots" FloatTexture
     required DotsFloatTexture dots = 5;
 
-    // The default "fbm" FloatTexture is fully captured in its definition
-    reserved 6;
+    // The default "fbm" FloatTexture
+    required FBmFloatTexture fbm = 6;
 
     // The default "imagemap" FloatTexture
     required ImageMapFloatTexture imagemap = 7;
 
-    // The default "marble" FloatTexture is fully captured in its definition
-    reserved 8;
-
     // The default "mix" FloatTexture
-    required MixFloatTexture mix = 9;
+    required MixFloatTexture mix = 8;
 
-    // The default "ptex" FloatTexture is fully captured in its definition
-    reserved 10;
+    // The default "ptex" FloatTexture
+    required PtexFloatTexture ptex = 9;
 
     // The default "scale" FloatTexture
-    required ScaleFloatTexture scale = 11;
+    required ScaleFloatTexture scale = 10;
 
-    // The default "windy" FloatTexture is fully captured in its definition
-    reserved 12;
+    // The default "windy" FloatTexture
+    required WindyFloatTexture windy = 11;
 
-    // The default "wrinkled" FloatTexture is fully captured in its definition
-    reserved 13;
+    // The default "wrinkled" FloatTexture
+    required WrinkledFloatTexture wrinkled = 12;
   }
 
   // The default values for every type of FloatTexture
@@ -103,30 +107,29 @@ message Defaults {
 
   // A container for the default values for every type of Integrator
   message DefaultIntegrators {
-    // The default "ao" Integrator
+    // The default "ambientocclusion" Integrator
     required AmbientOcclusionIntegrator ambientocclusion = 1;
 
-    // The default "bdpt" Integrator is fully captured in its definition
-    reserved 2;
+    // The default "bdpt" Integrator
+    required BdptIntegrator bdpt = 2;
 
-    // The default "directlighting" Integrator is fully captured in its
-    // definition
-    reserved 3;
+    // The default "directlighting" Integrator
+    required DirectLightingIntegrator directlighting = 3;
 
-    // The default "mlt" Integrator is fully captured in its definition
-    reserved 4;
+    // The default "mlt" Integrator
+    required MltIntegrator mlt = 4;
 
-    // The default "path" Integrator is fully captured in its definition
-    reserved 5;
+    // The default "path" Integrator
+    required PathIntegrator path = 5;
 
-    // The default "sppm" Integrator is fully captured in its definition
-    reserved 6;
+    // The default "sppm" Integrator
+    required SppmIntegrator sppm = 6;
 
-    // The default "volpath" Integrator is fully captured in its definition
-    reserved 7;
+    // The default "volpath" Integrator
+    required VolPathIntegrator volpath = 7;
 
-    // The default "whitted" Integrator is fully captured in its definition
-    reserved 8;
+    // The default "whitted" Integrator
+    required WhittedIntegrator whitted = 8;
   }
 
   // The default values for every type of Integrator
@@ -161,8 +164,8 @@ message Defaults {
     // The default "disney" Material
     required DisneyMaterial disney = 1;
 
-    // The default "fourier" Material is fully captured in its definition
-    reserved 2;
+    // The default "fourier" Material
+    required MeasuredFourierMaterial fourier = 2;
 
     // The default "glass" Material
     required GlassMaterial glass = 3;
@@ -190,9 +193,9 @@ message Defaults {
 
     // The default "substrate" Material
     required SubstrateMaterial substrate = 11;
-  
+
     // The default "subsurface" Material for every MeasuredSubsurfacePreset
-    // 
+    //
     // NOTE: Protocol Buffers do not allow enums to be used directly as map
     //       keys, so int32 is used here as the key type instead. Every value in
     //       MeasuredSubsurfacePreset is guaranteed to be present in this map.
@@ -211,14 +214,14 @@ message Defaults {
   // A container for the default values for every type of Medium
   message DefaultMedia {
     // The default "homogeneous" Medium for every MeasuredSubsurfacePreset
-    // 
+    //
     // NOTE: Protocol Buffers do not allow enums to be used directly as map
     //       keys, so int32 is used here as the key type instead. Every value in
     //       MeasuredSubsurfacePreset is guaranteed to be present in this map.
     map<int32, HomogeneousMedium> homogeneous = 1;
- 
+
     // The default "heterogeneous" Medium for every MeasuredSubsurfacePreset
-    // 
+    //
     // NOTE: Protocol Buffers do not allow enums to be used directly as map
     //       keys, so int32 is used here as the key type instead. Every value in
     //       MeasuredSubsurfacePreset is guaranteed to be present in this map.
@@ -230,20 +233,20 @@ message Defaults {
 
   // A container for the default values for every type of PixelFilter
   message DefaultPixelFilter {
-    // The default "box" PixelFilter is fully captured in its definition
-    reserved 1;
+    // The default "box" PixelFilter
+    required BoxPixelFilter box = 1;
 
     // The default "gaussian" PixelFilter
     required GaussianPixelFilter gaussian = 2;
 
-    // The default "mitchell" PixelFilter is fully captured in its definition
-    reserved 3;
+    // The default "mitchell" PixelFilter
+    required MitchellPixelFilter mitchell = 3;
 
-    // The default "sinc" PixelFilter is fully captured in its definition
-    reserved 4;
+    // The default "sinc" PixelFilter
+    required LanczosPixelFilter sinc = 4;
 
-    // The default "triangle" PixelFilter is fully captured in its definition
-    reserved 5;
+    // The default "triangle" PixelFilter
+    required TrianglePixelFilter triangle = 5;
   }
 
   // The default values for every type of PixelFilter
@@ -251,19 +254,19 @@ message Defaults {
 
   // A container for the default values for every type of Sampler
   message DefaultSamplers {
-    // The default "halton" Shape is fully captured in its definition
+    // The default "halton" Shape
     required HaltonSampler halton = 1;
 
-    // The default "maxmindist" Shape is fully captured in its definition
-    reserved 2;
+    // The default "maxmindist" Shape
+    required MaxMinDistSampler maxmindist = 2;
 
-    // The default "random" Shape is fully captured in its definition
-    reserved 3;
+    // The default "random" Shape
+    required IndependentSampler random = 3;
 
-    // The default "sobol" Shape is fully captured in its definition
-    reserved 4;
+    // The default "sobol" Shape
+    required SobolSampler sobol = 4;
 
-    // The default "stratified" Shape is fully captured in its definition
+    // The default "stratified" Shape
     required StratifiedSampler stratified = 5;
 
     // The default "zerotwosequence" Shape
@@ -275,38 +278,38 @@ message Defaults {
 
   // A container for the default values for every type of Shape
   message DefaultShapes {
-    // The default "cone" Shape is fully captured in its definition
-    reserved 1;
+    // The default "cone" Shape
+    required ConeShape cone = 1;
 
-    // The default "curve" Shape is fully captured in its definition
-    reserved 2;
+    // The default "curve" Shape
+    required CurveShape curve = 2;
 
-    // The default "cylinder" Shape is fully captured in its definition
-    reserved 3;
+    // The default "cylinder" Shape
+    required CylinderShape cylinder = 3;
 
-    // The default "disk" Shape is fully captured in its definition
-    reserved 4;
+    // The default "disk" Shape
+    required DiskShape disk = 4;
 
-    // The default "heightfield" Shape is fully captured in its definition
-    reserved 5;
+    // The default "heightfield" Shape
+    required HeightFieldShape heightfield = 5;
 
     // The default "heightfield" Shape
     required HyperboloidShape hyperboloid = 6;
 
-    // The default "loopsubdiv" Shape is fully captured in its definition
-    reserved 7;
+    // The default "loopsubdiv" Shape
+    required LoopSubdivShape loopsubdiv = 7;
 
-    // The default "nurbs" Shape is fully captured in its definition
-    reserved 8;
+    // The default "nurbs" Shape
+    required NurbsShape nurbs = 8;
 
-    // The default "paraboloid" Shape is fully captured in its definition
-    reserved 9;
+    // The default "paraboloid" Shape
+    required ParaboloidShape paraboloid = 9;
 
     // The default "plymesh" Shape
     required PlyMeshShape plymesh = 10;
 
-    // The default "sphere" Shape is fully captured in its definition
-    reserved 11;
+    // The default "sphere" Shape
+    required SphereShape sphere = 11;
 
     // The default "trianglemesh" Shape
     required TriangleMeshShape trianglemesh = 12;
@@ -332,33 +335,32 @@ message Defaults {
     // The default "dots" SpectrumTexture
     required DotsSpectrumTexture dots = 5;
 
-    // The default "fbm" SpectrumTexture is fully captured in its definition
-    reserved 6;
+    // The default "fbm" SpectrumTexture
+    required FBmSpectrumTexture fbm = 6;
 
     // The default "imagemap" SpectrumTexture
     required ImageMapSpectrumTexture imagemap = 7;
 
-    // The default "marble" SpectrumTexture is fully captured in its definition
-    reserved 8;
+    // The default "marble" SpectrumTexture
+    required MarbleSpectrumTexture marble = 8;
 
     // The default "mix" SpectrumTexture
     required MixSpectrumTexture mix = 9;
 
-    // The default "ptex" SpectrumTexture is fully captured in its definition
-    reserved 10;
+    // The default "ptex" SpectrumTexture
+    required PtexSpectrumTexture ptex = 10;
 
     // The default "scale" SpectrumTexture
     required ScaleSpectrumTexture scale = 11;
 
-    // The default "uv" SpectrumTexture is fully captured in its definition
+    // The default "uv" SpectrumTexture
     required UvSpectrumTexture uv = 12;
 
-    // The default "windy" SpectrumTexture is fully captured in its definition
-    reserved 13;
+    // The default "windy" SpectrumTexture
+    required WindySpectrumTexture windy = 13;
 
-    // The default "wrinkled" SpectrumTexture is fully captured in its
-    // definition
-    reserved 14;
+    // The default "wrinkled" SpectrumTexture
+    required WrinkledSpectrumTexture wrinkled = 14;
   }
 
   // The default values for every type of SpectrumTexture

@@ -89,11 +89,6 @@ films {
     yresolution: 720
   }
 }
-integrators {
-  ambientocclusion {
-    nsamples: 64
-  }
-}
 float_textures {
   bilerp {
     v00 {
@@ -145,6 +140,7 @@ float_textures {
       float_value: 0.0
     }
   }
+  constant { }
   dots {
     inside {
       float_value: 1.0
@@ -163,6 +159,7 @@ float_textures {
       z: 0.0
     }
   }
+  fbm { }
   imagemap {
     v1 {
       x: 1.0
@@ -186,6 +183,7 @@ float_textures {
       float_value: 0.5
     }
   }
+  ptex { }
   scale {
     tex1 {
       float_value: 1.0
@@ -194,6 +192,20 @@ float_textures {
       float_value: 1.0
     }
   }
+  windy { }
+  wrinkled { }
+}
+integrators {
+  ambientocclusion {
+    nsamples: 64
+  }
+  bdpt { }
+  directlighting { }
+  mlt { }
+  path { }
+  sppm { }
+  volpath { }
+  whitted { }
 }
 materials {
   disney {
@@ -237,6 +249,7 @@ materials {
       float_value: 0.0
     }
   }
+  fourier { }
   glass {
     Kr {
       constant_spectrum: 1.0
@@ -4914,15 +4927,22 @@ media {
   }
 }
 pixel_filter {
+  box { }
   gaussian {
     xradius: 2.0
     yradius: 2.0
   }
+  mitchell { }
+  sinc { }
+  triangle { }
 }
 samplers {
   halton {
     pixelsamples: 16
   }
+  maxmindist { }
+  random { }
+  sobol { }
   stratified {
     xsamples: 4
     ysamples: 4
@@ -4932,6 +4952,11 @@ samplers {
   }
 }
 shapes {
+  cone { }
+  curve { }
+  cylinder { }
+  disk { }
+  heightfield { }
   hyperboloid {
     p1 {
       x: 0.0
@@ -4944,6 +4969,9 @@ shapes {
       z: 1.0
     }
   }
+  loopsubdiv { }
+  nurbs { }
+  paraboloid { }
   plymesh {
     alpha {
       float_value: 1.0
@@ -4952,6 +4980,7 @@ shapes {
       float_value: 1.0
     }
   }
+  sphere { }
   trianglemesh {
     alpha {
       float_value: 1.0
@@ -5035,6 +5064,7 @@ spectrum_textures {
       z: 0.0
     }
   }
+  fbm { }
   imagemap {
     v1 {
       x: 1.0
@@ -5047,6 +5077,7 @@ spectrum_textures {
       z: 0.0
     }
   }
+  marble { }
   mix {
     tex1 {
       constant_spectrum: 0.0
@@ -5058,6 +5089,7 @@ spectrum_textures {
       float_value: 0.5
     }
   }
+  ptex { }
   scale {
     tex1 {
       constant_spectrum: 1.0
@@ -5078,4 +5110,6 @@ spectrum_textures {
       z: 0.0
     }
   }
+  windy { }
+  wrinkled { }
 }

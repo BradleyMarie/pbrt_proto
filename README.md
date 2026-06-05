@@ -70,3 +70,13 @@ following roughly ordered set of principles was used to guide the process.
    otherwise the conversion must succeed.
 3) The conversion only is required to support the range of inputs supported by
    PBRT even if the Protocol Buffers use types with larger ranges.
+
+## Defaults
+
+Do not rely on the default values defined in pbrt.proto or the default instance
+of any directive to correctly represent the default state of that directive
+since the default value for any directive can vary by PBRT version. They may be
+correct; however, they should be considered informational at best and may be
+removed in future pbrt_proto versions. The only way supported way to get a
+directive in its default state is to use the defaults proto data files included
+with each supported PBRT version.
