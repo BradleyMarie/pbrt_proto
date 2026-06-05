@@ -29,8 +29,8 @@ the serialized data as well as their CPU and memory cost at runtime).
 # Current Status
 
 PBRT Proto has full support for the PBRT v3 inputs. Some work has been done to
-support v1, v2, and v4; however, however, there is no immediate plan to complete
-their implementations.
+support v1, v2, and v4; however, there is no immediate plan to complete their
+implementation.
 
 Additionally, while PBRT Proto fully supports PBRT v3 inputs, their actual
 Protocol Buffer projection is still a work in progress and is not stable.
@@ -50,7 +50,7 @@ following roughly ordered set of principles was used to guide the process.
 
 ## Protobuf Projection
 
-1) If the input model is syntactically valid, the convered model should
+1) If the input model is syntactically valid, the converted model should be
    represented perfectly; however, the exact data types used to describe the
    scene may differ from the types used in PBRT as long as there is no loss of
    data on the valid range of inputs.
@@ -77,6 +77,6 @@ Do not rely on the default values defined in pbrt.proto or the default instance
 of any directive to correctly represent the default state of that directive
 since the default value for any directive can vary by PBRT version. They may be
 correct; however, they should be considered informational at best and may be
-removed in future pbrt_proto versions. The only way supported way to get a
-directive in its default state is to use the defaults proto data files included
-with each supported PBRT version.
+removed in future pbrt_proto versions. The only supported way to get a directive
+in its default state is to use the `defaults.txtpb` and `defaults.binpb` files
+included with each supported PBRT version.
