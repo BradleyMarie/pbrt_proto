@@ -13,6 +13,14 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    - name: Free up disk space
+      run: |
+        sudo rm -rf /usr/share/dotnet
+        sudo rm -rf /usr/local/lib/android
+        sudo rm -rf /opt/ghc
+        sudo rm -rf /opt/hostedtoolcache/CodeQL
+        sudo docker image prune --all --force
+
     - name: Build pbrt_proto_converter
       run: bazel build -c opt //tools:pbrt_proto_converter
 
