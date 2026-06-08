@@ -1,0 +1,26 @@
+#Format 200 200 -1
+#Format 20 20 -1
+SurfaceIntegrator "photonmap" "integer nused" [50] "bool finalgather" ["false"]
+	"float maxdist" [ .2] "integer indirectphotons" [0]
+	"bool directwithphotons" ["true"] "integer causticphotons" [25000]
+	"integer directphotons" [50000]
+
+Translate -2 0 15
+Rotate 30 1 0 0
+Camera "perspective" "float fov" [55 ]
+
+
+WorldBegin
+AttributeBegin
+    Translate 0 1 -6
+    LightSource "projection" "float fov" [35 ] "color I" [100 100 100]
+	"string mapname" ["textures/galileo_latlong.exr"]
+AttributeEnd
+AttributeBegin
+    Material "matte" 
+    Translate 0 0 -3
+    Shape "trianglemesh"  "integer indices" [0 2 1 0 3 2 ] "point P" [-100 -100 10 100 -100 10 100 100 10 -100 100 10 ] 
+AttributeEnd
+Material "glass" "float index" [1.5 ] "color Kr" [0 0 0 ] 
+Shape "sphere" "float radius" 1.5  
+WorldEnd

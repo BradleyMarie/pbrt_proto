@@ -1,0 +1,78 @@
+Transform [ 1.000000 0.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 0.000000 1.000000 ]
+Translate 0.000000 445.540985 0.000000
+Rotate 0.000000 0.000000 1.000000 0.000000
+Rotate 15.000000 1.000000 0.000000 0.000000
+Rotate 590.000000 0.000000 0.000000 1.000000
+Translate 27.541000 10.012500 64.076401
+Identity
+
+LookAt 300 350 -20   0 33 -75   0 0 1
+Camera "perspective" "float fov" [35]
+Film "image"  
+# zoom in by feet
+ "integer xresolution" [500] "integer yresolution" [500]
+	"float cropwindow" [ .34 .49  .66 .81 ]
+
+Sampler "lowdiscrepancy" "integer pixelsamples" [4] # [64]
+#Sampler "random" "integer xsamples" [8] "integer ysamples" [8]
+#	"bool samepts" ["true"]
+
+PixelFilter "box" "float xwidth" [.5 ] "float ywidth" [.5 ] 
+
+SurfaceIntegrator "directlighting"
+SurfaceIntegrator "path" "integer maxdepth" [1]
+
+WorldBegin
+AttributeBegin
+#Scale 1 -1 1
+#LightSource "infinite" "integer nsamples" [ 8 ] # [64]
+#	"string mapname" "../textures/skylight-morn.exr"
+Material "matte" "color Kd" [0 0 0]
+AreaLightSource "area"  "color L" [1000 1000 1000] "integer nsamples" [8] #10 10 10
+Translate 0 0 800
+ReverseOrientation
+#Shape "disk" "float radius" [3] # was 300
+AttributeEnd
+
+AttributeBegin
+CoordSysTransform "camera"
+LightSource "distant" "color L" [3 3 3]
+AttributeEnd
+
+AttributeBegin
+  Material "matte" "color Kd" [.5 .5 .5]
+  Translate 0 0 -140
+Texture "grid" "color" "imagemap" "string filename" ["textures/lines.exr"]
+Texture "sgrid" "color" "scale" "texture tex1" "grid" "color tex2" [ .5 .5 .5 ]
+Material "plastic" "color Kd" [.2 .2 .2 ] "color Ks" [2 2 2] "float roughness" .01
+Shape "trianglemesh" "point P" [ -400 -400 0 400 -400 0 400 400 0 -400 400 0 ]
+      "float uv" [ 0 0 5 0 5 5 0 5 ]
+	"integer indices" [ 0 1 2 2 3 0]
+#Shape "trianglemesh" "point P" [ -400 -400 0 400 -400 0 
+#	400 -400  1000 -400 -400 1000 ]
+#      "float uv" [ 0 0 5 0 5 5 0 5 ]
+#	"integer indices" [ 0 1 2 2 3 0]
+#Shape "trianglemesh" "point P" [ -400 -400 0 -400 400 0  -400 400 1000 -400 -400 1000 ]
+#      "float uv" [ 0 0 5 0 5 5 0 5 ]
+#	"integer indices" [ 0 1 2 2 3 0]
+#Shape "trianglemesh" "point P" [ -400 400 0 400 400 0 
+#	400 400  1000 -400 400 1000 ]
+#      "float uv" [ 0 0 5 0 5 5 0 5 ]
+#	"integer indices" [ 0 1 2 2 3 0]
+#Shape "trianglemesh" "point P" [ 400 -400 0 400 400 0  400 400 1000 400 -400 1000 ]
+#      "float uv" [ 0 0 5 0 5 5 0 5 ]
+#	"integer indices" [ 0 1 2 2 3 0]
+
+AttributeEnd
+AttributeBegin
+    Material "plastic" "color Kd" [.5 .5 .5] "color Ks" [1 1 1.5]
+	"float roughness" [.02] 
+#	Material "plastic" "color Kd" [0 0 0] "color Ks" [.3 .3 .3]
+#	"float roughness" [.08]
+#Material "matte" "color Kd" [.5 .5 .7] "float sigma" [20]
+#Material "clay"
+#Material "glass" "float index" [1.2] "color Kr" [0 0 0]
+#Material "mirror"
+    Include "geometry/killeroo.pbrt"
+AttributeEnd
+WorldEnd

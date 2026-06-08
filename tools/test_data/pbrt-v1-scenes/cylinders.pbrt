@@ -1,0 +1,67 @@
+
+Film "image"
+	"integer xresolution" [200] "integer yresolution" [100]
+	"integer xresolution" [400] "integer yresolution" [200]
+#	"integer xresolution" [1500] "integer yresolution" [750]
+#Sampler "bestcandidate" "integer pixelsamples" [64]
+
+LookAt 0 3 8  0 .8 0   0 1 0
+Camera "perspective" "float fov" [21]
+
+SurfaceIntegrator "directlighting"
+
+WorldBegin
+
+AttributeBegin
+  CoordSysTransform "camera"
+  AreaLightSource "area" "color L" [8 8 8  ] "integer nsamples" [16]
+  Translate 0 2 -10
+  Material "matte" "color Kd" [ 0 0 0 ]
+  Shape "disk" "float radius" [3] 
+AttributeEnd
+
+AttributeBegin
+  AreaLightSource "area" "color L" [3.2 3.2 3.2] "integer nsamples" [16]
+  Translate 0 10 0
+  Rotate 90 1 0 0 
+  Material "matte" "color Kd" [ 0 0 0 ]
+  Shape "disk" "float radius" [20] 
+AttributeEnd
+
+AttributeBegin
+  Material "matte" "color Kd" [.8 .8 .8 ]
+  Shape "trianglemesh" "integer indices" [ 0 1 2 2 0 3 ]
+    "point P" [-10 0 -10   10 0 -10   10 0 10   -10 0 10 ]
+  Shape "trianglemesh" "integer indices" [ 0 1 2 2 0 3 ]
+    "point P" [-10 0 -10   10 0 -10   10 9 -10   -10 9 -10 ]
+  Shape "trianglemesh" "integer indices" [ 0 1 2 2 0 3 ]
+    "point P" [-10 0 -10   -10 0 10   -10 9 10   -10 9 -10 ]
+AttributeEnd
+
+Texture "g" "color" "imagemap" "string filename" "textures/grid.exr"
+Texture "grid" "color" "scale" "texture tex1" "g" "color tex2" [.75 .75 .75]
+
+Material "uber" "texture Kd" "grid" "color Ks" [.1 .1 .1]
+	"color opacity" [.8 .8 .8]
+
+AttributeBegin
+Translate -1.5 1 0
+#Rotate 10 0 0 1
+Rotate 80 0 1 0
+Rotate 90 1 0 0
+#Rotate -20 1 1 1
+Shape "cylinder"
+AttributeEnd
+
+Material "uber" "texture Kd" "grid" "color Ks" [.1 .1 .1]
+	"color opacity" [.4 .4 .4]
+
+AttributeBegin
+Translate 1.5 1.015 0
+Rotate -50 0 1 0
+#Rotate 45 1 1 1
+Rotate 180 1 0 0 
+Shape "cylinder" "float phimax" [225] "float zmin" [-.5]
+AttributeEnd
+
+WorldEnd

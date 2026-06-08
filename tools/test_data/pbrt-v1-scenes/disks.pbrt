@@ -1,0 +1,65 @@
+
+Film "image"
+	"integer xresolution" [100] "integer yresolution" [100]
+	"integer xresolution" [400] "integer yresolution" [200]
+#	"integer xresolution" [1500] "integer yresolution" [750]
+Sampler "bestcandidate" "integer pixelsamples" [2]
+
+LookAt 0 3 8  0 .8 0   0 1 0
+Camera "perspective" "float fov" [21]
+
+SurfaceIntegrator "photonmap" "integer indirectphotons" [0]
+	"integer causticphotons" [0] "integer directphotons" [500000]
+	"integer finalgather" [0] "float maxdist" [1]
+	"integer directwithphotons" [1] "integer nused" [200]
+SurfaceIntegrator "directlighting"
+
+WorldBegin
+
+AttributeBegin
+  CoordSysTransform "camera"
+  AreaLightSource "area" "color L" [8 8 8  ] "integer nsamples" [32]
+  Translate 0 2 -10
+  Material "matte" "color Kd" [ 0 0 0 ]
+  Shape "disk" "float radius" [3] 
+AttributeEnd
+
+AttributeBegin
+  AreaLightSource "area" "color L" [3.2 3.2 3.2] "integer nsamples" [32]
+  Translate 0 10 0
+  Rotate 90 1 0 0 
+  Material "matte" "color Kd" [ 0 0 0 ]
+  Shape "disk" "float radius" [20] 
+AttributeEnd
+
+AttributeBegin
+  Material "matte" "color Kd" [.8 .8 .8 ]
+  Shape "trianglemesh" "integer indices" [ 0 1 2 2 0 3 ]
+    "point P" [-10 0 -10   10 0 -10   10 0 10   -10 0 10 ]
+  Shape "trianglemesh" "integer indices" [ 0 1 2 2 0 3 ]
+    "point P" [-10 0 -10   10 0 -10   10 9 -10   -10 9 -10 ]
+  Shape "trianglemesh" "integer indices" [ 0 1 2 2 0 3 ]
+    "point P" [-10 0 -10   -10 0 10   -10 9 10   -10 9 -10 ]
+AttributeEnd
+
+Texture "g" "color" "imagemap" "string filename" "textures/grid.exr"
+Texture "grid" "color" "scale" "texture tex1" "g" "color tex2" [.75 .75 .75]
+
+Material "uber" "texture Kd" "grid" "color Ks" [.1 .1 .1]
+	"color opacity" [.8 .8 .8]
+
+AttributeBegin
+Translate -1.5 .707 -.4
+Rotate 194 0 1 0
+Rotate 45 1 0 0
+Shape "disk"
+AttributeEnd
+
+AttributeBegin
+Translate 1.5 1.0 0
+Rotate -10 0 1 0
+Rotate 180 1 0 0 
+Shape "disk" "float phimax" [225] "float innerradius" [.4]
+AttributeEnd
+
+WorldEnd

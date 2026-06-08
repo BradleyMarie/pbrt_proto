@@ -1,0 +1,52 @@
+
+# good downstairs view fov=66 ish
+#LookAt 16 -1 2  -4 .2 1.5 0 0 1
+
+# good upstairs looking over edge view do fov=70
+#LookAt 12 -1 7   -4 .2 1.5 0 0 1
+
+# back a bit from edge, get some indir
+#LookAt 15 -1 7    -4 .2 3.5 0 0 1
+
+LookAt 15 -.25 7   11 -3 6.5  0 0 1
+
+Camera "perspective" "float fov" [46 ] "float focaldistance" [25] 
+#	"float lensradius" [ .05]
+Film "image"  "integer xresolution" [500 ] "integer yresolution" [500 ] 
+#	"integer xresolution" [2206] "integer yresolution" [ 1029] "float cropwindow" [.77 .86 .1 .4]
+
+Sampler "lowdiscrepancy" "integer pixelsamples" [4] #path 16 irrad 4]  # 1024 for final
+
+PixelFilter "box"
+
+SurfaceIntegrator "photonmap" "integer causticphotons" [0]
+	"integer indirectphotons" [200000]
+	"integer directphotons" [200000]
+	"integer finalgathersamples" [32]
+	    "bool finalgather" ["true"] "integer nused" [25]
+    "bool directwithphotons" ["false"] "float maxdist" [1.5]
+#SurfaceIntegrator "irradiancecache" "integer nsamples" [128] "float maxerror" [.2]
+#	"integer maxindirectdepth" [3] #"integer nfilter" [0]
+#SurfaceIntegrator "directlighting"
+#SurfaceIntegrator "path" "integer maxdepth" [3]
+
+VolumeIntegrator "single" "float stepsize" [3]
+
+WorldBegin
+
+#Volume "exponential" "float a" [10] "float b" [2] "vector updir" [0 0 1]
+#	"point p0" [-30 -30 0] "point p1" [30 30 10] 
+#	"color sigma_a" [.02 .02 .02 ]
+#	"color sigma_s" [.02 .02 .02 ]
+#	"color Le" [.01 .01 .01]
+
+AttributeBegin
+AreaLightSource "area" "color L" [10 9.5 9] "integer nsamples" [16]
+ReverseOrientation
+Material "matte" "color Kd" [0 0 0 ]
+Shape "disk" "float radius" [160] "float height" [100]
+AttributeEnd
+
+Include "geometry/sponzageom.pbrt"
+
+WorldEnd

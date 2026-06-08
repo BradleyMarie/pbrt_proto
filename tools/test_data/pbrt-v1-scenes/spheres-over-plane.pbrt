@@ -1,0 +1,170 @@
+
+#LookAt 4 .5 -15   0 0 0   0 1 0
+Rotate -15 1 0 0
+Rotate 16 0 1 0
+Translate -4 -.5 15
+Camera "perspective" "float fov" [50]
+
+Film "image" "integer xresolution" [638] "integer yresolution" [383]
+#Film "image" "integer xresolution" [3825] "integer yresolution" [2295]
+Sampler "bestcandidate" "integer pixelsamples" [2]
+SurfaceIntegrator "directlighting" "integer maxdepth" [10]
+
+WorldBegin
+AttributeBegin
+CoordSysTransform "camera"
+#LightSource "point"
+AttributeEnd
+
+AttributeBegin
+AreaLightSource "area" "color L" [3000000 3000000 3000000] "integer nsamples" [4]
+Translate 0 20 0
+Rotate 90 1 0 0
+Shape "disk" "float radius" [.02]
+AttributeEnd
+
+AttributeBegin
+Texture "grid" "color" "imagemap" "string filename" ["textures/lines.exr"]
+Texture "sgrid" "color" "scale" "texture tex1" "grid" "color tex2" [ .5 .5 .5 ]
+Material "matte" "texture Kd" "sgrid"
+Translate 0 0 -2
+Shape "trianglemesh" "point P" [ -40 -3 -40 40 -3 -40 40 -3 40 -40 -3 40 ]
+      "float uv" [ 0 0 2 0 2 2 0 2 ]
+	"integer indices" [ 0 1 2 2 3 0]
+AttributeEnd
+
+
+Material "glass"
+AttributeBegin
+Translate -2.070704 1.361941 -2.933278
+Shape "sphere" "float radius" 1.339750
+AttributeEnd
+AttributeBegin
+Translate -3.626145 1.545714 -9.688343
+Shape "sphere" "float radius" 1.752271
+AttributeEnd
+AttributeBegin
+Translate -6.812627 -0.465136 3.820087
+Shape "sphere" "float radius" 0.176577
+AttributeEnd
+AttributeBegin
+Translate 7.997086 -1.345816 -6.818570
+Shape "sphere" "float radius" 1.599194
+AttributeEnd
+AttributeBegin
+Translate 2.082884 0.330796 -4.600578
+Shape "sphere" "float radius" 1.171435
+AttributeEnd
+AttributeBegin
+Translate -4.131989 0.969510 -4.029488
+Shape "sphere" "float radius" 0.226614
+AttributeEnd
+AttributeBegin
+Translate -1.900347 1.429512 8.839367
+Shape "sphere" "float radius" 1.988492
+AttributeEnd
+AttributeBegin
+Translate 6.929515 -1.988980 -0.752415
+Shape "sphere" "float radius" 1.597788
+AttributeEnd
+AttributeBegin
+Translate 5.757533 -0.937551 9.655046
+Shape "sphere" "float radius" 0.920355
+AttributeEnd
+AttributeBegin
+Translate -3.906858 -1.392561 -3.246762
+Shape "sphere" "float radius" 1.162431
+AttributeEnd
+
+Material "mirror"
+AttributeBegin
+Translate 2.872197 1.014213 2.072322
+Shape "sphere" "float radius" 1.594885
+AttributeEnd
+AttributeBegin
+Translate -4.544581 -1.902803 1.839090
+Shape "sphere" "float radius" 0.614891
+AttributeEnd
+AttributeBegin
+Translate 7.829905 -0.007208 4.200511
+Shape "sphere" "float radius" 0.859242
+AttributeEnd
+AttributeBegin
+Translate 5.493508 -0.493795 -5.427217
+Shape "sphere" "float radius" 1.063602
+AttributeEnd
+AttributeBegin
+Translate -3.993635 0.679063 4.379332
+Shape "sphere" "float radius" 1.697864
+AttributeEnd
+AttributeBegin
+Translate -6.390645 1.773584 -1.502265
+Shape "sphere" "float radius" 1.561997
+AttributeEnd
+AttributeBegin
+Translate -8.687125 1.654033 7.651691
+Shape "sphere" "float radius" 2.284092
+AttributeEnd
+AttributeBegin
+Translate -7.494977 -0.061464 -5.550749
+Shape "sphere" "float radius" 2.619364
+AttributeEnd
+AttributeBegin
+Translate 0.576438 -1.994344 7.210276
+Shape "sphere" "float radius" 0.056092
+AttributeEnd
+AttributeBegin
+Translate 8.711202 1.237727 -0.157817
+Shape "sphere" "float radius" 0.660407
+AttributeEnd
+AttributeBegin
+Translate -6.520243 -1.992731 -9.104318
+Shape "sphere" "float radius" 0.723524
+AttributeEnd
+AttributeBegin
+Translate -1.690976 0.806499 -5.563086
+Shape "sphere" "float radius" 1.511731
+AttributeEnd
+AttributeBegin
+Translate -8.659396 -0.427746 -0.410469
+Shape "sphere" "float radius" 0.654427
+AttributeEnd
+AttributeBegin
+Translate 8.192966 -0.108621 7.433909
+Shape "sphere" "float radius" 2.086702
+AttributeEnd
+AttributeBegin
+Translate 3.238778 -1.810350 -2.539232
+Shape "sphere" "float radius" 1.854584
+AttributeEnd
+AttributeBegin
+Translate -7.027440 -0.490778 2.891828
+Shape "sphere" "float radius" 0.077063
+AttributeEnd
+AttributeBegin
+Translate 6.827610 -1.691925 4.852678
+Shape "sphere" "float radius" 0.767958
+AttributeEnd
+AttributeBegin
+Translate 8.036884 -0.489410 -3.609401
+Shape "sphere" "float radius" 0.634305
+AttributeEnd
+AttributeBegin
+Translate 2.970650 -0.994740 -5.427114
+Shape "sphere" "float radius" 0.752767
+AttributeEnd
+AttributeBegin
+Translate 6.662945 1.505230 2.993291
+Shape "sphere" "float radius" 0.219346
+AttributeEnd
+AttributeBegin
+Translate 6.640386 -0.509652 5.140965
+Shape "sphere" "float radius" 0.327645
+AttributeEnd
+AttributeBegin
+Translate 1.210759 0.428972 6.328792
+Shape "sphere" "float radius" 1.339605
+AttributeEnd
+
+
+WorldEnd

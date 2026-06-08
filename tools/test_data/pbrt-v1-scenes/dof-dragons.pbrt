@@ -1,0 +1,82 @@
+Film "image" 
+#	"integer xresolution" [1275] "integer yresolution" [541] 
+	"integer xresolution" [750] "integer yresolution" [318] 
+
+Sampler "lowdiscrepancy" "integer pixelsamples" [4] # for final: [512] #128 for all but blurriest 
+
+#LookAt 2.3 .1 -.7    .4 0 -.9  0 1 0
+Rotate -3 1 0 0
+Rotate 52 0 1 0
+Translate -2.3 -.05 .5
+Camera "perspective" "float fov" [30]
+	"float focaldistance" [.75] 
+	#"float lensradius" [.05] 
+	#"float lensradius" [.0075] 
+	"float lensradius" [.002] 
+
+WorldBegin
+
+AttributeBegin
+AreaLightSource "area" "color L" [6 6 6] "integer nsamples" [4] # 4 for 128 pixel samples
+Translate 0 10 0
+Rotate 90 1 0 0
+Shape "disk" "float radius" [8]
+AttributeEnd
+
+Texture "grid" "color" "imagemap" "string filename" ["textures/lines.exr"]
+Texture "sgrid" "color" "scale" "texture tex1" "grid" "color tex2" [ .5 .5 .5 ]
+Material "matte" "texture Kd" "sgrid"
+Shape "trianglemesh" "point P" [ -4 0 -4 4 0 -4 4 0 4 -4 0 4 ]
+      "float uv" [ 0 0 5 0 5 5 0 5 ]
+	"integer indices" [ 0 1 2 2 3 0]
+
+ObjectBegin "dragon-b"
+Material "bluepaint"
+Translate -.01 0 0
+Rotate -10 0 1 0
+Translate .01 0 0
+Include "geometry/dragon.pbrt"
+ObjectEnd
+
+ObjectBegin "dragon-a"
+Material "clay"
+Translate -.01 0 0
+Rotate -17 0 1 0
+Translate .01 0 0
+Include "geometry/dragon.pbrt"
+ObjectEnd
+
+Translate -.6 0 0 
+ObjectInstance "dragon-b"
+
+Translate .26 0 0 
+ObjectInstance "dragon-a"
+
+Translate .26 0 0 
+ObjectInstance "dragon-b"
+
+Translate .26 0 0 
+ObjectInstance "dragon-a"
+
+Translate .26 0 0 
+ObjectInstance "dragon-b"
+
+Translate .26 0 0 
+ObjectInstance "dragon-a"
+
+Translate .26 0 0 
+ObjectInstance "dragon-b"
+
+Translate .26 0 0 
+ObjectInstance "dragon-a"
+
+Translate .26 0 0 
+ObjectInstance "dragon-b"
+
+Translate .26 0 0 
+ObjectInstance "dragon-a"
+
+Translate .26 0 0 
+ObjectInstance "dragon-b"
+
+WorldEnd

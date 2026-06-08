@@ -1,0 +1,37 @@
+
+LookAt -15 5 6.5   4 2 5.5  0 0 1
+
+Camera "perspective" "float fov" [55 ] "float focaldistance" [10] 
+#	"float lensradius" [ .08]
+
+Film "image"  "integer xresolution" [750 ] "integer yresolution" [350 ] 
+#	"integer xresolution" [2206] "integer yresolution" [ 1029] "float cropwindow" [.77 .86 .1 .4]
+
+Sampler "lowdiscrepancy" "integer pixelsamples" [8]  # 1024 for final
+
+PixelFilter "box" "float xwidth" [.5] "float ywidth" [.5]
+
+SurfaceIntegrator "photonmap" "integer causticphotons" [0]
+	"integer indirectphotons" [200000]
+	"integer directphotons" [100000]
+	"integer nfilter" [0] "integer finalgathersamples" [64]
+	    "bool finalgather" ["true"] "integer nused" [100]
+    "bool directwithphotons" ["false"] "float maxdist" [.5]
+#SurfaceIntegrator "directlighting"
+SurfaceIntegrator "path" "integer maxdepth" [3]
+
+#VolumeIntegrator "single" "float stepsize" [1.5]
+
+WorldBegin
+
+Volume "homogeneous"
+	"point p0" [-30 2 0] "point p1" [30 30 10] 
+	"color sigma_a" [.02 .02 .02 ]
+	"color sigma_s" [.02 .02 .02 ]
+
+LightSource "spot" "color I" [100000 100000 100000  ] "point from" [0 -30 60]
+	"point to" [0 3 6] "float coneangle" [25]
+
+Include "geometry/sponzageom.pbrt"
+
+WorldEnd

@@ -1,0 +1,77 @@
+
+Camera "orthographic"  "float screenwindow" [ -.05 4.2  -.05  1.05 ]
+Film "image"  "integer xresolution" [1500] "integer yresolution" [388] 
+	"integer xresolution" [500] "integer yresolution" [129]
+
+Sampler "bestcandidate" "integer pixelsamples" [1] # [64]
+
+WorldBegin
+
+AttributeBegin
+AreaLightSource "area" "color L" [30 30 30] "integer nsamples" [64]
+Translate 0 0 -1
+Shape "disk" "float radius" [1]
+AttributeEnd
+
+AttributeBegin
+AreaLightSource "area" "color L" [10 10 10] "integer nsamples" [64]
+Translate 0 10 0
+Rotate 90 1 0 0
+Shape "disk" "float radius" [10]
+AttributeEnd
+
+Translate 0 0 3
+
+Material "uber" "color Kd" [.1 .1 .2 ] "color Ks" [4 4 4] "float roughness" [.0025]
+
+AttributeBegin
+  Rotate 45 1 1 1
+  Translate .5 .5 .5
+  Rotate 60 0 0 1
+  Rotate -20 1 0 0
+  Scale 2.5 2.5 2.5
+  Translate -.5 -.5 -.5
+  Shape "loopsubdiv"  "integer nlevels" [0 ] 
+    "integer indices" [0 1 2 1 0 3 2 1 3 0 2 3 ] "point P" [0 0 0   0 1 1   1 0 1   1 1 0 ]
+AttributeEnd
+
+AttributeBegin
+  Translate 1 0 0 
+  Rotate 45 1 1 1
+  Translate .5 .5 .5
+  Rotate 60 0 0 1
+  Rotate -20 1 0 0
+  Scale 2.5 2.5 2.5
+  Translate -.5 -.5 -.5
+  Shape "loopsubdiv"  "integer nlevels" [1 ] 
+    "integer indices" [0 1 2 1 0 3 2 1 3 0 2 3 ] "point P" [0 0 0   0 1 1   1 0 1   1 1 0 ]
+AttributeEnd
+
+
+AttributeBegin
+  Translate 2 0 0 
+  Rotate 45 1 1 1
+  Translate .5 .5 .5
+  Rotate 60 0 0 1
+  Rotate -20 1 0 0
+  Scale 2.5 2.5 2.5
+  Translate -.5 -.5 -.5
+  Shape "loopsubdiv"  "integer nlevels" [2 ] 
+    "integer indices" [0 1 2 1 0 3 2 1 3 0 2 3 ] "point P" [0 0 0   0 1 1   1 0 1   1 1 0 ]
+AttributeEnd
+
+
+AttributeBegin
+  Translate 3 0 0 
+  Rotate 45 1 1 1
+  Translate .5 .5 .5
+  Rotate 60 0 0 1
+  Rotate -20 1 0 0
+  Scale 2.5 2.5 2.5
+  Translate -.5 -.5 -.5
+  Shape "loopsubdiv"  "integer nlevels" [6 ] 
+    "integer indices" [0 1 2 1 0 3 2 1 3 0 2 3 ] "point P" [0 0 0   0 1 1   1 0 1   1 1 0 ]
+AttributeEnd
+
+
+WorldEnd

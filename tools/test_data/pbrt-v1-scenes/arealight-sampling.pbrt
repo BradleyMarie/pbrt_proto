@@ -1,0 +1,36 @@
+Film "image" 
+	"integer xresolution" [900] "integer yresolution" [900] 
+#	"integer xresolution" [912] "integer yresolution" [912] "float cropwindow" [ .5 1 .72 .85 ]
+
+Sampler "lowdiscrepancy" "integer pixelsamples" [1]
+#Sampler "stratified" "integer xsamples" [4] "integer ysamples" [4]
+#Sampler "stratified" "integer xsamples" [1] "integer ysamples" [1]
+
+PixelFilter "box" "float xwidth" [.5]  "float ywidth" [.5]
+#PixelFilter "mitchell" "float xwidth" [2] "float ywidth" [2]
+
+LookAt 0 .3 .5    0 .16 0  0 1 0
+Camera "perspective" "float fov" [50] 
+
+WorldBegin
+
+AttributeBegin
+   AreaLightSource "area" "color L" [ 150 150 150 ]  "integer nsamples" [16]
+   Translate 0 .35 0 
+   Rotate 90 0 1 0
+   Shape "cylinder" "float radius" [.004] "float zmin" [-.15]  "float zmax" [.15] 
+AttributeEnd
+
+AttributeBegin
+Material "matte" "color Kd" [.4 .42 .48]
+Shape "trianglemesh" "point P" [ -1 0 -1 1 0 -1 1 0 1 -1 0 1 ]
+	"integer indices" [ 0 1 2 2 3 0]
+Shape "trianglemesh" "point P" [ -1 0 -1  1 0 -1  1 1 -1 -1 1 -1 ]
+	"integer indices" [ 0 1 2 2 3 0]
+AttributeEnd
+
+Material "plastic"
+
+Include "geometry/happy.pbrt"
+
+WorldEnd

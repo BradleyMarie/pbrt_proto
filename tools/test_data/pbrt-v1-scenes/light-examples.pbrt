@@ -1,0 +1,57 @@
+Film "image" 
+#	"integer xresolution" [600] "integer yresolution" [900] 
+	"integer xresolution" [900] "integer yresolution" [900]
+
+Sampler "bestcandidate" "integer pixelsamples" [2] # [32]
+
+# far away view, fits area light
+LookAt 0 .3 .5    0 .16 0  0 1 0
+Camera "perspective" "float fov" [48] 
+
+# zoom in on dragon only
+#LookAt 0 .3 .5 -.01 .06 0 0 1 0
+#Camera "perspective" "float fov" [35]
+
+WorldBegin
+
+AttributeBegin
+   AreaLightSource "area" "color L" [ 600 600 600 ]  "integer nsamples" [4]
+   Translate 0 .35 0 
+   Rotate 90 1 0 0
+   #Shape "disk" "float radius" [.02]
+AttributeEnd
+
+AttributeBegin
+   AreaLightSource "area" "color L" [ 24 24 24 ]  "integer nsamples" [16]
+   Translate 0 .35  0
+   Rotate 90 1 0 0
+   #Shape "disk" "float radius" [.1]
+AttributeEnd
+
+#LightSource "point" "point from" [0 .35 0] "color I" [.65 .65 .65]
+#LightSource "spot" "point from" [0 .35 0] "point to" [-.012 0 0] "color I" [.6 .6 .6] "float coneangle" [27]
+AttributeBegin
+Translate 0 .35 0
+#LightSource "goniometric" "string mapname" ["textures/gonio3.exr"]
+AttributeEnd
+
+AttributeBegin
+  Translate -.2 .25 .2
+  Rotate -35 1 0 0
+  Rotate 150 0 1 0
+  LightSource "projection" "string mapname"  ["textures/lines.exr"] "float fov" [55]
+AttributeEnd
+
+AttributeBegin
+Material "matte" "color Kd" [.42 .42 .42] 
+Shape "trianglemesh" "point P" [ -1 0 -1 1 0 -1 1 0 1 -1 0 1 ]
+	"integer indices" [ 0 1 2 2 3 0]
+Shape "trianglemesh" "point P" [ -1 0 -1  1 0 -1  1 1 -1 -1 1 -1 ]
+	"integer indices" [ 0 1 2 2 3 0]
+AttributeEnd
+
+Material "matte" "color Kd" [.3 .3 .34]
+
+Include "geometry/dragon.pbrt"
+
+WorldEnd
