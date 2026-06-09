@@ -2685,9 +2685,17 @@ message UniformGridMedium {
   optional uint32 nz = 13 [default = 1];
 
   // The named measured scattering medium properties to use.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv3 and should be ignored when
+  //       reading earlier input.
   optional MeasuredScatteringPreset preset = 14 [default = DEFAULT];
 
   // Scale factor applied to the absorption and scattering cross sections.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv3 and should be ignored when
+  //       reading earlier input.
   optional double scale = 15 [default = 1.0];
 
   // The scale factor applied to the medium's emitted radiance.
