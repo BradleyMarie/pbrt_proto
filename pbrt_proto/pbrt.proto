@@ -390,6 +390,12 @@ message Scale {
   required double z = 3;
 }
 
+// A directive which modifies where the renderer searches for plugins.
+message SearchPath {
+  // The path to search.
+  required string path = 1;
+}
+
 // A directive which multiplies the current transformation matrix by the
 // specified matrix.
 message Transform {

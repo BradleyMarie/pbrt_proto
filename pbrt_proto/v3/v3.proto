@@ -307,11 +307,11 @@ message Directive {
     WorldBegin world_begin = 34;
     WorldEnd world_end = 35;
     ActiveTransform active_transform = 36;
-    MakeNamedMaterial make_named_material = 39;
-    NamedMaterial named_material = 40;
-    TransformTimes transform_times = 43;
-    MakeNamedMedium make_named_medium = 44;
-    MediumInterface medium_interface = 45;
+    MakeNamedMaterial make_named_material = 37;
+    NamedMaterial named_material = 38;
+    TransformTimes transform_times = 40;
+    MakeNamedMedium make_named_medium = 41;
+    MediumInterface medium_interface = 42;
   }
 }
 

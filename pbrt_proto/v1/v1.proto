@@ -220,6 +220,17 @@ message SurfaceIntegrator {
   }
 }
 
+// A directive which creates a named participating medium.
+message Volume {
+  // The type of medium to create. If none are set, then the directive should
+  // have no effect.
+  oneof medium_type {
+    ExponentialMedium exponential = 1;  // Create a exponential medium
+    HomogeneousMedium homogeneous = 2;  // Create a homogenous medium
+    UniformGridMedium volumegrid = 3;   // Create a uniform grid medium
+  }
+}
+
 // A PBRTv1 directive.
 message Directive {
   oneof directive_type {
@@ -245,7 +256,7 @@ message Directive {
     ReverseOrientation reverse_orientation = 20;
     Rotate rotate = 21;
     Sampler sampler = 22;
-    // SearchPath
+    SearchPath search_path = 23;
     Scale scale = 24;
     Shape shape = 25;
     SurfaceIntegrator surface_integrator = 26;
@@ -254,14 +265,12 @@ message Directive {
     TransformEnd transform_end = 29;
     Transform transform = 30;
     Translate translate = 31;
-    // Volume
+    Volume volume = 32;
     // VolumeIntegrator
     WorldBegin world_begin = 34;
     WorldEnd world_end = 35;
   }
 
-  reserved 23;  // SearchPath
-  reserved 32;  // Volume
   reserved 33;  // VolumeIntegrator
 }
 
