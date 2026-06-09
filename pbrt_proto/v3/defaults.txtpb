@@ -2543,6 +2543,19 @@ media {
           b: 0.014
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
+      }
     }
   }
   homogeneous {
@@ -2562,6 +2575,19 @@ media {
           g: 0.0034
           b: 0.046
         }
+      }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
       }
     }
   }
@@ -2583,6 +2609,19 @@ media {
           b: 0.19
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
+      }
     }
   }
   homogeneous {
@@ -2602,6 +2641,19 @@ media {
           g: 0.088
           b: 0.20
         }
+      }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
       }
     }
   }
@@ -2623,6 +2675,19 @@ media {
           b: 0.0163
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
+      }
     }
   }
   homogeneous {
@@ -2642,6 +2707,19 @@ media {
           g: 0.97
           b: 1.45
         }
+      }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
       }
     }
   }
@@ -2663,6 +2741,19 @@ media {
           b: 0.0071
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
+      }
     }
   }
   homogeneous {
@@ -2682,6 +2773,19 @@ media {
           g: 0.0090
           b: 0.12
         }
+      }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
       }
     }
   }
@@ -2703,6 +2807,19 @@ media {
           b: 0.0142
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
+      }
     }
   }
   homogeneous {
@@ -2722,6 +2839,19 @@ media {
           g: 0.17
           b: 0.48
         }
+      }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
       }
     }
   }
@@ -2743,6 +2873,19 @@ media {
           b: 0.145
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
+      }
     }
   }
   homogeneous {
@@ -2762,6 +2905,19 @@ media {
           g: 0.00
           b: 0.00
         }
+      }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
       }
     }
   }
@@ -2783,6 +2939,19 @@ media {
           b: 0.014
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
+      }
     }
   }
   homogeneous {
@@ -2802,6 +2971,19 @@ media {
           g: 0.00575
           b: 0.0115
         }
+      }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
       }
     }
   }
@@ -2823,6 +3005,19 @@ media {
           b: 0.012778
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
+      }
     }
   }
   homogeneous {
@@ -2842,6 +3037,19 @@ media {
           g: 0.0046
           b: 0.019933
         }
+      }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
       }
     }
   }
@@ -2863,6 +3071,19 @@ media {
           b: 8.8493
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
+      }
     }
   }
   homogeneous {
@@ -2882,6 +3103,19 @@ media {
           g: 5.8228
           b: 7.82
         }
+      }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
       }
     }
   }
@@ -2903,6 +3137,19 @@ media {
           b: 0.035937
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
+      }
     }
   }
   homogeneous {
@@ -2922,6 +3169,19 @@ media {
           g: 0.0095833
           b: 0.065167
         }
+      }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
       }
     }
   }
@@ -2943,6 +3203,19 @@ media {
           b: 0.1564
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
+      }
     }
   }
   homogeneous {
@@ -2962,6 +3235,19 @@ media {
           g: 0.043125
           b: 0.14375
         }
+      }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
       }
     }
   }
@@ -2983,6 +3269,19 @@ media {
           b: 0.2468
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
+      }
     }
   }
   homogeneous {
@@ -3002,6 +3301,19 @@ media {
           g: 0.14158
           b: 0.20729
         }
+      }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
       }
     }
   }
@@ -3023,6 +3335,19 @@ media {
           b: 0.0020025
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
+      }
     }
   }
   homogeneous {
@@ -3042,6 +3367,19 @@ media {
           g: 0.019289
           b: 0.008878
         }
+      }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
       }
     }
   }
@@ -3063,6 +3401,19 @@ media {
           b: 0.023997
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
+      }
     }
   }
   homogeneous {
@@ -3082,6 +3433,19 @@ media {
           g: 0.016184
           b: 0.019843
         }
+      }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
       }
     }
   }
@@ -3103,6 +3467,19 @@ media {
           b: 0.29434
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
+      }
     }
   }
   homogeneous {
@@ -3122,6 +3499,19 @@ media {
           g: 0.024911
           b: 0.057786
         }
+      }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
       }
     }
   }
@@ -3143,6 +3533,19 @@ media {
           b: 0.034983
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
+      }
     }
   }
   homogeneous {
@@ -3162,6 +3565,19 @@ media {
           g: 0.014892
           b: 0.026297
         }
+      }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
       }
     }
   }
@@ -3183,6 +3599,19 @@ media {
           b: 0.052184
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
+      }
     }
   }
   homogeneous {
@@ -3202,6 +3631,19 @@ media {
           g: 0.094223
           b: 0.12426
         }
+      }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
       }
     }
   }
@@ -3223,6 +3665,19 @@ media {
           b: 0.29325
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
+      }
     }
   }
   homogeneous {
@@ -3242,6 +3697,19 @@ media {
           g: 0.18314
           b: 0.25262
         }
+      }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
       }
     }
   }
@@ -3263,6 +3731,19 @@ media {
           b: 0.056781
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
+      }
     }
   }
   homogeneous {
@@ -3282,6 +3763,19 @@ media {
           g: 0.045693
           b: 0.061717
         }
+      }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
       }
     }
   }
@@ -3303,6 +3797,19 @@ media {
           b: 0.075823
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
+      }
     }
   }
   homogeneous {
@@ -3322,6 +3829,19 @@ media {
           g: 0.15688
           b: 0.20365
         }
+      }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
       }
     }
   }
@@ -3343,6 +3863,19 @@ media {
           b: 7.2127
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
+      }
     }
   }
   homogeneous {
@@ -3362,6 +3895,19 @@ media {
           g: 0.003441
           b: 0.007863
         }
+      }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
       }
     }
   }
@@ -3383,6 +3929,19 @@ media {
           b: 0.003195
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
+      }
     }
   }
   homogeneous {
@@ -3402,6 +3961,19 @@ media {
           g: 49.547
           b: 61.084
         }
+      }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
       }
     }
   }
@@ -3423,6 +3995,19 @@ media {
           b: 0.34148
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
+      }
     }
   }
   homogeneous {
@@ -3442,6 +4027,19 @@ media {
           g: 0.031051
           b: 0.050124
         }
+      }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
       }
     }
   }
@@ -3463,6 +4061,19 @@ media {
           b: 35.433
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
+      }
     }
   }
   homogeneous {
@@ -3482,6 +4093,19 @@ media {
           g: 0.031324
           b: 0.030147
         }
+      }
+      Le {
+        constant_spectrum: 0.0
+      }
+      p0 {
+        x: -inf
+        y: -inf
+        z: -inf
+      }
+      p1 {
+        x: inf
+        y: inf
+        z: inf
       }
     }
   }
@@ -3503,6 +4127,9 @@ media {
           b: 0.014
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
       p0 {
         x: 0.0
         y: 0.0
@@ -3532,6 +4159,9 @@ media {
           g: 0.0034
           b: 0.046
         }
+      }
+      Le {
+        constant_spectrum: 0.0
       }
       p0 {
         x: 0.0
@@ -3563,6 +4193,9 @@ media {
           b: 0.19
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
       p0 {
         x: 0.0
         y: 0.0
@@ -3592,6 +4225,9 @@ media {
           g: 0.088
           b: 0.20
         }
+      }
+      Le {
+        constant_spectrum: 0.0
       }
       p0 {
         x: 0.0
@@ -3623,6 +4259,9 @@ media {
           b: 0.0163
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
       p0 {
         x: 0.0
         y: 0.0
@@ -3652,6 +4291,9 @@ media {
           g: 0.97
           b: 1.45
         }
+      }
+      Le {
+        constant_spectrum: 0.0
       }
       p0 {
         x: 0.0
@@ -3683,6 +4325,9 @@ media {
           b: 0.0071
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
       p0 {
         x: 0.0
         y: 0.0
@@ -3712,6 +4357,9 @@ media {
           g: 0.0090
           b: 0.12
         }
+      }
+      Le {
+        constant_spectrum: 0.0
       }
       p0 {
         x: 0.0
@@ -3743,6 +4391,9 @@ media {
           b: 0.0142
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
       p0 {
         x: 0.0
         y: 0.0
@@ -3772,6 +4423,9 @@ media {
           g: 0.17
           b: 0.48
         }
+      }
+      Le {
+        constant_spectrum: 0.0
       }
       p0 {
         x: 0.0
@@ -3803,6 +4457,9 @@ media {
           b: 0.145
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
       p0 {
         x: 0.0
         y: 0.0
@@ -3832,6 +4489,9 @@ media {
           g: 0.00
           b: 0.00
         }
+      }
+      Le {
+        constant_spectrum: 0.0
       }
       p0 {
         x: 0.0
@@ -3863,6 +4523,9 @@ media {
           b: 0.014
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
       p0 {
         x: 0.0
         y: 0.0
@@ -3892,6 +4555,9 @@ media {
           g: 0.00575
           b: 0.0115
         }
+      }
+      Le {
+        constant_spectrum: 0.0
       }
       p0 {
         x: 0.0
@@ -3923,6 +4589,9 @@ media {
           b: 0.012778
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
       p0 {
         x: 0.0
         y: 0.0
@@ -3952,6 +4621,9 @@ media {
           g: 0.0046
           b: 0.019933
         }
+      }
+      Le {
+        constant_spectrum: 0.0
       }
       p0 {
         x: 0.0
@@ -3983,6 +4655,9 @@ media {
           b: 8.8493
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
       p0 {
         x: 0.0
         y: 0.0
@@ -4012,6 +4687,9 @@ media {
           g: 5.8228
           b: 7.82
         }
+      }
+      Le {
+        constant_spectrum: 0.0
       }
       p0 {
         x: 0.0
@@ -4043,6 +4721,9 @@ media {
           b: 0.035937
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
       p0 {
         x: 0.0
         y: 0.0
@@ -4072,6 +4753,9 @@ media {
           g: 0.0095833
           b: 0.065167
         }
+      }
+      Le {
+        constant_spectrum: 0.0
       }
       p0 {
         x: 0.0
@@ -4103,6 +4787,9 @@ media {
           b: 0.1564
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
       p0 {
         x: 0.0
         y: 0.0
@@ -4132,6 +4819,9 @@ media {
           g: 0.043125
           b: 0.14375
         }
+      }
+      Le {
+        constant_spectrum: 0.0
       }
       p0 {
         x: 0.0
@@ -4163,6 +4853,9 @@ media {
           b: 0.2468
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
       p0 {
         x: 0.0
         y: 0.0
@@ -4192,6 +4885,9 @@ media {
           g: 0.14158
           b: 0.20729
         }
+      }
+      Le {
+        constant_spectrum: 0.0
       }
       p0 {
         x: 0.0
@@ -4223,6 +4919,9 @@ media {
           b: 0.0020025
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
       p0 {
         x: 0.0
         y: 0.0
@@ -4252,6 +4951,9 @@ media {
           g: 0.019289
           b: 0.008878
         }
+      }
+      Le {
+        constant_spectrum: 0.0
       }
       p0 {
         x: 0.0
@@ -4283,6 +4985,9 @@ media {
           b: 0.023997
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
       p0 {
         x: 0.0
         y: 0.0
@@ -4312,6 +5017,9 @@ media {
           g: 0.016184
           b: 0.019843
         }
+      }
+      Le {
+        constant_spectrum: 0.0
       }
       p0 {
         x: 0.0
@@ -4343,6 +5051,9 @@ media {
           b: 0.29434
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
       p0 {
         x: 0.0
         y: 0.0
@@ -4372,6 +5083,9 @@ media {
           g: 0.024911
           b: 0.057786
         }
+      }
+      Le {
+        constant_spectrum: 0.0
       }
       p0 {
         x: 0.0
@@ -4403,6 +5117,9 @@ media {
           b: 0.034983
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
       p0 {
         x: 0.0
         y: 0.0
@@ -4432,6 +5149,9 @@ media {
           g: 0.014892
           b: 0.026297
         }
+      }
+      Le {
+        constant_spectrum: 0.0
       }
       p0 {
         x: 0.0
@@ -4463,6 +5183,9 @@ media {
           b: 0.052184
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
       p0 {
         x: 0.0
         y: 0.0
@@ -4492,6 +5215,9 @@ media {
           g: 0.094223
           b: 0.12426
         }
+      }
+      Le {
+        constant_spectrum: 0.0
       }
       p0 {
         x: 0.0
@@ -4523,6 +5249,9 @@ media {
           b: 0.29325
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
       p0 {
         x: 0.0
         y: 0.0
@@ -4552,6 +5281,9 @@ media {
           g: 0.18314
           b: 0.25262
         }
+      }
+      Le {
+        constant_spectrum: 0.0
       }
       p0 {
         x: 0.0
@@ -4583,6 +5315,9 @@ media {
           b: 0.056781
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
       p0 {
         x: 0.0
         y: 0.0
@@ -4612,6 +5347,9 @@ media {
           g: 0.045693
           b: 0.061717
         }
+      }
+      Le {
+        constant_spectrum: 0.0
       }
       p0 {
         x: 0.0
@@ -4643,6 +5381,9 @@ media {
           b: 0.075823
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
       p0 {
         x: 0.0
         y: 0.0
@@ -4672,6 +5413,9 @@ media {
           g: 0.15688
           b: 0.20365
         }
+      }
+      Le {
+        constant_spectrum: 0.0
       }
       p0 {
         x: 0.0
@@ -4703,6 +5447,9 @@ media {
           b: 7.2127
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
       p0 {
         x: 0.0
         y: 0.0
@@ -4732,6 +5479,9 @@ media {
           g: 0.003441
           b: 0.007863
         }
+      }
+      Le {
+        constant_spectrum: 0.0
       }
       p0 {
         x: 0.0
@@ -4763,6 +5513,9 @@ media {
           b: 0.003195
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
       p0 {
         x: 0.0
         y: 0.0
@@ -4792,6 +5545,9 @@ media {
           g: 49.547
           b: 61.084
         }
+      }
+      Le {
+        constant_spectrum: 0.0
       }
       p0 {
         x: 0.0
@@ -4823,6 +5579,9 @@ media {
           b: 0.34148
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
       p0 {
         x: 0.0
         y: 0.0
@@ -4852,6 +5611,9 @@ media {
           g: 0.031051
           b: 0.050124
         }
+      }
+      Le {
+        constant_spectrum: 0.0
       }
       p0 {
         x: 0.0
@@ -4883,6 +5645,9 @@ media {
           b: 35.433
         }
       }
+      Le {
+        constant_spectrum: 0.0
+      }
       p0 {
         x: 0.0
         y: 0.0
@@ -4912,6 +5677,9 @@ media {
           g: 0.031324
           b: 0.030147
         }
+      }
+      Le {
+        constant_spectrum: 0.0
       }
       p0 {
         x: 0.0

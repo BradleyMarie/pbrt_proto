@@ -100,6 +100,152 @@ TEST(RemoveCloudMediumV4, WithData) {
               )pb"));
 }
 
+TEST(RemoveExponentialMediumV1, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  ExponentialMedium actual;
+  EXPECT_TRUE(RemoveExponentialMediumV1(parameters, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveExponentialMediumV1, WithData) {
+  std::vector<absl::string_view> sigma_a = {"a"};
+  Parameter sigma_a_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::SPECTRUM,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(sigma_a)};
+
+  std::vector<absl::string_view> sigma_s = {"b"};
+  Parameter sigma_s_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::SPECTRUM,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(sigma_s)};
+
+  std::vector<double> g = {5.0};
+  Parameter g_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::FLOAT,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(g)};
+
+  std::vector<double> a = {6.0};
+  Parameter a_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::FLOAT,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(a)};
+
+  std::vector<double> b = {7.0};
+  Parameter b_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::FLOAT,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(b)};
+
+  std::vector<absl::string_view> le = {"c"};
+  Parameter le_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::SPECTRUM,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(le)};
+
+  std::vector<std::array<double, 3>> p0 = {{9.0, 10.0, 11.0}};
+  Parameter p0_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::POINT3,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(p0)};
+
+  std::vector<std::array<double, 3>> p1 = {{12.0, 13.0, 14.0}};
+  Parameter p1_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::POINT3,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(p1)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"sigma_a", sigma_a_parameter},
+      {"sigma_s", sigma_s_parameter},
+      {"g", g_parameter},
+      {"a", a_parameter},
+      {"b", b_parameter},
+      {"Le", le_parameter},
+      {"p0", p0_parameter},
+      {"p1", p1_parameter}};
+
+  ExponentialMedium actual;
+  EXPECT_TRUE(RemoveExponentialMediumV1(parameters, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                sigma_a { sampled_spectrum_filename: "a" }
+                sigma_s { sampled_spectrum_filename: "b" }
+                g: 5.0
+                a: 6.0
+                b: 7.0
+                Le { sampled_spectrum_filename: "c" }
+                p0 { x: 9.0 y: 10.0 z: 11.0 }
+                p1 { x: 12.0 y: 13.0 z: 14.0 }
+              )pb"));
+}
+
+TEST(RemoveHomogeneousMediumV1, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  HomogeneousMedium actual;
+  EXPECT_TRUE(RemoveHomogeneousMediumV1(parameters, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveHomogeneousMediumV1, WithData) {
+  std::vector<absl::string_view> sigma_a = {"a"};
+  Parameter sigma_a_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::SPECTRUM,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(sigma_a)};
+
+  std::vector<absl::string_view> sigma_s = {"b"};
+  Parameter sigma_s_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::SPECTRUM,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(sigma_s)};
+
+  std::vector<double> g = {5.0};
+  Parameter g_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::FLOAT,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(g)};
+
+  std::vector<absl::string_view> le = {"c"};
+  Parameter le_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::SPECTRUM,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(le)};
+
+  std::vector<std::array<double, 3>> p0 = {{9.0, 10.0, 11.0}};
+  Parameter p0_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::POINT3,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(p0)};
+
+  std::vector<std::array<double, 3>> p1 = {{12.0, 13.0, 14.0}};
+  Parameter p1_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::POINT3,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(p1)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"sigma_a", sigma_a_parameter},
+      {"sigma_s", sigma_s_parameter},
+      {"g", g_parameter},
+      {"Le", le_parameter},
+      {"p0", p0_parameter},
+      {"p1", p1_parameter}};
+
+  HomogeneousMedium actual;
+  EXPECT_TRUE(RemoveHomogeneousMediumV1(parameters, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                sigma_a { sampled_spectrum_filename: "a" }
+                sigma_s { sampled_spectrum_filename: "b" }
+                g: 5.0
+                Le { sampled_spectrum_filename: "c" }
+                p0 { x: 9.0 y: 10.0 z: 11.0 }
+                p1 { x: 12.0 y: 13.0 z: 14.0 }
+              )pb"));
+}
+
 TEST(RemoveHomogeneousMediumV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
@@ -415,6 +561,99 @@ TEST(RemoveRgbGridMediumV4, WithData) {
                 ny: 17
                 nz: 18
                 Le { r: 19.0 g: 20.0 b: 21.0 }
+              )pb"));
+}
+
+TEST(RemoveUniformGridMediumV1, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  UniformGridMedium actual;
+  EXPECT_TRUE(RemoveUniformGridMediumV1(parameters, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveUniformGridMediumV1, WithData) {
+  std::vector<absl::string_view> sigma_a = {"a"};
+  Parameter sigma_a_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::SPECTRUM,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(sigma_a)};
+
+  std::vector<absl::string_view> sigma_s = {"b"};
+  Parameter sigma_s_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::SPECTRUM,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(sigma_s)};
+
+  std::vector<absl::string_view> le = {"c"};
+  Parameter le_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::SPECTRUM,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(le)};
+
+  std::vector<double> g = {7.0};
+  Parameter g_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::FLOAT,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(g)};
+
+  std::vector<std::array<double, 3>> p0 = {{9.0, 10.0, 11.0}};
+  Parameter p0_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::POINT3,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(p0)};
+
+  std::vector<std::array<double, 3>> p1 = {{12.0, 13.0, 14.0}};
+  Parameter p1_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::POINT3,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(p1)};
+
+  std::vector<int> nx = {16};
+  Parameter nx_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::INTEGER,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(nx)};
+
+  std::vector<int> ny = {17};
+  Parameter ny_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::INTEGER,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(ny)};
+
+  std::vector<int> nz = {18};
+  Parameter nz_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::INTEGER,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(nz)};
+
+  std::vector<double> density = {19.0};
+  Parameter density_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::FLOAT,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(density)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"sigma_a", sigma_a_parameter}, {"sigma_s", sigma_s_parameter},
+      {"Le", le_parameter},           {"g", g_parameter},
+      {"p0", p0_parameter},           {"p1", p1_parameter},
+      {"nx", nx_parameter},           {"ny", ny_parameter},
+      {"nz", nz_parameter},           {"density", density_parameter},
+  };
+
+  UniformGridMedium actual;
+  EXPECT_TRUE(RemoveUniformGridMediumV1(parameters, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                sigma_a { sampled_spectrum_filename: "a" }
+                sigma_s { sampled_spectrum_filename: "b" }
+                Le { sampled_spectrum_filename: "c" }
+                g: 7.0
+                p0 { x: 9.0 y: 10.0 z: 11.0 }
+                p1 { x: 12.0 y: 13.0 z: 14.0 }
+                nx: 16
+                ny: 17
+                nz: 18
+                density: 19.0
               )pb"));
 }
 

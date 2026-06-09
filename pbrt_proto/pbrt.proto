@@ -2524,10 +2524,10 @@ message ExponentialMedium {
   optional Point p1 = 6;
 
   // The `a` parameter of the exponential volume formula.
-  optional double a = 7 [default = 0.0];
+  optional double a = 7 [default = 1.0];
 
   // The `b` parameter of the exponential volume formula.
-  optional double b = 8 [default = 0.0];
+  optional double b = 8 [default = 1.0];
 
   // The `up` direction along which to compute height.
   optional Vector updir = 9;

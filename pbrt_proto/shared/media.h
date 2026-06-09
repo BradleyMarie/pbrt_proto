@@ -13,6 +13,14 @@ absl::Status RemoveCloudMediumV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     CloudMedium& output);
 
+absl::Status RemoveExponentialMediumV1(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    ExponentialMedium& output);
+
+absl::Status RemoveHomogeneousMediumV1(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    HomogeneousMedium& output);
+
 absl::Status RemoveHomogeneousMediumV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     HomogeneousMedium& output);
@@ -28,6 +36,10 @@ absl::Status RemoveNanoVdbMediumV4(
 absl::Status RemoveRgbGridMediumV4(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     RgbGridMedium& output);
+
+absl::Status RemoveUniformGridMediumV1(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    UniformGridMedium& output);
 
 absl::Status RemoveUniformGridMediumV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
