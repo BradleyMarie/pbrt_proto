@@ -2479,178 +2479,230 @@ message CloudMedium {
   optional Spectrum sigma_s = 2;
 
   // The phase function asymmetry.
-  optional double g = 4 [default = 0.0];
+  optional double g = 3 [default = 0.0];
 
   // The first corner of the bounding box defining the extents of the medium.
-  optional Point p0 = 6;
+  optional Point p0 = 5;
 
   // The second corner of the bounding box defining the extents of the medium.
-  optional Point p1 = 7;
+  optional Point p1 = 6;
 
   // Additional scale factor applied to the computed cloud density.
-  optional double density = 8;
+  optional double density = 10 [default = 1.0];
 
   // A parameter that controls the frequency at which the cloud density varies.
-  optional double frequency = 12 [default = 5.0];
+  optional double frequency = 16 [default = 5.0];
 
   // A parameter that controls how wispy the cloud density is.
-  optional double wispiness = 13 [default = 1.0];
+  optional double wispiness = 17 [default = 1.0];
+}
+
+// A participating medium that is uniform throughout its volume.
+message ExponentialMedium {
+  // The absorption cross section.
+  optional Spectrum sigma_a = 1;
+
+  // The scattering cross section.
+  optional Spectrum sigma_s = 2;
+
+  // The phase function asymmetry.
+  optional double g = 3 [default = 0.0];
+
+  // The spectral distribution of the medium's emitted radiance.
+  optional Spectrum Le = 4;
+
+  // The first corner of the bounding box defining the extents of the medium.
+  optional Point p0 = 5;
+
+  // The second corner of the bounding box defining the extents of the medium.
+  optional Point p1 = 6;
+
+  // The `a` parameter of the exponential volume formula.
+  optional double a = 7 [default = 0.0];
+
+  // The `b` parameter of the exponential volume formula.
+  optional double b = 8 [default = 0.0];
+
+  // The `up` direction along which to compute height.
+  optional Vector updir = 9;
 }
 
 // A participating medium that is uniform throughout its volume.
 message HomogeneousMedium {
-  // The named measured scattering medium properties to use.
-  optional MeasuredScatteringPreset preset = 1 [default = DEFAULT];
-
   // The absorption cross section.
-  optional Spectrum sigma_a = 2;
+  optional Spectrum sigma_a = 1;
 
   // The scattering cross section.
-  optional Spectrum sigma_s = 3;
+  optional Spectrum sigma_s = 2;
 
   // The phase function asymmetry.
-  optional double g = 4 [default = 0.0];
-
-  // Scale factor applied to the absorption and scattering cross sections.
-  optional double scale = 5 [default = 1.0];
+  optional double g = 3 [default = 0.0];
 
   // The spectral distribution of the medium's emitted radiance.
   //
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv4 and should be ignored when
+  //       however, it is not supported in PBRTv3 and should be ignored when
+  //       reading those input.
+  optional Spectrum Le = 4;
+
+  // The first corner of the bounding box defining the extents of the medium.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported after PBRTv2 and should be ignored when
+  //       reading later input.
+  optional Point p0 = 5;
+
+  // The second corner of the bounding box defining the extents of the medium.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported after PBRTv2 and should be ignored when
+  //       reading later input.
+  optional Point p1 = 6;
+
+  // The named measured scattering medium properties to use.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv3 and should be ignored when
   //       reading earlier input.
-  optional Spectrum Le = 14;
+  optional MeasuredScatteringPreset preset = 14 [default = DEFAULT];
+
+  // Scale factor applied to the absorption and scattering cross sections.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv3 and should be ignored when
+  //       reading earlier input.
+  optional double scale = 15 [default = 1.0];
 
   // The scale factor applied to the medium's emitted radiance.
   //
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported before PBRTv4 and should be ignored when
   //       reading earlier input.
-  optional double Lescale = 15 [default = 1.0];
+  optional double Lescale = 18 [default = 1.0];
 }
 
 // A participating medium defined by a NanoVDB input.
 message NanoVdbMedium {
   // The absorption cross section.
-  optional Spectrum sigma_a = 2;
+  optional Spectrum sigma_a = 1;
 
   // The scattering cross section.
-  optional Spectrum sigma_s = 3;
+  optional Spectrum sigma_s = 2;
 
   // The phase function asymmetry.
-  optional double g = 4 [default = 0.0];
+  optional double g = 3 [default = 0.0];
 
   // Scale factor applied to the absorption and scattering cross sections.
-  optional double scale = 5 [default = 1.0];
+  optional double scale = 15 [default = 1.0];
 
   // The scale factor applied to the medium's emitted radiance.
-  optional double Lescale = 15 [default = 1.0];
+  optional double Lescale = 18 [default = 1.0];
 
   // The filename of the NanoVDB volume.
-  optional string filename = 16;
+  optional string filename = 19;
 
   // An offset value that is added to the emission temperature.
-  optional double temperatureoffset = 17 [default = 0.0];
+  optional double temperatureoffset = 20 [default = 0.0];
 
   // The scale factor applied to the ofsetted emission temperature to get a
   // temperature in kelvin before the blackbody emission is determined.
-  optional double temperaturescale = 18 [default = 1.0];
+  optional double temperaturescale = 21 [default = 1.0];
 }
 
 // A participating medium defined by a uniform grid of points with non-uniform
 // properties defined by RGB color values.
 message RgbGridMedium {
   // The phase function asymmetry.
-  optional double g = 4 [default = 0.0];
-
-  // Scale factor applied to the absorption and scattering cross sections.
-  optional double scale = 5 [default = 1.0];
+  optional double g = 3 [default = 0.0];
 
   // The first corner of the bounding box defining the extents of the medium.
-  optional Point p0 = 6;
+  optional Point p0 = 5;
 
   // The second corner of the bounding box defining the extents of the medium.
-  optional Point p1 = 7;
+  optional Point p1 = 6;
 
   // The number of voxels in the x direction.
-  optional uint32 nx = 9 [default = 1];
+  optional uint32 nx = 11 [default = 1];
 
   // The number of voxels in the y direction.
-  optional uint32 ny = 10 [default = 1];
+  optional uint32 ny = 12 [default = 1];
 
   // The number of voxels in the z direction.
-  optional uint32 nz = 11 [default = 1];
+  optional uint32 nz = 13 [default = 1];
+
+  // Scale factor applied to the absorption and scattering cross sections.
+  optional double scale = 15 [default = 1.0];
 
   // The scale factor applied to the medium's emitted radiance.
-  optional double Lescale = 15 [default = 1.0];
+  optional double Lescale = 18 [default = 1.0];
 
   // The absorption cross section.
-  optional RgbSpectrum sigma_a = 19;
+  optional RgbSpectrum sigma_a = 22;
 
   // The scattering cross section.
-  optional RgbSpectrum sigma_s = 20;
+  optional RgbSpectrum sigma_s = 23;
 
   // The spectral distribution of the medium's emitted radiance for each voxel
   // in row-major order.
-  repeated RgbSpectrum Le = 21;
+  repeated RgbSpectrum Le = 24;
 }
 
 // A participating medium defined by a uniform grid of points with non-uniform
 // density.
 message UniformGridMedium {
-  // The named measured scattering medium properties to use.
-  optional MeasuredScatteringPreset preset = 1 [default = DEFAULT];
-
   // The absorption cross section.
-  optional Spectrum sigma_a = 2;
+  optional Spectrum sigma_a = 1;
 
   // The scattering cross section.
-  optional Spectrum sigma_s = 3;
+  optional Spectrum sigma_s = 2;
 
   // The phase function asymmetry.
-  optional double g = 4 [default = 0.0];
-
-  // Scale factor applied to the absorption and scattering cross sections.
-  optional double scale = 5 [default = 1.0];
-
-  // The first corner of the bounding box defining the extents of the medium.
-  optional Point p0 = 6;
-
-  // The second corner of the bounding box defining the extents of the medium.
-  optional Point p1 = 7;
-
-  // The density values for each voxel of the medium in row-major order.
-  repeated double density = 8;
-
-  // The number of voxels in the x direction.
-  optional uint32 nx = 9 [default = 1];
-
-  // The number of voxels in the y direction.
-  optional uint32 ny = 10 [default = 1];
-
-  // The number of voxels in the z direction.
-  optional uint32 nz = 11 [default = 1];
+  optional double g = 3 [default = 0.0];
 
   // The spectral distribution of the medium's emitted radiance.
   //
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv4 and should be ignored when
-  //       reading earlier input.
-  optional Spectrum Le = 14;
+  //       however, it is not supported in PBRTv3 and should be ignored when
+  //       reading those input.
+  optional Spectrum Le = 4;
+
+  // The first corner of the bounding box defining the extents of the medium.
+  optional Point p0 = 5;
+
+  // The second corner of the bounding box defining the extents of the medium.
+  optional Point p1 = 6;
+
+  // The density values for each voxel of the medium in row-major order.
+  repeated double density = 10;
+
+  // The number of voxels in the x direction.
+  optional uint32 nx = 11 [default = 1];
+
+  // The number of voxels in the y direction.
+  optional uint32 ny = 12 [default = 1];
+
+  // The number of voxels in the z direction.
+  optional uint32 nz = 13 [default = 1];
+
+  // The named measured scattering medium properties to use.
+  optional MeasuredScatteringPreset preset = 14 [default = DEFAULT];
+
+  // Scale factor applied to the absorption and scattering cross sections.
+  optional double scale = 15 [default = 1.0];
 
   // The scale factor applied to the medium's emitted radiance.
   //
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported before PBRTv4 and should be ignored when
   //       reading earlier input.
-  optional double Lescale = 15 [default = 1.0];
+  optional double Lescale = 18 [default = 1.0];
 
   // The offset value that is added to the emission temperature.
   //
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported before PBRTv4 and should be ignored when
   //       reading earlier input.
-  optional double temperatureoffset = 17 [default = 0.0];
+  optional double temperatureoffset = 20 [default = 0.0];
 
   // The scale factor applied to the ofsetted emission temperature to get a
   // temperature in kelvin before the blackbody emission is determined.
@@ -2658,7 +2710,7 @@ message UniformGridMedium {
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported before PBRTv4 and should be ignored when
   //       reading earlier input.
-  optional double temperaturescale = 18 [default = 1.0];
+  optional double temperaturescale = 21 [default = 1.0];
 
   // The blackbody temperature values for each voxel in kelvin in row-major
   // order.
@@ -2666,7 +2718,7 @@ message UniformGridMedium {
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported before PBRTv4 and should be ignored when
   //       reading earlier input.
-  repeated double temperature = 22;
+  repeated double temperature = 25;
 }
 
 //
