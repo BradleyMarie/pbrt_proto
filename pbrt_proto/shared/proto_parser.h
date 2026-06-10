@@ -1,5 +1,7 @@
 #ifndef _PBRT_PROTO_SHARED_PROTO_PARSER_
 
+#include <utility>
+
 #include "absl/container/flat_hash_map.h"
 #include "absl/status/status.h"
 #include "absl/strings/str_cat.h"
@@ -16,96 +18,106 @@ class ProtoParser : public Parser {
               T& output)
       : Parser(parameter_type_names), output_(output) {}
 
+  typedef decltype(*std::declval<T>().add_directives()->mutable_material())
+      MaterialType;
+
+  virtual absl::Status Material(
+      absl::string_view material_type,
+      absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+      MaterialType& material) = 0;
+
   T& output_;
 
  private:
-  virtual absl::Status ActiveTransform(ActiveTransformation active) final;
+  absl::Status ActiveTransform(ActiveTransformation active) final;
 
-  virtual absl::Status AttributeBegin() final;
+  absl::Status AttributeBegin() final;
 
-  virtual absl::Status AttributeEnd() final;
+  absl::Status AttributeEnd() final;
 
-  virtual absl::Status ConcatTransform(double m00, double m01, double m02,
-                                       double m03, double m10, double m11,
-                                       double m12, double m13, double m20,
-                                       double m21, double m22, double m23,
-                                       double m30, double m31, double m32,
-                                       double m33) final;
+  absl::Status ConcatTransform(double m00, double m01, double m02, double m03,
+                               double m10, double m11, double m12, double m13,
+                               double m20, double m21, double m22, double m23,
+                               double m30, double m31, double m32,
+                               double m33) final;
 
-  virtual absl::Status CoordinateSystem(absl::string_view name) final;
+  absl::Status CoordinateSystem(absl::string_view name) final;
 
-  virtual absl::Status CoordSysTransform(absl::string_view name) final;
+  absl::Status CoordSysTransform(absl::string_view name) final;
 
-  virtual absl::Status Identity() final;
+  absl::Status Identity() final;
 
-  virtual absl::Status Include(absl::string_view path) final;
+  absl::Status Include(absl::string_view path) final;
 
-  virtual absl::Status Integrator(
+  absl::Status Integrator(
       absl::string_view integrator_type,
       absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
 
-  virtual absl::Status Import(absl::string_view path) final;
+  absl::Status Import(absl::string_view path) final;
 
-  virtual absl::Status LookAt(double eye_x, double eye_y, double eye_z,
-                              double look_x, double look_y, double look_z,
-                              double up_x, double up_y, double up_z) final;
+  absl::Status LookAt(double eye_x, double eye_y, double eye_z, double look_x,
+                      double look_y, double look_z, double up_x, double up_y,
+                      double up_z) final;
 
-  virtual absl::Status MakeNamedMaterial(
+  absl::Status MakeNamedMaterial(
       absl::string_view material_name,
-      absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
+      absl::flat_hash_map<absl::string_view, Parameter>& parameters) final;
 
-  virtual absl::Status MakeNamedMedium(
+  absl::Status MakeNamedMedium(
       absl::string_view medium_name,
       absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
 
-  virtual absl::Status MediumInterface(absl::string_view inside,
-                                       absl::string_view outside) override;
+  absl::Status Material(
+      absl::string_view material_name,
+      absl::flat_hash_map<absl::string_view, Parameter>& parameters) final;
 
-  virtual absl::Status NamedMaterial(absl::string_view material) override;
+  absl::Status MediumInterface(absl::string_view inside,
+                               absl::string_view outside) final;
 
-  virtual absl::Status ObjectBegin(absl::string_view name) final;
+  absl::Status NamedMaterial(absl::string_view material) final;
 
-  virtual absl::Status ObjectEnd() final;
+  absl::Status ObjectBegin(absl::string_view name) final;
 
-  virtual absl::Status ObjectInstance(absl::string_view name) final;
+  absl::Status ObjectEnd() final;
 
-  virtual absl::Status ReverseOrientation() final;
+  absl::Status ObjectInstance(absl::string_view name) final;
 
-  virtual absl::Status Rotate(double angle, double x, double y, double z) final;
+  absl::Status ReverseOrientation() final;
 
-  virtual absl::Status Scale(double x, double y, double z) final;
+  absl::Status Rotate(double angle, double x, double y, double z) final;
 
-  virtual absl::Status SearchPath(absl::string_view path) final;
+  absl::Status Scale(double x, double y, double z) final;
 
-  virtual absl::Status SurfaceIntegrator(
+  absl::Status SearchPath(absl::string_view path) final;
+
+  absl::Status SurfaceIntegrator(
       absl::string_view integrator_type,
       absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
 
-  virtual absl::Status Transform(double m00, double m01, double m02, double m03,
-                                 double m10, double m11, double m12, double m13,
-                                 double m20, double m21, double m22, double m23,
-                                 double m30, double m31, double m32,
-                                 double m33) final;
+  absl::Status Transform(double m00, double m01, double m02, double m03,
+                         double m10, double m11, double m12, double m13,
+                         double m20, double m21, double m22, double m23,
+                         double m30, double m31, double m32, double m33) final;
 
-  virtual absl::Status TransformBegin() final;
+  absl::Status TransformBegin() final;
 
-  virtual absl::Status TransformEnd() final;
+  absl::Status TransformEnd() final;
 
-  virtual absl::Status TransformTimes(double start_time, double end_time) final;
+  absl::Status TransformTimes(double start_time, double end_time) final;
 
-  virtual absl::Status Translate(double x, double y, double z) final;
+  absl::Status Translate(double x, double y, double z) final;
 
-  virtual absl::Status Volume(
+  absl::Status Volume(
       absl::string_view volume_type,
       absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
 
-  virtual absl::Status VolumeIntegrator(
+  absl::Status VolumeIntegrator(
       absl::string_view integrator_type,
       absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
 
-  virtual absl::Status WorldBegin() final;
+  absl::Status WorldBegin() final;
 
-  virtual absl::Status WorldEnd() final;
+  absl::Status WorldEnd() final;
 
   absl::Status UnsupportedError(absl::string_view directive) const;
 };
@@ -244,7 +256,23 @@ template <typename T, int PbrtVersion>
 absl::Status ProtoParser<T, PbrtVersion>::MakeNamedMaterial(
     absl::string_view material_name,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
+  if constexpr (PbrtVersion >= 2) {
+    auto& make_named_material =
+        *output_.add_directives()->mutable_make_named_material();
+    make_named_material.set_name(material_name);
+    return Material(TryRemoveString(parameters, "type").value_or(""),
+                    parameters, *make_named_material.mutable_material());
+  }
+
   return UnsupportedError("MakeNamedMaterial");
+}
+
+template <typename T, int PbrtVersion>
+absl::Status ProtoParser<T, PbrtVersion>::Material(
+    absl::string_view material_name,
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
+  return Material(material_name, parameters,
+                  *output_.add_directives()->mutable_material());
 }
 
 template <typename T, int PbrtVersion>
@@ -257,12 +285,25 @@ absl::Status ProtoParser<T, PbrtVersion>::MakeNamedMedium(
 template <typename T, int PbrtVersion>
 absl::Status ProtoParser<T, PbrtVersion>::MediumInterface(
     absl::string_view inside, absl::string_view outside) {
+  if constexpr (PbrtVersion == 3) {
+    auto& material_interface =
+        *output_.add_directives()->mutable_medium_interface();
+    material_interface.set_inside(inside);
+    material_interface.set_outside(outside);
+    return absl::OkStatus();
+  }
+
   return UnsupportedError("MediumInterface");
 }
 
 template <typename T, int PbrtVersion>
 absl::Status ProtoParser<T, PbrtVersion>::NamedMaterial(
     absl::string_view material) {
+  if constexpr (PbrtVersion >= 2) {
+    output_.add_directives()->mutable_named_material()->set_name(material);
+    return absl::OkStatus();
+  }
+
   return UnsupportedError("NamedMaterial");
 }
 

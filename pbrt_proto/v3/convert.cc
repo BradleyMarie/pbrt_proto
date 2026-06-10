@@ -32,51 +32,6 @@
 namespace pbrt_proto::v3 {
 namespace {
 
-Material ParseMaterial(
-    absl::string_view material_type,
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
-  Material material;
-
-  if (material_type == "" || material_type == "none") {
-    // Do Nothing
-  } else if (material_type == "disney") {
-    RemoveDisneyMaterialV3(parameters, *material.mutable_disney());
-  } else if (material_type == "fourier") {
-    RemoveMeasuredFourierMaterialV3(parameters, *material.mutable_fourier());
-  } else if (material_type == "glass") {
-    RemoveGlassMaterialV3(parameters, *material.mutable_glass());
-  } else if (material_type == "hair") {
-    RemoveHairMaterialV3(parameters, *material.mutable_hair());
-  } else if (material_type == "kdsubsurface") {
-    RemoveKdSubsurfaceMaterialV3(parameters, *material.mutable_kdsubsurface());
-  } else if (material_type == "metal") {
-    RemoveMetalMaterialV3(parameters, *material.mutable_metal());
-  } else if (material_type == "mirror") {
-    RemoveMirrorMaterialV1(parameters, *material.mutable_mirror());
-  } else if (material_type == "mix") {
-    RemoveMixMaterialV2(parameters, *material.mutable_mix());
-  } else if (material_type == "plastic") {
-    RemovePlasticMaterialV3(parameters, *material.mutable_plastic());
-  } else if (material_type == "substrate") {
-    RemoveSubstrateMaterialV3(parameters, *material.mutable_substrate());
-  } else if (material_type == "subsurface") {
-    RemoveSubsurfaceMaterialV3(parameters, *material.mutable_subsurface());
-  } else if (material_type == "translucent") {
-    RemoveTranslucentMaterialV3(parameters, *material.mutable_translucent());
-  } else if (material_type == "uber") {
-    RemoveUberMaterialV3(parameters, *material.mutable_uber());
-  } else {
-    if (material_type != "matte") {
-      std::cerr << "Unrecognized Material type: \"" << material_type << "\""
-                << std::endl;
-    }
-
-    RemoveMatteMaterialV1(parameters, *material.mutable_matte());
-  }
-
-  return material;
-}
-
 static const absl::flat_hash_map<absl::string_view, ParameterType>
     parameter_type_names = {
         {
@@ -182,22 +137,14 @@ class ParserV3 final : public ProtoParser<PbrtProto, 3> {
       absl::string_view light_source_type,
       absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
 
-  absl::Status MakeNamedMaterial(
-      absl::string_view material_name,
-      absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
-
   absl::Status MakeNamedMedium(
       absl::string_view medium_name,
       absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
 
   absl::Status Material(
       absl::string_view material_type,
-      absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
-
-  absl::Status MediumInterface(absl::string_view inside,
-                               absl::string_view outside) override;
-
-  absl::Status NamedMaterial(absl::string_view material) override;
+      absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+      v3::Material& material) override;
 
   absl::Status PixelFilter(
       absl::string_view filter_type,
@@ -402,19 +349,6 @@ absl::Status ParserV3::LightSource(
   return absl::OkStatus();
 }
 
-absl::Status ParserV3::MakeNamedMaterial(
-    absl::string_view material_name,
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
-  auto& make_named_material =
-      *output_.add_directives()->mutable_make_named_material();
-
-  make_named_material.set_name(material_name);
-  *make_named_material.mutable_material() = ParseMaterial(
-      TryRemoveString(parameters, "type").value_or(""), parameters);
-
-  return absl::OkStatus();
-}
-
 absl::Status ParserV3::MakeNamedMedium(
     absl::string_view medium_name,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
@@ -444,23 +378,45 @@ absl::Status ParserV3::MakeNamedMedium(
 
 absl::Status ParserV3::Material(
     absl::string_view material_type,
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
-  *output_.add_directives()->mutable_material() =
-      ParseMaterial(material_type, parameters);
-  return absl::OkStatus();
-}
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    v3::Material& material) {
+  if (material_type == "" || material_type == "none") {
+    // Do Nothing
+  } else if (material_type == "disney") {
+    RemoveDisneyMaterialV3(parameters, *material.mutable_disney());
+  } else if (material_type == "fourier") {
+    RemoveMeasuredFourierMaterialV3(parameters, *material.mutable_fourier());
+  } else if (material_type == "glass") {
+    RemoveGlassMaterialV3(parameters, *material.mutable_glass());
+  } else if (material_type == "hair") {
+    RemoveHairMaterialV3(parameters, *material.mutable_hair());
+  } else if (material_type == "kdsubsurface") {
+    RemoveKdSubsurfaceMaterialV3(parameters, *material.mutable_kdsubsurface());
+  } else if (material_type == "metal") {
+    RemoveMetalMaterialV3(parameters, *material.mutable_metal());
+  } else if (material_type == "mirror") {
+    RemoveMirrorMaterialV1(parameters, *material.mutable_mirror());
+  } else if (material_type == "mix") {
+    RemoveMixMaterialV2(parameters, *material.mutable_mix());
+  } else if (material_type == "plastic") {
+    RemovePlasticMaterialV3(parameters, *material.mutable_plastic());
+  } else if (material_type == "substrate") {
+    RemoveSubstrateMaterialV3(parameters, *material.mutable_substrate());
+  } else if (material_type == "subsurface") {
+    RemoveSubsurfaceMaterialV3(parameters, *material.mutable_subsurface());
+  } else if (material_type == "translucent") {
+    RemoveTranslucentMaterialV3(parameters, *material.mutable_translucent());
+  } else if (material_type == "uber") {
+    RemoveUberMaterialV3(parameters, *material.mutable_uber());
+  } else {
+    if (material_type != "matte") {
+      std::cerr << "Unrecognized Material type: \"" << material_type << "\""
+                << std::endl;
+    }
 
-absl::Status ParserV3::MediumInterface(absl::string_view inside,
-                                       absl::string_view outside) {
-  auto& material_interface =
-      *output_.add_directives()->mutable_medium_interface();
-  material_interface.set_inside(inside);
-  material_interface.set_outside(outside);
-  return absl::OkStatus();
-}
+    RemoveMatteMaterialV1(parameters, *material.mutable_matte());
+  }
 
-absl::Status ParserV3::NamedMaterial(absl::string_view name) {
-  output_.add_directives()->mutable_named_material()->set_name(name);
   return absl::OkStatus();
 }
 

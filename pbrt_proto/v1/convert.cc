@@ -99,7 +99,8 @@ class ParserV1 final : public ProtoParser<PbrtProto, 1> {
 
   absl::Status Material(
       absl::string_view material_type,
-      absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
+      absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+      v1::Material& material) override;
 
   absl::Status PixelFilter(
       absl::string_view filter_type,
@@ -288,9 +289,8 @@ absl::Status ParserV1::LightSource(
 
 absl::Status ParserV1::Material(
     absl::string_view material_type,
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
-  auto& material = *output_.add_directives()->mutable_material();
-
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    v1::Material& material) {
   if (material_type == "bluepaint") {
     material.mutable_bluepaint();
   } else if (material_type == "brushedmetal") {
