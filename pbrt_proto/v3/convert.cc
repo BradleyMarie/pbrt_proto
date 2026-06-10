@@ -215,18 +215,6 @@ class ParserV3 final : public ProtoParser<PbrtProto, 3> {
       absl::string_view spectrum_texture_name,
       absl::string_view spectrum_texture_type,
       absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
-
-  absl::Status SurfaceIntegrator(
-      absl::string_view integrator_type,
-      absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
-
-  absl::Status Volume(
-      absl::string_view volume_type,
-      absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
-
-  absl::Status VolumeIntegrator(
-      absl::string_view integrator_type,
-      absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
 };
 
 absl::Status ParserV3::Accelerator(
@@ -823,27 +811,6 @@ absl::Status ParserV3::SpectrumTexture(
   }
 
   return absl::OkStatus();
-}
-
-absl::Status ParserV3::SurfaceIntegrator(
-    absl::string_view integrator_type,
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
-  return absl::UnimplementedError(
-      "Directive 'SurfaceIntegrator' is not supported in pbrt-v3");
-}
-
-absl::Status ParserV3::Volume(
-    absl::string_view volume_type,
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
-  return absl::UnimplementedError(
-      "Directive 'Volume' is not supported in pbrt-v3");
-}
-
-absl::Status ParserV3::VolumeIntegrator(
-    absl::string_view integrator_type,
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
-  return absl::UnimplementedError(
-      "Directive 'VolumeIntegrator' is not supported in pbrt-v3");
 }
 
 }  // namespace
