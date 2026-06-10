@@ -183,6 +183,10 @@ class Parser {
 
   virtual absl::Status Translate(double x, double y, double z) = 0;
 
+  virtual absl::Status Volume(
+      absl::string_view volume_type,
+      absl::flat_hash_map<absl::string_view, Parameter>& parameters) = 0;
+
   virtual absl::Status VolumeIntegrator(
       absl::string_view integrator_type,
       absl::flat_hash_map<absl::string_view, Parameter>& parameters) = 0;

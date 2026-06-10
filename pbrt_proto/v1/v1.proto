@@ -82,15 +82,6 @@ message LightSource {
   }
 }
 
-// A directive which creates a named material.
-message MakeNamedMaterial {
-  // The name to give the created medium.
-  required string name = 1;
-
-  // The material to create.
-  required Material material = 2;
-}
-
 // A directive which creates a material.
 message Material {
   // The type of material to create. If none of these fields are set, program

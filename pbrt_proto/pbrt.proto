@@ -1117,7 +1117,7 @@ message AmbientOcclusionIntegrator {
   optional double maxdistance = 8 [default = inf];
 
   // How many rays are used to estimate the occlusion value at a point.
-  optional uint32 nsamples = 20;
+  optional uint32 nsamples = 21;
 
   // Subset of image to sample during rendering; in order, values given specify
   // the starting and ending x coordinates and then starting and ending y
@@ -1204,24 +1204,24 @@ message DebugIntegrator {
   }
 
   // The value to use to populate the `r` channel of the output.
-  optional ChannelValue red = 25 [default = U];
+  optional ChannelValue red = 26 [default = U];
 
   // The value to use to populate the `g` channel of the output.
-  optional ChannelValue green = 26 [default = V];
+  optional ChannelValue green = 27 [default = V];
 
   // The value to use to populate the `b` channel of the output.
-  optional ChannelValue blue = 27 [default = ZERO];
+  optional ChannelValue blue = 28 [default = ZERO];
 }
 
 // An integrator which performs precomputed radiance transfer.
 message DiffusePrtIntegrator {
   // The number of Monte Carlo samples to use when computing the projection of
   // the transfer function T.
-  optional uint32 nsamples = 20 [default = 4096];
+  optional uint32 nsamples = 21 [default = 4096];
 
   // The maximum spherical harmonic band l to use; the total number of SH
   // coefficients used at each point will be (lmax+1)*(lmax+1)
-  optional uint32 lmax = 28 [default = 4];
+  optional uint32 lmax = 29 [default = 4];
 }
 
 // An integrator which performs dipole subsurface scattering.
@@ -1232,7 +1232,7 @@ message DipoleSubsurfaceIntegrator {
   // Maximum value of the error term used to determine whether to traverse
   // deeper into the irradiance sample octree or to use the current node for
   // illumination.
-  optional double maxerror = 29 [default = 0.05];
+  optional double maxerror = 18 [default = 0.05];
 
   // Minimum distance between the point samples generated on translucent objects
   // at which to compute the incident irradiance. In general, this value should
@@ -1286,11 +1286,11 @@ message DirectLightingIntegrator {
 message GlossyPrtIntegrator {
   // The number of Monte Carlo samples to use when computing the projection of
   // the transfer function T.
-  optional uint32 nsamples = 20 [default = 4096];
+  optional uint32 nsamples = 21 [default = 4096];
 
   // The maximum spherical harmonic band l to use; the total number of SH
   // coefficients used at each point will be (lmax+1)*(lmax+1)
-  optional uint32 lmax = 28 [default = 4];
+  optional uint32 lmax = 29 [default = 4];
 
   // The surface roughness, for use with the Blinn microfacet distributions.
   optional double roughness = 32 [default = 0.01];
@@ -1356,33 +1356,42 @@ message IgiIntegrator {
 
 // An integrator which does irradiance caching.
 message IrradianceCacheIntegrator {
+  // Maximum value of the error term used to determine whether to traverse
+  // deeper into the irradiance sample octree or to use the current node for
+  // illumination.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported after PBRTv1 and should be ignored when
+  //       reading later input.
+  optional double maxerror = 18 [default = 0.2];
+
   // Maximum recursion depth for tracing specular reflection and refraction
   // rays.
-  optional uint32 maxspeculardepth = 18 [default = 5];
+  optional uint32 maxspeculardepth = 19 [default = 5];
 
   // Maximum recursion depth for tracing paths to compute irradiance estimates.
-  optional uint32 maxindirectdepth = 19 [default = 3];
+  optional uint32 maxindirectdepth = 20 [default = 3];
 
   // How many rays are used to estimate the irradiance value at a point.
-  optional uint32 nsamples = 20 [default = 4096];
+  optional uint32 nsamples = 21 [default = 4096];
 
   // Minimum weight for the interpolated irradiance samples. If the sum of
   // interpolated sample weights is less than this value, a new sample is
   // computed.
-  optional double minweight = 21 [default = 0.5];
+  optional double minweight = 22 [default = 0.5];
 
   // Minimum distance, in pixels, between irradiance samples. No samples nearer
   // this distance will be generated.
-  optional double minpixelspacing = 22 [default = 2.5];
+  optional double minpixelspacing = 23 [default = 2.5];
 
   // Maximum distance, in pixels, between irradiance samples. Even if the other
   // error terms indicate that a sample can be used at a point being shaded, if
   // it is more than this many pixels away on the image plane, it is ignored.
-  optional double maxpixelspacing = 23 [default = 15.0];
+  optional double maxpixelspacing = 24 [default = 15.0];
 
   // Maximum allowed difference in the angle between the surface normal at an
   // irradiance lookup point and the surface normal of an irradiance sample.
-  optional double maxangledifference = 24 [default = 10.0];
+  optional double maxangledifference = 25 [default = 10.0];
 }
 
 // An integrator which does Metropolis light transport.
@@ -1519,7 +1528,7 @@ message PhotonMapIntegrator {
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported before PBRTv2 and should be ignored when
   //       reading earlier input.
-  optional uint32 maxspeculardepth = 18 [default = 5];
+  optional uint32 maxspeculardepth = 19 [default = 5];
 
   // The maximum number of levels of scattering to follow when tracing photon
   // paths from light sources.

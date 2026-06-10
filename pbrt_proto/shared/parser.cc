@@ -1252,6 +1252,17 @@ absl::Status Parser::ReadFrom(std::istream& stream) {
 
              return Translate((*values)[0], (*values)[1], (*values)[2]);
            }},
+          {"Volume",
+           [&]() {
+             absl::StatusOr<absl::string_view> type_name =
+                 ReadParameters("Volume", parameter_type_names_, storage,
+                                tokenizer, parameters);
+             if (!type_name.ok()) {
+               return type_name.status();
+             }
+
+             return Volume(*type_name, parameters);
+           }},
           {"VolumeIntegrator",
            [&]() {
              absl::StatusOr<absl::string_view> type_name =

@@ -17,6 +17,8 @@
 #include "google/protobuf/arena.h"
 #include "google/protobuf/io/zero_copy_stream_impl.h"
 #include "google/protobuf/text_format.h"
+#include "pbrt_proto/v1/convert.h"
+#include "pbrt_proto/v1/v1.pb.h"
 #include "pbrt_proto/v3/convert.h"
 #include "pbrt_proto/v3/v3.pb.h"
 
@@ -45,8 +47,9 @@ class ScopedArena {
  public:
   ~ScopedArena() { arena_.Reset(); }
 
-  pbrt_proto::v3::PbrtProto* Allocate() {
-    return google::protobuf::Arena::Create<pbrt_proto::v3::PbrtProto>(&arena_);
+  template <typename T>
+  T* Allocate() {
+    return google::protobuf::Arena::Create<T>(&arena_);
   }
 
   void FreeAll() { arena_.Reset(); }
@@ -63,9 +66,9 @@ class NullOstream : public std::ostream, std::streambuf {
 
 std::string FileExtension() {
   if (absl::GetFlag(FLAGS_textproto)) {
-    return ".v3.txtpb";
+    return "." + std::to_string(*absl::GetFlag(FLAGS_pbrt_version)) + ".txtpb";
   } else {
-    return ".v3.binpb";
+    return "." + std::to_string(*absl::GetFlag(FLAGS_pbrt_version)) + ".binpb";
   }
 }
 
@@ -88,8 +91,9 @@ std::string MakePath(std::filesystem::path partial_file_name,
   return partial_file_name.string();
 }
 
+template <typename T>
 void Serialize(std::filesystem::path output_path, size_t file_index,
-               const pbrt_proto::v3::PbrtProto& proto) {
+               const T& proto) {
   std::string prefix;
   if (file_index != 0) {
     prefix = "." + std::to_string(file_index);
@@ -122,6 +126,7 @@ void Serialize(std::filesystem::path output_path, size_t file_index,
   }
 }
 
+template <typename T, absl::Status (*Convert)(std::istream&, T&)>
 void ConvertFile(const std::filesystem::path& search_root,
                  const std::filesystem::path& file,
                  const std::filesystem::path& partial_file_name,
@@ -134,14 +139,13 @@ void ConvertFile(const std::filesystem::path& search_root,
   }
 
   ScopedArena parent_arena;
-  pbrt_proto::v3::PbrtProto* to_v3 = parent_arena.Allocate();
-  if (absl::Status error = pbrt_proto::v3::Convert(input, *to_v3);
-      !error.ok()) {
+  T* to_output = parent_arena.Allocate<T>();
+  if (absl::Status error = Convert(input, *to_output); !error.ok()) {
     std::cerr << "ERROR: " << error.message() << std::endl;
     exit(EXIT_FAILURE);
   }
 
-  for (auto& directive : *to_v3->mutable_directives()) {
+  for (auto& directive : *to_output->mutable_directives()) {
     if (!directive.has_include() || !absl::GetFlag(FLAGS_recursive)) {
       continue;
     }
@@ -162,18 +166,18 @@ void ConvertFile(const std::filesystem::path& search_root,
     *directive.mutable_include()->mutable_path() += FileExtension();
   }
 
-  if (to_v3->ByteSizeLong() < kMaxProtoSize) {
-    Serialize(file, 0, *to_v3);
+  if (to_output->ByteSizeLong() < kMaxProtoSize) {
+    Serialize(file, 0, *to_output);
     return;
   }
 
   ScopedArena child_arena;
-  pbrt_proto::v3::PbrtProto* child = child_arena.Allocate();
+  T* child = child_arena.Allocate<T>();
 
-  pbrt_proto::v3::PbrtProto parent;
+  T parent;
   size_t current_size = 0;
   size_t child_index = 1;
-  for (const auto& directive : to_v3->directives()) {
+  for (const auto& directive : to_output->directives()) {
     if (current_size + directive.ByteSizeLong() > kMaxProtoSize &&
         current_size != 0) {
       parent.add_directives()->mutable_include()->set_path(
@@ -181,7 +185,7 @@ void ConvertFile(const std::filesystem::path& search_root,
       Serialize(file, child_index++, *child);
 
       child_arena.FreeAll();
-      child = child_arena.Allocate();
+      child = child_arena.Allocate<T>();
       current_size = 0;
     }
 
@@ -196,6 +200,25 @@ void ConvertFile(const std::filesystem::path& search_root,
   Serialize(file, 0, parent);
 }
 
+void ConvertFile(const std::filesystem::path& search_root,
+                 const std::filesystem::path& file,
+                 const std::filesystem::path& partial_file_name,
+                 std::vector<std::pair<std::filesystem::path, std::string>>&
+                     included_files) {
+  switch (*absl::GetFlag(FLAGS_pbrt_version)) {
+    case 1:
+      ConvertFile<pbrt_proto::v1::PbrtProto, pbrt_proto::v1::Convert>(
+          search_root, file, partial_file_name, included_files);
+      break;
+    case 2:
+      break;
+    case 3:
+      ConvertFile<pbrt_proto::v3::PbrtProto, pbrt_proto::v3::Convert>(
+          search_root, file, partial_file_name, included_files);
+      break;
+  }
+}
+
 int main(int argc, char** argv) {
   auto unparsed = absl::ParseCommandLine(argc, argv);
   if (2 != unparsed.size()) {
@@ -208,7 +231,8 @@ int main(int argc, char** argv) {
     return EXIT_FAILURE;
   }
 
-  if (*absl::GetFlag(FLAGS_pbrt_version) != 3) {
+  if (*absl::GetFlag(FLAGS_pbrt_version) != 1 &&
+      *absl::GetFlag(FLAGS_pbrt_version) != 3) {
     std::cerr << "ERROR: PBRT version was not recognized" << std::endl;
     return EXIT_FAILURE;
   }

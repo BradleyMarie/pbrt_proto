@@ -410,6 +410,11 @@ void RemoveIgiIntegratorV2(
 void RemoveIrradianceCacheIntegratorV1(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     IrradianceCacheIntegrator& output) {
+  if (std::optional<double> maxerror = TryRemoveFloat(parameters, "maxerror");
+      maxerror.has_value()) {
+    output.set_maxerror(*maxerror);
+  }
+
   if (std::optional<double> minweight = TryRemoveFloat(parameters, "minweight");
       minweight.has_value()) {
     output.set_minweight(*minweight);

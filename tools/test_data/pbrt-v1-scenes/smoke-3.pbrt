@@ -16,9 +16,7 @@ Rotate 80 1 0 0
 Shape "disk" "float radius" [.2]
 AttributeEnd
 
-Include "geometry/density_render.60.pbrt"
-  "color sigma_a" [3 3 3] "color sigma_s" [20 20 20]
-#  "color Le" [4.5 4.5 4.5]
+Include "geometry/density_render.60.3.pbrt"
 
 Material "matte" "color Kd" [.57 .57 .6]
 Translate 0 -1 0

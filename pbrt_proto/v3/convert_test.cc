@@ -336,7 +336,7 @@ TEST(Convert, FloatTextureBilerp) {
 
 TEST(Convert, FloatTextureCheckerboard2DNone) {
   std::stringstream stream(
-      "Texture \"name\" \"float\" \"checkerboard\" \"integer dimensions\" 2 "
+      "Texture \"name\" \"float\" \"checkerboard\" \"integer dimension\" 2 "
       "\"float tex1\" 1.0 \"float tex2\" 2.0 \"string aamode\" \"none\" "
       "\"string mapping\" \"uv\" \"float uscale\" 5.0 \"float vscale\" 6.0 "
       "\"float udelta\" 7.0 \"float vdelta\" 8.0 \"vector v1\" [1.0 2 3.0] "
@@ -363,7 +363,7 @@ TEST(Convert, FloatTextureCheckerboard2DNone) {
 
 TEST(Convert, FloatTextureCheckerboard2DClosedForm) {
   std::stringstream stream(
-      "Texture \"name\" \"float\" \"checkerboard\" \"integer dimensions\" 2 "
+      "Texture \"name\" \"float\" \"checkerboard\" \"integer dimension\" 2 "
       "\"float tex1\" 1.0 \"float tex2\" 2.0 \"string aamode\" \"closedform\" "
       "\"string mapping\" \"uv\" \"float uscale\" 5.0 \"float vscale\" 6.0 "
       "\"float udelta\" 7.0 \"float vdelta\" 8.0 \"vector v1\" [1.0 2 3.0] "
@@ -390,7 +390,7 @@ TEST(Convert, FloatTextureCheckerboard2DClosedForm) {
 
 TEST(Convert, FloatTextureCheckerboard3D) {
   std::stringstream stream(
-      "Texture \"name\" \"float\" \"checkerboard\" \"integer dimensions\" 3 "
+      "Texture \"name\" \"float\" \"checkerboard\" \"integer dimension\" 3 "
       "\"float tex1\" 1.0 \"float tex2\" 2.0");
   EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
                                    R"pb(directives {
@@ -1832,6 +1832,13 @@ TEST(Convert, Rotate) {
                                             })pb")));
 }
 
+TEST(Convert, SearchPath) {
+  std::stringstream stream("SearchPath \"a\"");
+  EXPECT_THAT(Convert(stream),
+              StatusIs(absl::StatusCode::kUnimplemented,
+                       "Directive 'SearchPath' is not supported in pbrt-v3"));
+}
+
 TEST(Convert, SamplerUnknown) {
   std::stringstream stream("Sampler \"unknown\"");
   EXPECT_THAT(Convert(stream),
@@ -2519,6 +2526,14 @@ TEST(Convert, ShapeOverridesEtaSampled) {
                })pb")));
 }
 
+TEST(Convert, SurfaceIntegrator) {
+  std::stringstream stream("SurfaceIntegrator \"a\"");
+  EXPECT_THAT(
+      Convert(stream),
+      StatusIs(absl::StatusCode::kUnimplemented,
+               "Directive 'SurfaceIntegrator' is not supported in pbrt-v3"));
+}
+
 TEST(Convert, SpectrumTextureUnknown) {
   std::stringstream stream("Texture \"name\" \"spectrum\" \"unknown\"");
   EXPECT_THAT(Convert(stream),
@@ -2559,7 +2574,7 @@ TEST(Convert, SpectrumTextureBilerp) {
 
 TEST(Convert, SpectrumTextureCheckerboard2DNone) {
   std::stringstream stream(
-      "Texture \"name\" \"spectrum\" \"checkerboard\" \"integer dimensions\" 2 "
+      "Texture \"name\" \"spectrum\" \"checkerboard\" \"integer dimension\" 2 "
       "\"blackbody tex1\" [1.0 2.0] \"blackbody tex2\" [3.0 4.0] \"string "
       "aamode\" \"none\" \"string mapping\" \"uv\" \"float uscale\" 5.0 "
       "\"float vscale\" 6.0 \"float udelta\" 7.0 \"float vdelta\" 8.0 \"vector "
@@ -2588,7 +2603,7 @@ TEST(Convert, SpectrumTextureCheckerboard2DNone) {
 
 TEST(Convert, SpectrumTextureCheckerboard2DClosedForm) {
   std::stringstream stream(
-      "Texture \"name\" \"spectrum\" \"checkerboard\" \"integer dimensions\" 2 "
+      "Texture \"name\" \"spectrum\" \"checkerboard\" \"integer dimension\" 2 "
       "\"blackbody tex1\" [1.0 2.0] \"blackbody tex2\" [3.0 4.0] \"string "
       "aamode\" \"closedform\" \"string mapping\" \"uv\" \"float uscale\" 5.0 "
       "\"float vscale\" 6.0 \"float udelta\" 7.0 \"float vdelta\" 8.0 \"vector "
@@ -2617,7 +2632,7 @@ TEST(Convert, SpectrumTextureCheckerboard2DClosedForm) {
 
 TEST(Convert, SpectrumTextureCheckerboard3D) {
   std::stringstream stream(
-      "Texture \"name\" \"spectrum\" \"checkerboard\" \"integer dimensions\" 3 "
+      "Texture \"name\" \"spectrum\" \"checkerboard\" \"integer dimension\" 3 "
       "\"blackbody tex1\" [1.0 2.0] \"blackbody tex2\" [3.0 4.0]");
   EXPECT_THAT(
       Convert(stream),
@@ -2936,6 +2951,21 @@ TEST(Convert, Translate) {
               IsOkAndHolds(EqualsProto(R"pb(directives {
                                               translate { x: 1 y: 2 z: 3 }
                                             })pb")));
+}
+
+TEST(Convert, Volume) {
+  std::stringstream stream("Volume \"a\"");
+  EXPECT_THAT(Convert(stream),
+              StatusIs(absl::StatusCode::kUnimplemented,
+                       "Directive 'Volume' is not supported in pbrt-v3"));
+}
+
+TEST(Convert, VolumeIntegrator) {
+  std::stringstream stream("VolumeIntegrator \"a\"");
+  EXPECT_THAT(
+      Convert(stream),
+      StatusIs(absl::StatusCode::kUnimplemented,
+               "Directive 'VolumeIntegrator' is not supported in pbrt-v3"));
 }
 
 TEST(Convert, WorldBegin) {

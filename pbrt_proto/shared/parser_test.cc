@@ -184,6 +184,10 @@ class MockParser final : public Parser {
   MOCK_METHOD(absl::Status, TransformTimes, (double, double), (override));
   MOCK_METHOD(absl::Status, Translate, (double x, double y, double z),
               (override));
+  MOCK_METHOD(absl::Status, Volume,
+              (absl::string_view,
+               (absl::flat_hash_map<absl::string_view, Parameter>&)),
+              (override));
   MOCK_METHOD(absl::Status, VolumeIntegrator,
               (absl::string_view,
                (absl::flat_hash_map<absl::string_view, Parameter>&)),
@@ -2451,6 +2455,30 @@ TEST(Translate, Fails) {
   std::stringstream stream("Translate 1 2 3");
   MockParser parser;
   EXPECT_CALL(parser, Translate(1.0, 2.0, 3.0))
+      .WillOnce(Return(absl::UnknownError("")));
+  EXPECT_THAT(parser.ReadFrom(stream),
+              StatusIs(absl::StatusCode::kUnknown, ""));
+}
+
+TEST(Volume, Succeeds) {
+  std::stringstream stream("Volume \"abc\"");
+  MockParser parser;
+  EXPECT_CALL(parser, Volume("abc", IsEmpty()))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Volume, MissingType) {
+  std::stringstream stream("Volume");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Missing type parameter to directive Volume"));
+}
+
+TEST(Volume, Fails) {
+  std::stringstream stream("Volume \"abc\"");
+  MockParser parser;
+  EXPECT_CALL(parser, Volume("abc", IsEmpty()))
       .WillOnce(Return(absl::UnknownError("")));
   EXPECT_THAT(parser.ReadFrom(stream),
               StatusIs(absl::StatusCode::kUnknown, ""));

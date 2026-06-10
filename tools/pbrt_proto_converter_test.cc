@@ -9,6 +9,7 @@
 #include <sstream>
 #include <string>
 #include <thread>
+#include <tuple>
 #include <vector>
 
 #include "gtest/gtest.h"
@@ -71,6 +72,55 @@ std::pair<int, std::string> Convert(int version,
 struct TestInput {
   std::filesystem::path path;
   bool allow_warnings = false;
+};
+
+const std::vector<TestInput> pbrt_v1_inputs = {
+    {"pbrt-v1-scenes/arealight-sampling.pbrt"},
+    {"pbrt-v1-scenes/areapot.pbrt"},
+    {"pbrt-v1-scenes/balls.pbrt"},
+    {"pbrt-v1-scenes/buddha.pbrt"},
+    {"pbrt-v1-scenes/bump-sphere.pbrt"},
+    {"pbrt-v1-scenes/bunny.pbrt"},
+    {"pbrt-v1-scenes/caustic-proj.pbrt"},
+    {"pbrt-v1-scenes/caustic-simple.pbrt"},
+    {"pbrt-v1-scenes/checkerboard.pbrt"},
+    {"pbrt-v1-scenes/cylinders.pbrt"},
+    {"pbrt-v1-scenes/disks.pbrt", /*allow_warnings=*/true},
+    {"pbrt-v1-scenes/dof-dragons.pbrt"},
+    {"pbrt-v1-scenes/dof-simple.pbrt"},
+    {"pbrt-v1-scenes/dragon.pbrt"},
+    {"pbrt-v1-scenes/fbm-sphere.pbrt"},
+    {"pbrt-v1-scenes/killeroo-glossy.pbrt"},
+    {"pbrt-v1-scenes/killeroo-materials.pbrt"},
+    {"pbrt-v1-scenes/killeroo-simple.pbrt"},
+    {"pbrt-v1-scenes/light-examples.pbrt"},
+    {"pbrt-v1-scenes/miscquads.pbrt"},
+    {"pbrt-v1-scenes/mis.pbrt"},
+    {"pbrt-v1-scenes/mount.pbrt"},
+    {"pbrt-v1-scenes/plants-directsun.pbrt", /*allow_warnings=*/true},
+    {"pbrt-v1-scenes/plants-dof-1.pbrt", /*allow_warnings=*/true},
+    {"pbrt-v1-scenes/plants-dof-2.pbrt", /*allow_warnings=*/true},
+    {"pbrt-v1-scenes/plants-dusk.pbrt", /*allow_warnings=*/true},
+    {"pbrt-v1-scenes/plants-godrays.pbrt", /*allow_warnings=*/true},
+    {"pbrt-v1-scenes/plants.pbrt", /*allow_warnings=*/true},
+    {"pbrt-v1-scenes/sibenik.pbrt"},
+    {"pbrt-v1-scenes/simple.pbrt"},
+    {"pbrt-v1-scenes/smoke-1.pbrt"},
+    {"pbrt-v1-scenes/smoke-2.pbrt"},
+    {"pbrt-v1-scenes/smoke-3.pbrt"},
+    {"pbrt-v1-scenes/sphere-ewa-vs-trilerp.pbrt"},
+    {"pbrt-v1-scenes/spheres-aniso.pbrt"},
+    {"pbrt-v1-scenes/spheres-over-plane.pbrt"},
+    {"pbrt-v1-scenes/sponza-corner.pbrt"},
+    {"pbrt-v1-scenes/sponza-fog-corridor.pbrt", /*allow_warnings=*/true},
+    {"pbrt-v1-scenes/sponza-fog.pbrt"},
+    {"pbrt-v1-scenes/sponza-irrad.pbrt"},
+    {"pbrt-v1-scenes/sponza-phomap.pbrt"},
+    {"pbrt-v1-scenes/spotfog.pbrt"},
+    {"pbrt-v1-scenes/subdiv-example.pbrt", /*allow_warnings=*/true},
+    {"pbrt-v1-scenes/subdiv-tetra.pbrt"},
+    // {"pbrt-v1-scenes/tt.pbrt"},
+    // {"pbrt-v1-scenes/tt-tire.pbrt"},
 };
 
 const std::vector<TestInput> pbrt_v3_inputs = {
@@ -240,28 +290,35 @@ const std::vector<TestInput> pbrt_v3_inputs = {
 };
 
 void AddAllCallbacks(
-    std::vector<std::function<std::pair<int, std::string>()>>& output,
+    std::vector<
+        std::tuple<std::string, std::function<std::pair<int, std::string>()>,
+                   std::pair<int, std::string>>>& output,
     int version, const std::vector<TestInput>& all_input) {
   for (const TestInput& input : all_input) {
-    output.push_back([version, input]() {
-      return Convert(version, input.path, input.allow_warnings);
-    });
+    output.emplace_back(
+        input.path,
+        [version, input]() {
+          return Convert(version, input.path, input.allow_warnings);
+        },
+        std::pair<int, std::string>());
   }
 }
 
 TEST(Convert, All) {
-  std::vector<std::function<std::pair<int, std::string>()>> callbacks;
-  AddAllCallbacks(callbacks, /*version=*/3, pbrt_v3_inputs);
-
-  std::vector<std::pair<int, std::string>> results(callbacks.size());
+  std::vector<
+      std::tuple<std::string, std::function<std::pair<int, std::string>()>,
+                 std::pair<int, std::string>>>
+      state;
+  AddAllCallbacks(state, /*version=*/1, pbrt_v1_inputs);
+  AddAllCallbacks(state, /*version=*/3, pbrt_v3_inputs);
 
   std::atomic<size_t> index = 0;
   std::vector<std::thread> threads;
   for (size_t i = 0; i < std::thread::hardware_concurrency(); i++) {
     threads.emplace_back([&]() {
-      for (size_t work_index = index.fetch_add(1);
-           work_index < callbacks.size(); work_index = index.fetch_add(1)) {
-        results[work_index] = callbacks[work_index]();
+      for (size_t work_index = index.fetch_add(1); work_index < state.size();
+           work_index = index.fetch_add(1)) {
+        std::get<2>(state[work_index]) = std::get<1>(state[work_index])();
       }
     });
   }
@@ -270,9 +327,10 @@ TEST(Convert, All) {
     t.join();
   }
 
-  for (const auto& [code, output] : results) {
-    EXPECT_EQ(0, code);
-    EXPECT_EQ("", output);
+  for (const auto& [input_path, _, result] : state) {
+    SCOPED_TRACE(input_path);
+    EXPECT_EQ(0, result.first);
+    EXPECT_EQ("", result.second);
   }
 }
 
