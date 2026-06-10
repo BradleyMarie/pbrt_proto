@@ -231,6 +231,17 @@ message Volume {
   }
 }
 
+// A directive which sets the VolumeIntegrator to use for rendering.
+message VolumeIntegrator {
+  // The type of integrator to use. If none are set, then the current integrator
+  // should be unset. If no integrator is set at the time an image is to be
+  // rendered the renderer should exit with an error.
+  oneof surface_integrator_type {
+    EmissionVolumeIntegrator emission = 1;  // Create a emission integrator
+    SingleVolumeIntegrator single = 2;      // Create a single integrator
+  }
+}
+
 // A PBRTv1 directive.
 message Directive {
   oneof directive_type {
@@ -266,12 +277,10 @@ message Directive {
     Transform transform = 30;
     Translate translate = 31;
     Volume volume = 32;
-    // VolumeIntegrator
+    VolumeIntegrator volume_integrator = 33;
     WorldBegin world_begin = 34;
     WorldEnd world_end = 35;
   }
-
-  reserved 33;  // VolumeIntegrator
 }
 
 // A list of PBRTv1 directives.

@@ -1685,5 +1685,55 @@ TEST(RemoveWhittedIntegratorV3, WithData) {
               )pb"));
 }
 
+TEST(RemoveEmissionVolumeIntegratorV1, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  EmissionVolumeIntegrator actual;
+  RemoveEmissionVolumeIntegratorV1(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveEmissionVolumeIntegratorV1, WithData) {
+  std::vector<double> stepsize = {1};
+  Parameter stepsize_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::FLOAT,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(stepsize)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"stepsize", stepsize_parameter}};
+
+  EmissionVolumeIntegrator actual;
+  RemoveEmissionVolumeIntegratorV1(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                stepsize: 1
+              )pb"));
+}
+
+TEST(RemoveSingleVolumeIntegratorV1, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  SingleVolumeIntegrator actual;
+  RemoveSingleVolumeIntegratorV1(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveSingleVolumeIntegratorV1, WithData) {
+  std::vector<double> stepsize = {1};
+  Parameter stepsize_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::FLOAT,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(stepsize)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"stepsize", stepsize_parameter}};
+
+  SingleVolumeIntegrator actual;
+  RemoveSingleVolumeIntegratorV1(parameters, actual);
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                stepsize: 1
+              )pb"));
+}
+
 }  // namespace
 }  // namespace pbrt_proto

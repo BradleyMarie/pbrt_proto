@@ -7,8 +7,8 @@
 
 #include "absl/strings/match.h"
 #include "absl/strings/string_view.h"
-#include "google/protobuf/descriptor.pb.h"
 #include "gmock/gmock.h"
+#include "google/protobuf/descriptor.pb.h"
 #include "gtest/gtest.h"
 #include "pbrt_proto/pbrt.pb.h"
 #include "pbrt_proto/v1/v1.pb.h"
@@ -126,6 +126,11 @@ TEST_P(CommonTypes, AreBinaryCompatible) {
       continue;
     }
 
+    if (GetParam() == "Integrator" &&
+        absl::EndsWith(message_descriptor->full_name(), "VolumeIntegrator")) {
+      continue;
+    }
+
     if (GetParam() == "LightSource" &&
         absl::EndsWith(message_descriptor->full_name(), "AreaLightSource")) {
       continue;
@@ -146,7 +151,8 @@ INSTANTIATE_TEST_CASE_P(AllTypes, CommonTypes,
                                         "Camera", "Film", "FloatTexture",
                                         "Integrator", "LightSource", "Material",
                                         "Medium", "PixelFilter", "Sampler",
-                                        "Shape", "SpectrumTexture"));
+                                        "Shape", "SpectrumTexture",
+                                        "VolumeIntegrator"));
 
 std::vector<std::pair<int, int>> GenerateVersionPairs(int max) {
   std::vector<std::pair<int, int>> result;

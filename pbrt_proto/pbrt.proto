@@ -3,7 +3,7 @@ syntax = "proto2";
 package pbrt_proto;
 
 //
-// Common Data Types
+// Data Types
 //
 
 // A blackbody spectral power distribution.
@@ -99,7 +99,7 @@ message Vector {
 }
 
 //
-// Common Variant Data Types
+// Variant Data Types
 //
 
 // A spectral power distribution
@@ -179,7 +179,7 @@ message SpectrumTextureParameter {
 }
 
 //
-// Common Directives
+// Directives
 //
 
 // A directive that selects the current transformation matrix
@@ -487,7 +487,7 @@ message WorldBegin {}
 message WorldEnd {}
 
 //
-// Common Accelerators
+// Accelerators
 //
 
 // A bounding volume heirarchy (BVH) accelerator.
@@ -546,7 +546,7 @@ message KdTreeAccelerator {
 }
 
 //
-// Common Area Light Sources
+// Area Light Sources
 //
 
 // A diffuse area light source.
@@ -606,7 +606,7 @@ message DiffuseAreaLightSource {
 }
 
 //
-// Common Cameras
+// Cameras
 //
 
 // The bounds of the film plane in screen space.
@@ -825,7 +825,7 @@ message RealisticCamera {
 }
 
 //
-// Common Film
+// Film
 //
 
 // The sub-region of the image to render in normalized device coordinates.
@@ -1092,7 +1092,7 @@ message SpectralFilm {
 }
 
 //
-// Common Integrators
+// Integrators
 //
 
 // The strategy used to sample direct lighting.
@@ -1616,7 +1616,7 @@ message WhittedIntegrator {
 }
 
 //
-// Common Light Sources
+// Light Sources
 //
 
 // An infinitely distant directional light source.
@@ -1834,7 +1834,7 @@ message SpotLightSource {
 }
 
 //
-// Common Materials
+// Materials
 //
 
 // A built-in material with no parameters other than a bump map. Used to
@@ -2421,7 +2421,7 @@ message UberMaterial {
 }
 
 //
-// Common Participating Media
+// Participating Media
 //
 
 // A predefined scattering medium known by PBRT.
@@ -2736,7 +2736,7 @@ message UniformGridMedium {
 }
 
 //
-// Common Pixel Filters
+// Pixel Filters
 //
 
 // A pixel filter that performs a box filter.
@@ -2823,7 +2823,7 @@ message TrianglePixelFilter {
 }
 
 //
-// Common Samplers
+// Samplers
 //
 
 // The supported randomization methods for low discrepancy samplers.
@@ -3016,7 +3016,7 @@ message ZeroTwoSequenceSampler {
 }
 
 //
-// Common Shapes
+// Shapes
 //
 
 // A tuple of three vertex indicies.
@@ -3326,7 +3326,7 @@ message TriangleMeshShape {
 }
 
 //
-// Common Textures
+// Textures
 //
 
 // The type of antialiasing to apply to 2D checkerboard textures.
@@ -3955,4 +3955,20 @@ message WindyFloatTexture {
 // A texture which uses Perlin noise to create a windy appearance.
 message WindySpectrumTexture {
   // Empty Message
+}
+
+//
+// Volume Integrators
+//
+
+// A volume integrator which only accounts for attenutation and emission.
+message EmissionVolumeIntegrator {
+  // The stepping distance along a ray when doing ray marching.
+  optional double stepsize = 1 [default = 1.0];
+}
+
+// A volume integrator which only accounts for single scattering.
+message SingleVolumeIntegrator {
+  // The stepping distance along a ray when doing ray marching.
+  optional double stepsize = 1 [default = 1.0];
 }

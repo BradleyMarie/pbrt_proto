@@ -9,6 +9,10 @@
 
 namespace pbrt_proto {
 
+//
+// Standard Integrators
+//
+
 void RemoveAmbientOcclusionIntegratorV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     AmbientOcclusionIntegrator& output);
@@ -108,6 +112,18 @@ void RemoveWhittedIntegratorV1(
 void RemoveWhittedIntegratorV3(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     WhittedIntegrator& output);
+
+//
+// Volume Integrators
+//
+
+void RemoveEmissionVolumeIntegratorV1(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    EmissionVolumeIntegrator& output);
+
+void RemoveSingleVolumeIntegratorV1(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    SingleVolumeIntegrator& output);
 
 }  // namespace pbrt_proto
 
