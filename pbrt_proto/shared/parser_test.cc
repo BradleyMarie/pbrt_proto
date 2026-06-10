@@ -165,6 +165,7 @@ class MockParser final : public Parser {
                (absl::flat_hash_map<absl::string_view, Parameter>&)),
               (override));
   MOCK_METHOD(absl::Status, Scale, (double, double, double), (override));
+  MOCK_METHOD(absl::Status, SearchPath, (absl::string_view), (override));
   MOCK_METHOD(absl::Status, Shape,
               (absl::string_view,
                (absl::flat_hash_map<absl::string_view, Parameter>&)),
@@ -173,11 +174,19 @@ class MockParser final : public Parser {
               (absl::string_view, absl::string_view,
                (absl::flat_hash_map<absl::string_view, Parameter>&)),
               (override));
+  MOCK_METHOD(absl::Status, SurfaceIntegrator,
+              (absl::string_view,
+               (absl::flat_hash_map<absl::string_view, Parameter>&)),
+              (override));
   MOCK_METHOD(absl::Status, Transform, ((const std::array<double, 16>&)), ());
   MOCK_METHOD(absl::Status, TransformBegin, (), (override));
   MOCK_METHOD(absl::Status, TransformEnd, (), (override));
   MOCK_METHOD(absl::Status, TransformTimes, (double, double), (override));
   MOCK_METHOD(absl::Status, Translate, (double x, double y, double z),
+              (override));
+  MOCK_METHOD(absl::Status, VolumeIntegrator,
+              (absl::string_view,
+               (absl::flat_hash_map<absl::string_view, Parameter>&)),
               (override));
   MOCK_METHOD(absl::Status, WorldBegin, (), (override));
   MOCK_METHOD(absl::Status, WorldEnd, (), (override));
@@ -2203,6 +2212,28 @@ TEST(Scale, Fails) {
               StatusIs(absl::StatusCode::kUnknown, ""));
 }
 
+TEST(SearchPath, Invalid) {
+  std::stringstream stream("SearchPath a");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Invalid parameter to directive SearchPath: 'a'"));
+}
+
+TEST(SearchPath, Succeeds) {
+  std::stringstream stream("SearchPath \"a\"");
+  MockParser parser;
+  EXPECT_CALL(parser, SearchPath("a")).WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(SearchPath, Fails) {
+  std::stringstream stream("SearchPath \"a\"");
+  MockParser parser;
+  EXPECT_CALL(parser, SearchPath("a")).WillOnce(Return(absl::UnknownError("")));
+  EXPECT_THAT(parser.ReadFrom(stream),
+              StatusIs(absl::StatusCode::kUnknown, ""));
+}
+
 TEST(Shape, Succeeds) {
   std::stringstream stream("Shape \"abc\"");
   MockParser parser;
@@ -2222,6 +2253,31 @@ TEST(Shape, Fails) {
   std::stringstream stream("Shape \"abc\"");
   MockParser parser;
   EXPECT_CALL(parser, Shape("abc", IsEmpty()))
+      .WillOnce(Return(absl::UnknownError("")));
+  EXPECT_THAT(parser.ReadFrom(stream),
+              StatusIs(absl::StatusCode::kUnknown, ""));
+}
+
+TEST(SurfaceIntegrator, Succeeds) {
+  std::stringstream stream("SurfaceIntegrator \"abc\"");
+  MockParser parser;
+  EXPECT_CALL(parser, SurfaceIntegrator("abc", IsEmpty()))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(SurfaceIntegrator, MissingType) {
+  std::stringstream stream("SurfaceIntegrator");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(absl::StatusCode::kInvalidArgument,
+               "Missing type parameter to directive SurfaceIntegrator"));
+}
+
+TEST(SurfaceIntegrator, Fails) {
+  std::stringstream stream("SurfaceIntegrator \"abc\"");
+  MockParser parser;
+  EXPECT_CALL(parser, SurfaceIntegrator("abc", IsEmpty()))
       .WillOnce(Return(absl::UnknownError("")));
   EXPECT_THAT(parser.ReadFrom(stream),
               StatusIs(absl::StatusCode::kUnknown, ""));
@@ -2395,6 +2451,30 @@ TEST(Translate, Fails) {
   std::stringstream stream("Translate 1 2 3");
   MockParser parser;
   EXPECT_CALL(parser, Translate(1.0, 2.0, 3.0))
+      .WillOnce(Return(absl::UnknownError("")));
+  EXPECT_THAT(parser.ReadFrom(stream),
+              StatusIs(absl::StatusCode::kUnknown, ""));
+}
+
+TEST(VolumeIntegrator, Succeeds) {
+  std::stringstream stream("VolumeIntegrator \"abc\"");
+  MockParser parser;
+  EXPECT_CALL(parser, VolumeIntegrator("abc", IsEmpty()))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(VolumeIntegrator, MissingType) {
+  std::stringstream stream("VolumeIntegrator");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Missing type parameter to directive VolumeIntegrator"));
+}
+
+TEST(VolumeIntegrator, Fails) {
+  std::stringstream stream("VolumeIntegrator \"abc\"");
+  MockParser parser;
+  EXPECT_CALL(parser, VolumeIntegrator("abc", IsEmpty()))
       .WillOnce(Return(absl::UnknownError("")));
   EXPECT_THAT(parser.ReadFrom(stream),
               StatusIs(absl::StatusCode::kUnknown, ""));

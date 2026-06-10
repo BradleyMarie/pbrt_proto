@@ -244,6 +244,8 @@ class ParserV3 final : public Parser {
 
   absl::Status Scale(double x, double y, double z) override;
 
+  absl::Status SearchPath(absl::string_view path) override;
+
   absl::Status Shape(
       absl::string_view shape_type,
       absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
@@ -251,6 +253,10 @@ class ParserV3 final : public Parser {
   absl::Status SpectrumTexture(
       absl::string_view spectrum_texture_name,
       absl::string_view spectrum_texture_type,
+      absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
+
+  absl::Status SurfaceIntegrator(
+      absl::string_view integrator_type,
       absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
 
   absl::Status Transform(double m00, double m01, double m02, double m03,
@@ -266,6 +272,10 @@ class ParserV3 final : public Parser {
   absl::Status TransformEnd() override;
 
   absl::Status Translate(double x, double y, double z) override;
+
+  absl::Status VolumeIntegrator(
+      absl::string_view integrator_type,
+      absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
 
   absl::Status WorldBegin() override;
 
@@ -668,14 +678,6 @@ absl::Status ParserV3::Rotate(double angle, double x, double y, double z) {
   return absl::OkStatus();
 }
 
-absl::Status ParserV3::Scale(double x, double y, double z) {
-  auto& scale = *output_.add_directives()->mutable_scale();
-  scale.set_x(x);
-  scale.set_y(y);
-  scale.set_z(z);
-  return absl::OkStatus();
-}
-
 absl::Status ParserV3::Sampler(
     absl::string_view sampler_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
@@ -700,6 +702,19 @@ absl::Status ParserV3::Sampler(
   }
 
   return absl::OkStatus();
+}
+
+absl::Status ParserV3::Scale(double x, double y, double z) {
+  auto& scale = *output_.add_directives()->mutable_scale();
+  scale.set_x(x);
+  scale.set_y(y);
+  scale.set_z(z);
+  return absl::OkStatus();
+}
+
+absl::Status ParserV3::SearchPath(absl::string_view path) {
+  return absl::UnimplementedError(
+      "Directive 'SearchPath' is not supported in pbrt-v3");
 }
 
 absl::Status ParserV3::Shape(
@@ -1002,6 +1017,13 @@ absl::Status ParserV3::SpectrumTexture(
   return absl::OkStatus();
 }
 
+absl::Status ParserV3::SurfaceIntegrator(
+    absl::string_view shape_type,
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
+  return absl::UnimplementedError(
+      "Directive 'SurfaceIntegrator' is not supported in pbrt-v3");
+}
+
 absl::Status ParserV3::Transform(double m00, double m01, double m02, double m03,
                                  double m10, double m11, double m12, double m13,
                                  double m20, double m21, double m22, double m23,
@@ -1050,6 +1072,13 @@ absl::Status ParserV3::Translate(double x, double y, double z) {
   translate.set_y(y);
   translate.set_z(z);
   return absl::OkStatus();
+}
+
+absl::Status ParserV3::VolumeIntegrator(
+    absl::string_view shape_type,
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
+  return absl::UnimplementedError(
+      "Directive 'VolumeIntegrator' is not supported in pbrt-v3");
 }
 
 absl::Status ParserV3::WorldBegin() {

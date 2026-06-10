@@ -1150,6 +1150,15 @@ absl::Status Parser::ReadFrom(std::istream& stream) {
 
              return Scale((*values)[0], (*values)[1], (*values)[2]);
            }},
+          {"SearchPath",
+           [&]() {
+             auto name = ReadQuotedString("SearchPath", tokenizer);
+             if (!name.ok()) {
+               return name.status();
+             }
+
+             return SearchPath(*name);
+           }},
           {"Shape",
            [&]() {
              absl::StatusOr<absl::string_view> type_name =
@@ -1160,6 +1169,17 @@ absl::Status Parser::ReadFrom(std::istream& stream) {
              }
 
              return Shape(*type_name, parameters);
+           }},
+          {"SurfaceIntegrator",
+           [&]() {
+             absl::StatusOr<absl::string_view> type_name =
+                 ReadParameters("SurfaceIntegrator", parameter_type_names_,
+                                storage, tokenizer, parameters);
+             if (!type_name.ok()) {
+               return type_name.status();
+             }
+
+             return SurfaceIntegrator(*type_name, parameters);
            }},
           {"Texture",
            [&]() {
@@ -1231,6 +1251,17 @@ absl::Status Parser::ReadFrom(std::istream& stream) {
              }
 
              return Translate((*values)[0], (*values)[1], (*values)[2]);
+           }},
+          {"VolumeIntegrator",
+           [&]() {
+             absl::StatusOr<absl::string_view> type_name =
+                 ReadParameters("VolumeIntegrator", parameter_type_names_,
+                                storage, tokenizer, parameters);
+             if (!type_name.ok()) {
+               return type_name.status();
+             }
+
+             return VolumeIntegrator(*type_name, parameters);
            }},
           {"WorldBegin", [&]() { return WorldBegin(); }},
           {"WorldEnd", [&]() { return WorldEnd(); }}};

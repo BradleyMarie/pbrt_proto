@@ -154,6 +154,8 @@ class Parser {
 
   virtual absl::Status Scale(double x, double y, double z) = 0;
 
+  virtual absl::Status SearchPath(absl::string_view path) = 0;
+
   virtual absl::Status Shape(
       absl::string_view shape_type,
       absl::flat_hash_map<absl::string_view, Parameter>& parameters) = 0;
@@ -161,6 +163,10 @@ class Parser {
   virtual absl::Status SpectrumTexture(
       absl::string_view spectrum_texture_name,
       absl::string_view spectrum_texture_type,
+      absl::flat_hash_map<absl::string_view, Parameter>& parameters) = 0;
+
+  virtual absl::Status SurfaceIntegrator(
+      absl::string_view integrator_type,
       absl::flat_hash_map<absl::string_view, Parameter>& parameters) = 0;
 
   virtual absl::Status Transform(double m00, double m01, double m02, double m03,
@@ -176,6 +182,10 @@ class Parser {
   virtual absl::Status TransformTimes(double start_time, double end_time) = 0;
 
   virtual absl::Status Translate(double x, double y, double z) = 0;
+
+  virtual absl::Status VolumeIntegrator(
+      absl::string_view integrator_type,
+      absl::flat_hash_map<absl::string_view, Parameter>& parameters) = 0;
 
   virtual absl::Status WorldBegin() = 0;
 
