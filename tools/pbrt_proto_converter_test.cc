@@ -296,7 +296,7 @@ void AddAllCallbacks(
     int version, const std::vector<TestInput>& all_input) {
   for (const TestInput& input : all_input) {
     auto& back = output.emplace_back();
-    std::get<0>(back) = input.path;
+    std::get<0>(back) = input.path.string();
     std::get<1>(back) = [version, input]() {
       return Convert(version, input.path, input.allow_warnings);
     };
