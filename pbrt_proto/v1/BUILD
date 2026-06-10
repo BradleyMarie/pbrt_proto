@@ -27,6 +27,7 @@ cc_library(
         "//pbrt_proto/shared:media",
         "//pbrt_proto/shared:parser",
         "//pbrt_proto/shared:pixel_filters",
+        "//pbrt_proto/shared:proto_parser",
         "//pbrt_proto/shared:samplers",
         "//pbrt_proto/shared:shapes",
         "//pbrt_proto/shared:textures",

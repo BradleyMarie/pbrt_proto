@@ -317,6 +317,18 @@ cc_test(
 )
 
 cc_library(
+    name = "proto_parser",
+    hdrs = ["proto_parser.h"],
+    deps = [
+        ":parser",
+        "@abseil-cpp//absl/container:flat_hash_map",
+        "@abseil-cpp//absl/status:status",
+        "@abseil-cpp//absl/strings",
+        "@abseil-cpp//absl/strings:string_view",
+    ],
+)
+
+cc_library(
     name = "pixel_filters",
     srcs = ["pixel_filters.cc"],
     hdrs = ["pixel_filters.h"],

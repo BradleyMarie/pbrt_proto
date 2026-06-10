@@ -23,6 +23,7 @@
 #include "pbrt_proto/shared/media.h"
 #include "pbrt_proto/shared/parser.h"
 #include "pbrt_proto/shared/pixel_filters.h"
+#include "pbrt_proto/shared/proto_parser.h"
 #include "pbrt_proto/shared/samplers.h"
 #include "pbrt_proto/shared/shapes.h"
 #include "pbrt_proto/shared/textures.h"
@@ -146,39 +147,23 @@ static const absl::flat_hash_map<absl::string_view, ParameterType>
         },
 };
 
-class ParserV3 final : public Parser {
+class ParserV3 final : public ProtoParser<PbrtProto, 3> {
  public:
   ParserV3(PbrtProto& output) noexcept
-      : Parser(parameter_type_names), output_(output) {}
+      : ProtoParser(parameter_type_names, output) {}
 
  private:
   absl::Status Accelerator(
       absl::string_view accelerator_type,
       absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
 
-  absl::Status ActiveTransform(ActiveTransformation active) override;
-
   absl::Status AreaLightSource(
       absl::string_view area_light_source_type,
       absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
 
-  absl::Status AttributeBegin() override;
-
-  absl::Status AttributeEnd() override;
-
   absl::Status Camera(
       absl::string_view camera_type,
       absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
-
-  absl::Status ConcatTransform(double m00, double m01, double m02, double m03,
-                               double m10, double m11, double m12, double m13,
-                               double m20, double m21, double m22, double m23,
-                               double m30, double m31, double m32,
-                               double m33) override;
-
-  absl::Status CoordinateSystem(absl::string_view name) override;
-
-  absl::Status CoordSysTransform(absl::string_view name) override;
 
   absl::Status Film(
       absl::string_view film_type,
@@ -189,23 +174,13 @@ class ParserV3 final : public Parser {
       absl::string_view float_texture_type,
       absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
 
-  absl::Status Identity() override;
-
-  absl::Status Include(absl::string_view path) override;
-
   absl::Status Integrator(
       absl::string_view integrator_type,
       absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
 
-  absl::Status Import(absl::string_view path) override;
-
   absl::Status LightSource(
       absl::string_view light_source_type,
       absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
-
-  absl::Status LookAt(double eye_x, double eye_y, double eye_z, double look_x,
-                      double look_y, double look_z, double up_x, double up_y,
-                      double up_z) override;
 
   absl::Status MakeNamedMaterial(
       absl::string_view material_name,
@@ -224,27 +199,13 @@ class ParserV3 final : public Parser {
 
   absl::Status NamedMaterial(absl::string_view material) override;
 
-  absl::Status ObjectBegin(absl::string_view path) override;
-
-  absl::Status ObjectEnd() override;
-
-  absl::Status ObjectInstance(absl::string_view path) override;
-
   absl::Status PixelFilter(
       absl::string_view filter_type,
       absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
 
-  absl::Status ReverseOrientation() override;
-
-  absl::Status Rotate(double angle, double x, double y, double z) override;
-
   absl::Status Sampler(
       absl::string_view sampler_type,
       absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
-
-  absl::Status Scale(double x, double y, double z) override;
-
-  absl::Status SearchPath(absl::string_view path) override;
 
   absl::Status Shape(
       absl::string_view shape_type,
@@ -259,20 +220,6 @@ class ParserV3 final : public Parser {
       absl::string_view integrator_type,
       absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
 
-  absl::Status Transform(double m00, double m01, double m02, double m03,
-                         double m10, double m11, double m12, double m13,
-                         double m20, double m21, double m22, double m23,
-                         double m30, double m31, double m32,
-                         double m33) override;
-
-  absl::Status TransformTimes(double start_time, double end_time) override;
-
-  absl::Status TransformBegin() override;
-
-  absl::Status TransformEnd() override;
-
-  absl::Status Translate(double x, double y, double z) override;
-
   absl::Status Volume(
       absl::string_view volume_type,
       absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
@@ -280,12 +227,6 @@ class ParserV3 final : public Parser {
   absl::Status VolumeIntegrator(
       absl::string_view integrator_type,
       absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
-
-  absl::Status WorldBegin() override;
-
-  absl::Status WorldEnd() override;
-
-  PbrtProto& output_;
 };
 
 absl::Status ParserV3::Accelerator(
@@ -305,23 +246,6 @@ absl::Status ParserV3::Accelerator(
   return absl::OkStatus();
 }
 
-absl::Status ParserV3::ActiveTransform(ActiveTransformation active) {
-  auto& active_transform =
-      *output_.add_directives()->mutable_active_transform();
-  switch (active) {
-    case ActiveTransformation::ALL:
-      active_transform.set_active(ActiveTransform::ALL);
-      break;
-    case ActiveTransformation::START_TIME:
-      active_transform.set_active(ActiveTransform::START_TIME);
-      break;
-    case ActiveTransformation::END_TIME:
-      active_transform.set_active(ActiveTransform::END_TIME);
-      break;
-  }
-  return absl::OkStatus();
-}
-
 absl::Status ParserV3::AreaLightSource(
     absl::string_view area_light_source_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
@@ -336,16 +260,6 @@ absl::Status ParserV3::AreaLightSource(
   std::cerr << "Unrecognized AreaLightSource type: \"" << area_light_source_type
             << "\"" << std::endl;
 
-  return absl::OkStatus();
-}
-
-absl::Status ParserV3::AttributeBegin() {
-  output_.add_directives()->mutable_attribute_begin();
-  return absl::OkStatus();
-}
-
-absl::Status ParserV3::AttributeEnd() {
-  output_.add_directives()->mutable_attribute_end();
   return absl::OkStatus();
 }
 
@@ -367,43 +281,6 @@ absl::Status ParserV3::Camera(
               << std::endl;
   }
 
-  return absl::OkStatus();
-}
-
-absl::Status ParserV3::ConcatTransform(double m00, double m01, double m02,
-                                       double m03, double m10, double m11,
-                                       double m12, double m13, double m20,
-                                       double m21, double m22, double m23,
-                                       double m30, double m31, double m32,
-                                       double m33) {
-  auto& concat_transform =
-      *output_.add_directives()->mutable_concat_transform();
-  concat_transform.set_m00(m00);
-  concat_transform.set_m01(m01);
-  concat_transform.set_m02(m02);
-  concat_transform.set_m03(m03);
-  concat_transform.set_m10(m10);
-  concat_transform.set_m11(m11);
-  concat_transform.set_m12(m12);
-  concat_transform.set_m13(m13);
-  concat_transform.set_m20(m20);
-  concat_transform.set_m21(m21);
-  concat_transform.set_m22(m22);
-  concat_transform.set_m23(m23);
-  concat_transform.set_m30(m30);
-  concat_transform.set_m31(m31);
-  concat_transform.set_m32(m32);
-  concat_transform.set_m33(m33);
-  return absl::OkStatus();
-}
-
-absl::Status ParserV3::CoordinateSystem(absl::string_view name) {
-  output_.add_directives()->mutable_coordinate_system()->set_name(name);
-  return absl::OkStatus();
-}
-
-absl::Status ParserV3::CoordSysTransform(absl::string_view name) {
-  output_.add_directives()->mutable_coord_sys_transform()->set_name(name);
   return absl::OkStatus();
 }
 
@@ -467,16 +344,6 @@ absl::Status ParserV3::FloatTexture(
   return absl::OkStatus();
 }
 
-absl::Status ParserV3::Identity() {
-  output_.add_directives()->mutable_identity();
-  return absl::OkStatus();
-}
-
-absl::Status ParserV3::Include(absl::string_view path) {
-  output_.add_directives()->mutable_include()->set_path(path);
-  return absl::OkStatus();
-}
-
 absl::Status ParserV3::Integrator(
     absl::string_view integrator_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
@@ -506,11 +373,6 @@ absl::Status ParserV3::Integrator(
   }
 
   return absl::OkStatus();
-}
-
-absl::Status ParserV3::Import(absl::string_view path) {
-  return absl::UnimplementedError(
-      "Directive 'Import' is not supported in pbrt-v3");
 }
 
 absl::Status ParserV3::LightSource(
@@ -549,22 +411,6 @@ absl::Status ParserV3::LightSource(
   std::cerr << "Unrecognized LightSource type: \"" << light_source_type << "\""
             << std::endl;
 
-  return absl::OkStatus();
-}
-
-absl::Status ParserV3::LookAt(double eye_x, double eye_y, double eye_z,
-                              double look_x, double look_y, double look_z,
-                              double up_x, double up_y, double up_z) {
-  auto& look_at = *output_.add_directives()->mutable_look_at();
-  look_at.set_eye_x(eye_x);
-  look_at.set_eye_y(eye_y);
-  look_at.set_eye_z(eye_z);
-  look_at.set_look_x(look_x);
-  look_at.set_look_y(look_y);
-  look_at.set_look_z(look_z);
-  look_at.set_up_x(up_x);
-  look_at.set_up_y(up_y);
-  look_at.set_up_z(up_z);
   return absl::OkStatus();
 }
 
@@ -630,21 +476,6 @@ absl::Status ParserV3::NamedMaterial(absl::string_view name) {
   return absl::OkStatus();
 }
 
-absl::Status ParserV3::ObjectBegin(absl::string_view name) {
-  output_.add_directives()->mutable_object_begin()->set_name(name);
-  return absl::OkStatus();
-}
-
-absl::Status ParserV3::ObjectEnd() {
-  output_.add_directives()->mutable_object_end();
-  return absl::OkStatus();
-}
-
-absl::Status ParserV3::ObjectInstance(absl::string_view name) {
-  output_.add_directives()->mutable_object_instance()->set_name(name);
-  return absl::OkStatus();
-}
-
 absl::Status ParserV3::PixelFilter(
     absl::string_view pixel_filter_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
@@ -665,20 +496,6 @@ absl::Status ParserV3::PixelFilter(
               << "\"" << std::endl;
   }
 
-  return absl::OkStatus();
-}
-
-absl::Status ParserV3::ReverseOrientation() {
-  output_.add_directives()->mutable_reverse_orientation();
-  return absl::OkStatus();
-}
-
-absl::Status ParserV3::Rotate(double angle, double x, double y, double z) {
-  auto& rotate = *output_.add_directives()->mutable_rotate();
-  rotate.set_angle(angle);
-  rotate.set_x(x);
-  rotate.set_y(y);
-  rotate.set_z(z);
   return absl::OkStatus();
 }
 
@@ -706,19 +523,6 @@ absl::Status ParserV3::Sampler(
   }
 
   return absl::OkStatus();
-}
-
-absl::Status ParserV3::Scale(double x, double y, double z) {
-  auto& scale = *output_.add_directives()->mutable_scale();
-  scale.set_x(x);
-  scale.set_y(y);
-  scale.set_z(z);
-  return absl::OkStatus();
-}
-
-absl::Status ParserV3::SearchPath(absl::string_view path) {
-  return absl::UnimplementedError(
-      "Directive 'SearchPath' is not supported in pbrt-v3");
 }
 
 absl::Status ParserV3::Shape(
@@ -1028,56 +832,6 @@ absl::Status ParserV3::SurfaceIntegrator(
       "Directive 'SurfaceIntegrator' is not supported in pbrt-v3");
 }
 
-absl::Status ParserV3::Transform(double m00, double m01, double m02, double m03,
-                                 double m10, double m11, double m12, double m13,
-                                 double m20, double m21, double m22, double m23,
-                                 double m30, double m31, double m32,
-                                 double m33) {
-  auto& transform = *output_.add_directives()->mutable_transform();
-  transform.set_m00(m00);
-  transform.set_m01(m01);
-  transform.set_m02(m02);
-  transform.set_m03(m03);
-  transform.set_m10(m10);
-  transform.set_m11(m11);
-  transform.set_m12(m12);
-  transform.set_m13(m13);
-  transform.set_m20(m20);
-  transform.set_m21(m21);
-  transform.set_m22(m22);
-  transform.set_m23(m23);
-  transform.set_m30(m30);
-  transform.set_m31(m31);
-  transform.set_m32(m32);
-  transform.set_m33(m33);
-  return absl::OkStatus();
-}
-
-absl::Status ParserV3::TransformTimes(double start_time, double end_time) {
-  auto& transform_times = *output_.add_directives()->mutable_transform_times();
-  transform_times.set_start_time(start_time);
-  transform_times.set_end_time(end_time);
-  return absl::OkStatus();
-}
-
-absl::Status ParserV3::TransformBegin() {
-  output_.add_directives()->mutable_transform_begin();
-  return absl::OkStatus();
-}
-
-absl::Status ParserV3::TransformEnd() {
-  output_.add_directives()->mutable_transform_end();
-  return absl::OkStatus();
-}
-
-absl::Status ParserV3::Translate(double x, double y, double z) {
-  auto& translate = *output_.add_directives()->mutable_translate();
-  translate.set_x(x);
-  translate.set_y(y);
-  translate.set_z(z);
-  return absl::OkStatus();
-}
-
 absl::Status ParserV3::Volume(
     absl::string_view volume_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
@@ -1090,16 +844,6 @@ absl::Status ParserV3::VolumeIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
   return absl::UnimplementedError(
       "Directive 'VolumeIntegrator' is not supported in pbrt-v3");
-}
-
-absl::Status ParserV3::WorldBegin() {
-  output_.add_directives()->mutable_world_begin();
-  return absl::OkStatus();
-}
-
-absl::Status ParserV3::WorldEnd() {
-  output_.add_directives()->mutable_world_end();
-  return absl::OkStatus();
 }
 
 }  // namespace
