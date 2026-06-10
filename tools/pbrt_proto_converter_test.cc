@@ -295,12 +295,11 @@ void AddAllCallbacks(
                    std::pair<int, std::string>>>& output,
     int version, const std::vector<TestInput>& all_input) {
   for (const TestInput& input : all_input) {
-    output.emplace_back(
-        input.path,
-        [version, input]() {
-          return Convert(version, input.path, input.allow_warnings);
-        },
-        std::pair<int, std::string>());
+    auto& back = output.emplace_back();
+    std::get<0>(back) = input.path;
+    std::get<1>(back) = [version, input]() {
+      return Convert(version, input.path, input.allow_warnings);
+    };
   }
 }
 
