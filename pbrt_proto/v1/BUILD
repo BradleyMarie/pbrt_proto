@@ -36,7 +36,6 @@ cc_library(
         "@abseil-cpp//absl/status:status",
         "@abseil-cpp//absl/status:statusor",
         "@abseil-cpp//absl/strings:string_view",
-        "@abseil-cpp//absl/types:span",
     ],
 )
 

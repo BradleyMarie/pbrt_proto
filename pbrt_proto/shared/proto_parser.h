@@ -26,6 +26,11 @@ class ProtoParser : public Parser {
       absl::flat_hash_map<absl::string_view, Parameter>& parameters,
       MaterialType& material) = 0;
 
+  static absl::Status UnrecognizedTypeError(absl::string_view directive,
+                                            absl::string_view type);
+
+  static constexpr int kPbrtVersion = PbrtVersion;
+
   T& output_;
 
  private:
@@ -119,14 +124,29 @@ class ProtoParser : public Parser {
 
   absl::Status WorldEnd() final;
 
-  absl::Status UnsupportedError(absl::string_view directive) const;
+  static absl::Status UnsupportedDirectiveError(absl::string_view directive);
 };
 
 template <typename T, int PbrtVersion>
-absl::Status ProtoParser<T, PbrtVersion>::UnsupportedError(
-    absl::string_view directive) const {
+absl::Status ProtoParser<T, PbrtVersion>::UnsupportedDirectiveError(
+    absl::string_view directive) {
   return absl::UnimplementedError(absl::StrCat(
       "Directive '", directive, "' is not supported in pbrt-v", PbrtVersion));
+}
+
+template <typename T, int PbrtVersion>
+absl::Status ProtoParser<T, PbrtVersion>::UnrecognizedTypeError(
+    absl::string_view directive, absl::string_view type) {
+  std::string message =
+      absl::StrCat(directive, " type \'", type, "\' is not supported in pbrt-v",
+                   PbrtVersion);
+
+  if constexpr (PbrtVersion < 4) {
+    std::cerr << "WARNING: " << message << std::endl;
+    return absl::OkStatus();
+  }
+
+  return absl::InvalidArgumentError(message);
 }
 
 template <typename T, int PbrtVersion>
@@ -150,7 +170,7 @@ absl::Status ProtoParser<T, PbrtVersion>::ActiveTransform(
     return absl::OkStatus();
   }
 
-  return UnsupportedError("ActiveTransformation");
+  return UnsupportedDirectiveError("ActiveTransformation");
 }
 
 template <typename T, int PbrtVersion>
@@ -221,7 +241,7 @@ template <typename T, int PbrtVersion>
 absl::Status ProtoParser<T, PbrtVersion>::Integrator(
     absl::string_view integrator_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
-  return UnsupportedError("Integrator");
+  return UnsupportedDirectiveError("Integrator");
 }
 
 template <typename T, int PbrtVersion>
@@ -230,7 +250,7 @@ absl::Status ProtoParser<T, PbrtVersion>::Import(absl::string_view path) {
     output_.add_directives()->mutable_import()->set_path(path);
   }
 
-  return UnsupportedError("Import");
+  return UnsupportedDirectiveError("Import");
 }
 
 template <typename T, int PbrtVersion>
@@ -264,7 +284,7 @@ absl::Status ProtoParser<T, PbrtVersion>::MakeNamedMaterial(
                     parameters, *make_named_material.mutable_material());
   }
 
-  return UnsupportedError("MakeNamedMaterial");
+  return UnsupportedDirectiveError("MakeNamedMaterial");
 }
 
 template <typename T, int PbrtVersion>
@@ -279,7 +299,7 @@ template <typename T, int PbrtVersion>
 absl::Status ProtoParser<T, PbrtVersion>::MakeNamedMedium(
     absl::string_view medium_name,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
-  return UnsupportedError("MakeNamedMedium");
+  return UnsupportedDirectiveError("MakeNamedMedium");
 }
 
 template <typename T, int PbrtVersion>
@@ -293,7 +313,7 @@ absl::Status ProtoParser<T, PbrtVersion>::MediumInterface(
     return absl::OkStatus();
   }
 
-  return UnsupportedError("MediumInterface");
+  return UnsupportedDirectiveError("MediumInterface");
 }
 
 template <typename T, int PbrtVersion>
@@ -304,7 +324,7 @@ absl::Status ProtoParser<T, PbrtVersion>::NamedMaterial(
     return absl::OkStatus();
   }
 
-  return UnsupportedError("NamedMaterial");
+  return UnsupportedDirectiveError("NamedMaterial");
 }
 
 template <typename T, int PbrtVersion>
@@ -359,14 +379,14 @@ absl::Status ProtoParser<T, PbrtVersion>::SearchPath(absl::string_view path) {
     return absl::OkStatus();
   }
 
-  return UnsupportedError("SearchPath");
+  return UnsupportedDirectiveError("SearchPath");
 }
 
 template <typename T, int PbrtVersion>
 absl::Status ProtoParser<T, PbrtVersion>::SurfaceIntegrator(
     absl::string_view integrator_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
-  return UnsupportedError("SurfaceIntegrator");
+  return UnsupportedDirectiveError("SurfaceIntegrator");
 }
 
 template <typename T, int PbrtVersion>
@@ -417,7 +437,7 @@ absl::Status ProtoParser<T, PbrtVersion>::TransformTimes(double start_time,
     return absl::OkStatus();
   }
 
-  return UnsupportedError("TransformTimes");
+  return UnsupportedDirectiveError("TransformTimes");
 }
 
 template <typename T, int PbrtVersion>
@@ -434,14 +454,14 @@ template <typename T, int PbrtVersion>
 absl::Status ProtoParser<T, PbrtVersion>::Volume(
     absl::string_view volume_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
-  return UnsupportedError("Volume");
+  return UnsupportedDirectiveError("Volume");
 }
 
 template <typename T, int PbrtVersion>
 absl::Status ProtoParser<T, PbrtVersion>::VolumeIntegrator(
     absl::string_view integrator_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
-  return UnsupportedError("VolumeIntegrator");
+  return UnsupportedDirectiveError("VolumeIntegrator");
 }
 
 template <typename T, int PbrtVersion>
@@ -457,7 +477,7 @@ absl::Status ProtoParser<T, PbrtVersion>::WorldEnd() {
     return absl::OkStatus();
   }
 
-  return UnsupportedError("WorldEnd");
+  return UnsupportedDirectiveError("WorldEnd");
 }
 
 }  // namespace pbrt_proto

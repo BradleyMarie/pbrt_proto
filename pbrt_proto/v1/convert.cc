@@ -1,17 +1,13 @@
 #include "pbrt_proto/v1/convert.h"
 
-#include <algorithm>
-#include <array>
 #include <functional>
 #include <istream>
-#include <variant>
 
 #include "absl/container/flat_hash_map.h"
 #include "absl/functional/function_ref.h"
 #include "absl/status/status.h"
 #include "absl/status/statusor.h"
 #include "absl/strings/string_view.h"
-#include "absl/types/span.h"
 #include "pbrt_proto/shared/accelerators.h"
 #include "pbrt_proto/shared/area_light_sources.h"
 #include "pbrt_proto/shared/cameras.h"
@@ -135,468 +131,869 @@ class ParserV1 final : public ProtoParser<PbrtProto, 1> {
 absl::Status ParserV1::Accelerator(
     absl::string_view accelerator_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
+  static const absl::flat_hash_map<
+      absl::string_view, absl::FunctionRef<absl::Status(
+                             absl::flat_hash_map<absl::string_view, Parameter>&,
+                             v1::Accelerator&)>>
+      kTypes = {
+          {"grid",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::Accelerator& accelerator) {
+             RemoveGridAcceleratorV1(parameters, *accelerator.mutable_grid());
+             return absl::OkStatus();
+           }},
+          {"kdtree",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::Accelerator& accelerator) {
+             RemoveKdTreeAcceleratorV1(parameters,
+                                       *accelerator.mutable_kdtree());
+             return absl::OkStatus();
+           }}};
+
   auto& accelerator = *output_.add_directives()->mutable_accelerator();
 
-  if (accelerator_type == "grid") {
-    RemoveGridAcceleratorV1(parameters, *accelerator.mutable_grid());
-  } else if (accelerator_type == "kdtree") {
-    RemoveKdTreeAcceleratorV1(parameters, *accelerator.mutable_kdtree());
-  } else {
-    std::cerr << "Unrecognized Accelerator type: \"" << accelerator_type << "\""
-              << std::endl;
+  auto iter = kTypes.find(accelerator_type);
+  if (iter == kTypes.end()) {
+    return UnrecognizedTypeError("Accelerator", accelerator_type);
   }
 
-  return absl::OkStatus();
+  return iter->second(parameters, accelerator);
 }
 
 absl::Status ParserV1::AreaLightSource(
     absl::string_view area_light_source_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
+  static const absl::flat_hash_map<
+      absl::string_view, absl::FunctionRef<absl::Status(
+                             absl::flat_hash_map<absl::string_view, Parameter>&,
+                             v1::AreaLightSource&)>>
+      kTypes = {
+          {"area",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::AreaLightSource& area_light_source) {
+             return RemoveDiffuseAreaLightSourceV1(
+                 parameters, *area_light_source.mutable_area());
+           }}};
+
   auto& area_light_source =
       *output_.add_directives()->mutable_area_light_source();
 
-  if (area_light_source_type == "area") {
-    return RemoveDiffuseAreaLightSourceV1(parameters,
-                                          *area_light_source.mutable_area());
+  auto iter = kTypes.find(area_light_source_type);
+  if (iter == kTypes.end()) {
+    return UnrecognizedTypeError("AreaLightSource", area_light_source_type);
   }
 
-  std::cerr << "Unrecognized AreaLightSource type: \"" << area_light_source_type
-            << "\"" << std::endl;
-
-  return absl::OkStatus();
+  return iter->second(parameters, area_light_source);
 }
 
 absl::Status ParserV1::Camera(
     absl::string_view camera_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
+  static const absl::flat_hash_map<
+      absl::string_view,
+      absl::FunctionRef<absl::Status(
+          absl::flat_hash_map<absl::string_view, Parameter>&, v1::Camera&)>>
+      kTypes = {
+          {"environment",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::Camera& camera) {
+             RemoveSphericalCameraV1(parameters, *camera.mutable_environment());
+             return absl::OkStatus();
+           }},
+          {"orthographic",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::Camera& camera) {
+             RemoveOrthographicCameraV1(parameters,
+                                        *camera.mutable_orthographic());
+             return absl::OkStatus();
+           }},
+          {"perspective",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::Camera& camera) {
+             RemovePerspectiveCameraV1(parameters,
+                                       *camera.mutable_perspective());
+             return absl::OkStatus();
+           }}};
+
   auto& camera = *output_.add_directives()->mutable_camera();
 
-  if (camera_type == "environment") {
-    RemoveSphericalCameraV1(parameters, *camera.mutable_environment());
-  } else if (camera_type == "orthographic") {
-    RemoveOrthographicCameraV1(parameters, *camera.mutable_orthographic());
-  } else if (camera_type == "perspective") {
-    RemovePerspectiveCameraV1(parameters, *camera.mutable_perspective());
-  } else {
-    std::cerr << "Unrecognized Camera type: \"" << camera_type << "\""
-              << std::endl;
+  auto iter = kTypes.find(camera_type);
+  if (iter == kTypes.end()) {
+    return UnrecognizedTypeError("Camera", camera_type);
   }
 
-  return absl::OkStatus();
+  return iter->second(parameters, camera);
 }
 
 absl::Status ParserV1::Film(
     absl::string_view film_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
+  static const absl::flat_hash_map<
+      absl::string_view,
+      absl::FunctionRef<absl::Status(
+          absl::flat_hash_map<absl::string_view, Parameter>&, v1::Film&)>>
+      kTypes = {
+          {"image",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::Film& film) {
+             RemoveRgbFilmV1(parameters, *film.mutable_image());
+             return absl::OkStatus();
+           }}};
+
   auto& film = *output_.add_directives()->mutable_film();
 
-  if (film_type == "image") {
-    RemoveRgbFilmV1(parameters, *film.mutable_image());
-  } else {
-    std::cerr << "Unrecognized Film type: \"" << film_type << "\"" << std::endl;
+  auto iter = kTypes.find(film_type);
+  if (iter == kTypes.end()) {
+    return UnrecognizedTypeError("Film", film_type);
   }
 
-  return absl::OkStatus();
+  return iter->second(parameters, film);
 }
 
 absl::Status ParserV1::FloatTexture(
     absl::string_view float_texture_name, absl::string_view float_texture_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
-  auto& float_texture = *output_.add_directives()->mutable_float_texture();
+  static const absl::flat_hash_map<
+      absl::string_view, absl::FunctionRef<absl::Status(
+                             absl::flat_hash_map<absl::string_view, Parameter>&,
+                             v1::FloatTexture&)>>
+      kTypes = {
+          {"bilerp",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::FloatTexture& float_texture) {
+             RemoveBilerpFloatTextureV1(parameters,
+                                        *float_texture.mutable_bilerp());
+             return absl::OkStatus();
+           }},
+          {"checkerboard",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::FloatTexture& float_texture) {
+             int32_t dimension =
+                 TryRemoveInteger(parameters, "dimension").value_or(2);
 
+             if (dimension == 2) {
+               RemoveCheckerboard2DFloatTextureV1(
+                   parameters, *float_texture.mutable_checkerboard2d());
+             } else {
+               RemoveCheckerboard3DFloatTextureV1(
+                   parameters, *float_texture.mutable_checkerboard3d());
+             }
+
+             return absl::OkStatus();
+           }},
+          {"constant",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::FloatTexture& float_texture) {
+             RemoveConstantFloatTextureV1(parameters,
+                                          *float_texture.mutable_constant());
+             return absl::OkStatus();
+           }},
+          {"dots",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::FloatTexture& float_texture) {
+             RemoveDotsFloatTextureV1(parameters,
+                                      *float_texture.mutable_dots());
+             return absl::OkStatus();
+           }},
+          {"fbm",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::FloatTexture& float_texture) {
+             RemoveFBmFloatTextureV1(parameters, *float_texture.mutable_fbm());
+             return absl::OkStatus();
+           }},
+          {"imagemap",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::FloatTexture& float_texture) {
+             RemoveImageMapFloatTextureV1(parameters,
+                                          *float_texture.mutable_imagemap());
+             return absl::OkStatus();
+           }},
+          {"marble",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::FloatTexture& float_texture) { return absl::OkStatus(); }},
+          {"mix",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::FloatTexture& float_texture) {
+             RemoveMixFloatTextureV1(parameters, *float_texture.mutable_mix());
+             return absl::OkStatus();
+           }},
+          {"scale",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::FloatTexture& float_texture) {
+             RemoveScaleFloatTextureV1(parameters,
+                                       *float_texture.mutable_scale());
+             return absl::OkStatus();
+           }},
+          {"windy",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::FloatTexture& float_texture) {
+             float_texture.mutable_windy();
+             return absl::OkStatus();
+           }},
+          {"wrinkled",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::FloatTexture& float_texture) {
+             RemoveWrinkledFloatTextureV1(parameters,
+                                          *float_texture.mutable_wrinkled());
+             return absl::OkStatus();
+           }}};
+
+  auto& float_texture = *output_.add_directives()->mutable_float_texture();
   float_texture.set_name(float_texture_name);
 
-  if (float_texture_type == "bilerp") {
-    RemoveBilerpFloatTextureV1(parameters, *float_texture.mutable_bilerp());
-  } else if (float_texture_type == "checkerboard") {
-    int32_t dimension = TryRemoveInteger(parameters, "dimension").value_or(2);
-    if (dimension == 2) {
-      RemoveCheckerboard2DFloatTextureV1(
-          parameters, *float_texture.mutable_checkerboard2d());
-    } else {
-      RemoveCheckerboard3DFloatTextureV1(
-          parameters, *float_texture.mutable_checkerboard3d());
-    }
-  } else if (float_texture_type == "constant") {
-    RemoveConstantFloatTextureV1(parameters, *float_texture.mutable_constant());
-  } else if (float_texture_type == "dots") {
-    RemoveDotsFloatTextureV1(parameters, *float_texture.mutable_dots());
-  } else if (float_texture_type == "fbm") {
-    RemoveFBmFloatTextureV1(parameters, *float_texture.mutable_fbm());
-  } else if (float_texture_type == "imagemap") {
-    RemoveImageMapFloatTextureV1(parameters, *float_texture.mutable_imagemap());
-  } else if (float_texture_type == "marble") {
-    // Ignored
-  } else if (float_texture_type == "mix") {
-    RemoveMixFloatTextureV1(parameters, *float_texture.mutable_mix());
-  } else if (float_texture_type == "scale") {
-    RemoveScaleFloatTextureV1(parameters, *float_texture.mutable_scale());
-  } else if (float_texture_type == "windy") {
-    float_texture.mutable_windy();
-  } else if (float_texture_type == "wrinkled") {
-    RemoveWrinkledFloatTextureV1(parameters, *float_texture.mutable_wrinkled());
-  } else {
-    std::cerr << "Unrecognized Texture type: \"" << float_texture_type << "\""
-              << std::endl;
+  auto iter = kTypes.find(float_texture_type);
+  if (iter == kTypes.end()) {
+    return UnrecognizedTypeError("Texture", float_texture_type);
   }
 
-  return absl::OkStatus();
+  return iter->second(parameters, float_texture);
 }
 
 absl::Status ParserV1::LightSource(
     absl::string_view light_source_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
+  static const absl::flat_hash_map<
+      absl::string_view, absl::FunctionRef<absl::Status(
+                             absl::flat_hash_map<absl::string_view, Parameter>&,
+                             v1::LightSource&)>>
+      kTypes = {
+          {"distant",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::LightSource& light_source) {
+             return RemoveDistantLightSourceV1(parameters,
+                                               *light_source.mutable_distant());
+           }},
+          {"goniometric",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::LightSource& light_source) {
+             return RemoveGoniometricLightSourceV1(
+                 parameters, *light_source.mutable_goniometric());
+           }},
+          {"infinite",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::LightSource& light_source) {
+             return RemoveInfiniteLightSourceV1(
+                 parameters, *light_source.mutable_infinite());
+           }},
+          {"infinitesample",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::LightSource& light_source) {
+             return RemoveInfiniteLightSourceV1(
+                 parameters, *light_source.mutable_infinitesample());
+           }},
+          {"point",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::LightSource& light_source) {
+             return RemovePointLightSourceV1(parameters,
+                                             *light_source.mutable_point());
+           }},
+          {"projection",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::LightSource& light_source) {
+             return RemoveProjectionLightSourceV1(
+                 parameters, *light_source.mutable_projection());
+           }},
+          {"spot",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::LightSource& light_source) {
+             return RemoveSpotLightSourceV1(parameters,
+                                            *light_source.mutable_spot());
+           }}};
+
   auto& light_source = *output_.add_directives()->mutable_light_source();
 
-  if (light_source_type == "distant") {
-    return RemoveDistantLightSourceV1(parameters,
-                                      *light_source.mutable_distant());
+  auto iter = kTypes.find(light_source_type);
+  if (iter == kTypes.end()) {
+    return UnrecognizedTypeError("LightSource", light_source_type);
   }
 
-  if (light_source_type == "goniometric") {
-    return RemoveGoniometricLightSourceV1(parameters,
-                                          *light_source.mutable_goniometric());
-  }
-
-  if (light_source_type == "infinite") {
-    return RemoveInfiniteLightSourceV1(parameters,
-                                       *light_source.mutable_infinite());
-  }
-
-  if (light_source_type == "infinitesample") {
-    return RemoveInfiniteLightSourceV1(parameters,
-                                       *light_source.mutable_infinitesample());
-  }
-
-  if (light_source_type == "point") {
-    return RemovePointLightSourceV1(parameters, *light_source.mutable_point());
-  }
-
-  if (light_source_type == "projection") {
-    return RemoveProjectionLightSourceV1(parameters,
-                                         *light_source.mutable_projection());
-  }
-
-  if (light_source_type == "spot") {
-    return RemoveSpotLightSourceV1(parameters, *light_source.mutable_spot());
-  }
-
-  std::cerr << "Unrecognized LightSource type: \"" << light_source_type << "\""
-            << std::endl;
-
-  return absl::OkStatus();
+  return iter->second(parameters, light_source);
 }
 
 absl::Status ParserV1::Material(
     absl::string_view material_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     v1::Material& material) {
-  if (material_type == "bluepaint") {
-    material.mutable_bluepaint();
-  } else if (material_type == "brushedmetal") {
-    material.mutable_brushedmetal();
-  } else if (material_type == "clay") {
-    material.mutable_clay();
-  } else if (material_type == "felt") {
-    material.mutable_felt();
-  } else if (material_type == "glass") {
-    RemoveGlassMaterialV1(parameters, *material.mutable_glass());
-  } else if (material_type == "matte") {
-    RemoveMatteMaterialV1(parameters, *material.mutable_matte());
-  } else if (material_type == "mirror") {
-    RemoveMirrorMaterialV1(parameters, *material.mutable_mirror());
-  } else if (material_type == "plastic") {
-    RemovePlasticMaterialV1(parameters, *material.mutable_plastic());
-  } else if (material_type == "primer") {
-    material.mutable_primer();
-  } else if (material_type == "shinymetal") {
-    RemoveShinyMetalMaterialV1(parameters, *material.mutable_shinymetal());
-  } else if (material_type == "skin") {
-    material.mutable_skin();
-  } else if (material_type == "substrate") {
-    RemoveSubstrateMaterialV1(parameters, *material.mutable_substrate());
-  } else if (material_type == "translucent") {
-    RemoveTranslucentMaterialV1(parameters, *material.mutable_translucent());
-  } else if (material_type == "uber") {
-    RemoveUberMaterialV1(parameters, *material.mutable_uber());
-  } else {
-    if (material_type != "matte") {
-      std::cerr << "Unrecognized Material type: \"" << material_type << "\""
-                << std::endl;
-    }
+  static const absl::flat_hash_map<
+      absl::string_view,
+      absl::FunctionRef<absl::Status(
+          absl::flat_hash_map<absl::string_view, Parameter>&, v1::Material&)>>
+      kTypes = {
+          {"bluepaint",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::Material& material) {
+             material.mutable_bluepaint();
+             return absl::OkStatus();
+           }},
+          {"brushedmetal",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::Material& material) {
+             material.mutable_brushedmetal();
+             return absl::OkStatus();
+           }},
+          {"clay",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::Material& material) {
+             material.mutable_clay();
+             return absl::OkStatus();
+           }},
+          {"felt",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::Material& material) {
+             material.mutable_felt();
+             return absl::OkStatus();
+           }},
+          {"glass",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::Material& material) {
+             RemoveGlassMaterialV1(parameters, *material.mutable_glass());
+             return absl::OkStatus();
+           }},
+          {"matte",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::Material& material) {
+             RemoveMatteMaterialV1(parameters, *material.mutable_matte());
+             return absl::OkStatus();
+           }},
+          {"mirror",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::Material& material) {
+             RemoveMirrorMaterialV1(parameters, *material.mutable_mirror());
+             return absl::OkStatus();
+           }},
+          {"plastic",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::Material& material) {
+             RemovePlasticMaterialV1(parameters, *material.mutable_plastic());
+             return absl::OkStatus();
+           }},
+          {"primer",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::Material& material) {
+             material.mutable_primer();
+             return absl::OkStatus();
+           }},
+          {"shinymetal",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::Material& material) {
+             RemoveShinyMetalMaterialV1(parameters,
+                                        *material.mutable_shinymetal());
+             return absl::OkStatus();
+           }},
+          {"skin",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::Material& material) {
+             material.mutable_skin();
+             return absl::OkStatus();
+           }},
+          {"substrate",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::Material& material) {
+             RemoveSubstrateMaterialV1(parameters,
+                                       *material.mutable_substrate());
+             return absl::OkStatus();
+           }},
+          {"translucent",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::Material& material) {
+             RemoveTranslucentMaterialV1(parameters,
+                                         *material.mutable_translucent());
+             return absl::OkStatus();
+           }},
+          {"uber",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::Material& material) {
+             RemoveUberMaterialV1(parameters, *material.mutable_uber());
+             return absl::OkStatus();
+           }}};
 
+  auto iter = kTypes.find(material_type);
+  if (iter == kTypes.end()) {
     RemoveMatteMaterialV1(parameters, *material.mutable_matte());
+    return UnrecognizedTypeError("Material", material_type);
   }
 
-  return absl::OkStatus();
+  return iter->second(parameters, material);
 }
 
 absl::Status ParserV1::PixelFilter(
     absl::string_view pixel_filter_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
+  static const absl::flat_hash_map<
+      absl::string_view, absl::FunctionRef<absl::Status(
+                             absl::flat_hash_map<absl::string_view, Parameter>&,
+                             v1::PixelFilter&)>>
+      kTypes = {
+          {"box",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::PixelFilter& pixel_filter) {
+             RemoveBoxPixelFilterV1(parameters, *pixel_filter.mutable_box());
+             return absl::OkStatus();
+           }},
+          {"gaussian",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::PixelFilter& pixel_filter) {
+             RemoveGaussianPixelFilterV1(parameters,
+                                         *pixel_filter.mutable_gaussian());
+             return absl::OkStatus();
+           }},
+          {"mitchell",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::PixelFilter& pixel_filter) {
+             RemoveMitchellPixelFilterV1(parameters,
+                                         *pixel_filter.mutable_mitchell());
+             return absl::OkStatus();
+           }},
+          {"sinc",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::PixelFilter& pixel_filter) {
+             RemoveLanczosPixelFilterV1(parameters,
+                                        *pixel_filter.mutable_sinc());
+             return absl::OkStatus();
+           }},
+          {"triangle",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::PixelFilter& pixel_filter) {
+             RemoveTrianglePixelFilterV1(parameters,
+                                         *pixel_filter.mutable_triangle());
+             return absl::OkStatus();
+           }}};
+
   auto& pixel_filter = *output_.add_directives()->mutable_pixel_filter();
 
-  if (pixel_filter_type == "box") {
-    RemoveBoxPixelFilterV1(parameters, *pixel_filter.mutable_box());
-  } else if (pixel_filter_type == "gaussian") {
-    RemoveGaussianPixelFilterV1(parameters, *pixel_filter.mutable_gaussian());
-  } else if (pixel_filter_type == "mitchell") {
-    RemoveMitchellPixelFilterV1(parameters, *pixel_filter.mutable_mitchell());
-  } else if (pixel_filter_type == "sinc") {
-    RemoveLanczosPixelFilterV1(parameters, *pixel_filter.mutable_sinc());
-  } else if (pixel_filter_type == "triangle") {
-    RemoveTrianglePixelFilterV1(parameters, *pixel_filter.mutable_triangle());
-  } else {
-    std::cerr << "Unrecognized PixelFilter type: \"" << pixel_filter_type
-              << "\"" << std::endl;
+  auto iter = kTypes.find(pixel_filter_type);
+  if (iter == kTypes.end()) {
+    return UnrecognizedTypeError("PixelFilter", pixel_filter_type);
   }
 
-  return absl::OkStatus();
+  return iter->second(parameters, pixel_filter);
 }
 
 absl::Status ParserV1::Sampler(
     absl::string_view sampler_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
+  static const absl::flat_hash_map<
+      absl::string_view,
+      absl::FunctionRef<absl::Status(
+          absl::flat_hash_map<absl::string_view, Parameter>&, v1::Sampler&)>>
+      kTypes = {
+          {"bestcandidate",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::Sampler& sampler) {
+             RemoveBestCandidateSamplerV1(parameters,
+                                          *sampler.mutable_bestcandidate());
+             return absl::OkStatus();
+           }},
+          {"lowdiscrepancy",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::Sampler& sampler) {
+             RemoveZeroTwoSequenceSamplerV1(parameters,
+                                            *sampler.mutable_lowdiscrepancy());
+             return absl::OkStatus();
+           }},
+          {"random",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::Sampler& sampler) {
+             RemoveRandomSamplerV1(parameters, *sampler.mutable_random());
+             return absl::OkStatus();
+           }},
+          {"stratified",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::Sampler& sampler) {
+             RemoveStratifiedSamplerV1(parameters,
+                                       *sampler.mutable_stratified());
+             return absl::OkStatus();
+           }}};
+
   auto& sampler = *output_.add_directives()->mutable_sampler();
 
-  if (sampler_type == "bestcandidate") {
-    RemoveBestCandidateSamplerV1(parameters, *sampler.mutable_bestcandidate());
-  } else if (sampler_type == "lowdiscrepancy") {
-    RemoveZeroTwoSequenceSamplerV1(parameters,
-                                   *sampler.mutable_lowdiscrepancy());
-  } else if (sampler_type == "random") {
-    RemoveRandomSamplerV1(parameters, *sampler.mutable_random());
-  } else if (sampler_type == "stratified") {
-    RemoveStratifiedSamplerV1(parameters, *sampler.mutable_stratified());
-  } else {
-    std::cerr << "Unrecognized Sampler type: \"" << sampler_type << "\""
-              << std::endl;
+  auto iter = kTypes.find(sampler_type);
+  if (iter == kTypes.end()) {
+    return UnrecognizedTypeError("Sampler", sampler_type);
   }
 
-  return absl::OkStatus();
+  return iter->second(parameters, sampler);
 }
 
 absl::Status ParserV1::Shape(
     absl::string_view shape_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
+  static const absl::flat_hash_map<
+      absl::string_view,
+      absl::FunctionRef<absl::Status(
+          absl::flat_hash_map<absl::string_view, Parameter>&, v1::Shape&)>>
+      kTypes = {
+          {"cone",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::Shape& shape) {
+             RemoveConeShapeV1(parameters, *shape.mutable_cone());
+             return absl::OkStatus();
+           }},
+          {"cylinder",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::Shape& shape) {
+             RemoveCylinderShapeV1(parameters, *shape.mutable_cylinder());
+             return absl::OkStatus();
+           }},
+          {"disk",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::Shape& shape) {
+             RemoveDiskShapeV1(parameters, *shape.mutable_disk());
+             return absl::OkStatus();
+           }},
+          {"heightfield",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::Shape& shape) {
+             return RemoveHeightFieldShapeV1(parameters,
+                                             *shape.mutable_heightfield());
+           }},
+          {"hyperboloid",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::Shape& shape) {
+             RemoveHyperboloidShapeV1(parameters, *shape.mutable_hyperboloid());
+             return absl::OkStatus();
+           }},
+          {"loopsubdiv",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::Shape& shape) {
+             return RemoveLoopSubdivShapeV1(parameters,
+                                            *shape.mutable_loopsubdiv());
+           }},
+          {"nurbs",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::Shape& shape) {
+             return RemoveNurbsShapeV1(parameters, *shape.mutable_nurbs());
+           }},
+          {"paraboloid",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::Shape& shape) {
+             RemoveParaboloidShapeV1(parameters, *shape.mutable_paraboloid());
+             return absl::OkStatus();
+           }},
+          {"sphere",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::Shape& shape) {
+             RemoveSphereShapeV1(parameters, *shape.mutable_sphere());
+             return absl::OkStatus();
+           }},
+          {"trianglemesh",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::Shape& shape) {
+             return RemoveTriangleMeshShapeV1(parameters,
+                                              *shape.mutable_trianglemesh());
+           }}};
+
   auto& shape = *output_.add_directives()->mutable_shape();
 
-  if (shape_type == "cone") {
-    RemoveConeShapeV1(parameters, *shape.mutable_cone());
-  } else if (shape_type == "cylinder") {
-    RemoveCylinderShapeV1(parameters, *shape.mutable_cylinder());
-  } else if (shape_type == "disk") {
-    RemoveDiskShapeV1(parameters, *shape.mutable_disk());
-  } else if (shape_type == "heightfield") {
-    if (absl::Status status =
-            RemoveHeightFieldShapeV1(parameters, *shape.mutable_heightfield());
-        !status.ok()) {
-      return status;
-    }
-  } else if (shape_type == "hyperboloid") {
-    RemoveHyperboloidShapeV1(parameters, *shape.mutable_hyperboloid());
-  } else if (shape_type == "loopsubdiv") {
-    if (absl::Status status =
-            RemoveLoopSubdivShapeV1(parameters, *shape.mutable_loopsubdiv());
-        !status.ok()) {
-      return status;
-    }
-  } else if (shape_type == "nurbs") {
-    if (absl::Status status =
-            RemoveNurbsShapeV1(parameters, *shape.mutable_nurbs());
-        !status.ok()) {
-      return status;
-    }
-  } else if (shape_type == "paraboloid") {
-    RemoveParaboloidShapeV1(parameters, *shape.mutable_paraboloid());
-  } else if (shape_type == "sphere") {
-    RemoveSphereShapeV1(parameters, *shape.mutable_sphere());
-  } else if (shape_type == "trianglemesh") {
-    if (absl::Status status = RemoveTriangleMeshShapeV1(
-            parameters, *shape.mutable_trianglemesh());
-        !status.ok()) {
-      return status;
-    }
-  } else {
-    std::cerr << "Unrecognized Shape type: \"" << shape_type << "\""
-              << std::endl;
-    return absl::OkStatus();
+  auto iter = kTypes.find(shape_type);
+  if (iter == kTypes.end()) {
+    return UnrecognizedTypeError("Shape", shape_type);
   }
 
-  auto& overrides = *shape.mutable_overrides();
-
-  bool overrides_populated = false;
-  overrides_populated |= TryRemoveFloatTexture(
+  auto overrides = std::bind(&Shape::mutable_overrides, shape);
+  TryRemoveFloatTexture(
       parameters, "bumpmap",
-      std::bind(&Shape::MaterialOverrides::mutable_bumpmap, &overrides));
-  overrides_populated |= TryRemoveFloatTexture(
+      std::bind(&Shape::MaterialOverrides::mutable_bumpmap, overrides));
+  TryRemoveFloatTexture(
       parameters, "eta",
-      std::bind(&Shape::MaterialOverrides::mutable_eta, &overrides));
-  overrides_populated |= TryRemoveFloatTexture(
+      std::bind(&Shape::MaterialOverrides::mutable_eta, overrides));
+  TryRemoveFloatTexture(
       parameters, "roughness",
-      std::bind(&Shape::MaterialOverrides::mutable_roughness, &overrides));
-  overrides_populated |= TryRemoveFloatTexture(
+      std::bind(&Shape::MaterialOverrides::mutable_roughness, overrides));
+  TryRemoveFloatTexture(
       parameters, "sigma",
-      std::bind(&Shape::MaterialOverrides::mutable_sigma, &overrides));
-  overrides_populated |= TryRemoveFloatTexture(
+      std::bind(&Shape::MaterialOverrides::mutable_sigma, overrides));
+  TryRemoveFloatTexture(
       parameters, "uroughness",
-      std::bind(&Shape::MaterialOverrides::mutable_uroughness, &overrides));
-  overrides_populated |= TryRemoveFloatTexture(
+      std::bind(&Shape::MaterialOverrides::mutable_uroughness, overrides));
+  TryRemoveFloatTexture(
       parameters, "vroughness",
-      std::bind(&Shape::MaterialOverrides::mutable_vroughness, &overrides));
-
-  overrides_populated |= TryRemoveSpectrumTextureV1(
+      std::bind(&Shape::MaterialOverrides::mutable_vroughness, overrides));
+  TryRemoveSpectrumTextureV1(
       parameters, "Kd",
-      std::bind(&Shape::MaterialOverrides::mutable_kd, &overrides));
-  overrides_populated |= TryRemoveSpectrumTextureV1(
+      std::bind(&Shape::MaterialOverrides::mutable_kd, overrides));
+  TryRemoveSpectrumTextureV1(
       parameters, "Kr",
-      std::bind(&Shape::MaterialOverrides::mutable_kr, &overrides));
-  overrides_populated |= TryRemoveSpectrumTextureV1(
+      std::bind(&Shape::MaterialOverrides::mutable_kr, overrides));
+  TryRemoveSpectrumTextureV1(
       parameters, "Ks",
-      std::bind(&Shape::MaterialOverrides::mutable_ks, &overrides));
-  overrides_populated |= TryRemoveSpectrumTextureV1(
+      std::bind(&Shape::MaterialOverrides::mutable_ks, overrides));
+  TryRemoveSpectrumTextureV1(
       parameters, "Kt",
-      std::bind(&Shape::MaterialOverrides::mutable_kt, &overrides));
-  overrides_populated |= TryRemoveSpectrumTextureV1(
+      std::bind(&Shape::MaterialOverrides::mutable_kt, overrides));
+  TryRemoveSpectrumTextureV1(
       parameters, "opacity",
-      std::bind(&Shape::MaterialOverrides::mutable_opacity, &overrides));
-  overrides_populated |= TryRemoveSpectrumTextureV1(
+      std::bind(&Shape::MaterialOverrides::mutable_opacity, overrides));
+  TryRemoveSpectrumTextureV1(
       parameters, "reflect",
-      std::bind(&Shape::MaterialOverrides::mutable_reflect, &overrides));
-  overrides_populated |= TryRemoveSpectrumTextureV1(
+      std::bind(&Shape::MaterialOverrides::mutable_reflect, overrides));
+  TryRemoveSpectrumTextureV1(
       parameters, "transmit",
-      std::bind(&Shape::MaterialOverrides::mutable_transmit, &overrides));
+      std::bind(&Shape::MaterialOverrides::mutable_transmit, overrides));
 
-  if (!overrides_populated) {
-    shape.clear_overrides();
-  }
-
-  return absl::OkStatus();
+  return iter->second(parameters, shape);
 }
 
 absl::Status ParserV1::SpectrumTexture(
     absl::string_view spectrum_texture_name,
     absl::string_view spectrum_texture_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
+  static const absl::flat_hash_map<
+      absl::string_view, absl::FunctionRef<absl::Status(
+                             absl::flat_hash_map<absl::string_view, Parameter>&,
+                             v1::SpectrumTexture&)>>
+      kTypes = {
+          {"bilerp",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::SpectrumTexture& spectrum_texture) {
+             RemoveBilerpSpectrumTextureV1(parameters,
+                                           *spectrum_texture.mutable_bilerp());
+             return absl::OkStatus();
+           }},
+          {"checkerboard",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::SpectrumTexture& spectrum_texture) {
+             int32_t dimension =
+                 TryRemoveInteger(parameters, "dimension").value_or(2);
+
+             if (dimension == 2) {
+               RemoveCheckerboard2DSpectrumTextureV1(
+                   parameters, *spectrum_texture.mutable_checkerboard2d());
+             } else {
+               RemoveCheckerboard3DSpectrumTextureV1(
+                   parameters, *spectrum_texture.mutable_checkerboard3d());
+             }
+
+             return absl::OkStatus();
+           }},
+          {"constant",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::SpectrumTexture& spectrum_texture) {
+             return RemoveConstantSpectrumTextureV1(
+                 parameters, *spectrum_texture.mutable_constant());
+           }},
+          {"dots",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::SpectrumTexture& spectrum_texture) {
+             RemoveDotsSpectrumTextureV1(parameters,
+                                         *spectrum_texture.mutable_dots());
+             return absl::OkStatus();
+           }},
+          {"fbm",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::SpectrumTexture& spectrum_texture) {
+             RemoveDotsSpectrumTextureV1(parameters,
+                                         *spectrum_texture.mutable_dots());
+             return absl::OkStatus();
+           }},
+          {"imagemap",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::SpectrumTexture& spectrum_texture) {
+             RemoveImageMapSpectrumTextureV1(
+                 parameters, *spectrum_texture.mutable_imagemap());
+             return absl::OkStatus();
+           }},
+          {"marble",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::SpectrumTexture& spectrum_texture) {
+             RemoveMarbleSpectrumTextureV1(parameters,
+                                           *spectrum_texture.mutable_marble());
+             return absl::OkStatus();
+           }},
+          {"mix",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::SpectrumTexture& spectrum_texture) {
+             RemoveMarbleSpectrumTextureV1(parameters,
+                                           *spectrum_texture.mutable_marble());
+             return absl::OkStatus();
+           }},
+          {"scale",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::SpectrumTexture& spectrum_texture) {
+             RemoveScaleSpectrumTextureV1(parameters,
+                                          *spectrum_texture.mutable_scale());
+             return absl::OkStatus();
+           }},
+          {"uv",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::SpectrumTexture& spectrum_texture) {
+             RemoveUvSpectrumTextureV1(parameters,
+                                       *spectrum_texture.mutable_uv());
+             return absl::OkStatus();
+           }},
+          {"windy",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::SpectrumTexture& spectrum_texture) {
+             spectrum_texture.mutable_windy();
+             return absl::OkStatus();
+           }},
+          {"wrinkled",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::SpectrumTexture& spectrum_texture) {
+             RemoveWrinkledSpectrumTextureV1(
+                 parameters, *spectrum_texture.mutable_wrinkled());
+             return absl::OkStatus();
+           }}};
+
   auto& spectrum_texture =
       *output_.add_directives()->mutable_spectrum_texture();
-
   spectrum_texture.set_name(spectrum_texture_name);
 
-  if (spectrum_texture_type == "bilerp") {
-    RemoveBilerpSpectrumTextureV1(parameters,
-                                  *spectrum_texture.mutable_bilerp());
-  } else if (spectrum_texture_type == "checkerboard") {
-    int32_t dimension = TryRemoveInteger(parameters, "dimension").value_or(2);
-    if (dimension == 2) {
-      RemoveCheckerboard2DSpectrumTextureV1(
-          parameters, *spectrum_texture.mutable_checkerboard2d());
-    } else {
-      RemoveCheckerboard3DSpectrumTextureV1(
-          parameters, *spectrum_texture.mutable_checkerboard3d());
-    }
-  } else if (spectrum_texture_type == "constant") {
-    return RemoveConstantSpectrumTextureV1(
-        parameters, *spectrum_texture.mutable_constant());
-  } else if (spectrum_texture_type == "dots") {
-    RemoveDotsSpectrumTextureV1(parameters, *spectrum_texture.mutable_dots());
-  } else if (spectrum_texture_type == "fbm") {
-    RemoveFBmSpectrumTextureV1(parameters, *spectrum_texture.mutable_fbm());
-  } else if (spectrum_texture_type == "imagemap") {
-    RemoveImageMapSpectrumTextureV1(parameters,
-                                    *spectrum_texture.mutable_imagemap());
-  } else if (spectrum_texture_type == "marble") {
-    RemoveMarbleSpectrumTextureV1(parameters,
-                                  *spectrum_texture.mutable_marble());
-  } else if (spectrum_texture_type == "mix") {
-    RemoveMixSpectrumTextureV1(parameters, *spectrum_texture.mutable_mix());
-  } else if (spectrum_texture_type == "scale") {
-    RemoveScaleSpectrumTextureV1(parameters, *spectrum_texture.mutable_scale());
-  } else if (spectrum_texture_type == "uv") {
-    RemoveUvSpectrumTextureV1(parameters, *spectrum_texture.mutable_uv());
-  } else if (spectrum_texture_type == "windy") {
-    spectrum_texture.mutable_windy();
-  } else if (spectrum_texture_type == "wrinkled") {
-    RemoveWrinkledSpectrumTextureV1(parameters,
-                                    *spectrum_texture.mutable_wrinkled());
-  } else {
-    std::cerr << "Unrecognized Texture type: \"" << spectrum_texture_type
-              << "\"" << std::endl;
+  auto iter = kTypes.find(spectrum_texture_type);
+  if (iter == kTypes.end()) {
+    return UnrecognizedTypeError("Texture", spectrum_texture_type);
   }
 
-  return absl::OkStatus();
+  return iter->second(parameters, spectrum_texture);
 }
 
 absl::Status ParserV1::SurfaceIntegrator(
     absl::string_view integrator_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
+  static const absl::flat_hash_map<
+      absl::string_view, absl::FunctionRef<absl::Status(
+                             absl::flat_hash_map<absl::string_view, Parameter>&,
+                             v1::SurfaceIntegrator&)>>
+      kTypes = {
+          {"bidirectional",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::SurfaceIntegrator& integrator) {
+             RemoveBdptIntegratorV1(parameters,
+                                    *integrator.mutable_bidirectional());
+             return absl::OkStatus();
+           }},
+          {"debug",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::SurfaceIntegrator& integrator) {
+             RemoveDebugIntegratorV1(parameters, *integrator.mutable_debug());
+             return absl::OkStatus();
+           }},
+          {"directlighting",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::SurfaceIntegrator& integrator) {
+             RemoveDirectLightingIntegratorV1(
+                 parameters, *integrator.mutable_directlighting());
+             return absl::OkStatus();
+           }},
+          {"exphotonmap",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::SurfaceIntegrator& integrator) {
+             RemoveExPhotonMapIntegratorV1(parameters,
+                                           *integrator.mutable_exphotonmap());
+             return absl::OkStatus();
+           }},
+          {"igi",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::SurfaceIntegrator& integrator) {
+             RemoveIgiIntegratorV1(parameters, *integrator.mutable_igi());
+             return absl::OkStatus();
+           }},
+          {"irradiancecache",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::SurfaceIntegrator& integrator) {
+             RemoveIrradianceCacheIntegratorV1(
+                 parameters, *integrator.mutable_irradiancecache());
+             return absl::OkStatus();
+           }},
+          {"path",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::SurfaceIntegrator& integrator) {
+             RemovePathIntegratorV1(parameters, *integrator.mutable_path());
+             return absl::OkStatus();
+           }},
+          {"photonmap",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::SurfaceIntegrator& integrator) {
+             RemovePhotonMapIntegratorV1(parameters,
+                                         *integrator.mutable_photonmap());
+             return absl::OkStatus();
+           }},
+          {"whitted",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::SurfaceIntegrator& integrator) {
+             RemoveWhittedIntegratorV1(parameters,
+                                       *integrator.mutable_whitted());
+             return absl::OkStatus();
+           }}};
+
   auto& integrator = *output_.add_directives()->mutable_surface_integrator();
 
-  if (integrator_type == "bidirectional") {
-    RemoveBdptIntegratorV1(parameters, *integrator.mutable_bidirectional());
-  } else if (integrator_type == "debug") {
-    RemoveDebugIntegratorV1(parameters, *integrator.mutable_debug());
-  }
-  if (integrator_type == "directlighting") {
-    RemoveDirectLightingIntegratorV1(parameters,
-                                     *integrator.mutable_directlighting());
-  } else if (integrator_type == "exphotonmap") {
-    RemoveExPhotonMapIntegratorV1(parameters,
-                                  *integrator.mutable_exphotonmap());
-  } else if (integrator_type == "igi") {
-    RemoveIgiIntegratorV1(parameters, *integrator.mutable_igi());
-  } else if (integrator_type == "irradiancecache") {
-    RemoveIrradianceCacheIntegratorV1(parameters,
-                                      *integrator.mutable_irradiancecache());
-  } else if (integrator_type == "path") {
-    RemovePathIntegratorV1(parameters, *integrator.mutable_path());
-  } else if (integrator_type == "photonmap") {
-    RemovePhotonMapIntegratorV1(parameters, *integrator.mutable_photonmap());
-  } else if (integrator_type == "whitted") {
-    RemoveWhittedIntegratorV1(parameters, *integrator.mutable_whitted());
-  } else {
-    std::cerr << "Unrecognized SurfaceIntegrator type: \"" << integrator_type
-              << "\"" << std::endl;
+  auto iter = kTypes.find(integrator_type);
+  if (iter == kTypes.end()) {
+    return UnrecognizedTypeError("SurfaceIntegrator", integrator_type);
   }
 
-  return absl::OkStatus();
+  return iter->second(parameters, integrator);
 }
 
 absl::Status ParserV1::Volume(
     absl::string_view volume_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
+  static const absl::flat_hash_map<
+      absl::string_view,
+      absl::FunctionRef<absl::Status(
+          absl::flat_hash_map<absl::string_view, Parameter>&, v1::Volume&)>>
+      kTypes = {
+          {"exponential",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::Volume& volume) {
+             return RemoveExponentialMediumV1(parameters,
+                                              *volume.mutable_exponential());
+           }},
+          {"homogeneous",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::Volume& volume) {
+             return RemoveHomogeneousMediumV1(parameters,
+                                              *volume.mutable_homogeneous());
+           }},
+          {"volumegrid",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::Volume& volume) {
+             return RemoveUniformGridMediumV1(parameters,
+                                              *volume.mutable_volumegrid());
+           }}};
+
   auto& volume = *output_.add_directives()->mutable_volume();
 
-  if (volume_type == "exponential") {
-    return RemoveExponentialMediumV1(parameters, *volume.mutable_exponential());
-  } else if (volume_type == "homogeneous") {
-    return RemoveHomogeneousMediumV1(parameters, *volume.mutable_homogeneous());
-  } else if (volume_type == "volumegrid") {
-    return RemoveUniformGridMediumV1(parameters, *volume.mutable_volumegrid());
-  } else {
-    std::cerr << "Unrecognized Volume type: \"" << volume_type << "\""
-              << std::endl;
+  auto iter = kTypes.find(volume_type);
+  if (iter == kTypes.end()) {
+    return UnrecognizedTypeError("Volume", volume_type);
   }
 
-  return absl::OkStatus();
+  return iter->second(parameters, volume);
 }
 
 absl::Status ParserV1::VolumeIntegrator(
     absl::string_view integrator_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
+  static const absl::flat_hash_map<
+      absl::string_view, absl::FunctionRef<absl::Status(
+                             absl::flat_hash_map<absl::string_view, Parameter>&,
+                             v1::VolumeIntegrator&)>>
+      kTypes = {
+          {"emission",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::VolumeIntegrator& integrator) {
+             RemoveEmissionVolumeIntegratorV1(parameters,
+                                              *integrator.mutable_emission());
+             return absl::OkStatus();
+           }},
+          {"single",
+           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              v1::VolumeIntegrator& integrator) {
+             RemoveSingleVolumeIntegratorV1(parameters,
+                                            *integrator.mutable_single());
+             return absl::OkStatus();
+           }}};
+
   auto& integrator = *output_.add_directives()->mutable_volume_integrator();
 
-  if (integrator_type == "emission") {
-    RemoveEmissionVolumeIntegratorV1(parameters,
-                                     *integrator.mutable_emission());
-  } else if (integrator_type == "single") {
-    RemoveSingleVolumeIntegratorV1(parameters, *integrator.mutable_single());
-  } else {
-    std::cerr << "Unrecognized VolumeIntegrator type: \"" << integrator_type
-              << "\"" << std::endl;
+  auto iter = kTypes.find(integrator_type);
+  if (iter == kTypes.end()) {
+    return UnrecognizedTypeError("VolumeIntegrator", integrator_type);
   }
 
-  return absl::OkStatus();
+  return iter->second(parameters, integrator);
 }
 
 }  // namespace
