@@ -690,7 +690,11 @@ absl::Status ParserV1::Shape(
     return UnrecognizedTypeError("Shape", shape_type);
   }
 
-  auto overrides = std::bind(&Shape::mutable_overrides, shape);
+  if (absl::Status status = iter->second(parameters, shape); !status.ok()) {
+    return status;
+  }
+
+  auto overrides = std::bind(&Shape::mutable_overrides, &shape);
   TryRemoveFloatTexture(
       parameters, "bumpmap",
       std::bind(&Shape::MaterialOverrides::mutable_bumpmap, overrides));
@@ -731,7 +735,7 @@ absl::Status ParserV1::Shape(
       parameters, "transmit",
       std::bind(&Shape::MaterialOverrides::mutable_transmit, overrides));
 
-  return iter->second(parameters, shape);
+  return absl::OkStatus();
 }
 
 absl::Status ParserV1::SpectrumTexture(
