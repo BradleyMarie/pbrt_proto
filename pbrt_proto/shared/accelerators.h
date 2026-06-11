@@ -2,27 +2,24 @@
 #define _PBRT_PROTO_SHARED_ACCELERATORS_
 
 #include "absl/container/flat_hash_map.h"
+#include "absl/status/status.h"
 #include "absl/strings/string_view.h"
 #include "pbrt_proto/pbrt.pb.h"
 #include "pbrt_proto/shared/parser.h"
 
 namespace pbrt_proto {
 
-void RemoveGridAcceleratorV1(
+absl::Status RemoveGridAccelerator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    GridAccelerator& output);
+    int pbrt_version, GridAccelerator& output);
 
-void RemoveKdTreeAcceleratorV1(
+absl::Status RemoveKdTreeAccelerator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    KdTreeAccelerator& output);
+    int pbrt_version, KdTreeAccelerator& output);
 
-void RemoveBvhAcceleratorV2(
+absl::Status RemoveBvhAccelerator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    BvhAccelerator& output);
-
-void RemoveBvhAcceleratorV3(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    BvhAccelerator& output);
+    int pbrt_version, BvhAccelerator& output);
 
 }  // namespace pbrt_proto
 

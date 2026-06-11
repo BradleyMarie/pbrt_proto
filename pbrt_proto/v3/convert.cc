@@ -163,33 +163,13 @@ class ParserV3 final : public ProtoParser<PbrtProto, 3> {
 absl::Status ParserV3::Accelerator(
     absl::string_view accelerator_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
-  static const absl::flat_hash_map<
-      absl::string_view, absl::FunctionRef<absl::Status(
-                             absl::flat_hash_map<absl::string_view, Parameter>&,
-                             v3::Accelerator&)>>
-      kTypes = {
-          {"bvh",
-           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-              v3::Accelerator& accelerator) {
-             RemoveBvhAcceleratorV3(parameters, *accelerator.mutable_bvh());
-             return absl::OkStatus();
-           }},
-          {"kdtree",
-           [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-              v3::Accelerator& accelerator) {
-             RemoveKdTreeAcceleratorV1(parameters,
-                                       *accelerator.mutable_kdtree());
-             return absl::OkStatus();
-           }}};
+  static const TypeMap<v3::Accelerator> kSupportedTypes = {
+      {"bvh", CB<RemoveBvhAccelerator, &Accelerator::mutable_bvh>()},
+      {"kdtree", CB<RemoveKdTreeAccelerator, &Accelerator::mutable_kdtree>()},
+  };
 
-  auto& accelerator = *output_.add_directives()->mutable_accelerator();
-
-  auto iter = kTypes.find(accelerator_type);
-  if (iter == kTypes.end()) {
-    return UnrecognizedTypeError("Accelerator", accelerator_type);
-  }
-
-  return iter->second(parameters, accelerator);
+  return Parse<&Directive::mutable_accelerator>(kSupportedTypes,
+                                                accelerator_type, parameters);
 }
 
 absl::Status ParserV3::AreaLightSource(

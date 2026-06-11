@@ -16,15 +16,16 @@ namespace {
 
 using ::google::protobuf::EqualsProto;
 
-TEST(RemoveGridAcceleratorV1, Empty) {
+TEST(RemoveGridAccelerator, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   GridAccelerator actual;
-  RemoveGridAcceleratorV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveGridAccelerator(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveGridAcceleratorV1, RefineImmediately) {
+TEST(RemoveGridAccelerator, RefineImmediately) {
   bool values[] = {true};
   Parameter parameter{/*directive=*/"",
                       /*type=*/ParameterType::BOOL,
@@ -35,21 +36,23 @@ TEST(RemoveGridAcceleratorV1, RefineImmediately) {
       {"refineimmediately", parameter}};
 
   GridAccelerator actual;
-  RemoveGridAcceleratorV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveGridAccelerator(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 refineimmediately: true
               )pb"));
 }
 
-TEST(RemoveKdTreeAcceleratorV1, Empty) {
+TEST(RemoveKdTreeAccelerator, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   KdTreeAccelerator actual;
-  RemoveKdTreeAcceleratorV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveKdTreeAccelerator(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveKdTreeAcceleratorV1, EmptyBonus) {
+TEST(RemoveKdTreeAccelerator, EmptyBonus) {
   std::vector<double> values = {1.0};
   Parameter parameter{/*directive=*/"",
                       /*type=*/ParameterType::FLOAT,
@@ -60,13 +63,14 @@ TEST(RemoveKdTreeAcceleratorV1, EmptyBonus) {
       {"emptybonus", parameter}};
 
   KdTreeAccelerator actual;
-  RemoveKdTreeAcceleratorV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveKdTreeAccelerator(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 emptybonus: 1.0
               )pb"));
 }
 
-TEST(RemoveKdTreeAcceleratorV1, IntersectCost) {
+TEST(RemoveKdTreeAccelerator, IntersectCost) {
   std::vector<int32_t> values = {1};
   Parameter parameter{/*directive=*/"",
                       /*type=*/ParameterType::INTEGER,
@@ -77,13 +81,14 @@ TEST(RemoveKdTreeAcceleratorV1, IntersectCost) {
       {"intersectcost", parameter}};
 
   KdTreeAccelerator actual;
-  RemoveKdTreeAcceleratorV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveKdTreeAccelerator(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 intersectcost: 1
               )pb"));
 }
 
-TEST(RemoveKdTreeAcceleratorV1, MaxDepth) {
+TEST(RemoveKdTreeAccelerator, MaxDepth) {
   std::vector<int32_t> values = {1};
   Parameter parameter{/*directive=*/"",
                       /*type=*/ParameterType::INTEGER,
@@ -94,13 +99,14 @@ TEST(RemoveKdTreeAcceleratorV1, MaxDepth) {
       {"maxdepth", parameter}};
 
   KdTreeAccelerator actual;
-  RemoveKdTreeAcceleratorV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveKdTreeAccelerator(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 maxdepth: 1
               )pb"));
 }
 
-TEST(RemoveKdTreeAcceleratorV1, MaxPrims) {
+TEST(RemoveKdTreeAccelerator, MaxPrims) {
   std::vector<int32_t> values = {1};
   Parameter parameter{/*directive=*/"",
                       /*type=*/ParameterType::INTEGER,
@@ -111,13 +117,14 @@ TEST(RemoveKdTreeAcceleratorV1, MaxPrims) {
       {"maxprims", parameter}};
 
   KdTreeAccelerator actual;
-  RemoveKdTreeAcceleratorV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveKdTreeAccelerator(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 maxprims: 1
               )pb"));
 }
 
-TEST(RemoveKdTreeAcceleratorV1, TraversalCost) {
+TEST(RemoveKdTreeAccelerator, TraversalCost) {
   std::vector<int32_t> values = {1};
   Parameter parameter{/*directive=*/"",
                       /*type=*/ParameterType::INTEGER,
@@ -128,7 +135,8 @@ TEST(RemoveKdTreeAcceleratorV1, TraversalCost) {
       {"traversalcost", parameter}};
 
   KdTreeAccelerator actual;
-  RemoveKdTreeAcceleratorV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveKdTreeAccelerator(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 traversalcost: 1
               )pb"));
@@ -138,7 +146,8 @@ TEST(RemoveBvhAcceleratorV2, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   BvhAccelerator actual;
-  RemoveBvhAcceleratorV2(parameters, actual);
+  EXPECT_TRUE(
+      RemoveBvhAccelerator(parameters, /*pbrt_version=*/2, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -153,7 +162,8 @@ TEST(RemoveBvhAcceleratorV2, MaxNodePrims) {
       {"maxnodeprims", parameter}};
 
   BvhAccelerator actual;
-  RemoveBvhAcceleratorV2(parameters, actual);
+  EXPECT_TRUE(
+      RemoveBvhAccelerator(parameters, /*pbrt_version=*/2, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 maxnodeprims: 1
               )pb"));
@@ -170,7 +180,8 @@ TEST(RemoveBvhAcceleratorV2, Middle) {
       {"splitmethod", parameter}};
 
   BvhAccelerator actual;
-  RemoveBvhAcceleratorV2(parameters, actual);
+  EXPECT_TRUE(
+      RemoveBvhAccelerator(parameters, /*pbrt_version=*/2, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 splitmethod: MIDDLE
               )pb"));
@@ -187,7 +198,8 @@ TEST(RemoveBvhAcceleratorV2, Equal) {
       {"splitmethod", parameter}};
 
   BvhAccelerator actual;
-  RemoveBvhAcceleratorV2(parameters, actual);
+  EXPECT_TRUE(
+      RemoveBvhAccelerator(parameters, /*pbrt_version=*/2, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 splitmethod: EQUAL
               )pb"));
@@ -204,7 +216,8 @@ TEST(RemoveBvhAcceleratorV2, Hlbvh) {
       {"splitmethod", parameter}};
 
   BvhAccelerator actual;
-  RemoveBvhAcceleratorV2(parameters, actual);
+  EXPECT_TRUE(
+      RemoveBvhAccelerator(parameters, /*pbrt_version=*/2, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 splitmethod: SAH
               )pb"));
@@ -214,7 +227,8 @@ TEST(RemoveBvhAcceleratorV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   BvhAccelerator actual;
-  RemoveBvhAcceleratorV3(parameters, actual);
+  EXPECT_TRUE(
+      RemoveBvhAccelerator(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -229,7 +243,8 @@ TEST(RemoveBvhAcceleratorV3, MaxNodePrims) {
       {"maxnodeprims", parameter}};
 
   BvhAccelerator actual;
-  RemoveBvhAcceleratorV3(parameters, actual);
+  EXPECT_TRUE(
+      RemoveBvhAccelerator(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 maxnodeprims: 1
               )pb"));
@@ -246,7 +261,8 @@ TEST(RemoveBvhAcceleratorV3, Middle) {
       {"splitmethod", parameter}};
 
   BvhAccelerator actual;
-  RemoveBvhAcceleratorV3(parameters, actual);
+  EXPECT_TRUE(
+      RemoveBvhAccelerator(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 splitmethod: MIDDLE
               )pb"));
@@ -263,7 +279,8 @@ TEST(RemoveBvhAcceleratorV3, Equal) {
       {"splitmethod", parameter}};
 
   BvhAccelerator actual;
-  RemoveBvhAcceleratorV3(parameters, actual);
+  EXPECT_TRUE(
+      RemoveBvhAccelerator(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 splitmethod: EQUAL
               )pb"));
@@ -280,7 +297,8 @@ TEST(RemoveBvhAcceleratorV3, Hlbvh) {
       {"splitmethod", parameter}};
 
   BvhAccelerator actual;
-  RemoveBvhAcceleratorV3(parameters, actual);
+  EXPECT_TRUE(
+      RemoveBvhAccelerator(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 splitmethod: HLBVH
               )pb"));
@@ -297,7 +315,8 @@ TEST(RemoveBvhAcceleratorV3, Unknown) {
       {"splitmethod", parameter}};
 
   BvhAccelerator actual;
-  RemoveBvhAcceleratorV3(parameters, actual);
+  EXPECT_TRUE(
+      RemoveBvhAccelerator(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 splitmethod: SAH
               )pb"));

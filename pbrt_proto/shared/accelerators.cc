@@ -8,52 +8,22 @@
 #include "pbrt_proto/shared/parser.h"
 
 namespace pbrt_proto {
-namespace {
 
-void RemoveBvhAccelerator(
+absl::Status RemoveGridAccelerator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    bool allow_hlbvh, BvhAccelerator& output) {
-  if (std::optional<int32_t> maxnodeprims =
-          TryRemoveInteger(parameters, "maxnodeprims");
-      maxnodeprims.has_value()) {
-    output.set_maxnodeprims(std::max(0, *maxnodeprims));
-  }
-
-  if (std::optional<absl::string_view> splitmethod =
-          TryRemoveString(parameters, "splitmethod");
-      splitmethod.has_value()) {
-    if (*splitmethod == "sah") {
-      output.set_splitmethod(BvhAccelerator::SAH);
-    } else if (*splitmethod == "middle") {
-      output.set_splitmethod(BvhAccelerator::MIDDLE);
-    } else if (*splitmethod == "equal") {
-      output.set_splitmethod(BvhAccelerator::EQUAL);
-    } else if (allow_hlbvh && *splitmethod == "hlbvh") {
-      output.set_splitmethod(BvhAccelerator::HLBVH);
-    } else {
-      std::cerr << "Unsupported value for 'bvh' Accelerator parameter "
-                   "'splitmethod': \""
-                << *splitmethod << "\"" << std::endl;
-      output.set_splitmethod(BvhAccelerator::SAH);
-    }
-  }
-}
-
-}  // namespace
-
-void RemoveGridAcceleratorV1(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    GridAccelerator& output) {
+    int pbrt_version, GridAccelerator& output) {
   if (std::optional<bool> refineimmediately =
           TryRemoveBool(parameters, "refineimmediately");
       refineimmediately) {
     output.set_refineimmediately(*refineimmediately);
   }
+
+  return absl::OkStatus();
 }
 
-void RemoveKdTreeAcceleratorV1(
+absl::Status RemoveKdTreeAccelerator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    KdTreeAccelerator& output) {
+    int pbrt_version, KdTreeAccelerator& output) {
   if (std::optional<double> emptybonus =
           TryRemoveFloat(parameters, "emptybonus");
       emptybonus.has_value()) {
@@ -83,18 +53,39 @@ void RemoveKdTreeAcceleratorV1(
       traversalcost.has_value()) {
     output.set_traversalcost(*traversalcost);
   }
+
+  return absl::OkStatus();
 }
 
-void RemoveBvhAcceleratorV2(
+absl::Status RemoveBvhAccelerator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    BvhAccelerator& output) {
-  RemoveBvhAccelerator(parameters, /*allow_hlbvh=*/false, output);
-}
+    int pbrt_version, BvhAccelerator& output) {
+  if (std::optional<int32_t> maxnodeprims =
+          TryRemoveInteger(parameters, "maxnodeprims");
+      maxnodeprims.has_value()) {
+    output.set_maxnodeprims(std::max(0, *maxnodeprims));
+  }
 
-void RemoveBvhAcceleratorV3(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    BvhAccelerator& output) {
-  RemoveBvhAccelerator(parameters, /*allow_hlbvh=*/true, output);
+  if (std::optional<absl::string_view> splitmethod =
+          TryRemoveString(parameters, "splitmethod");
+      splitmethod.has_value()) {
+    if (*splitmethod == "sah") {
+      output.set_splitmethod(BvhAccelerator::SAH);
+    } else if (*splitmethod == "middle") {
+      output.set_splitmethod(BvhAccelerator::MIDDLE);
+    } else if (*splitmethod == "equal") {
+      output.set_splitmethod(BvhAccelerator::EQUAL);
+    } else if (pbrt_version >= 3 && *splitmethod == "hlbvh") {
+      output.set_splitmethod(BvhAccelerator::HLBVH);
+    } else {
+      std::cerr << "Unsupported value for 'bvh' Accelerator parameter "
+                   "'splitmethod': \""
+                << *splitmethod << "\"" << std::endl;
+      output.set_splitmethod(BvhAccelerator::SAH);
+    }
+  }
+
+  return absl::OkStatus();
 }
 
 }  // namespace pbrt_proto

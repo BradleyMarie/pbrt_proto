@@ -1,8 +1,10 @@
 #ifndef _PBRT_PROTO_SHARED_PROTO_PARSER_
 
+#include <string>
 #include <utility>
 
 #include "absl/container/flat_hash_map.h"
+#include "absl/functional/function_ref.h"
 #include "absl/status/status.h"
 #include "absl/strings/str_cat.h"
 #include "absl/strings/string_view.h"
@@ -18,18 +20,34 @@ class ProtoParser : public Parser {
               T& output)
       : Parser(parameter_type_names), output_(output) {}
 
-  typedef decltype(*std::declval<T>().add_directives()->mutable_material())
-      MaterialType;
+  template <typename U>
+  using TypeMap = absl::flat_hash_map<
+      absl::string_view,
+      absl::FunctionRef<absl::Status(
+          absl::flat_hash_map<absl::string_view, Parameter>&, U&)>>;
+
+  template <auto Func, auto Getter>
+  auto CB() {
+    return [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              auto& output) {
+      auto& field = *(output.*Getter)();
+      return Func(parameters, PbrtVersion, field);
+    };
+  }
+
+  template <auto Func, typename U>
+  absl::Status Parse(
+      const TypeMap<U>& type_map, absl::string_view type_name,
+      absl::flat_hash_map<absl::string_view, Parameter>& parameters);
 
   virtual absl::Status Material(
       absl::string_view material_type,
       absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-      MaterialType& material) = 0;
+      decltype(*std::declval<T>().add_directives()->mutable_material())&
+          material) = 0;
 
   static absl::Status UnrecognizedTypeError(absl::string_view directive,
                                             absl::string_view type);
-
-  static constexpr int kPbrtVersion = PbrtVersion;
 
   T& output_;
 
@@ -125,28 +143,25 @@ class ProtoParser : public Parser {
   absl::Status WorldEnd() final;
 
   static absl::Status UnsupportedDirectiveError(absl::string_view directive);
+  static std::string GetShortName(absl::string_view full_name);
 };
 
 template <typename T, int PbrtVersion>
-absl::Status ProtoParser<T, PbrtVersion>::UnsupportedDirectiveError(
-    absl::string_view directive) {
-  return absl::UnimplementedError(absl::StrCat(
-      "Directive '", directive, "' is not supported in pbrt-v", PbrtVersion));
-}
+template <auto Func, typename U>
+absl::Status ProtoParser<T, PbrtVersion>::Parse(
+    const TypeMap<U>& type_map, absl::string_view type_name,
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
+  auto& base_directive = *output_.add_directives();
+  auto& directive = *(base_directive.*Func)();
 
-template <typename T, int PbrtVersion>
-absl::Status ProtoParser<T, PbrtVersion>::UnrecognizedTypeError(
-    absl::string_view directive, absl::string_view type) {
-  std::string message =
-      absl::StrCat(directive, " type \'", type, "\' is not supported in pbrt-v",
-                   PbrtVersion);
-
-  if constexpr (PbrtVersion < 4) {
-    std::cerr << "WARNING: " << message << std::endl;
-    return absl::OkStatus();
+  auto iter = type_map.find(type_name);
+  if (iter == type_map.end()) {
+    static const std::string directive_name =
+        GetShortName(directive.GetTypeName());
+    return UnrecognizedTypeError(directive_name, type_name);
   }
 
-  return absl::InvalidArgumentError(message);
+  return iter->second(parameters, directive);
 }
 
 template <typename T, int PbrtVersion>
@@ -478,6 +493,44 @@ absl::Status ProtoParser<T, PbrtVersion>::WorldEnd() {
   }
 
   return UnsupportedDirectiveError("WorldEnd");
+}
+
+template <typename T, int PbrtVersion>
+absl::Status ProtoParser<T, PbrtVersion>::UnsupportedDirectiveError(
+    absl::string_view directive) {
+  return absl::UnimplementedError(absl::StrCat(
+      "Directive '", directive, "' is not supported in pbrt-v", PbrtVersion));
+}
+
+template <typename T, int PbrtVersion>
+absl::Status ProtoParser<T, PbrtVersion>::UnrecognizedTypeError(
+    absl::string_view directive, absl::string_view type) {
+  std::string message =
+      absl::StrCat(directive, " type \'", type, "\' is not supported in pbrt-v",
+                   PbrtVersion);
+
+  if constexpr (PbrtVersion < 4) {
+    std::cerr << "WARNING: " << message << std::endl;
+    return absl::OkStatus();
+  }
+
+  return absl::InvalidArgumentError(message);
+}
+
+template <typename T, int PbrtVersion>
+std::string ProtoParser<T, PbrtVersion>::GetShortName(
+    absl::string_view full_name) {
+  size_t last_dot = full_name.find_last_of('.');
+  if (last_dot == absl::string_view::npos) {
+    return std::string(full_name);
+  }
+
+  absl::string_view result = full_name.substr(last_dot + 1);
+  if (result == "FloatTexture" || result == "SpectrumTexture") {
+    return "Texture";
+  }
+
+  return std::string(result);
 }
 
 }  // namespace pbrt_proto
