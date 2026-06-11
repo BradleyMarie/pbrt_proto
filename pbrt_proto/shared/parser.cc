@@ -807,6 +807,10 @@ absl::Status TryRemoveValues(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     absl::string_view parameter_name, std::optional<size_t> required_size,
     std::optional<absl::Span<T>>& value) {
+  if (parameters.empty()) {
+    return absl::OkStatus();
+  }
+
   auto iter = parameters.find(parameter_name);
   if (iter == parameters.end()) {
     return absl::OkStatus();
@@ -837,6 +841,10 @@ template <ParameterType type, typename T>
 absl::Status TryRemoveValue(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     absl::string_view parameter_name, std::optional<T>& value) {
+  if (parameters.empty()) {
+    return absl::OkStatus();
+  }
+
   auto iter = parameters.find(parameter_name);
   if (iter == parameters.end()) {
     return absl::OkStatus();
