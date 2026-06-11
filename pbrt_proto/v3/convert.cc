@@ -175,7 +175,7 @@ absl::Status ParserV3::Accelerator(
 absl::Status ParserV3::AreaLightSource(
     absl::string_view area_light_source_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
-  static const TypeMap<v3::AreaLightSource> kTypeMap = {
+  static const TypeMap<v3::AreaLightSource> kSupportedTypes = {
       {"area",
        [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
           v3::AreaLightSource& area_light_source) {
@@ -192,8 +192,8 @@ absl::Status ParserV3::AreaLightSource(
   auto& area_light_source =
       *output_.add_directives()->mutable_area_light_source();
 
-  auto iter = kTypeMap.find(area_light_source_type);
-  if (iter == kTypeMap.end()) {
+  auto iter = kSupportedTypes.find(area_light_source_type);
+  if (iter == kSupportedTypes.end()) {
     return UnrecognizedTypeError("AreaLightSource", area_light_source_type);
   }
 
@@ -203,46 +203,24 @@ absl::Status ParserV3::AreaLightSource(
 absl::Status ParserV3::Camera(
     absl::string_view camera_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
-  static const TypeMap<v3::Camera> kTypeMap = {
+  static const TypeMap<v3::Camera> kSupportedTypes = {
       {"environment",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::Camera& camera) {
-         RemoveSphericalCameraV2(parameters, *camera.mutable_environment());
-         return absl::OkStatus();
-       }},
+       CB<RemoveSphericalCamera, &Camera::mutable_environment>()},
       {"orthographic",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::Camera& camera) {
-         RemoveOrthographicCameraV2(parameters, *camera.mutable_orthographic());
-         return absl::OkStatus();
-       }},
+       CB<RemoveOrthographicCamera, &Camera::mutable_orthographic>()},
       {"perspective",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::Camera& camera) {
-         RemovePerspectiveCameraV2(parameters, *camera.mutable_perspective());
-         return absl::OkStatus();
-       }},
-      {"realistic",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::Camera& camera) {
-         RemoveRealisticCameraV3(parameters, *camera.mutable_realistic());
-         return absl::OkStatus();
-       }}};
+       CB<RemovePerspectiveCamera, &Camera::mutable_perspective>()},
+      {"realistic", CB<RemoveRealisticCamera, &Camera::mutable_realistic>()},
+  };
 
-  auto& camera = *output_.add_directives()->mutable_camera();
-
-  auto iter = kTypeMap.find(camera_type);
-  if (iter == kTypeMap.end()) {
-    return UnrecognizedTypeError("Camera", camera_type);
-  }
-
-  return iter->second(parameters, camera);
+  return Parse<&Directive::mutable_camera>(kSupportedTypes, camera_type,
+                                           parameters);
 }
 
 absl::Status ParserV3::Film(
     absl::string_view film_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
-  static const TypeMap<v3::Film> kTypeMap = {
+  static const TypeMap<v3::Film> kSupportedTypes = {
       {"image",
        [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
           v3::Film& film) {
@@ -252,8 +230,8 @@ absl::Status ParserV3::Film(
 
   auto& film = *output_.add_directives()->mutable_film();
 
-  auto iter = kTypeMap.find(film_type);
-  if (iter == kTypeMap.end()) {
+  auto iter = kSupportedTypes.find(film_type);
+  if (iter == kSupportedTypes.end()) {
     return UnrecognizedTypeError("Film", film_type);
   }
 
@@ -263,7 +241,7 @@ absl::Status ParserV3::Film(
 absl::Status ParserV3::FloatTexture(
     absl::string_view float_texture_name, absl::string_view float_texture_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
-  static const TypeMap<v3::FloatTexture> kTypeMap = {
+  static const TypeMap<v3::FloatTexture> kSupportedTypes = {
       {"bilerp",
        [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
           v3::FloatTexture& float_texture) {
@@ -351,8 +329,8 @@ absl::Status ParserV3::FloatTexture(
   auto& float_texture = *output_.add_directives()->mutable_float_texture();
   float_texture.set_name(float_texture_name);
 
-  auto iter = kTypeMap.find(float_texture_type);
-  if (iter == kTypeMap.end()) {
+  auto iter = kSupportedTypes.find(float_texture_type);
+  if (iter == kSupportedTypes.end()) {
     return UnrecognizedTypeError("Texture", float_texture_type);
   }
 
@@ -362,7 +340,7 @@ absl::Status ParserV3::FloatTexture(
 absl::Status ParserV3::Integrator(
     absl::string_view integrator_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
-  static const TypeMap<v3::Integrator> kTypeMap = {
+  static const TypeMap<v3::Integrator> kSupportedTypes = {
       {"ambientocclusion",
        [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
           v3::Integrator& integrator) {
@@ -417,8 +395,8 @@ absl::Status ParserV3::Integrator(
 
   auto& integrator = *output_.add_directives()->mutable_integrator();
 
-  auto iter = kTypeMap.find(integrator_type);
-  if (iter == kTypeMap.end()) {
+  auto iter = kSupportedTypes.find(integrator_type);
+  if (iter == kSupportedTypes.end()) {
     return UnrecognizedTypeError("Integrator", integrator_type);
   }
 
@@ -428,7 +406,7 @@ absl::Status ParserV3::Integrator(
 absl::Status ParserV3::LightSource(
     absl::string_view light_source_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
-  static const TypeMap<v3::LightSource> kTypeMap = {
+  static const TypeMap<v3::LightSource> kSupportedTypes = {
       {"distant",
        [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
           v3::LightSource& light_source) {
@@ -467,8 +445,8 @@ absl::Status ParserV3::LightSource(
 
   auto& light_source = *output_.add_directives()->mutable_light_source();
 
-  auto iter = kTypeMap.find(light_source_type);
-  if (iter == kTypeMap.end()) {
+  auto iter = kSupportedTypes.find(light_source_type);
+  if (iter == kSupportedTypes.end()) {
     return UnrecognizedTypeError("LightSource", light_source_type);
   }
 
@@ -478,7 +456,7 @@ absl::Status ParserV3::LightSource(
 absl::Status ParserV3::MakeNamedMedium(
     absl::string_view medium_name,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
-  static const TypeMap<v3::MakeNamedMedium> kTypeMap = {
+  static const TypeMap<v3::MakeNamedMedium> kSupportedTypes = {
       {"homogeneous",
        [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
           v3::MakeNamedMedium& make_named_medium) {
@@ -500,8 +478,8 @@ absl::Status ParserV3::MakeNamedMedium(
       *output_.add_directives()->mutable_make_named_medium();
   make_named_medium.set_name(medium_name);
 
-  auto iter = kTypeMap.find(medium_type);
-  if (iter == kTypeMap.end()) {
+  auto iter = kSupportedTypes.find(medium_type);
+  if (iter == kSupportedTypes.end()) {
     return UnrecognizedTypeError("MakeNamedMedium", medium_type);
   }
 
@@ -512,7 +490,7 @@ absl::Status ParserV3::Material(
     absl::string_view material_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     v3::Material& material) {
-  static const TypeMap<v3::Material> kTypeMap = {
+  static const TypeMap<v3::Material> kSupportedTypes = {
       {"", [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
               v3::Material& material) { return absl::OkStatus(); }},
       {"disney",
@@ -606,8 +584,8 @@ absl::Status ParserV3::Material(
        }},
   };
 
-  auto iter = kTypeMap.find(material_type);
-  if (iter == kTypeMap.end()) {
+  auto iter = kSupportedTypes.find(material_type);
+  if (iter == kSupportedTypes.end()) {
     RemoveMatteMaterialV1(parameters, *material.mutable_matte());
     return UnrecognizedTypeError("Material", material_type);
   }
@@ -618,7 +596,7 @@ absl::Status ParserV3::Material(
 absl::Status ParserV3::PixelFilter(
     absl::string_view pixel_filter_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
-  static const TypeMap<v3::PixelFilter> kTypeMap = {
+  static const TypeMap<v3::PixelFilter> kSupportedTypes = {
       {"box",
        [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
           v3::PixelFilter& pixel_filter) {
@@ -655,8 +633,8 @@ absl::Status ParserV3::PixelFilter(
 
   auto& pixel_filter = *output_.add_directives()->mutable_pixel_filter();
 
-  auto iter = kTypeMap.find(pixel_filter_type);
-  if (iter == kTypeMap.end()) {
+  auto iter = kSupportedTypes.find(pixel_filter_type);
+  if (iter == kSupportedTypes.end()) {
     return UnrecognizedTypeError("PixelFilter", pixel_filter_type);
   }
 
@@ -666,7 +644,7 @@ absl::Status ParserV3::PixelFilter(
 absl::Status ParserV3::Sampler(
     absl::string_view sampler_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
-  static const TypeMap<v3::Sampler> kTypeMap = {
+  static const TypeMap<v3::Sampler> kSupportedTypes = {
       {"halton",
        [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
           v3::Sampler& sampler) {
@@ -715,8 +693,8 @@ absl::Status ParserV3::Sampler(
 
   auto& sampler = *output_.add_directives()->mutable_sampler();
 
-  auto iter = kTypeMap.find(sampler_type);
-  if (iter == kTypeMap.end()) {
+  auto iter = kSupportedTypes.find(sampler_type);
+  if (iter == kSupportedTypes.end()) {
     return UnrecognizedTypeError("Sampler", sampler_type);
   }
 
@@ -726,7 +704,7 @@ absl::Status ParserV3::Sampler(
 absl::Status ParserV3::Shape(
     absl::string_view shape_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
-  static const TypeMap<v3::Shape> kTypeMap = {
+  static const TypeMap<v3::Shape> kSupportedTypes = {
       {"cone",
        [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
           v3::Shape& shape) {
@@ -801,8 +779,8 @@ absl::Status ParserV3::Shape(
 
   auto& shape = *output_.add_directives()->mutable_shape();
 
-  auto iter = kTypeMap.find(shape_type);
-  if (iter == kTypeMap.end()) {
+  auto iter = kSupportedTypes.find(shape_type);
+  if (iter == kSupportedTypes.end()) {
     return UnrecognizedTypeError("Shape", shape_type);
   }
 
@@ -987,7 +965,7 @@ absl::Status ParserV3::SpectrumTexture(
     absl::string_view spectrum_texture_name,
     absl::string_view spectrum_texture_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
-  static const TypeMap<v3::SpectrumTexture> kTypeMap = {
+  static const TypeMap<v3::SpectrumTexture> kSupportedTypes = {
       {"bilerp",
        [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
           v3::SpectrumTexture& spectrum_texture) {
@@ -1090,8 +1068,8 @@ absl::Status ParserV3::SpectrumTexture(
       *output_.add_directives()->mutable_spectrum_texture();
   spectrum_texture.set_name(spectrum_texture_name);
 
-  auto iter = kTypeMap.find(spectrum_texture_type);
-  if (iter == kTypeMap.end()) {
+  auto iter = kSupportedTypes.find(spectrum_texture_type);
+  if (iter == kSupportedTypes.end()) {
     return UnrecognizedTypeError("Texture", spectrum_texture_type);
   }
 

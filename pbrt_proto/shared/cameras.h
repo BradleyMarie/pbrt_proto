@@ -9,45 +9,21 @@
 
 namespace pbrt_proto {
 
-void RemoveOrthographicCameraV1(
+absl::Status RemoveOrthographicCamera(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    OrthographicCamera& output);
+    int pbrt_version, OrthographicCamera& output);
 
-void RemoveOrthographicCameraV2(
+absl::Status RemovePerspectiveCamera(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    OrthographicCamera& output);
+    int pbrt_version, PerspectiveCamera& output);
 
-void RemovePerspectiveCameraV1(
+absl::Status RemoveSphericalCamera(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    PerspectiveCamera& output);
+    int pbrt_version, SphericalCamera& output);
 
-void RemovePerspectiveCameraV2(
+absl::Status RemoveRealisticCamera(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    PerspectiveCamera& output);
-
-void RemovePerspectiveCameraV4(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    PerspectiveCamera& output);
-
-void RemoveSphericalCameraV1(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    SphericalCamera& output);
-
-void RemoveSphericalCameraV2(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    SphericalCamera& output);
-
-absl::Status RemoveSphericalCameraV4(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    SphericalCamera& output);
-
-void RemoveRealisticCameraV3(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    RealisticCamera& output);
-
-void RemoveRealisticCameraV4(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    RealisticCamera& output);
+    int pbrt_version, RealisticCamera& output);
 
 }  // namespace pbrt_proto
 

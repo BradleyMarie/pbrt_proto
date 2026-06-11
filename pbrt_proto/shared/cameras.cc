@@ -28,77 +28,11 @@ void MaybeRemoveCameraScreenWindow(
   }
 }
 
-void RemoveRealisticCamera(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    bool parse_simpleweighting, bool parse_aperture, RealisticCamera& output) {
-  if (std::optional<double> shutteropen =
-          TryRemoveFloat(parameters, "shutteropen");
-      shutteropen.has_value()) {
-    output.set_shutteropen(*shutteropen);
-  }
-
-  if (std::optional<double> shutterclose =
-          TryRemoveFloat(parameters, "shutterclose");
-      shutterclose.has_value()) {
-    output.set_shutterclose(*shutterclose);
-  }
-
-  if (std::optional<absl::string_view> lensfile =
-          TryRemoveString(parameters, "lensfile");
-      lensfile.has_value()) {
-    output.set_lensfile(*lensfile);
-  }
-
-  if (std::optional<double> aperturediameter =
-          TryRemoveFloat(parameters, "aperturediameter");
-      aperturediameter.has_value()) {
-    output.set_aperturediameter(*aperturediameter);
-  }
-
-  if (parse_aperture) {
-    if (std::optional<absl::string_view> aperture =
-            TryRemoveString(parameters, "aperture");
-        aperture.has_value()) {
-      output.set_aperture(*aperture);
-    }
-  }
-
-  if (std::optional<double> focusdistance =
-          TryRemoveFloat(parameters, "focusdistance");
-      focusdistance.has_value()) {
-    output.set_focusdistance(*focusdistance);
-  }
-
-  if (parse_simpleweighting) {
-    if (std::optional<bool> simpleweighting =
-            TryRemoveBool(parameters, "simpleweighting");
-        simpleweighting.has_value()) {
-      output.set_simpleweighting(*simpleweighting);
-    }
-  }
-}
-
 }  // namespace
 
-void RemoveOrthographicCameraV1(
+absl::Status RemoveOrthographicCamera(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    OrthographicCamera& output) {
-  RemoveOrthographicCameraV2(parameters, output);
-
-  if (std::optional<double> hither = TryRemoveFloat(parameters, "hither");
-      hither.has_value()) {
-    output.set_hither(*hither);
-  }
-
-  if (std::optional<double> yon = TryRemoveFloat(parameters, "yon");
-      yon.has_value()) {
-    output.set_yon(*yon);
-  }
-}
-
-void RemoveOrthographicCameraV2(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    OrthographicCamera& output) {
+    int pbrt_version, OrthographicCamera& output) {
   if (std::optional<double> shutteropen =
           TryRemoveFloat(parameters, "shutteropen");
       shutteropen.has_value()) {
@@ -132,38 +66,25 @@ void RemoveOrthographicCameraV2(
   MaybeRemoveCameraScreenWindow(
       parameters,
       std::bind(&OrthographicCamera::mutable_screenwindow, &output));
-}
 
-void RemovePerspectiveCameraV1(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    PerspectiveCamera& output) {
-  RemovePerspectiveCameraV4(parameters, output);
+  if (pbrt_version == 1) {
+    if (std::optional<double> hither = TryRemoveFloat(parameters, "hither");
+        hither.has_value()) {
+      output.set_hither(*hither);
+    }
 
-  if (std::optional<double> hither = TryRemoveFloat(parameters, "hither");
-      hither.has_value()) {
-    output.set_hither(*hither);
+    if (std::optional<double> yon = TryRemoveFloat(parameters, "yon");
+        yon.has_value()) {
+      output.set_yon(*yon);
+    }
   }
 
-  if (std::optional<double> yon = TryRemoveFloat(parameters, "yon");
-      yon.has_value()) {
-    output.set_yon(*yon);
-  }
+  return absl::OkStatus();
 }
 
-void RemovePerspectiveCameraV2(
+absl::Status RemovePerspectiveCamera(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    PerspectiveCamera& output) {
-  RemovePerspectiveCameraV4(parameters, output);
-
-  if (std::optional<double> halffov = TryRemoveFloat(parameters, "halffov");
-      halffov.has_value() && *halffov > 0.0) {
-    output.set_fov(*halffov * 2.0);
-  }
-}
-
-void RemovePerspectiveCameraV4(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    PerspectiveCamera& output) {
+    int pbrt_version, PerspectiveCamera& output) {
   if (std::optional<double> shutteropen =
           TryRemoveFloat(parameters, "shutteropen");
       shutteropen.has_value()) {
@@ -201,27 +122,32 @@ void RemovePerspectiveCameraV4(
 
   MaybeRemoveCameraScreenWindow(
       parameters, std::bind(&PerspectiveCamera::mutable_screenwindow, &output));
-}
 
-void RemoveSphericalCameraV1(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    SphericalCamera& output) {
-  RemoveSphericalCameraV2(parameters, output);
+  if (pbrt_version == 1) {
+    if (std::optional<double> hither = TryRemoveFloat(parameters, "hither");
+        hither.has_value()) {
+      output.set_hither(*hither);
+    }
 
-  if (std::optional<double> hither = TryRemoveFloat(parameters, "hither");
-      hither.has_value()) {
-    output.set_hither(*hither);
+    if (std::optional<double> yon = TryRemoveFloat(parameters, "yon");
+        yon.has_value()) {
+      output.set_yon(*yon);
+    }
   }
 
-  if (std::optional<double> yon = TryRemoveFloat(parameters, "yon");
-      yon.has_value()) {
-    output.set_yon(*yon);
+  if (pbrt_version >= 2 && pbrt_version <= 3) {
+    if (std::optional<double> halffov = TryRemoveFloat(parameters, "halffov");
+        halffov.has_value() && *halffov > 0.0) {
+      output.set_fov(*halffov * 2.0);
+    }
   }
+
+  return absl::OkStatus();
 }
 
-void RemoveSphericalCameraV2(
+absl::Status RemoveSphericalCamera(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    SphericalCamera& output) {
+    int pbrt_version, SphericalCamera& output) {
   if (std::optional<double> shutteropen =
           TryRemoveFloat(parameters, "shutteropen");
       shutteropen.has_value()) {
@@ -254,41 +180,87 @@ void RemoveSphericalCameraV2(
 
   MaybeRemoveCameraScreenWindow(
       parameters, std::bind(&SphericalCamera::mutable_screenwindow, &output));
-}
 
-absl::Status RemoveSphericalCameraV4(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    SphericalCamera& output) {
-  RemoveSphericalCameraV2(parameters, output);
+  if (pbrt_version == 1) {
+    if (std::optional<double> hither = TryRemoveFloat(parameters, "hither");
+        hither.has_value()) {
+      output.set_hither(*hither);
+    }
 
-  if (std::optional<absl::string_view> mapping =
-          TryRemoveString(parameters, "mapping");
-      mapping.has_value()) {
-    if (*mapping == "equalarea") {
-      output.set_mapping(SphericalCamera::EQUALAREA);
-    } else if (*mapping == "equirectangular") {
-      output.set_mapping(SphericalCamera::EQUIRECTANGULAR);
-    } else {
-      return absl::InvalidArgumentError(
-          "A spherical Camera specified an invalid 'mapping'");
+    if (std::optional<double> yon = TryRemoveFloat(parameters, "yon");
+        yon.has_value()) {
+      output.set_yon(*yon);
+    }
+  }
+
+  if (pbrt_version >= 4) {
+    if (std::optional<absl::string_view> mapping =
+            TryRemoveString(parameters, "mapping");
+        mapping.has_value()) {
+      if (*mapping == "equalarea") {
+        output.set_mapping(SphericalCamera::EQUALAREA);
+      } else if (*mapping == "equirectangular") {
+        output.set_mapping(SphericalCamera::EQUIRECTANGULAR);
+      } else {
+        return absl::InvalidArgumentError(
+            "A spherical Camera specified an invalid 'mapping'");
+      }
     }
   }
 
   return absl::OkStatus();
 }
 
-void RemoveRealisticCameraV3(
+absl::Status RemoveRealisticCamera(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    RealisticCamera& output) {
-  RemoveRealisticCamera(parameters, /*parse_simpleweighting=*/true,
-                        /*parse_aperture=*/false, output);
-}
+    int pbrt_version, RealisticCamera& output) {
+  if (std::optional<double> shutteropen =
+          TryRemoveFloat(parameters, "shutteropen");
+      shutteropen.has_value()) {
+    output.set_shutteropen(*shutteropen);
+  }
 
-void RemoveRealisticCameraV4(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    RealisticCamera& output) {
-  RemoveRealisticCamera(parameters, /*parse_simpleweighting=*/false,
-                        /*parse_aperture=*/true, output);
+  if (std::optional<double> shutterclose =
+          TryRemoveFloat(parameters, "shutterclose");
+      shutterclose.has_value()) {
+    output.set_shutterclose(*shutterclose);
+  }
+
+  if (std::optional<absl::string_view> lensfile =
+          TryRemoveString(parameters, "lensfile");
+      lensfile.has_value()) {
+    output.set_lensfile(*lensfile);
+  }
+
+  if (std::optional<double> aperturediameter =
+          TryRemoveFloat(parameters, "aperturediameter");
+      aperturediameter.has_value()) {
+    output.set_aperturediameter(*aperturediameter);
+  }
+
+  if (std::optional<double> focusdistance =
+          TryRemoveFloat(parameters, "focusdistance");
+      focusdistance.has_value()) {
+    output.set_focusdistance(*focusdistance);
+  }
+
+  if (pbrt_version == 3) {
+    if (std::optional<bool> simpleweighting =
+            TryRemoveBool(parameters, "simpleweighting");
+        simpleweighting.has_value()) {
+      output.set_simpleweighting(*simpleweighting);
+    }
+  }
+
+  if (pbrt_version >= 4) {
+    if (std::optional<absl::string_view> aperture =
+            TryRemoveString(parameters, "aperture");
+        aperture.has_value()) {
+      output.set_aperture(*aperture);
+    }
+  }
+
+  return absl::OkStatus();
 }
 
 }  // namespace pbrt_proto

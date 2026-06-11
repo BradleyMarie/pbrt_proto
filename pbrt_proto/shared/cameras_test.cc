@@ -23,7 +23,8 @@ TEST(OrthographicCameraV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   OrthographicCamera actual;
-  RemoveOrthographicCameraV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveOrthographicCamera(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -81,7 +82,8 @@ TEST(OrthographicCameraV1, WithData) {
       {"yon", yon_parameter}};
 
   OrthographicCamera actual;
-  RemoveOrthographicCameraV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveOrthographicCamera(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 shutteropen: 1.0
                 shutterclose: 2.0
@@ -97,7 +99,8 @@ TEST(OrthographicCameraV2, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   OrthographicCamera actual;
-  RemoveOrthographicCameraV2(parameters, actual);
+  EXPECT_TRUE(
+      RemoveOrthographicCamera(parameters, /*pbrt_version=*/2, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -155,7 +158,8 @@ TEST(OrthographicCameraV2, WithData) {
       {"yon", yon_parameter}};
 
   OrthographicCamera actual;
-  RemoveOrthographicCameraV2(parameters, actual);
+  EXPECT_TRUE(
+      RemoveOrthographicCamera(parameters, /*pbrt_version=*/2, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 shutteropen: 1.0
                 shutterclose: 2.0
@@ -233,7 +237,8 @@ TEST(RemovePerspectiveCameraV1, WithData) {
       {"halffov", halffov_parameter}};
 
   PerspectiveCamera actual;
-  RemovePerspectiveCameraV1(parameters, actual);
+  EXPECT_TRUE(
+      RemovePerspectiveCamera(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 shutteropen: 1.0
                 shutterclose: 2.0
@@ -250,7 +255,8 @@ TEST(RemovePerspectiveCameraV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   PerspectiveCamera actual;
-  RemovePerspectiveCameraV1(parameters, actual);
+  EXPECT_TRUE(
+      RemovePerspectiveCamera(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -322,7 +328,8 @@ TEST(RemovePerspectiveCameraV2, WithData) {
       {"halffov", halffov_parameter}};
 
   PerspectiveCamera actual;
-  RemovePerspectiveCameraV2(parameters, actual);
+  EXPECT_TRUE(
+      RemovePerspectiveCamera(parameters, /*pbrt_version=*/2, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 shutteropen: 1.0
                 shutterclose: 2.0
@@ -344,7 +351,8 @@ TEST(RemovePerspectiveCameraV2, ZeroHalfFov) {
       {"halffov", halffov_parameter}};
 
   PerspectiveCamera actual;
-  RemovePerspectiveCameraV2(parameters, actual);
+  EXPECT_TRUE(
+      RemovePerspectiveCamera(parameters, /*pbrt_version=*/2, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -352,7 +360,8 @@ TEST(RemovePerspectiveCameraV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   PerspectiveCamera actual;
-  RemovePerspectiveCameraV4(parameters, actual);
+  EXPECT_TRUE(
+      RemovePerspectiveCamera(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -424,7 +433,8 @@ TEST(RemovePerspectiveCameraV4, WithData) {
       {"halffov", halffov_parameter}};
 
   PerspectiveCamera actual;
-  RemovePerspectiveCameraV4(parameters, actual);
+  EXPECT_TRUE(
+      RemovePerspectiveCamera(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 shutteropen: 1.0
                 shutterclose: 2.0
@@ -439,7 +449,8 @@ TEST(RemoveSphericalCameraV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   SphericalCamera actual;
-  RemoveSphericalCameraV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveSphericalCamera(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -511,7 +522,8 @@ TEST(RemoveSphericalCameraV1, WithData) {
       {"mapping", mapping_parameter}};
 
   SphericalCamera actual;
-  RemoveSphericalCameraV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveSphericalCamera(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 shutteropen: 1.0
                 shutterclose: 2.0
@@ -528,7 +540,8 @@ TEST(RemoveSphericalCameraV2, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   SphericalCamera actual;
-  RemoveSphericalCameraV2(parameters, actual);
+  EXPECT_TRUE(
+      RemoveSphericalCamera(parameters, /*pbrt_version=*/2, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -600,7 +613,8 @@ TEST(RemoveSphericalCameraV2, WithData) {
       {"mapping", mapping_parameter}};
 
   SphericalCamera actual;
-  RemoveSphericalCameraV2(parameters, actual);
+  EXPECT_TRUE(
+      RemoveSphericalCamera(parameters, /*pbrt_version=*/2, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 shutteropen: 1.0
                 shutterclose: 2.0
@@ -615,7 +629,8 @@ TEST(RemoveSphericalCameraV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   SphericalCamera actual;
-  ASSERT_TRUE(RemoveSphericalCameraV4(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveSphericalCamera(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -687,7 +702,8 @@ TEST(RemoveSphericalCameraV4, WithData) {
       {"mapping", mapping_parameter}};
 
   SphericalCamera actual;
-  ASSERT_TRUE(RemoveSphericalCameraV4(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveSphericalCamera(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 shutteropen: 1.0
                 shutterclose: 2.0
@@ -710,7 +726,8 @@ TEST(RemoveSphericalCameraV4, Equirectangular) {
       {"mapping", mapping_parameter}};
 
   SphericalCamera actual;
-  ASSERT_TRUE(RemoveSphericalCameraV4(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveSphericalCamera(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 mapping: EQUIRECTANGULAR
               )pb"));
@@ -727,7 +744,7 @@ TEST(RemoveSphericalCameraV4, InvalidMapping) {
       {"mapping", mapping_parameter}};
 
   SphericalCamera actual;
-  EXPECT_THAT(RemoveSphericalCameraV4(parameters, actual),
+  EXPECT_THAT(RemoveSphericalCamera(parameters, /*pbrt_version=*/4, actual),
               StatusIs(absl::StatusCode::kInvalidArgument,
                        "A spherical Camera specified an invalid 'mapping'"));
 }
@@ -736,7 +753,8 @@ TEST(RemoveRealisticCameraV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   RealisticCamera actual;
-  RemoveRealisticCameraV3(parameters, actual);
+  EXPECT_TRUE(
+      RemoveRealisticCamera(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -795,7 +813,8 @@ TEST(RemoveRealisticCameraV3, WithData) {
       {"simpleweighting", simpleweighting_parameter}};
 
   RealisticCamera actual;
-  RemoveRealisticCameraV3(parameters, actual);
+  EXPECT_TRUE(
+      RemoveRealisticCamera(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 shutteropen: 1.0
                 shutterclose: 2.0
@@ -810,7 +829,8 @@ TEST(RemoveRealisticCameraV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   RealisticCamera actual;
-  RemoveRealisticCameraV4(parameters, actual);
+  EXPECT_TRUE(
+      RemoveRealisticCamera(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -869,7 +889,8 @@ TEST(RemoveRealisticCameraV4, WithData) {
       {"simpleweighting", simpleweighting_parameter}};
 
   RealisticCamera actual;
-  RemoveRealisticCameraV4(parameters, actual);
+  EXPECT_TRUE(
+      RemoveRealisticCamera(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 shutteropen: 1.0
                 shutterclose: 2.0
