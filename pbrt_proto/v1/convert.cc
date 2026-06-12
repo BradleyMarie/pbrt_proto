@@ -29,7 +29,7 @@ namespace pbrt_proto::v1 {
 namespace {
 
 static const absl::flat_hash_map<absl::string_view, ParameterType>
-    parameter_type_names = {
+    kParameterTypeNames = {
         {
             "bool",
             ParameterType::BOOL,
@@ -65,7 +65,7 @@ static const absl::flat_hash_map<absl::string_view, ParameterType>
 class ParserV1 final : public ProtoParser<PbrtProto, 1> {
  public:
   ParserV1(PbrtProto& output) noexcept
-      : ProtoParser(parameter_type_names, output) {}
+      : ProtoParser(kParameterTypeNames, output) {}
 
  private:
   absl::Status Accelerator(

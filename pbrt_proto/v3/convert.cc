@@ -29,7 +29,7 @@ namespace pbrt_proto::v3 {
 namespace {
 
 static const absl::flat_hash_map<absl::string_view, ParameterType>
-    parameter_type_names = {
+    kParameterTypeNames = {
         {
             "blackbody",
             ParameterType::BLACKBODY_V1,
@@ -101,7 +101,7 @@ static const absl::flat_hash_map<absl::string_view, ParameterType>
 class ParserV3 final : public ProtoParser<PbrtProto, 3> {
  public:
   ParserV3(PbrtProto& output) noexcept
-      : ProtoParser(parameter_type_names, output) {}
+      : ProtoParser(kParameterTypeNames, output) {}
 
  private:
   absl::Status Accelerator(
