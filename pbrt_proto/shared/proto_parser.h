@@ -51,9 +51,6 @@ class ProtoParser : public Parser {
       decltype(*std::declval<T>().add_directives()->mutable_material())&
           material) = 0;
 
-  static absl::Status UnrecognizedTypeError(absl::string_view directive,
-                                            absl::string_view type);
-
   T& output_;
 
  private:
@@ -148,6 +145,8 @@ class ProtoParser : public Parser {
   absl::Status WorldEnd() final;
 
   static absl::Status UnsupportedDirectiveError(absl::string_view directive);
+  static absl::Status UnrecognizedTypeError(absl::string_view directive,
+                                            absl::string_view type);
   static std::string GetShortName(absl::string_view full_name);
 };
 
