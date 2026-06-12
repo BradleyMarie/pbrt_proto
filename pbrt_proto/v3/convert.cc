@@ -384,49 +384,19 @@ absl::Status ParserV3::LightSource(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
   static const TypeMap<v3::LightSource> kSupportedTypes = {
       {"distant",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::LightSource& light_source) {
-         return RemoveDistantLightSourceV2(parameters,
-                                           *light_source.mutable_distant());
-       }},
+       CB<RemoveDistantLightSource, &LightSource::mutable_distant>()},
       {"goniometric",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::LightSource& light_source) {
-         return RemoveGoniometricLightSourceV2(
-             parameters, *light_source.mutable_goniometric());
-       }},
+       CB<RemoveGoniometricLightSource, &LightSource::mutable_goniometric>()},
       {"infinite",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::LightSource& light_source) {
-         return RemoveInfiniteLightSourceV3(parameters,
-                                            *light_source.mutable_infinite());
-       }},
-      {"point",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::LightSource& light_source) {
-         return RemovePointLightSourceV2(parameters,
-                                         *light_source.mutable_point());
-       }},
+       CB<RemoveInfiniteLightSource, &LightSource::mutable_infinite>()},
+      {"point", CB<RemovePointLightSource, &LightSource::mutable_point>()},
       {"projection",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::LightSource& light_source) {
-         return RemoveProjectionLightSourceV2(
-             parameters, *light_source.mutable_projection());
-       }},
-      {"spot", [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-                  v3::LightSource& light_source) {
-         return RemoveSpotLightSourceV2(parameters,
-                                        *light_source.mutable_spot());
-       }}};
+       CB<RemoveProjectionLightSource, &LightSource::mutable_projection>()},
+      {"spot", CB<RemoveSpotLightSource, &LightSource::mutable_spot>()},
+  };
 
-  auto& light_source = *output_.add_directives()->mutable_light_source();
-
-  auto iter = kSupportedTypes.find(light_source_type);
-  if (iter == kSupportedTypes.end()) {
-    return UnrecognizedTypeError("LightSource", light_source_type);
-  }
-
-  return iter->second(parameters, light_source);
+  return Parse<&Directive::mutable_light_source>(kSupportedTypes,
+                                                 light_source_type, parameters);
 }
 
 absl::Status ParserV3::MakeNamedMedium(

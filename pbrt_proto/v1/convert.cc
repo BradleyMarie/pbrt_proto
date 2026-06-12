@@ -277,55 +277,21 @@ absl::Status ParserV1::LightSource(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
   static const TypeMap<v1::LightSource> kSupportedTypes = {
       {"distant",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::LightSource& light_source) {
-         return RemoveDistantLightSourceV1(parameters,
-                                           *light_source.mutable_distant());
-       }},
+       CB<RemoveDistantLightSource, &LightSource::mutable_distant>()},
       {"goniometric",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::LightSource& light_source) {
-         return RemoveGoniometricLightSourceV1(
-             parameters, *light_source.mutable_goniometric());
-       }},
+       CB<RemoveGoniometricLightSource, &LightSource::mutable_goniometric>()},
       {"infinite",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::LightSource& light_source) {
-         return RemoveInfiniteLightSourceV1(parameters,
-                                            *light_source.mutable_infinite());
-       }},
+       CB<RemoveInfiniteLightSource, &LightSource::mutable_infinite>()},
       {"infinitesample",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::LightSource& light_source) {
-         return RemoveInfiniteLightSourceV1(
-             parameters, *light_source.mutable_infinitesample());
-       }},
-      {"point",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::LightSource& light_source) {
-         return RemovePointLightSourceV1(parameters,
-                                         *light_source.mutable_point());
-       }},
+       CB<RemoveInfiniteLightSource, &LightSource::mutable_infinitesample>()},
+      {"point", CB<RemovePointLightSource, &LightSource::mutable_point>()},
       {"projection",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::LightSource& light_source) {
-         return RemoveProjectionLightSourceV1(
-             parameters, *light_source.mutable_projection());
-       }},
-      {"spot", [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-                  v1::LightSource& light_source) {
-         return RemoveSpotLightSourceV1(parameters,
-                                        *light_source.mutable_spot());
-       }}};
+       CB<RemoveProjectionLightSource, &LightSource::mutable_projection>()},
+      {"spot", CB<RemoveSpotLightSource, &LightSource::mutable_spot>()},
+  };
 
-  auto& light_source = *output_.add_directives()->mutable_light_source();
-
-  auto iter = kSupportedTypes.find(light_source_type);
-  if (iter == kSupportedTypes.end()) {
-    return UnrecognizedTypeError("LightSource", light_source_type);
-  }
-
-  return iter->second(parameters, light_source);
+  return Parse<&Directive::mutable_light_source>(kSupportedTypes,
+                                                 light_source_type, parameters);
 }
 
 absl::Status ParserV1::Material(

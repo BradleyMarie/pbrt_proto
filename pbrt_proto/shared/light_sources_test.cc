@@ -23,7 +23,8 @@ TEST(RemoveDistantLightSourceV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   DistantLightSource actual;
-  EXPECT_TRUE(RemoveDistantLightSourceV1(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveDistantLightSource(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -53,7 +54,8 @@ TEST(RemoveDistantLightSourceV1, WithData) {
   };
 
   DistantLightSource actual;
-  EXPECT_TRUE(RemoveDistantLightSourceV1(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveDistantLightSource(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 L { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
                 from { x: 3.0 y: 4.0 z: 5.0 }
@@ -65,7 +67,8 @@ TEST(RemoveDistantLightSourceV2, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   DistantLightSource actual;
-  EXPECT_TRUE(RemoveDistantLightSourceV2(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveDistantLightSource(parameters, /*pbrt_version=*/2, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -102,7 +105,8 @@ TEST(RemoveDistantLightSourceV2, WithData) {
   };
 
   DistantLightSource actual;
-  EXPECT_TRUE(RemoveDistantLightSourceV2(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveDistantLightSource(parameters, /*pbrt_version=*/2, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 L { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
                 from { x: 3.0 y: 4.0 z: 5.0 }
@@ -115,7 +119,8 @@ TEST(RemoveDistantLightSourceV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   DistantLightSource actual;
-  EXPECT_TRUE(RemoveDistantLightSourceV4(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveDistantLightSource(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -157,7 +162,8 @@ TEST(RemoveDistantLightSourceV4, WithData) {
   };
 
   DistantLightSource actual;
-  EXPECT_TRUE(RemoveDistantLightSourceV4(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveDistantLightSource(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 L { blackbody_spectrum { temperature: 1.0 } }
                 from { x: 3.0 y: 4.0 z: 5.0 }
@@ -171,7 +177,9 @@ TEST(RemoveGoniometricLightSourceV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   GoniometricLightSource actual;
-  EXPECT_TRUE(RemoveGoniometricLightSourceV1(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveGoniometricLightSource(parameters, /*pbrt_version=*/1, actual)
+          .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -194,7 +202,9 @@ TEST(RemoveGoniometricLightSourceV1, WithData) {
   };
 
   GoniometricLightSource actual;
-  EXPECT_TRUE(RemoveGoniometricLightSourceV1(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveGoniometricLightSource(parameters, /*pbrt_version=*/1, actual)
+          .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 I { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
                 filename: "file"
@@ -205,7 +215,9 @@ TEST(RemoveGoniometricLightSourceV2, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   GoniometricLightSource actual;
-  EXPECT_TRUE(RemoveGoniometricLightSourceV2(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveGoniometricLightSource(parameters, /*pbrt_version=*/2, actual)
+          .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -235,7 +247,9 @@ TEST(RemoveGoniometricLightSourceV2, WithData) {
   };
 
   GoniometricLightSource actual;
-  EXPECT_TRUE(RemoveGoniometricLightSourceV2(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveGoniometricLightSource(parameters, /*pbrt_version=*/2, actual)
+          .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 I { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
                 filename: "file"
@@ -247,7 +261,9 @@ TEST(RemoveGoniometricLightSourceV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   GoniometricLightSource actual;
-  EXPECT_TRUE(RemoveGoniometricLightSourceV4(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveGoniometricLightSource(parameters, /*pbrt_version=*/4, actual)
+          .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -284,7 +300,9 @@ TEST(RemoveGoniometricLightSourceV4, WithData) {
   };
 
   GoniometricLightSource actual;
-  EXPECT_TRUE(RemoveGoniometricLightSourceV4(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveGoniometricLightSource(parameters, /*pbrt_version=*/4, actual)
+          .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 I { blackbody_spectrum { temperature: 1.0 } }
                 filename: "file"
@@ -297,7 +315,8 @@ TEST(RemoveInfiniteLightSourceV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   InfiniteLightSource actual;
-  EXPECT_TRUE(RemoveInfiniteLightSourceV1(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveInfiniteLightSource(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -327,7 +346,8 @@ TEST(RemoveInfiniteLightSourceV1, WithData) {
   };
 
   InfiniteLightSource actual;
-  EXPECT_TRUE(RemoveInfiniteLightSourceV1(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveInfiniteLightSource(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 L { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
                 filename: "file"
@@ -339,7 +359,8 @@ TEST(RemoveInfiniteLightSourceV2, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   InfiniteLightSource actual;
-  EXPECT_TRUE(RemoveInfiniteLightSourceV2(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveInfiniteLightSource(parameters, /*pbrt_version=*/2, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -376,7 +397,8 @@ TEST(RemoveInfiniteLightSourceV2, WithData) {
   };
 
   InfiniteLightSource actual;
-  EXPECT_TRUE(RemoveInfiniteLightSourceV2(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveInfiniteLightSource(parameters, /*pbrt_version=*/2, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 L { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
                 filename: "file"
@@ -389,7 +411,8 @@ TEST(RemoveInfiniteLightSourceV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   InfiniteLightSource actual;
-  EXPECT_TRUE(RemoveInfiniteLightSourceV3(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveInfiniteLightSource(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -405,7 +428,8 @@ TEST(RemoveInfiniteLightSourceV3, NSamples) {
   };
 
   InfiniteLightSource actual;
-  EXPECT_TRUE(RemoveInfiniteLightSourceV3(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveInfiniteLightSource(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 samples: 3
               )pb"));
@@ -444,7 +468,8 @@ TEST(RemoveInfiniteLightSourceV3, WithData) {
   };
 
   InfiniteLightSource actual;
-  EXPECT_TRUE(RemoveInfiniteLightSourceV3(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveInfiniteLightSource(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 L { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
                 filename: "file"
@@ -457,7 +482,8 @@ TEST(RemoveInfiniteLightSourceV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   InfiniteLightSource actual;
-  EXPECT_TRUE(RemoveInfiniteLightSourceV3(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveInfiniteLightSource(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -494,7 +520,8 @@ TEST(RemoveInfiniteLightSourceV4, WithData) {
   };
 
   InfiniteLightSource actual;
-  EXPECT_TRUE(RemoveInfiniteLightSourceV4(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveInfiniteLightSource(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 L { blackbody_spectrum { temperature: 1.0 } }
                 filename: "file"
@@ -507,7 +534,8 @@ TEST(RemovePointLightSourceV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   PointLightSource actual;
-  EXPECT_TRUE(RemovePointLightSourceV1(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemovePointLightSource(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -530,7 +558,8 @@ TEST(RemovePointLightSourceV1, WithData) {
   };
 
   PointLightSource actual;
-  EXPECT_TRUE(RemovePointLightSourceV1(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemovePointLightSource(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 I { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
                 from { x: 3.0 y: 4.0 z: 5.0 }
@@ -541,7 +570,8 @@ TEST(RemovePointLightSourceV2, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   PointLightSource actual;
-  EXPECT_TRUE(RemovePointLightSourceV2(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemovePointLightSource(parameters, /*pbrt_version=*/2, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -571,7 +601,8 @@ TEST(RemovePointLightSourceV2, WithData) {
   };
 
   PointLightSource actual;
-  EXPECT_TRUE(RemovePointLightSourceV2(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemovePointLightSource(parameters, /*pbrt_version=*/2, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 I { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
                 from { x: 3.0 y: 4.0 z: 5.0 }
@@ -583,7 +614,8 @@ TEST(RemovePointLightSourceV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   PointLightSource actual;
-  EXPECT_TRUE(RemovePointLightSourceV4(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemovePointLightSource(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -620,7 +652,8 @@ TEST(RemovePointLightSourceV4, WithData) {
   };
 
   PointLightSource actual;
-  EXPECT_TRUE(RemovePointLightSourceV4(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemovePointLightSource(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 I { blackbody_spectrum { temperature: 1.0 } }
                 from { x: 3.0 y: 4.0 z: 5.0 }
@@ -633,7 +666,8 @@ TEST(RemoveProjectionLightSourceV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   ProjectionLightSource actual;
-  EXPECT_TRUE(RemoveProjectionLightSourceV1(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveProjectionLightSource(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -663,7 +697,8 @@ TEST(RemoveProjectionLightSourceV1, WithData) {
   };
 
   ProjectionLightSource actual;
-  EXPECT_TRUE(RemoveProjectionLightSourceV1(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveProjectionLightSource(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 I { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
                 filename: "file"
@@ -675,7 +710,8 @@ TEST(RemoveProjectionLightSourceV2, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   ProjectionLightSource actual;
-  EXPECT_TRUE(RemoveProjectionLightSourceV2(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveProjectionLightSource(parameters, /*pbrt_version=*/2, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -712,7 +748,8 @@ TEST(RemoveProjectionLightSourceV2, WithData) {
   };
 
   ProjectionLightSource actual;
-  EXPECT_TRUE(RemoveProjectionLightSourceV2(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveProjectionLightSource(parameters, /*pbrt_version=*/2, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 I { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
                 filename: "file"
@@ -725,7 +762,8 @@ TEST(RemoveProjectionLightSourceV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   ProjectionLightSource actual;
-  EXPECT_TRUE(RemoveProjectionLightSourceV4(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveProjectionLightSource(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -767,7 +805,8 @@ TEST(RemoveProjectionLightSourceV4, WithData) {
   };
 
   ProjectionLightSource actual;
-  EXPECT_TRUE(RemoveProjectionLightSourceV4(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveProjectionLightSource(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 I { blackbody_spectrum { temperature: 1.0 } }
                 filename: "file"
@@ -781,7 +820,8 @@ TEST(RemoveSpotLightSourceV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   SpotLightSource actual;
-  EXPECT_TRUE(RemoveSpotLightSourceV1(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveSpotLightSource(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -825,7 +865,8 @@ TEST(RemoveSpotLightSourceV1, WithData) {
   };
 
   SpotLightSource actual;
-  EXPECT_TRUE(RemoveSpotLightSourceV1(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveSpotLightSource(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 I { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
                 from { x: 3.0 y: 4.0 z: 5.0 }
@@ -839,7 +880,8 @@ TEST(RemoveSpotLightSourceV2, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   SpotLightSource actual;
-  EXPECT_TRUE(RemoveSpotLightSourceV2(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveSpotLightSource(parameters, /*pbrt_version=*/2, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -890,7 +932,8 @@ TEST(RemoveSpotLightSourceV2, WithData) {
   };
 
   SpotLightSource actual;
-  EXPECT_TRUE(RemoveSpotLightSourceV2(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveSpotLightSource(parameters, /*pbrt_version=*/2, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 I { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
                 from { x: 3.0 y: 4.0 z: 5.0 }
@@ -905,7 +948,8 @@ TEST(RemoveSpotLightSourceV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   SpotLightSource actual;
-  EXPECT_TRUE(RemoveSpotLightSourceV4(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveSpotLightSource(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -963,7 +1007,8 @@ TEST(RemoveSpotLightSourceV4, WithData) {
   };
 
   SpotLightSource actual;
-  EXPECT_TRUE(RemoveSpotLightSourceV4(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveSpotLightSource(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 I { blackbody_spectrum { temperature: 1.0 } }
                 from { x: 3.0 y: 4.0 z: 5.0 }
