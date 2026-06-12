@@ -409,19 +409,17 @@ absl::Status ParserV3::MakeNamedMedium(
        CB<RemoveUniformGridMedium, &MakeNamedMedium::mutable_heterogeneous>()},
   };
 
-  int pre_size = output_.directives_size();
-  absl::Status status = Parse<&Directive::mutable_make_named_medium>(
-      kSupportedTypes, TryRemoveString(parameters, "type").value_or(""),
-      parameters);
-
-  if (pre_size != output_.directives_size()) {
-    output_.mutable_directives()
-        ->rbegin()
-        ->mutable_make_named_medium()
-        ->set_name(medium_name);
+  if (absl::Status status = Parse<&Directive::mutable_make_named_medium>(
+          kSupportedTypes, TryRemoveString(parameters, "type").value_or(""),
+          parameters);
+      !status.ok()) {
+    return status;
   }
 
-  return status;
+  output_.mutable_directives()->rbegin()->mutable_make_named_medium()->set_name(
+      medium_name);
+
+  return absl::OkStatus();
 }
 
 absl::Status ParserV3::Material(
