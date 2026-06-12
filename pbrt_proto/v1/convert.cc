@@ -144,21 +144,12 @@ absl::Status ParserV1::AreaLightSource(
     absl::string_view area_light_source_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
   static const TypeMap<v1::AreaLightSource> kSupportedTypes = {
-      {"area", [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-                  v1::AreaLightSource& area_light_source) {
-         return RemoveDiffuseAreaLightSourceV1(
-             parameters, *area_light_source.mutable_area());
-       }}};
+      {"area",
+       CB<RemoveDiffuseAreaLightSource, &AreaLightSource::mutable_area>()},
+  };
 
-  auto& area_light_source =
-      *output_.add_directives()->mutable_area_light_source();
-
-  auto iter = kSupportedTypes.find(area_light_source_type);
-  if (iter == kSupportedTypes.end()) {
-    return UnrecognizedTypeError("AreaLightSource", area_light_source_type);
-  }
-
-  return iter->second(parameters, area_light_source);
+  return Parse<&Directive::mutable_area_light_source>(
+      kSupportedTypes, area_light_source_type, parameters);
 }
 
 absl::Status ParserV1::Camera(

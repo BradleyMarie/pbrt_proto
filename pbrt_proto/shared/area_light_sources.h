@@ -9,21 +9,9 @@
 
 namespace pbrt_proto {
 
-absl::Status RemoveDiffuseAreaLightSourceV1(
+absl::Status RemoveDiffuseAreaLightSource(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    DiffuseAreaLightSource& output);
-
-absl::Status RemoveDiffuseAreaLightSourceV2(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    DiffuseAreaLightSource& output);
-
-absl::Status RemoveDiffuseAreaLightSourceV3(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    DiffuseAreaLightSource& output);
-
-absl::Status RemoveDiffuseAreaLightSourceV4(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    DiffuseAreaLightSource& output);
+    int pbrt_version, DiffuseAreaLightSource& output);
 
 }  // namespace pbrt_proto
 

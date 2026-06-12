@@ -33,6 +33,17 @@ absl::Status TryRemoveSpectrumV2(
     absl::string_view parameter_name,
     absl::FunctionRef<Spectrum*()> get_output);
 
+static inline absl::Status TryRemoveSpectrum(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    int pbrt_version, absl::string_view parameter_name,
+    absl::FunctionRef<Spectrum*()> get_output) {
+  if (pbrt_version <= 3) {
+    return TryRemoveSpectrumV1(parameters, parameter_name, get_output);
+  }
+
+  return TryRemoveSpectrumV2(parameters, parameter_name, get_output);
+}
+
 bool TryRemoveFloatTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     absl::string_view parameter_name,
