@@ -75,8 +75,8 @@ absl::Status RemoveScale(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, T& output) {
   if (pbrt_version <= 3) {
-    return TryRemoveSpectrumV1(parameters, "scale",
-                               std::bind(&T::mutable_scale, &output));
+    return TryRemoveSpectrum(parameters, pbrt_version, "scale",
+                             std::bind(&T::mutable_scale, &output));
   } else {
     if (std::optional<double> scale = TryRemoveFloat(parameters, "scale");
         scale) {

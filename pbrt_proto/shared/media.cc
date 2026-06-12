@@ -11,27 +11,17 @@ namespace {
 
 template <typename T>
 absl::Status RemoveSigma(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters, T& output,
-    int pbrt_version) {
-  if (pbrt_version >= 4) {
-    if (absl::Status status = TryRemoveSpectrumV1(
-            parameters, "sigma_a", std::bind(&T::mutable_sigma_a, &output));
-        !status.ok()) {
-      return status;
-    }
-
-    return TryRemoveSpectrumV1(parameters, "sigma_s",
-                               std::bind(&T::mutable_sigma_s, &output));
-  }
-
-  if (absl::Status status = TryRemoveSpectrumV2(
-          parameters, "sigma_a", std::bind(&T::mutable_sigma_a, &output));
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    int pbrt_version, T& output) {
+  if (absl::Status status =
+          TryRemoveSpectrum(parameters, pbrt_version, "sigma_a",
+                            std::bind(&T::mutable_sigma_a, &output));
       !status.ok()) {
     return status;
   }
 
-  return TryRemoveSpectrumV2(parameters, "sigma_s",
-                             std::bind(&T::mutable_sigma_s, &output));
+  return TryRemoveSpectrum(parameters, pbrt_version, "sigma_s",
+                           std::bind(&T::mutable_sigma_s, &output));
 }
 
 template <typename T>
@@ -95,7 +85,7 @@ absl::Status RemoveCloudMedium(
     output.set_wispiness(*wispiness);
   }
 
-  return RemoveSigma(parameters, output, pbrt_version);
+  return RemoveSigma(parameters, pbrt_version, output);
 }
 
 absl::Status RemoveExponentialMedium(
@@ -103,7 +93,7 @@ absl::Status RemoveExponentialMedium(
     int pbrt_version, ExponentialMedium& output) {
   RemoveBounds(parameters, output);
 
-  if (absl::Status status = RemoveSigma(parameters, output, pbrt_version);
+  if (absl::Status status = RemoveSigma(parameters, pbrt_version, output);
       !status.ok()) {
     return status;
   }
@@ -131,8 +121,8 @@ absl::Status RemoveExponentialMedium(
     output.mutable_updir()->set_z((*updir)[2]);
   }
 
-  return TryRemoveSpectrumV1(
-      parameters, "Le", std::bind(&ExponentialMedium::mutable_le, &output));
+  return TryRemoveSpectrum(parameters, pbrt_version, "Le",
+                           std::bind(&ExponentialMedium::mutable_le, &output));
 }
 
 absl::Status RemoveHomogeneousMedium(
@@ -177,7 +167,7 @@ absl::Status RemoveHomogeneousMedium(
     }
   }
 
-  return RemoveSigma(parameters, output, pbrt_version);
+  return RemoveSigma(parameters, pbrt_version, output);
 }
 
 absl::Status RemoveNanoVdbMedium(
@@ -216,7 +206,7 @@ absl::Status RemoveNanoVdbMedium(
     output.set_filename(*filename);
   }
 
-  return RemoveSigma(parameters, output, pbrt_version);
+  return RemoveSigma(parameters, pbrt_version, output);
 }
 
 absl::Status RemoveRgbGridMedium(
@@ -393,7 +383,7 @@ absl::Status RemoveUniformGridMedium(
     }
   }
 
-  return RemoveSigma(parameters, output, pbrt_version);
+  return RemoveSigma(parameters, pbrt_version, output);
 }
 
 }  // namespace pbrt_proto
