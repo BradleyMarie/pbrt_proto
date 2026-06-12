@@ -49,6 +49,72 @@ TEST(RemoveBoxPixelFilterV1, WithData) {
               )pb"));
 }
 
+TEST(RemoveBoxPixelFilterV2, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  BoxPixelFilter actual;
+  EXPECT_TRUE(
+      RemoveBoxPixelFilter(parameters, /*pbrt_version=*/2, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveBoxPixelFilterV2, WithData) {
+  std::vector<double> xwidth = {1.0};
+  Parameter xwidth_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(xwidth)};
+
+  std::vector<double> ywidth = {2.0};
+  Parameter ywidth_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(ywidth)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"xwidth", xwidth_parameter}, {"ywidth", ywidth_parameter}};
+
+  BoxPixelFilter actual;
+  EXPECT_TRUE(
+      RemoveBoxPixelFilter(parameters, /*pbrt_version=*/2, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                xradius: 1.0 yradius: 2.0
+              )pb"));
+}
+
+TEST(RemoveBoxPixelFilterV3, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  BoxPixelFilter actual;
+  EXPECT_TRUE(
+      RemoveBoxPixelFilter(parameters, /*pbrt_version=*/3, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveBoxPixelFilterV3, WithData) {
+  std::vector<double> xwidth = {1.0};
+  Parameter xwidth_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(xwidth)};
+
+  std::vector<double> ywidth = {2.0};
+  Parameter ywidth_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(ywidth)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"xwidth", xwidth_parameter}, {"ywidth", ywidth_parameter}};
+
+  BoxPixelFilter actual;
+  EXPECT_TRUE(
+      RemoveBoxPixelFilter(parameters, /*pbrt_version=*/3, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                xradius: 1.0 yradius: 2.0
+              )pb"));
+}
+
 TEST(RemoveBoxPixelFilterV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
@@ -118,6 +184,88 @@ TEST(RemoveGaussianPixelFilterV1, WithData) {
   GaussianPixelFilter actual;
   EXPECT_TRUE(
       RemoveGaussianPixelFilter(parameters, /*pbrt_version=*/1, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                xradius: 1.0 yradius: 2.0 sigma: 0.25
+              )pb"));
+}
+
+TEST(RemoveGaussianPixelFilterV2, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  GaussianPixelFilter actual;
+  EXPECT_TRUE(
+      RemoveGaussianPixelFilter(parameters, /*pbrt_version=*/2, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveGaussianPixelFilterV2, WithData) {
+  std::vector<double> xwidth = {1.0};
+  Parameter xwidth_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(xwidth)};
+
+  std::vector<double> ywidth = {2.0};
+  Parameter ywidth_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(ywidth)};
+
+  std::vector<double> alpha = {8.0};
+  Parameter alpha_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(alpha)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"xwidth", xwidth_parameter},
+      {"ywidth", ywidth_parameter},
+      {"alpha", alpha_parameter}};
+
+  GaussianPixelFilter actual;
+  EXPECT_TRUE(
+      RemoveGaussianPixelFilter(parameters, /*pbrt_version=*/2, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                xradius: 1.0 yradius: 2.0 sigma: 0.25
+              )pb"));
+}
+
+TEST(RemoveGaussianPixelFilterV3, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  GaussianPixelFilter actual;
+  EXPECT_TRUE(
+      RemoveGaussianPixelFilter(parameters, /*pbrt_version=*/3, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveGaussianPixelFilterV3, WithData) {
+  std::vector<double> xwidth = {1.0};
+  Parameter xwidth_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(xwidth)};
+
+  std::vector<double> ywidth = {2.0};
+  Parameter ywidth_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(ywidth)};
+
+  std::vector<double> alpha = {8.0};
+  Parameter alpha_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(alpha)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"xwidth", xwidth_parameter},
+      {"ywidth", ywidth_parameter},
+      {"alpha", alpha_parameter}};
+
+  GaussianPixelFilter actual;
+  EXPECT_TRUE(
+      RemoveGaussianPixelFilter(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 xradius: 1.0 yradius: 2.0 sigma: 0.25
               )pb"));
@@ -200,6 +348,88 @@ TEST(RemoveLanczosPixelFilterV1, WithData) {
   LanczosPixelFilter actual;
   EXPECT_TRUE(
       RemoveLanczosPixelFilter(parameters, /*pbrt_version=*/1, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                xradius: 1.0 yradius: 2.0 tau: 3.0
+              )pb"));
+}
+
+TEST(RemoveLanczosPixelFilterV2, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  LanczosPixelFilter actual;
+  EXPECT_TRUE(
+      RemoveLanczosPixelFilter(parameters, /*pbrt_version=*/2, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveLanczosPixelFilterV2, WithData) {
+  std::vector<double> xwidth = {1.0};
+  Parameter xwidth_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(xwidth)};
+
+  std::vector<double> ywidth = {2.0};
+  Parameter ywidth_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(ywidth)};
+
+  std::vector<double> tau = {3.0};
+  Parameter tau_parameter{/*directive=*/"",
+                          /*type=*/ParameterType::FLOAT,
+                          /*type_name=*/"",
+                          /*values=*/absl::MakeSpan(tau)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"xwidth", xwidth_parameter},
+      {"ywidth", ywidth_parameter},
+      {"tau", tau_parameter}};
+
+  LanczosPixelFilter actual;
+  EXPECT_TRUE(
+      RemoveLanczosPixelFilter(parameters, /*pbrt_version=*/2, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                xradius: 1.0 yradius: 2.0 tau: 3.0
+              )pb"));
+}
+
+TEST(RemoveLanczosPixelFilterV3, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  LanczosPixelFilter actual;
+  EXPECT_TRUE(
+      RemoveLanczosPixelFilter(parameters, /*pbrt_version=*/3, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveLanczosPixelFilterV3, WithData) {
+  std::vector<double> xwidth = {1.0};
+  Parameter xwidth_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(xwidth)};
+
+  std::vector<double> ywidth = {2.0};
+  Parameter ywidth_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(ywidth)};
+
+  std::vector<double> tau = {3.0};
+  Parameter tau_parameter{/*directive=*/"",
+                          /*type=*/ParameterType::FLOAT,
+                          /*type_name=*/"",
+                          /*values=*/absl::MakeSpan(tau)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"xwidth", xwidth_parameter},
+      {"ywidth", ywidth_parameter},
+      {"tau", tau_parameter}};
+
+  LanczosPixelFilter actual;
+  EXPECT_TRUE(
+      RemoveLanczosPixelFilter(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 xradius: 1.0 yradius: 2.0 tau: 3.0
               )pb"));
@@ -294,6 +524,102 @@ TEST(RemoveMitchellPixelFilterV1, WithData) {
               )pb"));
 }
 
+TEST(RemoveMitchellPixelFilterV2, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  MitchellPixelFilter actual;
+  EXPECT_TRUE(
+      RemoveMitchellPixelFilter(parameters, /*pbrt_version=*/2, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveMitchellPixelFilterV2, WithData) {
+  std::vector<double> xwidth = {1.0};
+  Parameter xwidth_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(xwidth)};
+
+  std::vector<double> ywidth = {2.0};
+  Parameter ywidth_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(ywidth)};
+
+  std::vector<double> b = {3.0};
+  Parameter b_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::FLOAT,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(b)};
+
+  std::vector<double> c = {4.0};
+  Parameter c_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::FLOAT,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(c)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"xwidth", xwidth_parameter},
+      {"ywidth", ywidth_parameter},
+      {"B", b_parameter},
+      {"C", c_parameter}};
+
+  MitchellPixelFilter actual;
+  EXPECT_TRUE(
+      RemoveMitchellPixelFilter(parameters, /*pbrt_version=*/2, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                xradius: 1.0 yradius: 2.0 B: 3.0 C: 4.0
+              )pb"));
+}
+
+TEST(RemoveMitchellPixelFilterV3, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  MitchellPixelFilter actual;
+  EXPECT_TRUE(
+      RemoveMitchellPixelFilter(parameters, /*pbrt_version=*/3, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveMitchellPixelFilterV3, WithData) {
+  std::vector<double> xwidth = {1.0};
+  Parameter xwidth_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(xwidth)};
+
+  std::vector<double> ywidth = {2.0};
+  Parameter ywidth_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(ywidth)};
+
+  std::vector<double> b = {3.0};
+  Parameter b_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::FLOAT,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(b)};
+
+  std::vector<double> c = {4.0};
+  Parameter c_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::FLOAT,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(c)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"xwidth", xwidth_parameter},
+      {"ywidth", ywidth_parameter},
+      {"B", b_parameter},
+      {"C", c_parameter}};
+
+  MitchellPixelFilter actual;
+  EXPECT_TRUE(
+      RemoveMitchellPixelFilter(parameters, /*pbrt_version=*/3, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                xradius: 1.0 yradius: 2.0 B: 3.0 C: 4.0
+              )pb"));
+}
+
 TEST(RemoveMitchellPixelFilterV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
@@ -370,6 +696,72 @@ TEST(RemoveTrianglePixelFilterV1, WithData) {
   TrianglePixelFilter actual;
   EXPECT_TRUE(
       RemoveTrianglePixelFilter(parameters, /*pbrt_version=*/1, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                xradius: 1.0 yradius: 2.0
+              )pb"));
+}
+
+TEST(RemoveTrianglePixelFilterV2, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  TrianglePixelFilter actual;
+  EXPECT_TRUE(
+      RemoveTrianglePixelFilter(parameters, /*pbrt_version=*/2, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveTrianglePixelFilterV2, WithData) {
+  std::vector<double> xwidth = {1.0};
+  Parameter xwidth_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(xwidth)};
+
+  std::vector<double> ywidth = {2.0};
+  Parameter ywidth_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(ywidth)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"xwidth", xwidth_parameter}, {"ywidth", ywidth_parameter}};
+
+  TrianglePixelFilter actual;
+  EXPECT_TRUE(
+      RemoveTrianglePixelFilter(parameters, /*pbrt_version=*/2, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                xradius: 1.0 yradius: 2.0
+              )pb"));
+}
+
+TEST(RemoveTrianglePixelFilterV3, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  TrianglePixelFilter actual;
+  EXPECT_TRUE(
+      RemoveTrianglePixelFilter(parameters, /*pbrt_version=*/3, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveTrianglePixelFilterV3, WithData) {
+  std::vector<double> xwidth = {1.0};
+  Parameter xwidth_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(xwidth)};
+
+  std::vector<double> ywidth = {2.0};
+  Parameter ywidth_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(ywidth)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"xwidth", xwidth_parameter}, {"ywidth", ywidth_parameter}};
+
+  TrianglePixelFilter actual;
+  EXPECT_TRUE(
+      RemoveTrianglePixelFilter(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 xradius: 1.0 yradius: 2.0
               )pb"));

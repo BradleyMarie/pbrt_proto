@@ -169,6 +169,163 @@ TEST(OrthographicCameraV2, WithData) {
               )pb"));
 }
 
+TEST(OrthographicCameraV3, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  OrthographicCamera actual;
+  EXPECT_TRUE(
+      RemoveOrthographicCamera(parameters, /*pbrt_version=*/3, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(OrthographicCameraV3, WithData) {
+  std::vector<double> shutteropen = {1.0};
+  Parameter shutteropen_parameter{/*directive=*/"",
+                                  /*type=*/ParameterType::FLOAT,
+                                  /*type_name=*/"",
+                                  /*values=*/absl::MakeSpan(shutteropen)};
+
+  std::vector<double> shutterclose = {2.0};
+  Parameter shutterclose_parameter{/*directive=*/"",
+                                   /*type=*/ParameterType::FLOAT,
+                                   /*type_name=*/"",
+                                   /*values=*/absl::MakeSpan(shutterclose)};
+
+  std::vector<double> focaldistance = {3.0};
+  Parameter focaldistance_parameter{/*directive=*/"",
+                                    /*type=*/ParameterType::FLOAT,
+                                    /*type_name=*/"",
+                                    /*values=*/absl::MakeSpan(focaldistance)};
+
+  std::vector<double> frameaspectratio = {4.0};
+  Parameter frameaspectratio_parameter{
+      /*directive=*/"",
+      /*type=*/ParameterType::FLOAT,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(frameaspectratio)};
+
+  std::vector<double> screenwindow = {5.0, 6.0, 7.0, 8.0};
+  Parameter screenwindow_parameter{/*directive=*/"",
+                                   /*type=*/ParameterType::FLOAT,
+                                   /*type_name=*/"",
+                                   /*values=*/absl::MakeSpan(screenwindow)};
+
+  std::vector<double> hither = {9.0};
+  Parameter hither_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(hither)};
+
+  std::vector<double> yon = {10.0};
+  Parameter yon_parameter{/*directive=*/"",
+                          /*type=*/ParameterType::FLOAT,
+                          /*type_name=*/"",
+                          /*values=*/absl::MakeSpan(yon)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"shutteropen", shutteropen_parameter},
+      {"shutterclose", shutterclose_parameter},
+      {"focaldistance", focaldistance_parameter},
+      {"frameaspectratio", frameaspectratio_parameter},
+      {"screenwindow", screenwindow_parameter},
+      {"hither", hither_parameter},
+      {"yon", yon_parameter}};
+
+  OrthographicCamera actual;
+  EXPECT_TRUE(
+      RemoveOrthographicCamera(parameters, /*pbrt_version=*/3, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                shutteropen: 1.0
+                shutterclose: 2.0
+                focaldistance: 3.0
+                frameaspectratio: 4.0
+                screenwindow { x_min: 5.0 x_max: 6.0 y_min: 7.0 y_max: 8.0 }
+              )pb"));
+}
+
+TEST(OrthographicCameraV4, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  OrthographicCamera actual;
+  EXPECT_TRUE(
+      RemoveOrthographicCamera(parameters, /*pbrt_version=*/4, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(OrthographicCameraV4, WithData) {
+  std::vector<double> shutteropen = {1.0};
+  Parameter shutteropen_parameter{/*directive=*/"",
+                                  /*type=*/ParameterType::FLOAT,
+                                  /*type_name=*/"",
+                                  /*values=*/absl::MakeSpan(shutteropen)};
+
+  std::vector<double> shutterclose = {2.0};
+  Parameter shutterclose_parameter{/*directive=*/"",
+                                   /*type=*/ParameterType::FLOAT,
+                                   /*type_name=*/"",
+                                   /*values=*/absl::MakeSpan(shutterclose)};
+
+  std::vector<double> focaldistance = {3.0};
+  Parameter focaldistance_parameter{/*directive=*/"",
+                                    /*type=*/ParameterType::FLOAT,
+                                    /*type_name=*/"",
+                                    /*values=*/absl::MakeSpan(focaldistance)};
+
+  std::vector<double> frameaspectratio = {4.0};
+  Parameter frameaspectratio_parameter{
+      /*directive=*/"",
+      /*type=*/ParameterType::FLOAT,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(frameaspectratio)};
+
+  std::vector<double> screenwindow = {5.0, 6.0, 7.0, 8.0};
+  Parameter screenwindow_parameter{/*directive=*/"",
+                                   /*type=*/ParameterType::FLOAT,
+                                   /*type_name=*/"",
+                                   /*values=*/absl::MakeSpan(screenwindow)};
+
+  std::vector<double> hither = {9.0};
+  Parameter hither_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(hither)};
+
+  std::vector<double> yon = {10.0};
+  Parameter yon_parameter{/*directive=*/"",
+                          /*type=*/ParameterType::FLOAT,
+                          /*type_name=*/"",
+                          /*values=*/absl::MakeSpan(yon)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"shutteropen", shutteropen_parameter},
+      {"shutterclose", shutterclose_parameter},
+      {"focaldistance", focaldistance_parameter},
+      {"frameaspectratio", frameaspectratio_parameter},
+      {"screenwindow", screenwindow_parameter},
+      {"hither", hither_parameter},
+      {"yon", yon_parameter}};
+
+  OrthographicCamera actual;
+  EXPECT_TRUE(
+      RemoveOrthographicCamera(parameters, /*pbrt_version=*/4, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                shutteropen: 1.0
+                shutterclose: 2.0
+                focaldistance: 3.0
+                frameaspectratio: 4.0
+                screenwindow { x_min: 5.0 x_max: 6.0 y_min: 7.0 y_max: 8.0 }
+              )pb"));
+}
+
+TEST(RemovePerspectiveCameraV1, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  PerspectiveCamera actual;
+  EXPECT_TRUE(
+      RemovePerspectiveCamera(parameters, /*pbrt_version=*/1, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
 TEST(RemovePerspectiveCameraV1, WithData) {
   std::vector<double> shutteropen = {1.0};
   Parameter shutteropen_parameter{/*directive=*/"",
@@ -251,12 +408,12 @@ TEST(RemovePerspectiveCameraV1, WithData) {
               )pb"));
 }
 
-TEST(RemovePerspectiveCameraV1, Empty) {
+TEST(RemovePerspectiveCameraV2, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   PerspectiveCamera actual;
   EXPECT_TRUE(
-      RemovePerspectiveCamera(parameters, /*pbrt_version=*/1, actual).ok());
+      RemovePerspectiveCamera(parameters, /*pbrt_version=*/2, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -353,6 +510,111 @@ TEST(RemovePerspectiveCameraV2, ZeroHalfFov) {
   PerspectiveCamera actual;
   EXPECT_TRUE(
       RemovePerspectiveCamera(parameters, /*pbrt_version=*/2, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemovePerspectiveCameraV3, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  PerspectiveCamera actual;
+  EXPECT_TRUE(
+      RemovePerspectiveCamera(parameters, /*pbrt_version=*/3, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemovePerspectiveCameraV3, WithData) {
+  std::vector<double> shutteropen = {1.0};
+  Parameter shutteropen_parameter{/*directive=*/"",
+                                  /*type=*/ParameterType::FLOAT,
+                                  /*type_name=*/"",
+                                  /*values=*/absl::MakeSpan(shutteropen)};
+
+  std::vector<double> shutterclose = {2.0};
+  Parameter shutterclose_parameter{/*directive=*/"",
+                                   /*type=*/ParameterType::FLOAT,
+                                   /*type_name=*/"",
+                                   /*values=*/absl::MakeSpan(shutterclose)};
+
+  std::vector<double> fov = {3.0};
+  Parameter fov_parameter{/*directive=*/"",
+                          /*type=*/ParameterType::FLOAT,
+                          /*type_name=*/"",
+                          /*values=*/absl::MakeSpan(fov)};
+
+  std::vector<double> focaldistance = {4.0};
+  Parameter focaldistance_parameter{/*directive=*/"",
+                                    /*type=*/ParameterType::FLOAT,
+                                    /*type_name=*/"",
+                                    /*values=*/absl::MakeSpan(focaldistance)};
+
+  std::vector<double> frameaspectratio = {5.0};
+  Parameter frameaspectratio_parameter{
+      /*directive=*/"",
+      /*type=*/ParameterType::FLOAT,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(frameaspectratio)};
+
+  std::vector<double> screenwindow = {6.0, 7.0, 8.0, 9.0};
+  Parameter screenwindow_parameter{/*directive=*/"",
+                                   /*type=*/ParameterType::FLOAT,
+                                   /*type_name=*/"",
+                                   /*values=*/absl::MakeSpan(screenwindow)};
+
+  std::vector<double> hither = {10.0};
+  Parameter hither_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(hither)};
+
+  std::vector<double> yon = {11.0};
+  Parameter yon_parameter{/*directive=*/"",
+                          /*type=*/ParameterType::FLOAT,
+                          /*type_name=*/"",
+                          /*values=*/absl::MakeSpan(yon)};
+
+  std::vector<double> halffov = {6.0};
+  Parameter halffov_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::FLOAT,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(halffov)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"shutteropen", shutteropen_parameter},
+      {"shutterclose", shutterclose_parameter},
+      {"fov", fov_parameter},
+      {"focaldistance", focaldistance_parameter},
+      {"frameaspectratio", frameaspectratio_parameter},
+      {"screenwindow", screenwindow_parameter},
+      {"hither", hither_parameter},
+      {"yon", yon_parameter},
+      {"halffov", halffov_parameter}};
+
+  PerspectiveCamera actual;
+  EXPECT_TRUE(
+      RemovePerspectiveCamera(parameters, /*pbrt_version=*/3, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                shutteropen: 1.0
+                shutterclose: 2.0
+                fov: 12.0
+                focaldistance: 4.0
+                frameaspectratio: 5.0
+                screenwindow { x_min: 6.0 x_max: 7.0 y_min: 8.0 y_max: 9.0 }
+              )pb"));
+}
+
+TEST(RemovePerspectiveCameraV3, ZeroHalfFov) {
+  std::vector<double> halffov = {0.0};
+  Parameter halffov_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::FLOAT,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(halffov)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"halffov", halffov_parameter}};
+
+  PerspectiveCamera actual;
+  EXPECT_TRUE(
+      RemovePerspectiveCamera(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -615,6 +877,95 @@ TEST(RemoveSphericalCameraV2, WithData) {
   SphericalCamera actual;
   EXPECT_TRUE(
       RemoveSphericalCamera(parameters, /*pbrt_version=*/2, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                shutteropen: 1.0
+                shutterclose: 2.0
+                lensradius: 3.0
+                focaldistance: 4.0
+                frameaspectratio: 5.0
+                screenwindow { x_min: 6.0 x_max: 7.0 y_min: 8.0 y_max: 9.0 }
+              )pb"));
+}
+
+TEST(RemoveSphericalCameraV3, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  SphericalCamera actual;
+  EXPECT_TRUE(
+      RemoveSphericalCamera(parameters, /*pbrt_version=*/3, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveSphericalCameraV3, WithData) {
+  std::vector<double> shutteropen = {1.0};
+  Parameter shutteropen_parameter{/*directive=*/"",
+                                  /*type=*/ParameterType::FLOAT,
+                                  /*type_name=*/"",
+                                  /*values=*/absl::MakeSpan(shutteropen)};
+
+  std::vector<double> shutterclose = {2.0};
+  Parameter shutterclose_parameter{/*directive=*/"",
+                                   /*type=*/ParameterType::FLOAT,
+                                   /*type_name=*/"",
+                                   /*values=*/absl::MakeSpan(shutterclose)};
+
+  std::vector<double> lensradius = {3.0};
+  Parameter lensradius_parameter{/*directive=*/"",
+                                 /*type=*/ParameterType::FLOAT,
+                                 /*type_name=*/"",
+                                 /*values=*/absl::MakeSpan(lensradius)};
+
+  std::vector<double> focaldistance = {4.0};
+  Parameter focaldistance_parameter{/*directive=*/"",
+                                    /*type=*/ParameterType::FLOAT,
+                                    /*type_name=*/"",
+                                    /*values=*/absl::MakeSpan(focaldistance)};
+
+  std::vector<double> frameaspectratio = {5.0};
+  Parameter frameaspectratio_parameter{
+      /*directive=*/"",
+      /*type=*/ParameterType::FLOAT,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(frameaspectratio)};
+
+  std::vector<double> screenwindow = {6.0, 7.0, 8.0, 9.0};
+  Parameter screenwindow_parameter{/*directive=*/"",
+                                   /*type=*/ParameterType::FLOAT,
+                                   /*type_name=*/"",
+                                   /*values=*/absl::MakeSpan(screenwindow)};
+
+  std::vector<double> hither = {10.0};
+  Parameter hither_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(hither)};
+
+  std::vector<double> yon = {11.0};
+  Parameter yon_parameter{/*directive=*/"",
+                          /*type=*/ParameterType::FLOAT,
+                          /*type_name=*/"",
+                          /*values=*/absl::MakeSpan(yon)};
+
+  std::vector<absl::string_view> mapping = {"equalarea"};
+  Parameter mapping_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::FLOAT,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(mapping)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"shutteropen", shutteropen_parameter},
+      {"shutterclose", shutterclose_parameter},
+      {"lensradius", lensradius_parameter},
+      {"focaldistance", focaldistance_parameter},
+      {"frameaspectratio", frameaspectratio_parameter},
+      {"screenwindow", screenwindow_parameter},
+      {"hither", hither_parameter},
+      {"yon", yon_parameter},
+      {"mapping", mapping_parameter}};
+
+  SphericalCamera actual;
+  EXPECT_TRUE(
+      RemoveSphericalCamera(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 shutteropen: 1.0
                 shutterclose: 2.0

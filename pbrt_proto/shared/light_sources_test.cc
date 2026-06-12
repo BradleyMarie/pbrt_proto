@@ -115,6 +115,58 @@ TEST(RemoveDistantLightSourceV2, WithData) {
               )pb"));
 }
 
+TEST(RemoveDistantLightSourceV3, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  DistantLightSource actual;
+  EXPECT_TRUE(
+      RemoveDistantLightSource(parameters, /*pbrt_version=*/3, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveDistantLightSourceV3, WithData) {
+  std::vector<std::array<double, 2>> l = {{1.0, 2.0}};
+  Parameter l_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::BLACKBODY_V1,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(l)};
+
+  std::vector<std::array<double, 3>> from = {{3.0, 4.0, 5.0}};
+  Parameter from_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::POINT3,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(from)};
+
+  std::vector<std::array<double, 3>> to = {{6.0, 7.0, 8.0}};
+  Parameter to_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::POINT3,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(to)};
+
+  std::vector<std::array<double, 2>> scale = {{9.0, 10.0}};
+  Parameter scale_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::BLACKBODY_V1,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(scale)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"L", l_parameter},
+      {"from", from_parameter},
+      {"to", to_parameter},
+      {"scale", scale_parameter},
+  };
+
+  DistantLightSource actual;
+  EXPECT_TRUE(
+      RemoveDistantLightSource(parameters, /*pbrt_version=*/3, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                L { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
+                from { x: 3.0 y: 4.0 z: 5.0 }
+                to { x: 6.0 y: 7.0 z: 8.0 }
+                scale { blackbody_spectrum { temperature: 9.0 scale: 10.0 } }
+              )pb"));
+}
+
 TEST(RemoveDistantLightSourceV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
@@ -249,6 +301,52 @@ TEST(RemoveGoniometricLightSourceV2, WithData) {
   GoniometricLightSource actual;
   EXPECT_TRUE(
       RemoveGoniometricLightSource(parameters, /*pbrt_version=*/2, actual)
+          .ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                I { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
+                filename: "file"
+                scale { blackbody_spectrum { temperature: 3.0 scale: 4.0 } }
+              )pb"));
+}
+
+TEST(RemoveGoniometricLightSourceV3, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  GoniometricLightSource actual;
+  EXPECT_TRUE(
+      RemoveGoniometricLightSource(parameters, /*pbrt_version=*/3, actual)
+          .ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveGoniometricLightSourceV3, WithData) {
+  std::vector<std::array<double, 2>> i = {{1.0, 2.0}};
+  Parameter i_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::BLACKBODY_V1,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(i)};
+
+  std::vector<absl::string_view> mapname = {"file"};
+  Parameter mapname_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::STRING,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(mapname)};
+
+  std::vector<std::array<double, 2>> scale = {{3.0, 4.0}};
+  Parameter scale_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::BLACKBODY_V1,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(scale)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"I", i_parameter},
+      {"mapname", mapname_parameter},
+      {"scale", scale_parameter},
+  };
+
+  GoniometricLightSource actual;
+  EXPECT_TRUE(
+      RemoveGoniometricLightSource(parameters, /*pbrt_version=*/3, actual)
           .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 I { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
@@ -610,6 +708,50 @@ TEST(RemovePointLightSourceV2, WithData) {
               )pb"));
 }
 
+TEST(RemovePointLightSourceV3, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  PointLightSource actual;
+  EXPECT_TRUE(
+      RemovePointLightSource(parameters, /*pbrt_version=*/3, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemovePointLightSourceV3, WithData) {
+  std::vector<std::array<double, 2>> i = {{1.0, 2.0}};
+  Parameter i_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::BLACKBODY_V1,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(i)};
+
+  std::vector<std::array<double, 3>> from = {{3.0, 4.0, 5.0}};
+  Parameter from_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::POINT3,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(from)};
+
+  std::vector<std::array<double, 2>> scale = {{6.0, 7.0}};
+  Parameter scale_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::BLACKBODY_V1,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(scale)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"I", i_parameter},
+      {"from", from_parameter},
+      {"scale", scale_parameter},
+  };
+
+  PointLightSource actual;
+  EXPECT_TRUE(
+      RemovePointLightSource(parameters, /*pbrt_version=*/3, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                I { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
+                from { x: 3.0 y: 4.0 z: 5.0 }
+                scale { blackbody_spectrum { temperature: 6.0 scale: 7.0 } }
+              )pb"));
+}
+
 TEST(RemovePointLightSourceV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
@@ -750,6 +892,58 @@ TEST(RemoveProjectionLightSourceV2, WithData) {
   ProjectionLightSource actual;
   EXPECT_TRUE(
       RemoveProjectionLightSource(parameters, /*pbrt_version=*/2, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                I { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
+                filename: "file"
+                fov: 20.0
+                scale { blackbody_spectrum { temperature: 3.0 scale: 4.0 } }
+              )pb"));
+}
+
+TEST(RemoveProjectionLightSourceV3, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  ProjectionLightSource actual;
+  EXPECT_TRUE(
+      RemoveProjectionLightSource(parameters, /*pbrt_version=*/3, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveProjectionLightSourceV3, WithData) {
+  std::vector<std::array<double, 2>> i = {{1.0, 2.0}};
+  Parameter i_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::BLACKBODY_V1,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(i)};
+
+  std::vector<absl::string_view> mapname = {"file"};
+  Parameter mapname_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::STRING,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(mapname)};
+
+  std::vector<double> fov = {10.0};
+  Parameter fov_parameter{/*directive=*/"",
+                          /*type=*/ParameterType::FLOAT,
+                          /*type_name=*/"",
+                          /*values=*/absl::MakeSpan(fov)};
+
+  std::vector<std::array<double, 2>> scale = {{3.0, 4.0}};
+  Parameter scale_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::BLACKBODY_V1,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(scale)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"I", i_parameter},
+      {"mapname", mapname_parameter},
+      {"fov", fov_parameter},
+      {"scale", scale_parameter},
+  };
+
+  ProjectionLightSource actual;
+  EXPECT_TRUE(
+      RemoveProjectionLightSource(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 I { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
                 filename: "file"
@@ -934,6 +1128,74 @@ TEST(RemoveSpotLightSourceV2, WithData) {
   SpotLightSource actual;
   EXPECT_TRUE(
       RemoveSpotLightSource(parameters, /*pbrt_version=*/2, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                I { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
+                from { x: 3.0 y: 4.0 z: 5.0 }
+                to { x: 6.0 y: 7.0 z: 8.0 }
+                coneangle: 9.0
+                conedeltaangle: 10.0
+                scale { blackbody_spectrum { temperature: 11.0 scale: 12.0 } }
+              )pb"));
+}
+
+TEST(RemoveSpotLightSourceV3, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  SpotLightSource actual;
+  EXPECT_TRUE(
+      RemoveSpotLightSource(parameters, /*pbrt_version=*/3, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveSpotLightSourceV3, WithData) {
+  std::vector<std::array<double, 2>> i = {{1.0, 2.0}};
+  Parameter i_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::BLACKBODY_V1,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(i)};
+
+  std::vector<std::array<double, 3>> from = {{3.0, 4.0, 5.0}};
+  Parameter from_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::POINT3,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(from)};
+
+  std::vector<std::array<double, 3>> to = {{6.0, 7.0, 8.0}};
+  Parameter to_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::POINT3,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(to)};
+
+  std::vector<double> coneangle = {9.0};
+  Parameter coneangle_parameter{/*directive=*/"",
+                                /*type=*/ParameterType::FLOAT,
+                                /*type_name=*/"",
+                                /*values=*/absl::MakeSpan(coneangle)};
+
+  std::vector<double> conedeltaangle = {10.0};
+  Parameter conedeltaangle_parameter{/*directive=*/"",
+                                     /*type=*/ParameterType::FLOAT,
+                                     /*type_name=*/"",
+                                     /*values=*/absl::MakeSpan(conedeltaangle)};
+
+  std::vector<std::array<double, 2>> scale = {{11.0, 12.0}};
+  Parameter scale_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::BLACKBODY_V1,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(scale)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"I", i_parameter},
+      {"from", from_parameter},
+      {"to", to_parameter},
+      {"coneangle", coneangle_parameter},
+      {"conedeltaangle", conedeltaangle_parameter},
+      {"scale", scale_parameter},
+  };
+
+  SpotLightSource actual;
+  EXPECT_TRUE(
+      RemoveSpotLightSource(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 I { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
                 from { x: 3.0 y: 4.0 z: 5.0 }
