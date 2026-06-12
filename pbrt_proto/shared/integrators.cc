@@ -661,22 +661,26 @@ void RemoveWhittedIntegratorV3(
   RemovePixelBounds(parameters, output);
 }
 
-void RemoveEmissionVolumeIntegratorV1(
+absl::Status RemoveEmissionVolumeIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    EmissionVolumeIntegrator& output) {
+    int pbrt_version, EmissionVolumeIntegrator& output) {
   if (std::optional<double> stepsize = TryRemoveFloat(parameters, "stepsize");
       stepsize.has_value()) {
     output.set_stepsize(*stepsize);
   }
+
+  return absl::OkStatus();
 }
 
-void RemoveSingleVolumeIntegratorV1(
+absl::Status RemoveSingleVolumeIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    SingleVolumeIntegrator& output) {
+    int pbrt_version, SingleVolumeIntegrator& output) {
   if (std::optional<double> stepsize = TryRemoveFloat(parameters, "stepsize");
       stepsize.has_value()) {
     output.set_stepsize(*stepsize);
   }
+
+  return absl::OkStatus();
 }
 
 }  // namespace pbrt_proto

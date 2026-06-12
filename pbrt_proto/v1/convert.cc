@@ -773,29 +773,14 @@ absl::Status ParserV1::VolumeIntegrator(
     absl::string_view integrator_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
   static const TypeMap<v1::VolumeIntegrator> kSupportedTypes = {
-      {"emission",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::VolumeIntegrator& integrator) {
-         RemoveEmissionVolumeIntegratorV1(parameters,
-                                          *integrator.mutable_emission());
-         return absl::OkStatus();
-       }},
+      {"emission", CB<RemoveEmissionVolumeIntegrator,
+                      &VolumeIntegrator::mutable_emission>()},
       {"single",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::VolumeIntegrator& integrator) {
-         RemoveSingleVolumeIntegratorV1(parameters,
-                                        *integrator.mutable_single());
-         return absl::OkStatus();
-       }}};
+       CB<RemoveSingleVolumeIntegrator, &VolumeIntegrator::mutable_single>()},
+  };
 
-  auto& integrator = *output_.add_directives()->mutable_volume_integrator();
-
-  auto iter = kSupportedTypes.find(integrator_type);
-  if (iter == kSupportedTypes.end()) {
-    return UnrecognizedTypeError("VolumeIntegrator", integrator_type);
-  }
-
-  return iter->second(parameters, integrator);
+  return Parse<&Directive::mutable_volume_integrator>(
+      kSupportedTypes, integrator_type, parameters);
 }
 
 }  // namespace

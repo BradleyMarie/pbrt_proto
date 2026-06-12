@@ -1689,7 +1689,9 @@ TEST(RemoveEmissionVolumeIntegratorV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   EmissionVolumeIntegrator actual;
-  RemoveEmissionVolumeIntegratorV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveEmissionVolumeIntegrator(parameters, /*pbrt_version=*/1, actual)
+          .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -1704,7 +1706,38 @@ TEST(RemoveEmissionVolumeIntegratorV1, WithData) {
       {"stepsize", stepsize_parameter}};
 
   EmissionVolumeIntegrator actual;
-  RemoveEmissionVolumeIntegratorV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveEmissionVolumeIntegrator(parameters, /*pbrt_version=*/1, actual)
+          .ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                stepsize: 1
+              )pb"));
+}
+
+TEST(RemoveEmissionVolumeIntegratorV2, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  EmissionVolumeIntegrator actual;
+  EXPECT_TRUE(
+      RemoveEmissionVolumeIntegrator(parameters, /*pbrt_version=*/2, actual)
+          .ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveEmissionVolumeIntegratorV2, WithData) {
+  std::vector<double> stepsize = {1};
+  Parameter stepsize_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::FLOAT,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(stepsize)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"stepsize", stepsize_parameter}};
+
+  EmissionVolumeIntegrator actual;
+  EXPECT_TRUE(
+      RemoveEmissionVolumeIntegrator(parameters, /*pbrt_version=*/2, actual)
+          .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 stepsize: 1
               )pb"));
@@ -1714,7 +1747,9 @@ TEST(RemoveSingleVolumeIntegratorV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   SingleVolumeIntegrator actual;
-  RemoveSingleVolumeIntegratorV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveSingleVolumeIntegrator(parameters, /*pbrt_version=*/1, actual)
+          .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -1729,7 +1764,38 @@ TEST(RemoveSingleVolumeIntegratorV1, WithData) {
       {"stepsize", stepsize_parameter}};
 
   SingleVolumeIntegrator actual;
-  RemoveSingleVolumeIntegratorV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveSingleVolumeIntegrator(parameters, /*pbrt_version=*/1, actual)
+          .ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                stepsize: 1
+              )pb"));
+}
+
+TEST(RemoveSingleVolumeIntegratorV2, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  SingleVolumeIntegrator actual;
+  EXPECT_TRUE(
+      RemoveSingleVolumeIntegrator(parameters, /*pbrt_version=*/2, actual)
+          .ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveSingleVolumeIntegratorV2, WithData) {
+  std::vector<double> stepsize = {1};
+  Parameter stepsize_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::FLOAT,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(stepsize)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"stepsize", stepsize_parameter}};
+
+  SingleVolumeIntegrator actual;
+  EXPECT_TRUE(
+      RemoveSingleVolumeIntegrator(parameters, /*pbrt_version=*/2, actual)
+          .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 stepsize: 1
               )pb"));

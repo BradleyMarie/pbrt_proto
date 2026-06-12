@@ -117,13 +117,13 @@ void RemoveWhittedIntegratorV3(
 // Volume Integrators
 //
 
-void RemoveEmissionVolumeIntegratorV1(
+absl::Status RemoveEmissionVolumeIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    EmissionVolumeIntegrator& output);
+    int pbrt_version, EmissionVolumeIntegrator& output);
 
-void RemoveSingleVolumeIntegratorV1(
+absl::Status RemoveSingleVolumeIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    SingleVolumeIntegrator& output);
+    int pbrt_version, SingleVolumeIntegrator& output);
 
 }  // namespace pbrt_proto
 
