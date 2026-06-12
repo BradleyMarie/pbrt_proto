@@ -63,78 +63,78 @@ void RemoveTau(absl::flat_hash_map<absl::string_view, Parameter>& parameters,
 
 }  // namespace
 
-void RemoveBoxPixelFilterV1(
+absl::Status RemoveBoxPixelFilter(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    BoxPixelFilter& output) {
-  RemoveWidth(parameters, output);
-}
-
-void RemoveBoxPixelFilterV4(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    BoxPixelFilter& output) {
-  RemoveRadius(parameters, output);
-}
-
-void RemoveGaussianPixelFilterV1(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    GaussianPixelFilter& output) {
-  RemoveWidth(parameters, output);
-
-  if (std::optional<double> alpha = TryRemoveFloat(parameters, "alpha");
-      alpha.has_value()) {
-    output.set_sigma(1.0 / std::sqrt(2.0 * std::abs(*alpha)));
+    int pbrt_version, BoxPixelFilter& output) {
+  if (pbrt_version <= 3) {
+    RemoveWidth(parameters, output);
+  } else {
+    RemoveRadius(parameters, output);
   }
+
+  return absl::OkStatus();
 }
 
-void RemoveGaussianPixelFilterV4(
+absl::Status RemoveGaussianPixelFilter(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    GaussianPixelFilter& output) {
-  RemoveRadius(parameters, output);
+    int pbrt_version, GaussianPixelFilter& output) {
+  if (pbrt_version <= 3) {
+    RemoveWidth(parameters, output);
 
-  if (std::optional<double> sigma = TryRemoveFloat(parameters, "sigma");
-      sigma.has_value()) {
-    output.set_sigma(*sigma);
+    if (std::optional<double> alpha = TryRemoveFloat(parameters, "alpha");
+        alpha.has_value()) {
+      output.set_sigma(1.0 / std::sqrt(2.0 * std::abs(*alpha)));
+    }
+  } else {
+    RemoveRadius(parameters, output);
+
+    if (std::optional<double> sigma = TryRemoveFloat(parameters, "sigma");
+        sigma.has_value()) {
+      output.set_sigma(*sigma);
+    }
   }
+
+  return absl::OkStatus();
 }
 
-void RemoveLanczosPixelFilterV1(
+absl::Status RemoveLanczosPixelFilter(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    LanczosPixelFilter& output) {
-  RemoveWidth(parameters, output);
-  RemoveTau(parameters, output);
+    int pbrt_version, LanczosPixelFilter& output) {
+  if (pbrt_version <= 3) {
+    RemoveWidth(parameters, output);
+    RemoveTau(parameters, output);
+  } else {
+    RemoveRadius(parameters, output);
+    RemoveTau(parameters, output);
+  }
+
+  return absl::OkStatus();
 }
 
-void RemoveLanczosPixelFilterV4(
+absl::Status RemoveMitchellPixelFilter(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    LanczosPixelFilter& output) {
-  RemoveRadius(parameters, output);
-  RemoveTau(parameters, output);
+    int pbrt_version, MitchellPixelFilter& output) {
+  if (pbrt_version <= 3) {
+    RemoveWidth(parameters, output);
+    RemoveBC(parameters, output);
+  } else {
+    RemoveRadius(parameters, output);
+    RemoveBC(parameters, output);
+  }
+
+  return absl::OkStatus();
 }
 
-void RemoveMitchellPixelFilterV1(
+absl::Status RemoveTrianglePixelFilter(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    MitchellPixelFilter& output) {
-  RemoveWidth(parameters, output);
-  RemoveBC(parameters, output);
-}
+    int pbrt_version, TrianglePixelFilter& output) {
+  if (pbrt_version <= 3) {
+    RemoveWidth(parameters, output);
+  } else {
+    RemoveRadius(parameters, output);
+  }
 
-void RemoveMitchellPixelFilterV4(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    MitchellPixelFilter& output) {
-  RemoveRadius(parameters, output);
-  RemoveBC(parameters, output);
-}
-
-void RemoveTrianglePixelFilterV1(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    TrianglePixelFilter& output) {
-  RemoveWidth(parameters, output);
-}
-
-void RemoveTrianglePixelFilterV4(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    TrianglePixelFilter& output) {
-  RemoveRadius(parameters, output);
+  return absl::OkStatus();
 }
 
 }  // namespace pbrt_proto

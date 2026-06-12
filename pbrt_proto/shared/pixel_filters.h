@@ -2,51 +2,32 @@
 #define _PBRT_PROTO_SHARED_PIXEL_FILTERS_
 
 #include "absl/container/flat_hash_map.h"
+#include "absl/status/status.h"
 #include "absl/strings/string_view.h"
 #include "pbrt_proto/pbrt.pb.h"
 #include "pbrt_proto/shared/parser.h"
 
 namespace pbrt_proto {
 
-void RemoveBoxPixelFilterV1(
+absl::Status RemoveBoxPixelFilter(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    BoxPixelFilter& output);
+    int pbrt_version, BoxPixelFilter& output);
 
-void RemoveBoxPixelFilterV4(
+absl::Status RemoveGaussianPixelFilter(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    BoxPixelFilter& output);
+    int pbrt_version, GaussianPixelFilter& output);
 
-void RemoveGaussianPixelFilterV1(
+absl::Status RemoveLanczosPixelFilter(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    GaussianPixelFilter& output);
+    int pbrt_version, LanczosPixelFilter& output);
 
-void RemoveGaussianPixelFilterV4(
+absl::Status RemoveMitchellPixelFilter(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    GaussianPixelFilter& output);
+    int pbrt_version, MitchellPixelFilter& output);
 
-void RemoveLanczosPixelFilterV1(
+absl::Status RemoveTrianglePixelFilter(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    LanczosPixelFilter& output);
-
-void RemoveLanczosPixelFilterV4(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    LanczosPixelFilter& output);
-
-void RemoveMitchellPixelFilterV1(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    MitchellPixelFilter& output);
-
-void RemoveMitchellPixelFilterV4(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    MitchellPixelFilter& output);
-
-void RemoveTrianglePixelFilterV1(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    TrianglePixelFilter& output);
-
-void RemoveTrianglePixelFilterV4(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    TrianglePixelFilter& output);
+    int pbrt_version, TrianglePixelFilter& output);
 
 }  // namespace pbrt_proto
 

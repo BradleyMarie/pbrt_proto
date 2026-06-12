@@ -20,7 +20,8 @@ TEST(RemoveBoxPixelFilterV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   BoxPixelFilter actual;
-  RemoveBoxPixelFilterV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveBoxPixelFilter(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -41,7 +42,8 @@ TEST(RemoveBoxPixelFilterV1, WithData) {
       {"xwidth", xwidth_parameter}, {"ywidth", ywidth_parameter}};
 
   BoxPixelFilter actual;
-  RemoveBoxPixelFilterV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveBoxPixelFilter(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 xradius: 1.0 yradius: 2.0
               )pb"));
@@ -51,7 +53,8 @@ TEST(RemoveBoxPixelFilterV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   BoxPixelFilter actual;
-  RemoveBoxPixelFilterV4(parameters, actual);
+  EXPECT_TRUE(
+      RemoveBoxPixelFilter(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -72,7 +75,8 @@ TEST(RemoveBoxPixelFilterV4, WithData) {
       {"xradius", xradius_parameter}, {"yradius", yradius_parameter}};
 
   BoxPixelFilter actual;
-  RemoveBoxPixelFilterV4(parameters, actual);
+  EXPECT_TRUE(
+      RemoveBoxPixelFilter(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 xradius: 1.0 yradius: 2.0
               )pb"));
@@ -82,7 +86,8 @@ TEST(RemoveGaussianPixelFilterV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   GaussianPixelFilter actual;
-  RemoveGaussianPixelFilterV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveGaussianPixelFilter(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -111,7 +116,8 @@ TEST(RemoveGaussianPixelFilterV1, WithData) {
       {"alpha", alpha_parameter}};
 
   GaussianPixelFilter actual;
-  RemoveGaussianPixelFilterV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveGaussianPixelFilter(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 xradius: 1.0 yradius: 2.0 sigma: 0.25
               )pb"));
@@ -121,7 +127,8 @@ TEST(RemoveGaussianPixelFilterV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   GaussianPixelFilter actual;
-  RemoveGaussianPixelFilterV4(parameters, actual);
+  EXPECT_TRUE(
+      RemoveGaussianPixelFilter(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -150,7 +157,8 @@ TEST(RemoveGaussianPixelFilterV4, WithData) {
       {"sigma", sigma_parameter}};
 
   GaussianPixelFilter actual;
-  RemoveGaussianPixelFilterV4(parameters, actual);
+  EXPECT_TRUE(
+      RemoveGaussianPixelFilter(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 xradius: 1.0 yradius: 2.0 sigma: 3.0
               )pb"));
@@ -160,7 +168,8 @@ TEST(RemoveLanczosPixelFilterV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   LanczosPixelFilter actual;
-  RemoveLanczosPixelFilterV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveLanczosPixelFilter(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -189,7 +198,8 @@ TEST(RemoveLanczosPixelFilterV1, WithData) {
       {"tau", tau_parameter}};
 
   LanczosPixelFilter actual;
-  RemoveLanczosPixelFilterV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveLanczosPixelFilter(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 xradius: 1.0 yradius: 2.0 tau: 3.0
               )pb"));
@@ -199,7 +209,8 @@ TEST(RemoveLanczosPixelFilterV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   LanczosPixelFilter actual;
-  RemoveLanczosPixelFilterV4(parameters, actual);
+  EXPECT_TRUE(
+      RemoveLanczosPixelFilter(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -228,7 +239,8 @@ TEST(RemoveLanczosPixelFilterV4, WithData) {
       {"tau", tau_parameter}};
 
   LanczosPixelFilter actual;
-  RemoveLanczosPixelFilterV4(parameters, actual);
+  EXPECT_TRUE(
+      RemoveLanczosPixelFilter(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 xradius: 1.0 yradius: 2.0 tau: 3.0
               )pb"));
@@ -238,7 +250,8 @@ TEST(RemoveMitchellPixelFilterV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   MitchellPixelFilter actual;
-  RemoveMitchellPixelFilterV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveMitchellPixelFilter(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -274,7 +287,8 @@ TEST(RemoveMitchellPixelFilterV1, WithData) {
       {"C", c_parameter}};
 
   MitchellPixelFilter actual;
-  RemoveMitchellPixelFilterV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveMitchellPixelFilter(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 xradius: 1.0 yradius: 2.0 B: 3.0 C: 4.0
               )pb"));
@@ -284,7 +298,8 @@ TEST(RemoveMitchellPixelFilterV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   MitchellPixelFilter actual;
-  RemoveMitchellPixelFilterV4(parameters, actual);
+  EXPECT_TRUE(
+      RemoveMitchellPixelFilter(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -320,7 +335,8 @@ TEST(RemoveMitchellPixelFilterV4, WithData) {
       {"C", c_parameter}};
 
   MitchellPixelFilter actual;
-  RemoveMitchellPixelFilterV4(parameters, actual);
+  EXPECT_TRUE(
+      RemoveMitchellPixelFilter(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 xradius: 1.0 yradius: 2.0 B: 3.0 C: 4.0
               )pb"));
@@ -330,7 +346,8 @@ TEST(RemoveTrianglePixelFilterV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   TrianglePixelFilter actual;
-  RemoveTrianglePixelFilterV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveTrianglePixelFilter(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -351,7 +368,8 @@ TEST(RemoveTrianglePixelFilterV1, WithData) {
       {"xwidth", xwidth_parameter}, {"ywidth", ywidth_parameter}};
 
   TrianglePixelFilter actual;
-  RemoveTrianglePixelFilterV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveTrianglePixelFilter(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 xradius: 1.0 yradius: 2.0
               )pb"));
@@ -361,7 +379,8 @@ TEST(RemoveTrianglePixelFilterV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   TrianglePixelFilter actual;
-  RemoveTrianglePixelFilterV4(parameters, actual);
+  EXPECT_TRUE(
+      RemoveTrianglePixelFilter(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -382,7 +401,8 @@ TEST(RemoveTrianglePixelFilterV4, WithData) {
       {"xradius", xradius_parameter}, {"yradius", yradius_parameter}};
 
   TrianglePixelFilter actual;
-  RemoveTrianglePixelFilterV4(parameters, actual);
+  EXPECT_TRUE(
+      RemoveTrianglePixelFilter(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 xradius: 1.0 yradius: 2.0
               )pb"));

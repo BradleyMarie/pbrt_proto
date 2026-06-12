@@ -543,48 +543,18 @@ absl::Status ParserV3::PixelFilter(
     absl::string_view pixel_filter_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
   static const TypeMap<v3::PixelFilter> kSupportedTypes = {
-      {"box",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::PixelFilter& pixel_filter) {
-         RemoveBoxPixelFilterV1(parameters, *pixel_filter.mutable_box());
-         return absl::OkStatus();
-       }},
+      {"box", CB<RemoveBoxPixelFilter, &PixelFilter::mutable_box>()},
       {"gaussian",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::PixelFilter& pixel_filter) {
-         RemoveGaussianPixelFilterV1(parameters,
-                                     *pixel_filter.mutable_gaussian());
-         return absl::OkStatus();
-       }},
+       CB<RemoveGaussianPixelFilter, &PixelFilter::mutable_gaussian>()},
       {"mitchell",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::PixelFilter& pixel_filter) {
-         RemoveMitchellPixelFilterV1(parameters,
-                                     *pixel_filter.mutable_mitchell());
-         return absl::OkStatus();
-       }},
-      {"sinc",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::PixelFilter& pixel_filter) {
-         RemoveLanczosPixelFilterV1(parameters, *pixel_filter.mutable_sinc());
-         return absl::OkStatus();
-       }},
+       CB<RemoveMitchellPixelFilter, &PixelFilter::mutable_mitchell>()},
+      {"sinc", CB<RemoveLanczosPixelFilter, &PixelFilter::mutable_sinc>()},
       {"triangle",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::PixelFilter& pixel_filter) {
-         RemoveTrianglePixelFilterV1(parameters,
-                                     *pixel_filter.mutable_triangle());
-         return absl::OkStatus();
-       }}};
+       CB<RemoveTrianglePixelFilter, &PixelFilter::mutable_triangle>()},
+  };
 
-  auto& pixel_filter = *output_.add_directives()->mutable_pixel_filter();
-
-  auto iter = kSupportedTypes.find(pixel_filter_type);
-  if (iter == kSupportedTypes.end()) {
-    return UnrecognizedTypeError("PixelFilter", pixel_filter_type);
-  }
-
-  return iter->second(parameters, pixel_filter);
+  return Parse<&Directive::mutable_pixel_filter>(kSupportedTypes,
+                                                 pixel_filter_type, parameters);
 }
 
 absl::Status ParserV3::Sampler(
