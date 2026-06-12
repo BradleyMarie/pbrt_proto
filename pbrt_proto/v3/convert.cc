@@ -553,60 +553,21 @@ absl::Status ParserV3::Sampler(
     absl::string_view sampler_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
   static const TypeMap<v3::Sampler> kSupportedTypes = {
-      {"halton",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::Sampler& sampler) {
-         RemoveHaltonSamplerV3(parameters, *sampler.mutable_halton());
-         return absl::OkStatus();
-       }},
+      {"halton", CB<RemoveHaltonSampler, &Sampler::mutable_halton>()},
       {"lowdiscrepancy",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::Sampler& sampler) {
-         RemoveZeroTwoSequenceSamplerV3(parameters,
-                                        *sampler.mutable_zerotwosequence());
-         return absl::OkStatus();
-       }},
+       CB<RemoveZeroTwoSequenceSampler, &Sampler::mutable_zerotwosequence>()},
       {"maxmindist",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::Sampler& sampler) {
-         RemoveMaxMinDistSamplerV3(parameters, *sampler.mutable_maxmindist());
-         return absl::OkStatus();
-       }},
-      {"random",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::Sampler& sampler) {
-         RemoveIndependentSamplerV2(parameters, *sampler.mutable_random());
-         return absl::OkStatus();
-       }},
-      {"sobol",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::Sampler& sampler) {
-         RemoveSobolSamplerV3(parameters, *sampler.mutable_sobol());
-         return absl::OkStatus();
-       }},
+       CB<RemoveMaxMinDistSampler, &Sampler::mutable_maxmindist>()},
+      {"random", CB<RemoveIndependentSampler, &Sampler::mutable_random>()},
+      {"sobol", CB<RemoveSobolSampler, &Sampler::mutable_sobol>()},
       {"stratified",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::Sampler& sampler) {
-         RemoveStratifiedSamplerV3(parameters, *sampler.mutable_stratified());
-         return absl::OkStatus();
-       }},
+       CB<RemoveStratifiedSampler, &Sampler::mutable_stratified>()},
       {"02sequence",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::Sampler& sampler) {
-         RemoveZeroTwoSequenceSamplerV3(parameters,
-                                        *sampler.mutable_zerotwosequence());
-         return absl::OkStatus();
-       }},
+       CB<RemoveZeroTwoSequenceSampler, &Sampler::mutable_zerotwosequence>()},
   };
 
-  auto& sampler = *output_.add_directives()->mutable_sampler();
-
-  auto iter = kSupportedTypes.find(sampler_type);
-  if (iter == kSupportedTypes.end()) {
-    return UnrecognizedTypeError("Sampler", sampler_type);
-  }
-
-  return iter->second(parameters, sampler);
+  return Parse<&Directive::mutable_sampler>(kSupportedTypes, sampler_type,
+                                            parameters);
 }
 
 absl::Status ParserV3::Shape(

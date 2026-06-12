@@ -416,40 +416,16 @@ absl::Status ParserV1::Sampler(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
   static const TypeMap<v1::Sampler> kSupportedTypes = {
       {"bestcandidate",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::Sampler& sampler) {
-         RemoveBestCandidateSamplerV1(parameters,
-                                      *sampler.mutable_bestcandidate());
-         return absl::OkStatus();
-       }},
+       CB<RemoveBestCandidateSampler, &Sampler::mutable_bestcandidate>()},
       {"lowdiscrepancy",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::Sampler& sampler) {
-         RemoveZeroTwoSequenceSamplerV1(parameters,
-                                        *sampler.mutable_lowdiscrepancy());
-         return absl::OkStatus();
-       }},
-      {"random",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::Sampler& sampler) {
-         RemoveRandomSamplerV1(parameters, *sampler.mutable_random());
-         return absl::OkStatus();
-       }},
+       CB<RemoveZeroTwoSequenceSampler, &Sampler::mutable_lowdiscrepancy>()},
+      {"random", CB<RemoveRandomSampler, &Sampler::mutable_random>()},
       {"stratified",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::Sampler& sampler) {
-         RemoveStratifiedSamplerV1(parameters, *sampler.mutable_stratified());
-         return absl::OkStatus();
-       }}};
+       CB<RemoveStratifiedSampler, &Sampler::mutable_stratified>()},
+  };
 
-  auto& sampler = *output_.add_directives()->mutable_sampler();
-
-  auto iter = kSupportedTypes.find(sampler_type);
-  if (iter == kSupportedTypes.end()) {
-    return UnrecognizedTypeError("Sampler", sampler_type);
-  }
-
-  return iter->second(parameters, sampler);
+  return Parse<&Directive::mutable_sampler>(kSupportedTypes, sampler_type,
+                                            parameters);
 }
 
 absl::Status ParserV1::Shape(

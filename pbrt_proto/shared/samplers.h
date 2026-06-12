@@ -9,81 +9,53 @@
 
 namespace pbrt_proto {
 
-void RemoveAdaptiveSamplerV2(
+absl::Status RemoveAdaptiveSampler(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    AdaptiveSampler& output);
+    int pbrt_version, AdaptiveSampler& output);
 
-void RemoveBestCandidateSamplerV1(
+absl::Status RemoveBestCandidateSampler(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    BestCandidateSampler& output);
+    int pbrt_version, BestCandidateSampler& output);
 
-void RemoveHaltonSamplerV2(
+absl::Status RemoveHaltonSampler(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    HaltonSampler& output);
+    int pbrt_version, HaltonSampler& output);
 
-void RemoveHaltonSamplerV3(
+absl::Status RemoveIndependentSampler(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    HaltonSampler& output);
+    int pbrt_version, IndependentSampler& output);
 
-absl::Status RemoveHaltonSamplerV4(
+absl::Status RemoveMaxMinDistSampler(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    HaltonSampler& output);
+    int pbrt_version, MaxMinDistSampler& output);
 
-void RemoveIndependentSamplerV2(
+absl::Status RemovePaddedSobolSampler(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    IndependentSampler& output);
+    int pbrt_version, PaddedSobolSampler& output);
 
-void RemoveIndependentSamplerV4(
+absl::Status RemovePMJ02BNSampler(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    IndependentSampler& output);
+    int pbrt_version, PMJ02BNSampler& output);
 
-void RemoveMaxMinDistSamplerV3(
+absl::Status RemoveRandomSampler(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    MaxMinDistSampler& output);
+    int pbrt_version, RandomSampler& output);
 
-absl::Status RemovePaddedSobolSamplerV4(
+absl::Status RemoveSobolSampler(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    PaddedSobolSampler& output);
+    int pbrt_version, SobolSampler& output);
 
-void RemovePMJ02BNSamplerV4(
+absl::Status RemoveStratifiedSampler(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    PMJ02BNSampler& output);
+    int pbrt_version, StratifiedSampler& output);
 
-void RemoveRandomSamplerV1(
+absl::Status RemoveZeroTwoSequenceSampler(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    RandomSampler& output);
+    int pbrt_version, ZeroTwoSequenceSampler& output);
 
-void RemoveSobolSamplerV3(
+absl::Status RemoveZSobolSampler(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    SobolSampler& output);
-
-absl::Status RemoveSobolSamplerV4(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    SobolSampler& output);
-
-void RemoveStratifiedSamplerV1(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    StratifiedSampler& output);
-
-void RemoveStratifiedSamplerV3(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    StratifiedSampler& output);
-
-void RemoveStratifiedSamplerV4(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    StratifiedSampler& output);
-
-void RemoveZeroTwoSequenceSamplerV1(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    ZeroTwoSequenceSampler& output);
-
-void RemoveZeroTwoSequenceSamplerV3(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    ZeroTwoSequenceSampler& output);
-
-absl::Status RemoveZSobolSamplerV4(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    ZSobolSampler& output);
+    int pbrt_version, ZSobolSampler& output);
 
 }  // namespace pbrt_proto
 

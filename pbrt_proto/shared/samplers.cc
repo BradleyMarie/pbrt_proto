@@ -92,9 +92,9 @@ void RemoveSeed(absl::flat_hash_map<absl::string_view, Parameter>& parameters,
 
 }  // namespace
 
-void RemoveAdaptiveSamplerV2(
+absl::Status RemoveAdaptiveSampler(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    AdaptiveSampler& output) {
+    int pbrt_version, AdaptiveSampler& output) {
   if (std::optional<int32_t> minsamples =
           TryRemoveInteger(parameters, "minsamples");
       minsamples.has_value()) {
@@ -115,144 +115,142 @@ void RemoveAdaptiveSamplerV2(
     } else if (*method == "shapeid") {
       output.set_method(AdaptiveSampler::SHAPEID);
     } else {
-      std::cerr
-          << "Unsupported value for 'adaptive' Sampler parameter 'method': \""
-          << *method << "\"" << std::endl;
+      std::cerr << "WARNING: Unsupported value for 'adaptive' Sampler "
+                   "parameter 'method': \""
+                << *method << "\"" << std::endl;
       output.set_method(AdaptiveSampler::CONTRAST);
     }
   }
+
+  return absl::OkStatus();
 }
 
-void RemoveBestCandidateSamplerV1(
+absl::Status RemoveBestCandidateSampler(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    BestCandidateSampler& output) {
+    int pbrt_version, BestCandidateSampler& output) {
   RemovePixelSamples(parameters, output);
+  return absl::OkStatus();
 }
 
-void RemoveHaltonSamplerV2(
+absl::Status RemoveHaltonSampler(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    HaltonSampler& output) {
-  RemovePixelSamples(parameters, output);
-}
-
-void RemoveHaltonSamplerV3(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    HaltonSampler& output) {
+    int pbrt_version, HaltonSampler& output) {
   RemovePixelSamples(parameters, output);
 
-  if (std::optional<bool> samplepixelcenter =
-          TryRemoveBool(parameters, "samplepixelcenter");
-      samplepixelcenter.has_value()) {
-    output.set_samplepixelcenter(*samplepixelcenter);
+  if (pbrt_version == 3) {
+    if (std::optional<bool> samplepixelcenter =
+            TryRemoveBool(parameters, "samplepixelcenter");
+        samplepixelcenter.has_value()) {
+      output.set_samplepixelcenter(*samplepixelcenter);
+    }
   }
+
+  if (pbrt_version >= 4) {
+    RemoveSeed(parameters, output);
+
+    if (absl::Status status = RemoveRandomization(parameters, output);
+        !status.ok()) {
+      return status;
+    }
+  }
+
+  return absl::OkStatus();
 }
 
-absl::Status RemoveHaltonSamplerV4(
+absl::Status RemoveIndependentSampler(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    HaltonSampler& output) {
+    int pbrt_version, IndependentSampler& output) {
+  RemovePixelSamples(parameters, output);
+
+  if (pbrt_version >= 4) {
+    RemoveSeed(parameters, output);
+  }
+
+  return absl::OkStatus();
+}
+
+absl::Status RemoveMaxMinDistSampler(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    int pbrt_version, MaxMinDistSampler& output) {
+  RemovePixelSamples(parameters, output);
+  RemoveDimension(parameters, output);
+  return absl::OkStatus();
+}
+
+absl::Status RemovePaddedSobolSampler(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    int pbrt_version, PaddedSobolSampler& output) {
   RemovePixelSamples(parameters, output);
   RemoveSeed(parameters, output);
   return RemoveRandomization(parameters, output);
 }
 
-void RemoveIndependentSamplerV2(
+absl::Status RemovePMJ02BNSampler(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    IndependentSampler& output) {
-  RemovePixelSamples(parameters, output);
-}
-
-void RemoveIndependentSamplerV4(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    IndependentSampler& output) {
+    int pbrt_version, PMJ02BNSampler& output) {
   RemovePixelSamples(parameters, output);
   RemoveSeed(parameters, output);
+  return absl::OkStatus();
 }
 
-void RemoveMaxMinDistSamplerV3(
+absl::Status RemoveRandomSampler(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    MaxMinDistSampler& output) {
-  RemovePixelSamples(parameters, output);
-  RemoveDimension(parameters, output);
-}
-
-absl::Status RemovePaddedSobolSamplerV4(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    PaddedSobolSampler& output) {
-  RemovePixelSamples(parameters, output);
-  RemoveSeed(parameters, output);
-  return RemoveRandomization(parameters, output);
-}
-
-void RemovePMJ02BNSamplerV4(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    PMJ02BNSampler& output) {
-  RemovePixelSamples(parameters, output);
-  RemoveSeed(parameters, output);
-}
-
-void RemoveRandomSamplerV1(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    RandomSampler& output) {
+    int pbrt_version, RandomSampler& output) {
   RemoveXSamples(parameters, output);
   RemoveYSamples(parameters, output);
+  return absl::OkStatus();
 }
 
-void RemoveSobolSamplerV3(
+absl::Status RemoveSobolSampler(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    SobolSampler& output) {
+    int pbrt_version, SobolSampler& output) {
   RemovePixelSamples(parameters, output);
+
+  if (pbrt_version >= 4) {
+    RemoveSeed(parameters, output);
+
+    if (absl::Status status = RemoveRandomization(parameters, output);
+        !status.ok()) {
+      return status;
+    }
+  }
+
+  return absl::OkStatus();
 }
 
-absl::Status RemoveSobolSamplerV4(
+absl::Status RemoveStratifiedSampler(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    SobolSampler& output) {
-  RemovePixelSamples(parameters, output);
-  RemoveSeed(parameters, output);
-  return RemoveRandomization(parameters, output);
-}
-
-void RemoveStratifiedSamplerV1(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    StratifiedSampler& output) {
+    int pbrt_version, StratifiedSampler& output) {
   RemoveJitter(parameters, output);
   RemoveXSamples(parameters, output);
   RemoveYSamples(parameters, output);
+
+  if (pbrt_version == 3) {
+    RemoveDimension(parameters, output);
+  }
+
+  if (pbrt_version >= 4) {
+    RemoveSeed(parameters, output);
+  }
+
+  return absl::OkStatus();
 }
 
-void RemoveStratifiedSamplerV3(
+absl::Status RemoveZeroTwoSequenceSampler(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    StratifiedSampler& output) {
-  RemoveJitter(parameters, output);
-  RemoveXSamples(parameters, output);
-  RemoveYSamples(parameters, output);
-  RemoveDimension(parameters, output);
-}
-
-void RemoveStratifiedSamplerV4(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    StratifiedSampler& output) {
-  RemoveJitter(parameters, output);
-  RemoveXSamples(parameters, output);
-  RemoveYSamples(parameters, output);
-  RemoveSeed(parameters, output);
-}
-
-void RemoveZeroTwoSequenceSamplerV1(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    ZeroTwoSequenceSampler& output) {
+    int pbrt_version, ZeroTwoSequenceSampler& output) {
   RemovePixelSamples(parameters, output);
+
+  if (pbrt_version >= 3) {
+    RemoveDimension(parameters, output);
+  }
+
+  return absl::OkStatus();
 }
 
-void RemoveZeroTwoSequenceSamplerV3(
+absl::Status RemoveZSobolSampler(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    ZeroTwoSequenceSampler& output) {
-  RemovePixelSamples(parameters, output);
-  RemoveDimension(parameters, output);
-}
-
-absl::Status RemoveZSobolSamplerV4(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    ZSobolSampler& output) {
+    int pbrt_version, ZSobolSampler& output) {
   RemovePixelSamples(parameters, output);
   RemoveSeed(parameters, output);
   return RemoveRandomization(parameters, output);
