@@ -261,15 +261,14 @@ absl::Status ParserV1::FloatTexture(
          return absl::OkStatus();
        }}};
 
-  auto& float_texture = *output_.add_directives()->mutable_float_texture();
-  float_texture.set_name(float_texture_name);
+  absl::Status status = Parse<&Directive::mutable_float_texture>(
+      kSupportedTypes, float_texture_type, parameters);
 
-  auto iter = kSupportedTypes.find(float_texture_type);
-  if (iter == kSupportedTypes.end()) {
-    return UnrecognizedTypeError("Texture", float_texture_type);
-  }
+  // No need to check status. The directive is always added by Parse.
+  output_.mutable_directives()->rbegin()->mutable_float_texture()->set_name(
+      float_texture_name);
 
-  return iter->second(parameters, float_texture);
+  return absl::OkStatus();
 }
 
 absl::Status ParserV1::LightSource(
@@ -384,13 +383,15 @@ absl::Status ParserV1::Material(
          return absl::OkStatus();
        }}};
 
-  auto iter = kSupportedTypes.find(material_type);
-  if (iter == kSupportedTypes.end()) {
+  absl::Status status =
+      Parse(kSupportedTypes, material_type, parameters, material);
+
+  if (material.material_type_case() == Material::MATERIAL_TYPE_NOT_SET &&
+      !kSupportedTypes.contains(material_type)) {
     RemoveMatteMaterialV1(parameters, *material.mutable_matte());
-    return UnrecognizedTypeError("Material", material_type);
   }
 
-  return iter->second(parameters, material);
+  return status;
 }
 
 absl::Status ParserV1::PixelFilter(
@@ -492,16 +493,11 @@ absl::Status ParserV1::Shape(
                                           *shape.mutable_trianglemesh());
        }}};
 
-  auto& shape = *output_.add_directives()->mutable_shape();
+  absl::Status status =
+      Parse<&Directive::mutable_shape>(kSupportedTypes, shape_type, parameters);
 
-  auto iter = kSupportedTypes.find(shape_type);
-  if (iter == kSupportedTypes.end()) {
-    return UnrecognizedTypeError("Shape", shape_type);
-  }
-
-  if (absl::Status status = iter->second(parameters, shape); !status.ok()) {
-    return status;
-  }
+  // No need to check status. The directive is always added by Parse.
+  auto& shape = *output_.mutable_directives()->rbegin()->mutable_shape();
 
   auto overrides = std::bind(&Shape::mutable_overrides, &shape);
   TryRemoveFloatTexture(
@@ -544,7 +540,7 @@ absl::Status ParserV1::Shape(
       parameters, "transmit",
       std::bind(&Shape::MaterialOverrides::mutable_transmit, overrides));
 
-  return absl::OkStatus();
+  return status;
 }
 
 absl::Status ParserV1::SpectrumTexture(
@@ -643,16 +639,14 @@ absl::Status ParserV1::SpectrumTexture(
          return absl::OkStatus();
        }}};
 
-  auto& spectrum_texture =
-      *output_.add_directives()->mutable_spectrum_texture();
-  spectrum_texture.set_name(spectrum_texture_name);
+  absl::Status status = Parse<&Directive::mutable_spectrum_texture>(
+      kSupportedTypes, spectrum_texture_type, parameters);
 
-  auto iter = kSupportedTypes.find(spectrum_texture_type);
-  if (iter == kSupportedTypes.end()) {
-    return UnrecognizedTypeError("Texture", spectrum_texture_type);
-  }
+  // No need to check status. The directive is always added by Parse.
+  output_.mutable_directives()->rbegin()->mutable_spectrum_texture()->set_name(
+      spectrum_texture_name);
 
-  return iter->second(parameters, spectrum_texture);
+  return absl::OkStatus();
 }
 
 absl::Status ParserV1::SurfaceIntegrator(
@@ -719,14 +713,8 @@ absl::Status ParserV1::SurfaceIntegrator(
          return absl::OkStatus();
        }}};
 
-  auto& integrator = *output_.add_directives()->mutable_surface_integrator();
-
-  auto iter = kSupportedTypes.find(integrator_type);
-  if (iter == kSupportedTypes.end()) {
-    return UnrecognizedTypeError("SurfaceIntegrator", integrator_type);
-  }
-
-  return iter->second(parameters, integrator);
+  return Parse<&Directive::mutable_surface_integrator>(
+      kSupportedTypes, integrator_type, parameters);
 }
 
 absl::Status ParserV1::Volume(

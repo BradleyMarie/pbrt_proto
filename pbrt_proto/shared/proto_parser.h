@@ -35,6 +35,11 @@ class ProtoParser : public Parser {
     };
   }
 
+  template <typename U>
+  absl::Status Parse(
+      const TypeMap<U>& type_map, absl::string_view type_name,
+      absl::flat_hash_map<absl::string_view, Parameter>& parameters, U& output);
+
   template <auto Func, typename U>
   absl::Status Parse(
       const TypeMap<U>& type_map, absl::string_view type_name,
@@ -147,21 +152,27 @@ class ProtoParser : public Parser {
 };
 
 template <typename T, int PbrtVersion>
+template <typename U>
+absl::Status ProtoParser<T, PbrtVersion>::Parse(
+    const TypeMap<U>& type_map, absl::string_view type_name,
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters, U& output) {
+  auto iter = type_map.find(type_name);
+  if (iter == type_map.end()) {
+    static const std::string directive_name =
+        GetShortName(output.GetTypeName());
+    return UnrecognizedTypeError(directive_name, type_name);
+  }
+
+  return iter->second(parameters, output);
+}
+
+template <typename T, int PbrtVersion>
 template <auto Func, typename U>
 absl::Status ProtoParser<T, PbrtVersion>::Parse(
     const TypeMap<U>& type_map, absl::string_view type_name,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
-  auto& base_directive = *output_.add_directives();
-  auto& directive = *(base_directive.*Func)();
-
-  auto iter = type_map.find(type_name);
-  if (iter == type_map.end()) {
-    static const std::string directive_name =
-        GetShortName(directive.GetTypeName());
-    return UnrecognizedTypeError(directive_name, type_name);
-  }
-
-  return iter->second(parameters, directive);
+  return Parse(type_map, type_name, parameters,
+               *(*output_.add_directives().*Func)());
 }
 
 template <typename T, int PbrtVersion>
