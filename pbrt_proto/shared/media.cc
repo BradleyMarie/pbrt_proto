@@ -95,7 +95,7 @@ absl::Status RemoveCloudMedium(
     output.set_wispiness(*wispiness);
   }
 
-  return RemoveSigma(parameters, output, /*pbrt_version=*/4);
+  return RemoveSigma(parameters, output, pbrt_version);
 }
 
 absl::Status RemoveExponentialMedium(
@@ -103,7 +103,7 @@ absl::Status RemoveExponentialMedium(
     int pbrt_version, ExponentialMedium& output) {
   RemoveBounds(parameters, output);
 
-  if (absl::Status status = RemoveSigma(parameters, output, /*pbrt_version=*/1);
+  if (absl::Status status = RemoveSigma(parameters, output, pbrt_version);
       !status.ok()) {
     return status;
   }
@@ -216,7 +216,7 @@ absl::Status RemoveNanoVdbMedium(
     output.set_filename(*filename);
   }
 
-  return RemoveSigma(parameters, output, /*pbrt_version=*/4);
+  return RemoveSigma(parameters, output, pbrt_version);
 }
 
 absl::Status RemoveRgbGridMedium(
