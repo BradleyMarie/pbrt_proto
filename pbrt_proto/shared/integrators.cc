@@ -34,7 +34,7 @@ void RemoveDirectLightingIntegrator(
     } else if (pbrt_v1 && *strategy == "weighted") {
       output.set_strategy(DirectLightingIntegrator::WEIGHTED);
     } else {
-      std::cerr << "Unsupported value for 'directlighting' Integrator "
+      std::cerr << "WARNING: Unsupported value for 'directlighting' Integrator "
                    "parameter 'strategy': \""
                 << *strategy << "\"" << std::endl;
       output.set_strategy(DirectLightingIntegrator::ALL);
@@ -117,7 +117,7 @@ void RemoveLightSampleStrategy(
     } else if (pbrt_v4 && *lightsamplestrategy == "bvh") {
       output.set_lightsampler(LightSampler::BVH);
     } else {
-      std::cerr << "Unsupported value for '" << type
+      std::cerr << "WARNING: Unsupported value for '" << type
                 << "' Integrator parameter '" << parameter << "': \""
                 << *lightsamplestrategy << "\"" << std::endl;
       output.set_lightsampler(LightSampler::BVH);
@@ -208,9 +208,9 @@ void RemoveDebugIntegratorV1(
     if (auto iter = values.find(*red); iter != values.end()) {
       output.set_red(iter->second);
     } else {
-      std::cerr
-          << "Unsupported value for 'debug' Integrator parameter 'red': \""
-          << *red << "\"" << std::endl;
+      std::cerr << "WARNING: Unsupported value for 'debug' Integrator "
+                   "parameter 'red': \""
+                << *red << "\"" << std::endl;
       output.set_red(DebugIntegrator::ZERO);
     }
   }
@@ -221,9 +221,9 @@ void RemoveDebugIntegratorV1(
     if (auto iter = values.find(*green); iter != values.end()) {
       output.set_green(iter->second);
     } else {
-      std::cerr
-          << "Unsupported value for 'debug' Integrator parameter 'green': \""
-          << *green << "\"" << std::endl;
+      std::cerr << "WARNING: Unsupported value for 'debug' Integrator "
+                   "parameter 'green': \""
+                << *green << "\"" << std::endl;
       output.set_green(DebugIntegrator::ZERO);
     }
   }
@@ -234,9 +234,9 @@ void RemoveDebugIntegratorV1(
     if (auto iter = values.find(*blue); iter != values.end()) {
       output.set_blue(iter->second);
     } else {
-      std::cerr
-          << "Unsupported value for 'debug' Integrator parameter 'blue': \""
-          << *blue << "\"" << std::endl;
+      std::cerr << "WARNING: Unsupported value for 'debug' Integrator "
+                   "parameter 'blue': \""
+                << *blue << "\"" << std::endl;
       output.set_blue(DebugIntegrator::ZERO);
     }
   }

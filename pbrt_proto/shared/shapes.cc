@@ -45,7 +45,8 @@ absl::Status TryRemoveCurveShapeV3(
     } else if (*degree == 2) {
       output.set_degree(CurveShape::TWO);
     } else {
-      std::cerr << "Unsupported value for 'curve' Shape parameter 'degree': \""
+      std::cerr << "WARNING: Unsupported value for 'curve' Shape parameter "
+                   "'degree': \""
                 << *degree << "\"" << std::endl;
       write_output = false;
     }
@@ -59,7 +60,8 @@ absl::Status TryRemoveCurveShapeV3(
     } else if (*basis == "bspline") {
       output.set_basis(CurveShape::BSPLINE);
     } else {
-      std::cerr << "Unrecognized value for 'curve' Shape parameter 'basis': \""
+      std::cerr << "WARNING: Unrecognized value for 'curve' Shape parameter "
+                   "'basis': \""
                 << *basis << "\"" << std::endl;
       write_output = false;
     }

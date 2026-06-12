@@ -78,7 +78,7 @@ absl::Status RemoveBvhAccelerator(
     } else if (pbrt_version >= 3 && *splitmethod == "hlbvh") {
       output.set_splitmethod(BvhAccelerator::HLBVH);
     } else {
-      std::cerr << "Unsupported value for 'bvh' Accelerator parameter "
+      std::cerr << "WARNING: Unsupported value for 'bvh' Accelerator parameter "
                    "'splitmethod': \""
                 << *splitmethod << "\"" << std::endl;
       output.set_splitmethod(BvhAccelerator::SAH);

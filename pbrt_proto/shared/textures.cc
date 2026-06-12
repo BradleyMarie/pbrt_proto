@@ -29,9 +29,10 @@ std::optional<CheckerboardAntialiasing> TryRemoveAaMode(
     } else if (pbrt_v1 && *aamode == "supersample") {
       return CheckerboardAntialiasing::SUPERSAMPLE;
     } else {
-      std::cerr << "Unsupported value for 'checkerboard' Texture parameter "
-                   "'aamode': \""
-                << *aamode << "\"" << std::endl;
+      std::cerr
+          << "WARNING: Unsupported value for 'checkerboard' Texture parameter "
+             "'aamode': \""
+          << *aamode << "\"" << std::endl;
       return CheckerboardAntialiasing::CLOSEDFORM;
     }
   }
@@ -96,9 +97,10 @@ void RemoveFilter(absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     } else if (*filter == "point") {
       output.set_filter(TextureFilter::POINT);
     } else {
-      std::cerr << "Unsupported value for 'imagemap' Texture parameter "
-                   "'filter': \""
-                << *filter << "\"" << std::endl;
+      std::cerr
+          << "WARNING: Unsupported value for 'imagemap' Texture parameter "
+             "'filter': \""
+          << *filter << "\"" << std::endl;
       output.set_filter(TextureFilter::EWA);
     }
   }
@@ -119,7 +121,7 @@ std::optional<TextureMapping> TryRemoveMapping(
     } else if (*mapping == "planar") {
       return TextureMapping::PLANAR;
     } else {
-      std::cerr << "Unsupported value for '" << type
+      std::cerr << "WARNING: Unsupported value for '" << type
                 << "' Texture parameter 'mapping': \"" << *mapping << "\""
                 << std::endl;
       return TextureMapping::UV;
@@ -141,9 +143,9 @@ std::optional<ImageWrap> TryRemoveWrap(
     } else if (*wrap == "repeat") {
       return ImageWrap::REPEAT;
     } else {
-      std::cerr
-          << "Unsupported value for 'imagemap' Texture parameter 'wrap': \""
-          << *wrap << "\"" << std::endl;
+      std::cerr << "WARNING: Unsupported value for 'imagemap' Texture "
+                   "parameter 'wrap': \""
+                << *wrap << "\"" << std::endl;
       return ImageWrap::REPEAT;
     }
   }

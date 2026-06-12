@@ -1306,7 +1306,7 @@ absl::Status Parser::ReadFrom(std::istream& stream) {
     }
 
     for (const auto& [name, parameter] : parameters) {
-      std::cerr << "Unused " << parameter.directive << " "
+      std::cerr << "WARNING: Unused " << parameter.directive << " "
                 << parameter.type_name << " parameter: '" << name << "'"
                 << std::endl;
     }
