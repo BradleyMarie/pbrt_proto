@@ -54,125 +54,11 @@ void RemoveBounds(absl::flat_hash_map<absl::string_view, Parameter>& parameters,
   }
 }
 
-absl::Status RemoveHomogeneousMedium(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    HomogeneousMedium& output, int pbrt_version) {
-  if (pbrt_version >= 3) {
-    if (std::optional<absl::string_view> preset =
-            TryRemoveString(parameters, "preset");
-        preset.has_value()) {
-      auto iter = kNamedMeasuredScatteringPresets.find(*preset);
-      if (iter != kNamedMeasuredScatteringPresets.end()) {
-        output.set_preset(iter->second);
-      }
-    }
-
-    if (std::optional<double> scale = TryRemoveFloat(parameters, "scale");
-        scale.has_value()) {
-      output.set_scale(*scale);
-    }
-  }
-
-  if (pbrt_version <= 2) {
-    if (absl::Status status = TryRemoveSpectrumV1(
-            parameters, "Le",
-            std::bind(&HomogeneousMedium::mutable_le, &output));
-        !status.ok()) {
-      return status;
-    }
-  } else if (pbrt_version >= 4) {
-    if (absl::Status status = TryRemoveSpectrumV2(
-            parameters, "Le",
-            std::bind(&HomogeneousMedium::mutable_le, &output));
-        !status.ok()) {
-      return status;
-    }
-  }
-
-  if (std::optional<double> g = TryRemoveFloat(parameters, "g");
-      g.has_value()) {
-    output.set_g(*g);
-  }
-
-  return RemoveSigma(parameters, output, pbrt_version);
-}
-
-absl::Status RemoveUniformGridMedium(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    UniformGridMedium& output, int pbrt_version) {
-  RemoveBounds(parameters, output);
-
-  if (pbrt_version >= 3) {
-    if (std::optional<absl::string_view> preset =
-            TryRemoveString(parameters, "preset");
-        preset.has_value()) {
-      auto iter = kNamedMeasuredScatteringPresets.find(*preset);
-      if (iter != kNamedMeasuredScatteringPresets.end()) {
-        output.set_preset(iter->second);
-      }
-    }
-
-    if (std::optional<double> scale = TryRemoveFloat(parameters, "scale");
-        scale.has_value()) {
-      output.set_scale(*scale);
-    }
-  }
-
-  if (pbrt_version <= 2) {
-    if (absl::Status status = TryRemoveSpectrumV1(
-            parameters, "Le",
-            std::bind(&UniformGridMedium::mutable_le, &output));
-        !status.ok()) {
-      return status;
-    }
-  } else if (pbrt_version >= 4) {
-    if (absl::Status status = TryRemoveSpectrumV2(
-            parameters, "Le",
-            std::bind(&UniformGridMedium::mutable_le, &output));
-        !status.ok()) {
-      return status;
-    }
-  }
-
-  if (std::optional<double> g = TryRemoveFloat(parameters, "g");
-      g.has_value()) {
-    output.set_g(*g);
-  }
-
-  if (std::optional<int32_t> nx = TryRemoveInteger(parameters, "nx");
-      nx.has_value() && *nx > 0) {
-    output.set_nx(*nx);
-  }
-
-  if (std::optional<int32_t> ny = TryRemoveInteger(parameters, "ny");
-      ny.has_value() && *ny > 0) {
-    output.set_ny(*ny);
-  }
-
-  if (std::optional<int32_t> nz = TryRemoveInteger(parameters, "nz");
-      nz.has_value() && *nz > 0) {
-    output.set_nz(*nz);
-  }
-
-  if (std::optional<absl::Span<double>> density =
-          TryRemoveFloats(parameters, "density");
-      density.has_value()) {
-    if (density->size() > std::numeric_limits<int>::max()) {
-      return absl::ResourceExhaustedError(
-          "density is too large to be stored in a proto array");
-    }
-
-    output.mutable_density()->Add(density->begin(), density->end());
-  }
-
-  return RemoveSigma(parameters, output, pbrt_version);
-}
-
 }  // namespace
 
-absl::Status RemoveCloudMediumV4(
+absl::Status RemoveCloudMedium(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    CloudMedium& output) {
+    int pbrt_version, CloudMedium& output) {
   if (std::optional<double> g = TryRemoveFloat(parameters, "g");
       g.has_value()) {
     output.set_g(*g);
@@ -212,9 +98,9 @@ absl::Status RemoveCloudMediumV4(
   return RemoveSigma(parameters, output, /*pbrt_version=*/4);
 }
 
-absl::Status RemoveExponentialMediumV1(
+absl::Status RemoveExponentialMedium(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    ExponentialMedium& output) {
+    int pbrt_version, ExponentialMedium& output) {
   RemoveBounds(parameters, output);
 
   if (absl::Status status = RemoveSigma(parameters, output, /*pbrt_version=*/1);
@@ -249,34 +135,54 @@ absl::Status RemoveExponentialMediumV1(
       parameters, "Le", std::bind(&ExponentialMedium::mutable_le, &output));
 }
 
-absl::Status RemoveHomogeneousMediumV1(
+absl::Status RemoveHomogeneousMedium(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    HomogeneousMedium& output) {
-  RemoveBounds(parameters, output);
-
-  return RemoveHomogeneousMedium(parameters, output, /*pbrt_version=*/1);
-}
-
-absl::Status RemoveHomogeneousMediumV3(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    HomogeneousMedium& output) {
-  return RemoveHomogeneousMedium(parameters, output, /*pbrt_version=*/3);
-}
-
-absl::Status RemoveHomogeneousMediumV4(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    HomogeneousMedium& output) {
-  if (std::optional<double> lescale = TryRemoveFloat(parameters, "Lescale");
-      lescale.has_value()) {
-    output.set_lescale(*lescale);
+    int pbrt_version, HomogeneousMedium& output) {
+  if (absl::Status status =
+          TryRemoveSpectrum(parameters, pbrt_version, "Le",
+                            std::bind(&HomogeneousMedium::mutable_le, &output));
+      !status.ok()) {
+    return status;
   }
 
-  return RemoveHomogeneousMedium(parameters, output, /*pbrt_version=*/4);
+  if (std::optional<double> g = TryRemoveFloat(parameters, "g");
+      g.has_value()) {
+    output.set_g(*g);
+  }
+
+  if (pbrt_version <= 2) {
+    RemoveBounds(parameters, output);
+  }
+
+  if (pbrt_version >= 3) {
+    if (std::optional<absl::string_view> preset =
+            TryRemoveString(parameters, "preset");
+        preset.has_value()) {
+      auto iter = kNamedMeasuredScatteringPresets.find(*preset);
+      if (iter != kNamedMeasuredScatteringPresets.end()) {
+        output.set_preset(iter->second);
+      }
+    }
+
+    if (std::optional<double> scale = TryRemoveFloat(parameters, "scale");
+        scale.has_value()) {
+      output.set_scale(*scale);
+    }
+  }
+
+  if (pbrt_version >= 4) {
+    if (std::optional<double> lescale = TryRemoveFloat(parameters, "Lescale");
+        lescale.has_value()) {
+      output.set_lescale(*lescale);
+    }
+  }
+
+  return RemoveSigma(parameters, output, pbrt_version);
 }
 
-absl::Status RemoveNanoVdbMediumV4(
+absl::Status RemoveNanoVdbMedium(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    NanoVdbMedium& output) {
+    int pbrt_version, NanoVdbMedium& output) {
   if (std::optional<double> g = TryRemoveFloat(parameters, "g");
       g.has_value()) {
     output.set_g(*g);
@@ -313,9 +219,9 @@ absl::Status RemoveNanoVdbMediumV4(
   return RemoveSigma(parameters, output, /*pbrt_version=*/4);
 }
 
-absl::Status RemoveRgbGridMediumV4(
+absl::Status RemoveRgbGridMedium(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    RgbGridMedium& output) {
+    int pbrt_version, RgbGridMedium& output) {
   if (std::optional<std::array<double, 3>> sigma_a =
           TryRemoveRgb(parameters, "sigma_a");
       sigma_a.has_value()) {
@@ -397,50 +303,97 @@ absl::Status RemoveRgbGridMediumV4(
   return absl::OkStatus();
 }
 
-absl::Status RemoveUniformGridMediumV1(
+absl::Status RemoveUniformGridMedium(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    UniformGridMedium& output) {
-  return RemoveUniformGridMedium(parameters, output, /*pbrt_version=*/1);
-}
+    int pbrt_version, UniformGridMedium& output) {
+  RemoveBounds(parameters, output);
 
-absl::Status RemoveUniformGridMediumV3(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    UniformGridMedium& output) {
-  return RemoveUniformGridMedium(parameters, output, /*pbrt_version=*/3);
-}
-
-absl::Status RemoveUniformGridMediumV4(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    UniformGridMedium& output) {
-  if (std::optional<double> lescale = TryRemoveFloat(parameters, "Lescale");
-      lescale.has_value()) {
-    output.set_lescale(*lescale);
+  if (absl::Status status =
+          TryRemoveSpectrum(parameters, pbrt_version, "Le",
+                            std::bind(&UniformGridMedium::mutable_le, &output));
+      !status.ok()) {
+    return status;
   }
 
-  if (std::optional<absl::Span<double>> temperature =
-          TryRemoveFloats(parameters, "temperature");
-      temperature.has_value()) {
-    if (temperature->size() > std::numeric_limits<int>::max()) {
+  if (std::optional<double> g = TryRemoveFloat(parameters, "g");
+      g.has_value()) {
+    output.set_g(*g);
+  }
+
+  if (std::optional<int32_t> nx = TryRemoveInteger(parameters, "nx");
+      nx.has_value() && *nx > 0) {
+    output.set_nx(*nx);
+  }
+
+  if (std::optional<int32_t> ny = TryRemoveInteger(parameters, "ny");
+      ny.has_value() && *ny > 0) {
+    output.set_ny(*ny);
+  }
+
+  if (std::optional<int32_t> nz = TryRemoveInteger(parameters, "nz");
+      nz.has_value() && *nz > 0) {
+    output.set_nz(*nz);
+  }
+
+  if (std::optional<absl::Span<double>> density =
+          TryRemoveFloats(parameters, "density");
+      density.has_value()) {
+    if (density->size() > std::numeric_limits<int>::max()) {
       return absl::ResourceExhaustedError(
-          "temperature is too large to be stored in a proto array");
+          "density is too large to be stored in a proto array");
     }
 
-    output.mutable_temperature()->Add(temperature->begin(), temperature->end());
+    output.mutable_density()->Add(density->begin(), density->end());
   }
 
-  if (std::optional<double> temperatureoffset =
-          TryRemoveFloat(parameters, "temperatureoffset");
-      temperatureoffset.has_value()) {
-    output.set_temperatureoffset(*temperatureoffset);
+  if (pbrt_version >= 3) {
+    if (std::optional<absl::string_view> preset =
+            TryRemoveString(parameters, "preset");
+        preset.has_value()) {
+      auto iter = kNamedMeasuredScatteringPresets.find(*preset);
+      if (iter != kNamedMeasuredScatteringPresets.end()) {
+        output.set_preset(iter->second);
+      }
+    }
+
+    if (std::optional<double> scale = TryRemoveFloat(parameters, "scale");
+        scale.has_value()) {
+      output.set_scale(*scale);
+    }
   }
 
-  if (std::optional<double> temperaturescale =
-          TryRemoveFloat(parameters, "temperaturescale");
-      temperaturescale.has_value()) {
-    output.set_temperaturescale(*temperaturescale);
+  if (pbrt_version >= 4) {
+    if (std::optional<double> lescale = TryRemoveFloat(parameters, "Lescale");
+        lescale.has_value()) {
+      output.set_lescale(*lescale);
+    }
+
+    if (std::optional<absl::Span<double>> temperature =
+            TryRemoveFloats(parameters, "temperature");
+        temperature.has_value()) {
+      if (temperature->size() > std::numeric_limits<int>::max()) {
+        return absl::ResourceExhaustedError(
+            "temperature is too large to be stored in a proto array");
+      }
+
+      output.mutable_temperature()->Add(temperature->begin(),
+                                        temperature->end());
+    }
+
+    if (std::optional<double> temperatureoffset =
+            TryRemoveFloat(parameters, "temperatureoffset");
+        temperatureoffset.has_value()) {
+      output.set_temperatureoffset(*temperatureoffset);
+    }
+
+    if (std::optional<double> temperaturescale =
+            TryRemoveFloat(parameters, "temperaturescale");
+        temperaturescale.has_value()) {
+      output.set_temperaturescale(*temperaturescale);
+    }
   }
 
-  return RemoveUniformGridMedium(parameters, output, /*pbrt_version=*/4);
+  return RemoveSigma(parameters, output, pbrt_version);
 }
 
 }  // namespace pbrt_proto

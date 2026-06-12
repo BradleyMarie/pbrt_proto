@@ -404,32 +404,24 @@ absl::Status ParserV3::MakeNamedMedium(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
   static const TypeMap<v3::MakeNamedMedium> kSupportedTypes = {
       {"homogeneous",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::MakeNamedMedium& make_named_medium) {
-         return RemoveHomogeneousMediumV3(
-             parameters, *make_named_medium.mutable_homogeneous());
-       }},
+       CB<RemoveHomogeneousMedium, &MakeNamedMedium::mutable_homogeneous>()},
       {"heterogeneous",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::MakeNamedMedium& make_named_medium) {
-         return RemoveUniformGridMediumV3(
-             parameters, *make_named_medium.mutable_heterogeneous());
-       }},
+       CB<RemoveUniformGridMedium, &MakeNamedMedium::mutable_heterogeneous>()},
   };
 
-  absl::string_view medium_type =
-      TryRemoveString(parameters, "type").value_or("");
+  int pre_size = output_.directives_size();
+  absl::Status status = Parse<&Directive::mutable_make_named_medium>(
+      kSupportedTypes, TryRemoveString(parameters, "type").value_or(""),
+      parameters);
 
-  auto& make_named_medium =
-      *output_.add_directives()->mutable_make_named_medium();
-  make_named_medium.set_name(medium_name);
-
-  auto iter = kSupportedTypes.find(medium_type);
-  if (iter == kSupportedTypes.end()) {
-    return UnrecognizedTypeError("MakeNamedMedium", medium_type);
+  if (pre_size != output_.directives_size()) {
+    output_.mutable_directives()
+        ->rbegin()
+        ->mutable_make_named_medium()
+        ->set_name(medium_name);
   }
 
-  return iter->second(parameters, make_named_medium);
+  return status;
 }
 
 absl::Status ParserV3::Material(

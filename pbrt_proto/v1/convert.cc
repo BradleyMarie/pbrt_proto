@@ -758,32 +758,15 @@ absl::Status ParserV1::Volume(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
   static const TypeMap<v1::Volume> kSupportedTypes = {
       {"exponential",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::Volume& volume) {
-         return RemoveExponentialMediumV1(parameters,
-                                          *volume.mutable_exponential());
-       }},
+       CB<RemoveExponentialMedium, &Volume::mutable_exponential>()},
       {"homogeneous",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::Volume& volume) {
-         return RemoveHomogeneousMediumV1(parameters,
-                                          *volume.mutable_homogeneous());
-       }},
+       CB<RemoveHomogeneousMedium, &Volume::mutable_homogeneous>()},
       {"volumegrid",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::Volume& volume) {
-         return RemoveUniformGridMediumV1(parameters,
-                                          *volume.mutable_volumegrid());
-       }}};
+       CB<RemoveUniformGridMedium, &Volume::mutable_volumegrid>()},
+  };
 
-  auto& volume = *output_.add_directives()->mutable_volume();
-
-  auto iter = kSupportedTypes.find(volume_type);
-  if (iter == kSupportedTypes.end()) {
-    return UnrecognizedTypeError("Volume", volume_type);
-  }
-
-  return iter->second(parameters, volume);
+  return Parse<&Directive::mutable_volume>(kSupportedTypes, volume_type,
+                                           parameters);
 }
 
 absl::Status ParserV1::VolumeIntegrator(

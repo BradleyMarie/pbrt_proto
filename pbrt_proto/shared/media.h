@@ -9,45 +9,29 @@
 
 namespace pbrt_proto {
 
-absl::Status RemoveCloudMediumV4(
+absl::Status RemoveCloudMedium(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    CloudMedium& output);
+    int pbrt_version, CloudMedium& output);
 
-absl::Status RemoveExponentialMediumV1(
+absl::Status RemoveExponentialMedium(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    ExponentialMedium& output);
+    int pbrt_version, ExponentialMedium& output);
 
-absl::Status RemoveHomogeneousMediumV1(
+absl::Status RemoveHomogeneousMedium(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    HomogeneousMedium& output);
+    int pbrt_version, HomogeneousMedium& output);
 
-absl::Status RemoveHomogeneousMediumV3(
+absl::Status RemoveNanoVdbMedium(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    HomogeneousMedium& output);
+    int pbrt_version, NanoVdbMedium& output);
 
-absl::Status RemoveHomogeneousMediumV4(
+absl::Status RemoveRgbGridMedium(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    HomogeneousMedium& output);
+    int pbrt_version, RgbGridMedium& output);
 
-absl::Status RemoveNanoVdbMediumV4(
+absl::Status RemoveUniformGridMedium(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    NanoVdbMedium& output);
-
-absl::Status RemoveRgbGridMediumV4(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    RgbGridMedium& output);
-
-absl::Status RemoveUniformGridMediumV1(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    UniformGridMedium& output);
-
-absl::Status RemoveUniformGridMediumV3(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    UniformGridMedium& output);
-
-absl::Status RemoveUniformGridMediumV4(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    UniformGridMedium& output);
+    int pbrt_version, UniformGridMedium& output);
 
 }  // namespace pbrt_proto
 
