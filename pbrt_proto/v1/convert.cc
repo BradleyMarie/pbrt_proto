@@ -172,21 +172,11 @@ absl::Status ParserV1::Film(
     absl::string_view film_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
   static const TypeMap<v1::Film> kSupportedTypes = {
-      {"image",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::Film& film) {
-         RemoveRgbFilmV1(parameters, *film.mutable_image());
-         return absl::OkStatus();
-       }}};
+      {"image", CB<RemoveRgbFilm, &Film::mutable_image>()},
+  };
 
-  auto& film = *output_.add_directives()->mutable_film();
-
-  auto iter = kSupportedTypes.find(film_type);
-  if (iter == kSupportedTypes.end()) {
-    return UnrecognizedTypeError("Film", film_type);
-  }
-
-  return iter->second(parameters, film);
+  return Parse<&Directive::mutable_film>(kSupportedTypes, film_type,
+                                         parameters);
 }
 
 absl::Status ParserV1::FloatTexture(

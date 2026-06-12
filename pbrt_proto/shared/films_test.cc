@@ -23,7 +23,7 @@ TEST(RemoveRgbFilmV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   RgbFilm actual;
-  RemoveRgbFilmV1(parameters, actual);
+  EXPECT_TRUE(RemoveRgbFilm(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -74,7 +74,7 @@ TEST(RemoveRgbFilmV1, WithData) {
       {"writefrequency", writefrequency_parameter}};
 
   RgbFilm actual;
-  RemoveRgbFilmV1(parameters, actual);
+  EXPECT_TRUE(RemoveRgbFilm(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 filename: "file"
                 xresolution: 1
@@ -89,7 +89,7 @@ TEST(RemoveRgbFilmV2, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   RgbFilm actual;
-  RemoveRgbFilmV2(parameters, actual);
+  EXPECT_TRUE(RemoveRgbFilm(parameters, /*pbrt_version=*/2, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -132,7 +132,7 @@ TEST(RemoveRgbFilmV2, WithData) {
       {"display", display_parameter}};
 
   RgbFilm actual;
-  RemoveRgbFilmV2(parameters, actual);
+  EXPECT_TRUE(RemoveRgbFilm(parameters, /*pbrt_version=*/2, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 filename: "file"
                 xresolution: 1
@@ -146,7 +146,7 @@ TEST(RemoveRgbFilmV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   RgbFilm actual;
-  RemoveRgbFilmV3(parameters, actual);
+  EXPECT_TRUE(RemoveRgbFilm(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -204,7 +204,7 @@ TEST(RemoveRgbFilmV3, WithData) {
       {"maxsampleluminance", maxsampleluminance_parameter}};
 
   RgbFilm actual;
-  RemoveRgbFilmV3(parameters, actual);
+  EXPECT_TRUE(RemoveRgbFilm(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 filename: "file"
                 xresolution: 1
@@ -220,7 +220,7 @@ TEST(RemoveRgbFilmV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   RgbFilm actual;
-  ASSERT_TRUE(RemoveRgbFilmV4(parameters, actual).ok());
+  ASSERT_TRUE(RemoveRgbFilm(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -242,7 +242,7 @@ TEST(RemoveRgbFilmV4, CropwindowOverrides) {
       {"cropwindow", cropwindow_parameter}};
 
   RgbFilm actual;
-  ASSERT_TRUE(RemoveRgbFilmV4(parameters, actual).ok());
+  ASSERT_TRUE(RemoveRgbFilm(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 cropwindow { x_min: 3.0 x_max: 4.0 y_min: 5.0 y_max: 6.0 }
               )pb"));
@@ -259,7 +259,7 @@ TEST(RemoveRgbFilmV4, BadSensor) {
       {"sensor", filename_parameter}};
 
   RgbFilm actual;
-  EXPECT_THAT(RemoveRgbFilmV4(parameters, actual),
+  EXPECT_THAT(RemoveRgbFilm(parameters, /*pbrt_version=*/4, actual),
               StatusIs(absl::StatusCode::kInvalidArgument,
                        "A Film specified an invalid 'sensor'"));
 }
@@ -339,7 +339,7 @@ TEST(RemoveRgbFilmV4, WithData) {
       {"savefp16", savefp16_parameter}};
 
   RgbFilm actual;
-  ASSERT_TRUE(RemoveRgbFilmV4(parameters, actual).ok());
+  ASSERT_TRUE(RemoveRgbFilm(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 filename: "file"
                 xresolution: 1
@@ -358,7 +358,7 @@ TEST(RemoveGBufferFilmV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   GBufferFilm actual;
-  ASSERT_TRUE(RemoveGBufferFilmV4(parameters, actual).ok());
+  ASSERT_TRUE(RemoveGBufferFilm(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -380,7 +380,7 @@ TEST(RemoveGBufferFilmV4, CropwindowOverrides) {
       {"cropwindow", cropwindow_parameter}};
 
   GBufferFilm actual;
-  ASSERT_TRUE(RemoveGBufferFilmV4(parameters, actual).ok());
+  ASSERT_TRUE(RemoveGBufferFilm(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 cropwindow { x_min: 3.0 x_max: 4.0 y_min: 5.0 y_max: 6.0 }
               )pb"));
@@ -397,7 +397,7 @@ TEST(RemoveGBufferFilmV4, BadSensor) {
       {"sensor", filename_parameter}};
 
   GBufferFilm actual;
-  EXPECT_THAT(RemoveGBufferFilmV4(parameters, actual),
+  EXPECT_THAT(RemoveGBufferFilm(parameters, /*pbrt_version=*/4, actual),
               StatusIs(absl::StatusCode::kInvalidArgument,
                        "A Film specified an invalid 'sensor'"));
 }
@@ -414,7 +414,7 @@ TEST(RemoveGBufferFilmV4, BadCoordinateSystem) {
 
   GBufferFilm actual;
   EXPECT_THAT(
-      RemoveGBufferFilmV4(parameters, actual),
+      RemoveGBufferFilm(parameters, /*pbrt_version=*/4, actual),
       StatusIs(absl::StatusCode::kInvalidArgument,
                "A gbuffer Film specified an invalid 'coordinatesystem'"));
 }
@@ -502,7 +502,7 @@ TEST(RemoveGBufferFilmV4, WithData) {
       {"coordinatesystem", coordinatesystem_parameter}};
 
   GBufferFilm actual;
-  ASSERT_TRUE(RemoveGBufferFilmV4(parameters, actual).ok());
+  ASSERT_TRUE(RemoveGBufferFilm(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 filename: "file"
                 xresolution: 1
@@ -522,7 +522,7 @@ TEST(RemoveSpectralFilmV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   SpectralFilm actual;
-  ASSERT_TRUE(RemoveSpectralFilmV4(parameters, actual).ok());
+  ASSERT_TRUE(RemoveSpectralFilm(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -544,7 +544,7 @@ TEST(RemoveSpectralFilmV4, CropwindowOverrides) {
       {"cropwindow", cropwindow_parameter}};
 
   SpectralFilm actual;
-  ASSERT_TRUE(RemoveSpectralFilmV4(parameters, actual).ok());
+  ASSERT_TRUE(RemoveSpectralFilm(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 cropwindow { x_min: 3.0 x_max: 4.0 y_min: 5.0 y_max: 6.0 }
               )pb"));
@@ -561,7 +561,7 @@ TEST(RemoveSpectralFilmV4, BadSensor) {
       {"sensor", filename_parameter}};
 
   SpectralFilm actual;
-  EXPECT_THAT(RemoveSpectralFilmV4(parameters, actual),
+  EXPECT_THAT(RemoveSpectralFilm(parameters, /*pbrt_version=*/4, actual),
               StatusIs(absl::StatusCode::kInvalidArgument,
                        "A Film specified an invalid 'sensor'"));
 }
@@ -662,7 +662,7 @@ TEST(RemoveSpectralFilmV4, WithData) {
       {"lambdamax", lambdamax_parameter}};
 
   SpectralFilm actual;
-  ASSERT_TRUE(RemoveSpectralFilmV4(parameters, actual).ok());
+  ASSERT_TRUE(RemoveSpectralFilm(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 filename: "file"
                 xresolution: 1

@@ -54,8 +54,6 @@ absl::Status RemoveCommonV4(
     output.mutable_pixelbounds()->set_y_max((std::max(0, (*pixelbounds)[3])));
   }
 
-  RemoveUniversal(parameters, output);
-
   if (std::optional<double> diagonal = TryRemoveFloat(parameters, "diagonal");
       diagonal.has_value()) {
     output.set_diagonal(*diagonal);
@@ -132,66 +130,59 @@ absl::Status RemoveCommonV4(
 
 }  // namespace
 
-void RemoveRgbFilmV1(
+absl::Status RemoveRgbFilm(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    RgbFilm& output) {
+    int pbrt_version, RgbFilm& output) {
+  if (pbrt_version == 1) {
+    if (std::optional<bool> premultiplyalpha =
+            TryRemoveBool(parameters, "premultiplyalpha");
+        premultiplyalpha) {
+      output.set_premultiplyalpha(*premultiplyalpha);
+    }
+
+    if (std::optional<int32_t> writefrequency =
+            TryRemoveInteger(parameters, "writefrequency");
+        writefrequency.has_value() && *writefrequency >= 0) {
+      output.set_writefrequency(*writefrequency);
+    }
+  } else if (pbrt_version == 2) {
+    if (std::optional<bool> display = TryRemoveBool(parameters, "display");
+        display.has_value()) {
+      output.set_display(*display);
+    }
+
+  } else if (pbrt_version == 3) {
+    if (std::optional<double> scale = TryRemoveFloat(parameters, "scale");
+        scale.has_value()) {
+      output.set_scale(*scale);
+    }
+
+    if (std::optional<double> maxsampleluminance =
+            TryRemoveFloat(parameters, "maxsampleluminance");
+        maxsampleluminance.has_value()) {
+      output.set_maxsampleluminance(*maxsampleluminance);
+    }
+
+    if (std::optional<double> diagonal = TryRemoveFloat(parameters, "diagonal");
+        diagonal.has_value()) {
+      output.set_diagonal(*diagonal);
+    }
+  } else if (pbrt_version >= 4) {
+    if (absl::Status status = RemoveCommonV4(parameters, output);
+        !status.ok()) {
+      return status;
+    }
+  }
+
+  // Must be done after RemoveCommonV4
   RemoveUniversal(parameters, output);
 
-  if (std::optional<bool> premultiplyalpha =
-          TryRemoveBool(parameters, "premultiplyalpha");
-      premultiplyalpha) {
-    output.set_premultiplyalpha(*premultiplyalpha);
-  }
-
-  if (std::optional<int32_t> writefrequency =
-          TryRemoveInteger(parameters, "writefrequency");
-      writefrequency.has_value() && *writefrequency >= 0) {
-    output.set_writefrequency(*writefrequency);
-  }
+  return absl::OkStatus();
 }
 
-void RemoveRgbFilmV2(
+absl::Status RemoveGBufferFilm(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    RgbFilm& output) {
-  RemoveUniversal(parameters, output);
-
-  if (std::optional<bool> display = TryRemoveBool(parameters, "display");
-      display.has_value()) {
-    output.set_display(*display);
-  }
-}
-
-void RemoveRgbFilmV3(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    RgbFilm& output) {
-  RemoveUniversal(parameters, output);
-
-  if (std::optional<double> scale = TryRemoveFloat(parameters, "scale");
-      scale.has_value()) {
-    output.set_scale(*scale);
-  }
-
-  if (std::optional<double> maxsampleluminance =
-          TryRemoveFloat(parameters, "maxsampleluminance");
-      maxsampleluminance.has_value()) {
-    output.set_maxsampleluminance(*maxsampleluminance);
-  }
-
-  if (std::optional<double> diagonal = TryRemoveFloat(parameters, "diagonal");
-      diagonal.has_value()) {
-    output.set_diagonal(*diagonal);
-  }
-}
-
-absl::Status RemoveRgbFilmV4(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    RgbFilm& output) {
-  return RemoveCommonV4(parameters, output);
-}
-
-absl::Status RemoveGBufferFilmV4(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    GBufferFilm& output) {
+    int pbrt_version, GBufferFilm& output) {
   if (absl::Status status = RemoveCommonV4(parameters, output); !status.ok()) {
     return status;
   }
@@ -209,12 +200,15 @@ absl::Status RemoveGBufferFilmV4(
     }
   }
 
+  // Must be done after RemoveCommonV4
+  RemoveUniversal(parameters, output);
+
   return absl::OkStatus();
 }
 
-absl::Status RemoveSpectralFilmV4(
+absl::Status RemoveSpectralFilm(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    SpectralFilm& output) {
+    int pbrt_version, SpectralFilm& output) {
   if (absl::Status status = RemoveCommonV4(parameters, output); !status.ok()) {
     return status;
   }
@@ -234,6 +228,9 @@ absl::Status RemoveSpectralFilmV4(
       lambdamax.has_value()) {
     output.set_lambdamax(*lambdamax);
   }
+
+  // Must be done after RemoveCommonV4
+  RemoveUniversal(parameters, output);
 
   return absl::OkStatus();
 }

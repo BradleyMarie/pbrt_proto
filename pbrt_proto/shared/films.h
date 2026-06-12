@@ -9,29 +9,17 @@
 
 namespace pbrt_proto {
 
-void RemoveRgbFilmV1(
+absl::Status RemoveRgbFilm(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    RgbFilm& output);
+    int pbrt_version, RgbFilm& output);
 
-void RemoveRgbFilmV2(
+absl::Status RemoveGBufferFilm(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    RgbFilm& output);
+    int pbrt_version, GBufferFilm& output);
 
-void RemoveRgbFilmV3(
+absl::Status RemoveSpectralFilm(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    RgbFilm& output);
-
-absl::Status RemoveRgbFilmV4(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    RgbFilm& output);
-
-absl::Status RemoveGBufferFilmV4(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    GBufferFilm& output);
-
-absl::Status RemoveSpectralFilmV4(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    SpectralFilm& output);
+    int pbrt_version, SpectralFilm& output);
 
 }  // namespace pbrt_proto
 
