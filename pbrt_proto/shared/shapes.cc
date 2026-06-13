@@ -13,9 +13,9 @@
 
 namespace pbrt_proto {
 
-void RemoveConeShapeV1(
+absl::Status RemoveConeShape(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    ConeShape& output) {
+    int pbrt_version, ConeShape& output) {
   if (std::optional<double> radius = TryRemoveFloat(parameters, "radius");
       radius.has_value()) {
     output.set_radius(*radius);
@@ -30,11 +30,13 @@ void RemoveConeShapeV1(
       phimax.has_value()) {
     output.set_phimax(*phimax);
   }
+
+  return absl::OkStatus();
 }
 
-absl::Status TryRemoveCurveShapeV3(
+absl::Status TryRemoveCurveShape(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    absl::FunctionRef<CurveShape*()> get_output) {
+    int pbrt_version, absl::FunctionRef<CurveShape*()> get_output) {
   CurveShape output;
 
   bool write_output = true;
@@ -143,9 +145,9 @@ absl::Status TryRemoveCurveShapeV3(
   return absl::OkStatus();
 }
 
-void RemoveCylinderShapeV1(
+absl::Status RemoveCylinderShape(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    CylinderShape& output) {
+    int pbrt_version, CylinderShape& output) {
   if (std::optional<double> radius = TryRemoveFloat(parameters, "radius");
       radius.has_value()) {
     output.set_radius(*radius);
@@ -165,11 +167,13 @@ void RemoveCylinderShapeV1(
       phimax.has_value()) {
     output.set_phimax(*phimax);
   }
+
+  return absl::OkStatus();
 }
 
-void RemoveDiskShapeV1(
+absl::Status RemoveDiskShape(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    DiskShape& output) {
+    int pbrt_version, DiskShape& output) {
   if (std::optional<double> height = TryRemoveFloat(parameters, "height");
       height.has_value()) {
     output.set_height(*height);
@@ -190,11 +194,13 @@ void RemoveDiskShapeV1(
       phimax.has_value()) {
     output.set_phimax(*phimax);
   }
+
+  return absl::OkStatus();
 }
 
-absl::Status RemoveHeightFieldShapeV1(
+absl::Status RemoveHeightFieldShape(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    HeightFieldShape& output) {
+    int pbrt_version, HeightFieldShape& output) {
   if (std::optional<int32_t> nu = TryRemoveInteger(parameters, "nu");
       nu.has_value()) {
     output.set_nu(std::max(0, *nu));
@@ -222,9 +228,9 @@ absl::Status RemoveHeightFieldShapeV1(
   return absl::OkStatus();
 }
 
-void RemoveHyperboloidShapeV1(
+absl::Status RemoveHyperboloidShape(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    HyperboloidShape& output) {
+    int pbrt_version, HyperboloidShape& output) {
   if (std::optional<std::array<double, 3>> p1 =
           TryRemovePoint3(parameters, "p1");
       p1.has_value()) {
@@ -245,11 +251,13 @@ void RemoveHyperboloidShapeV1(
       phimax.has_value()) {
     output.set_phimax(*phimax);
   }
+
+  return absl::OkStatus();
 }
 
-absl::Status RemoveLoopSubdivShapeV1(
+absl::Status RemoveLoopSubdivShape(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    LoopSubdivShape& output) {
+    int pbrt_version, LoopSubdivShape& output) {
   if (std::optional<int32_t> nlevels = TryRemoveInteger(parameters, "nlevels");
       nlevels.has_value()) {
     output.set_levels(std::max(0, *nlevels));
@@ -291,28 +299,19 @@ absl::Status RemoveLoopSubdivShapeV1(
     }
   }
 
-  return absl::OkStatus();
-}
-
-absl::Status RemoveLoopSubdivShapeV3(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    LoopSubdivShape& output) {
-  if (absl::Status status = RemoveLoopSubdivShapeV1(parameters, output);
-      !status.ok()) {
-    return status;
-  }
-
-  if (std::optional<int32_t> levels = TryRemoveInteger(parameters, "levels");
-      levels.has_value()) {
-    output.set_levels(std::max(0, *levels));
+  if (pbrt_version >= 3) {
+    if (std::optional<int32_t> levels = TryRemoveInteger(parameters, "levels");
+        levels.has_value()) {
+      output.set_levels(std::max(0, *levels));
+    }
   }
 
   return absl::OkStatus();
 }
 
-absl::Status RemoveNurbsShapeV1(
+absl::Status RemoveNurbsShape(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    NurbsShape& output) {
+    int pbrt_version, NurbsShape& output) {
   if (std::optional<int32_t> nu = TryRemoveInteger(parameters, "nu");
       nu.has_value()) {
     output.set_nu(std::max(0, *nu));
@@ -422,9 +421,9 @@ absl::Status RemoveNurbsShapeV1(
   return absl::OkStatus();
 }
 
-void RemoveParaboloidShapeV1(
+absl::Status RemoveParaboloidShape(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    ParaboloidShape& output) {
+    int pbrt_version, ParaboloidShape& output) {
   if (std::optional<double> radius = TryRemoveFloat(parameters, "radius");
       radius.has_value()) {
     output.set_radius(*radius);
@@ -444,11 +443,13 @@ void RemoveParaboloidShapeV1(
       phimax.has_value()) {
     output.set_phimax(*phimax);
   }
+
+  return absl::OkStatus();
 }
 
-void RemovePlyMeshShapeV3(
+absl::Status RemovePlyMeshShape(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    PlyMeshShape& output) {
+    int pbrt_version, PlyMeshShape& output) {
   if (std::optional<absl::string_view> filename =
           TryRemoveString(parameters, "filename");
       filename) {
@@ -460,11 +461,13 @@ void RemovePlyMeshShapeV3(
 
   TryRemoveFloatTexture(parameters, "shadowalpha",
                         std::bind(&PlyMeshShape::mutable_shadowalpha, &output));
+
+  return absl::OkStatus();
 }
 
-void RemoveSphereShapeV1(
+absl::Status RemoveSphereShape(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    SphereShape& output) {
+    int pbrt_version, SphereShape& output) {
   if (std::optional<double> radius = TryRemoveFloat(parameters, "radius");
       radius.has_value()) {
     output.set_radius(*radius);
@@ -484,11 +487,13 @@ void RemoveSphereShapeV1(
       phimax.has_value()) {
     output.set_phimax(*phimax);
   }
+
+  return absl::OkStatus();
 }
 
-absl::Status RemoveTriangleMeshShapeV1(
+absl::Status RemoveTriangleMeshShape(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    TriangleMeshShape& output) {
+    int pbrt_version, TriangleMeshShape& output) {
   if (std::optional<absl::Span<std::array<double, 3>>> p =
           TryRemovePoint3s(parameters, "P");
       p.has_value()) {
@@ -589,84 +594,70 @@ absl::Status RemoveTriangleMeshShapeV1(
     }
   }
 
-  return absl::OkStatus();
-}
-
-absl::Status RemoveTriangleMeshShapeV2(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    TriangleMeshShape& output) {
-  if (absl::Status status = RemoveTriangleMeshShapeV1(parameters, output);
-      !status.ok()) {
-    return status;
-  }
-
-  if (std::optional<bool> discarddegenerateuvs =
-          TryRemoveBool(parameters, "discarddegenerateUVs");
-      discarddegenerateuvs.has_value()) {
-    output.set_discarddegenerateuvs(*discarddegenerateuvs);
-  }
-
-  TryRemoveFloatTexture(parameters, "alpha",
-                        std::bind(&TriangleMeshShape::mutable_alpha, &output));
-
-  return absl::OkStatus();
-}
-
-absl::Status RemoveTriangleMeshShapeV3(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    TriangleMeshShape& output) {
-  if (absl::Status status = RemoveTriangleMeshShapeV1(parameters, output);
-      !status.ok()) {
-    return status;
-  }
-
-  if (std::optional<absl::Span<int32_t>> faceIndices =
-          TryRemoveIntegers(parameters, "faceIndices");
-      faceIndices.has_value()) {
-    if (faceIndices->size() > std::numeric_limits<int32_t>::max()) {
-      return absl::ResourceExhaustedError(
-          "Trianglemesh shape has too many face indices to be stored in "
-          "a 1D proto array");
-    }
-
-    output.mutable_faceindices()->Add(faceIndices->begin(), faceIndices->end());
-  }
-
-  if (std::optional<absl::Span<std::array<double, 2>>> uv =
-          TryRemovePoint2s(parameters, "uv");
-      uv.has_value()) {
-    if (uv->size() > std::numeric_limits<int32_t>::max()) {
-      return absl::ResourceExhaustedError(
-          "Trianglemesh shape has too many texture coordinates to be stored in "
-          "a 1D proto array");
-    }
-
-    for (const std::array<double, 2>& src : *uv) {
-      TriangleMeshShape::UVCoordinate& dest = *output.add_uv();
-      dest.set_u(src[0]);
-      dest.set_v(src[1]);
-    }
-  } else if (std::optional<absl::Span<std::array<double, 2>>> st =
-                 TryRemovePoint2s(parameters, "st");
-             st.has_value()) {
-    if (st->size() > std::numeric_limits<int32_t>::max()) {
-      return absl::ResourceExhaustedError(
-          "Trianglemesh shape has too many texture coordinates to be stored in "
-          "a 1D proto array");
-    }
-
-    for (const std::array<double, 2>& src : *st) {
-      TriangleMeshShape::UVCoordinate& dest = *output.add_uv();
-      dest.set_u(src[0]);
-      dest.set_v(src[1]);
+  if (pbrt_version == 2) {
+    if (std::optional<bool> discarddegenerateuvs =
+            TryRemoveBool(parameters, "discarddegenerateUVs");
+        discarddegenerateuvs.has_value()) {
+      output.set_discarddegenerateuvs(*discarddegenerateuvs);
     }
   }
 
-  TryRemoveFloatTexture(parameters, "alpha",
-                        std::bind(&TriangleMeshShape::mutable_alpha, &output));
-  TryRemoveFloatTexture(
-      parameters, "shadowalpha",
-      std::bind(&TriangleMeshShape::mutable_shadowalpha, &output));
+  if (pbrt_version >= 2) {
+    TryRemoveFloatTexture(
+        parameters, "alpha",
+        std::bind(&TriangleMeshShape::mutable_alpha, &output));
+  }
+
+  if (pbrt_version == 3) {
+    TryRemoveFloatTexture(
+        parameters, "shadowalpha",
+        std::bind(&TriangleMeshShape::mutable_shadowalpha, &output));
+  }
+
+  if (pbrt_version >= 3) {
+    if (std::optional<absl::Span<int32_t>> faceIndices =
+            TryRemoveIntegers(parameters, "faceIndices");
+        faceIndices.has_value()) {
+      if (faceIndices->size() > std::numeric_limits<int32_t>::max()) {
+        return absl::ResourceExhaustedError(
+            "Trianglemesh shape has too many face indices to be stored in "
+            "a 1D proto array");
+      }
+
+      output.mutable_faceindices()->Add(faceIndices->begin(),
+                                        faceIndices->end());
+    }
+
+    if (std::optional<absl::Span<std::array<double, 2>>> uv =
+            TryRemovePoint2s(parameters, "uv");
+        uv.has_value()) {
+      if (uv->size() > std::numeric_limits<int32_t>::max()) {
+        return absl::ResourceExhaustedError(
+            "Trianglemesh shape has too many texture coordinates to be stored "
+            "in a 1D proto array");
+      }
+
+      for (const std::array<double, 2>& src : *uv) {
+        TriangleMeshShape::UVCoordinate& dest = *output.add_uv();
+        dest.set_u(src[0]);
+        dest.set_v(src[1]);
+      }
+    } else if (std::optional<absl::Span<std::array<double, 2>>> st =
+                   TryRemovePoint2s(parameters, "st");
+               st.has_value()) {
+      if (st->size() > std::numeric_limits<int32_t>::max()) {
+        return absl::ResourceExhaustedError(
+            "Trianglemesh shape has too many texture coordinates to be stored "
+            "in a 1D proto array");
+      }
+
+      for (const std::array<double, 2>& src : *st) {
+        TriangleMeshShape::UVCoordinate& dest = *output.add_uv();
+        dest.set_u(src[0]);
+        dest.set_v(src[1]);
+      }
+    }
+  }
 
   return absl::OkStatus();
 }

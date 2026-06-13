@@ -395,73 +395,31 @@ absl::Status ParserV1::Shape(
     absl::string_view shape_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
   static const TypeMap<v1::Shape> kSupportedTypes = {
-      {"cone",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::Shape& shape) {
-         RemoveConeShapeV1(parameters, *shape.mutable_cone());
-         return absl::OkStatus();
-       }},
-      {"cylinder",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::Shape& shape) {
-         RemoveCylinderShapeV1(parameters, *shape.mutable_cylinder());
-         return absl::OkStatus();
-       }},
-      {"disk",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::Shape& shape) {
-         RemoveDiskShapeV1(parameters, *shape.mutable_disk());
-         return absl::OkStatus();
-       }},
+      {"cone", CB<RemoveConeShape, &Shape::mutable_cone>()},
+      {"cylinder", CB<RemoveCylinderShape, &Shape::mutable_cylinder>()},
+      {"disk", CB<RemoveDiskShape, &Shape::mutable_disk>()},
       {"heightfield",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::Shape& shape) {
-         return RemoveHeightFieldShapeV1(parameters,
-                                         *shape.mutable_heightfield());
-       }},
+       CB<RemoveHeightFieldShape, &Shape::mutable_heightfield>()},
       {"hyperboloid",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::Shape& shape) {
-         RemoveHyperboloidShapeV1(parameters, *shape.mutable_hyperboloid());
-         return absl::OkStatus();
-       }},
-      {"loopsubdiv",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::Shape& shape) {
-         return RemoveLoopSubdivShapeV1(parameters,
-                                        *shape.mutable_loopsubdiv());
-       }},
-      {"nurbs",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::Shape& shape) {
-         return RemoveNurbsShapeV1(parameters, *shape.mutable_nurbs());
-       }},
-      {"paraboloid",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::Shape& shape) {
-         RemoveParaboloidShapeV1(parameters, *shape.mutable_paraboloid());
-         return absl::OkStatus();
-       }},
-      {"sphere",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::Shape& shape) {
-         RemoveSphereShapeV1(parameters, *shape.mutable_sphere());
-         return absl::OkStatus();
-       }},
+       CB<RemoveHyperboloidShape, &Shape::mutable_hyperboloid>()},
+      {"loopsubdiv", CB<RemoveLoopSubdivShape, &Shape::mutable_loopsubdiv>()},
+      {"nurbs", CB<RemoveNurbsShape, &Shape::mutable_nurbs>()},
+      {"paraboloid", CB<RemoveParaboloidShape, &Shape::mutable_paraboloid>()},
+      {"sphere", CB<RemoveSphereShape, &Shape::mutable_sphere>()},
       {"trianglemesh",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::Shape& shape) {
-         return RemoveTriangleMeshShapeV1(parameters,
-                                          *shape.mutable_trianglemesh());
-       }}};
+       CB<RemoveTriangleMeshShape, &Shape::mutable_trianglemesh>()},
+  };
 
-  absl::Status status =
-      Parse<&Directive::mutable_shape>(kSupportedTypes, shape_type, parameters);
+  if (absl::Status status = Parse<&Directive::mutable_shape>(
+          kSupportedTypes, shape_type, parameters);
+      !status.ok()) {
+    return status;
+  }
 
   // No need to check status. The directive is always added by Parse.
   auto& shape = *output_.mutable_directives()->rbegin()->mutable_shape();
-
   auto overrides = std::bind(&Shape::mutable_overrides, &shape);
+
   TryRemoveFloatTexture(
       parameters, "bumpmap",
       std::bind(&Shape::MaterialOverrides::mutable_bumpmap, overrides));
@@ -480,29 +438,57 @@ absl::Status ParserV1::Shape(
   TryRemoveFloatTexture(
       parameters, "vroughness",
       std::bind(&Shape::MaterialOverrides::mutable_vroughness, overrides));
-  TryRemoveSpectrumTextureV1(
-      parameters, "Kd",
-      std::bind(&Shape::MaterialOverrides::mutable_kd, overrides));
-  TryRemoveSpectrumTextureV1(
-      parameters, "Kr",
-      std::bind(&Shape::MaterialOverrides::mutable_kr, overrides));
-  TryRemoveSpectrumTextureV1(
-      parameters, "Ks",
-      std::bind(&Shape::MaterialOverrides::mutable_ks, overrides));
-  TryRemoveSpectrumTextureV1(
-      parameters, "Kt",
-      std::bind(&Shape::MaterialOverrides::mutable_kt, overrides));
-  TryRemoveSpectrumTextureV1(
-      parameters, "opacity",
-      std::bind(&Shape::MaterialOverrides::mutable_opacity, overrides));
-  TryRemoveSpectrumTextureV1(
-      parameters, "reflect",
-      std::bind(&Shape::MaterialOverrides::mutable_reflect, overrides));
-  TryRemoveSpectrumTextureV1(
-      parameters, "transmit",
-      std::bind(&Shape::MaterialOverrides::mutable_transmit, overrides));
 
-  return status;
+  if (absl::Status status = TryRemoveSpectrumTexture(
+          parameters, kPbrtVersion, "Kd",
+          std::bind(&Shape::MaterialOverrides::mutable_kd, overrides));
+      !status.ok()) {
+    return status;
+  }
+
+  if (absl::Status status = TryRemoveSpectrumTexture(
+          parameters, kPbrtVersion, "Kr",
+          std::bind(&Shape::MaterialOverrides::mutable_kr, overrides));
+      !status.ok()) {
+    return status;
+  }
+
+  if (absl::Status status = TryRemoveSpectrumTexture(
+          parameters, kPbrtVersion, "Ks",
+          std::bind(&Shape::MaterialOverrides::mutable_ks, overrides));
+      !status.ok()) {
+    return status;
+  }
+
+  if (absl::Status status = TryRemoveSpectrumTexture(
+          parameters, kPbrtVersion, "Kt",
+          std::bind(&Shape::MaterialOverrides::mutable_kt, overrides));
+      !status.ok()) {
+    return status;
+  }
+
+  if (absl::Status status = TryRemoveSpectrumTexture(
+          parameters, kPbrtVersion, "opacity",
+          std::bind(&Shape::MaterialOverrides::mutable_opacity, overrides));
+      !status.ok()) {
+    return status;
+  }
+
+  if (absl::Status status = TryRemoveSpectrumTexture(
+          parameters, kPbrtVersion, "reflect",
+          std::bind(&Shape::MaterialOverrides::mutable_reflect, overrides));
+      !status.ok()) {
+    return status;
+  }
+
+  if (absl::Status status = TryRemoveSpectrumTexture(
+          parameters, kPbrtVersion, "transmit",
+          std::bind(&Shape::MaterialOverrides::mutable_transmit, overrides));
+      !status.ok()) {
+    return status;
+  }
+
+  return absl::OkStatus();
 }
 
 absl::Status ParserV1::SpectrumTexture(

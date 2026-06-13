@@ -10,65 +10,53 @@
 
 namespace pbrt_proto {
 
-void RemoveConeShapeV1(
+absl::Status RemoveConeShape(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    ConeShape& output);
+    int pbrt_version, ConeShape& output);
 
-absl::Status TryRemoveCurveShapeV3(
+absl::Status TryRemoveCurveShape(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    absl::FunctionRef<CurveShape*()> get_output);
+    int pbrt_version, absl::FunctionRef<CurveShape*()> get_output);
 
-void RemoveCylinderShapeV1(
+absl::Status RemoveCylinderShape(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    CylinderShape& output);
+    int pbrt_version, CylinderShape& output);
 
-void RemoveDiskShapeV1(
+absl::Status RemoveDiskShape(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    DiskShape& output);
+    int pbrt_version, DiskShape& output);
 
-absl::Status RemoveHeightFieldShapeV1(
+absl::Status RemoveHeightFieldShape(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    HeightFieldShape& output);
+    int pbrt_version, HeightFieldShape& output);
 
-void RemoveHyperboloidShapeV1(
+absl::Status RemoveHyperboloidShape(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    HyperboloidShape& output);
+    int pbrt_version, HyperboloidShape& output);
 
-absl::Status RemoveLoopSubdivShapeV1(
+absl::Status RemoveLoopSubdivShape(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    LoopSubdivShape& output);
+    int pbrt_version, LoopSubdivShape& output);
 
-absl::Status RemoveLoopSubdivShapeV3(
+absl::Status RemoveNurbsShape(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    LoopSubdivShape& output);
+    int pbrt_version, NurbsShape& output);
 
-absl::Status RemoveNurbsShapeV1(
+absl::Status RemoveParaboloidShape(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    NurbsShape& output);
+    int pbrt_version, ParaboloidShape& output);
 
-void RemoveParaboloidShapeV1(
+absl::Status RemovePlyMeshShape(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    ParaboloidShape& output);
+    int pbrt_version, PlyMeshShape& output);
 
-void RemovePlyMeshShapeV3(
+absl::Status RemoveSphereShape(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    PlyMeshShape& output);
+    int pbrt_version, SphereShape& output);
 
-void RemoveSphereShapeV1(
+absl::Status RemoveTriangleMeshShape(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    SphereShape& output);
-
-absl::Status RemoveTriangleMeshShapeV1(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    TriangleMeshShape& output);
-
-absl::Status RemoveTriangleMeshShapeV2(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    TriangleMeshShape& output);
-
-absl::Status RemoveTriangleMeshShapeV3(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    TriangleMeshShape& output);
+    int pbrt_version, TriangleMeshShape& output);
 
 }  // namespace pbrt_proto
 

@@ -19,15 +19,15 @@ namespace {
 using ::absl_testing::StatusIs;
 using ::google::protobuf::EqualsProto;
 
-TEST(RemoveConeShapeV1, Empty) {
+TEST(RemoveConeShape, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   ConeShape actual;
-  RemoveConeShapeV1(parameters, actual);
+  EXPECT_TRUE(RemoveConeShape(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveConeShapeV1, WithData) {
+TEST(RemoveConeShape, WithData) {
   std::vector<double> radius = {0.1};
   Parameter radius_parameter{/*directive=*/"",
                              /*type=*/ParameterType::FLOAT,
@@ -52,18 +52,18 @@ TEST(RemoveConeShapeV1, WithData) {
       {"phimax", phimax_parameter}};
 
   ConeShape actual;
-  RemoveConeShapeV1(parameters, actual);
+  EXPECT_TRUE(RemoveConeShape(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 radius: 0.1 height: 0.2 phimax: 0.3
               )pb"));
 }
 
-TEST(TryRemoveCurveShapeV3, Empty) {
+TEST(TryRemoveCurveShape, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   CurveShape actual;
   bool called = false;
-  EXPECT_TRUE(TryRemoveCurveShapeV3(parameters, [&]() {
+  EXPECT_TRUE(TryRemoveCurveShape(parameters, /*pbrt_version=*/3, [&]() {
                 called = true;
                 return &actual;
               }).ok());
@@ -71,7 +71,7 @@ TEST(TryRemoveCurveShapeV3, Empty) {
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(TryRemoveCurveShapeV3, InvalidDegree) {
+TEST(TryRemoveCurveShape, InvalidDegree) {
   std::vector<int32_t> degree = {1};
   Parameter degrees_parameter{/*directive=*/"",
                               /*type=*/ParameterType::INTEGER,
@@ -82,13 +82,13 @@ TEST(TryRemoveCurveShapeV3, InvalidDegree) {
       {"degree", degrees_parameter}};
 
   CurveShape actual;
-  EXPECT_TRUE(TryRemoveCurveShapeV3(parameters, [&]() {
+  EXPECT_TRUE(TryRemoveCurveShape(parameters, /*pbrt_version=*/3, [&]() {
                 EXPECT_TRUE(false);
                 return &actual;
               }).ok());
 }
 
-TEST(TryRemoveCurveShapeV3, DegreeTwo) {
+TEST(TryRemoveCurveShape, DegreeTwo) {
   std::vector<int32_t> degree = {2};
   Parameter degrees_parameter{/*directive=*/"",
                               /*type=*/ParameterType::INTEGER,
@@ -99,14 +99,15 @@ TEST(TryRemoveCurveShapeV3, DegreeTwo) {
       {"degree", degrees_parameter}};
 
   CurveShape actual;
-  EXPECT_TRUE(
-      TryRemoveCurveShapeV3(parameters, [&]() { return &actual; }).ok());
+  EXPECT_TRUE(TryRemoveCurveShape(parameters, /*pbrt_version=*/3, [&]() {
+                return &actual;
+              }).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 degree: TWO
               )pb"));
 }
 
-TEST(TryRemoveCurveShapeV3, DegreeThree) {
+TEST(TryRemoveCurveShape, DegreeThree) {
   std::vector<int32_t> degree = {3};
   Parameter degrees_parameter{/*directive=*/"",
                               /*type=*/ParameterType::INTEGER,
@@ -117,14 +118,15 @@ TEST(TryRemoveCurveShapeV3, DegreeThree) {
       {"degree", degrees_parameter}};
 
   CurveShape actual;
-  EXPECT_TRUE(
-      TryRemoveCurveShapeV3(parameters, [&]() { return &actual; }).ok());
+  EXPECT_TRUE(TryRemoveCurveShape(parameters, /*pbrt_version=*/3, [&]() {
+                return &actual;
+              }).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 degree: THREE
               )pb"));
 }
 
-TEST(TryRemoveCurveShapeV3, InvalidBasis) {
+TEST(TryRemoveCurveShape, InvalidBasis) {
   std::vector<absl::string_view> basis = {"invalid"};
   Parameter basis_parameter{/*directive=*/"",
                             /*type=*/ParameterType::STRING,
@@ -135,13 +137,13 @@ TEST(TryRemoveCurveShapeV3, InvalidBasis) {
       {"basis", basis_parameter}};
 
   CurveShape actual;
-  EXPECT_TRUE(TryRemoveCurveShapeV3(parameters, [&]() {
+  EXPECT_TRUE(TryRemoveCurveShape(parameters, /*pbrt_version=*/3, [&]() {
                 EXPECT_TRUE(false);
                 return &actual;
               }).ok());
 }
 
-TEST(TryRemoveCurveShapeV3, BasisBezier) {
+TEST(TryRemoveCurveShape, BasisBezier) {
   std::vector<absl::string_view> basis = {"bezier"};
   Parameter basis_parameter{/*directive=*/"",
                             /*type=*/ParameterType::STRING,
@@ -152,14 +154,15 @@ TEST(TryRemoveCurveShapeV3, BasisBezier) {
       {"basis", basis_parameter}};
 
   CurveShape actual;
-  EXPECT_TRUE(
-      TryRemoveCurveShapeV3(parameters, [&]() { return &actual; }).ok());
+  EXPECT_TRUE(TryRemoveCurveShape(parameters, /*pbrt_version=*/3, [&]() {
+                return &actual;
+              }).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 basis: BEZIER
               )pb"));
 }
 
-TEST(TryRemoveCurveShapeV3, BasisBspline) {
+TEST(TryRemoveCurveShape, BasisBspline) {
   std::vector<absl::string_view> basis = {"bspline"};
   Parameter basis_parameter{/*directive=*/"",
                             /*type=*/ParameterType::STRING,
@@ -170,14 +173,15 @@ TEST(TryRemoveCurveShapeV3, BasisBspline) {
       {"basis", basis_parameter}};
 
   CurveShape actual;
-  EXPECT_TRUE(
-      TryRemoveCurveShapeV3(parameters, [&]() { return &actual; }).ok());
+  EXPECT_TRUE(TryRemoveCurveShape(parameters, /*pbrt_version=*/3, [&]() {
+                return &actual;
+              }).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 basis: BSPLINE
               )pb"));
 }
 
-TEST(TryRemoveCurveShapeV3, InvalidType) {
+TEST(TryRemoveCurveShape, InvalidType) {
   std::vector<absl::string_view> type = {"invalid"};
   Parameter type_parameter{/*directive=*/"",
                            /*type=*/ParameterType::STRING,
@@ -188,14 +192,15 @@ TEST(TryRemoveCurveShapeV3, InvalidType) {
       {"type", type_parameter}};
 
   CurveShape actual;
-  EXPECT_TRUE(
-      TryRemoveCurveShapeV3(parameters, [&]() { return &actual; }).ok());
+  EXPECT_TRUE(TryRemoveCurveShape(parameters, /*pbrt_version=*/3, [&]() {
+                return &actual;
+              }).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 type: CYLINDER
               )pb"));
 }
 
-TEST(TryRemoveCurveShapeV3, TypeCylinder) {
+TEST(TryRemoveCurveShape, TypeCylinder) {
   std::vector<absl::string_view> type = {"cylinder"};
   Parameter type_parameter{/*directive=*/"",
                            /*type=*/ParameterType::STRING,
@@ -206,14 +211,15 @@ TEST(TryRemoveCurveShapeV3, TypeCylinder) {
       {"type", type_parameter}};
 
   CurveShape actual;
-  EXPECT_TRUE(
-      TryRemoveCurveShapeV3(parameters, [&]() { return &actual; }).ok());
+  EXPECT_TRUE(TryRemoveCurveShape(parameters, /*pbrt_version=*/3, [&]() {
+                return &actual;
+              }).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 type: CYLINDER
               )pb"));
 }
 
-TEST(TryRemoveCurveShapeV3, TypeFlat) {
+TEST(TryRemoveCurveShape, TypeFlat) {
   std::vector<absl::string_view> type = {"flat"};
   Parameter type_parameter{/*directive=*/"",
                            /*type=*/ParameterType::STRING,
@@ -224,14 +230,15 @@ TEST(TryRemoveCurveShapeV3, TypeFlat) {
       {"type", type_parameter}};
 
   CurveShape actual;
-  EXPECT_TRUE(
-      TryRemoveCurveShapeV3(parameters, [&]() { return &actual; }).ok());
+  EXPECT_TRUE(TryRemoveCurveShape(parameters, /*pbrt_version=*/3, [&]() {
+                return &actual;
+              }).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 type: FLAT
               )pb"));
 }
 
-TEST(TryRemoveCurveShapeV3, TypeRibbon) {
+TEST(TryRemoveCurveShape, TypeRibbon) {
   std::vector<absl::string_view> type = {"ribbon"};
   Parameter type_parameter{/*directive=*/"",
                            /*type=*/ParameterType::STRING,
@@ -242,14 +249,15 @@ TEST(TryRemoveCurveShapeV3, TypeRibbon) {
       {"type", type_parameter}};
 
   CurveShape actual;
-  EXPECT_TRUE(
-      TryRemoveCurveShapeV3(parameters, [&]() { return &actual; }).ok());
+  EXPECT_TRUE(TryRemoveCurveShape(parameters, /*pbrt_version=*/3, [&]() {
+                return &actual;
+              }).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 type: RIBBON
               )pb"));
 }
 
-TEST(TryRemoveCurveShapeV3, WithData) {
+TEST(TryRemoveCurveShape, WithData) {
   std::vector<std::array<double, 3>> p = {{1.0, 2.0, 3.0}};
   Parameter p_parameter{/*directive=*/"",
                         /*type=*/ParameterType::POINT3,
@@ -317,8 +325,9 @@ TEST(TryRemoveCurveShapeV3, WithData) {
   };
 
   CurveShape actual;
-  EXPECT_TRUE(
-      TryRemoveCurveShapeV3(parameters, [&]() { return &actual; }).ok());
+  EXPECT_TRUE(TryRemoveCurveShape(parameters, /*pbrt_version=*/3, [&]() {
+                return &actual;
+              }).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 P { x: 1.0 y: 2.0 z: 3.0 }
                 basis: BEZIER
@@ -332,15 +341,15 @@ TEST(TryRemoveCurveShapeV3, WithData) {
               )pb"));
 }
 
-TEST(RemoveCylinderShapeV1, Empty) {
+TEST(RemoveCylinderShape, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   CylinderShape actual;
-  RemoveCylinderShapeV1(parameters, actual);
+  EXPECT_TRUE(RemoveCylinderShape(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveCylinderShapeV1, WithData) {
+TEST(RemoveCylinderShape, WithData) {
   std::vector<double> radius = {0.1};
   Parameter radius_parameter{/*directive=*/"",
                              /*type=*/ParameterType::FLOAT,
@@ -372,22 +381,22 @@ TEST(RemoveCylinderShapeV1, WithData) {
       {"phimax", phimax_parameter}};
 
   CylinderShape actual;
-  RemoveCylinderShapeV1(parameters, actual);
+  EXPECT_TRUE(RemoveCylinderShape(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual,
               EqualsProto(R"pb(
                 radius: 0.1 zmin: 0.2 zmax: 0.3 phimax: 0.4
               )pb"));
 }
 
-TEST(RemoveDiskShapeV1, Empty) {
+TEST(RemoveDiskShape, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   DiskShape actual;
-  RemoveDiskShapeV1(parameters, actual);
+  EXPECT_TRUE(RemoveDiskShape(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveDiskShapeV1, WithData) {
+TEST(RemoveDiskShape, WithData) {
   std::vector<double> innerradius = {0.1};
   Parameter innerradius_parameter{/*directive=*/"",
                                   /*type=*/ParameterType::FLOAT,
@@ -419,7 +428,7 @@ TEST(RemoveDiskShapeV1, WithData) {
       {"phimax", phimax_parameter}};
 
   DiskShape actual;
-  RemoveDiskShapeV1(parameters, actual);
+  EXPECT_TRUE(RemoveDiskShape(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 innerradius: 0.1
                 radius: 0.2
@@ -428,15 +437,16 @@ TEST(RemoveDiskShapeV1, WithData) {
               )pb"));
 }
 
-TEST(RemoveHeightFieldShapeV1, Empty) {
+TEST(RemoveHeightFieldShape, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   HeightFieldShape actual;
-  EXPECT_TRUE(RemoveHeightFieldShapeV1(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveHeightFieldShape(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveHeightFieldShapeV1, TooBig) {
+TEST(RemoveHeightFieldShape, TooBig) {
   std::vector<int32_t> nu = {2147483647};
   Parameter nu_parameter{/*directive=*/"",
                          /*type=*/ParameterType::INTEGER,
@@ -454,13 +464,13 @@ TEST(RemoveHeightFieldShapeV1, TooBig) {
 
   HeightFieldShape actual;
   EXPECT_THAT(
-      RemoveHeightFieldShapeV1(parameters, actual),
+      RemoveHeightFieldShape(parameters, /*pbrt_version=*/1, actual),
       StatusIs(
           absl::StatusCode::kResourceExhausted,
           "Heighfield shape is too large to be stored in a 1D proto array"));
 }
 
-TEST(RemoveHeightFieldShapeV1, WithData) {
+TEST(RemoveHeightFieldShape, WithData) {
   std::vector<int32_t> nu = {1};
   Parameter nu_parameter{/*directive=*/"",
                          /*type=*/ParameterType::INTEGER,
@@ -483,21 +493,23 @@ TEST(RemoveHeightFieldShapeV1, WithData) {
       {"nu", nu_parameter}, {"nv", nv_parameter}, {"Pz", pz_parameter}};
 
   HeightFieldShape actual;
-  EXPECT_TRUE(RemoveHeightFieldShapeV1(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveHeightFieldShape(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 nu: 1 nv: 1 Pz: 1.0
               )pb"));
 }
 
-TEST(RemoveHyperboloidShapeV1, Empty) {
+TEST(RemoveHyperboloidShape, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   HyperboloidShape actual;
-  RemoveHyperboloidShapeV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveHyperboloidShape(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveHyperboloidShapeV1, WithData) {
+TEST(RemoveHyperboloidShape, WithData) {
   std::vector<std::array<double, 3>> p1 = {{1.0, 2.0, 3.0}};
   Parameter p1_parameter{/*directive=*/"",
                          /*type=*/ParameterType::POINT3,
@@ -520,7 +532,8 @@ TEST(RemoveHyperboloidShapeV1, WithData) {
       {"p1", p1_parameter}, {"p2", p2_parameter}, {"phimax", phimax_parameter}};
 
   HyperboloidShape actual;
-  RemoveHyperboloidShapeV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveHyperboloidShape(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 p1 { x: 1.0 y: 2.0 z: 3.0 }
                 p2 { x: 4.0 y: 5.0 z: 6.0 }
@@ -532,7 +545,8 @@ TEST(RemoveLoopSubdivShapeV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   LoopSubdivShape actual;
-  EXPECT_TRUE(RemoveLoopSubdivShapeV1(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveLoopSubdivShape(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -562,7 +576,54 @@ TEST(RemoveLoopSubdivShapeV1, WithData) {
       {"nlevels", levels_parameter}};
 
   LoopSubdivShape actual;
-  EXPECT_TRUE(RemoveLoopSubdivShapeV1(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveLoopSubdivShape(parameters, /*pbrt_version=*/1, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                indices { v0: 0 v1: 1 v2: 2 }
+                P { x: 1.0 y: 2.0 z: 3.0 }
+                P { x: 4.0 y: 5.0 z: 6.0 }
+                P { x: 7.0 y: 8.0 z: 9.0 }
+                levels: 10
+              )pb"));
+}
+
+TEST(RemoveLoopSubdivShapeV2, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  LoopSubdivShape actual;
+  EXPECT_TRUE(
+      RemoveLoopSubdivShape(parameters, /*pbrt_version=*/2, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveLoopSubdivShapeV2, WithData) {
+  std::vector<std::array<double, 3>> p = {
+      {1.0, 2.0, 3.0}, {4.0, 5.0, 6.0}, {7.0, 8.0, 9.0}};
+  Parameter p_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::POINT3,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(p)};
+
+  std::vector<int32_t> indices = {0, 1, 2};
+  Parameter indices_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::INTEGER,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(indices)};
+
+  std::vector<int32_t> levels = {10};
+  Parameter levels_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::INTEGER,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(levels)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"P", p_parameter},
+      {"indices", indices_parameter},
+      {"nlevels", levels_parameter}};
+
+  LoopSubdivShape actual;
+  EXPECT_TRUE(
+      RemoveLoopSubdivShape(parameters, /*pbrt_version=*/2, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 indices { v0: 0 v1: 1 v2: 2 }
                 P { x: 1.0 y: 2.0 z: 3.0 }
@@ -576,7 +637,8 @@ TEST(RemoveLoopSubdivShapeV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   LoopSubdivShape actual;
-  EXPECT_TRUE(RemoveLoopSubdivShapeV3(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveLoopSubdivShape(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -606,7 +668,8 @@ TEST(RemoveLoopSubdivShapeV3, WithData) {
       {"levels", levels_parameter}};
 
   LoopSubdivShape actual;
-  EXPECT_TRUE(RemoveLoopSubdivShapeV3(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveLoopSubdivShape(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 indices { v0: 0 v1: 1 v2: 2 }
                 P { x: 1.0 y: 2.0 z: 3.0 }
@@ -616,15 +679,15 @@ TEST(RemoveLoopSubdivShapeV3, WithData) {
               )pb"));
 }
 
-TEST(RemoveNurbsShapeV1, Empty) {
+TEST(RemoveNurbsShape, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   NurbsShape actual;
-  EXPECT_TRUE(RemoveNurbsShapeV1(parameters, actual).ok());
+  EXPECT_TRUE(RemoveNurbsShape(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveNurbsShapeV1, WithData) {
+TEST(RemoveNurbsShape, WithData) {
   std::vector<int32_t> nu = {1};
   Parameter nu_parameter{/*directive=*/"",
                          /*type=*/ParameterType::INTEGER,
@@ -706,7 +769,7 @@ TEST(RemoveNurbsShapeV1, WithData) {
       {"P", p_parameter},           {"Pw", pw_parameter}};
 
   NurbsShape actual;
-  EXPECT_TRUE(RemoveNurbsShapeV1(parameters, actual).ok());
+  EXPECT_TRUE(RemoveNurbsShape(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 nu: 1
                 nv: 2
@@ -726,15 +789,16 @@ TEST(RemoveNurbsShapeV1, WithData) {
               )pb"));
 }
 
-TEST(RemoveParaboloidShapeV1, Empty) {
+TEST(RemoveParaboloidShape, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   ParaboloidShape actual;
-  RemoveParaboloidShapeV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveParaboloidShape(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveParaboloidShapeV1, WithData) {
+TEST(RemoveParaboloidShape, WithData) {
   std::vector<double> radius = {0.1};
   Parameter radius_parameter{/*directive=*/"",
                              /*type=*/ParameterType::FLOAT,
@@ -766,22 +830,23 @@ TEST(RemoveParaboloidShapeV1, WithData) {
       {"phimax", phimax_parameter}};
 
   ParaboloidShape actual;
-  RemoveParaboloidShapeV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveParaboloidShape(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual,
               EqualsProto(R"pb(
                 radius: 0.1 zmin: 0.2 zmax: 0.3 phimax: 0.4
               )pb"));
 }
 
-TEST(RemovePlyMeshShapeV3, Empty) {
+TEST(RemovePlyMeshShape, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   PlyMeshShape actual;
-  RemovePlyMeshShapeV3(parameters, actual);
+  EXPECT_TRUE(RemovePlyMeshShape(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemovePlyMeshShapeV3, WithData) {
+TEST(RemovePlyMeshShape, WithData) {
   std::vector<absl::string_view> filename = {"file"};
   Parameter filename_parameter{/*directive=*/"",
                                /*type=*/ParameterType::STRING,
@@ -806,7 +871,7 @@ TEST(RemovePlyMeshShapeV3, WithData) {
       {"shadowalpha", shadowalpha_parameter}};
 
   PlyMeshShape actual;
-  RemovePlyMeshShapeV3(parameters, actual);
+  EXPECT_TRUE(RemovePlyMeshShape(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 filename: "file"
                 alpha { float_value: 1.0 }
@@ -814,15 +879,15 @@ TEST(RemovePlyMeshShapeV3, WithData) {
               )pb"));
 }
 
-TEST(RemoveSphereShapeV1, Empty) {
+TEST(RemoveSphereShape, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   SphereShape actual;
-  RemoveSphereShapeV1(parameters, actual);
+  EXPECT_TRUE(RemoveSphereShape(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveSphereShapeV1, WithData) {
+TEST(RemoveSphereShape, WithData) {
   std::vector<double> radius = {0.1};
   Parameter radius_parameter{/*directive=*/"",
                              /*type=*/ParameterType::FLOAT,
@@ -854,7 +919,7 @@ TEST(RemoveSphereShapeV1, WithData) {
       {"phimax", phimax_parameter}};
 
   SphereShape actual;
-  RemoveSphereShapeV1(parameters, actual);
+  EXPECT_TRUE(RemoveSphereShape(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual,
               EqualsProto(R"pb(
                 radius: 0.1 zmin: 0.2 zmax: 0.3 phimax: 0.4
@@ -865,7 +930,8 @@ TEST(RemoveTriangleMeshShapeV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   TriangleMeshShape actual;
-  EXPECT_TRUE(RemoveTriangleMeshShapeV1(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveTriangleMeshShape(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -908,7 +974,8 @@ TEST(RemoveTriangleMeshShapeV1, WithData) {
       {"uv", uv_parameter}};
 
   TriangleMeshShape actual;
-  EXPECT_TRUE(RemoveTriangleMeshShapeV1(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveTriangleMeshShape(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 P { x: 1.0 y: 2.0 z: 3.0 }
                 indices { v0: 4 v1: 5 v2: 6 }
@@ -929,7 +996,8 @@ TEST(RemoveTriangleMeshShapeV1, St) {
       {"st", st_parameter}};
 
   TriangleMeshShape actual;
-  EXPECT_TRUE(RemoveTriangleMeshShapeV1(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveTriangleMeshShape(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 uv { u: 13.0 v: 14.0 }
               )pb"));
@@ -939,7 +1007,8 @@ TEST(RemoveTriangleMeshShapeV2, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   TriangleMeshShape actual;
-  EXPECT_TRUE(RemoveTriangleMeshShapeV2(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveTriangleMeshShape(parameters, /*pbrt_version=*/2, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -997,7 +1066,8 @@ TEST(RemoveTriangleMeshShapeV2, WithData) {
       {"alpha", alpha_parameter}};
 
   TriangleMeshShape actual;
-  EXPECT_TRUE(RemoveTriangleMeshShapeV2(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveTriangleMeshShape(parameters, /*pbrt_version=*/2, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 P { x: 1.0 y: 2.0 z: 3.0 }
                 indices { v0: 4 v1: 5 v2: 6 }
@@ -1013,7 +1083,8 @@ TEST(RemoveTriangleMeshShapeV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   TriangleMeshShape actual;
-  EXPECT_TRUE(RemoveTriangleMeshShapeV3(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveTriangleMeshShape(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -1077,7 +1148,8 @@ TEST(RemoveTriangleMeshShapeV3, WithData) {
       {"shadowalpha", shadowalpha_parameter}};
 
   TriangleMeshShape actual;
-  EXPECT_TRUE(RemoveTriangleMeshShapeV3(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveTriangleMeshShape(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 P { x: 1.0 y: 2.0 z: 3.0 }
                 indices { v0: 4 v1: 5 v2: 6 }
