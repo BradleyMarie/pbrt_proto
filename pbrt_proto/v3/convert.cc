@@ -316,56 +316,16 @@ absl::Status ParserV3::Integrator(
     absl::string_view integrator_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
   static const TypeMap<v3::Integrator> kSupportedTypes = {
-      {"ambientocclusion",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::Integrator& integrator) {
-         RemoveAmbientOcclusionIntegratorV3(
-             parameters, *integrator.mutable_ambientocclusion());
-         return absl::OkStatus();
-       }},
-      {"bdpt",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::Integrator& integrator) {
-         RemoveBdptIntegratorV3(parameters, *integrator.mutable_bdpt());
-         return absl::OkStatus();
-       }},
-      {"directlighting",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::Integrator& integrator) {
-         RemoveDirectLightingIntegratorV3(parameters,
-                                          *integrator.mutable_directlighting());
-         return absl::OkStatus();
-       }},
-      {"mlt",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::Integrator& integrator) {
-         RemoveMltIntegratorV3(parameters, *integrator.mutable_mlt());
-         return absl::OkStatus();
-       }},
-      {"path",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::Integrator& integrator) {
-         RemovePathIntegratorV3(parameters, *integrator.mutable_path());
-         return absl::OkStatus();
-       }},
-      {"sppm",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::Integrator& integrator) {
-         RemoveSppmIntegratorV3(parameters, *integrator.mutable_sppm());
-         return absl::OkStatus();
-       }},
-      {"volpath",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::Integrator& integrator) {
-         RemoveVolPathIntegratorV3(parameters, *integrator.mutable_volpath());
-         return absl::OkStatus();
-       }},
-      {"whitted",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::Integrator& integrator) {
-         RemoveWhittedIntegratorV3(parameters, *integrator.mutable_whitted());
-         return absl::OkStatus();
-       }},
+      {"ambientocclusion", CB<RemoveAmbientOcclusionIntegrator,
+                              &Integrator::mutable_ambientocclusion>()},
+      {"bdpt", CB<RemoveBdptIntegrator, &Integrator::mutable_bdpt>()},
+      {"directlighting", CB<RemoveDirectLightingIntegrator,
+                            &Integrator::mutable_directlighting>()},
+      {"mlt", CB<RemoveMltIntegrator, &Integrator::mutable_mlt>()},
+      {"path", CB<RemovePathIntegrator, &Integrator::mutable_path>()},
+      {"sppm", CB<RemoveSppmIntegrator, &Integrator::mutable_sppm>()},
+      {"volpath", CB<RemoveVolPathIntegrator, &Integrator::mutable_volpath>()},
+      {"whitted", CB<RemoveWhittedIntegrator, &Integrator::mutable_whitted>()},
   };
 
   return Parse<&Directive::mutable_integrator>(kSupportedTypes, integrator_type,

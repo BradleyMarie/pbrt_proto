@@ -15,77 +15,6 @@
 namespace pbrt_proto {
 namespace {
 
-void RemoveDirectLightingIntegrator(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    DirectLightingIntegrator& output, bool pbrt_v1) {
-  if (std::optional<int32_t> maxdepth =
-          TryRemoveInteger(parameters, "maxdepth");
-      maxdepth.has_value()) {
-    output.set_maxdepth(std::max(0, *maxdepth));
-  }
-
-  if (std::optional<absl::string_view> strategy =
-          TryRemoveString(parameters, "strategy");
-      strategy.has_value()) {
-    if (*strategy == "all") {
-      output.set_strategy(DirectLightingIntegrator::ALL);
-    } else if (*strategy == "one") {
-      output.set_strategy(DirectLightingIntegrator::ONE);
-    } else if (pbrt_v1 && *strategy == "weighted") {
-      output.set_strategy(DirectLightingIntegrator::WEIGHTED);
-    } else {
-      std::cerr << "WARNING: Unsupported value for 'directlighting' Integrator "
-                   "parameter 'strategy': \""
-                << *strategy << "\"" << std::endl;
-      output.set_strategy(DirectLightingIntegrator::ALL);
-    }
-  }
-}
-
-void RemovePhotonMapIntegrator(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    PhotonMapIntegrator& output) {
-  if (std::optional<int32_t> causticphotons =
-          TryRemoveInteger(parameters, "causticphotons");
-      causticphotons.has_value()) {
-    output.set_causticphotons(std::max(0, *causticphotons));
-  }
-
-  if (std::optional<int32_t> indirectphotons =
-          TryRemoveInteger(parameters, "indirectphotons");
-      indirectphotons.has_value()) {
-    output.set_indirectphotons(std::max(0, *indirectphotons));
-  }
-
-  if (std::optional<int32_t> nused = TryRemoveInteger(parameters, "nused");
-      nused.has_value()) {
-    output.set_nused(std::max(0, *nused));
-  }
-
-  if (std::optional<int32_t> finalgathersamples =
-          TryRemoveInteger(parameters, "finalgathersamples");
-      finalgathersamples.has_value()) {
-    output.set_finalgathersamples(std::max(0, *finalgathersamples));
-  }
-
-  if (std::optional<double> maxdist = TryRemoveFloat(parameters, "maxdist");
-      maxdist.has_value()) {
-    output.set_maxdist(*maxdist);
-  }
-
-  if (std::optional<bool> finalgather =
-          TryRemoveBool(parameters, "finalgather");
-      finalgather.has_value()) {
-    output.set_finalgather(*finalgather);
-  }
-
-  if (std::optional<double> rrthreshold =
-          TryRemoveFloat(parameters, "rrthreshold");
-      rrthreshold.has_value()) {
-    output.set_rrthreshold(*rrthreshold);
-  }
-}
-
 template <typename T>
 void RemovePixelBounds(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters, T& output) {
@@ -103,7 +32,7 @@ void RemovePixelBounds(
 template <typename T>
 void RemoveLightSampleStrategy(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    absl::string_view type, absl::string_view parameter, bool pbrt_v4,
+    int pbrt_version, absl::string_view type, absl::string_view parameter,
     T& output) {
   if (std::optional<absl::string_view> lightsamplestrategy =
           TryRemoveString(parameters, parameter);
@@ -112,9 +41,9 @@ void RemoveLightSampleStrategy(
       output.set_lightsampler(LightSampler::POWER);
     } else if (*lightsamplestrategy == "uniform") {
       output.set_lightsampler(LightSampler::UNIFORM);
-    } else if (!pbrt_v4 && *lightsamplestrategy == "spatial") {
+    } else if (pbrt_version <= 3 && *lightsamplestrategy == "spatial") {
       output.set_lightsampler(LightSampler::BVH);
-    } else if (pbrt_v4 && *lightsamplestrategy == "bvh") {
+    } else if (pbrt_version >= 4 && *lightsamplestrategy == "bvh") {
       output.set_lightsampler(LightSampler::BVH);
     } else {
       std::cerr << "WARNING: Unsupported value for '" << type
@@ -127,71 +56,68 @@ void RemoveLightSampleStrategy(
 
 }  // namespace
 
-void RemoveAmbientOcclusionIntegratorV2(
+absl::Status RemoveAmbientOcclusionIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    AmbientOcclusionIntegrator& output) {
-  if (std::optional<double> maxdist = TryRemoveFloat(parameters, "maxdist");
-      maxdist.has_value()) {
-    output.set_maxdistance(*maxdist);
-  }
-
-  if (std::optional<int32_t> nsamples =
-          TryRemoveInteger(parameters, "nsamples");
-      nsamples.has_value()) {
-    output.set_nsamples(std::max(0, *nsamples));
-  }
-}
-
-void RemoveAmbientOcclusionIntegratorV3(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    AmbientOcclusionIntegrator& output) {
+    int pbrt_version, AmbientOcclusionIntegrator& output) {
   if (std::optional<int32_t> nsamples =
           TryRemoveInteger(parameters, "nsamples");
       nsamples.has_value()) {
     output.set_nsamples(std::max(0, *nsamples));
   }
 
-  if (std::optional<bool> cossample = TryRemoveBool(parameters, "cossample");
-      cossample.has_value()) {
-    output.set_cossample(*cossample);
+  if (pbrt_version <= 2) {
+    if (std::optional<double> maxdist = TryRemoveFloat(parameters, "maxdist");
+        maxdist.has_value()) {
+      output.set_maxdistance(*maxdist);
+    }
+  } else {
+    if (std::optional<bool> cossample = TryRemoveBool(parameters, "cossample");
+        cossample.has_value()) {
+      output.set_cossample(*cossample);
+    }
+
+    RemovePixelBounds(parameters, output);
   }
 
-  RemovePixelBounds(parameters, output);
+  return absl::OkStatus();
 }
 
-void RemoveBdptIntegratorV1(
+absl::Status RemoveBdptIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    BdptIntegrator& output) {}
+    int pbrt_version, BdptIntegrator& output) {
+  if (pbrt_version >= 3) {
+    if (std::optional<int32_t> maxdepth =
+            TryRemoveInteger(parameters, "maxdepth");
+        maxdepth.has_value()) {
+      output.set_maxdepth(std::max(0, *maxdepth));
+    }
 
-void RemoveBdptIntegratorV3(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    BdptIntegrator& output) {
-  if (std::optional<int32_t> maxdepth =
-          TryRemoveInteger(parameters, "maxdepth");
-      maxdepth.has_value()) {
-    output.set_maxdepth(std::max(0, *maxdepth));
+    if (std::optional<bool> visualizestrategies =
+            TryRemoveBool(parameters, "visualizestrategies");
+        visualizestrategies.has_value()) {
+      output.set_visualizestrategies(*visualizestrategies);
+    }
+
+    if (std::optional<bool> visualizeweights =
+            TryRemoveBool(parameters, "visualizeweights");
+        visualizeweights.has_value()) {
+      output.set_visualizeweights(*visualizeweights);
+    }
+
+    RemoveLightSampleStrategy(parameters, pbrt_version, "bdpt",
+                              "lightsamplestrategy", output);
   }
 
-  if (std::optional<bool> visualizestrategies =
-          TryRemoveBool(parameters, "visualizestrategies");
-      visualizestrategies.has_value()) {
-    output.set_visualizestrategies(*visualizestrategies);
+  if (pbrt_version == 3) {
+    RemovePixelBounds(parameters, output);
   }
 
-  if (std::optional<bool> visualizeweights =
-          TryRemoveBool(parameters, "visualizeweights");
-      visualizeweights.has_value()) {
-    output.set_visualizeweights(*visualizeweights);
-  }
-
-  RemoveLightSampleStrategy(parameters, "bdpt", "lightsamplestrategy",
-                            /*pbrt_v4=*/false, output);
-  RemovePixelBounds(parameters, output);
+  return absl::OkStatus();
 }
 
-void RemoveDebugIntegratorV1(
+absl::Status RemoveDebugIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    DebugIntegrator& output) {
+    int pbrt_version, DebugIntegrator& output) {
   static const absl::flat_hash_map<absl::string_view,
                                    DebugIntegrator::ChannelValue>
       values = {
@@ -240,11 +166,13 @@ void RemoveDebugIntegratorV1(
       output.set_blue(DebugIntegrator::ZERO);
     }
   }
+
+  return absl::OkStatus();
 }
 
-void RemoveDiffusePrtIntegratorV2(
+absl::Status RemoveDiffusePrtIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    DiffusePrtIntegrator& output) {
+    int pbrt_version, DiffusePrtIntegrator& output) {
   if (std::optional<int32_t> nsamples =
           TryRemoveInteger(parameters, "nsamples");
       nsamples.has_value()) {
@@ -255,11 +183,13 @@ void RemoveDiffusePrtIntegratorV2(
       lmax.has_value()) {
     output.set_lmax(std::max(0, *lmax));
   }
+
+  return absl::OkStatus();
 }
 
-void RemoveDipoleSubsurfaceIntegratorV2(
+absl::Status RemoveDipoleSubsurfaceIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    DipoleSubsurfaceIntegrator& output) {
+    int pbrt_version, DipoleSubsurfaceIntegrator& output) {
   if (std::optional<int32_t> maxdepth =
           TryRemoveInteger(parameters, "maxdepth");
       maxdepth.has_value()) {
@@ -282,30 +212,46 @@ void RemoveDipoleSubsurfaceIntegratorV2(
       pointsfile.has_value()) {
     output.set_pointsfile(*pointsfile);
   }
+
+  return absl::OkStatus();
 }
 
-void RemoveDirectLightingIntegratorV1(
+absl::Status RemoveDirectLightingIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    DirectLightingIntegrator& output) {
-  RemoveDirectLightingIntegrator(parameters, output, /*pbrt_v1=*/true);
+    int pbrt_version, DirectLightingIntegrator& output) {
+  if (std::optional<int32_t> maxdepth =
+          TryRemoveInteger(parameters, "maxdepth");
+      maxdepth.has_value()) {
+    output.set_maxdepth(std::max(0, *maxdepth));
+  }
+
+  if (std::optional<absl::string_view> strategy =
+          TryRemoveString(parameters, "strategy");
+      strategy.has_value()) {
+    if (*strategy == "all") {
+      output.set_strategy(DirectLightingIntegrator::ALL);
+    } else if (*strategy == "one") {
+      output.set_strategy(DirectLightingIntegrator::ONE);
+    } else if (pbrt_version == 1 && *strategy == "weighted") {
+      output.set_strategy(DirectLightingIntegrator::WEIGHTED);
+    } else {
+      std::cerr << "WARNING: Unsupported value for 'directlighting' Integrator "
+                   "parameter 'strategy': \""
+                << *strategy << "\"" << std::endl;
+      output.set_strategy(DirectLightingIntegrator::ALL);
+    }
+  }
+
+  if (pbrt_version == 3) {
+    RemovePixelBounds(parameters, output);
+  }
+
+  return absl::OkStatus();
 }
 
-void RemoveDirectLightingIntegratorV2(
+absl::Status RemoveGlossyPrtIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    DirectLightingIntegrator& output) {
-  RemoveDirectLightingIntegrator(parameters, output, /*pbrt_v1=*/false);
-}
-
-void RemoveDirectLightingIntegratorV3(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    DirectLightingIntegrator& output) {
-  RemoveDirectLightingIntegrator(parameters, output, /*pbrt_v1=*/false);
-  RemovePixelBounds(parameters, output);
-}
-
-absl::Status RemoveGlossyPrtIntegratorV2(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    GlossyPrtIntegrator& output) {
+    int pbrt_version, GlossyPrtIntegrator& output) {
   if (std::optional<int32_t> nsamples =
           TryRemoveInteger(parameters, "nsamples");
       nsamples.has_value()) {
@@ -339,9 +285,9 @@ absl::Status RemoveGlossyPrtIntegratorV2(
   return absl::OkStatus();
 }
 
-void RemoveIgiIntegratorV1(
+absl::Status RemoveIgiIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    IgiIntegrator& output) {
+    int pbrt_version, IgiIntegrator& output) {
   if (std::optional<int32_t> nlights = TryRemoveInteger(parameters, "nlights");
       nlights.has_value()) {
     output.set_nlights(std::max(0, *nlights));
@@ -358,58 +304,44 @@ void RemoveIgiIntegratorV1(
     output.set_rrthreshold(*rrthreshold);
   }
 
-  if (std::optional<double> indirectscale =
-          TryRemoveFloat(parameters, "indirectscale");
-      indirectscale.has_value()) {
-    output.set_indirectscale(*indirectscale);
+  if (pbrt_version == 1) {
+    if (std::optional<double> indirectscale =
+            TryRemoveFloat(parameters, "indirectscale");
+        indirectscale.has_value()) {
+      output.set_indirectscale(*indirectscale);
+    }
+
+    if (std::optional<double> mindist = TryRemoveFloat(parameters, "mindist");
+        mindist.has_value()) {
+      output.set_mindist(*mindist);
+    }
   }
 
-  if (std::optional<double> mindist = TryRemoveFloat(parameters, "mindist");
-      mindist.has_value()) {
-    output.set_mindist(*mindist);
+  if (pbrt_version >= 2) {
+    if (std::optional<int32_t> maxdepth =
+            TryRemoveInteger(parameters, "maxdepth");
+        maxdepth.has_value()) {
+      output.set_maxdepth(std::max(0, *maxdepth));
+    }
+
+    if (std::optional<double> glimit = TryRemoveFloat(parameters, "glimit");
+        glimit.has_value()) {
+      output.set_glimit(*glimit);
+    }
+
+    if (std::optional<int32_t> gathersamples =
+            TryRemoveInteger(parameters, "gathersamples");
+        gathersamples.has_value()) {
+      output.set_gathersamples(std::max(0, *gathersamples));
+    }
   }
+
+  return absl::OkStatus();
 }
 
-void RemoveIgiIntegratorV2(
+absl::Status RemoveIrradianceCacheIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    IgiIntegrator& output) {
-  if (std::optional<int32_t> maxdepth =
-          TryRemoveInteger(parameters, "maxdepth");
-      maxdepth.has_value()) {
-    output.set_maxdepth(std::max(0, *maxdepth));
-  }
-
-  if (std::optional<int32_t> nlights = TryRemoveInteger(parameters, "nlights");
-      nlights.has_value()) {
-    output.set_nlights(std::max(0, *nlights));
-  }
-
-  if (std::optional<int32_t> nsets = TryRemoveInteger(parameters, "nsets");
-      nsets.has_value()) {
-    output.set_nsets(std::max(0, *nsets));
-  }
-
-  if (std::optional<double> rrthreshold =
-          TryRemoveFloat(parameters, "rrthreshold");
-      rrthreshold.has_value()) {
-    output.set_rrthreshold(*rrthreshold);
-  }
-
-  if (std::optional<double> glimit = TryRemoveFloat(parameters, "glimit");
-      glimit.has_value()) {
-    output.set_glimit(*glimit);
-  }
-
-  if (std::optional<int32_t> gathersamples =
-          TryRemoveInteger(parameters, "gathersamples");
-      gathersamples.has_value()) {
-    output.set_gathersamples(std::max(0, *gathersamples));
-  }
-}
-
-void RemoveIrradianceCacheIntegratorV1(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    IrradianceCacheIntegrator& output) {
+    int pbrt_version, IrradianceCacheIntegrator& output) {
   if (std::optional<double> maxerror = TryRemoveFloat(parameters, "maxerror");
       maxerror.has_value()) {
     output.set_maxerror(*maxerror);
@@ -455,11 +387,13 @@ void RemoveIrradianceCacheIntegratorV1(
       nsamples.has_value()) {
     output.set_nsamples(std::max(0, *nsamples));
   }
+
+  return absl::OkStatus();
 }
 
-void RemoveMltIntegratorV3(
+absl::Status RemoveMltIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    MltIntegrator& output) {
+    int pbrt_version, MltIntegrator& output) {
   if (std::optional<int32_t> maxdepth =
           TryRemoveInteger(parameters, "maxdepth");
       maxdepth.has_value()) {
@@ -493,22 +427,73 @@ void RemoveMltIntegratorV3(
       sigma.has_value()) {
     output.set_sigma(*sigma);
   }
+
+  return absl::OkStatus();
 }
 
-void RemovePathIntegratorV1(
+absl::Status RemovePathIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    PathIntegrator& output) {
+    int pbrt_version, PathIntegrator& output) {
   if (std::optional<int32_t> maxdepth =
           TryRemoveInteger(parameters, "maxdepth");
       maxdepth.has_value()) {
     output.set_maxdepth(std::max(0, *maxdepth));
   }
+
+  if (pbrt_version >= 3) {
+    RemoveLightSampleStrategy(parameters, pbrt_version, "path",
+                              "lightsamplestrategy", output);
+  }
+
+  if (pbrt_version == 3) {
+    if (std::optional<double> rrthreshold =
+            TryRemoveFloat(parameters, "rrthreshold");
+        rrthreshold.has_value()) {
+      output.set_rrthreshold(*rrthreshold);
+    }
+
+    RemovePixelBounds(parameters, output);
+  }
+
+  return absl::OkStatus();
 }
 
-void RemovePathIntegratorV3(
+absl::Status RemovePhotonMapIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    PathIntegrator& output) {
-  RemovePathIntegratorV1(parameters, output);
+    int pbrt_version, PhotonMapIntegrator& output) {
+  if (std::optional<int32_t> causticphotons =
+          TryRemoveInteger(parameters, "causticphotons");
+      causticphotons.has_value()) {
+    output.set_causticphotons(std::max(0, *causticphotons));
+  }
+
+  if (std::optional<int32_t> indirectphotons =
+          TryRemoveInteger(parameters, "indirectphotons");
+      indirectphotons.has_value()) {
+    output.set_indirectphotons(std::max(0, *indirectphotons));
+  }
+
+  if (std::optional<int32_t> nused = TryRemoveInteger(parameters, "nused");
+      nused.has_value()) {
+    output.set_nused(std::max(0, *nused));
+  }
+
+  if (std::optional<int32_t> finalgathersamples =
+          TryRemoveInteger(parameters, "finalgathersamples");
+      finalgathersamples.has_value()) {
+    output.set_finalgathersamples(std::max(0, *finalgathersamples));
+  }
+
+  if (std::optional<double> maxdist = TryRemoveFloat(parameters, "maxdist");
+      maxdist.has_value()) {
+    output.set_maxdist(*maxdist);
+  }
+
+  if (std::optional<bool> finalgather =
+          TryRemoveBool(parameters, "finalgather");
+      finalgather.has_value()) {
+    output.set_finalgather(*finalgather);
+  }
 
   if (std::optional<double> rrthreshold =
           TryRemoveFloat(parameters, "rrthreshold");
@@ -516,74 +501,64 @@ void RemovePathIntegratorV3(
     output.set_rrthreshold(*rrthreshold);
   }
 
-  RemoveLightSampleStrategy(parameters, "path", "lightsamplestrategy",
-                            /*pbrt_v4=*/false, output);
-  RemovePixelBounds(parameters, output);
+  if (pbrt_version == 1) {
+    if (std::optional<int32_t> directphotons =
+            TryRemoveInteger(parameters, "directphotons");
+        directphotons.has_value()) {
+      output.set_directphotons(std::max(0, *directphotons));
+    }
+
+    if (std::optional<int32_t> maxdepth =
+            TryRemoveInteger(parameters, "maxdepth");
+        maxdepth.has_value()) {
+      output.set_maxdepth(std::max(0, *maxdepth));
+    }
+
+    if (std::optional<bool> directwithphotons =
+            TryRemoveBool(parameters, "directwithphotons");
+        directwithphotons.has_value()) {
+      output.set_directwithphotons(*directwithphotons);
+    }
+  }
+
+  if (pbrt_version >= 2) {
+    if (std::optional<double> gatherangle =
+            TryRemoveFloat(parameters, "gatherangle");
+        gatherangle.has_value()) {
+      output.set_gatherangle(*gatherangle);
+    }
+
+    if (std::optional<int32_t> maxspeculardepth =
+            TryRemoveInteger(parameters, "maxspeculardepth");
+        maxspeculardepth.has_value()) {
+      output.set_maxspeculardepth(std::max(0, *maxspeculardepth));
+    }
+
+    if (std::optional<int32_t> maxphotondepth =
+            TryRemoveInteger(parameters, "maxphotondepth");
+        maxphotondepth.has_value()) {
+      output.set_maxphotondepth(std::max(0, *maxphotondepth));
+    }
+  }
+
+  return absl::OkStatus();
 }
 
-void RemovePhotonMapIntegratorV1(
+absl::Status RemoveExPhotonMapIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    PhotonMapIntegrator& output) {
-  RemovePhotonMapIntegrator(parameters, output);
-
-  if (std::optional<int32_t> directphotons =
-          TryRemoveInteger(parameters, "directphotons");
-      directphotons.has_value()) {
-    output.set_directphotons(std::max(0, *directphotons));
-  }
-
-  if (std::optional<int32_t> maxdepth =
-          TryRemoveInteger(parameters, "maxdepth");
-      maxdepth.has_value()) {
-    output.set_maxdepth(std::max(0, *maxdepth));
-  }
-
-  if (std::optional<bool> directwithphotons =
-          TryRemoveBool(parameters, "directwithphotons");
-      directwithphotons.has_value()) {
-    output.set_directwithphotons(*directwithphotons);
-  }
-}
-
-void RemoveExPhotonMapIntegratorV1(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    PhotonMapIntegrator& output) {
-  RemovePhotonMapIntegratorV1(parameters, output);
-
+    int pbrt_version, PhotonMapIntegrator& output) {
   if (std::optional<double> gatherangle =
           TryRemoveFloat(parameters, "gatherangle");
       gatherangle.has_value()) {
     output.set_gatherangle(*gatherangle);
   }
+
+  return RemovePhotonMapIntegrator(parameters, pbrt_version, output);
 }
 
-void RemovePhotonMapIntegratorV2(
+absl::Status RemoveSppmIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    PhotonMapIntegrator& output) {
-  RemovePhotonMapIntegrator(parameters, output);
-
-  if (std::optional<double> gatherangle =
-          TryRemoveFloat(parameters, "gatherangle");
-      gatherangle.has_value()) {
-    output.set_gatherangle(*gatherangle);
-  }
-
-  if (std::optional<int32_t> maxspeculardepth =
-          TryRemoveInteger(parameters, "maxspeculardepth");
-      maxspeculardepth.has_value()) {
-    output.set_maxspeculardepth(std::max(0, *maxspeculardepth));
-  }
-
-  if (std::optional<int32_t> maxphotondepth =
-          TryRemoveInteger(parameters, "maxphotondepth");
-      maxphotondepth.has_value()) {
-    output.set_maxphotondepth(std::max(0, *maxphotondepth));
-  }
-}
-
-void RemoveSppmIntegratorV3(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    SppmIntegrator& output) {
+    int pbrt_version, SppmIntegrator& output) {
   if (std::optional<int32_t> maxdepth =
           TryRemoveInteger(parameters, "maxdepth");
       maxdepth.has_value()) {
@@ -612,21 +587,25 @@ void RemoveSppmIntegratorV3(
       radius.has_value()) {
     output.set_radius(*radius);
   }
+
+  return absl::OkStatus();
 }
 
-void RemoveUseProbesIntegratorV2(
+absl::Status RemoveUseProbesIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    UseProbesIntegrator& output) {
+    int pbrt_version, UseProbesIntegrator& output) {
   if (std::optional<absl::string_view> filename =
           TryRemoveString(parameters, "filename");
       filename.has_value()) {
     output.set_filename(*filename);
   }
+
+  return absl::OkStatus();
 }
 
-void RemoveVolPathIntegratorV3(
+absl::Status RemoveVolPathIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    VolPathIntegrator& output) {
+    int pbrt_version, VolPathIntegrator& output) {
   if (std::optional<int32_t> maxdepth =
           TryRemoveInteger(parameters, "maxdepth");
       maxdepth.has_value()) {
@@ -639,26 +618,30 @@ void RemoveVolPathIntegratorV3(
     output.set_rrthreshold(*rrthreshold);
   }
 
-  RemoveLightSampleStrategy(parameters, "volpath", "lightsamplestrategy",
-                            /*pbrt_v4=*/false, output);
-  RemovePixelBounds(parameters, output);
+  RemoveLightSampleStrategy(parameters, pbrt_version, "volpath",
+                            "lightsamplestrategy", output);
+
+  if (pbrt_version == 3) {
+    RemovePixelBounds(parameters, output);
+  }
+
+  return absl::OkStatus();
 }
 
-void RemoveWhittedIntegratorV1(
+absl::Status RemoveWhittedIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    WhittedIntegrator& output) {
+    int pbrt_version, WhittedIntegrator& output) {
   if (std::optional<int32_t> maxdepth =
           TryRemoveInteger(parameters, "maxdepth");
       maxdepth.has_value()) {
     output.set_maxdepth(std::max(0, *maxdepth));
   }
-}
 
-void RemoveWhittedIntegratorV3(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    WhittedIntegrator& output) {
-  RemoveWhittedIntegratorV1(parameters, output);
-  RemovePixelBounds(parameters, output);
+  if (pbrt_version == 3) {
+    RemovePixelBounds(parameters, output);
+  }
+
+  return absl::OkStatus();
 }
 
 absl::Status RemoveEmissionVolumeIntegrator(

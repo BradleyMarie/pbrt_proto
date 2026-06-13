@@ -654,64 +654,21 @@ absl::Status ParserV1::SurfaceIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
   static const TypeMap<v1::SurfaceIntegrator> kSupportedTypes = {
       {"bidirectional",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::SurfaceIntegrator& integrator) {
-         RemoveBdptIntegratorV1(parameters,
-                                *integrator.mutable_bidirectional());
-         return absl::OkStatus();
-       }},
-      {"debug",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::SurfaceIntegrator& integrator) {
-         RemoveDebugIntegratorV1(parameters, *integrator.mutable_debug());
-         return absl::OkStatus();
-       }},
-      {"directlighting",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::SurfaceIntegrator& integrator) {
-         RemoveDirectLightingIntegratorV1(parameters,
-                                          *integrator.mutable_directlighting());
-         return absl::OkStatus();
-       }},
-      {"exphotonmap",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::SurfaceIntegrator& integrator) {
-         RemoveExPhotonMapIntegratorV1(parameters,
-                                       *integrator.mutable_exphotonmap());
-         return absl::OkStatus();
-       }},
-      {"igi",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::SurfaceIntegrator& integrator) {
-         RemoveIgiIntegratorV1(parameters, *integrator.mutable_igi());
-         return absl::OkStatus();
-       }},
-      {"irradiancecache",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::SurfaceIntegrator& integrator) {
-         RemoveIrradianceCacheIntegratorV1(
-             parameters, *integrator.mutable_irradiancecache());
-         return absl::OkStatus();
-       }},
-      {"path",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::SurfaceIntegrator& integrator) {
-         RemovePathIntegratorV1(parameters, *integrator.mutable_path());
-         return absl::OkStatus();
-       }},
+       CB<RemoveBdptIntegrator, &SurfaceIntegrator::mutable_bidirectional>()},
+      {"debug", CB<RemoveDebugIntegrator, &SurfaceIntegrator::mutable_debug>()},
+      {"directlighting", CB<RemoveDirectLightingIntegrator,
+                            &SurfaceIntegrator::mutable_directlighting>()},
+      {"exphotonmap", CB<RemoveExPhotonMapIntegrator,
+                         &SurfaceIntegrator::mutable_exphotonmap>()},
+      {"igi", CB<RemoveIgiIntegrator, &SurfaceIntegrator::mutable_igi>()},
+      {"irradiancecache", CB<RemoveIrradianceCacheIntegrator,
+                             &SurfaceIntegrator::mutable_irradiancecache>()},
+      {"path", CB<RemovePathIntegrator, &SurfaceIntegrator::mutable_path>()},
       {"photonmap",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::SurfaceIntegrator& integrator) {
-         RemovePhotonMapIntegratorV1(parameters,
-                                     *integrator.mutable_photonmap());
-         return absl::OkStatus();
-       }},
+       CB<RemovePhotonMapIntegrator, &SurfaceIntegrator::mutable_photonmap>()},
       {"whitted",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::SurfaceIntegrator& integrator) {
-         RemoveWhittedIntegratorV1(parameters, *integrator.mutable_whitted());
-         return absl::OkStatus();
-       }}};
+       CB<RemoveWhittedIntegrator, &SurfaceIntegrator::mutable_whitted>()},
+  };
 
   return Parse<&Directive::mutable_surface_integrator>(
       kSupportedTypes, integrator_type, parameters);
