@@ -30,7 +30,9 @@ TEST(AaMode, UnknownValue) {
       {"aamode", parameter}};
 
   Checkerboard2DFloatTexture actual;
-  RemoveCheckerboard2DFloatTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveCheckerboard2DFloatTexture(parameters, /*pbrt_version=*/1, actual)
+          .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 aamode: CLOSEDFORM
               )pb"));
@@ -47,7 +49,9 @@ TEST(AaMode, ClosedForm) {
       {"aamode", parameter}};
 
   Checkerboard2DFloatTexture actual;
-  RemoveCheckerboard2DFloatTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveCheckerboard2DFloatTexture(parameters, /*pbrt_version=*/1, actual)
+          .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 aamode: CLOSEDFORM
               )pb"));
@@ -64,7 +68,9 @@ TEST(AaMode, None) {
       {"aamode", parameter}};
 
   Checkerboard2DFloatTexture actual;
-  RemoveCheckerboard2DFloatTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveCheckerboard2DFloatTexture(parameters, /*pbrt_version=*/1, actual)
+          .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 aamode: DISABLED
               )pb"));
@@ -81,7 +87,9 @@ TEST(AaMode, Supersample) {
       {"aamode", parameter}};
 
   Checkerboard2DFloatTexture actual;
-  RemoveCheckerboard2DFloatTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveCheckerboard2DFloatTexture(parameters, /*pbrt_version=*/1, actual)
+          .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 aamode: SUPERSAMPLE
               )pb"));
@@ -98,7 +106,9 @@ TEST(AaMode, SupersampleV2) {
       {"aamode", parameter}};
 
   Checkerboard2DFloatTexture actual;
-  RemoveCheckerboard2DFloatTextureV2(parameters, actual);
+  EXPECT_TRUE(
+      RemoveCheckerboard2DFloatTexture(parameters, /*pbrt_version=*/2, actual)
+          .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 aamode: CLOSEDFORM
               )pb"));
@@ -115,9 +125,10 @@ TEST(Encoding, UnknownValue) {
       {"encoding", parameter}};
 
   ImageMapFloatTexture actual;
-  EXPECT_THAT(RemoveImageMapFloatTextureV4(parameters, actual),
-              StatusIs(absl::StatusCode::kInvalidArgument,
-                       "Invalid imagemap FloatTexture parameter : 'encoding'"));
+  EXPECT_THAT(
+      RemoveImageMapFloatTexture(parameters, /*pbrt_version=*/4, actual),
+      StatusIs(absl::StatusCode::kInvalidArgument,
+               "Invalid imagemap Texture parameter : 'encoding'"));
 }
 
 TEST(Encoding, SRGB) {
@@ -131,7 +142,8 @@ TEST(Encoding, SRGB) {
       {"encoding", parameter}};
 
   ImageMapFloatTexture actual;
-  EXPECT_TRUE(RemoveImageMapFloatTextureV4(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveImageMapFloatTexture(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 encoding: SRGB
               )pb"));
@@ -148,7 +160,8 @@ TEST(Encoding, Linear) {
       {"encoding", parameter}};
 
   ImageMapFloatTexture actual;
-  EXPECT_TRUE(RemoveImageMapFloatTextureV4(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveImageMapFloatTexture(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 encoding: LINEAR
               )pb"));
@@ -165,7 +178,8 @@ TEST(Encoding, Gamma) {
       {"encoding", parameter}};
 
   ImageMapFloatTexture actual;
-  EXPECT_TRUE(RemoveImageMapFloatTextureV4(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveImageMapFloatTexture(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 encoding: GAMMA gamma: 2.2
               )pb"));
@@ -182,7 +196,8 @@ TEST(Filter, UnknownValue) {
       {"filter", parameter}};
 
   ImageMapFloatTexture actual;
-  RemoveImageMapFloatTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveImageMapFloatTexture(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -197,7 +212,8 @@ TEST(Filter, Bilinear) {
       {"filter", parameter}};
 
   ImageMapFloatTexture actual;
-  EXPECT_TRUE(RemoveImageMapFloatTextureV4(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveImageMapFloatTexture(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 filter: BILINEAR
               )pb"));
@@ -214,7 +230,8 @@ TEST(Filter, Trilinear) {
       {"filter", parameter}};
 
   ImageMapFloatTexture actual;
-  EXPECT_TRUE(RemoveImageMapFloatTextureV4(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveImageMapFloatTexture(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 filter: TRILINEAR
               )pb"));
@@ -231,7 +248,8 @@ TEST(Filter, EWA) {
       {"filter", parameter}};
 
   ImageMapFloatTexture actual;
-  EXPECT_TRUE(RemoveImageMapFloatTextureV4(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveImageMapFloatTexture(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 filter: EWA
               )pb"));
@@ -248,7 +266,8 @@ TEST(Filter, Point) {
       {"filter", parameter}};
 
   ImageMapFloatTexture actual;
-  EXPECT_TRUE(RemoveImageMapFloatTextureV4(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveImageMapFloatTexture(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 filter: POINT
               )pb"));
@@ -265,7 +284,8 @@ TEST(Mapping, UnknownValue) {
       {"mapping", parameter}};
 
   BilerpFloatTexture actual;
-  RemoveBilerpFloatTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveBilerpFloatTexture(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 mapping: UV
               )pb"));
@@ -282,7 +302,8 @@ TEST(Mapping, UV) {
       {"mapping", parameter}};
 
   BilerpFloatTexture actual;
-  RemoveBilerpFloatTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveBilerpFloatTexture(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 mapping: UV
               )pb"));
@@ -299,7 +320,8 @@ TEST(Mapping, Spherical) {
       {"mapping", parameter}};
 
   BilerpFloatTexture actual;
-  RemoveBilerpFloatTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveBilerpFloatTexture(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 mapping: SPHERICAL
               )pb"));
@@ -316,7 +338,8 @@ TEST(Mapping, Planar) {
       {"mapping", parameter}};
 
   BilerpFloatTexture actual;
-  RemoveBilerpFloatTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveBilerpFloatTexture(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 mapping: PLANAR
               )pb"));
@@ -333,7 +356,8 @@ TEST(Mapping, Cylindrical) {
       {"mapping", parameter}};
 
   BilerpFloatTexture actual;
-  RemoveBilerpFloatTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveBilerpFloatTexture(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 mapping: CYLINDRICAL
               )pb"));
@@ -350,7 +374,8 @@ TEST(Wrap, UnknownValue) {
       {"wrap", parameter}};
 
   ImageMapFloatTexture actual;
-  RemoveImageMapFloatTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveImageMapFloatTexture(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 wrap: REPEAT
               )pb"));
@@ -367,7 +392,8 @@ TEST(Wrap, Black) {
       {"wrap", parameter}};
 
   ImageMapFloatTexture actual;
-  RemoveImageMapFloatTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveImageMapFloatTexture(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 wrap: BLACK
               )pb"));
@@ -384,7 +410,8 @@ TEST(Wrap, Clamp) {
       {"wrap", parameter}};
 
   ImageMapFloatTexture actual;
-  RemoveImageMapFloatTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveImageMapFloatTexture(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 wrap: CLAMP
               )pb"));
@@ -401,7 +428,8 @@ TEST(Wrap, Repeat) {
       {"wrap", parameter}};
 
   ImageMapFloatTexture actual;
-  RemoveImageMapFloatTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveImageMapFloatTexture(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 wrap: REPEAT
               )pb"));
@@ -460,7 +488,8 @@ TEST(Mapping, UvParameters) {
       {"v2", v2_parameter}};
 
   BilerpFloatTexture actual;
-  RemoveBilerpFloatTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveBilerpFloatTexture(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 mapping: UV
                 uscale: 1.0
@@ -472,15 +501,16 @@ TEST(Mapping, UvParameters) {
               )pb"));
 }
 
-TEST(RemoveBilerpFloatTextureV1, Empty) {
+TEST(RemoveBilerpFloatTexture, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   BilerpFloatTexture actual;
-  RemoveBilerpFloatTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveBilerpFloatTexture(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveBilerpFloatTextureV1, WithData) {
+TEST(RemoveBilerpFloatTexture, WithData) {
   std::vector<absl::string_view> v00 = {"v00"};
   Parameter v00_parameter{/*directive=*/"",
                           /*type=*/ParameterType::TEXTURE,
@@ -519,7 +549,8 @@ TEST(RemoveBilerpFloatTextureV1, WithData) {
       {"mapping", mapping_parameter}};
 
   BilerpFloatTexture actual;
-  RemoveBilerpFloatTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveBilerpFloatTexture(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 v00 { float_texture_name: "v00" }
                 v01 { float_texture_name: "v01" }
@@ -529,15 +560,16 @@ TEST(RemoveBilerpFloatTextureV1, WithData) {
               )pb"));
 }
 
-TEST(RemoveBilerpSpectrumTextureV1, Empty) {
+TEST(RemoveBilerpSpectrumTexture, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   BilerpSpectrumTexture actual;
-  RemoveBilerpSpectrumTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveBilerpSpectrumTexture(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveBilerpSpectrumTextureV1, WithData) {
+TEST(RemoveBilerpSpectrumTexture, WithData) {
   std::vector<absl::string_view> v00 = {"v00"};
   Parameter v00_parameter{/*directive=*/"",
                           /*type=*/ParameterType::TEXTURE,
@@ -576,7 +608,8 @@ TEST(RemoveBilerpSpectrumTextureV1, WithData) {
       {"mapping", mapping_parameter}};
 
   BilerpSpectrumTexture actual;
-  RemoveBilerpSpectrumTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveBilerpSpectrumTexture(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 v00 { spectrum_texture_name: "v00" }
                 v01 { spectrum_texture_name: "v01" }
@@ -590,7 +623,9 @@ TEST(RemoveCheckerboard2DFloatTextureV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   Checkerboard2DFloatTexture actual;
-  RemoveCheckerboard2DFloatTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveCheckerboard2DFloatTexture(parameters, /*pbrt_version=*/1, actual)
+          .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -626,7 +661,9 @@ TEST(RemoveCheckerboard2DFloatTextureV1, WithData) {
       {"mapping", mapping_parameter}};
 
   Checkerboard2DFloatTexture actual;
-  RemoveCheckerboard2DFloatTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveCheckerboard2DFloatTexture(parameters, /*pbrt_version=*/1, actual)
+          .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 tex1 { float_texture_name: "tex1" }
                 tex2 { float_texture_name: "tex2" }
@@ -639,7 +676,9 @@ TEST(RemoveCheckerboard2DFloatTextureV2, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   Checkerboard2DFloatTexture actual;
-  RemoveCheckerboard2DFloatTextureV2(parameters, actual);
+  EXPECT_TRUE(
+      RemoveCheckerboard2DFloatTexture(parameters, /*pbrt_version=*/2, actual)
+          .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -675,7 +714,62 @@ TEST(RemoveCheckerboard2DFloatTextureV2, WithData) {
       {"mapping", mapping_parameter}};
 
   Checkerboard2DFloatTexture actual;
-  RemoveCheckerboard2DFloatTextureV2(parameters, actual);
+  EXPECT_TRUE(
+      RemoveCheckerboard2DFloatTexture(parameters, /*pbrt_version=*/2, actual)
+          .ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                tex1 { float_texture_name: "tex1" }
+                tex2 { float_texture_name: "tex2" }
+                aamode: CLOSEDFORM
+                mapping: UV
+              )pb"));
+}
+
+TEST(RemoveCheckerboard2DFloatTextureV3, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  Checkerboard2DFloatTexture actual;
+  EXPECT_TRUE(
+      RemoveCheckerboard2DFloatTexture(parameters, /*pbrt_version=*/3, actual)
+          .ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveCheckerboard2DFloatTextureV3, WithData) {
+  std::vector<absl::string_view> tex1 = {"tex1"};
+  Parameter tex1_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::TEXTURE,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(tex1)};
+
+  std::vector<absl::string_view> tex2 = {"tex2"};
+  Parameter tex2_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::TEXTURE,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(tex2)};
+
+  std::vector<absl::string_view> aamode = {"closedform"};
+  Parameter aamode_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::STRING,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(aamode)};
+
+  std::vector<absl::string_view> mapping = {"uv"};
+  Parameter mapping_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::STRING,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(mapping)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"tex1", tex1_parameter},
+      {"tex2", tex2_parameter},
+      {"aamode", aamode_parameter},
+      {"mapping", mapping_parameter}};
+
+  Checkerboard2DFloatTexture actual;
+  EXPECT_TRUE(
+      RemoveCheckerboard2DFloatTexture(parameters, /*pbrt_version=*/3, actual)
+          .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 tex1 { float_texture_name: "tex1" }
                 tex2 { float_texture_name: "tex2" }
@@ -688,7 +782,9 @@ TEST(RemoveCheckerboard2DFloatTextureV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   Checkerboard2DFloatTexture actual;
-  RemoveCheckerboard2DFloatTextureV4(parameters, actual);
+  EXPECT_TRUE(
+      RemoveCheckerboard2DFloatTexture(parameters, /*pbrt_version=*/4, actual)
+          .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -717,7 +813,9 @@ TEST(RemoveCheckerboard2DFloatTextureV4, WithData) {
       {"mapping", mapping_parameter}};
 
   Checkerboard2DFloatTexture actual;
-  RemoveCheckerboard2DFloatTextureV4(parameters, actual);
+  EXPECT_TRUE(
+      RemoveCheckerboard2DFloatTexture(parameters, /*pbrt_version=*/4, actual)
+          .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 tex1 { float_texture_name: "tex1" }
                 tex2 { float_texture_name: "tex2" }
@@ -729,7 +827,9 @@ TEST(RemoveCheckerboard2DSpectrumTextureV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   Checkerboard2DSpectrumTexture actual;
-  RemoveCheckerboard2DSpectrumTextureV1(parameters, actual);
+  EXPECT_TRUE(RemoveCheckerboard2DSpectrumTexture(parameters,
+                                                  /*pbrt_version=*/1, actual)
+                  .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -765,7 +865,9 @@ TEST(RemoveCheckerboard2DSpectrumTextureV1, WithData) {
       {"mapping", mapping_parameter}};
 
   Checkerboard2DSpectrumTexture actual;
-  RemoveCheckerboard2DSpectrumTextureV1(parameters, actual);
+  EXPECT_TRUE(RemoveCheckerboard2DSpectrumTexture(parameters,
+                                                  /*pbrt_version=*/1, actual)
+                  .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 tex1 { spectrum_texture_name: "tex1" }
                 tex2 { spectrum_texture_name: "tex2" }
@@ -778,7 +880,9 @@ TEST(RemoveCheckerboard2DSpectrumTextureV2, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   Checkerboard2DSpectrumTexture actual;
-  RemoveCheckerboard2DSpectrumTextureV2(parameters, actual);
+  EXPECT_TRUE(RemoveCheckerboard2DSpectrumTexture(parameters,
+                                                  /*pbrt_version=*/2, actual)
+                  .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -814,7 +918,62 @@ TEST(RemoveCheckerboard2DSpectrumTextureV2, WithData) {
       {"mapping", mapping_parameter}};
 
   Checkerboard2DSpectrumTexture actual;
-  RemoveCheckerboard2DSpectrumTextureV2(parameters, actual);
+  EXPECT_TRUE(RemoveCheckerboard2DSpectrumTexture(parameters,
+                                                  /*pbrt_version=*/2, actual)
+                  .ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                tex1 { spectrum_texture_name: "tex1" }
+                tex2 { spectrum_texture_name: "tex2" }
+                aamode: CLOSEDFORM
+                mapping: UV
+              )pb"));
+}
+
+TEST(RemoveCheckerboard2DSpectrumTextureV3, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  Checkerboard2DSpectrumTexture actual;
+  EXPECT_TRUE(RemoveCheckerboard2DSpectrumTexture(parameters,
+                                                  /*pbrt_version=*/3, actual)
+                  .ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveCheckerboard2DSpectrumTextureV3, WithData) {
+  std::vector<absl::string_view> tex1 = {"tex1"};
+  Parameter tex1_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::TEXTURE,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(tex1)};
+
+  std::vector<absl::string_view> tex2 = {"tex2"};
+  Parameter tex2_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::TEXTURE,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(tex2)};
+
+  std::vector<absl::string_view> aamode = {"closedform"};
+  Parameter aamode_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::STRING,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(aamode)};
+
+  std::vector<absl::string_view> mapping = {"uv"};
+  Parameter mapping_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::STRING,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(mapping)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"tex1", tex1_parameter},
+      {"tex2", tex2_parameter},
+      {"aamode", aamode_parameter},
+      {"mapping", mapping_parameter}};
+
+  Checkerboard2DSpectrumTexture actual;
+  EXPECT_TRUE(RemoveCheckerboard2DSpectrumTexture(parameters,
+                                                  /*pbrt_version=*/3, actual)
+                  .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 tex1 { spectrum_texture_name: "tex1" }
                 tex2 { spectrum_texture_name: "tex2" }
@@ -827,7 +986,9 @@ TEST(RemoveCheckerboard2DSpectrumTextureV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   Checkerboard2DSpectrumTexture actual;
-  RemoveCheckerboard2DSpectrumTextureV4(parameters, actual);
+  EXPECT_TRUE(RemoveCheckerboard2DSpectrumTexture(parameters,
+                                                  /*pbrt_version=*/4, actual)
+                  .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -856,7 +1017,9 @@ TEST(RemoveCheckerboard2DSpectrumTextureV4, WithData) {
       {"mapping", mapping_parameter}};
 
   Checkerboard2DSpectrumTexture actual;
-  RemoveCheckerboard2DSpectrumTextureV4(parameters, actual);
+  EXPECT_TRUE(RemoveCheckerboard2DSpectrumTexture(parameters,
+                                                  /*pbrt_version=*/4, actual)
+                  .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 tex1 { spectrum_texture_name: "tex1" }
                 tex2 { spectrum_texture_name: "tex2" }
@@ -868,7 +1031,9 @@ TEST(RemoveCheckerboard3DFloatTextureV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   Checkerboard3DFloatTexture actual;
-  RemoveCheckerboard3DFloatTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveCheckerboard3DFloatTexture(parameters, /*pbrt_version=*/1, actual)
+          .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -889,22 +1054,26 @@ TEST(RemoveCheckerboard3DFloatTextureV1, WithData) {
       {"tex1", tex1_parameter}, {"tex2", tex2_parameter}};
 
   Checkerboard3DFloatTexture actual;
-  RemoveCheckerboard3DFloatTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveCheckerboard3DFloatTexture(parameters, /*pbrt_version=*/1, actual)
+          .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 tex1 { float_texture_name: "tex1" }
                 tex2 { float_texture_name: "tex2" }
               )pb"));
 }
 
-TEST(RemoveCheckerboard3DSpectrumTextureV1, Empty) {
+TEST(RemoveCheckerboard3DSpectrumTexture, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   Checkerboard3DSpectrumTexture actual;
-  RemoveCheckerboard3DSpectrumTextureV1(parameters, actual);
+  EXPECT_TRUE(RemoveCheckerboard3DSpectrumTexture(parameters,
+                                                  /*pbrt_version=*/1, actual)
+                  .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveCheckerboard3DSpectrumTextureV1, WithData) {
+TEST(RemoveCheckerboard3DSpectrumTexture, WithData) {
   std::vector<absl::string_view> tex1 = {"tex1"};
   Parameter tex1_parameter{/*directive=*/"",
                            /*type=*/ParameterType::TEXTURE,
@@ -921,22 +1090,25 @@ TEST(RemoveCheckerboard3DSpectrumTextureV1, WithData) {
       {"tex1", tex1_parameter}, {"tex2", tex2_parameter}};
 
   Checkerboard3DSpectrumTexture actual;
-  RemoveCheckerboard3DSpectrumTextureV1(parameters, actual);
+  EXPECT_TRUE(RemoveCheckerboard3DSpectrumTexture(parameters,
+                                                  /*pbrt_version=*/1, actual)
+                  .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 tex1 { spectrum_texture_name: "tex1" }
                 tex2 { spectrum_texture_name: "tex2" }
               )pb"));
 }
 
-TEST(RemoveConstantFloatTextureV1, Empty) {
+TEST(RemoveConstantFloatTexture, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   ConstantFloatTexture actual;
-  RemoveConstantFloatTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveConstantFloatTexture(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveConstantFloatTextureV1, WithData) {
+TEST(RemoveConstantFloatTexture, WithData) {
   std::vector<double> value = {1.0};
   Parameter value_parameter{/*directive=*/"",
                             /*type=*/ParameterType::FLOAT,
@@ -947,21 +1119,24 @@ TEST(RemoveConstantFloatTextureV1, WithData) {
       {"value", value_parameter}};
 
   ConstantFloatTexture actual;
-  RemoveConstantFloatTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveConstantFloatTexture(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 value: 1.0
               )pb"));
 }
 
-TEST(RemoveConstantSpectrumTextureV1, Empty) {
+TEST(RemoveConstantSpectrumTexture, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   ConstantSpectrumTexture actual;
-  EXPECT_TRUE(RemoveConstantSpectrumTextureV1(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveConstantSpectrumTexture(parameters, /*pbrt_version=*/1, actual)
+          .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveConstantSpectrumTextureV1, WithData) {
+TEST(RemoveConstantSpectrumTexture, WithData) {
   std::vector<absl::string_view> value = {"value"};
   Parameter value_parameter{/*directive=*/"",
                             /*type=*/ParameterType::SPECTRUM,
@@ -972,21 +1147,25 @@ TEST(RemoveConstantSpectrumTextureV1, WithData) {
       {"value", value_parameter}};
 
   ConstantSpectrumTexture actual;
-  EXPECT_TRUE(RemoveConstantSpectrumTextureV1(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveConstantSpectrumTexture(parameters, /*pbrt_version=*/1, actual)
+          .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 value { sampled_spectrum_filename: "value" }
               )pb"));
 }
 
-TEST(RemoveDirectionMixFloatTextureV4, Empty) {
+TEST(RemoveDirectionMixFloatTexture, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   DirectionMixFloatTexture actual;
-  RemoveDirectionMixFloatTextureV4(parameters, actual);
+  EXPECT_TRUE(
+      RemoveDirectionMixFloatTexture(parameters, /*pbrt_version=*/4, actual)
+          .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveDirectionMixFloatTextureV4, WithData) {
+TEST(RemoveDirectionMixFloatTexture, WithData) {
   std::vector<absl::string_view> tex1 = {"tex1"};
   Parameter tex1_parameter{/*directive=*/"",
                            /*type=*/ParameterType::TEXTURE,
@@ -1011,7 +1190,9 @@ TEST(RemoveDirectionMixFloatTextureV4, WithData) {
       {"dir", dir_parameter}};
 
   DirectionMixFloatTexture actual;
-  RemoveDirectionMixFloatTextureV4(parameters, actual);
+  EXPECT_TRUE(
+      RemoveDirectionMixFloatTexture(parameters, /*pbrt_version=*/4, actual)
+          .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 tex1 { float_texture_name: "tex1" }
                 tex2 { float_texture_name: "tex2" }
@@ -1019,15 +1200,17 @@ TEST(RemoveDirectionMixFloatTextureV4, WithData) {
               )pb"));
 }
 
-TEST(RemoveDirectionMixSpectrumTextureV4, Empty) {
+TEST(RemoveDirectionMixSpectrumTexture, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   DirectionMixSpectrumTexture actual;
-  RemoveDirectionMixSpectrumTextureV4(parameters, actual);
+  EXPECT_TRUE(
+      RemoveDirectionMixSpectrumTexture(parameters, /*pbrt_version=*/4, actual)
+          .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveDirectionMixSpectrumTextureV4, WithData) {
+TEST(RemoveDirectionMixSpectrumTexture, WithData) {
   std::vector<absl::string_view> tex1 = {"tex1"};
   Parameter tex1_parameter{/*directive=*/"",
                            /*type=*/ParameterType::TEXTURE,
@@ -1052,7 +1235,9 @@ TEST(RemoveDirectionMixSpectrumTextureV4, WithData) {
       {"dir", dir_parameter}};
 
   DirectionMixSpectrumTexture actual;
-  RemoveDirectionMixSpectrumTextureV4(parameters, actual);
+  EXPECT_TRUE(
+      RemoveDirectionMixSpectrumTexture(parameters, /*pbrt_version=*/4, actual)
+          .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 tex1 { spectrum_texture_name: "tex1" }
                 tex2 { spectrum_texture_name: "tex2" }
@@ -1060,15 +1245,16 @@ TEST(RemoveDirectionMixSpectrumTextureV4, WithData) {
               )pb"));
 }
 
-TEST(RemoveDotsFloatTextureV1, Empty) {
+TEST(RemoveDotsFloatTexture, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   DotsFloatTexture actual;
-  RemoveDotsFloatTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveDotsFloatTexture(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveDotsFloatTextureV1, WithData) {
+TEST(RemoveDotsFloatTexture, WithData) {
   std::vector<absl::string_view> inside = {"inside"};
   Parameter inside_parameter{/*directive=*/"",
                              /*type=*/ParameterType::TEXTURE,
@@ -1093,7 +1279,8 @@ TEST(RemoveDotsFloatTextureV1, WithData) {
       {"mapping", mapping_parameter}};
 
   DotsFloatTexture actual;
-  RemoveDotsFloatTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveDotsFloatTexture(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 inside { float_texture_name: "inside" }
                 outside { float_texture_name: "outside" }
@@ -1101,15 +1288,16 @@ TEST(RemoveDotsFloatTextureV1, WithData) {
               )pb"));
 }
 
-TEST(RemoveDotsSpectrumTextureV1, Empty) {
+TEST(RemoveDotsSpectrumTexture, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   DotsSpectrumTexture actual;
-  RemoveDotsSpectrumTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveDotsSpectrumTexture(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveDotsSpectrumTextureV1, WithData) {
+TEST(RemoveDotsSpectrumTexture, WithData) {
   std::vector<absl::string_view> inside = {"inside"};
   Parameter inside_parameter{/*directive=*/"",
                              /*type=*/ParameterType::TEXTURE,
@@ -1134,7 +1322,8 @@ TEST(RemoveDotsSpectrumTextureV1, WithData) {
       {"mapping", mapping_parameter}};
 
   DotsSpectrumTexture actual;
-  RemoveDotsSpectrumTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveDotsSpectrumTexture(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 inside { spectrum_texture_name: "inside" }
                 outside { spectrum_texture_name: "outside" }
@@ -1142,15 +1331,16 @@ TEST(RemoveDotsSpectrumTextureV1, WithData) {
               )pb"));
 }
 
-TEST(RemoveFBmFloatTextureV1, Empty) {
+TEST(RemoveFBmFloatTexture, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   FBmFloatTexture actual;
-  RemoveFBmFloatTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveFBmFloatTexture(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveFBmFloatTextureV1, WithData) {
+TEST(RemoveFBmFloatTexture, WithData) {
   std::vector<int32_t> octaves = {1};
   Parameter octaves_parameter{/*directive=*/"",
                               /*type=*/ParameterType::INTEGER,
@@ -1167,21 +1357,23 @@ TEST(RemoveFBmFloatTextureV1, WithData) {
       {"octaves", octaves_parameter}, {"roughness", roughness_parameter}};
 
   FBmFloatTexture actual;
-  RemoveFBmFloatTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveFBmFloatTexture(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 octaves: 1 roughness: 2.0
               )pb"));
 }
 
-TEST(RemoveFBmSpectrumTextureV1, Empty) {
+TEST(RemoveFBmSpectrumTexture, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   FBmSpectrumTexture actual;
-  RemoveFBmSpectrumTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveFBmSpectrumTexture(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveFBmSpectrumTextureV1, WithData) {
+TEST(RemoveFBmSpectrumTexture, WithData) {
   std::vector<int32_t> octaves = {1};
   Parameter octaves_parameter{/*directive=*/"",
                               /*type=*/ParameterType::INTEGER,
@@ -1198,7 +1390,8 @@ TEST(RemoveFBmSpectrumTextureV1, WithData) {
       {"octaves", octaves_parameter}, {"roughness", roughness_parameter}};
 
   FBmSpectrumTexture actual;
-  RemoveFBmSpectrumTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveFBmSpectrumTexture(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 octaves: 1 roughness: 2.0
               )pb"));
@@ -1208,7 +1401,8 @@ TEST(RemoveImageMapFloatTextureV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   ImageMapFloatTexture actual;
-  RemoveImageMapFloatTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveImageMapFloatTexture(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -1251,7 +1445,8 @@ TEST(RemoveImageMapFloatTextureV1, WithData) {
       {"mapping", mapping_parameter}};
 
   ImageMapFloatTexture actual;
-  RemoveImageMapFloatTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveImageMapFloatTexture(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 filename: "filename"
                 wrap: BLACK
@@ -1265,7 +1460,8 @@ TEST(RemoveImageMapFloatTextureV2, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   ImageMapFloatTexture actual;
-  RemoveImageMapFloatTextureV2(parameters, actual);
+  EXPECT_TRUE(
+      RemoveImageMapFloatTexture(parameters, /*pbrt_version=*/2, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -1322,7 +1518,8 @@ TEST(RemoveImageMapFloatTextureV2, WithData) {
       {"gamma", gamma_parameter}};
 
   ImageMapFloatTexture actual;
-  RemoveImageMapFloatTextureV2(parameters, actual);
+  EXPECT_TRUE(
+      RemoveImageMapFloatTexture(parameters, /*pbrt_version=*/2, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 filename: "filename"
                 wrap: BLACK
@@ -1338,7 +1535,8 @@ TEST(RemoveImageMapFloatTextureV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   ImageMapFloatTexture actual;
-  RemoveImageMapFloatTextureV3(parameters, actual);
+  EXPECT_TRUE(
+      RemoveImageMapFloatTexture(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -1395,7 +1593,8 @@ TEST(RemoveImageMapFloatTextureV3, WithData) {
       {"gamma", gamma_parameter}};
 
   ImageMapFloatTexture actual;
-  RemoveImageMapFloatTextureV3(parameters, actual);
+  EXPECT_TRUE(
+      RemoveImageMapFloatTexture(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 filename: "filename"
                 wrap: BLACK
@@ -1467,7 +1666,8 @@ TEST(RemoveImageMapFloatTextureV4, Empty) {
       {"invert", invert_parameter}};
 
   ImageMapFloatTexture actual;
-  EXPECT_TRUE(RemoveImageMapFloatTextureV4(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveImageMapFloatTexture(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 filename: "filename"
                 wrap: BLACK
@@ -1485,7 +1685,8 @@ TEST(RemoveImageMapFloatTextureV4, WithData) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   ImageMapFloatTexture actual;
-  EXPECT_TRUE(RemoveImageMapFloatTextureV4(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveImageMapFloatTexture(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -1493,7 +1694,9 @@ TEST(RemoveImageMapSpectrumTextureV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   ImageMapSpectrumTexture actual;
-  RemoveImageMapSpectrumTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveImageMapSpectrumTexture(parameters, /*pbrt_version=*/1, actual)
+          .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -1536,7 +1739,9 @@ TEST(RemoveImageMapSpectrumTextureV1, WithData) {
       {"mapping", mapping_parameter}};
 
   ImageMapSpectrumTexture actual;
-  RemoveImageMapSpectrumTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveImageMapSpectrumTexture(parameters, /*pbrt_version=*/1, actual)
+          .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 filename: "filename"
                 wrap: BLACK
@@ -1550,7 +1755,9 @@ TEST(RemoveImageMapSpectrumTextureV2, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   ImageMapSpectrumTexture actual;
-  RemoveImageMapSpectrumTextureV2(parameters, actual);
+  EXPECT_TRUE(
+      RemoveImageMapSpectrumTexture(parameters, /*pbrt_version=*/2, actual)
+          .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -1607,7 +1814,9 @@ TEST(RemoveImageMapSpectrumTextureV2, WithData) {
       {"gamma", gamma_parameter}};
 
   ImageMapSpectrumTexture actual;
-  RemoveImageMapSpectrumTextureV2(parameters, actual);
+  EXPECT_TRUE(
+      RemoveImageMapSpectrumTexture(parameters, /*pbrt_version=*/2, actual)
+          .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 filename: "filename"
                 wrap: BLACK
@@ -1623,7 +1832,9 @@ TEST(RemoveImageMapSpectrumTextureV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   ImageMapSpectrumTexture actual;
-  RemoveImageMapSpectrumTextureV3(parameters, actual);
+  EXPECT_TRUE(
+      RemoveImageMapSpectrumTexture(parameters, /*pbrt_version=*/3, actual)
+          .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -1680,7 +1891,9 @@ TEST(RemoveImageMapSpectrumTextureV3, WithData) {
       {"gamma", gamma_parameter}};
 
   ImageMapSpectrumTexture actual;
-  RemoveImageMapSpectrumTextureV3(parameters, actual);
+  EXPECT_TRUE(
+      RemoveImageMapSpectrumTexture(parameters, /*pbrt_version=*/3, actual)
+          .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 filename: "filename"
                 wrap: BLACK
@@ -1696,7 +1909,9 @@ TEST(RemoveImageMapSpectrumTextureV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   ImageMapSpectrumTexture actual;
-  EXPECT_TRUE(RemoveImageMapSpectrumTextureV4(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveImageMapSpectrumTexture(parameters, /*pbrt_version=*/4, actual)
+          .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -1760,7 +1975,9 @@ TEST(RemoveImageMapSpectrumTextureV4, WithData) {
       {"invert", invert_parameter}};
 
   ImageMapSpectrumTexture actual;
-  EXPECT_TRUE(RemoveImageMapSpectrumTextureV4(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemoveImageMapSpectrumTexture(parameters, /*pbrt_version=*/4, actual)
+          .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 filename: "filename"
                 wrap: BLACK
@@ -1774,15 +1991,16 @@ TEST(RemoveImageMapSpectrumTextureV4, WithData) {
               )pb"));
 }
 
-TEST(RemoveMarbleSpectrumTextureV1, Empty) {
+TEST(RemoveMarbleSpectrumTexture, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   MarbleSpectrumTexture actual;
-  RemoveMarbleSpectrumTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveMarbleSpectrumTexture(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveMarbleSpectrumTextureV1, WithData) {
+TEST(RemoveMarbleSpectrumTexture, WithData) {
   std::vector<int32_t> octaves = {1};
   Parameter octaves_parameter{/*directive=*/"",
                               /*type=*/ParameterType::INTEGER,
@@ -1814,7 +2032,8 @@ TEST(RemoveMarbleSpectrumTextureV1, WithData) {
       {"variation", variation_parameter}};
 
   MarbleSpectrumTexture actual;
-  RemoveMarbleSpectrumTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveMarbleSpectrumTexture(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 octaves: 1
                 roughness: 2.0
@@ -1823,15 +2042,16 @@ TEST(RemoveMarbleSpectrumTextureV1, WithData) {
               )pb"));
 }
 
-TEST(RemoveMixFloatTextureV1, Empty) {
+TEST(RemoveMixFloatTexture, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   MixFloatTexture actual;
-  RemoveMixFloatTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveMixFloatTexture(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveMixFloatTextureV1, WithData) {
+TEST(RemoveMixFloatTexture, WithData) {
   std::vector<absl::string_view> tex1 = {"tex1"};
   Parameter tex1_parameter{/*directive=*/"",
                            /*type=*/ParameterType::TEXTURE,
@@ -1856,7 +2076,8 @@ TEST(RemoveMixFloatTextureV1, WithData) {
       {"amount", amount_parameter}};
 
   MixFloatTexture actual;
-  RemoveMixFloatTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveMixFloatTexture(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 tex1 { float_texture_name: "tex1" }
                 tex2 { float_texture_name: "tex2" }
@@ -1864,15 +2085,16 @@ TEST(RemoveMixFloatTextureV1, WithData) {
               )pb"));
 }
 
-TEST(RemoveMixSpectrumTextureV1, Empty) {
+TEST(RemoveMixSpectrumTexture, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   MixSpectrumTexture actual;
-  RemoveMixSpectrumTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveMixSpectrumTexture(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveMixSpectrumTextureV1, WithData) {
+TEST(RemoveMixSpectrumTexture, WithData) {
   std::vector<absl::string_view> tex1 = {"tex1"};
   Parameter tex1_parameter{/*directive=*/"",
                            /*type=*/ParameterType::TEXTURE,
@@ -1897,7 +2119,8 @@ TEST(RemoveMixSpectrumTextureV1, WithData) {
       {"amount", amount_parameter}};
 
   MixSpectrumTexture actual;
-  RemoveMixSpectrumTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveMixSpectrumTexture(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 tex1 { spectrum_texture_name: "tex1" }
                 tex2 { spectrum_texture_name: "tex2" }
@@ -1909,7 +2132,8 @@ TEST(RemovePtexFloatTextureV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   PtexFloatTexture actual;
-  RemovePtexFloatTextureV3(parameters, actual);
+  EXPECT_TRUE(
+      RemovePtexFloatTexture(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -1930,7 +2154,8 @@ TEST(RemovePtexFloatTextureV3, WithData) {
       {"filename", filename_parameter}, {"gamma", gamma_parameter}};
 
   PtexFloatTexture actual;
-  RemovePtexFloatTextureV3(parameters, actual);
+  EXPECT_TRUE(
+      RemovePtexFloatTexture(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 filename: "filename" gamma: 1.0
               )pb"));
@@ -1940,7 +2165,8 @@ TEST(RemovePtexFloatTextureV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   PtexFloatTexture actual;
-  EXPECT_TRUE(RemovePtexFloatTextureV4(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemovePtexFloatTexture(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -1970,7 +2196,8 @@ TEST(RemovePtexFloatTextureV4, WithData) {
       {"encoding", encoding_parameter}};
 
   PtexFloatTexture actual;
-  EXPECT_TRUE(RemovePtexFloatTextureV4(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemovePtexFloatTexture(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 filename: "filename"
                 scale: 1.0
@@ -1983,7 +2210,8 @@ TEST(RemovePtexSpectrumTextureV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   PtexSpectrumTexture actual;
-  RemovePtexSpectrumTextureV3(parameters, actual);
+  EXPECT_TRUE(
+      RemovePtexSpectrumTexture(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -2004,7 +2232,8 @@ TEST(RemovePtexSpectrumTextureV3, WithData) {
       {"filename", filename_parameter}, {"gamma", gamma_parameter}};
 
   PtexSpectrumTexture actual;
-  RemovePtexSpectrumTextureV3(parameters, actual);
+  EXPECT_TRUE(
+      RemovePtexSpectrumTexture(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 filename: "filename" gamma: 1.0
               )pb"));
@@ -2014,7 +2243,8 @@ TEST(RemovePtexSpectrumTextureV4, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   PtexSpectrumTexture actual;
-  EXPECT_TRUE(RemovePtexSpectrumTextureV4(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemovePtexSpectrumTexture(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -2044,7 +2274,8 @@ TEST(RemovePtexSpectrumTextureV4, WithData) {
       {"encoding", encoding_parameter}};
 
   PtexSpectrumTexture actual;
-  EXPECT_TRUE(RemovePtexSpectrumTextureV4(parameters, actual).ok());
+  EXPECT_TRUE(
+      RemovePtexSpectrumTexture(parameters, /*pbrt_version=*/4, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 filename: "filename"
                 scale: 1.0
@@ -2053,15 +2284,16 @@ TEST(RemovePtexSpectrumTextureV4, WithData) {
               )pb"));
 }
 
-TEST(RemoveScaleFloatTextureV1, Empty) {
+TEST(RemoveScaleFloatTexture, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   ScaleFloatTexture actual;
-  RemoveScaleFloatTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveScaleFloatTexture(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveScaleFloatTextureV1, WithData) {
+TEST(RemoveScaleFloatTexture, WithData) {
   std::vector<absl::string_view> tex1 = {"tex1"};
   Parameter tex1_parameter{/*directive=*/"",
                            /*type=*/ParameterType::TEXTURE,
@@ -2078,22 +2310,24 @@ TEST(RemoveScaleFloatTextureV1, WithData) {
       {"tex1", tex1_parameter}, {"tex2", tex2_parameter}};
 
   ScaleFloatTexture actual;
-  RemoveScaleFloatTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveScaleFloatTexture(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 tex1 { float_texture_name: "tex1" }
                 tex2 { float_texture_name: "tex2" }
               )pb"));
 }
 
-TEST(RemoveScaleSpectrumTextureV1, Empty) {
+TEST(RemoveScaleSpectrumTexture, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   ScaleSpectrumTexture actual;
-  RemoveScaleSpectrumTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveScaleSpectrumTexture(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveScaleSpectrumTextureV1, WithData) {
+TEST(RemoveScaleSpectrumTexture, WithData) {
   std::vector<absl::string_view> tex1 = {"tex1"};
   Parameter tex1_parameter{/*directive=*/"",
                            /*type=*/ParameterType::TEXTURE,
@@ -2110,22 +2344,24 @@ TEST(RemoveScaleSpectrumTextureV1, WithData) {
       {"tex1", tex1_parameter}, {"tex2", tex2_parameter}};
 
   ScaleSpectrumTexture actual;
-  RemoveScaleSpectrumTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveScaleSpectrumTexture(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 tex1 { spectrum_texture_name: "tex1" }
                 tex2 { spectrum_texture_name: "tex2" }
               )pb"));
 }
 
-TEST(RemoveWrinkledFloatTextureV1, Empty) {
+TEST(RemoveWrinkledFloatTexture, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   WrinkledFloatTexture actual;
-  RemoveWrinkledFloatTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveWrinkledFloatTexture(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveWrinkledFloatTextureV1, WithData) {
+TEST(RemoveWrinkledFloatTexture, WithData) {
   std::vector<int32_t> octaves = {1};
   Parameter octaves_parameter{/*directive=*/"",
                               /*type=*/ParameterType::INTEGER,
@@ -2142,21 +2378,24 @@ TEST(RemoveWrinkledFloatTextureV1, WithData) {
       {"octaves", octaves_parameter}, {"roughness", roughness_parameter}};
 
   WrinkledFloatTexture actual;
-  RemoveWrinkledFloatTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveWrinkledFloatTexture(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 octaves: 1 roughness: 2.0
               )pb"));
 }
 
-TEST(RemoveWrinkledSpectrumTextureV1, Empty) {
+TEST(RemoveWrinkledSpectrumTexture, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   WrinkledSpectrumTexture actual;
-  RemoveWrinkledSpectrumTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveWrinkledSpectrumTexture(parameters, /*pbrt_version=*/1, actual)
+          .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveWrinkledSpectrumTextureV1, WithData) {
+TEST(RemoveWrinkledSpectrumTexture, WithData) {
   std::vector<int32_t> octaves = {1};
   Parameter octaves_parameter{/*directive=*/"",
                               /*type=*/ParameterType::INTEGER,
@@ -2173,21 +2412,24 @@ TEST(RemoveWrinkledSpectrumTextureV1, WithData) {
       {"octaves", octaves_parameter}, {"roughness", roughness_parameter}};
 
   WrinkledSpectrumTexture actual;
-  RemoveWrinkledSpectrumTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveWrinkledSpectrumTexture(parameters, /*pbrt_version=*/1, actual)
+          .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 octaves: 1 roughness: 2.0
               )pb"));
 }
 
-TEST(RemoveUvSpectrumTextureV1, Empty) {
+TEST(RemoveUvSpectrumTexture, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   UvSpectrumTexture actual;
-  RemoveUvSpectrumTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveUvSpectrumTexture(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveUvSpectrumTextureV1, WithData) {
+TEST(RemoveUvSpectrumTexture, WithData) {
   std::vector<absl::string_view> mapping = {"uv"};
   Parameter mapping_parameter{/*directive=*/"",
                               /*type=*/ParameterType::STRING,
@@ -2198,7 +2440,8 @@ TEST(RemoveUvSpectrumTextureV1, WithData) {
       {"mapping", mapping_parameter}};
 
   UvSpectrumTexture actual;
-  RemoveUvSpectrumTextureV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveUvSpectrumTexture(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 mapping: UV
               )pb"));

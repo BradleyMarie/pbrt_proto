@@ -44,7 +44,7 @@ static inline absl::Status TryRemoveSpectrum(
   return TryRemoveSpectrumV2(parameters, parameter_name, get_output);
 }
 
-bool TryRemoveFloatTexture(
+void TryRemoveFloatTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     absl::string_view parameter_name,
     absl::FunctionRef<FloatTextureParameter*()> get_output);
@@ -58,6 +58,19 @@ bool TryRemoveSpectrumTextureV2(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     absl::string_view parameter_name,
     absl::FunctionRef<SpectrumTextureParameter*()> get_output);
+
+static inline absl::Status TryRemoveSpectrumTexture(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    int pbrt_version, absl::string_view parameter_name,
+    absl::FunctionRef<SpectrumTextureParameter*()> get_output) {
+  if (pbrt_version <= 3) {
+    TryRemoveSpectrumTextureV1(parameters, parameter_name, get_output);
+  } else {
+    TryRemoveSpectrumTextureV2(parameters, parameter_name, get_output);
+  }
+
+  return absl::OkStatus();
+}
 
 }  // namespace pbrt_proto
 

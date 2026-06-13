@@ -18,7 +18,7 @@ namespace {
 
 std::optional<CheckerboardAntialiasing> TryRemoveAaMode(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    bool pbrt_v1) {
+    int pbrt_version) {
   if (std::optional<absl::string_view> aamode =
           TryRemoveString(parameters, "aamode");
       aamode) {
@@ -26,7 +26,7 @@ std::optional<CheckerboardAntialiasing> TryRemoveAaMode(
       return CheckerboardAntialiasing::CLOSEDFORM;
     } else if (*aamode == "none") {
       return CheckerboardAntialiasing::DISABLED;
-    } else if (pbrt_v1 && *aamode == "supersample") {
+    } else if (pbrt_version == 1 && *aamode == "supersample") {
       return CheckerboardAntialiasing::SUPERSAMPLE;
     } else {
       std::cerr
@@ -224,9 +224,10 @@ void RemoveImageMapBase(
 
 }  // namespace
 
-void RemoveBilerpFloatTextureV1(
+absl::Status RemoveBilerpFloatTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    BilerpFloatTexture& output) {
+    int pbrt_version, BilerpFloatTexture& output) {
+  TryRemoveUVParameters(parameters, "bilerp", output);
   TryRemoveFloatTexture(parameters, "v00",
                         std::bind(&BilerpFloatTexture::mutable_v00, &output));
   TryRemoveFloatTexture(parameters, "v01",
@@ -235,187 +236,219 @@ void RemoveBilerpFloatTextureV1(
                         std::bind(&BilerpFloatTexture::mutable_v10, &output));
   TryRemoveFloatTexture(parameters, "v11",
                         std::bind(&BilerpFloatTexture::mutable_v11, &output));
-  TryRemoveUVParameters(parameters, "bilerp", output);
+  return absl::OkStatus();
 }
 
-void RemoveBilerpSpectrumTextureV1(
+absl::Status RemoveBilerpSpectrumTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    BilerpSpectrumTexture& output) {
-  TryRemoveSpectrumTextureV1(
-      parameters, "v00",
-      std::bind(&BilerpSpectrumTexture::mutable_v00, &output));
-  TryRemoveSpectrumTextureV1(
-      parameters, "v01",
-      std::bind(&BilerpSpectrumTexture::mutable_v01, &output));
-  TryRemoveSpectrumTextureV1(
-      parameters, "v10",
-      std::bind(&BilerpSpectrumTexture::mutable_v10, &output));
-  TryRemoveSpectrumTextureV1(
-      parameters, "v11",
-      std::bind(&BilerpSpectrumTexture::mutable_v11, &output));
+    int pbrt_version, BilerpSpectrumTexture& output) {
   TryRemoveUVParameters(parameters, "bilerp", output);
-}
 
-void RemoveCheckerboard2DFloatTextureV1(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    Checkerboard2DFloatTexture& output) {
-  if (std::optional<CheckerboardAntialiasing> aamode =
-          TryRemoveAaMode(parameters, /*pbrt_v1=*/true);
-      aamode) {
-    output.set_aamode(*aamode);
+  if (absl::Status status = TryRemoveSpectrumTexture(
+          parameters, pbrt_version, "v00",
+          std::bind(&BilerpSpectrumTexture::mutable_v00, &output));
+      !status.ok()) {
+    return status;
   }
 
-  RemoveCheckerboard2DFloatTextureV4(parameters, output);
-}
-
-void RemoveCheckerboard2DFloatTextureV2(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    Checkerboard2DFloatTexture& output) {
-  if (std::optional<CheckerboardAntialiasing> aamode =
-          TryRemoveAaMode(parameters, /*pbrt_v1=*/false);
-      aamode) {
-    output.set_aamode(*aamode);
+  if (absl::Status status = TryRemoveSpectrumTexture(
+          parameters, pbrt_version, "v01",
+          std::bind(&BilerpSpectrumTexture::mutable_v01, &output));
+      !status.ok()) {
+    return status;
   }
 
-  RemoveCheckerboard2DFloatTextureV4(parameters, output);
+  if (absl::Status status = TryRemoveSpectrumTexture(
+          parameters, pbrt_version, "v10",
+          std::bind(&BilerpSpectrumTexture::mutable_v10, &output));
+      !status.ok()) {
+    return status;
+  }
+
+  if (absl::Status status = TryRemoveSpectrumTexture(
+          parameters, pbrt_version, "v11",
+          std::bind(&BilerpSpectrumTexture::mutable_v11, &output));
+      !status.ok()) {
+    return status;
+  }
+
+  return absl::OkStatus();
 }
 
-void RemoveCheckerboard2DFloatTextureV4(
+absl::Status RemoveCheckerboard2DFloatTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    Checkerboard2DFloatTexture& output) {
+    int pbrt_version, Checkerboard2DFloatTexture& output) {
+  TryRemoveUVParameters(parameters, "checkerboard", output);
   TryRemoveFloatTexture(
       parameters, "tex1",
       std::bind(&Checkerboard2DFloatTexture::mutable_tex1, &output));
   TryRemoveFloatTexture(
       parameters, "tex2",
       std::bind(&Checkerboard2DFloatTexture::mutable_tex2, &output));
-  TryRemoveUVParameters(parameters, "checkerboard", output);
-}
 
-void RemoveCheckerboard2DSpectrumTextureV1(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    Checkerboard2DSpectrumTexture& output) {
-  if (std::optional<CheckerboardAntialiasing> aamode =
-          TryRemoveAaMode(parameters, /*pbrt_v1=*/true);
-      aamode) {
-    output.set_aamode(*aamode);
+  if (pbrt_version <= 3) {
+    if (std::optional<CheckerboardAntialiasing> aamode =
+            TryRemoveAaMode(parameters, pbrt_version);
+        aamode) {
+      output.set_aamode(*aamode);
+    }
   }
 
-  RemoveCheckerboard2DSpectrumTextureV4(parameters, output);
+  return absl::OkStatus();
 }
 
-void RemoveCheckerboard2DSpectrumTextureV2(
+absl::Status RemoveCheckerboard2DSpectrumTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    Checkerboard2DSpectrumTexture& output) {
-  if (std::optional<CheckerboardAntialiasing> aamode =
-          TryRemoveAaMode(parameters, /*pbrt_v1=*/false);
-      aamode) {
-    output.set_aamode(*aamode);
+    int pbrt_version, Checkerboard2DSpectrumTexture& output) {
+  TryRemoveUVParameters(parameters, "checkerboard", output);
+
+  if (absl::Status status = TryRemoveSpectrumTexture(
+          parameters, pbrt_version, "tex1",
+          std::bind(&Checkerboard2DSpectrumTexture::mutable_tex1, &output));
+      !status.ok()) {
+    return status;
   }
 
-  RemoveCheckerboard2DSpectrumTextureV4(parameters, output);
+  if (absl::Status status = TryRemoveSpectrumTexture(
+          parameters, pbrt_version, "tex2",
+          std::bind(&Checkerboard2DSpectrumTexture::mutable_tex2, &output));
+      !status.ok()) {
+    return status;
+  }
+
+  if (pbrt_version <= 3) {
+    if (std::optional<CheckerboardAntialiasing> aamode =
+            TryRemoveAaMode(parameters, pbrt_version);
+        aamode) {
+      output.set_aamode(*aamode);
+    }
+  }
+
+  return absl::OkStatus();
 }
 
-void RemoveCheckerboard2DSpectrumTextureV4(
+absl::Status RemoveCheckerboard3DFloatTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    Checkerboard2DSpectrumTexture& output) {
-  TryRemoveSpectrumTextureV1(
-      parameters, "tex1",
-      std::bind(&Checkerboard2DSpectrumTexture::mutable_tex1, &output));
-  TryRemoveSpectrumTextureV1(
-      parameters, "tex2",
-      std::bind(&Checkerboard2DSpectrumTexture::mutable_tex2, &output));
-  TryRemoveUVParameters(parameters, "checkerboard", output);
-}
-
-void RemoveCheckerboard3DFloatTextureV1(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    Checkerboard3DFloatTexture& output) {
+    int pbrt_version, Checkerboard3DFloatTexture& output) {
   TryRemoveFloatTexture(
       parameters, "tex1",
       std::bind(&Checkerboard3DFloatTexture::mutable_tex1, &output));
   TryRemoveFloatTexture(
       parameters, "tex2",
       std::bind(&Checkerboard3DFloatTexture::mutable_tex2, &output));
+  return absl::OkStatus();
 }
 
-void RemoveCheckerboard3DSpectrumTextureV1(
+absl::Status RemoveCheckerboard3DSpectrumTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    Checkerboard3DSpectrumTexture& output) {
-  TryRemoveSpectrumTextureV1(
-      parameters, "tex1",
-      std::bind(&Checkerboard3DSpectrumTexture::mutable_tex1, &output));
-  TryRemoveSpectrumTextureV1(
-      parameters, "tex2",
-      std::bind(&Checkerboard3DSpectrumTexture::mutable_tex2, &output));
+    int pbrt_version, Checkerboard3DSpectrumTexture& output) {
+  if (absl::Status status = TryRemoveSpectrumTexture(
+          parameters, pbrt_version, "tex1",
+          std::bind(&Checkerboard3DSpectrumTexture::mutable_tex1, &output));
+      !status.ok()) {
+    return status;
+  }
+
+  if (absl::Status status = TryRemoveSpectrumTexture(
+          parameters, pbrt_version, "tex2",
+          std::bind(&Checkerboard3DSpectrumTexture::mutable_tex2, &output));
+      !status.ok()) {
+    return status;
+  }
+
+  return absl::OkStatus();
 }
 
-void RemoveConstantFloatTextureV1(
+absl::Status RemoveConstantFloatTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    ConstantFloatTexture& output) {
+    int pbrt_version, ConstantFloatTexture& output) {
   if (std::optional<double> value = TryRemoveFloat(parameters, "value");
       value) {
     output.set_value(*value);
   }
+
+  return absl::OkStatus();
 }
 
-absl::Status RemoveConstantSpectrumTextureV1(
+absl::Status RemoveConstantSpectrumTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    ConstantSpectrumTexture& output) {
-  return TryRemoveSpectrumV1(
-      parameters, "value",
+    int pbrt_version, ConstantSpectrumTexture& output) {
+  return TryRemoveSpectrum(
+      parameters, pbrt_version, "value",
       std::bind(&ConstantSpectrumTexture::mutable_value, &output));
 }
 
-void RemoveDirectionMixFloatTextureV4(
+absl::Status RemoveDirectionMixFloatTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    DirectionMixFloatTexture& output) {
+    int pbrt_version, DirectionMixFloatTexture& output) {
+  RemoveDir(parameters, output);
   TryRemoveFloatTexture(
       parameters, "tex1",
       std::bind(&DirectionMixFloatTexture::mutable_tex1, &output));
   TryRemoveFloatTexture(
       parameters, "tex2",
       std::bind(&DirectionMixFloatTexture::mutable_tex2, &output));
-  RemoveDir(parameters, output);
+  return absl::OkStatus();
 }
 
-void RemoveDirectionMixSpectrumTextureV4(
+absl::Status RemoveDirectionMixSpectrumTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    DirectionMixSpectrumTexture& output) {
-  TryRemoveSpectrumTextureV1(
-      parameters, "tex1",
-      std::bind(&DirectionMixSpectrumTexture::mutable_tex1, &output));
-  TryRemoveSpectrumTextureV1(
-      parameters, "tex2",
-      std::bind(&DirectionMixSpectrumTexture::mutable_tex2, &output));
+    int pbrt_version, DirectionMixSpectrumTexture& output) {
   RemoveDir(parameters, output);
+
+  if (absl::Status status = TryRemoveSpectrumTexture(
+          parameters, pbrt_version, "tex1",
+          std::bind(&DirectionMixSpectrumTexture::mutable_tex1, &output));
+      !status.ok()) {
+    return status;
+  }
+
+  if (absl::Status status = TryRemoveSpectrumTexture(
+          parameters, pbrt_version, "tex2",
+          std::bind(&DirectionMixSpectrumTexture::mutable_tex2, &output));
+      !status.ok()) {
+    return status;
+  }
+
+  return absl::OkStatus();
 }
 
-void RemoveDotsFloatTextureV1(
+absl::Status RemoveDotsFloatTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    DotsFloatTexture& output) {
+    int pbrt_version, DotsFloatTexture& output) {
+  TryRemoveUVParameters(parameters, "dots", output);
   TryRemoveFloatTexture(parameters, "inside",
                         std::bind(&DotsFloatTexture::mutable_inside, &output));
   TryRemoveFloatTexture(parameters, "outside",
                         std::bind(&DotsFloatTexture::mutable_outside, &output));
-  TryRemoveUVParameters(parameters, "dots", output);
+  return absl::OkStatus();
 }
 
-void RemoveDotsSpectrumTextureV1(
+absl::Status RemoveDotsSpectrumTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    DotsSpectrumTexture& output) {
-  TryRemoveSpectrumTextureV1(
-      parameters, "inside",
-      std::bind(&DotsSpectrumTexture::mutable_inside, &output));
-  TryRemoveSpectrumTextureV1(
-      parameters, "outside",
-      std::bind(&DotsSpectrumTexture::mutable_outside, &output));
+    int pbrt_version, DotsSpectrumTexture& output) {
   TryRemoveUVParameters(parameters, "dots", output);
+
+  if (absl::Status status = TryRemoveSpectrumTexture(
+          parameters, pbrt_version, "inside",
+          std::bind(&DotsSpectrumTexture::mutable_inside, &output));
+      !status.ok()) {
+    return status;
+  }
+
+  if (absl::Status status = TryRemoveSpectrumTexture(
+          parameters, pbrt_version, "outside",
+          std::bind(&DotsSpectrumTexture::mutable_outside, &output));
+      !status.ok()) {
+    return status;
+  }
+
+  return absl::OkStatus();
 }
 
-void RemoveFBmFloatTextureV1(
+absl::Status RemoveFBmFloatTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    FBmFloatTexture& output) {
+    int pbrt_version, FBmFloatTexture& output) {
   if (std::optional<int32_t> octaves = TryRemoveInteger(parameters, "octaves");
       octaves) {
     output.set_octaves(std::max(0, *octaves));
@@ -425,11 +458,13 @@ void RemoveFBmFloatTextureV1(
       roughness) {
     output.set_roughness(*roughness);
   }
+
+  return absl::OkStatus();
 }
 
-void RemoveFBmSpectrumTextureV1(
+absl::Status RemoveFBmSpectrumTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    FBmSpectrumTexture& output) {
+    int pbrt_version, FBmSpectrumTexture& output) {
   if (std::optional<int32_t> octaves = TryRemoveInteger(parameters, "octaves");
       octaves) {
     output.set_octaves(std::max(0, *octaves));
@@ -439,135 +474,145 @@ void RemoveFBmSpectrumTextureV1(
       roughness) {
     output.set_roughness(*roughness);
   }
+
+  return absl::OkStatus();
 }
 
-void RemoveImageMapFloatTextureV1(
+absl::Status RemoveImageMapFloatTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    ImageMapFloatTexture& output) {
-  RemoveImageMapBase(parameters, output);
-
-  if (std::optional<bool> trilinear = TryRemoveBool(parameters, "trilinear");
-      trilinear) {
-    output.set_filter(TextureFilter::TRILINEAR);
+    int pbrt_version, ImageMapFloatTexture& output) {
+  if (std::optional<absl::string_view> filename =
+          TryRemoveString(parameters, "filename");
+      filename) {
+    output.set_filename(*filename);
   }
+
+  if (std::optional<double> maxanisotropy =
+          TryRemoveFloat(parameters, "maxanisotropy");
+      maxanisotropy) {
+    output.set_maxanisotropy(*maxanisotropy);
+  }
+
+  if (std::optional<ImageWrap> wrap = TryRemoveWrap(parameters); wrap) {
+    output.set_wrap(*wrap);
+  }
+
+  TryRemoveUVParameters(parameters, "imagemap", output);
+
+  if (pbrt_version <= 3) {
+    if (std::optional<bool> trilinear = TryRemoveBool(parameters, "trilinear");
+        trilinear) {
+      output.set_filter(TextureFilter::TRILINEAR);
+    }
+  }
+
+  if (pbrt_version >= 2) {
+    if (std::optional<double> scale = TryRemoveFloat(parameters, "scale");
+        scale) {
+      output.set_scale(*scale);
+    }
+  }
+
+  if (pbrt_version == 2) {
+    if (std::optional<double> gamma = TryRemoveFloat(parameters, "gamma");
+        gamma) {
+      output.set_gamma(*gamma);
+    }
+  }
+
+  if (pbrt_version == 3) {
+    if (std::optional<bool> gamma = TryRemoveBool(parameters, "gamma"); gamma) {
+      output.set_encoding(*gamma ? ImageEncoding::GAMMA : ImageEncoding::SRGB);
+    }
+  }
+
+  if (pbrt_version >= 4) {
+    RemoveFilter(parameters, output);
+
+    if (std::optional<bool> invert = TryRemoveBool(parameters, "invert");
+        invert) {
+      output.set_invert(*invert);
+    }
+
+    if (absl::Status status =
+            RemoveEncoding(parameters, "imagemap Texture", output);
+        !status.ok()) {
+      return status;
+    }
+  }
+
+  return absl::OkStatus();
 }
 
-void RemoveImageMapFloatTextureV2(
+absl::Status RemoveImageMapSpectrumTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    ImageMapFloatTexture& output) {
-  RemoveImageMapFloatTextureV1(parameters, output);
-
-  if (std::optional<double> gamma = TryRemoveFloat(parameters, "gamma");
-      gamma) {
-    output.set_gamma(*gamma);
+    int pbrt_version, ImageMapSpectrumTexture& output) {
+  if (std::optional<absl::string_view> filename =
+          TryRemoveString(parameters, "filename");
+      filename) {
+    output.set_filename(*filename);
   }
 
-  if (std::optional<double> scale = TryRemoveFloat(parameters, "scale");
-      scale) {
-    output.set_scale(*scale);
+  if (std::optional<double> maxanisotropy =
+          TryRemoveFloat(parameters, "maxanisotropy");
+      maxanisotropy) {
+    output.set_maxanisotropy(*maxanisotropy);
   }
+
+  if (std::optional<ImageWrap> wrap = TryRemoveWrap(parameters); wrap) {
+    output.set_wrap(*wrap);
+  }
+
+  TryRemoveUVParameters(parameters, "imagemap", output);
+
+  if (pbrt_version <= 3) {
+    if (std::optional<bool> trilinear = TryRemoveBool(parameters, "trilinear");
+        trilinear) {
+      output.set_filter(TextureFilter::TRILINEAR);
+    }
+  }
+
+  if (pbrt_version >= 2) {
+    if (std::optional<double> scale = TryRemoveFloat(parameters, "scale");
+        scale) {
+      output.set_scale(*scale);
+    }
+  }
+
+  if (pbrt_version == 2) {
+    if (std::optional<double> gamma = TryRemoveFloat(parameters, "gamma");
+        gamma) {
+      output.set_gamma(*gamma);
+    }
+  }
+
+  if (pbrt_version == 3) {
+    if (std::optional<bool> gamma = TryRemoveBool(parameters, "gamma"); gamma) {
+      output.set_encoding(*gamma ? ImageEncoding::GAMMA : ImageEncoding::SRGB);
+    }
+  }
+
+  if (pbrt_version >= 4) {
+    RemoveFilter(parameters, output);
+
+    if (std::optional<bool> invert = TryRemoveBool(parameters, "invert");
+        invert) {
+      output.set_invert(*invert);
+    }
+
+    if (absl::Status status =
+            RemoveEncoding(parameters, "imagemap Texture", output);
+        !status.ok()) {
+      return status;
+    }
+  }
+
+  return absl::OkStatus();
 }
 
-void RemoveImageMapFloatTextureV3(
+absl::Status RemoveMarbleSpectrumTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    ImageMapFloatTexture& output) {
-  RemoveImageMapFloatTextureV1(parameters, output);
-
-  if (std::optional<bool> gamma = TryRemoveBool(parameters, "gamma"); gamma) {
-    output.set_encoding(*gamma ? ImageEncoding::GAMMA : ImageEncoding::SRGB);
-  }
-
-  if (std::optional<double> scale = TryRemoveFloat(parameters, "scale");
-      scale) {
-    output.set_scale(*scale);
-  }
-}
-
-absl::Status RemoveImageMapFloatTextureV4(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    ImageMapFloatTexture& output) {
-  RemoveImageMapBase(parameters, output);
-
-  RemoveFilter(parameters, output);
-
-  if (std::optional<double> scale = TryRemoveFloat(parameters, "scale");
-      scale) {
-    output.set_scale(*scale);
-  }
-
-  if (std::optional<bool> invert = TryRemoveBool(parameters, "invert");
-      invert) {
-    output.set_invert(*invert);
-  }
-
-  return RemoveEncoding(parameters, "imagemap FloatTexture", output);
-}
-
-void RemoveImageMapSpectrumTextureV1(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    ImageMapSpectrumTexture& output) {
-  RemoveImageMapBase(parameters, output);
-
-  if (std::optional<bool> trilinear = TryRemoveBool(parameters, "trilinear");
-      trilinear) {
-    output.set_filter(TextureFilter::TRILINEAR);
-  }
-}
-
-void RemoveImageMapSpectrumTextureV2(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    ImageMapSpectrumTexture& output) {
-  RemoveImageMapSpectrumTextureV1(parameters, output);
-
-  if (std::optional<double> gamma = TryRemoveFloat(parameters, "gamma");
-      gamma) {
-    output.set_gamma(*gamma);
-  }
-
-  if (std::optional<double> scale = TryRemoveFloat(parameters, "scale");
-      scale) {
-    output.set_scale(*scale);
-  }
-}
-
-void RemoveImageMapSpectrumTextureV3(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    ImageMapSpectrumTexture& output) {
-  RemoveImageMapSpectrumTextureV1(parameters, output);
-
-  if (std::optional<bool> gamma = TryRemoveBool(parameters, "gamma"); gamma) {
-    output.set_encoding(*gamma ? ImageEncoding::GAMMA : ImageEncoding::SRGB);
-  }
-
-  if (std::optional<double> scale = TryRemoveFloat(parameters, "scale");
-      scale) {
-    output.set_scale(*scale);
-  }
-}
-
-absl::Status RemoveImageMapSpectrumTextureV4(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    ImageMapSpectrumTexture& output) {
-  RemoveImageMapBase(parameters, output);
-
-  RemoveFilter(parameters, output);
-
-  if (std::optional<double> scale = TryRemoveFloat(parameters, "scale");
-      scale) {
-    output.set_scale(*scale);
-  }
-
-  if (std::optional<bool> invert = TryRemoveBool(parameters, "invert");
-      invert) {
-    output.set_invert(*invert);
-  }
-
-  return RemoveEncoding(parameters, "imagemap SpectrumTexture", output);
-}
-
-void RemoveMarbleSpectrumTextureV1(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    MarbleSpectrumTexture& output) {
+    int pbrt_version, MarbleSpectrumTexture& output) {
   if (std::optional<int32_t> octaves = TryRemoveInteger(parameters, "octaves");
       octaves) {
     output.set_octaves(std::max(0, *octaves));
@@ -587,120 +632,143 @@ void RemoveMarbleSpectrumTextureV1(
       variation) {
     output.set_variation(*variation);
   }
+
+  return absl::OkStatus();
 }
 
-void RemoveMixFloatTextureV1(
+absl::Status RemoveMixFloatTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    MixFloatTexture& output) {
+    int pbrt_version, MixFloatTexture& output) {
   TryRemoveFloatTexture(parameters, "amount",
                         std::bind(&MixFloatTexture::mutable_amount, &output));
   TryRemoveFloatTexture(parameters, "tex1",
                         std::bind(&MixFloatTexture::mutable_tex1, &output));
   TryRemoveFloatTexture(parameters, "tex2",
                         std::bind(&MixFloatTexture::mutable_tex2, &output));
+  return absl::OkStatus();
 }
 
-void RemoveMixSpectrumTextureV1(
+absl::Status RemoveMixSpectrumTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    MixSpectrumTexture& output) {
+    int pbrt_version, MixSpectrumTexture& output) {
   TryRemoveFloatTexture(
       parameters, "amount",
       std::bind(&MixSpectrumTexture::mutable_amount, &output));
-  TryRemoveSpectrumTextureV1(
-      parameters, "tex1",
-      std::bind(&MixSpectrumTexture::mutable_tex1, &output));
-  TryRemoveSpectrumTextureV1(
-      parameters, "tex2",
-      std::bind(&MixSpectrumTexture::mutable_tex2, &output));
+
+  if (absl::Status status = TryRemoveSpectrumTexture(
+          parameters, pbrt_version, "tex1",
+          std::bind(&MixSpectrumTexture::mutable_tex1, &output));
+      !status.ok()) {
+    return status;
+  }
+
+  if (absl::Status status = TryRemoveSpectrumTexture(
+          parameters, pbrt_version, "tex2",
+          std::bind(&MixSpectrumTexture::mutable_tex2, &output));
+      !status.ok()) {
+    return status;
+  }
+
+  return absl::OkStatus();
 }
 
-void RemovePtexFloatTextureV3(
+absl::Status RemovePtexFloatTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    PtexFloatTexture& output) {
+    int pbrt_version, PtexFloatTexture& output) {
   if (std::optional<absl::string_view> filename =
           TryRemoveString(parameters, "filename");
       filename) {
     output.set_filename(*filename);
   }
 
-  if (std::optional<double> gamma = TryRemoveFloat(parameters, "gamma");
-      gamma) {
-    output.set_gamma(*gamma);
+  if (pbrt_version == 3) {
+    if (std::optional<double> gamma = TryRemoveFloat(parameters, "gamma");
+        gamma) {
+      output.set_gamma(*gamma);
+    }
   }
+
+  if (pbrt_version >= 4) {
+    if (std::optional<double> scale = TryRemoveFloat(parameters, "scale");
+        scale) {
+      output.set_scale(*scale);
+    }
+
+    if (absl::Status status =
+            RemoveEncoding(parameters, "ptex Texture", output);
+        !status.ok()) {
+      return status;
+    }
+  }
+
+  return absl::OkStatus();
 }
 
-absl::Status RemovePtexFloatTextureV4(
+absl::Status RemovePtexSpectrumTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    PtexFloatTexture& output) {
+    int pbrt_version, PtexSpectrumTexture& output) {
   if (std::optional<absl::string_view> filename =
           TryRemoveString(parameters, "filename");
       filename) {
     output.set_filename(*filename);
   }
 
-  if (std::optional<double> scale = TryRemoveFloat(parameters, "scale");
-      scale) {
-    output.set_scale(*scale);
+  if (pbrt_version == 3) {
+    if (std::optional<double> gamma = TryRemoveFloat(parameters, "gamma");
+        gamma) {
+      output.set_gamma(*gamma);
+    }
   }
 
-  return RemoveEncoding(parameters, "ptex SpectrumTexture", output);
+  if (pbrt_version >= 4) {
+    if (std::optional<double> scale = TryRemoveFloat(parameters, "scale");
+        scale) {
+      output.set_scale(*scale);
+    }
+
+    if (absl::Status status =
+            RemoveEncoding(parameters, "ptex Texture", output);
+        !status.ok()) {
+      return status;
+    }
+  }
+
+  return absl::OkStatus();
 }
 
-void RemovePtexSpectrumTextureV3(
+absl::Status RemoveScaleFloatTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    PtexSpectrumTexture& output) {
-  if (std::optional<absl::string_view> filename =
-          TryRemoveString(parameters, "filename");
-      filename) {
-    output.set_filename(*filename);
-  }
-
-  if (std::optional<double> gamma = TryRemoveFloat(parameters, "gamma");
-      gamma) {
-    output.set_gamma(*gamma);
-  }
-}
-
-absl::Status RemovePtexSpectrumTextureV4(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    PtexSpectrumTexture& output) {
-  if (std::optional<absl::string_view> filename =
-          TryRemoveString(parameters, "filename");
-      filename) {
-    output.set_filename(*filename);
-  }
-
-  if (std::optional<double> scale = TryRemoveFloat(parameters, "scale");
-      scale) {
-    output.set_scale(*scale);
-  }
-
-  return RemoveEncoding(parameters, "ptex SpectrumTexture", output);
-}
-
-void RemoveScaleFloatTextureV1(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    ScaleFloatTexture& output) {
+    int pbrt_version, ScaleFloatTexture& output) {
   TryRemoveFloatTexture(parameters, "tex1",
                         std::bind(&ScaleFloatTexture::mutable_tex1, &output));
   TryRemoveFloatTexture(parameters, "tex2",
                         std::bind(&ScaleFloatTexture::mutable_tex2, &output));
+  return absl::OkStatus();
 }
 
-void RemoveScaleSpectrumTextureV1(
+absl::Status RemoveScaleSpectrumTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    ScaleSpectrumTexture& output) {
-  TryRemoveSpectrumTextureV1(
-      parameters, "tex1",
-      std::bind(&ScaleSpectrumTexture::mutable_tex1, &output));
-  TryRemoveSpectrumTextureV1(
-      parameters, "tex2",
-      std::bind(&ScaleSpectrumTexture::mutable_tex2, &output));
+    int pbrt_version, ScaleSpectrumTexture& output) {
+  if (absl::Status status = TryRemoveSpectrumTexture(
+          parameters, pbrt_version, "tex1",
+          std::bind(&ScaleSpectrumTexture::mutable_tex1, &output));
+      !status.ok()) {
+    return status;
+  }
+
+  if (absl::Status status = TryRemoveSpectrumTexture(
+          parameters, pbrt_version, "tex2",
+          std::bind(&ScaleSpectrumTexture::mutable_tex2, &output));
+      !status.ok()) {
+    return status;
+  }
+
+  return absl::OkStatus();
 }
 
-void RemoveWrinkledFloatTextureV1(
+absl::Status RemoveWrinkledFloatTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    WrinkledFloatTexture& output) {
+    int pbrt_version, WrinkledFloatTexture& output) {
   if (std::optional<int32_t> octaves = TryRemoveInteger(parameters, "octaves");
       octaves) {
     output.set_octaves(std::max(0, *octaves));
@@ -710,11 +778,13 @@ void RemoveWrinkledFloatTextureV1(
       roughness) {
     output.set_roughness(*roughness);
   }
+
+  return absl::OkStatus();
 }
 
-void RemoveWrinkledSpectrumTextureV1(
+absl::Status RemoveWrinkledSpectrumTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    WrinkledSpectrumTexture& output) {
+    int pbrt_version, WrinkledSpectrumTexture& output) {
   if (std::optional<int32_t> octaves = TryRemoveInteger(parameters, "octaves");
       octaves) {
     output.set_octaves(std::max(0, *octaves));
@@ -724,12 +794,15 @@ void RemoveWrinkledSpectrumTextureV1(
       roughness) {
     output.set_roughness(*roughness);
   }
+
+  return absl::OkStatus();
 }
 
-void RemoveUvSpectrumTextureV1(
+absl::Status RemoveUvSpectrumTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    UvSpectrumTexture& output) {
+    int pbrt_version, UvSpectrumTexture& output) {
   TryRemoveUVParameters(parameters, "uv", output);
+  return absl::OkStatus();
 }
 
 }  // namespace pbrt_proto

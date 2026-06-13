@@ -9,157 +9,109 @@
 
 namespace pbrt_proto {
 
-void RemoveBilerpFloatTextureV1(
+absl::Status RemoveBilerpFloatTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    BilerpFloatTexture& output);
+    int pbrt_version, BilerpFloatTexture& output);
 
-void RemoveBilerpSpectrumTextureV1(
+absl::Status RemoveBilerpSpectrumTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    BilerpSpectrumTexture& output);
+    int pbrt_version, BilerpSpectrumTexture& output);
 
-void RemoveCheckerboard2DFloatTextureV1(
+absl::Status RemoveCheckerboard2DFloatTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    Checkerboard2DFloatTexture& output);
+    int pbrt_version, Checkerboard2DFloatTexture& output);
 
-void RemoveCheckerboard2DFloatTextureV2(
+absl::Status RemoveCheckerboard2DSpectrumTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    Checkerboard2DFloatTexture& output);
+    int pbrt_version, Checkerboard2DSpectrumTexture& output);
 
-void RemoveCheckerboard2DFloatTextureV4(
+absl::Status RemoveCheckerboard3DFloatTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    Checkerboard2DFloatTexture& output);
+    int pbrt_version, Checkerboard3DFloatTexture& output);
 
-void RemoveCheckerboard2DSpectrumTextureV1(
+absl::Status RemoveCheckerboard3DSpectrumTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    Checkerboard2DSpectrumTexture& output);
+    int pbrt_version, Checkerboard3DSpectrumTexture& output);
 
-void RemoveCheckerboard2DSpectrumTextureV2(
+absl::Status RemoveConstantFloatTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    Checkerboard2DSpectrumTexture& output);
+    int pbrt_version, ConstantFloatTexture& output);
 
-void RemoveCheckerboard2DSpectrumTextureV4(
+absl::Status RemoveConstantSpectrumTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    Checkerboard2DSpectrumTexture& output);
+    int pbrt_version, ConstantSpectrumTexture& output);
 
-void RemoveCheckerboard3DFloatTextureV1(
+absl::Status RemoveDirectionMixFloatTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    Checkerboard3DFloatTexture& output);
+    int pbrt_version, DirectionMixFloatTexture& output);
 
-void RemoveCheckerboard3DSpectrumTextureV1(
+absl::Status RemoveDirectionMixSpectrumTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    Checkerboard3DSpectrumTexture& output);
+    int pbrt_version, DirectionMixSpectrumTexture& output);
 
-void RemoveConstantFloatTextureV1(
+absl::Status RemoveDotsFloatTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    ConstantFloatTexture& output);
+    int pbrt_version, DotsFloatTexture& output);
 
-absl::Status RemoveConstantSpectrumTextureV1(
+absl::Status RemoveDotsSpectrumTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    ConstantSpectrumTexture& output);
+    int pbrt_version, DotsSpectrumTexture& output);
 
-void RemoveDirectionMixFloatTextureV4(
+absl::Status RemoveFBmFloatTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    DirectionMixFloatTexture& output);
+    int pbrt_version, FBmFloatTexture& output);
 
-void RemoveDirectionMixSpectrumTextureV4(
+absl::Status RemoveFBmSpectrumTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    DirectionMixSpectrumTexture& output);
+    int pbrt_version, FBmSpectrumTexture& output);
 
-void RemoveDotsFloatTextureV1(
+absl::Status RemoveImageMapFloatTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    DotsFloatTexture& output);
+    int pbrt_version, ImageMapFloatTexture& output);
 
-void RemoveDotsSpectrumTextureV1(
+absl::Status RemoveImageMapSpectrumTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    DotsSpectrumTexture& output);
+    int pbrt_version, ImageMapSpectrumTexture& output);
 
-void RemoveFBmFloatTextureV1(
+absl::Status RemoveMarbleSpectrumTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    FBmFloatTexture& output);
+    int pbrt_version, MarbleSpectrumTexture& output);
 
-void RemoveFBmSpectrumTextureV1(
+absl::Status RemoveMixFloatTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    FBmSpectrumTexture& output);
+    int pbrt_version, MixFloatTexture& output);
 
-void RemoveImageMapFloatTextureV1(
+absl::Status RemoveMixSpectrumTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    ImageMapFloatTexture& output);
+    int pbrt_version, MixSpectrumTexture& output);
 
-void RemoveImageMapFloatTextureV2(
+absl::Status RemovePtexFloatTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    ImageMapFloatTexture& output);
+    int pbrt_version, PtexFloatTexture& output);
 
-void RemoveImageMapFloatTextureV3(
+absl::Status RemovePtexSpectrumTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    ImageMapFloatTexture& output);
+    int pbrt_version, PtexSpectrumTexture& output);
 
-absl::Status RemoveImageMapFloatTextureV4(
+absl::Status RemoveScaleFloatTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    ImageMapFloatTexture& output);
+    int pbrt_version, ScaleFloatTexture& output);
 
-void RemoveImageMapSpectrumTextureV1(
+absl::Status RemoveScaleSpectrumTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    ImageMapSpectrumTexture& output);
+    int pbrt_version, ScaleSpectrumTexture& output);
 
-void RemoveImageMapSpectrumTextureV2(
+absl::Status RemoveWrinkledFloatTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    ImageMapSpectrumTexture& output);
+    int pbrt_version, WrinkledFloatTexture& output);
 
-void RemoveImageMapSpectrumTextureV3(
+absl::Status RemoveWrinkledSpectrumTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    ImageMapSpectrumTexture& output);
+    int pbrt_version, WrinkledSpectrumTexture& output);
 
-absl::Status RemoveImageMapSpectrumTextureV4(
+absl::Status RemoveUvSpectrumTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    ImageMapSpectrumTexture& output);
-
-void RemoveMarbleSpectrumTextureV1(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    MarbleSpectrumTexture& output);
-
-void RemoveMixFloatTextureV1(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    MixFloatTexture& output);
-
-void RemoveMixSpectrumTextureV1(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    MixSpectrumTexture& output);
-
-void RemovePtexFloatTextureV3(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    PtexFloatTexture& output);
-
-absl::Status RemovePtexFloatTextureV4(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    PtexFloatTexture& output);
-
-void RemovePtexSpectrumTextureV3(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    PtexSpectrumTexture& output);
-
-absl::Status RemovePtexSpectrumTextureV4(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    PtexSpectrumTexture& output);
-
-void RemoveScaleFloatTextureV1(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    ScaleFloatTexture& output);
-
-void RemoveScaleSpectrumTextureV1(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    ScaleSpectrumTexture& output);
-
-void RemoveWrinkledFloatTextureV1(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    WrinkledFloatTexture& output);
-
-void RemoveWrinkledSpectrumTextureV1(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    WrinkledSpectrumTexture& output);
-
-void RemoveUvSpectrumTextureV1(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    UvSpectrumTexture& output);
+    int pbrt_version, UvSpectrumTexture& output);
 
 }  // namespace pbrt_proto
 

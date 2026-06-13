@@ -35,6 +35,22 @@ class ProtoParser : public Parser {
     };
   }
 
+  template <auto Getter>
+  auto EmptyCallback() {
+    return [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+              auto& output) {
+      (output.*Getter)();
+      return absl::OkStatus();
+    };
+  }
+
+  template <typename U>
+  static absl::Status Ignored(
+      absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+      U& output) {
+    return absl::OkStatus();
+  }
+
   template <typename U>
   absl::Status Parse(
       const TypeMap<U>& type_map, absl::string_view type_name,
@@ -50,6 +66,8 @@ class ProtoParser : public Parser {
       absl::flat_hash_map<absl::string_view, Parameter>& parameters,
       decltype(*std::declval<T>().add_directives()->mutable_material())&
           material) = 0;
+
+  static constexpr int kPbrtVersion = PbrtVersion;
 
   T& output_;
 

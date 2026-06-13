@@ -218,13 +218,7 @@ absl::Status ParserV3::FloatTexture(
     absl::string_view float_texture_name, absl::string_view float_texture_type,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
   static const TypeMap<v3::FloatTexture> kSupportedTypes = {
-      {"bilerp",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::FloatTexture& float_texture) {
-         RemoveBilerpFloatTextureV1(parameters,
-                                    *float_texture.mutable_bilerp());
-         return absl::OkStatus();
-       }},
+      {"bilerp", CB<RemoveBilerpFloatTexture, &FloatTexture::mutable_bilerp>()},
       {"checkerboard",
        [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
           v3::FloatTexture& float_texture) {
@@ -232,75 +226,34 @@ absl::Status ParserV3::FloatTexture(
              TryRemoveInteger(parameters, "dimension").value_or(2);
 
          if (dimension == 2) {
-           RemoveCheckerboard2DFloatTextureV2(
-               parameters, *float_texture.mutable_checkerboard2d());
-         } else {
-           RemoveCheckerboard3DFloatTextureV1(
-               parameters, *float_texture.mutable_checkerboard3d());
+           return RemoveCheckerboard2DFloatTexture(
+               parameters, kPbrtVersion,
+               *float_texture.mutable_checkerboard2d());
          }
 
-         return absl::OkStatus();
+         if (dimension != 3) {
+           std::cerr << "WARNING: Unsupported value for 'checkerboard' Texture "
+                        "parameter 'dimension': "
+                     << dimension << std::endl;
+         }
+
+         return RemoveCheckerboard3DFloatTexture(
+             parameters, kPbrtVersion, *float_texture.mutable_checkerboard3d());
        }},
       {"constant",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::FloatTexture& float_texture) {
-         RemoveConstantFloatTextureV1(parameters,
-                                      *float_texture.mutable_constant());
-         return absl::OkStatus();
-       }},
-      {"dots",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::FloatTexture& float_texture) {
-         RemoveDotsFloatTextureV1(parameters, *float_texture.mutable_dots());
-         return absl::OkStatus();
-       }},
-      {"fbm",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::FloatTexture& float_texture) {
-         RemoveFBmFloatTextureV1(parameters, *float_texture.mutable_fbm());
-         return absl::OkStatus();
-       }},
+       CB<RemoveConstantFloatTexture, &FloatTexture::mutable_constant>()},
+      {"dots", CB<RemoveDotsFloatTexture, &FloatTexture::mutable_dots>()},
+      {"fbm", CB<RemoveFBmFloatTexture, &FloatTexture::mutable_fbm>()},
       {"imagemap",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::FloatTexture& float_texture) {
-         RemoveImageMapFloatTextureV3(parameters,
-                                      *float_texture.mutable_imagemap());
-         return absl::OkStatus();
-       }},
-      {"marble",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::FloatTexture& float_texture) { return absl::OkStatus(); }},
-      {"mix",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::FloatTexture& float_texture) {
-         RemoveMixFloatTextureV1(parameters, *float_texture.mutable_mix());
-         return absl::OkStatus();
-       }},
-      {"ptex",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::FloatTexture& float_texture) {
-         RemovePtexFloatTextureV3(parameters, *float_texture.mutable_ptex());
-         return absl::OkStatus();
-       }},
-      {"scale",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::FloatTexture& float_texture) {
-         RemoveScaleFloatTextureV1(parameters, *float_texture.mutable_scale());
-         return absl::OkStatus();
-       }},
-      {"windy",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::FloatTexture& float_texture) {
-         float_texture.mutable_windy();
-         return absl::OkStatus();
-       }},
+       CB<RemoveImageMapFloatTexture, &FloatTexture::mutable_imagemap>()},
+      {"marble", &Ignored<v3::FloatTexture>},
+      {"mix", CB<RemoveMixFloatTexture, &FloatTexture::mutable_mix>()},
+      {"ptex", CB<RemovePtexFloatTexture, &FloatTexture::mutable_ptex>()},
+      {"scale", CB<RemoveScaleFloatTexture, &FloatTexture::mutable_scale>()},
+      {"windy", EmptyCallback<&FloatTexture::mutable_windy>()},
       {"wrinkled",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::FloatTexture& float_texture) {
-         RemoveWrinkledFloatTextureV1(parameters,
-                                      *float_texture.mutable_wrinkled());
-         return absl::OkStatus();
-       }}};
+       CB<RemoveWrinkledFloatTexture, &FloatTexture::mutable_wrinkled>()},
+  };
 
   absl::Status status = Parse<&Directive::mutable_float_texture>(
       kSupportedTypes, float_texture_type, parameters);
@@ -782,12 +735,7 @@ absl::Status ParserV3::SpectrumTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
   static const TypeMap<v3::SpectrumTexture> kSupportedTypes = {
       {"bilerp",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::SpectrumTexture& spectrum_texture) {
-         RemoveBilerpSpectrumTextureV1(parameters,
-                                       *spectrum_texture.mutable_bilerp());
-         return absl::OkStatus();
-       }},
+       CB<RemoveBilerpSpectrumTexture, &SpectrumTexture::mutable_bilerp>()},
       {"checkerboard",
        [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
           v3::SpectrumTexture& spectrum_texture) {
@@ -795,89 +743,38 @@ absl::Status ParserV3::SpectrumTexture(
              TryRemoveInteger(parameters, "dimension").value_or(2);
 
          if (dimension == 2) {
-           RemoveCheckerboard2DSpectrumTextureV2(
-               parameters, *spectrum_texture.mutable_checkerboard2d());
-         } else {
-           RemoveCheckerboard3DSpectrumTextureV1(
-               parameters, *spectrum_texture.mutable_checkerboard3d());
+           return RemoveCheckerboard2DSpectrumTexture(
+               parameters, kPbrtVersion,
+               *spectrum_texture.mutable_checkerboard2d());
          }
 
-         return absl::OkStatus();
+         if (dimension != 3) {
+           std::cerr << "WARNING: Unsupported value for 'checkerboard' Texture "
+                        "parameter 'dimension': "
+                     << dimension << std::endl;
+         }
+
+         return RemoveCheckerboard3DSpectrumTexture(
+             parameters, kPbrtVersion,
+             *spectrum_texture.mutable_checkerboard3d());
        }},
       {"constant",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::SpectrumTexture& spectrum_texture) {
-         return RemoveConstantSpectrumTextureV1(
-             parameters, *spectrum_texture.mutable_constant());
-       }},
-      {"dots",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::SpectrumTexture& spectrum_texture) {
-         RemoveDotsSpectrumTextureV1(parameters,
-                                     *spectrum_texture.mutable_dots());
-         return absl::OkStatus();
-       }},
-      {"fbm",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::SpectrumTexture& spectrum_texture) {
-         RemoveFBmSpectrumTextureV1(parameters,
-                                    *spectrum_texture.mutable_fbm());
-         return absl::OkStatus();
-       }},
+       CB<RemoveConstantSpectrumTexture, &SpectrumTexture::mutable_constant>()},
+      {"dots", CB<RemoveDotsSpectrumTexture, &SpectrumTexture::mutable_dots>()},
+      {"fbm", CB<RemoveFBmSpectrumTexture, &SpectrumTexture::mutable_fbm>()},
       {"imagemap",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::SpectrumTexture& spectrum_texture) {
-         RemoveImageMapSpectrumTextureV3(parameters,
-                                         *spectrum_texture.mutable_imagemap());
-         return absl::OkStatus();
-       }},
+       CB<RemoveImageMapSpectrumTexture, &SpectrumTexture::mutable_imagemap>()},
       {"marble",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::SpectrumTexture& spectrum_texture) {
-         RemoveMarbleSpectrumTextureV1(parameters,
-                                       *spectrum_texture.mutable_marble());
-         return absl::OkStatus();
-       }},
-      {"mix",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::SpectrumTexture& spectrum_texture) {
-         RemoveMixSpectrumTextureV1(parameters,
-                                    *spectrum_texture.mutable_mix());
-         return absl::OkStatus();
-       }},
-      {"ptex",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::SpectrumTexture& spectrum_texture) {
-         RemovePtexSpectrumTextureV3(parameters,
-                                     *spectrum_texture.mutable_ptex());
-         return absl::OkStatus();
-       }},
+       CB<RemoveMarbleSpectrumTexture, &SpectrumTexture::mutable_marble>()},
+      {"mix", CB<RemoveMixSpectrumTexture, &SpectrumTexture::mutable_mix>()},
+      {"ptex", CB<RemovePtexSpectrumTexture, &SpectrumTexture::mutable_ptex>()},
       {"scale",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::SpectrumTexture& spectrum_texture) {
-         RemoveScaleSpectrumTextureV1(parameters,
-                                      *spectrum_texture.mutable_scale());
-         return absl::OkStatus();
-       }},
-      {"uv",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::SpectrumTexture& spectrum_texture) {
-         RemoveUvSpectrumTextureV1(parameters, *spectrum_texture.mutable_uv());
-         return absl::OkStatus();
-       }},
-      {"windy",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::SpectrumTexture& spectrum_texture) {
-         spectrum_texture.mutable_windy();
-         return absl::OkStatus();
-       }},
+       CB<RemoveScaleSpectrumTexture, &SpectrumTexture::mutable_scale>()},
+      {"uv", CB<RemoveUvSpectrumTexture, &SpectrumTexture::mutable_uv>()},
+      {"windy", EmptyCallback<&SpectrumTexture::mutable_windy>()},
       {"wrinkled",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v3::SpectrumTexture& spectrum_texture) {
-         RemoveWrinkledSpectrumTextureV1(parameters,
-                                         *spectrum_texture.mutable_wrinkled());
-         return absl::OkStatus();
-       }}};
+       CB<RemoveWrinkledSpectrumTexture, &SpectrumTexture::mutable_wrinkled>()},
+  };
 
   absl::Status status = Parse<&Directive::mutable_spectrum_texture>(
       kSupportedTypes, spectrum_texture_type, parameters);

@@ -220,24 +220,18 @@ absl::Status TryRemoveSpectrumV2(
                            get_output);
 }
 
-bool TryRemoveFloatTexture(
+void TryRemoveFloatTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     absl::string_view parameter_name,
     absl::FunctionRef<FloatTextureParameter*()> get_output) {
   if (std::optional<double> value = TryRemoveFloat(parameters, parameter_name);
       value) {
     get_output()->set_float_value(*value);
-    return true;
-  }
-
-  if (std::optional<absl::string_view> texture_name =
-          TryRemoveTexture(parameters, parameter_name);
-      texture_name) {
+  } else if (std::optional<absl::string_view> texture_name =
+                 TryRemoveTexture(parameters, parameter_name);
+             texture_name) {
     get_output()->set_float_texture_name(*texture_name);
-    return true;
   }
-
-  return false;
 }
 
 bool TryRemoveSpectrumTextureV1(
