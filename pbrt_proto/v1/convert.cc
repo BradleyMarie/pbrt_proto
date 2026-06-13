@@ -260,97 +260,36 @@ absl::Status ParserV1::Material(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     v1::Material& material) {
   static const TypeMap<v1::Material> kSupportedTypes = {
+      {"bluepaint", CB<RemoveBuiltInMaterial, &Material::mutable_bluepaint>()},
       {"bluepaint",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::Material& material) {
-         material.mutable_bluepaint();
-         return absl::OkStatus();
-       }},
-      {"brushedmetal",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::Material& material) {
-         material.mutable_brushedmetal();
-         return absl::OkStatus();
-       }},
-      {"clay",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::Material& material) {
-         material.mutable_clay();
-         return absl::OkStatus();
-       }},
-      {"felt",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::Material& material) {
-         material.mutable_felt();
-         return absl::OkStatus();
-       }},
-      {"glass",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::Material& material) {
-         RemoveGlassMaterialV1(parameters, *material.mutable_glass());
-         return absl::OkStatus();
-       }},
-      {"matte",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::Material& material) {
-         RemoveMatteMaterialV1(parameters, *material.mutable_matte());
-         return absl::OkStatus();
-       }},
-      {"mirror",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::Material& material) {
-         RemoveMirrorMaterialV1(parameters, *material.mutable_mirror());
-         return absl::OkStatus();
-       }},
-      {"plastic",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::Material& material) {
-         RemovePlasticMaterialV1(parameters, *material.mutable_plastic());
-         return absl::OkStatus();
-       }},
-      {"primer",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::Material& material) {
-         material.mutable_primer();
-         return absl::OkStatus();
-       }},
+       CB<RemoveBuiltInMaterial, &Material::mutable_brushedmetal>()},
+      {"clay", CB<RemoveBuiltInMaterial, &Material::mutable_clay>()},
+      {"felt", CB<RemoveBuiltInMaterial, &Material::mutable_felt>()},
+      {"glass", CB<RemoveGlassMaterial, &Material::mutable_glass>()},
+      {"matte", CB<RemoveMatteMaterial, &Material::mutable_matte>()},
+      {"mirror", CB<RemoveMirrorMaterial, &Material::mutable_mirror>()},
+      {"plastic", CB<RemovePlasticMaterial, &Material::mutable_plastic>()},
+      {"primer", CB<RemoveBuiltInMaterial, &Material::mutable_primer>()},
       {"shinymetal",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::Material& material) {
-         RemoveShinyMetalMaterialV1(parameters, *material.mutable_shinymetal());
-         return absl::OkStatus();
-       }},
-      {"skin",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::Material& material) {
-         material.mutable_skin();
-         return absl::OkStatus();
-       }},
+       CB<RemoveShinyMetalMaterial, &Material::mutable_shinymetal>()},
+      {"skin", CB<RemoveBuiltInMaterial, &Material::mutable_skin>()},
       {"substrate",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::Material& material) {
-         RemoveSubstrateMaterialV1(parameters, *material.mutable_substrate());
-         return absl::OkStatus();
-       }},
+       CB<RemoveSubstrateMaterial, &Material::mutable_substrate>()},
       {"translucent",
-       [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-          v1::Material& material) {
-         RemoveTranslucentMaterialV1(parameters,
-                                     *material.mutable_translucent());
-         return absl::OkStatus();
-       }},
-      {"uber", [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-                  v1::Material& material) {
-         RemoveUberMaterialV1(parameters, *material.mutable_uber());
-         return absl::OkStatus();
-       }}};
+       CB<RemoveTranslucentMaterial, &Material::mutable_translucent>()},
+      {"uber", CB<RemoveUberMaterial, &Material::mutable_uber>()},
+  };
 
   absl::Status status =
       Parse(kSupportedTypes, material_type, parameters, material);
 
   if (material.material_type_case() == Material::MATERIAL_TYPE_NOT_SET &&
       !kSupportedTypes.contains(material_type)) {
-    RemoveMatteMaterialV1(parameters, *material.mutable_matte());
+    if (absl::Status fallback_status = RemoveMatteMaterial(
+            parameters, kPbrtVersion, *material.mutable_matte());
+        !fallback_status.ok()) {
+      return fallback_status;
+    }
   }
 
   return status;

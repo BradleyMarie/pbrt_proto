@@ -17,15 +17,16 @@ namespace {
 using ::absl_testing::StatusIs;
 using ::google::protobuf::EqualsProto;
 
-TEST(RemoveBuiltInMaterialV1, Empty) {
+TEST(RemoveBuiltInMaterial, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   BuiltInMaterial actual;
-  RemoveBuiltInMaterialV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveBuiltInMaterial(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveBuiltInMaterialV1, WithData) {
+TEST(RemoveBuiltInMaterial, WithData) {
   std::vector<std::string_view> bumpmap = {"bump"};
   Parameter bumpmap_parameter{/*directive=*/"",
                               /*type=*/ParameterType::TEXTURE,
@@ -37,21 +38,23 @@ TEST(RemoveBuiltInMaterialV1, WithData) {
   };
 
   BuiltInMaterial actual;
-  RemoveBuiltInMaterialV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveBuiltInMaterial(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 bumpmap { float_texture_name: "bump" }
               )pb"));
 }
 
-TEST(RemoveDisneyMaterialV3, Empty) {
+TEST(RemoveDisneyMaterial, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   DisneyMaterial actual;
-  RemoveDisneyMaterialV3(parameters, actual);
+  EXPECT_TRUE(
+      RemoveDisneyMaterial(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveDisneyMaterialV3, WithData) {
+TEST(RemoveDisneyMaterial, WithData) {
   std::vector<std::string_view> roughness = {"roughness"};
   Parameter roughness_parameter{/*directive=*/"",
                                 /*type=*/ParameterType::TEXTURE,
@@ -169,7 +172,8 @@ TEST(RemoveDisneyMaterialV3, WithData) {
   };
 
   DisneyMaterial actual;
-  RemoveDisneyMaterialV3(parameters, actual);
+  EXPECT_TRUE(
+      RemoveDisneyMaterial(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 roughness { float_texture_name: "roughness" }
                 eta { float_texture_name: "eta" }
@@ -194,7 +198,7 @@ TEST(RemoveGlassMaterialV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   GlassMaterial actual;
-  RemoveGlassMaterialV1(parameters, actual);
+  EXPECT_TRUE(RemoveGlassMaterial(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -231,7 +235,57 @@ TEST(RemoveGlassMaterialV1, WithData) {
   };
 
   GlassMaterial actual;
-  RemoveGlassMaterialV1(parameters, actual);
+  EXPECT_TRUE(RemoveGlassMaterial(parameters, /*pbrt_version=*/1, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                Kr { spectrum_texture_name: "kr" }
+                Kt { spectrum_texture_name: "kt" }
+                eta { float_texture_name: "index" }
+                bumpmap { float_texture_name: "bump" }
+              )pb"));
+}
+
+TEST(RemoveGlassMaterialV2, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  GlassMaterial actual;
+  EXPECT_TRUE(RemoveGlassMaterial(parameters, /*pbrt_version=*/2, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveGlassMaterialV2, WithData) {
+  std::vector<std::string_view> kr = {"kr"};
+  Parameter kr_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(kr)};
+
+  std::vector<std::string_view> kt = {"kt"};
+  Parameter kt_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(kt)};
+
+  std::vector<std::string_view> index = {"index"};
+  Parameter index_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::TEXTURE,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(index)};
+
+  std::vector<std::string_view> bumpmap = {"bump"};
+  Parameter bumpmap_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(bumpmap)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"Kr", kr_parameter},
+      {"Kt", kt_parameter},
+      {"index", index_parameter},
+      {"bumpmap", bumpmap_parameter},
+  };
+
+  GlassMaterial actual;
+  EXPECT_TRUE(RemoveGlassMaterial(parameters, /*pbrt_version=*/2, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 Kr { spectrum_texture_name: "kr" }
                 Kt { spectrum_texture_name: "kt" }
@@ -244,7 +298,7 @@ TEST(RemoveGlassMaterialV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   GlassMaterial actual;
-  RemoveGlassMaterialV3(parameters, actual);
+  EXPECT_TRUE(RemoveGlassMaterial(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -302,7 +356,7 @@ TEST(RemoveGlassMaterialV3, WithDataIndex) {
   };
 
   GlassMaterial actual;
-  RemoveGlassMaterialV3(parameters, actual);
+  EXPECT_TRUE(RemoveGlassMaterial(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 Kr { spectrum_texture_name: "kr" }
                 Kt { spectrum_texture_name: "kt" }
@@ -375,7 +429,7 @@ TEST(RemoveGlassMaterialV3, WithDataEta) {
   };
 
   GlassMaterial actual;
-  RemoveGlassMaterialV3(parameters, actual);
+  EXPECT_TRUE(RemoveGlassMaterial(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 Kr { spectrum_texture_name: "kr" }
                 Kt { spectrum_texture_name: "kt" }
@@ -387,15 +441,15 @@ TEST(RemoveGlassMaterialV3, WithDataEta) {
               )pb"));
 }
 
-TEST(RemoveHairMaterialV3, Empty) {
+TEST(RemoveHairMaterial, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   HairMaterial actual;
-  RemoveHairMaterialV3(parameters, actual);
+  EXPECT_TRUE(RemoveHairMaterial(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveHairMaterialV3, WithData) {
+TEST(RemoveHairMaterial, WithData) {
   std::vector<std::string_view> eta = {"eta"};
   Parameter eta_parameter{/*directive=*/"",
                           /*type=*/ParameterType::TEXTURE,
@@ -456,7 +510,7 @@ TEST(RemoveHairMaterialV3, WithData) {
   };
 
   HairMaterial actual;
-  RemoveHairMaterialV3(parameters, actual);
+  EXPECT_TRUE(RemoveHairMaterial(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 eta { float_texture_name: "eta" }
                 sigma_a { spectrum_texture_name: "sigma_a" }
@@ -473,7 +527,8 @@ TEST(RemoveKdSubsurfaceMaterialV2, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   KdSubsurfaceMaterial actual;
-  RemoveKdSubsurfaceMaterialV2(parameters, actual);
+  EXPECT_TRUE(
+      RemoveKdSubsurfaceMaterial(parameters, /*pbrt_version=*/2, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -515,7 +570,8 @@ TEST(RemoveKdSubsurfaceMaterialV2, WithData) {
   };
 
   KdSubsurfaceMaterial actual;
-  RemoveKdSubsurfaceMaterialV2(parameters, actual);
+  EXPECT_TRUE(
+      RemoveKdSubsurfaceMaterial(parameters, /*pbrt_version=*/2, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 Kd { spectrum_texture_name: "kd" }
                 Kr { spectrum_texture_name: "kr" }
@@ -529,7 +585,8 @@ TEST(RemoveKdSubsurfaceMaterialV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   KdSubsurfaceMaterial actual;
-  RemoveKdSubsurfaceMaterialV3(parameters, actual);
+  EXPECT_TRUE(
+      RemoveKdSubsurfaceMaterial(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -608,7 +665,8 @@ TEST(RemoveKdSubsurfaceMaterialV3, WithData) {
   };
 
   KdSubsurfaceMaterial actual;
-  RemoveKdSubsurfaceMaterialV3(parameters, actual);
+  EXPECT_TRUE(
+      RemoveKdSubsurfaceMaterial(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 Kd { spectrum_texture_name: "kd" }
                 Kr { spectrum_texture_name: "kr" }
@@ -623,15 +681,15 @@ TEST(RemoveKdSubsurfaceMaterialV3, WithData) {
               )pb"));
 }
 
-TEST(RemoveMatteMaterialV1, Empty) {
+TEST(RemoveMatteMaterial, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   MatteMaterial actual;
-  RemoveMatteMaterialV1(parameters, actual);
+  EXPECT_TRUE(RemoveMatteMaterial(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveMatteMaterialV1, WithData) {
+TEST(RemoveMatteMaterial, WithData) {
   std::vector<std::string_view> kd = {"kd"};
   Parameter kd_parameter{/*directive=*/"",
                          /*type=*/ParameterType::TEXTURE,
@@ -657,7 +715,7 @@ TEST(RemoveMatteMaterialV1, WithData) {
   };
 
   MatteMaterial actual;
-  RemoveMatteMaterialV1(parameters, actual);
+  EXPECT_TRUE(RemoveMatteMaterial(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 Kd { spectrum_texture_name: "kd" }
                 sigma { float_texture_name: "sigma" }
@@ -665,15 +723,17 @@ TEST(RemoveMatteMaterialV1, WithData) {
               )pb"));
 }
 
-TEST(RemoveMeasuredFourierMaterialV3, Empty) {
+TEST(RemoveMeasuredFourierMaterial, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   MeasuredFourierMaterial actual;
-  RemoveMeasuredFourierMaterialV3(parameters, actual);
+  EXPECT_TRUE(
+      RemoveMeasuredFourierMaterial(parameters, /*pbrt_version=*/3, actual)
+          .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveMeasuredFourierMaterialV3, WithData) {
+TEST(RemoveMeasuredFourierMaterial, WithData) {
   std::vector<std::string_view> filename = {"filename"};
   Parameter filename_parameter{/*directive=*/"",
                                /*type=*/ParameterType::STRING,
@@ -692,22 +752,25 @@ TEST(RemoveMeasuredFourierMaterialV3, WithData) {
   };
 
   MeasuredFourierMaterial actual;
-  RemoveMeasuredFourierMaterialV3(parameters, actual);
+  EXPECT_TRUE(
+      RemoveMeasuredFourierMaterial(parameters, /*pbrt_version=*/3, actual)
+          .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 filename: "filename"
                 bumpmap { float_texture_name: "bump" }
               )pb"));
 }
 
-TEST(RemoveMeasuredMerlMaterialV2, Empty) {
+TEST(RemoveMeasuredMerlMaterial, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   MeasuredMerlMaterial actual;
-  RemoveMeasuredMerlMaterialV2(parameters, actual);
+  EXPECT_TRUE(
+      RemoveMeasuredMerlMaterial(parameters, /*pbrt_version=*/2, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveMeasuredMerlMaterialV2, WithData) {
+TEST(RemoveMeasuredMerlMaterial, WithData) {
   std::vector<std::string_view> filename = {"filename"};
   Parameter filename_parameter{/*directive=*/"",
                                /*type=*/ParameterType::STRING,
@@ -726,7 +789,8 @@ TEST(RemoveMeasuredMerlMaterialV2, WithData) {
   };
 
   MeasuredMerlMaterial actual;
-  RemoveMeasuredMerlMaterialV2(parameters, actual);
+  EXPECT_TRUE(
+      RemoveMeasuredMerlMaterial(parameters, /*pbrt_version=*/2, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 filename: "filename"
                 bumpmap { float_texture_name: "bump" }
@@ -737,7 +801,7 @@ TEST(RemoveMetalMaterialV2, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   MetalMaterial actual;
-  RemoveMetalMaterialV2(parameters, actual);
+  EXPECT_TRUE(RemoveMetalMaterial(parameters, /*pbrt_version=*/2, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -774,7 +838,7 @@ TEST(RemoveMetalMaterialV2, WithData) {
   };
 
   MetalMaterial actual;
-  RemoveMetalMaterialV2(parameters, actual);
+  EXPECT_TRUE(RemoveMetalMaterial(parameters, /*pbrt_version=*/2, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 k { spectrum_texture_name: "k" }
                 eta { spectrum_texture_name: "eta" }
@@ -787,7 +851,7 @@ TEST(RemoveMetalMaterialV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   MetalMaterial actual;
-  RemoveMetalMaterialV3(parameters, actual);
+  EXPECT_TRUE(RemoveMetalMaterial(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -845,7 +909,7 @@ TEST(RemoveMetalMaterialV3, WithData) {
   };
 
   MetalMaterial actual;
-  RemoveMetalMaterialV3(parameters, actual);
+  EXPECT_TRUE(RemoveMetalMaterial(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 k { spectrum_texture_name: "k" }
                 eta { spectrum_texture_name: "eta" }
@@ -857,15 +921,16 @@ TEST(RemoveMetalMaterialV3, WithData) {
               )pb"));
 }
 
-TEST(RemoveMirrorMaterialV1, Empty) {
+TEST(RemoveMirrorMaterial, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   MirrorMaterial actual;
-  RemoveMirrorMaterialV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveMirrorMaterial(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveMirrorMaterialV1, WithData) {
+TEST(RemoveMirrorMaterial, WithData) {
   std::vector<std::string_view> kr = {"kr"};
   Parameter kr_parameter{/*directive=*/"",
                          /*type=*/ParameterType::TEXTURE,
@@ -884,22 +949,23 @@ TEST(RemoveMirrorMaterialV1, WithData) {
   };
 
   MirrorMaterial actual;
-  RemoveMirrorMaterialV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveMirrorMaterial(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 Kr { spectrum_texture_name: "kr" }
                 bumpmap { float_texture_name: "bump" }
               )pb"));
 }
 
-TEST(RemoveMixMaterialV2, Empty) {
+TEST(RemoveMixMaterial, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   MixMaterial actual;
-  RemoveMixMaterialV2(parameters, actual);
+  EXPECT_TRUE(RemoveMixMaterial(parameters, /*pbrt_version=*/2, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveMixMaterialV2, WithData) {
+TEST(RemoveMixMaterial, WithData) {
   std::vector<std::string_view> kd = {"kd"};
   Parameter kd_parameter{/*directive=*/"",
                          /*type=*/ParameterType::TEXTURE,
@@ -939,7 +1005,7 @@ TEST(RemoveMixMaterialV2, WithData) {
   };
 
   MixMaterial actual;
-  RemoveMixMaterialV2(parameters, actual);
+  EXPECT_TRUE(RemoveMixMaterial(parameters, /*pbrt_version=*/2, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 Kd { spectrum_texture_name: "kd" }
                 sigma { float_texture_name: "sigma" }
@@ -951,7 +1017,8 @@ TEST(RemovePlasticMaterialV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   PlasticMaterial actual;
-  RemovePlasticMaterialV1(parameters, actual);
+  EXPECT_TRUE(
+      RemovePlasticMaterial(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -988,7 +1055,60 @@ TEST(RemovePlasticMaterialV1, WithData) {
   };
 
   PlasticMaterial actual;
-  RemovePlasticMaterialV1(parameters, actual);
+  EXPECT_TRUE(
+      RemovePlasticMaterial(parameters, /*pbrt_version=*/1, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                Kd { spectrum_texture_name: "kd" }
+                Ks { spectrum_texture_name: "ks" }
+                roughness { float_texture_name: "roughness" }
+                bumpmap { float_texture_name: "bump" }
+              )pb"));
+}
+
+TEST(RemovePlasticMaterialV2, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  PlasticMaterial actual;
+  EXPECT_TRUE(
+      RemovePlasticMaterial(parameters, /*pbrt_version=*/2, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemovePlasticMaterialV2, WithData) {
+  std::vector<std::string_view> kd = {"kd"};
+  Parameter kd_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(kd)};
+
+  std::vector<std::string_view> ks = {"ks"};
+  Parameter ks_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(ks)};
+
+  std::vector<std::string_view> roughness = {"roughness"};
+  Parameter roughness_parameter{/*directive=*/"",
+                                /*type=*/ParameterType::TEXTURE,
+                                /*type_name=*/"",
+                                /*values=*/absl::MakeSpan(roughness)};
+
+  std::vector<std::string_view> bumpmap = {"bump"};
+  Parameter bumpmap_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(bumpmap)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"Kd", kd_parameter},
+      {"Ks", ks_parameter},
+      {"roughness", roughness_parameter},
+      {"bumpmap", bumpmap_parameter},
+  };
+
+  PlasticMaterial actual;
+  EXPECT_TRUE(
+      RemovePlasticMaterial(parameters, /*pbrt_version=*/2, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 Kd { spectrum_texture_name: "kd" }
                 Ks { spectrum_texture_name: "ks" }
@@ -1001,7 +1121,8 @@ TEST(RemovePlasticMaterialV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   PlasticMaterial actual;
-  RemovePlasticMaterialV3(parameters, actual);
+  EXPECT_TRUE(
+      RemovePlasticMaterial(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -1045,7 +1166,8 @@ TEST(RemovePlasticMaterialV3, WithData) {
   };
 
   PlasticMaterial actual;
-  RemovePlasticMaterialV3(parameters, actual);
+  EXPECT_TRUE(
+      RemovePlasticMaterial(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 Kd { spectrum_texture_name: "kd" }
                 Ks { spectrum_texture_name: "ks" }
@@ -1055,15 +1177,16 @@ TEST(RemovePlasticMaterialV3, WithData) {
               )pb"));
 }
 
-TEST(RemoveShinyMetalMaterialV1, Empty) {
+TEST(RemoveShinyMetalMaterial, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   ShinyMetalMaterial actual;
-  RemoveShinyMetalMaterialV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveShinyMetalMaterial(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveShinyMetalMaterialV1, WithData) {
+TEST(RemoveShinyMetalMaterial, WithData) {
   std::vector<std::string_view> ks = {"ks"};
   Parameter ks_parameter{/*directive=*/"",
                          /*type=*/ParameterType::TEXTURE,
@@ -1096,7 +1219,8 @@ TEST(RemoveShinyMetalMaterialV1, WithData) {
   };
 
   ShinyMetalMaterial actual;
-  RemoveShinyMetalMaterialV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveShinyMetalMaterial(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 Ks { spectrum_texture_name: "ks" }
                 Kr { spectrum_texture_name: "kr" }
@@ -1109,7 +1233,8 @@ TEST(RemoveSubstrateMaterialV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   SubstrateMaterial actual;
-  RemoveSubstrateMaterialV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveSubstrateMaterial(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -1153,7 +1278,68 @@ TEST(RemoveSubstrateMaterialV1, WithDataIndex) {
   };
 
   SubstrateMaterial actual;
-  RemoveSubstrateMaterialV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveSubstrateMaterial(parameters, /*pbrt_version=*/1, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                Kd { spectrum_texture_name: "kd" }
+                Ks { spectrum_texture_name: "ks" }
+                bumpmap { float_texture_name: "bump" }
+                uroughness { float_texture_name: "uroughness" }
+                vroughness { float_texture_name: "vroughness" }
+              )pb"));
+}
+
+TEST(RemoveSubstrateMaterialV2, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  SubstrateMaterial actual;
+  EXPECT_TRUE(
+      RemoveSubstrateMaterial(parameters, /*pbrt_version=*/2, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveSubstrateMaterialV2, WithDataIndex) {
+  std::vector<std::string_view> kd = {"kd"};
+  Parameter kd_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(kd)};
+
+  std::vector<std::string_view> ks = {"ks"};
+  Parameter ks_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(ks)};
+
+  std::vector<std::string_view> bumpmap = {"bump"};
+  Parameter bumpmap_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(bumpmap)};
+
+  std::vector<std::string_view> uroughness = {"uroughness"};
+  Parameter uroughness_parameter{/*directive=*/"",
+                                 /*type=*/ParameterType::TEXTURE,
+                                 /*type_name=*/"",
+                                 /*values=*/absl::MakeSpan(uroughness)};
+
+  std::vector<std::string_view> vroughness = {"vroughness"};
+  Parameter vroughness_parameter{/*directive=*/"",
+                                 /*type=*/ParameterType::TEXTURE,
+                                 /*type_name=*/"",
+                                 /*values=*/absl::MakeSpan(vroughness)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"Kd", kd_parameter},
+      {"Ks", ks_parameter},
+      {"bumpmap", bumpmap_parameter},
+      {"uroughness", uroughness_parameter},
+      {"vroughness", vroughness_parameter},
+  };
+
+  SubstrateMaterial actual;
+  EXPECT_TRUE(
+      RemoveSubstrateMaterial(parameters, /*pbrt_version=*/2, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 Kd { spectrum_texture_name: "kd" }
                 Ks { spectrum_texture_name: "ks" }
@@ -1167,7 +1353,8 @@ TEST(RemoveSubstrateMaterialV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   SubstrateMaterial actual;
-  RemoveSubstrateMaterialV3(parameters, actual);
+  EXPECT_TRUE(
+      RemoveSubstrateMaterial(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -1218,7 +1405,8 @@ TEST(RemoveSubstrateMaterialV3, WithDataIndex) {
   };
 
   SubstrateMaterial actual;
-  RemoveSubstrateMaterialV3(parameters, actual);
+  EXPECT_TRUE(
+      RemoveSubstrateMaterial(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 Kd { spectrum_texture_name: "kd" }
                 Ks { spectrum_texture_name: "ks" }
@@ -1229,15 +1417,16 @@ TEST(RemoveSubstrateMaterialV3, WithDataIndex) {
               )pb"));
 }
 
-TEST(RemoveSubsurfaceMaterialV3, Empty) {
+TEST(RemoveSubsurfaceMaterial, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   SubsurfaceMaterial actual;
-  RemoveSubsurfaceMaterialV3(parameters, actual);
+  EXPECT_TRUE(
+      RemoveSubsurfaceMaterial(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveSubsurfaceMaterialV3, WithData) {
+TEST(RemoveSubsurfaceMaterial, WithData) {
   std::vector<std::string_view> kr = {"kr"};
   Parameter kr_parameter{/*directive=*/"",
                          /*type=*/ParameterType::TEXTURE,
@@ -1326,7 +1515,8 @@ TEST(RemoveSubsurfaceMaterialV3, WithData) {
   };
 
   SubsurfaceMaterial actual;
-  RemoveSubsurfaceMaterialV3(parameters, actual);
+  EXPECT_TRUE(
+      RemoveSubsurfaceMaterial(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 Kr { spectrum_texture_name: "kr" }
                 Kt { spectrum_texture_name: "kt" }
@@ -1347,7 +1537,8 @@ TEST(RemoveTranslucentMaterialV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   TranslucentMaterial actual;
-  RemoveTranslucentMaterialV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveTranslucentMaterial(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -1398,7 +1589,76 @@ TEST(RemoveTranslucentMaterialV1, WithData) {
   };
 
   TranslucentMaterial actual;
-  RemoveTranslucentMaterialV1(parameters, actual);
+  EXPECT_TRUE(
+      RemoveTranslucentMaterial(parameters, /*pbrt_version=*/1, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                Kd { spectrum_texture_name: "kd" }
+                Ks { spectrum_texture_name: "ks" }
+                reflect { spectrum_texture_name: "reflect" }
+                transmit { spectrum_texture_name: "transmit" }
+                roughness { float_texture_name: "roughness" }
+                bumpmap { float_texture_name: "bump" }
+              )pb"));
+}
+
+TEST(RemoveTranslucentMaterialV2, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  TranslucentMaterial actual;
+  EXPECT_TRUE(
+      RemoveTranslucentMaterial(parameters, /*pbrt_version=*/2, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveTranslucentMaterialV2, WithData) {
+  std::vector<std::string_view> kd = {"kd"};
+  Parameter kd_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(kd)};
+
+  std::vector<std::string_view> ks = {"ks"};
+  Parameter ks_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(ks)};
+
+  std::vector<std::string_view> reflect = {"reflect"};
+  Parameter reflect_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(reflect)};
+
+  std::vector<std::string_view> transmit = {"transmit"};
+  Parameter transmit_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::TEXTURE,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(transmit)};
+
+  std::vector<std::string_view> roughness = {"roughness"};
+  Parameter roughness_parameter{/*directive=*/"",
+                                /*type=*/ParameterType::TEXTURE,
+                                /*type_name=*/"",
+                                /*values=*/absl::MakeSpan(roughness)};
+
+  std::vector<std::string_view> bumpmap = {"bump"};
+  Parameter bumpmap_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(bumpmap)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"Kd", kd_parameter},
+      {"Ks", ks_parameter},
+      {"reflect", reflect_parameter},
+      {"transmit", transmit_parameter},
+      {"roughness", roughness_parameter},
+      {"bumpmap", bumpmap_parameter},
+  };
+
+  TranslucentMaterial actual;
+  EXPECT_TRUE(
+      RemoveTranslucentMaterial(parameters, /*pbrt_version=*/2, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 Kd { spectrum_texture_name: "kd" }
                 Ks { spectrum_texture_name: "ks" }
@@ -1413,7 +1673,8 @@ TEST(RemoveTranslucentMaterialV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   TranslucentMaterial actual;
-  RemoveTranslucentMaterialV3(parameters, actual);
+  EXPECT_TRUE(
+      RemoveTranslucentMaterial(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -1471,7 +1732,8 @@ TEST(RemoveTranslucentMaterialV3, WithData) {
   };
 
   TranslucentMaterial actual;
-  RemoveTranslucentMaterialV3(parameters, actual);
+  EXPECT_TRUE(
+      RemoveTranslucentMaterial(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 Kd { spectrum_texture_name: "kd" }
                 Ks { spectrum_texture_name: "ks" }
@@ -1487,7 +1749,7 @@ TEST(RemoveUberMaterialV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   UberMaterial actual;
-  RemoveUberMaterialV1(parameters, actual);
+  EXPECT_TRUE(RemoveUberMaterial(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -1538,7 +1800,7 @@ TEST(RemoveUberMaterialV1, WithData) {
   };
 
   UberMaterial actual;
-  RemoveUberMaterialV1(parameters, actual);
+  EXPECT_TRUE(RemoveUberMaterial(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 Kd { spectrum_texture_name: "kd" }
                 Ks { spectrum_texture_name: "ks" }
@@ -1553,7 +1815,7 @@ TEST(RemoveUberMaterialV2, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   UberMaterial actual;
-  RemoveUberMaterialV2(parameters, actual);
+  EXPECT_TRUE(RemoveUberMaterial(parameters, /*pbrt_version=*/2, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -1618,7 +1880,7 @@ TEST(RemoveUberMaterialV2, WithData) {
   };
 
   UberMaterial actual;
-  RemoveUberMaterialV2(parameters, actual);
+  EXPECT_TRUE(RemoveUberMaterial(parameters, /*pbrt_version=*/2, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 Kd { spectrum_texture_name: "kd" }
                 Ks { spectrum_texture_name: "ks" }
@@ -1635,7 +1897,7 @@ TEST(RemoveUberMaterialV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   UberMaterial actual;
-  RemoveUberMaterialV3(parameters, actual);
+  EXPECT_TRUE(RemoveUberMaterial(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
@@ -1721,7 +1983,7 @@ TEST(RemoveUberMaterialV3, WithDataIndex) {
   };
 
   UberMaterial actual;
-  RemoveUberMaterialV3(parameters, actual);
+  EXPECT_TRUE(RemoveUberMaterial(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 Kd { spectrum_texture_name: "kd" }
                 Ks { spectrum_texture_name: "ks" }
@@ -1826,7 +2088,7 @@ TEST(RemoveUberMaterialV3, WithDataEta) {
   };
 
   UberMaterial actual;
-  RemoveUberMaterialV3(parameters, actual);
+  EXPECT_TRUE(RemoveUberMaterial(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 Kd { spectrum_texture_name: "kd" }
                 Ks { spectrum_texture_name: "ks" }

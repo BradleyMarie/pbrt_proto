@@ -9,105 +9,73 @@
 
 namespace pbrt_proto {
 
-void RemoveBuiltInMaterialV1(
+absl::Status RemoveBuiltInMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    BuiltInMaterial& output);
+    int pbrt_version, BuiltInMaterial& output);
 
-void RemoveDisneyMaterialV3(
+absl::Status RemoveDisneyMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    DisneyMaterial& output);
+    int pbrt_version, DisneyMaterial& output);
 
-void RemoveGlassMaterialV1(
+absl::Status RemoveGlassMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    GlassMaterial& output);
+    int pbrt_version, GlassMaterial& output);
 
-void RemoveGlassMaterialV3(
+absl::Status RemoveHairMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    GlassMaterial& output);
+    int pbrt_version, HairMaterial& output);
 
-void RemoveHairMaterialV3(
+absl::Status RemoveKdSubsurfaceMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    HairMaterial& output);
+    int pbrt_version, KdSubsurfaceMaterial& output);
 
-void RemoveKdSubsurfaceMaterialV2(
+absl::Status RemoveMatteMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    KdSubsurfaceMaterial& output);
+    int pbrt_version, MatteMaterial& output);
 
-void RemoveKdSubsurfaceMaterialV3(
+absl::Status RemoveMeasuredFourierMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    KdSubsurfaceMaterial& output);
+    int pbrt_version, MeasuredFourierMaterial& output);
 
-void RemoveMatteMaterialV1(
+absl::Status RemoveMeasuredMerlMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    MatteMaterial& output);
+    int pbrt_version, MeasuredMerlMaterial& output);
 
-void RemoveMeasuredFourierMaterialV3(
+absl::Status RemoveMetalMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    MeasuredFourierMaterial& output);
+    int pbrt_version, MetalMaterial& output);
 
-void RemoveMeasuredMerlMaterialV2(
+absl::Status RemoveMirrorMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    MeasuredMerlMaterial& output);
+    int pbrt_version, MirrorMaterial& output);
 
-void RemoveMetalMaterialV2(
+absl::Status RemoveMixMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    MetalMaterial& output);
+    int pbrt_version, MixMaterial& output);
 
-void RemoveMetalMaterialV3(
+absl::Status RemovePlasticMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    MetalMaterial& output);
+    int pbrt_version, PlasticMaterial& output);
 
-void RemoveMirrorMaterialV1(
+absl::Status RemoveShinyMetalMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    MirrorMaterial& output);
+    int pbrt_version, ShinyMetalMaterial& output);
 
-void RemoveMixMaterialV2(
+absl::Status RemoveSubstrateMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    MixMaterial& output);
+    int pbrt_version, SubstrateMaterial& output);
 
-void RemovePlasticMaterialV1(
+absl::Status RemoveSubsurfaceMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    PlasticMaterial& output);
+    int pbrt_version, SubsurfaceMaterial& output);
 
-void RemovePlasticMaterialV3(
+absl::Status RemoveTranslucentMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    PlasticMaterial& output);
+    int pbrt_version, TranslucentMaterial& output);
 
-void RemoveShinyMetalMaterialV1(
+absl::Status RemoveUberMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    ShinyMetalMaterial& output);
-
-void RemoveSubstrateMaterialV1(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    SubstrateMaterial& output);
-
-void RemoveSubstrateMaterialV3(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    SubstrateMaterial& output);
-
-void RemoveSubsurfaceMaterialV3(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    SubsurfaceMaterial& output);
-
-void RemoveTranslucentMaterialV1(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    TranslucentMaterial& output);
-
-void RemoveTranslucentMaterialV3(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    TranslucentMaterial& output);
-
-void RemoveUberMaterialV1(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    UberMaterial& output);
-
-void RemoveUberMaterialV2(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    UberMaterial& output);
-
-void RemoveUberMaterialV3(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    UberMaterial& output);
+    int pbrt_version, UberMaterial& output);
 
 }  // namespace pbrt_proto
 
