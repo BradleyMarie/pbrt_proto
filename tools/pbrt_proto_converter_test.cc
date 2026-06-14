@@ -123,6 +123,64 @@ const std::vector<TestInput> pbrt_v1_inputs = {
     // {"pbrt-v1-scenes/tt-tire.pbrt"},
 };
 
+const std::vector<TestInput> pbrt_v2_inputs = {
+    {"pbrt-v2-scenes/anim-bluespheres.pbrt"},
+    {"pbrt-v2-scenes/anim-killeroos-moving.pbrt"},
+    {"pbrt-v2-scenes/arcsphere.pbrt"},
+    {"pbrt-v2-scenes/ballpile.pbrt"},
+    {"pbrt-v2-scenes/buddhamesh.pbrt"},
+    {"pbrt-v2-scenes/buddha.pbrt"},
+    {"pbrt-v2-scenes/bump-sphere.pbrt"},
+    {"pbrt-v2-scenes/bunny.pbrt"},
+    {"pbrt-v2-scenes/caustic-proj.pbrt"},
+    {"pbrt-v2-scenes/city-ao.pbrt"},
+    {"pbrt-v2-scenes/city-env.pbrt"},
+    {"pbrt-v2-scenes/cornell-mlt.pbrt"},
+    {"pbrt-v2-scenes/dof-dragons.pbrt"},
+    {"pbrt-v2-scenes/killeroo-glossy-prt.pbrt"},
+    {"pbrt-v2-scenes/killeroo-gold.pbrt"},
+    {"pbrt-v2-scenes/killeroo-simple.pbrt"},
+    {"pbrt-v2-scenes/metal-ssynth.pbrt"},
+    {"pbrt-v2-scenes/microcity.pbrt"},
+    {"pbrt-v2-scenes/miscquads.pbrt"},
+    {"pbrt-v2-scenes/plants-dusk.pbrt", /*allow_warnings=*/true},
+    {"pbrt-v2-scenes/plants-godrays.pbrt", /*allow_warnings=*/true},
+    {"pbrt-v2-scenes/probe-cornell.pbrt"},
+    {"pbrt-v2-scenes/room-igi.pbrt"},
+    {"pbrt-v2-scenes/room-mlt.pbrt"},
+    {"pbrt-v2-scenes/room-path.pbrt"},
+    {"pbrt-v2-scenes/room-photon-nogather.pbrt"},
+    {"pbrt-v2-scenes/room-photon.pbrt"},
+    {"pbrt-v2-scenes/sanmiguel_cam14.pbrt"},
+    {"pbrt-v2-scenes/sanmiguel_cam15.pbrt"},
+    {"pbrt-v2-scenes/sanmiguel_cam18.pbrt"},
+    {"pbrt-v2-scenes/sanmiguel_cam1.pbrt"},
+    {"pbrt-v2-scenes/sanmiguel_cam20.pbrt"},
+    {"pbrt-v2-scenes/sanmiguel_cam25.pbrt"},
+    {"pbrt-v2-scenes/sanmiguel_cam3.pbrt"},
+    {"pbrt-v2-scenes/sanmiguel_cam4.pbrt"},
+    {"pbrt-v2-scenes/sanmiguel_cam5.pbrt"},
+    {"pbrt-v2-scenes/sanmiguel_cam6.pbrt"},
+    {"pbrt-v2-scenes/sanmiguel.pbrt"},
+    {"pbrt-v2-scenes/sibenik-igi.pbrt"},
+    {"pbrt-v2-scenes/smoke-2.pbrt"},
+    {"pbrt-v2-scenes/sphere-ewa-vs-trilerp.pbrt"},
+    {"pbrt-v2-scenes/spheres-differentials-texfilt.pbrt"},
+    {"pbrt-v2-scenes/sponza-fog.pbrt"},
+    {"pbrt-v2-scenes/sponza-phomap.pbrt"},
+    {"pbrt-v2-scenes/spotfog.pbrt"},
+    {"pbrt-v2-scenes/teapot-area-light.pbrt"},
+    {"pbrt-v2-scenes/teapot-cornell-brdf.pbrt"},
+    {"pbrt-v2-scenes/teapot-metal.pbrt"},
+    {"pbrt-v2-scenes/teapot-subsurface.pbrt"},
+    {"pbrt-v2-scenes/tt.pbrt"},
+    {"pbrt-v2-scenes/villa-daylight.pbrt"},
+    {"pbrt-v2-scenes/villa-igi.pbrt"},
+    {"pbrt-v2-scenes/villa-lights-on.pbrt"},
+    {"pbrt-v2-scenes/villa-photons.pbrt"},
+    {"pbrt-v2-scenes/yeahright.pbrt"},
+};
+
 const std::vector<TestInput> pbrt_v3_inputs = {
     {"pbrt-v3-scenes/barcelona-pavilion/pavilion-day.pbrt"},
     {"pbrt-v3-scenes/barcelona-pavilion/pavilion-night.pbrt"},
@@ -309,6 +367,7 @@ TEST(Convert, All) {
                  std::pair<int, std::string>>>
       state;
   AddAllCallbacks(state, /*version=*/1, pbrt_v1_inputs);
+  AddAllCallbacks(state, /*version=*/2, pbrt_v2_inputs);
   AddAllCallbacks(state, /*version=*/3, pbrt_v3_inputs);
 
   std::atomic<size_t> index = 0;

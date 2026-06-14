@@ -19,6 +19,8 @@
 #include "google/protobuf/text_format.h"
 #include "pbrt_proto/v1/convert.h"
 #include "pbrt_proto/v1/v1.pb.h"
+#include "pbrt_proto/v2/convert.h"
+#include "pbrt_proto/v2/v2.pb.h"
 #include "pbrt_proto/v3/convert.h"
 #include "pbrt_proto/v3/v3.pb.h"
 
@@ -211,6 +213,8 @@ void ConvertFile(const std::filesystem::path& search_root,
           search_root, file, partial_file_name, included_files);
       break;
     case 2:
+      ConvertFile<pbrt_proto::v2::PbrtProto, pbrt_proto::v2::Convert>(
+          search_root, file, partial_file_name, included_files);
       break;
     case 3:
       ConvertFile<pbrt_proto::v3::PbrtProto, pbrt_proto::v3::Convert>(
@@ -232,6 +236,7 @@ int main(int argc, char** argv) {
   }
 
   if (*absl::GetFlag(FLAGS_pbrt_version) != 1 &&
+      *absl::GetFlag(FLAGS_pbrt_version) != 2 &&
       *absl::GetFlag(FLAGS_pbrt_version) != 3) {
     std::cerr << "ERROR: PBRT version was not recognized" << std::endl;
     return EXIT_FAILURE;

@@ -12,6 +12,7 @@ filegroup(
     name = "test_scenes",
     srcs = glob([
         "test_data/pbrt-v1-scenes/**/*.pbrt",
+        "test_data/pbrt-v2-scenes/**/*.pbrt",
         "test_data/pbrt-v3-scenes/**/*.pbrt",
     ]),
 )
@@ -23,6 +24,8 @@ cc_binary(
         "//pbrt_proto:pbrt_cc_proto",
         "//pbrt_proto/v1:convert",
         "//pbrt_proto/v1:v1_cc_proto",
+        "//pbrt_proto/v2:convert",
+        "//pbrt_proto/v2:v2_cc_proto",
         "//pbrt_proto/v3:convert",
         "//pbrt_proto/v3:v3_cc_proto",
         "@abseil-cpp//absl/container:flat_hash_set",
