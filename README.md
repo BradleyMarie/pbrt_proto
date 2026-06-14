@@ -92,3 +92,11 @@ following roughly ordered set of principles was used to guide the process.
    otherwise the conversion must succeed.
 3) The conversion only is required to support the range of inputs supported by
    PBRT even if the Protocol Buffers use types with larger ranges.
+
+# Expected Incompatibilities
+
+1) In PBRT Proto, the `Include` directive works like the `Import` directive in
+   that it cannot be used in the middle of a different directive and that the
+   included files must start and end with complete directives. This means that
+   some of the the volumetric example scenes from PBRTv1, PBRTv2, and PBRTv3 are
+   incompatible with PBRT Proto without modification.
