@@ -46,6 +46,10 @@ static const absl::flat_hash_map<absl::string_view, ParameterType>
         },
         {
             "integer",
+            ParameterType::INTEGER_STRICT,
+        },
+        {
+            "integer_loose",
             ParameterType::INTEGER,
         },
         {
@@ -157,6 +161,10 @@ class MockParser final : public Parser {
   MOCK_METHOD(absl::Status, ObjectBegin, (absl::string_view), (override));
   MOCK_METHOD(absl::Status, ObjectEnd, (), (override));
   MOCK_METHOD(absl::Status, ObjectInstance, (absl::string_view), (override));
+  MOCK_METHOD(absl::Status, Renderer,
+              (absl::string_view,
+               (absl::flat_hash_map<absl::string_view, Parameter>&)),
+              (override));
   MOCK_METHOD(absl::Status, ReverseOrientation, (), (override));
   MOCK_METHOD(absl::Status, Rotate, (double, double, double, double),
               (override));
@@ -533,6 +541,14 @@ TEST(Parser, InvalidInteger) {
                        "parameter aaa: '1.0'"));
 }
 
+TEST(Parser, MissingIntegerLoose) {
+  std::stringstream stream("Accelerator \"typename\" \"integer_loose aaa\"");
+  EXPECT_THAT(
+      MockParser().ReadFrom(stream),
+      StatusIs(absl::StatusCode::kInvalidArgument,
+               "Missing value for Accelerator integer_loose parameter: 'aaa'"));
+}
+
 TEST(Parser, MissingString) {
   std::stringstream stream("Accelerator \"typename\" \"string aaa\"");
   EXPECT_THAT(
@@ -776,7 +792,7 @@ TEST(Parser, FloatMultiple) {
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
 }
 
-TEST(Parser, IntegerEmpty) {
+TEST(Parser, IntegerStrictEmpty) {
   std::stringstream stream("Accelerator \"typename\" \"integer aaa\" []");
   MockParser parser;
   EXPECT_CALL(
@@ -790,7 +806,7 @@ TEST(Parser, IntegerEmpty) {
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
 }
 
-TEST(Parser, Integer) {
+TEST(Parser, IntegerStrict) {
   std::stringstream stream("Accelerator \"typename\" \"integer aaa\" [1]");
   MockParser parser;
   EXPECT_CALL(
@@ -800,12 +816,12 @@ TEST(Parser, Integer) {
           ElementsAre(Pair(
               "aaa",
               FieldsAre("Accelerator", ParameterType::INTEGER, "integer",
-                        VariantWith<absl::Span<int32_t>>(ElementsAre(1.0)))))))
+                        VariantWith<absl::Span<int32_t>>(ElementsAre(1)))))))
       .WillOnce(Return(absl::OkStatus()));
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
 }
 
-TEST(Parser, IntegerMultiple) {
+TEST(Parser, IntegerStrictMultiple) {
   std::stringstream stream("Accelerator \"typename\" \"integer aaa\" [1 2]");
   MockParser parser;
   EXPECT_CALL(
@@ -815,6 +831,69 @@ TEST(Parser, IntegerMultiple) {
           ElementsAre(Pair(
               "aaa",
               FieldsAre("Accelerator", ParameterType::INTEGER, "integer",
+                        VariantWith<absl::Span<int32_t>>(ElementsAre(1, 2)))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Parser, IntegerEmpty) {
+  std::stringstream stream("Accelerator \"typename\" \"integer_loose aaa\" []");
+  MockParser parser;
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(Pair(
+              "aaa",
+              FieldsAre("Accelerator", ParameterType::INTEGER, "integer_loose",
+                        VariantWith<absl::Span<int32_t>>(IsEmpty()))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Parser, Integer) {
+  std::stringstream stream(
+      "Accelerator \"typename\" \"integer_loose aaa\" [1]");
+  MockParser parser;
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(Pair(
+              "aaa",
+              FieldsAre("Accelerator", ParameterType::INTEGER, "integer_loose",
+                        VariantWith<absl::Span<int32_t>>(ElementsAre(1)))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Parser, IntegerFractional) {
+  std::stringstream stream(
+      "Accelerator \"typename\" \"integer_loose aaa\" [1.1]");
+  MockParser parser;
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(Pair(
+              "aaa",
+              FieldsAre("Accelerator", ParameterType::INTEGER, "integer_loose",
+                        VariantWith<absl::Span<int32_t>>(ElementsAre(1)))))))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Parser, IntegerMultiple) {
+  std::stringstream stream(
+      "Accelerator \"typename\" \"integer_loose aaa\" [1 2]");
+  MockParser parser;
+  EXPECT_CALL(
+      parser,
+      Accelerator(
+          "typename",
+          ElementsAre(Pair(
+              "aaa",
+              FieldsAre("Accelerator", ParameterType::INTEGER, "integer_loose",
                         VariantWith<absl::Span<int32_t>>(ElementsAre(1, 2)))))))
       .WillOnce(Return(absl::OkStatus()));
   EXPECT_THAT(parser.ReadFrom(stream), IsOk());
@@ -2124,6 +2203,30 @@ TEST(PixelFilter, Fails) {
   std::stringstream stream("PixelFilter \"abc\"");
   MockParser parser;
   EXPECT_CALL(parser, PixelFilter("abc", IsEmpty()))
+      .WillOnce(Return(absl::UnknownError("")));
+  EXPECT_THAT(parser.ReadFrom(stream),
+              StatusIs(absl::StatusCode::kUnknown, ""));
+}
+
+TEST(Renderer, Succeeds) {
+  std::stringstream stream("Renderer \"abc\"");
+  MockParser parser;
+  EXPECT_CALL(parser, Renderer("abc", IsEmpty()))
+      .WillOnce(Return(absl::OkStatus()));
+  EXPECT_THAT(parser.ReadFrom(stream), IsOk());
+}
+
+TEST(Renderer, MissingType) {
+  std::stringstream stream("Renderer");
+  EXPECT_THAT(MockParser().ReadFrom(stream),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Missing type parameter to directive Renderer"));
+}
+
+TEST(Renderer, Fails) {
+  std::stringstream stream("Renderer \"abc\"");
+  MockParser parser;
+  EXPECT_CALL(parser, Renderer("abc", IsEmpty()))
       .WillOnce(Return(absl::UnknownError("")));
   EXPECT_THAT(parser.ReadFrom(stream),
               StatusIs(absl::StatusCode::kUnknown, ""));

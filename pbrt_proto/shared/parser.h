@@ -15,21 +15,22 @@
 namespace pbrt_proto {
 
 enum class ParameterType {
-  BLACKBODY_V1,  // float2
-  BLACKBODY_V2,  // float
-  BOOL,          // bool
-  FLOAT,         // float
-  INTEGER,       // integer
-  NORMAL3,       // float3
-  POINT2,        // float2
-  POINT3,        // float3
-  RGB,           // float3
-  SPECTRUM,      // float2 or string
-  STRING,        // string
-  TEXTURE,       // string
-  VECTOR2,       // float2
-  VECTOR3,       // float3
-  XYZ,           // float3
+  BLACKBODY_V1,    // float2
+  BLACKBODY_V2,    // float
+  BOOL,            // bool
+  FLOAT,           // float
+  INTEGER,         // integer (truncates fractional values)
+  INTEGER_STRICT,  // integer (integral values only)
+  NORMAL3,         // float3
+  POINT2,          // float2
+  POINT3,          // float3
+  RGB,             // float3
+  SPECTRUM,        // float2 or string
+  STRING,          // string
+  TEXTURE,         // string
+  VECTOR2,         // float2
+  VECTOR3,         // float3
+  XYZ,             // float3
 };
 
 using ParameterValues =
@@ -142,6 +143,10 @@ class Parser {
 
   virtual absl::Status PixelFilter(
       absl::string_view pixel_filter_type,
+      absl::flat_hash_map<absl::string_view, Parameter>& parameters) = 0;
+
+  virtual absl::Status Renderer(
+      absl::string_view renderer_type,
       absl::flat_hash_map<absl::string_view, Parameter>& parameters) = 0;
 
   virtual absl::Status ReverseOrientation() = 0;

@@ -318,18 +318,6 @@ cc_test(
 )
 
 cc_library(
-    name = "proto_parser",
-    hdrs = ["proto_parser.h"],
-    deps = [
-        ":parser",
-        "@abseil-cpp//absl/container:flat_hash_map",
-        "@abseil-cpp//absl/status:status",
-        "@abseil-cpp//absl/strings",
-        "@abseil-cpp//absl/strings:string_view",
-    ],
-)
-
-cc_library(
     name = "pixel_filters",
     srcs = ["pixel_filters.cc"],
     hdrs = ["pixel_filters.h"],
@@ -348,6 +336,46 @@ cc_test(
     deps = [
         ":parser",
         ":pixel_filters",
+        "//pbrt_proto:pbrt_cc_proto",
+        "//pbrt_proto/testing:proto_matchers",
+        "@abseil-cpp//absl/container:flat_hash_map",
+        "@abseil-cpp//absl/strings:string_view",
+        "@googletest//:gtest",
+        "@googletest//:gtest_main",
+    ],
+)
+
+cc_library(
+    name = "proto_parser",
+    hdrs = ["proto_parser.h"],
+    deps = [
+        ":parser",
+        "@abseil-cpp//absl/container:flat_hash_map",
+        "@abseil-cpp//absl/status:status",
+        "@abseil-cpp//absl/strings",
+        "@abseil-cpp//absl/strings:string_view",
+    ],
+)
+
+cc_library(
+    name = "renderers",
+    srcs = ["renderers.cc"],
+    hdrs = ["renderers.h"],
+    deps = [
+        ":parser",
+        "//pbrt_proto:pbrt_cc_proto",
+        "@abseil-cpp//absl/container:flat_hash_map",
+        "@abseil-cpp//absl/status:status",
+        "@abseil-cpp//absl/strings:string_view",
+    ],
+)
+
+cc_test(
+    name = "renderers_test",
+    srcs = ["renderers_test.cc"],
+    deps = [
+        ":parser",
+        ":renderers",
         "//pbrt_proto:pbrt_cc_proto",
         "//pbrt_proto/testing:proto_matchers",
         "@abseil-cpp//absl/container:flat_hash_map",

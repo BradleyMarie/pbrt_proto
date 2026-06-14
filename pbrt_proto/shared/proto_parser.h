@@ -125,6 +125,10 @@ class ProtoParser : public Parser {
 
   absl::Status ObjectInstance(absl::string_view name) final;
 
+  absl::Status Renderer(
+      absl::string_view renderer_type,
+      absl::flat_hash_map<absl::string_view, Parameter>& parameters) override;
+
   absl::Status ReverseOrientation() final;
 
   absl::Status Rotate(double angle, double x, double y, double z) final;
@@ -387,6 +391,13 @@ absl::Status ProtoParser<T, PbrtVersion>::ObjectInstance(
     absl::string_view name) {
   output_.add_directives()->mutable_object_instance()->set_name(name);
   return absl::OkStatus();
+}
+
+template <typename T, int PbrtVersion>
+absl::Status ProtoParser<T, PbrtVersion>::Renderer(
+    absl::string_view integrator_type,
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
+  return UnsupportedDirectiveError("Renderer");
 }
 
 template <typename T, int PbrtVersion>

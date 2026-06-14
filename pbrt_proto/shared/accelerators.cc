@@ -14,7 +14,7 @@ absl::Status RemoveGridAccelerator(
     int pbrt_version, GridAccelerator& output) {
   if (std::optional<bool> refineimmediately =
           TryRemoveBool(parameters, "refineimmediately");
-      refineimmediately) {
+      refineimmediately.has_value()) {
     output.set_refineimmediately(*refineimmediately);
   }
 

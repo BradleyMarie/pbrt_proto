@@ -1417,7 +1417,75 @@ TEST(RemoveSubstrateMaterialV3, WithDataIndex) {
               )pb"));
 }
 
-TEST(RemoveSubsurfaceMaterial, Empty) {
+TEST(RemoveSubsurfaceMaterialV2, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  SubsurfaceMaterial actual;
+  EXPECT_TRUE(
+      RemoveSubsurfaceMaterial(parameters, /*pbrt_version=*/2, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveSubsurfaceMaterialV2, WithData) {
+  std::vector<std::string_view> kr = {"kr"};
+  Parameter kr_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(kr)};
+
+  std::vector<std::string_view> bumpmap = {"bump"};
+  Parameter bumpmap_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(bumpmap)};
+
+  std::vector<double> index = {2.0};
+  Parameter index_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(index)};
+
+  std::vector<std::string_view> sigma_a = {"sigma_a"};
+  Parameter sigma_a_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(sigma_a)};
+
+  std::vector<std::string_view> sigma_prime_s = {"sigma_s"};
+  Parameter sigma_prime_s_parameter{/*directive=*/"",
+                                    /*type=*/ParameterType::TEXTURE,
+                                    /*type_name=*/"",
+                                    /*values=*/absl::MakeSpan(sigma_prime_s)};
+
+  std::vector<std::string_view> name = {"Apple"};
+  Parameter name_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::STRING,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(name)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"Kr", kr_parameter},
+      {"bumpmap", bumpmap_parameter},
+      {"index", index_parameter},
+      {"sigma_a", sigma_a_parameter},
+      {"sigma_prime_s", sigma_prime_s_parameter},
+      {"name", name_parameter},
+  };
+
+  SubsurfaceMaterial actual;
+  EXPECT_TRUE(
+      RemoveSubsurfaceMaterial(parameters, /*pbrt_version=*/2, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                Kr { spectrum_texture_name: "kr" }
+                bumpmap { float_texture_name: "bump" }
+                eta: 2.0
+                sigma_a { spectrum_texture_name: "sigma_a" }
+                sigma_s { spectrum_texture_name: "sigma_s" }
+                name: APPLE
+              )pb"));
+}
+
+TEST(RemoveSubsurfaceMaterialV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   SubsurfaceMaterial actual;
@@ -1426,7 +1494,7 @@ TEST(RemoveSubsurfaceMaterial, Empty) {
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveSubsurfaceMaterial, WithData) {
+TEST(RemoveSubsurfaceMaterialV3, WithData) {
   std::vector<std::string_view> kr = {"kr"};
   Parameter kr_parameter{/*directive=*/"",
                          /*type=*/ParameterType::TEXTURE,

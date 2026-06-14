@@ -150,8 +150,8 @@ INSTANTIATE_TEST_CASE_P(AllTypes, CommonTypes,
                         testing::Values("Accelerator", "AreaLightSource",
                                         "Camera", "Film", "FloatTexture",
                                         "Integrator", "LightSource", "Material",
-                                        "Medium", "PixelFilter", "Sampler",
-                                        "Shape", "SpectrumTexture",
+                                        "Medium", "PixelFilter", "Renderer",
+                                        "Sampler", "Shape", "SpectrumTexture",
                                         "VolumeIntegrator"));
 
 std::vector<std::pair<int, int>> GenerateVersionPairs(int max) {

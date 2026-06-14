@@ -1,9 +1,11 @@
 #include "pbrt_proto/shared/parser.h"
 
 #include <cassert>
+#include <cmath>
 #include <functional>
 #include <iostream>
 #include <istream>
+#include <limits>
 #include <memory>
 #include <string>
 #include <tuple>
@@ -210,8 +212,9 @@ absl::Status CheckForNextValue(Tokenizer& tokenizer,
 }
 
 absl::Status ParseValue(absl::string_view directive, absl::string_view type,
-                        absl::string_view name, ParameterStorage& storage,
-                        Tokenizer& tokenizer, double& out) {
+                        absl::string_view name, ParameterType parameter_type,
+                        ParameterStorage& storage, Tokenizer& tokenizer,
+                        double& out) {
   assert(CheckForNextValue(tokenizer, directive, type, name).ok());
 
   if (const std::string* next = *tokenizer.Next();
@@ -223,12 +226,13 @@ absl::Status ParseValue(absl::string_view directive, absl::string_view type,
 }
 
 absl::Status ParseValue(absl::string_view directive, absl::string_view type,
-                        absl::string_view name, ParameterStorage& storage,
-                        Tokenizer& tokenizer, std::array<double, 2>& out) {
+                        absl::string_view name, ParameterType parameter_type,
+                        ParameterStorage& storage, Tokenizer& tokenizer,
+                        std::array<double, 2>& out) {
   assert(CheckForNextValue(tokenizer, directive, type, name).ok());
 
-  if (absl::Status status =
-          ParseValue(directive, type, name, storage, tokenizer, out[0]);
+  if (absl::Status status = ParseValue(directive, type, name, parameter_type,
+                                       storage, tokenizer, out[0]);
       !status.ok()) {
     return status;
   }
@@ -243,8 +247,8 @@ absl::Status ParseValue(absl::string_view directive, absl::string_view type,
     return MissingValueError(directive, type, name);
   }
 
-  if (absl::Status status =
-          ParseValue(directive, type, name, storage, tokenizer, out[1]);
+  if (absl::Status status = ParseValue(directive, type, name, parameter_type,
+                                       storage, tokenizer, out[1]);
       !status.ok()) {
     return status;
   }
@@ -253,12 +257,13 @@ absl::Status ParseValue(absl::string_view directive, absl::string_view type,
 }
 
 absl::Status ParseValue(absl::string_view directive, absl::string_view type,
-                        absl::string_view name, ParameterStorage& storage,
-                        Tokenizer& tokenizer, std::array<double, 3>& out) {
+                        absl::string_view name, ParameterType parameter_type,
+                        ParameterStorage& storage, Tokenizer& tokenizer,
+                        std::array<double, 3>& out) {
   assert(CheckForNextValue(tokenizer, directive, type, name).ok());
 
-  if (absl::Status status =
-          ParseValue(directive, type, name, storage, tokenizer, out[0]);
+  if (absl::Status status = ParseValue(directive, type, name, parameter_type,
+                                       storage, tokenizer, out[0]);
       !status.ok()) {
     return status;
   }
@@ -273,8 +278,8 @@ absl::Status ParseValue(absl::string_view directive, absl::string_view type,
     return MissingValueError(directive, type, name);
   }
 
-  if (absl::Status status =
-          ParseValue(directive, type, name, storage, tokenizer, out[1]);
+  if (absl::Status status = ParseValue(directive, type, name, parameter_type,
+                                       storage, tokenizer, out[1]);
       !status.ok()) {
     return status;
   }
@@ -289,8 +294,8 @@ absl::Status ParseValue(absl::string_view directive, absl::string_view type,
     return MissingValueError(directive, type, name);
   }
 
-  if (absl::Status status =
-          ParseValue(directive, type, name, storage, tokenizer, out[2]);
+  if (absl::Status status = ParseValue(directive, type, name, parameter_type,
+                                       storage, tokenizer, out[2]);
       !status.ok()) {
     return status;
   }
@@ -299,21 +304,32 @@ absl::Status ParseValue(absl::string_view directive, absl::string_view type,
 }
 
 absl::Status ParseValue(absl::string_view directive, absl::string_view type,
-                        absl::string_view name, ParameterStorage& storage,
-                        Tokenizer& tokenizer, int32_t& out) {
+                        absl::string_view name, ParameterType parameter_type,
+                        ParameterStorage& storage, Tokenizer& tokenizer,
+                        int32_t& out) {
   assert(CheckForNextValue(tokenizer, directive, type, name).ok());
 
-  if (const std::string* next = *tokenizer.Next();
-      !absl::SimpleAtoi(*next, &out)) {
-    return InvalidTokenError(directive, type, name, *next);
+  const std::string* next = *tokenizer.Next();
+  if (absl::SimpleAtoi(*next, &out)) {
+    return absl::OkStatus();
   }
 
-  return absl::OkStatus();
+  double as_double;
+  if (parameter_type == ParameterType::INTEGER &&
+      absl::SimpleAtod(*next, &as_double) && std::isfinite(as_double) &&
+      as_double <= std::numeric_limits<int>::max() &&
+      as_double >= std::numeric_limits<int>::min()) {
+    out = static_cast<int>(as_double);
+    return absl::OkStatus();
+  }
+
+  return InvalidTokenError(directive, type, name, *next);
 }
 
 absl::Status ParseValue(absl::string_view directive, absl::string_view type,
-                        absl::string_view name, ParameterStorage& storage,
-                        Tokenizer& tokenizer, bool& out) {
+                        absl::string_view name, ParameterType parameter_type,
+                        ParameterStorage& storage, Tokenizer& tokenizer,
+                        bool& out) {
   assert(CheckForNextValue(tokenizer, directive, type, name).ok());
 
   const std::string* next = *tokenizer.Next();
@@ -333,8 +349,9 @@ absl::Status ParseValue(absl::string_view directive, absl::string_view type,
 }
 
 absl::Status ParseValue(absl::string_view directive, absl::string_view type,
-                        absl::string_view name, ParameterStorage& storage,
-                        Tokenizer& tokenizer, absl::string_view& out) {
+                        absl::string_view name, ParameterType parameter_type,
+                        ParameterStorage& storage, Tokenizer& tokenizer,
+                        absl::string_view& out) {
   assert(CheckForNextValue(tokenizer, directive, type, name).ok());
 
   const std::string* next = *tokenizer.Next();
@@ -355,8 +372,8 @@ absl::Status ParseValue(absl::string_view directive, absl::string_view type,
 template <typename T>
 absl::Status ParseParameterListImpl(
     absl::string_view directive, absl::string_view type, absl::string_view name,
-    ParameterStorage& storage, Tokenizer& tokenizer,
-    absl::InlinedVector<T, 16>& output, bool loop) {
+    ParameterType parameter_type, ParameterStorage& storage,
+    Tokenizer& tokenizer, absl::InlinedVector<T, 16>& output, bool loop) {
   for (;;) {
     absl::StatusOr<const std::string*> next = tokenizer.Peek();
     if (!next.ok()) {
@@ -378,8 +395,8 @@ absl::Status ParseParameterListImpl(
     }
 
     T value;
-    if (absl::Status status =
-            ParseValue(directive, type, name, storage, tokenizer, value);
+    if (absl::Status status = ParseValue(directive, type, name, parameter_type,
+                                         storage, tokenizer, value);
         !status.ok()) {
       return status;
     }
@@ -397,6 +414,7 @@ absl::Status ParseParameterListImpl(
 template <typename T>
 absl::Status ParseParameterList(absl::string_view directive,
                                 absl::string_view type, absl::string_view name,
+                                ParameterType parameter_type,
                                 ParameterStorage& storage, Tokenizer& tokenizer,
                                 absl::InlinedVector<T, 16>& output,
                                 bool must_loop) {
@@ -421,8 +439,8 @@ absl::Status ParseParameterList(absl::string_view directive,
     loop = false;
   }
 
-  return ParseParameterListImpl(directive, type, name, storage, tokenizer,
-                                output, loop);
+  return ParseParameterListImpl(directive, type, name, parameter_type, storage,
+                                tokenizer, output, loop);
 }
 
 absl::Status ParseSpectrumParameter(
@@ -464,13 +482,15 @@ absl::Status ParseSpectrumParameter(
   absl::Status status;
   if ((**next)[0] == '"') {
     auto& output_storage = storage.NextString();
-    status = ParseParameterListImpl(directive, type, name, storage, tokenizer,
-                                    output_storage, loop);
+    status =
+        ParseParameterListImpl(directive, type, name, ParameterType::SPECTRUM,
+                               storage, tokenizer, output_storage, loop);
     output = absl::MakeSpan(output_storage);
   } else {
     auto& output_storage = storage.NextFloat2();
-    status = ParseParameterListImpl(directive, type, name, storage, tokenizer,
-                                    output_storage, loop);
+    status =
+        ParseParameterListImpl(directive, type, name, ParameterType::SPECTRUM,
+                               storage, tokenizer, output_storage, loop);
     output = absl::MakeSpan(output_storage);
   }
 
@@ -651,138 +671,136 @@ absl::StatusOr<absl::string_view> ReadParameters(
       break;
     }
 
+    ParameterType parameter_type = std::get<0>(**parameter_type_and_name);
+    absl::string_view type = std::get<1>(**parameter_type_and_name);
+    absl::string_view parameter_name = std::get<2>(**parameter_type_and_name);
+
     absl::Status status;
     ParameterValues values;
-    switch (std::get<0>(**parameter_type_and_name)) {
+    switch (parameter_type) {
       case ParameterType::BLACKBODY_V1: {
         auto& output = storage.NextFloat2();
-        status = ParseParameterList(
-            directive, std::get<1>(**parameter_type_and_name),
-            std::get<2>(**parameter_type_and_name), storage, tokenizer, output,
-            /*must_loop=*/true);
+        status = ParseParameterList(directive, type, parameter_name,
+                                    parameter_type, storage, tokenizer, output,
+                                    /*must_loop=*/true);
         values = absl::MakeSpan(output);
         break;
       }
       case ParameterType::BLACKBODY_V2: {
         auto& output = storage.NextFloat();
-        status = ParseParameterList(
-            directive, std::get<1>(**parameter_type_and_name),
-            std::get<2>(**parameter_type_and_name), storage, tokenizer, output,
-            /*must_loop=*/false);
+        status = ParseParameterList(directive, type, parameter_name,
+                                    parameter_type, storage, tokenizer, output,
+                                    /*must_loop=*/false);
         values = absl::MakeSpan(output);
         break;
       }
       case ParameterType::BOOL: {
         auto& output = storage.NextBool();
-        status = ParseParameterList(
-            directive, std::get<1>(**parameter_type_and_name),
-            std::get<2>(**parameter_type_and_name), storage, tokenizer, output,
-            /*must_loop=*/false);
+        status = ParseParameterList(directive, type, parameter_name,
+                                    parameter_type, storage, tokenizer, output,
+                                    /*must_loop=*/false);
         values = absl::MakeSpan(output);
         break;
       }
       case ParameterType::FLOAT: {
         auto& output = storage.NextFloat();
-        status = ParseParameterList(
-            directive, std::get<1>(**parameter_type_and_name),
-            std::get<2>(**parameter_type_and_name), storage, tokenizer, output,
-            /*must_loop=*/false);
+        status = ParseParameterList(directive, type, parameter_name,
+                                    parameter_type, storage, tokenizer, output,
+                                    /*must_loop=*/false);
         values = absl::MakeSpan(output);
         break;
       }
       case ParameterType::INTEGER: {
         auto& output = storage.NextInt();
-        status = ParseParameterList(
-            directive, std::get<1>(**parameter_type_and_name),
-            std::get<2>(**parameter_type_and_name), storage, tokenizer, output,
-            /*must_loop=*/false);
+        status = ParseParameterList(directive, type, parameter_name,
+                                    parameter_type, storage, tokenizer, output,
+                                    /*must_loop=*/false);
         values = absl::MakeSpan(output);
+        break;
+      }
+      case ParameterType::INTEGER_STRICT: {
+        auto& output = storage.NextInt();
+        status = ParseParameterList(directive, type, parameter_name,
+                                    parameter_type, storage, tokenizer, output,
+                                    /*must_loop=*/false);
+        values = absl::MakeSpan(output);
+        parameter_type = ParameterType::INTEGER;
         break;
       }
       case ParameterType::NORMAL3: {
         auto& output = storage.NextFloat3();
-        status = ParseParameterList(
-            directive, std::get<1>(**parameter_type_and_name),
-            std::get<2>(**parameter_type_and_name), storage, tokenizer, output,
-            /*must_loop=*/true);
+        status = ParseParameterList(directive, type, parameter_name,
+                                    parameter_type, storage, tokenizer, output,
+                                    /*must_loop=*/true);
         values = absl::MakeSpan(output);
         break;
       }
       case ParameterType::POINT2: {
         auto& output = storage.NextFloat2();
-        status = ParseParameterList(
-            directive, std::get<1>(**parameter_type_and_name),
-            std::get<2>(**parameter_type_and_name), storage, tokenizer, output,
-            /*must_loop=*/true);
+        status = ParseParameterList(directive, type, parameter_name,
+                                    parameter_type, storage, tokenizer, output,
+                                    /*must_loop=*/true);
         values = absl::MakeSpan(output);
         break;
       }
       case ParameterType::POINT3: {
         auto& output = storage.NextFloat3();
-        status = ParseParameterList(
-            directive, std::get<1>(**parameter_type_and_name),
-            std::get<2>(**parameter_type_and_name), storage, tokenizer, output,
-            /*must_loop=*/true);
+        status = ParseParameterList(directive, type, parameter_name,
+                                    parameter_type, storage, tokenizer, output,
+                                    /*must_loop=*/true);
         values = absl::MakeSpan(output);
         break;
       }
       case ParameterType::RGB: {
         auto& output = storage.NextFloat3();
-        status = ParseParameterList(
-            directive, std::get<1>(**parameter_type_and_name),
-            std::get<2>(**parameter_type_and_name), storage, tokenizer, output,
-            /*must_loop=*/true);
+        status = ParseParameterList(directive, type, parameter_name,
+                                    parameter_type, storage, tokenizer, output,
+                                    /*must_loop=*/true);
         values = absl::MakeSpan(output);
         break;
       }
       case ParameterType::SPECTRUM: {
-        status = ParseSpectrumParameter(
-            directive, std::get<1>(**parameter_type_and_name),
-            std::get<2>(**parameter_type_and_name), storage, tokenizer, values);
+        status = ParseSpectrumParameter(directive, type, parameter_name,
+                                        storage, tokenizer, values);
         break;
       }
       case ParameterType::STRING: {
         auto& output = storage.NextString();
-        status = ParseParameterList(
-            directive, std::get<1>(**parameter_type_and_name),
-            std::get<2>(**parameter_type_and_name), storage, tokenizer, output,
-            /*must_loop=*/false);
+        status = ParseParameterList(directive, type, parameter_name,
+                                    parameter_type, storage, tokenizer, output,
+                                    /*must_loop=*/false);
         values = absl::MakeSpan(output);
         break;
       }
       case ParameterType::TEXTURE: {
         auto& output = storage.NextString();
-        status = ParseParameterList(
-            directive, std::get<1>(**parameter_type_and_name),
-            std::get<2>(**parameter_type_and_name), storage, tokenizer, output,
-            /*must_loop=*/false);
+        status = ParseParameterList(directive, type, parameter_name,
+                                    parameter_type, storage, tokenizer, output,
+                                    /*must_loop=*/false);
         values = absl::MakeSpan(output);
         break;
       }
       case ParameterType::VECTOR2: {
         auto& output = storage.NextFloat2();
-        status = ParseParameterList(
-            directive, std::get<1>(**parameter_type_and_name),
-            std::get<2>(**parameter_type_and_name), storage, tokenizer, output,
-            /*must_loop=*/true);
+        status = ParseParameterList(directive, type, parameter_name,
+                                    parameter_type, storage, tokenizer, output,
+                                    /*must_loop=*/true);
         values = absl::MakeSpan(output);
         break;
       }
       case ParameterType::VECTOR3: {
         auto& output = storage.NextFloat3();
-        status = ParseParameterList(
-            directive, std::get<1>(**parameter_type_and_name),
-            std::get<2>(**parameter_type_and_name), storage, tokenizer, output,
-            /*must_loop=*/true);
+        status = ParseParameterList(directive, type, parameter_name,
+                                    parameter_type, storage, tokenizer, output,
+                                    /*must_loop=*/true);
         values = absl::MakeSpan(output);
         break;
       }
       case ParameterType::XYZ: {
         auto& output = storage.NextFloat3();
-        status = ParseParameterList(
-            directive, std::get<1>(**parameter_type_and_name),
-            std::get<2>(**parameter_type_and_name), storage, tokenizer, output,
-            /*must_loop=*/true);
+        status = ParseParameterList(directive, type, parameter_name,
+                                    parameter_type, storage, tokenizer, output,
+                                    /*must_loop=*/true);
         values = absl::MakeSpan(output);
         break;
       }
@@ -792,10 +810,10 @@ absl::StatusOr<absl::string_view> ReadParameters(
       return status;
     }
 
-    Parameter& parameter = parameters[std::get<2>(**parameter_type_and_name)];
+    Parameter& parameter = parameters[parameter_name];
     parameter.directive = directive;
-    parameter.type = std::get<0>(**parameter_type_and_name);
-    parameter.type_name = std::get<1>(**parameter_type_and_name);
+    parameter.type = parameter_type;
+    parameter.type_name = type;
     parameter.values = std::move(values);
   }
 
@@ -1124,6 +1142,17 @@ absl::Status Parser::ReadFrom(std::istream& stream) {
              }
 
              return PixelFilter(*type_name, parameters);
+           }},
+          {"Renderer",
+           [&]() {
+             absl::StatusOr<absl::string_view> type_name =
+                 ReadParameters("Renderer", parameter_type_names_, storage,
+                                tokenizer, parameters);
+             if (!type_name.ok()) {
+               return type_name.status();
+             }
+
+             return Renderer(*type_name, parameters);
            }},
           {"ReverseOrientation", [&]() { return ReverseOrientation(); }},
           {"Rotate",

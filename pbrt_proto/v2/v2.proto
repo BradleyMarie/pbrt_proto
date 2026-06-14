@@ -108,6 +108,7 @@ message Material {
     MeasuredMerlMaterial measured = 16;      // Create a measured BRDF material
     MetalMaterial metal = 17;                // Create a metal material
     MixMaterial mix = 18;                    // Create a mix material
+    SubsurfaceMaterial subsurface = 19;      // Create a subsurface material
   }
 }
 
@@ -122,6 +123,20 @@ message PixelFilter {
     MitchellPixelFilter mitchell = 3;  // Use a Mitchell-Netravali filter
     LanczosPixelFilter sinc = 4;       // Use a Lanczos filter
     TrianglePixelFilter triangle = 5;  // Use a triangle filter
+  }
+}
+
+// A directive which sets the Renderer to use for rendering.
+message Renderer {
+  // The type of Renderer to use. If none are set, then the current Renderer
+  // should be unset. If no Renderer is set at the time an image is to be
+  // rendered a black frame should be rendered.
+  oneof renderer_type {
+    AggregateTestRenderer aggregatetest = 1;  // Use the aggregate test renderer
+    CreateProbesRenderer createprobes = 2;    // Use the create probes renderer
+    MetropolisRenderer metropolis = 3;        // Use the MLT renderer
+    SamplerRenderer sampler = 4;              // Use the sampler renderer
+    SurfacePointsRenderer surfacepoints = 5;  // Use the surface points renderer
   }
 }
 
@@ -157,13 +172,17 @@ message Shape {
     optional FloatTextureParameter eta = 11;
     optional FloatTextureParameter sigma = 12;
     optional FloatTextureParameter bumpmap = 13;
-    optional SpectrumTextureParameter amount = 14;
-    optional SpectrumTextureParameter eta_as_spectrum_texture = 15;
-    optional SpectrumTextureParameter k = 16;
-    optional FloatTextureParameter meanfreepath = 17;
-    optional string filename = 18;
-    optional string namedmaterial1 = 19;
-    optional string namedmaterial2 = 20;
+    optional MeasuredScatteringPreset name = 14;
+    optional SpectrumTextureParameter amount = 15;
+    optional SpectrumTextureParameter eta_as_spectrum_texture = 16;
+    optional SpectrumTextureParameter k = 17;
+    optional SpectrumTextureParameter sigma_a = 18;
+    optional SpectrumTextureParameter sigma_s = 19;
+    optional FloatTextureParameter meanfreepath = 20;
+    optional string filename = 21;
+    optional string namedmaterial1 = 22;
+    optional string namedmaterial2 = 23;
+    optional double eta_as_value = 24;
   }
 
   // The overrides for the materials applied to the shape.
@@ -291,11 +310,9 @@ message Directive {
     ActiveTransform active_transform = 36;
     MakeNamedMaterial make_named_material = 37;
     NamedMaterial named_material = 38;
-    // Renderer
+    Renderer renderer = 39;
     TransformTimes transform_times = 40;
   }
-
-  reserved 39;  // Renderer
 }
 
 // A list of PBRTv2 directives.

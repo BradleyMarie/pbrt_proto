@@ -1865,41 +1865,41 @@ message DisneyMaterial {
   optional FloatTextureParameter bumpmap = 13;
 
   // The base color of the surface.
-  optional SpectrumTextureParameter color = 22;
+  optional SpectrumTextureParameter color = 25;
 
   // The path length light travels inside the material before exiting.
-  optional SpectrumTextureParameter scatterdistance = 26;
+  optional SpectrumTextureParameter scatterdistance = 27;
 
   // Adjusts the asapect ratio of the specular highlights.
-  optional FloatTextureParameter anisotropic = 28;
+  optional FloatTextureParameter anisotropic = 29;
 
   // Adds a clearcoat over the base material.
-  optional FloatTextureParameter clearcoat = 31;
+  optional FloatTextureParameter clearcoat = 32;
 
   // Controls the roughness of the clearcoat.
-  optional FloatTextureParameter clearcoatgloss = 32;
+  optional FloatTextureParameter clearcoatgloss = 33;
 
   // Controls how much light is diffusely transmitted through the surface.
-  optional FloatTextureParameter difftrans = 33;
+  optional FloatTextureParameter difftrans = 34;
 
   // Softens the diffuse transition making the surface more like fabric.
-  optional FloatTextureParameter flatness = 35;
+  optional FloatTextureParameter flatness = 36;
 
   // Controls how metallic the surface appears.
-  optional FloatTextureParameter metallic = 36;
+  optional FloatTextureParameter metallic = 37;
 
   // Controls how much light is specularly transmitted through the surface.
-  optional FloatTextureParameter spectrans = 38;
+  optional FloatTextureParameter spectrans = 39;
 
   // Adjusts the color of the specular highlights tinting them towards the
   // base color.
-  optional FloatTextureParameter speculartint = 39;
+  optional FloatTextureParameter speculartint = 40;
 
   // Adds a fabric-like backscatter.
-  optional FloatTextureParameter sheen = 40;
+  optional FloatTextureParameter sheen = 41;
 
   // Adjust the color of the sheen reflection towards the base color.
-  optional FloatTextureParameter sheentint = 41;
+  optional FloatTextureParameter sheentint = 42;
 
   // If true, the material is attached to a thin object like paper.
   optional bool thin = 46 [default = false];
@@ -1963,27 +1963,27 @@ message HairMaterial {
   // If specified, a value of the absorption coefficient is computed using an
   // approximation that leads to the hair having roughly this color, after
   // multiple scattering in the hair during rendering.
-  optional SpectrumTextureParameter color = 22;
+  optional SpectrumTextureParameter color = 25;
 
   // The absorption coefficient of the volume.
-  optional SpectrumTextureParameter sigma_a = 24;
+  optional SpectrumTextureParameter sigma_a = 18;
 
   // This represents the tilt angle of the cuticle scales on the hair surface.
-  optional FloatTextureParameter alpha = 27;
+  optional FloatTextureParameter alpha = 28;
 
   // The longitudinal roughness of the hair surface.
-  optional FloatTextureParameter beta_m = 29;
+  optional FloatTextureParameter beta_m = 30;
 
   // The azimuthal roughness of the hair surface.
-  optional FloatTextureParameter beta_n = 30;
+  optional FloatTextureParameter beta_n = 31;
 
   // Concentration of the eumelanin pigment in the hair. Blonde hair has
   // concentrations around 0.3, brown around 1.3, and black around 8.0.
-  optional FloatTextureParameter eumelanin = 34;
+  optional FloatTextureParameter eumelanin = 35;
 
   // Concentration of the pheomelanin pigment in the hair. Pheomelanin makes
   // red hair red.
-  optional FloatTextureParameter pheomelanin = 37;
+  optional FloatTextureParameter pheomelanin = 38;
 }
 
 // A material with subsurface scattering where Kd is main parameter.
@@ -2035,14 +2035,14 @@ message KdSubsurfaceMaterial {
     // NOTE: For simplicity, this field is shared between all PBRT versions;
     //       however, it is only supported in PBRTv2 and should be ignored when
     //       reading all other input.
-    FloatTextureParameter meanfreepath = 17;
+    FloatTextureParameter meanfreepath = 20;
 
     // The average distance light travels in the medium before scattering.
     //
     // NOTE: For simplicity, this field is shared between all PBRT versions;
     //       however, it is only supported in PBRTv3 and should be ignored when
     //       reading all other input.
-    SpectrumTextureParameter mfp = 23;
+    SpectrumTextureParameter mfp = 26;
   }
 
   // The asymmetry factor of the material's phase function. A value of zero
@@ -2053,7 +2053,7 @@ message KdSubsurfaceMaterial {
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported before PBRTv3 and should be ignored when
   //       reading earlier input.
-  optional double g = 42 [default = 0.0];
+  optional double g = 43 [default = 0.0];
 
   // A scale factor applied to the mean free path.
   //
@@ -2096,7 +2096,7 @@ message MeasuredFourierMaterial {
   //
   // NOTE: This field is named "bsdffile" in PBRTv3; however, for consistiency
   //       with the other measured materials it is renamed here to "filename".
-  optional string filename = 18;
+  optional string filename = 21;
 }
 
 // A material with a measured BRDF using the MERL representation.
@@ -2105,7 +2105,7 @@ message MeasuredMerlMaterial {
   optional FloatTextureParameter bumpmap = 13;
 
   // The file that stores the BRDF description.
-  optional string filename = 18;
+  optional string filename = 21;
 }
 
 message MetalMaterial {
@@ -2135,7 +2135,7 @@ message MetalMaterial {
   optional SpectrumTextureParameter eta = 15;
 
   // The absorption coefficient to use in computing the material's reflectance.
-  optional SpectrumTextureParameter k = 16;
+  optional SpectrumTextureParameter k = 17;
 
   // If true, roughness values are expected to be in the range [0,1], and are
   // remapped to microfacet distribution function parameter values that range
@@ -2201,15 +2201,15 @@ message MixMaterial {
   // Weighting factor for the blend between materials. A value of one
   // corresponds to just `namedmaterial1`, a value of zero corresponds to just
   // `namedmaterial2`, and values in between interpolate linearly.
-  optional SpectrumTextureParameter amount = 14;
+  optional SpectrumTextureParameter amount = 15;
 
   // The name of the first texture to mix. If not found, create a matte material
   // using the parameters in place of this one.
-  optional string namedmaterial1 = 19;
+  optional string namedmaterial1 = 22;
 
   // The name of the second texture to mix. If not found, create a matte
   // material using the parameters in place of this one.
-  optional string namedmaterial2 = 20;
+  optional string namedmaterial2 = 23;
 }
 
 // A material that approximates a shiny metal surface.
@@ -2290,13 +2290,20 @@ message SubsurfaceMaterial {
   optional FloatTextureParameter bumpmap = 13;
 
   // The name of measured subsurface scattering coefficients.
-  optional MeasuredScatteringPreset name = 21 [default = DEFAULT];
+  optional MeasuredScatteringPreset name = 14 [default = DEFAULT];
 
   // The absorption coefficient of the volume.
-  optional SpectrumTextureParameter sigma_a = 24;
+  optional SpectrumTextureParameter sigma_a = 18;
 
   // The reduced scattering coefficient of the volume.
-  optional SpectrumTextureParameter sigma_s = 25;
+  //
+  // NOTE: In PBRTv2 this field is referred to by the name `sigma_prime_s`;
+  //       however, it is referred to here as `sigma_s` which is the name of the
+  //       parameter used in PBRTv3 and later.
+  optional SpectrumTextureParameter sigma_s = 19;
+
+  // The index of refraction of the scattering volume.
+  optional double eta = 24 [default = 1.33];
 
   // The asymmetry factor of the material's phase function. A value of zero
   // represents isotropic scattering, a value less than zero represents
@@ -2306,10 +2313,7 @@ message SubsurfaceMaterial {
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported before PBRTv3 and should be ignored when
   //       reading earlier input.
-  optional double g = 42 [default = 0.0];
-
-  // The index of refraction of the scattering volume.
-  optional double eta = 43 [default = 1.33];
+  optional double g = 43 [default = 0.0];
 
   // A scale factor applied to the mean free path.
   //
@@ -2829,6 +2833,108 @@ message TrianglePixelFilter {
   //
   // NOTE: Prior to PBRTv4 this field was named "ywidth".
   optional double yradius = 2 [default = 2.0];
+}
+
+//
+// Renderers
+//
+
+// A renderer which can be used for testing Accelerator implementations.
+message AggregateTestRenderer {
+  // The number of random rays to generate to use for testing the aggregate.
+  optional uint32 niters = 1 [default = 100000];
+}
+
+// A renderer which computes a series of spherical harmonic radiance probes.
+message CreateProbesRenderer {
+  // A bounding box.
+  message Bounds {
+    // The first bounding point.
+    optional Point p0 = 1;
+
+    // The second bounding point.
+    optional Point p1 = 2;
+  }
+
+  // The bounding box within which to compute radiance probes. If this is not
+  // specified, then the entire scene bounding box is used.
+  optional Bounds bounds = 2;
+
+  // Determines whether direct illumination should be included in the computed
+  // incident radiance function.
+  optional bool directlighting = 3 [default = true];
+
+  // The filename of file in which to store SH coefficients of radiance probes.
+  optional string filename = 4 [default = "probes.out"];
+
+  // Determines whether indirect illumination should be included in the radiance
+  // probes.
+  optional bool indirectlighting = 5 [default = true];
+
+  // The number of spherical harmonic bands to use to represent the incident
+  // radiance function.
+  optional uint32 lmax = 6 [default = 4];
+
+  // The number of Monte Carlo samples to use to compute indirect illumination
+  // at each probe point.
+  optional uint32 indirectsamples = 7 [default = 512];
+
+  // The desired space between the radiance probes in world space.
+  optional double samplespacing = 8 [default = 1.0];
+
+  // The time at which to sample the incident radiance to compute the probes.
+  optional double time = 9 [default = 0.0];
+}
+
+// A renderer which implements Metropolis light transport.
+message MetropolisRenderer {
+  // The probability of the mutation strategy proposing a mutation where all of
+  // the sample values are replaced with completely new samples
+  optional double largestepprobability = 10 [default = 0.25];
+
+  // The average number of samples per pixel to take.
+  optional uint32 samplesperpixel = 11 [default = 100];
+
+  // The number of Monte Carlo samples to take to compute the estimate of the
+  // overall image brightness.
+  optional uint32 bootstrapsamples = 12 [default = 100000];
+
+  // The number of samples per pixel to take to compute the direct lighting
+  // component if direct lighting is being performed separately from Metropolis
+  // sampling.
+  optional uint32 directsamples = 13 [default = 4];
+
+  // Determines whether or not direct lighting should be included in Metropolis
+  // sampling.
+  optional bool dodirectseparately = 14 [default = true];
+
+  // The maximum number of repeated rejections of a proposed sample mutation.
+  optional uint32 maxconsecutiverejects = 15 [default = 512];
+
+  // The maximum number of light scattering bounces to follow when tracing paths
+  // through the scene.
+  optional uint32 maxdepth = 16 [default = 7];
+
+  // Determines whether bidirectional path tracing should be used.
+  optional bool bidirectional = 17 [default = true];
+}
+
+// A renderer which uses the sampler to generate rays and then render the scene
+// using the provided Surface/Volume Integrators.
+message SamplerRenderer {
+  // If true, the renderer ignores surface and volume integration and instead
+  // randomly shades based on the intersected geometry's primitive ID values.
+  optional bool visualizeobjectids = 18 [default = false];
+}
+
+// A renderer which computes a set of sample points on the surfaces of objects
+// in the scene that have BSSRDF materials.
+message SurfacePointsRenderer {
+  // The filename where generated points are saved.
+  optional string filename = 4;
+
+  // The minimum distance allowed between any pair of sample points.
+  optional double minsampledistance = 19 [default = 0.25];
 }
 
 //

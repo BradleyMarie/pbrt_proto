@@ -452,20 +452,15 @@ absl::Status RemoveSubsurfaceMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, SubsurfaceMaterial& output) {
   RemoveBumpmap(parameters, output);
-  RemoveUVRoughness(parameters, output);
-  RemoveRemapRoughness(parameters, output);
 
-  if (std::optional<double> g = TryRemoveFloat(parameters, "g"); g) {
-    output.set_g(*g);
+  if (absl::Status status = RemoveSigmaA(parameters, pbrt_version, output);
+      !status.ok()) {
+    return status;
   }
 
-  if (std::optional<double> scale = TryRemoveFloat(parameters, "scale");
-      scale) {
-    output.set_scale(*scale);
-  }
-
-  if (std::optional<double> eta = TryRemoveFloat(parameters, "eta"); eta) {
-    output.set_eta(*eta);
+  if (absl::Status status = RemoveKr(parameters, pbrt_version, output);
+      !status.ok()) {
+    return status;
   }
 
   if (std::optional<absl::string_view> name =
@@ -477,24 +472,46 @@ absl::Status RemoveSubsurfaceMaterial(
     }
   }
 
-  if (absl::Status status = RemoveKr(parameters, pbrt_version, output);
-      !status.ok()) {
-    return status;
+  if (pbrt_version <= 2) {
+    if (absl::Status status = TryRemoveSpectrumTexture(
+            parameters, "sigma_prime_s",
+            std::bind(&SubsurfaceMaterial::mutable_sigma_s, &output));
+        !status.ok()) {
+      return status;
+    }
+
+    if (std::optional<double> index = TryRemoveFloat(parameters, "index");
+        index) {
+      output.set_eta(*index);
+    }
   }
 
-  if (absl::Status status = RemoveKt(parameters, pbrt_version, output);
-      !status.ok()) {
-    return status;
-  }
+  if (pbrt_version >= 3) {
+    RemoveUVRoughness(parameters, output);
+    RemoveRemapRoughness(parameters, output);
 
-  if (absl::Status status = RemoveSigmaA(parameters, pbrt_version, output);
-      !status.ok()) {
-    return status;
-  }
+    if (absl::Status status = RemoveSigmaS(parameters, pbrt_version, output);
+        !status.ok()) {
+      return status;
+    }
 
-  if (absl::Status status = RemoveSigmaS(parameters, pbrt_version, output);
-      !status.ok()) {
-    return status;
+    if (std::optional<double> eta = TryRemoveFloat(parameters, "eta"); eta) {
+      output.set_eta(*eta);
+    }
+
+    if (absl::Status status = RemoveKt(parameters, pbrt_version, output);
+        !status.ok()) {
+      return status;
+    }
+
+    if (std::optional<double> g = TryRemoveFloat(parameters, "g"); g) {
+      output.set_g(*g);
+    }
+
+    if (std::optional<double> scale = TryRemoveFloat(parameters, "scale");
+        scale) {
+      output.set_scale(*scale);
+    }
   }
 
   return absl::OkStatus();
