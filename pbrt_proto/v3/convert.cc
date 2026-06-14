@@ -506,77 +506,77 @@ absl::Status ParserV3::Shape(
       std::bind(&Shape::MaterialOverrides::mutable_vroughness, overrides));
 
   if (absl::Status status = TryRemoveSpectrumTexture(
-          parameters, kPbrtVersion, "amount",
+          parameters, "amount",
           std::bind(&Shape::MaterialOverrides::mutable_amount, overrides));
       !status.ok()) {
     return status;
   }
 
   if (absl::Status status = TryRemoveSpectrumTexture(
-          parameters, kPbrtVersion, "color",
+          parameters, "color",
           std::bind(&Shape::MaterialOverrides::mutable_color, overrides));
       !status.ok()) {
     return status;
   }
 
   if (absl::Status status = TryRemoveSpectrumTexture(
-          parameters, kPbrtVersion, "k",
+          parameters, "k",
           std::bind(&Shape::MaterialOverrides::mutable_k, overrides));
       !status.ok()) {
     return status;
   }
 
   if (absl::Status status = TryRemoveSpectrumTexture(
-          parameters, kPbrtVersion, "Kd",
+          parameters, "Kd",
           std::bind(&Shape::MaterialOverrides::mutable_kd, overrides));
       !status.ok()) {
     return status;
   }
 
   if (absl::Status status = TryRemoveSpectrumTexture(
-          parameters, kPbrtVersion, "Kr",
+          parameters, "Kr",
           std::bind(&Shape::MaterialOverrides::mutable_kr, overrides));
       !status.ok()) {
     return status;
   }
 
   if (absl::Status status = TryRemoveSpectrumTexture(
-          parameters, kPbrtVersion, "Ks",
+          parameters, "Ks",
           std::bind(&Shape::MaterialOverrides::mutable_ks, overrides));
       !status.ok()) {
     return status;
   }
 
   if (absl::Status status = TryRemoveSpectrumTexture(
-          parameters, kPbrtVersion, "Kt",
+          parameters, "Kt",
           std::bind(&Shape::MaterialOverrides::mutable_kt, overrides));
       !status.ok()) {
     return status;
   }
 
   if (absl::Status status = TryRemoveSpectrumTexture(
-          parameters, kPbrtVersion, "mfp",
+          parameters, "mfp",
           std::bind(&Shape::MaterialOverrides::mutable_mfp, overrides));
       !status.ok()) {
     return status;
   }
 
   if (absl::Status status = TryRemoveSpectrumTexture(
-          parameters, kPbrtVersion, "opacity",
+          parameters, "opacity",
           std::bind(&Shape::MaterialOverrides::mutable_opacity, overrides));
       !status.ok()) {
     return status;
   }
 
   if (absl::Status status = TryRemoveSpectrumTexture(
-          parameters, kPbrtVersion, "reflect",
+          parameters, "reflect",
           std::bind(&Shape::MaterialOverrides::mutable_reflect, overrides));
       !status.ok()) {
     return status;
   }
 
   if (absl::Status status = TryRemoveSpectrumTexture(
-          parameters, kPbrtVersion, "scatterdistance",
+          parameters, "scatterdistance",
           std::bind(&Shape::MaterialOverrides::mutable_scatterdistance,
                     overrides));
       !status.ok()) {
@@ -584,21 +584,21 @@ absl::Status ParserV3::Shape(
   }
 
   if (absl::Status status = TryRemoveSpectrumTexture(
-          parameters, kPbrtVersion, "sigma_a",
+          parameters, "sigma_a",
           std::bind(&Shape::MaterialOverrides::mutable_sigma_a, overrides));
       !status.ok()) {
     return status;
   }
 
   if (absl::Status status = TryRemoveSpectrumTexture(
-          parameters, kPbrtVersion, "sigma_s",
+          parameters, "sigma_s",
           std::bind(&Shape::MaterialOverrides::mutable_sigma_s, overrides));
       !status.ok()) {
     return status;
   }
 
   if (absl::Status status = TryRemoveSpectrumTexture(
-          parameters, kPbrtVersion, "transmit",
+          parameters, "transmit",
           std::bind(&Shape::MaterialOverrides::mutable_transmit, overrides));
       !status.ok()) {
     return status;
@@ -665,7 +665,7 @@ absl::Status ParserV3::Shape(
         ->set_spectrum_texture_name(*eta);
   } else {
     if (absl::Status status = TryRemoveSpectrumTexture(
-            parameters, kPbrtVersion, "eta",
+            parameters, "eta",
             std::bind(
                 &Shape::MaterialOverrides::mutable_eta_as_spectrum_texture,
                 overrides));

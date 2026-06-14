@@ -13,14 +13,13 @@ template <typename T>
 absl::Status RemoveSigma(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, T& output) {
-  if (absl::Status status =
-          TryRemoveSpectrum(parameters, pbrt_version, "sigma_a",
-                            std::bind(&T::mutable_sigma_a, &output));
+  if (absl::Status status = TryRemoveSpectrum(
+          parameters, "sigma_a", std::bind(&T::mutable_sigma_a, &output));
       !status.ok()) {
     return status;
   }
 
-  return TryRemoveSpectrum(parameters, pbrt_version, "sigma_s",
+  return TryRemoveSpectrum(parameters, "sigma_s",
                            std::bind(&T::mutable_sigma_s, &output));
 }
 
@@ -121,16 +120,15 @@ absl::Status RemoveExponentialMedium(
     output.mutable_updir()->set_z((*updir)[2]);
   }
 
-  return TryRemoveSpectrum(parameters, pbrt_version, "Le",
+  return TryRemoveSpectrum(parameters, "Le",
                            std::bind(&ExponentialMedium::mutable_le, &output));
 }
 
 absl::Status RemoveHomogeneousMedium(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, HomogeneousMedium& output) {
-  if (absl::Status status =
-          TryRemoveSpectrum(parameters, pbrt_version, "Le",
-                            std::bind(&HomogeneousMedium::mutable_le, &output));
+  if (absl::Status status = TryRemoveSpectrum(
+          parameters, "Le", std::bind(&HomogeneousMedium::mutable_le, &output));
       !status.ok()) {
     return status;
   }
@@ -298,9 +296,8 @@ absl::Status RemoveUniformGridMedium(
     int pbrt_version, UniformGridMedium& output) {
   RemoveBounds(parameters, output);
 
-  if (absl::Status status =
-          TryRemoveSpectrum(parameters, pbrt_version, "Le",
-                            std::bind(&UniformGridMedium::mutable_le, &output));
+  if (absl::Status status = TryRemoveSpectrum(
+          parameters, "Le", std::bind(&UniformGridMedium::mutable_le, &output));
       !status.ok()) {
     return status;
   }

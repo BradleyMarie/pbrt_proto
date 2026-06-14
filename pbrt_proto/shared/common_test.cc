@@ -21,18 +21,18 @@ using ::google::protobuf::EqualsProto;
 using ::testing::Eq;
 using ::testing::Optional;
 
-TEST(TryRemoveSpectrumV1, NotFound) {
+TEST(TryRemoveSpectrum, NotFound) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   TestParameterProto actual;
-  EXPECT_TRUE(TryRemoveSpectrumV1(
+  EXPECT_TRUE(TryRemoveSpectrum(
                   parameters, "spectrum",
                   std::bind(&TestParameterProto::mutable_spectrum, &actual))
                   .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(TryRemoveSpectrumV1, Blackbody) {
+TEST(TryRemoveSpectrum, BlackbodyV1) {
   std::vector<std::array<double, 2>> values = {{1.0, 2.0}};
   Parameter parameter{/*directive=*/"",
                       /*type=*/ParameterType::BLACKBODY_V1,
@@ -43,7 +43,7 @@ TEST(TryRemoveSpectrumV1, Blackbody) {
       {"spectrum", parameter}};
 
   TestParameterProto actual;
-  EXPECT_TRUE(TryRemoveSpectrumV1(
+  EXPECT_TRUE(TryRemoveSpectrum(
                   parameters, "spectrum",
                   std::bind(&TestParameterProto::mutable_spectrum, &actual))
                   .ok());
@@ -52,101 +52,7 @@ TEST(TryRemoveSpectrumV1, Blackbody) {
               )pb"));
 }
 
-TEST(TryRemoveSpectrumV1, Rgb) {
-  std::vector<std::array<double, 3>> values = {{1.0, 2.0, 3.0}};
-  Parameter parameter{/*directive=*/"",
-                      /*type=*/ParameterType::RGB,
-                      /*type_name=*/"",
-                      /*values=*/absl::MakeSpan(values)};
-
-  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
-      {"spectrum", parameter}};
-
-  TestParameterProto actual;
-  EXPECT_TRUE(TryRemoveSpectrumV1(
-                  parameters, "spectrum",
-                  std::bind(&TestParameterProto::mutable_spectrum, &actual))
-                  .ok());
-  EXPECT_THAT(actual, EqualsProto(R"pb(
-                spectrum { rgb_spectrum { r: 1.0 g: 2.0 b: 3.0 } }
-              )pb"));
-}
-
-TEST(TryRemoveSpectrumV1, Xyz) {
-  std::vector<std::array<double, 3>> values = {{1.0, 2.0, 3.0}};
-  Parameter parameter{/*directive=*/"",
-                      /*type=*/ParameterType::XYZ,
-                      /*type_name=*/"",
-                      /*values=*/absl::MakeSpan(values)};
-
-  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
-      {"spectrum", parameter}};
-
-  TestParameterProto actual;
-  EXPECT_TRUE(TryRemoveSpectrumV1(
-                  parameters, "spectrum",
-                  std::bind(&TestParameterProto::mutable_spectrum, &actual))
-                  .ok());
-  EXPECT_THAT(actual, EqualsProto(R"pb(
-                spectrum { xyz_spectrum { x: 1.0 y: 2.0 z: 3.0 } }
-              )pb"));
-}
-
-TEST(TryRemoveSpectrumV1, Sampled) {
-  std::vector<std::array<double, 2>> values = {{1.0, 2.0}};
-  Parameter parameter{/*directive=*/"",
-                      /*type=*/ParameterType::SPECTRUM,
-                      /*type_name=*/"",
-                      /*values=*/absl::MakeSpan(values)};
-
-  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
-      {"spectrum", parameter}};
-
-  TestParameterProto actual;
-  EXPECT_TRUE(TryRemoveSpectrumV1(
-                  parameters, "spectrum",
-                  std::bind(&TestParameterProto::mutable_spectrum, &actual))
-                  .ok());
-  EXPECT_THAT(
-      actual, EqualsProto(R"pb(
-        spectrum {
-          sampled_spectrum { samples { wavelength: 1.0 intensity: 2.0 } }
-        }
-      )pb"));
-}
-
-TEST(TryRemoveSpectrumV1, SpectrumFile) {
-  std::vector<absl::string_view> values = {"abc"};
-  Parameter parameter{/*directive=*/"",
-                      /*type=*/ParameterType::SPECTRUM,
-                      /*type_name=*/"",
-                      /*values=*/absl::MakeSpan(values)};
-
-  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
-      {"spectrum", parameter}};
-
-  TestParameterProto actual;
-  EXPECT_TRUE(TryRemoveSpectrumV1(
-                  parameters, "spectrum",
-                  std::bind(&TestParameterProto::mutable_spectrum, &actual))
-                  .ok());
-  EXPECT_THAT(actual, EqualsProto(R"pb(
-                spectrum { sampled_spectrum_filename: "abc" }
-              )pb"));
-}
-
-TEST(TryRemoveSpectrumV2, NotFound) {
-  absl::flat_hash_map<absl::string_view, Parameter> parameters;
-
-  TestParameterProto actual;
-  EXPECT_TRUE(TryRemoveSpectrumV2(
-                  parameters, "spectrum",
-                  std::bind(&TestParameterProto::mutable_spectrum, &actual))
-                  .ok());
-  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
-}
-
-TEST(TryRemoveSpectrumV2, Blackbody) {
+TEST(TryRemoveSpectrum, BlackbodyV2) {
   std::vector<double> values = {1.0};
   Parameter parameter{/*directive=*/"",
                       /*type=*/ParameterType::BLACKBODY_V2,
@@ -157,7 +63,7 @@ TEST(TryRemoveSpectrumV2, Blackbody) {
       {"spectrum", parameter}};
 
   TestParameterProto actual;
-  EXPECT_TRUE(TryRemoveSpectrumV2(
+  EXPECT_TRUE(TryRemoveSpectrum(
                   parameters, "spectrum",
                   std::bind(&TestParameterProto::mutable_spectrum, &actual))
                   .ok());
@@ -166,7 +72,7 @@ TEST(TryRemoveSpectrumV2, Blackbody) {
               )pb"));
 }
 
-TEST(TryRemoveSpectrumV2, Rgb) {
+TEST(TryRemoveSpectrum, Rgb) {
   std::vector<std::array<double, 3>> values = {{1.0, 2.0, 3.0}};
   Parameter parameter{/*directive=*/"",
                       /*type=*/ParameterType::RGB,
@@ -177,7 +83,7 @@ TEST(TryRemoveSpectrumV2, Rgb) {
       {"spectrum", parameter}};
 
   TestParameterProto actual;
-  EXPECT_TRUE(TryRemoveSpectrumV2(
+  EXPECT_TRUE(TryRemoveSpectrum(
                   parameters, "spectrum",
                   std::bind(&TestParameterProto::mutable_spectrum, &actual))
                   .ok());
@@ -186,7 +92,7 @@ TEST(TryRemoveSpectrumV2, Rgb) {
               )pb"));
 }
 
-TEST(TryRemoveSpectrumV2, Xyz) {
+TEST(TryRemoveSpectrum, Xyz) {
   std::vector<std::array<double, 3>> values = {{1.0, 2.0, 3.0}};
   Parameter parameter{/*directive=*/"",
                       /*type=*/ParameterType::XYZ,
@@ -197,7 +103,7 @@ TEST(TryRemoveSpectrumV2, Xyz) {
       {"spectrum", parameter}};
 
   TestParameterProto actual;
-  EXPECT_TRUE(TryRemoveSpectrumV2(
+  EXPECT_TRUE(TryRemoveSpectrum(
                   parameters, "spectrum",
                   std::bind(&TestParameterProto::mutable_spectrum, &actual))
                   .ok());
@@ -206,7 +112,7 @@ TEST(TryRemoveSpectrumV2, Xyz) {
               )pb"));
 }
 
-TEST(TryRemoveSpectrumV2, Sampled) {
+TEST(TryRemoveSpectrum, Sampled) {
   std::vector<std::array<double, 2>> values = {{1.0, 2.0}};
   Parameter parameter{/*directive=*/"",
                       /*type=*/ParameterType::SPECTRUM,
@@ -217,7 +123,7 @@ TEST(TryRemoveSpectrumV2, Sampled) {
       {"spectrum", parameter}};
 
   TestParameterProto actual;
-  EXPECT_TRUE(TryRemoveSpectrumV2(
+  EXPECT_TRUE(TryRemoveSpectrum(
                   parameters, "spectrum",
                   std::bind(&TestParameterProto::mutable_spectrum, &actual))
                   .ok());
@@ -229,7 +135,7 @@ TEST(TryRemoveSpectrumV2, Sampled) {
       )pb"));
 }
 
-TEST(TryRemoveSpectrumV2, SpectrumFile) {
+TEST(TryRemoveSpectrum, SpectrumFile) {
   std::vector<absl::string_view> values = {"abc"};
   Parameter parameter{/*directive=*/"",
                       /*type=*/ParameterType::SPECTRUM,
@@ -240,7 +146,7 @@ TEST(TryRemoveSpectrumV2, SpectrumFile) {
       {"spectrum", parameter}};
 
   TestParameterProto actual;
-  EXPECT_TRUE(TryRemoveSpectrumV2(
+  EXPECT_TRUE(TryRemoveSpectrum(
                   parameters, "spectrum",
                   std::bind(&TestParameterProto::mutable_spectrum, &actual))
                   .ok());
@@ -297,146 +203,19 @@ TEST(TryRemoveFloatTexture, FloatTexture) {
               )pb"));
 }
 
-TEST(TryRemoveSpectrumTextureV1, NotFound) {
+TEST(TryRemoveSpectrumTexture, NotFound) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   TestParameterProto actual;
-  TryRemoveSpectrumTextureV1(
-      parameters, "spectrum_parameter",
-      std::bind(&TestParameterProto::mutable_spectrum_parameter, &actual));
+  EXPECT_TRUE(
+      TryRemoveSpectrumTexture(
+          parameters, "spectrum_parameter",
+          std::bind(&TestParameterProto::mutable_spectrum_parameter, &actual))
+          .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(TryRemoveSpectrumTextureV2, NotFound) {
-  absl::flat_hash_map<absl::string_view, Parameter> parameters;
-
-  TestParameterProto actual;
-  TryRemoveSpectrumTextureV2(
-      parameters, "spectrum_parameter",
-      std::bind(&TestParameterProto::mutable_spectrum_parameter, &actual));
-  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
-}
-
-TEST(TryRemoveSpectrumTextureV1, Blackbody) {
-  std::vector<std::array<double, 2>> values = {{1.0, 2.0}};
-  Parameter parameter{/*directive=*/"",
-                      /*type=*/ParameterType::BLACKBODY_V1,
-                      /*type_name=*/"",
-                      /*values=*/absl::MakeSpan(values)};
-
-  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
-      {"spectrum_parameter", parameter}};
-
-  TestParameterProto actual;
-  TryRemoveSpectrumTextureV1(
-      parameters, "spectrum_parameter",
-      std::bind(&TestParameterProto::mutable_spectrum_parameter, &actual));
-  EXPECT_THAT(actual, EqualsProto(R"pb(
-                spectrum_parameter {
-                  blackbody_spectrum { temperature: 1.0 scale: 2.0 }
-                }
-              )pb"));
-}
-
-TEST(TryRemoveSpectrumTextureV1, Rgb) {
-  std::vector<std::array<double, 3>> values = {{1.0, 2.0, 3.0}};
-  Parameter parameter{/*directive=*/"",
-                      /*type=*/ParameterType::RGB,
-                      /*type_name=*/"",
-                      /*values=*/absl::MakeSpan(values)};
-
-  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
-      {"spectrum_parameter", parameter}};
-
-  TestParameterProto actual;
-  TryRemoveSpectrumTextureV1(
-      parameters, "spectrum_parameter",
-      std::bind(&TestParameterProto::mutable_spectrum_parameter, &actual));
-  EXPECT_THAT(actual, EqualsProto(R"pb(
-                spectrum_parameter { rgb_spectrum { r: 1.0 g: 2.0 b: 3.0 } }
-              )pb"));
-}
-
-TEST(TryRemoveSpectrumTextureV1, Xyz) {
-  std::vector<std::array<double, 3>> values = {{1.0, 2.0, 3.0}};
-  Parameter parameter{/*directive=*/"",
-                      /*type=*/ParameterType::XYZ,
-                      /*type_name=*/"",
-                      /*values=*/absl::MakeSpan(values)};
-
-  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
-      {"spectrum_parameter", parameter}};
-
-  TestParameterProto actual;
-  TryRemoveSpectrumTextureV1(
-      parameters, "spectrum_parameter",
-      std::bind(&TestParameterProto::mutable_spectrum_parameter, &actual));
-  EXPECT_THAT(actual, EqualsProto(R"pb(
-                spectrum_parameter { xyz_spectrum { x: 1.0 y: 2.0 z: 3.0 } }
-              )pb"));
-}
-
-TEST(TryRemoveSpectrumTextureV1, Sampled) {
-  std::vector<std::array<double, 2>> values = {{1.0, 2.0}};
-  Parameter parameter{/*directive=*/"",
-                      /*type=*/ParameterType::SPECTRUM,
-                      /*type_name=*/"",
-                      /*values=*/absl::MakeSpan(values)};
-
-  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
-      {"spectrum_parameter", parameter}};
-
-  TestParameterProto actual;
-  TryRemoveSpectrumTextureV1(
-      parameters, "spectrum_parameter",
-      std::bind(&TestParameterProto::mutable_spectrum_parameter, &actual));
-  EXPECT_THAT(
-      actual, EqualsProto(R"pb(
-        spectrum_parameter {
-          sampled_spectrum { samples { wavelength: 1.0 intensity: 2.0 } }
-        }
-      )pb"));
-}
-
-TEST(TryRemoveSpectrumTextureV1, SpectrumFile) {
-  std::vector<absl::string_view> values = {"abc"};
-  Parameter parameter{/*directive=*/"",
-                      /*type=*/ParameterType::SPECTRUM,
-                      /*type_name=*/"",
-                      /*values=*/absl::MakeSpan(values)};
-
-  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
-      {"spectrum_parameter", parameter}};
-
-  TestParameterProto actual;
-  TryRemoveSpectrumTextureV1(
-      parameters, "spectrum_parameter",
-      std::bind(&TestParameterProto::mutable_spectrum_parameter, &actual));
-  EXPECT_THAT(actual, EqualsProto(R"pb(
-                spectrum_parameter { sampled_spectrum_filename: "abc" }
-              )pb"));
-}
-
-TEST(TryRemoveSpectrumTextureV1, SpectrumTexture) {
-  std::vector<absl::string_view> values = {"abc"};
-  Parameter parameter{/*directive=*/"",
-                      /*type=*/ParameterType::TEXTURE,
-                      /*type_name=*/"",
-                      /*values=*/absl::MakeSpan(values)};
-
-  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
-      {"spectrum_parameter", parameter}};
-
-  TestParameterProto actual;
-  TryRemoveSpectrumTextureV1(
-      parameters, "spectrum_parameter",
-      std::bind(&TestParameterProto::mutable_spectrum_parameter, &actual));
-  EXPECT_THAT(actual, EqualsProto(R"pb(
-                spectrum_parameter { spectrum_texture_name: "abc" }
-              )pb"));
-}
-
-TEST(TryRemoveSpectrumTextureV2, Blackbody) {
+TEST(TryRemoveSpectrumTexture, BlackbodyV2) {
   std::vector<double> values = {1.0};
   Parameter parameter{/*directive=*/"",
                       /*type=*/ParameterType::BLACKBODY_V2,
@@ -447,15 +226,17 @@ TEST(TryRemoveSpectrumTextureV2, Blackbody) {
       {"spectrum_parameter", parameter}};
 
   TestParameterProto actual;
-  TryRemoveSpectrumTextureV2(
-      parameters, "spectrum_parameter",
-      std::bind(&TestParameterProto::mutable_spectrum_parameter, &actual));
+  EXPECT_TRUE(
+      TryRemoveSpectrumTexture(
+          parameters, "spectrum_parameter",
+          std::bind(&TestParameterProto::mutable_spectrum_parameter, &actual))
+          .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 spectrum_parameter { blackbody_spectrum { temperature: 1.0 } }
               )pb"));
 }
 
-TEST(TryRemoveSpectrumTextureV2, Rgb) {
+TEST(TryRemoveSpectrumTexture, Rgb) {
   std::vector<std::array<double, 3>> values = {{1.0, 2.0, 3.0}};
   Parameter parameter{/*directive=*/"",
                       /*type=*/ParameterType::RGB,
@@ -466,15 +247,17 @@ TEST(TryRemoveSpectrumTextureV2, Rgb) {
       {"spectrum_parameter", parameter}};
 
   TestParameterProto actual;
-  TryRemoveSpectrumTextureV2(
-      parameters, "spectrum_parameter",
-      std::bind(&TestParameterProto::mutable_spectrum_parameter, &actual));
+  EXPECT_TRUE(
+      TryRemoveSpectrumTexture(
+          parameters, "spectrum_parameter",
+          std::bind(&TestParameterProto::mutable_spectrum_parameter, &actual))
+          .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 spectrum_parameter { rgb_spectrum { r: 1.0 g: 2.0 b: 3.0 } }
               )pb"));
 }
 
-TEST(TryRemoveSpectrumTextureV2, Xyz) {
+TEST(TryRemoveSpectrumTexture, Xyz) {
   std::vector<std::array<double, 3>> values = {{1.0, 2.0, 3.0}};
   Parameter parameter{/*directive=*/"",
                       /*type=*/ParameterType::XYZ,
@@ -485,15 +268,17 @@ TEST(TryRemoveSpectrumTextureV2, Xyz) {
       {"spectrum_parameter", parameter}};
 
   TestParameterProto actual;
-  TryRemoveSpectrumTextureV2(
-      parameters, "spectrum_parameter",
-      std::bind(&TestParameterProto::mutable_spectrum_parameter, &actual));
+  EXPECT_TRUE(
+      TryRemoveSpectrumTexture(
+          parameters, "spectrum_parameter",
+          std::bind(&TestParameterProto::mutable_spectrum_parameter, &actual))
+          .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 spectrum_parameter { xyz_spectrum { x: 1.0 y: 2.0 z: 3.0 } }
               )pb"));
 }
 
-TEST(TryRemoveSpectrumTextureV2, Sampled) {
+TEST(TryRemoveSpectrumTexture, Sampled) {
   std::vector<std::array<double, 2>> values = {{1.0, 2.0}};
   Parameter parameter{/*directive=*/"",
                       /*type=*/ParameterType::SPECTRUM,
@@ -504,9 +289,11 @@ TEST(TryRemoveSpectrumTextureV2, Sampled) {
       {"spectrum_parameter", parameter}};
 
   TestParameterProto actual;
-  TryRemoveSpectrumTextureV2(
-      parameters, "spectrum_parameter",
-      std::bind(&TestParameterProto::mutable_spectrum_parameter, &actual));
+  EXPECT_TRUE(
+      TryRemoveSpectrumTexture(
+          parameters, "spectrum_parameter",
+          std::bind(&TestParameterProto::mutable_spectrum_parameter, &actual))
+          .ok());
   EXPECT_THAT(
       actual, EqualsProto(R"pb(
         spectrum_parameter {
@@ -515,7 +302,7 @@ TEST(TryRemoveSpectrumTextureV2, Sampled) {
       )pb"));
 }
 
-TEST(TryRemoveSpectrumTextureV2, SpectrumFile) {
+TEST(TryRemoveSpectrumTexture, SpectrumFile) {
   std::vector<absl::string_view> values = {"abc"};
   Parameter parameter{/*directive=*/"",
                       /*type=*/ParameterType::SPECTRUM,
@@ -526,15 +313,17 @@ TEST(TryRemoveSpectrumTextureV2, SpectrumFile) {
       {"spectrum_parameter", parameter}};
 
   TestParameterProto actual;
-  TryRemoveSpectrumTextureV2(
-      parameters, "spectrum_parameter",
-      std::bind(&TestParameterProto::mutable_spectrum_parameter, &actual));
+  EXPECT_TRUE(
+      TryRemoveSpectrumTexture(
+          parameters, "spectrum_parameter",
+          std::bind(&TestParameterProto::mutable_spectrum_parameter, &actual))
+          .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 spectrum_parameter { sampled_spectrum_filename: "abc" }
               )pb"));
 }
 
-TEST(TryRemoveSpectrumTextureV2, SpectrumTexture) {
+TEST(TryRemoveSpectrumTexture, SpectrumTexture) {
   std::vector<absl::string_view> values = {"abc"};
   Parameter parameter{/*directive=*/"",
                       /*type=*/ParameterType::TEXTURE,
@@ -545,9 +334,11 @@ TEST(TryRemoveSpectrumTextureV2, SpectrumTexture) {
       {"spectrum_parameter", parameter}};
 
   TestParameterProto actual;
-  TryRemoveSpectrumTextureV2(
-      parameters, "spectrum_parameter",
-      std::bind(&TestParameterProto::mutable_spectrum_parameter, &actual));
+  EXPECT_TRUE(
+      TryRemoveSpectrumTexture(
+          parameters, "spectrum_parameter",
+          std::bind(&TestParameterProto::mutable_spectrum_parameter, &actual))
+          .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 spectrum_parameter { spectrum_texture_name: "abc" }
               )pb"));

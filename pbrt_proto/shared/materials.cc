@@ -22,7 +22,7 @@ template <typename T>
 absl::Status RemoveColor(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, T& output) {
-  return TryRemoveSpectrumTexture(parameters, pbrt_version, "color",
+  return TryRemoveSpectrumTexture(parameters, "color",
                                   std::bind(&T::mutable_color, &output));
 }
 
@@ -55,7 +55,7 @@ template <typename T>
 absl::Status RemoveKd(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, T& output) {
-  return TryRemoveSpectrumTexture(parameters, pbrt_version, "Kd",
+  return TryRemoveSpectrumTexture(parameters, "Kd",
                                   std::bind(&T::mutable_kd, &output));
 }
 
@@ -63,7 +63,7 @@ template <typename T>
 absl::Status RemoveKr(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, T& output) {
-  return TryRemoveSpectrumTexture(parameters, pbrt_version, "Kr",
+  return TryRemoveSpectrumTexture(parameters, "Kr",
                                   std::bind(&T::mutable_kr, &output));
 }
 
@@ -71,7 +71,7 @@ template <typename T>
 absl::Status RemoveKs(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, T& output) {
-  return TryRemoveSpectrumTexture(parameters, pbrt_version, "Ks",
+  return TryRemoveSpectrumTexture(parameters, "Ks",
                                   std::bind(&T::mutable_ks, &output));
 }
 
@@ -79,7 +79,7 @@ template <typename T>
 absl::Status RemoveKt(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, T& output) {
-  return TryRemoveSpectrumTexture(parameters, pbrt_version, "Kt",
+  return TryRemoveSpectrumTexture(parameters, "Kt",
                                   std::bind(&T::mutable_kt, &output));
 }
 
@@ -101,7 +101,7 @@ template <typename T>
 absl::Status RemoveSigmaA(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, T& output) {
-  return TryRemoveSpectrumTexture(parameters, pbrt_version, "sigma_a",
+  return TryRemoveSpectrumTexture(parameters, "sigma_a",
                                   std::bind(&T::mutable_sigma_a, &output));
 }
 
@@ -109,7 +109,7 @@ template <typename T>
 absl::Status RemoveSigmaS(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, T& output) {
-  return TryRemoveSpectrumTexture(parameters, pbrt_version, "sigma_s",
+  return TryRemoveSpectrumTexture(parameters, "sigma_s",
                                   std::bind(&T::mutable_sigma_s, &output));
 }
 
@@ -182,7 +182,7 @@ absl::Status RemoveDisneyMaterial(
   }
 
   return TryRemoveSpectrumTexture(
-      parameters, pbrt_version, "scatterdistance",
+      parameters, "scatterdistance",
       std::bind(&DisneyMaterial::mutable_scatterdistance, &output));
 }
 
@@ -277,7 +277,7 @@ absl::Status RemoveKdSubsurfaceMaterial(
     }
 
     if (absl::Status status = TryRemoveSpectrumTexture(
-            parameters, pbrt_version, "mfp",
+            parameters, "mfp",
             std::bind(&KdSubsurfaceMaterial::mutable_mfp, &output));
         !status.ok()) {
       return status;
@@ -330,15 +330,13 @@ absl::Status RemoveMetalMaterial(
   RemoveBumpmap(parameters, output);
 
   if (absl::Status status = TryRemoveSpectrumTexture(
-          parameters, pbrt_version, "eta",
-          std::bind(&MetalMaterial::mutable_eta, &output));
+          parameters, "eta", std::bind(&MetalMaterial::mutable_eta, &output));
       !status.ok()) {
     return status;
   }
 
   if (absl::Status status = TryRemoveSpectrumTexture(
-          parameters, pbrt_version, "k",
-          std::bind(&MetalMaterial::mutable_k, &output));
+          parameters, "k", std::bind(&MetalMaterial::mutable_k, &output));
       !status.ok()) {
     return status;
   }
@@ -382,8 +380,7 @@ absl::Status RemoveMixMaterial(
   }
 
   return TryRemoveSpectrumTexture(
-      parameters, pbrt_version, "amount",
-      std::bind(&MixMaterial::mutable_amount, &output));
+      parameters, "amount", std::bind(&MixMaterial::mutable_amount, &output));
 }
 
 absl::Status RemovePlasticMaterial(
@@ -510,14 +507,14 @@ absl::Status RemoveTranslucentMaterial(
   RemoveBumpmap(parameters, output);
 
   if (absl::Status status = TryRemoveSpectrumTexture(
-          parameters, pbrt_version, "reflect",
+          parameters, "reflect",
           std::bind(&TranslucentMaterial::mutable_reflect, &output));
       !status.ok()) {
     return status;
   }
 
   if (absl::Status status = TryRemoveSpectrumTexture(
-          parameters, pbrt_version, "transmit",
+          parameters, "transmit",
           std::bind(&TranslucentMaterial::mutable_transmit, &output));
       !status.ok()) {
     return status;
@@ -562,7 +559,7 @@ absl::Status RemoveUberMaterial(
   }
 
   if (absl::Status status = TryRemoveSpectrumTexture(
-          parameters, pbrt_version, "opacity",
+          parameters, "opacity",
           std::bind(&UberMaterial::mutable_opacity, &output));
       !status.ok()) {
     return status;

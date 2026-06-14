@@ -245,28 +245,28 @@ absl::Status RemoveBilerpSpectrumTexture(
   TryRemoveUVParameters(parameters, "bilerp", output);
 
   if (absl::Status status = TryRemoveSpectrumTexture(
-          parameters, pbrt_version, "v00",
+          parameters, "v00",
           std::bind(&BilerpSpectrumTexture::mutable_v00, &output));
       !status.ok()) {
     return status;
   }
 
   if (absl::Status status = TryRemoveSpectrumTexture(
-          parameters, pbrt_version, "v01",
+          parameters, "v01",
           std::bind(&BilerpSpectrumTexture::mutable_v01, &output));
       !status.ok()) {
     return status;
   }
 
   if (absl::Status status = TryRemoveSpectrumTexture(
-          parameters, pbrt_version, "v10",
+          parameters, "v10",
           std::bind(&BilerpSpectrumTexture::mutable_v10, &output));
       !status.ok()) {
     return status;
   }
 
   if (absl::Status status = TryRemoveSpectrumTexture(
-          parameters, pbrt_version, "v11",
+          parameters, "v11",
           std::bind(&BilerpSpectrumTexture::mutable_v11, &output));
       !status.ok()) {
     return status;
@@ -303,14 +303,14 @@ absl::Status RemoveCheckerboard2DSpectrumTexture(
   TryRemoveUVParameters(parameters, "checkerboard", output);
 
   if (absl::Status status = TryRemoveSpectrumTexture(
-          parameters, pbrt_version, "tex1",
+          parameters, "tex1",
           std::bind(&Checkerboard2DSpectrumTexture::mutable_tex1, &output));
       !status.ok()) {
     return status;
   }
 
   if (absl::Status status = TryRemoveSpectrumTexture(
-          parameters, pbrt_version, "tex2",
+          parameters, "tex2",
           std::bind(&Checkerboard2DSpectrumTexture::mutable_tex2, &output));
       !status.ok()) {
     return status;
@@ -343,14 +343,14 @@ absl::Status RemoveCheckerboard3DSpectrumTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, Checkerboard3DSpectrumTexture& output) {
   if (absl::Status status = TryRemoveSpectrumTexture(
-          parameters, pbrt_version, "tex1",
+          parameters, "tex1",
           std::bind(&Checkerboard3DSpectrumTexture::mutable_tex1, &output));
       !status.ok()) {
     return status;
   }
 
   if (absl::Status status = TryRemoveSpectrumTexture(
-          parameters, pbrt_version, "tex2",
+          parameters, "tex2",
           std::bind(&Checkerboard3DSpectrumTexture::mutable_tex2, &output));
       !status.ok()) {
     return status;
@@ -374,7 +374,7 @@ absl::Status RemoveConstantSpectrumTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, ConstantSpectrumTexture& output) {
   return TryRemoveSpectrum(
-      parameters, pbrt_version, "value",
+      parameters, "value",
       std::bind(&ConstantSpectrumTexture::mutable_value, &output));
 }
 
@@ -397,14 +397,14 @@ absl::Status RemoveDirectionMixSpectrumTexture(
   RemoveDir(parameters, output);
 
   if (absl::Status status = TryRemoveSpectrumTexture(
-          parameters, pbrt_version, "tex1",
+          parameters, "tex1",
           std::bind(&DirectionMixSpectrumTexture::mutable_tex1, &output));
       !status.ok()) {
     return status;
   }
 
   if (absl::Status status = TryRemoveSpectrumTexture(
-          parameters, pbrt_version, "tex2",
+          parameters, "tex2",
           std::bind(&DirectionMixSpectrumTexture::mutable_tex2, &output));
       !status.ok()) {
     return status;
@@ -430,14 +430,14 @@ absl::Status RemoveDotsSpectrumTexture(
   TryRemoveUVParameters(parameters, "dots", output);
 
   if (absl::Status status = TryRemoveSpectrumTexture(
-          parameters, pbrt_version, "inside",
+          parameters, "inside",
           std::bind(&DotsSpectrumTexture::mutable_inside, &output));
       !status.ok()) {
     return status;
   }
 
   if (absl::Status status = TryRemoveSpectrumTexture(
-          parameters, pbrt_version, "outside",
+          parameters, "outside",
           std::bind(&DotsSpectrumTexture::mutable_outside, &output));
       !status.ok()) {
     return status;
@@ -656,14 +656,14 @@ absl::Status RemoveMixSpectrumTexture(
       std::bind(&MixSpectrumTexture::mutable_amount, &output));
 
   if (absl::Status status = TryRemoveSpectrumTexture(
-          parameters, pbrt_version, "tex1",
+          parameters, "tex1",
           std::bind(&MixSpectrumTexture::mutable_tex1, &output));
       !status.ok()) {
     return status;
   }
 
   if (absl::Status status = TryRemoveSpectrumTexture(
-          parameters, pbrt_version, "tex2",
+          parameters, "tex2",
           std::bind(&MixSpectrumTexture::mutable_tex2, &output));
       !status.ok()) {
     return status;
@@ -750,14 +750,14 @@ absl::Status RemoveScaleSpectrumTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, ScaleSpectrumTexture& output) {
   if (absl::Status status = TryRemoveSpectrumTexture(
-          parameters, pbrt_version, "tex1",
+          parameters, "tex1",
           std::bind(&ScaleSpectrumTexture::mutable_tex1, &output));
       !status.ok()) {
     return status;
   }
 
   if (absl::Status status = TryRemoveSpectrumTexture(
-          parameters, pbrt_version, "tex2",
+          parameters, "tex2",
           std::bind(&ScaleSpectrumTexture::mutable_tex2, &output));
       !status.ok()) {
     return status;

@@ -16,7 +16,7 @@ absl::Status RemoveDiffuseAreaLightSource(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, DiffuseAreaLightSource& output) {
   if (absl::Status status = TryRemoveSpectrum(
-          parameters, pbrt_version, "L",
+          parameters, "L",
           std::bind(&DiffuseAreaLightSource::mutable_l, &output));
       !status.ok()) {
     return status;
@@ -50,7 +50,7 @@ absl::Status RemoveDiffuseAreaLightSource(
 
   if (pbrt_version >= 2 && pbrt_version <= 3) {
     if (absl::Status status = TryRemoveSpectrum(
-            parameters, pbrt_version, "scale",
+            parameters, "scale",
             std::bind(&DiffuseAreaLightSource::mutable_scale, &output));
         !status.ok()) {
       return status;

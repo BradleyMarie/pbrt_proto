@@ -39,8 +39,7 @@ template <typename T>
 absl::Status RemoveI(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, T& output) {
-  return TryRemoveSpectrum(parameters, pbrt_version, "I",
-                           std::bind(&T::mutable_i, &output));
+  return TryRemoveSpectrum(parameters, "I", std::bind(&T::mutable_i, &output));
 }
 
 template <typename T>
@@ -57,8 +56,7 @@ template <typename T>
 absl::Status RemoveL(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, T& output) {
-  return TryRemoveSpectrum(parameters, pbrt_version, "L",
-                           std::bind(&T::mutable_l, &output));
+  return TryRemoveSpectrum(parameters, "L", std::bind(&T::mutable_l, &output));
 }
 
 template <typename T>
@@ -75,7 +73,7 @@ absl::Status RemoveScale(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, T& output) {
   if (pbrt_version <= 3) {
-    return TryRemoveSpectrum(parameters, pbrt_version, "scale",
+    return TryRemoveSpectrum(parameters, "scale",
                              std::bind(&T::mutable_scale, &output));
   } else {
     if (std::optional<double> scale = TryRemoveFloat(parameters, "scale");

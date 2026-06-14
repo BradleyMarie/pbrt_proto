@@ -268,14 +268,14 @@ absl::Status RemoveGlossyPrtIntegrator(
     output.set_roughness(*roughness);
   }
 
-  if (absl::Status status = TryRemoveSpectrumV1(
+  if (absl::Status status = TryRemoveSpectrum(
           parameters, "Kd",
           std::bind(&GlossyPrtIntegrator::mutable_kd, &output));
       !status.ok()) {
     return status;
   }
 
-  if (absl::Status status = TryRemoveSpectrumV1(
+  if (absl::Status status = TryRemoveSpectrum(
           parameters, "Ks",
           std::bind(&GlossyPrtIntegrator::mutable_ks, &output));
       !status.ok()) {
