@@ -261,7 +261,7 @@ absl::Status ParserV1::Material(
     v1::Material& material) {
   static const TypeMap<v1::Material> kSupportedTypes = {
       {"bluepaint", CB<RemoveBuiltInMaterial, &Material::mutable_bluepaint>()},
-      {"bluepaint",
+      {"brushedmetal",
        CB<RemoveBuiltInMaterial, &Material::mutable_brushedmetal>()},
       {"clay", CB<RemoveBuiltInMaterial, &Material::mutable_clay>()},
       {"felt", CB<RemoveBuiltInMaterial, &Material::mutable_felt>()},

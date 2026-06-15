@@ -39,6 +39,21 @@ cc_library(
     ],
 )
 
+cc_test(
+    name = "convert_test",
+    srcs = ["convert_test.cc"],
+    deps = [
+        ":convert",
+        ":v1_cc_proto",
+        "//pbrt_proto/testing:proto_matchers",
+        "@abseil-cpp//absl/status:status",
+        "@abseil-cpp//absl/status:status_matchers",
+        "@abseil-cpp//absl/strings:string_view",
+        "@googletest//:gtest",
+        "@googletest//:gtest_main",
+    ],
+)
+
 proto_library(
     name = "v1_proto",
     srcs = ["v1.proto"],
