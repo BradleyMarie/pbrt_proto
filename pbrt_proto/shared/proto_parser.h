@@ -8,6 +8,7 @@
 #include "absl/status/status.h"
 #include "absl/strings/str_cat.h"
 #include "absl/strings/string_view.h"
+#include "pbrt_proto/pbrt.pb.h"
 #include "pbrt_proto/shared/parser.h"
 
 namespace pbrt_proto {
@@ -217,7 +218,7 @@ absl::Status ProtoParser<T, PbrtVersion>::ActiveTransform(
     return absl::OkStatus();
   }
 
-  return UnsupportedDirectiveError("ActiveTransformation");
+  return UnsupportedDirectiveError("ActiveTransform");
 }
 
 template <typename T, int PbrtVersion>
@@ -295,6 +296,7 @@ template <typename T, int PbrtVersion>
 absl::Status ProtoParser<T, PbrtVersion>::Import(absl::string_view path) {
   if constexpr (PbrtVersion >= 4) {
     output_.add_directives()->mutable_import()->set_path(path);
+    return absl::OkStatus();
   }
 
   return UnsupportedDirectiveError("Import");
@@ -335,18 +337,18 @@ absl::Status ProtoParser<T, PbrtVersion>::MakeNamedMaterial(
 }
 
 template <typename T, int PbrtVersion>
+absl::Status ProtoParser<T, PbrtVersion>::MakeNamedMedium(
+    absl::string_view medium_name,
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
+  return UnsupportedDirectiveError("MakeNamedMedium");
+}
+
+template <typename T, int PbrtVersion>
 absl::Status ProtoParser<T, PbrtVersion>::Material(
     absl::string_view material_name,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
   return Material(material_name, parameters,
                   *output_.add_directives()->mutable_material());
-}
-
-template <typename T, int PbrtVersion>
-absl::Status ProtoParser<T, PbrtVersion>::MakeNamedMedium(
-    absl::string_view medium_name,
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
-  return UnsupportedDirectiveError("MakeNamedMedium");
 }
 
 template <typename T, int PbrtVersion>
@@ -470,14 +472,22 @@ absl::Status ProtoParser<T, PbrtVersion>::Transform(
 
 template <typename T, int PbrtVersion>
 absl::Status ProtoParser<T, PbrtVersion>::TransformBegin() {
-  output_.add_directives()->mutable_transform_begin();
-  return absl::OkStatus();
+  if (PbrtVersion <= 3) {
+    output_.add_directives()->mutable_transform_begin();
+    return absl::OkStatus();
+  }
+
+  return UnsupportedDirectiveError("TransformBegin");
 }
 
 template <typename T, int PbrtVersion>
 absl::Status ProtoParser<T, PbrtVersion>::TransformEnd() {
-  output_.add_directives()->mutable_transform_end();
-  return absl::OkStatus();
+  if (PbrtVersion <= 3) {
+    output_.add_directives()->mutable_transform_end();
+    return absl::OkStatus();
+  }
+
+  return UnsupportedDirectiveError("TransformEnd");
 }
 
 template <typename T, int PbrtVersion>

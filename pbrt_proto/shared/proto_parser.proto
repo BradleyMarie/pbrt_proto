@@ -1,0 +1,64 @@
+syntax = "proto2";
+
+import "pbrt_proto/pbrt.proto";
+
+package pbrt_proto;
+
+message FloatTexture {
+  required string name = 1;
+}
+
+message MakeNamedMaterial {
+  required string name = 1;
+  required Material material = 2;
+}
+
+message MakeNamedMedium {
+  required string name = 1;
+}
+
+message Material {}
+
+message SpectrumTexture {
+  required string name = 1;
+}
+
+message Directive {
+  oneof directive_type {
+    ActiveTransform active_transform = 1;
+    AttributeBegin attribute_begin = 2;
+    AttributeEnd attribute_end = 3;
+    ConcatTransform concat_transform = 4;
+    CoordinateSystem coordinate_system = 5;
+    CoordSysTransform coord_sys_transform = 6;
+    FloatTexture float_texture = 7;
+    Identity identity = 8;
+    Include include = 9;
+    Import import = 10;
+    LookAt look_at = 11;
+    MakeNamedMaterial make_named_material = 12;
+    MakeNamedMedium make_named_medium = 13;
+    Material material = 14;
+    MediumInterface medium_interface = 15;
+    NamedMaterial named_material = 16;
+    ObjectBegin object_begin = 17;
+    ObjectEnd object_end = 18;
+    ObjectInstance object_instance = 19;
+    ReverseOrientation reverse_orientation = 20;
+    Rotate rotate = 21;
+    Scale scale = 22;
+    SearchPath search_path = 23;
+    SpectrumTexture spectrum_texture = 24;
+    TransformBegin transform_begin = 25;
+    TransformEnd transform_end = 26;
+    TransformTimes transform_times = 27;
+    Transform transform = 28;
+    Translate translate = 29;
+    WorldBegin world_begin = 30;
+    WorldEnd world_end = 31;
+  }
+}
+
+message PbrtProto {
+  repeated Directive directives = 1;
+}

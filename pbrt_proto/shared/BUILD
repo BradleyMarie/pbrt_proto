@@ -350,10 +350,42 @@ cc_library(
     hdrs = ["proto_parser.h"],
     deps = [
         ":parser",
+        "//pbrt_proto:pbrt_cc_proto",
         "@abseil-cpp//absl/container:flat_hash_map",
         "@abseil-cpp//absl/status:status",
         "@abseil-cpp//absl/strings",
         "@abseil-cpp//absl/strings:string_view",
+    ],
+)
+
+proto_library(
+    name = "proto_parser_proto",
+    srcs = ["proto_parser.proto"],
+    deps = [
+        "//pbrt_proto",
+    ],
+)
+
+cc_proto_library(
+    name = "proto_parser_cc_proto",
+    deps = [":proto_parser_proto"],
+)
+
+cc_test(
+    name = "proto_parser_test",
+    srcs = ["proto_parser_test.cc"],
+    deps = [
+        ":parser",
+        ":proto_parser",
+        ":proto_parser_cc_proto",
+        "//pbrt_proto:pbrt_cc_proto",
+        "//pbrt_proto/testing:proto_matchers",
+        "@abseil-cpp//absl/container:flat_hash_map",
+        "@abseil-cpp//absl/status:status",
+        "@abseil-cpp//absl/status:status_matchers",
+        "@abseil-cpp//absl/strings:string_view",
+        "@googletest//:gtest",
+        "@googletest//:gtest_main",
     ],
 )
 
