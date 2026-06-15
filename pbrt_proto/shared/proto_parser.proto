@@ -4,10 +4,6 @@ import "pbrt_proto/pbrt.proto";
 
 package pbrt_proto;
 
-message FloatTexture {
-  required string name = 1;
-}
-
 message MakeNamedMaterial {
   required string name = 1;
   required Material material = 2;
@@ -20,7 +16,8 @@ message MakeNamedMedium {
 message Material {}
 
 message SpectrumTexture {
-  required string name = 1;
+  message Nested {}
+  optional Nested nested = 1;
 }
 
 message Directive {
@@ -31,31 +28,30 @@ message Directive {
     ConcatTransform concat_transform = 4;
     CoordinateSystem coordinate_system = 5;
     CoordSysTransform coord_sys_transform = 6;
-    FloatTexture float_texture = 7;
-    Identity identity = 8;
-    Include include = 9;
-    Import import = 10;
-    LookAt look_at = 11;
-    MakeNamedMaterial make_named_material = 12;
-    MakeNamedMedium make_named_medium = 13;
-    Material material = 14;
-    MediumInterface medium_interface = 15;
-    NamedMaterial named_material = 16;
-    ObjectBegin object_begin = 17;
-    ObjectEnd object_end = 18;
-    ObjectInstance object_instance = 19;
-    ReverseOrientation reverse_orientation = 20;
-    Rotate rotate = 21;
-    Scale scale = 22;
-    SearchPath search_path = 23;
-    SpectrumTexture spectrum_texture = 24;
-    TransformBegin transform_begin = 25;
-    TransformEnd transform_end = 26;
-    TransformTimes transform_times = 27;
-    Transform transform = 28;
-    Translate translate = 29;
-    WorldBegin world_begin = 30;
-    WorldEnd world_end = 31;
+    Identity identity = 7;
+    Include include = 8;
+    Import import = 9;
+    LookAt look_at = 10;
+    MakeNamedMaterial make_named_material = 11;
+    MakeNamedMedium make_named_medium = 12;
+    Material material = 13;
+    MediumInterface medium_interface = 14;
+    NamedMaterial named_material = 15;
+    ObjectBegin object_begin = 16;
+    ObjectEnd object_end = 17;
+    ObjectInstance object_instance = 18;
+    ReverseOrientation reverse_orientation = 19;
+    Rotate rotate = 20;
+    Scale scale = 21;
+    SearchPath search_path = 22;
+    SpectrumTexture spectrum_texture = 23;
+    TransformBegin transform_begin = 24;
+    TransformEnd transform_end = 25;
+    TransformTimes transform_times = 26;
+    Transform transform = 27;
+    Translate translate = 28;
+    WorldBegin world_begin = 29;
+    WorldEnd world_end = 30;
   }
 }
 

@@ -96,7 +96,17 @@ class TestProtoParser final : public ProtoParser<PbrtProto, PbrtVersion> {
       absl::string_view spectrum_texture_name,
       absl::string_view spectrum_texture_type,
       absl::flat_hash_map<absl::string_view, Parameter>& parameters) override {
-    return absl::UnimplementedError("N/A");
+    static const typename ProtoParser<PbrtProto, PbrtVersion>::TypeMap<
+        pbrt_proto::SpectrumTexture>
+        kSupportedTypes = {
+            {"empty", this->template EmptyCallback<
+                          &pbrt_proto::SpectrumTexture::mutable_nested>()},
+            {"ignored", &ProtoParser<PbrtProto, PbrtVersion>::template Ignored<
+                            pbrt_proto::SpectrumTexture>},
+        };
+
+    return this->template Parse<&Directive::mutable_spectrum_texture>(
+        kSupportedTypes, spectrum_texture_type, parameters);
   }
 };
 
@@ -577,6 +587,44 @@ TEST(WorldEnd, V4) {
   EXPECT_THAT(Convert<4>(directive, actual),
               StatusIs(absl::StatusCode::kUnimplemented,
                        "Directive 'WorldEnd' is not supported in pbrt-v4"));
+}
+
+TEST(ParseFails, V1) {
+  absl::string_view directive =
+      R"pbrt(Texture "name" "spectrum" "missing")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert<1>(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives { spectrum_texture {} })pb"));
+}
+
+TEST(ParseFails, V4) {
+  absl::string_view directive =
+      R"pbrt(Texture "name" "spectrum" "missing")pbrt";
+
+  PbrtProto actual;
+  EXPECT_THAT(Convert<4>(directive, actual),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Texture type 'missing' is not supported in pbrt-v4"));
+}
+
+TEST(EmptyCallback, V4) {
+  absl::string_view directive = R"pbrt(Texture "name" "spectrum" "empty")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert<4>(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         spectrum_texture { nested {} }
+                                       })pb"));
+}
+
+TEST(Ignored, V4) {
+  absl::string_view directive =
+      R"pbrt(Texture "name" "spectrum" "ignored")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert<4>(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives { spectrum_texture {} })pb"));
 }
 
 }  // namespace
