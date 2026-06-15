@@ -24,6 +24,19 @@ using ::testing::Return;
 static const absl::flat_hash_map<absl::string_view, ParameterType>
     kSupportedTypes = {};
 
+absl::Status CallbackSucceeds(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    int pbrt_version, SpectrumTexture::Nested& nested) {
+  nested.set_name("name");
+  return absl::OkStatus();
+}
+
+absl::Status CallbackFails(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    int pbrt_version, SpectrumTexture::Nested& nested) {
+  return absl::InternalError("internal");
+}
+
 template <int PbrtVersion>
 class TestProtoParser final : public ProtoParser<PbrtProto, PbrtVersion> {
  public:
@@ -101,8 +114,14 @@ class TestProtoParser final : public ProtoParser<PbrtProto, PbrtVersion> {
         kSupportedTypes = {
             {"empty", this->template EmptyCallback<
                           &pbrt_proto::SpectrumTexture::mutable_nested>()},
+            {"fails",
+             this->template CB<CallbackFails,
+                               &pbrt_proto::SpectrumTexture::mutable_nested>()},
             {"ignored", &ProtoParser<PbrtProto, PbrtVersion>::template Ignored<
                             pbrt_proto::SpectrumTexture>},
+            {"succeeds",
+             this->template CB<CallbackSucceeds,
+                               &pbrt_proto::SpectrumTexture::mutable_nested>()},
         };
 
     return this->template Parse<&Directive::mutable_spectrum_texture>(
@@ -606,6 +625,26 @@ TEST(ParseFails, V4) {
   EXPECT_THAT(Convert<4>(directive, actual),
               StatusIs(absl::StatusCode::kInvalidArgument,
                        "Texture type 'missing' is not supported in pbrt-v4"));
+}
+
+TEST(CallbackSuccess, V1) {
+  absl::string_view directive =
+      R"pbrt(Texture "name" "spectrum" "succeeds")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert<1>(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives {
+                                 spectrum_texture { nested { name: "name" } }
+                               })pb"));
+}
+
+TEST(CallbackFails, V1) {
+  absl::string_view directive = R"pbrt(Texture "name" "spectrum" "fails")pbrt";
+
+  PbrtProto actual;
+  EXPECT_THAT(Convert<1>(directive, actual),
+              StatusIs(absl::StatusCode::kInternal, "internal"));
 }
 
 TEST(EmptyCallback, V4) {

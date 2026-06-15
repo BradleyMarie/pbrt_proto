@@ -16,7 +16,9 @@ message MakeNamedMedium {
 message Material {}
 
 message SpectrumTexture {
-  message Nested {}
+  message Nested {
+    optional string name = 1;
+  }
   optional Nested nested = 1;
 }
 
