@@ -3,12 +3,10 @@
 #include <sstream>
 #include <string>
 
-#include "absl/container/flat_hash_map.h"
 #include "absl/status/status.h"
 #include "absl/status/status_matchers.h"
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
-#include "pbrt_proto/shared/parser.h"
 #include "pbrt_proto/testing/proto_matchers.h"
 #include "pbrt_proto/v1/v1.pb.h"
 
