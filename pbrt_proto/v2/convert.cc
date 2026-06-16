@@ -212,14 +212,17 @@ absl::Status ParserV2::FloatTexture(
                *float_texture.mutable_checkerboard2d());
          }
 
-         if (dimension != 3) {
-           std::cerr << "WARNING: Unsupported value for 'checkerboard' Texture "
-                        "parameter 'dimension': "
-                     << dimension << std::endl;
+         if (dimension == 3) {
+           return RemoveCheckerboard3DFloatTexture(
+               parameters, kPbrtVersion,
+               *float_texture.mutable_checkerboard3d());
          }
 
-         return RemoveCheckerboard3DFloatTexture(
-             parameters, kPbrtVersion, *float_texture.mutable_checkerboard3d());
+         std::cerr << "WARNING: Unsupported value for 'checkerboard' Texture "
+                      "parameter 'dimension': "
+                   << dimension << std::endl;
+
+         return absl::OkStatus();
        }},
       {"constant",
        CB<RemoveConstantFloatTexture, &FloatTexture::mutable_constant>()},
@@ -383,14 +386,14 @@ absl::Status ParserV2::Shape(
       parameters, "bumpmap",
       std::bind(&Shape::MaterialOverrides::mutable_bumpmap, overrides));
   TryRemoveFloatTexture(
-      parameters, "eta",
-      std::bind(&Shape::MaterialOverrides::mutable_eta, overrides));
-  TryRemoveFloatTexture(
       parameters, "vroughness",
       std::bind(&Shape::MaterialOverrides::mutable_vroughness, overrides));
   TryRemoveFloatTexture(
       parameters, "meanfreepath",
       std::bind(&Shape::MaterialOverrides::mutable_meanfreepath, overrides));
+  TryRemoveFloatTexture(
+      parameters, "roughness",
+      std::bind(&Shape::MaterialOverrides::mutable_roughness, overrides));
   TryRemoveFloatTexture(
       parameters, "sigma",
       std::bind(&Shape::MaterialOverrides::mutable_sigma, overrides));
@@ -549,15 +552,17 @@ absl::Status ParserV2::SpectrumTexture(
                *spectrum_texture.mutable_checkerboard2d());
          }
 
-         if (dimension != 3) {
-           std::cerr << "WARNING: Unsupported value for 'checkerboard' Texture "
-                        "parameter 'dimension': "
-                     << dimension << std::endl;
+         if (dimension == 3) {
+           return RemoveCheckerboard3DSpectrumTexture(
+               parameters, kPbrtVersion,
+               *spectrum_texture.mutable_checkerboard3d());
          }
 
-         return RemoveCheckerboard3DSpectrumTexture(
-             parameters, kPbrtVersion,
-             *spectrum_texture.mutable_checkerboard3d());
+         std::cerr << "WARNING: Unsupported value for 'checkerboard' Texture "
+                      "parameter 'dimension': "
+                   << dimension << std::endl;
+
+         return absl::OkStatus();
        }},
       {"constant",
        CB<RemoveConstantSpectrumTexture, &SpectrumTexture::mutable_constant>()},

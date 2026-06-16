@@ -1,4 +1,4 @@
-#include "pbrt_proto/v1/convert.h"
+#include "pbrt_proto/v2/convert.h"
 
 #include <sstream>
 #include <string>
@@ -10,9 +10,9 @@
 #include "gtest/gtest.h"
 #include "pbrt_proto/shared/parser.h"
 #include "pbrt_proto/testing/proto_matchers.h"
-#include "pbrt_proto/v1/v1.pb.h"
+#include "pbrt_proto/v2/v2.pb.h"
 
-namespace pbrt_proto::v1 {
+namespace pbrt_proto::v2 {
 namespace {
 
 using ::absl_testing::StatusIs;
@@ -22,6 +22,15 @@ absl::Status Convert(absl::string_view input, PbrtProto& output) {
   std::string as_string(input);
   std::istringstream as_stream(as_string);
   return Convert(as_stream, output);
+}
+
+TEST(Accelerator, Bvh) {
+  absl::string_view directive = R"pbrt(Accelerator "bvh")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives { accelerator { bvh {} } })pb"));
 }
 
 TEST(Accelerator, Grid) {
@@ -48,7 +57,17 @@ TEST(AreaLightSource, Area) {
   PbrtProto actual;
   EXPECT_TRUE(Convert(directive, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(directives {
-                                         area_light_source { area {} }
+                                         area_light_source { diffuse {} }
+                                       })pb"));
+}
+
+TEST(AreaLightSource, Diffuse) {
+  absl::string_view directive = R"pbrt(AreaLightSource "diffuse")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         area_light_source { diffuse {} }
                                        })pb"));
 }
 
@@ -296,16 +315,6 @@ TEST(LightSource, Infinite) {
                                        })pb"));
 }
 
-TEST(LightSource, InfiniteSample) {
-  absl::string_view directive = R"pbrt(LightSource "infinitesample")pbrt";
-
-  PbrtProto actual;
-  EXPECT_TRUE(Convert(directive, actual).ok());
-  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
-                                         light_source { infinitesample {} }
-                                       })pb"));
-}
-
 TEST(LightSource, Point) {
   absl::string_view directive = R"pbrt(LightSource "point")pbrt";
 
@@ -334,43 +343,6 @@ TEST(LightSource, Spot) {
               EqualsProto(R"pb(directives { light_source { spot {} } })pb"));
 }
 
-TEST(Material, BluePaint) {
-  absl::string_view directive = R"pbrt(Material "bluepaint")pbrt";
-
-  PbrtProto actual;
-  EXPECT_TRUE(Convert(directive, actual).ok());
-  EXPECT_THAT(actual,
-              EqualsProto(R"pb(directives { material { bluepaint {} } })pb"));
-}
-
-TEST(Material, BrushedMetal) {
-  absl::string_view directive = R"pbrt(Material "brushedmetal")pbrt";
-
-  PbrtProto actual;
-  EXPECT_TRUE(Convert(directive, actual).ok());
-  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
-                                         material { brushedmetal {} }
-                                       })pb"));
-}
-
-TEST(Material, Clay) {
-  absl::string_view directive = R"pbrt(Material "clay")pbrt";
-
-  PbrtProto actual;
-  EXPECT_TRUE(Convert(directive, actual).ok());
-  EXPECT_THAT(actual,
-              EqualsProto(R"pb(directives { material { clay {} } })pb"));
-}
-
-TEST(Material, Felt) {
-  absl::string_view directive = R"pbrt(Material "felt")pbrt";
-
-  PbrtProto actual;
-  EXPECT_TRUE(Convert(directive, actual).ok());
-  EXPECT_THAT(actual,
-              EqualsProto(R"pb(directives { material { felt {} } })pb"));
-}
-
 TEST(Material, Glass) {
   absl::string_view directive = R"pbrt(Material "glass")pbrt";
 
@@ -378,6 +350,16 @@ TEST(Material, Glass) {
   EXPECT_TRUE(Convert(directive, actual).ok());
   EXPECT_THAT(actual,
               EqualsProto(R"pb(directives { material { glass {} } })pb"));
+}
+
+TEST(Material, KdSubsurface) {
+  absl::string_view directive = R"pbrt(Material "kdsubsurface")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         material { kdsubsurface {} }
+                                       })pb"));
 }
 
 TEST(Material, Matte) {
@@ -389,6 +371,15 @@ TEST(Material, Matte) {
               EqualsProto(R"pb(directives { material { matte {} } })pb"));
 }
 
+TEST(Material, Measured) {
+  absl::string_view directive = R"pbrt(Material "measured")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives { material { measured {} } })pb"));
+}
+
 TEST(Material, Mirror) {
   absl::string_view directive = R"pbrt(Material "mirror")pbrt";
 
@@ -396,6 +387,14 @@ TEST(Material, Mirror) {
   EXPECT_TRUE(Convert(directive, actual).ok());
   EXPECT_THAT(actual,
               EqualsProto(R"pb(directives { material { mirror {} } })pb"));
+}
+
+TEST(Material, Mix) {
+  absl::string_view directive = R"pbrt(Material "mix")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives { material { mix {} } })pb"));
 }
 
 TEST(Material, Plastic) {
@@ -407,15 +406,6 @@ TEST(Material, Plastic) {
               EqualsProto(R"pb(directives { material { plastic {} } })pb"));
 }
 
-TEST(Material, Primer) {
-  absl::string_view directive = R"pbrt(Material "primer")pbrt";
-
-  PbrtProto actual;
-  EXPECT_TRUE(Convert(directive, actual).ok());
-  EXPECT_THAT(actual,
-              EqualsProto(R"pb(directives { material { primer {} } })pb"));
-}
-
 TEST(Material, ShinyMetal) {
   absl::string_view directive = R"pbrt(Material "shinymetal")pbrt";
 
@@ -425,15 +415,6 @@ TEST(Material, ShinyMetal) {
               EqualsProto(R"pb(directives { material { shinymetal {} } })pb"));
 }
 
-TEST(Material, Skin) {
-  absl::string_view directive = R"pbrt(Material "skin")pbrt";
-
-  PbrtProto actual;
-  EXPECT_TRUE(Convert(directive, actual).ok());
-  EXPECT_THAT(actual,
-              EqualsProto(R"pb(directives { material { skin {} } })pb"));
-}
-
 TEST(Material, Substrate) {
   absl::string_view directive = R"pbrt(Material "substrate")pbrt";
 
@@ -441,6 +422,15 @@ TEST(Material, Substrate) {
   EXPECT_TRUE(Convert(directive, actual).ok());
   EXPECT_THAT(actual,
               EqualsProto(R"pb(directives { material { substrate {} } })pb"));
+}
+
+TEST(Material, Subsurface) {
+  absl::string_view directive = R"pbrt(Material "subsurface")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives { material { subsurface {} } })pb"));
 }
 
 TEST(Material, Translucent) {
@@ -466,8 +456,7 @@ TEST(Material, None) {
 
   PbrtProto actual;
   EXPECT_TRUE(Convert(directive, actual).ok());
-  EXPECT_THAT(actual,
-              EqualsProto(R"pb(directives { material { matte {} } })pb"));
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives { material {} })pb"));
 }
 
 TEST(PixelFilter, Box) {
@@ -518,6 +507,63 @@ TEST(PixelFilter, Triangle) {
                                        })pb"));
 }
 
+TEST(Renderer, AggregateTest) {
+  absl::string_view directive = R"pbrt(Renderer "aggregatetest")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         renderer { aggregatetest {} }
+                                       })pb"));
+}
+
+TEST(Renderer, CreateProbes) {
+  absl::string_view directive = R"pbrt(Renderer "createprobes")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         renderer { createprobes {} }
+                                       })pb"));
+}
+
+TEST(Renderer, Metropolis) {
+  absl::string_view directive = R"pbrt(Renderer "metropolis")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives { renderer { metropolis {} } })pb"));
+}
+
+TEST(Renderer, Sampler) {
+  absl::string_view directive = R"pbrt(Renderer "sampler")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives { renderer { sampler {} } })pb"));
+}
+
+TEST(Renderer, SurfacePoints) {
+  absl::string_view directive = R"pbrt(Renderer "surfacepoints")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         renderer { surfacepoints {} }
+                                       })pb"));
+}
+
+TEST(Sampler, Adaptive) {
+  absl::string_view directive = R"pbrt(Sampler "adaptive")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives { sampler { adaptive {} } })pb"));
+}
+
 TEST(Sampler, BestCandidate) {
   absl::string_view directive = R"pbrt(Sampler "bestcandidate")pbrt";
 
@@ -526,6 +572,15 @@ TEST(Sampler, BestCandidate) {
   EXPECT_THAT(actual, EqualsProto(R"pb(directives {
                                          sampler { bestcandidate {} }
                                        })pb"));
+}
+
+TEST(Sampler, Halton) {
+  absl::string_view directive = R"pbrt(Sampler "halton")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives { sampler { halton {} } })pb"));
 }
 
 TEST(Sampler, LowDiscrepancy) {
@@ -646,7 +701,6 @@ TEST(Shape, Overrides) {
   absl::string_view directive = R"pbrt(
     Shape "sphere"
         "texture bumpmap" "a"
-        "texture eta" "b"
         "texture roughness" "c"
         "texture sigma" "d"
         "texture uroughness" "e"
@@ -658,6 +712,15 @@ TEST(Shape, Overrides) {
         "texture opacity" "k"
         "texture reflect" "l"
         "texture transmit" "m"
+        "string name" "Apple"
+        "texture amount" "n"
+        "texture k" "o"
+        "texture sigma_a" "p"
+        "texture sigma_prime_s" "q"
+        "texture meanfreepath" "r"
+        "string filename" "file"
+        "string namedmaterial1" "mat1"
+        "string namedmaterial2" "mat2"
     )pbrt";
 
   PbrtProto actual;
@@ -668,7 +731,6 @@ TEST(Shape, Overrides) {
                                    sphere {}
                                    overrides {
                                      bumpmap { float_texture_name: "a" }
-                                     eta { float_texture_name: "b" }
                                      roughness { float_texture_name: "c" }
                                      sigma { float_texture_name: "d" }
                                      uroughness { float_texture_name: "e" }
@@ -680,6 +742,68 @@ TEST(Shape, Overrides) {
                                      opacity { spectrum_texture_name: "k" }
                                      reflect { spectrum_texture_name: "l" }
                                      transmit { spectrum_texture_name: "m" }
+                                     name: APPLE
+                                     amount { spectrum_texture_name: "n" }
+                                     k { spectrum_texture_name: "o" }
+                                     sigma_a { spectrum_texture_name: "p" }
+                                     sigma_s { spectrum_texture_name: "q" }
+                                     meanfreepath { float_texture_name: "r" }
+                                     filename: "file"
+                                     namedmaterial1: "mat1"
+                                     namedmaterial2: "mat2"
+                                   }
+                                 }
+                               })pb"));
+}
+
+TEST(Shape, OverridesEtaFloat) {
+  absl::string_view directive = R"pbrt(Shape "sphere" "float eta" 1.0)pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         shape {
+                                           sphere {}
+                                           overrides {
+                                             eta { float_value: 1.0 }
+                                             eta_as_value: 1.0
+                                           }
+                                         }
+                                       })pb"));
+}
+
+TEST(Shape, OverridesEtaTexture) {
+  absl::string_view directive = R"pbrt(Shape "sphere" "texture eta" "a")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(
+      actual,
+      EqualsProto(
+          R"pb(directives {
+                 shape {
+                   sphere {}
+                   overrides {
+                     eta { float_texture_name: "a" }
+                     eta_as_spectrum_texture { spectrum_texture_name: "a" }
+                   }
+                 }
+               })pb"));
+}
+
+TEST(Shape, OverridesEtaSpectrum) {
+  absl::string_view directive = R"pbrt(Shape "sphere" "rgb eta" [1 1 1])pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives {
+                                 shape {
+                                   sphere {}
+                                   overrides {
+                                     eta_as_spectrum_texture {
+                                       rgb_spectrum { r: 1.0 g: 1.0 b: 1.0 }
+                                     }
                                    }
                                  }
                                })pb"));
@@ -871,24 +995,38 @@ TEST(SpectrumTexture, Wrinkled) {
                                        })pb"));
 }
 
-TEST(SurfaceIntegrator, Bidirectional) {
-  absl::string_view directive = R"pbrt(SurfaceIntegrator "bidirectional")pbrt";
+TEST(SurfaceIntegrator, AmbientOcclusion) {
+  absl::string_view directive =
+      R"pbrt(SurfaceIntegrator "ambientocclusion")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives {
+                                 surface_integrator { ambientocclusion {} }
+                               })pb"));
+}
+
+TEST(SurfaceIntegrator, DiffusePrt) {
+  absl::string_view directive = R"pbrt(SurfaceIntegrator "diffuseprt")pbrt";
 
   PbrtProto actual;
   EXPECT_TRUE(Convert(directive, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(directives {
-                                         surface_integrator { bidirectional {} }
+                                         surface_integrator { diffuseprt {} }
                                        })pb"));
 }
 
-TEST(SurfaceIntegrator, Debug) {
-  absl::string_view directive = R"pbrt(SurfaceIntegrator "debug")pbrt";
+TEST(SurfaceIntegrator, DipoleSubsurface) {
+  absl::string_view directive =
+      R"pbrt(SurfaceIntegrator "dipolesubsurface")pbrt";
 
   PbrtProto actual;
   EXPECT_TRUE(Convert(directive, actual).ok());
-  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
-                                         surface_integrator { debug {} }
-                                       })pb"));
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives {
+                                 surface_integrator { dipolesubsurface {} }
+                               })pb"));
 }
 
 TEST(SurfaceIntegrator, DirectLighting) {
@@ -902,13 +1040,13 @@ TEST(SurfaceIntegrator, DirectLighting) {
                                })pb"));
 }
 
-TEST(SurfaceIntegrator, ExPhotonMap) {
-  absl::string_view directive = R"pbrt(SurfaceIntegrator "exphotonmap")pbrt";
+TEST(SurfaceIntegrator, GlossyPrt) {
+  absl::string_view directive = R"pbrt(SurfaceIntegrator "glossyprt")pbrt";
 
   PbrtProto actual;
   EXPECT_TRUE(Convert(directive, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(directives {
-                                         surface_integrator { exphotonmap {} }
+                                         surface_integrator { glossyprt {} }
                                        })pb"));
 }
 
@@ -964,6 +1102,16 @@ TEST(SurfaceIntegrator, Whitted) {
                                        })pb"));
 }
 
+TEST(SurfaceIntegrator, UseProbes) {
+  absl::string_view directive = R"pbrt(SurfaceIntegrator "useprobes")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         surface_integrator { useprobes {} }
+                                       })pb"));
+}
+
 TEST(Volume, Exponential) {
   absl::string_view directive = R"pbrt(Volume "exponential")pbrt";
 
@@ -1012,4 +1160,4 @@ TEST(VolumeIntegrator, Single) {
 }
 
 }  // namespace
-}  // namespace pbrt_proto::v1
+}  // namespace pbrt_proto::v2
