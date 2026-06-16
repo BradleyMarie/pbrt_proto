@@ -109,7 +109,7 @@ class TestProtoParser final : public ProtoParser<PbrtProto, PbrtVersion> {
       absl::string_view spectrum_texture_name,
       absl::string_view spectrum_texture_type,
       absl::flat_hash_map<absl::string_view, Parameter>& parameters) override {
-    static const typename ProtoParser<PbrtProto, PbrtVersion>::TypeMap<
+    static const typename ProtoParser<PbrtProto, PbrtVersion>::template TypeMap<
         pbrt_proto::SpectrumTexture>
         kSupportedTypes = {
             {"empty", this->template EmptyCallback<
