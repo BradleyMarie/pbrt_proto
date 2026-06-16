@@ -103,8 +103,8 @@ message MakeNamedMedium {
   // The type of medium to create. If none are set, then the directive should
   // have no effect.
   oneof medium_type {
-    HomogeneousMedium homogeneous = 2;    // Create a homogenous medium
-    UniformGridMedium heterogeneous = 3;  // Create a heterogeneous medium
+    UniformGridMedium heterogeneous = 2;  // Create a heterogeneous medium
+    HomogeneousMedium homogeneous = 3;    // Create a homogenous medium
   }
 }
 
@@ -197,7 +197,7 @@ message Shape {
     optional SpectrumTextureParameter k = 17;
     optional SpectrumTextureParameter sigma_a = 18;
     optional SpectrumTextureParameter sigma_s = 19;
-    optional FloatTextureParameter meanfreepath = 20;
+    reserved 20;
     optional string filename = 21;
     optional string namedmaterial1 = 22;
     optional string namedmaterial2 = 23;

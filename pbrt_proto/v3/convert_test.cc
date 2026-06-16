@@ -1,2503 +1,923 @@
 #include "pbrt_proto/v3/convert.h"
 
 #include <sstream>
+#include <string>
 
+#include "absl/container/flat_hash_map.h"
+#include "absl/status/status.h"
 #include "absl/status/status_matchers.h"
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
+#include "pbrt_proto/shared/parser.h"
 #include "pbrt_proto/testing/proto_matchers.h"
 #include "pbrt_proto/v3/v3.pb.h"
 
 namespace pbrt_proto::v3 {
 namespace {
 
-using ::absl_testing::IsOkAndHolds;
 using ::absl_testing::StatusIs;
 using ::google::protobuf::EqualsProto;
 
-TEST(Convert, Error) {
-  std::stringstream stream("Abc");
-  EXPECT_THAT(Convert(stream), StatusIs(absl::StatusCode::kInvalidArgument,
-                                        "Unrecognized directive: 'Abc'"));
+absl::Status Convert(absl::string_view input, PbrtProto& output) {
+  std::string as_string(input);
+  std::istringstream as_stream(as_string);
+  return Convert(as_stream, output);
 }
 
-TEST(Convert, Empty) {
-  std::stringstream stream;
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto("")));
+TEST(Accelerator, Bvh) {
+  absl::string_view directive = R"pbrt(Accelerator "bvh")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives { accelerator { bvh {} } })pb"));
 }
 
-TEST(Convert, AcceleratorUnknown) {
-  std::stringstream stream("Accelerator \"unknown\"");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(R"pb(directives {
-                                                               accelerator {}
-                                                             })pb")));
+TEST(Accelerator, KdTree) {
+  absl::string_view directive = R"pbrt(Accelerator "kdtree")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives { accelerator { kdtree {} } })pb"));
 }
 
-TEST(Convert, AcceleratorBvhEmpty) {
-  std::stringstream stream("Accelerator \"bvh\"");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(
-                  EqualsProto(R"pb(directives { accelerator { bvh {} } })pb")));
+TEST(AreaLightSource, Area) {
+  absl::string_view directive = R"pbrt(AreaLightSource "area")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         area_light_source { diffuse {} }
+                                       })pb"));
 }
 
-TEST(Convert, AcceleratorBvhHlbvh) {
-  std::stringstream stream(
-      "Accelerator \"bvh\" \"integer maxnodeprims\" 5 \"string splitmethod\" "
-      "\"hlbvh\"");
+TEST(AreaLightSource, Diffuse) {
+  absl::string_view directive = R"pbrt(AreaLightSource "diffuse")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         area_light_source { diffuse {} }
+                                       })pb"));
+}
+
+TEST(Camera, Environment) {
+  absl::string_view directive = R"pbrt(Camera "environment")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives { camera { environment {} } })pb"));
+}
+
+TEST(Camera, Orthographic) {
+  absl::string_view directive = R"pbrt(Camera "orthographic")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives { camera { orthographic {} } })pb"));
+}
+
+TEST(Camera, Perspective) {
+  absl::string_view directive = R"pbrt(Camera "perspective")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives { camera { perspective {} } })pb"));
+}
+
+TEST(Camera, Realistic) {
+  absl::string_view directive = R"pbrt(Camera "realistic")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives { camera { realistic {} } })pb"));
+}
+
+TEST(Film, Image) {
+  absl::string_view directive = R"pbrt(Film "image")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives { film { image {} } })pb"));
+}
+
+TEST(FloatTexture, Bilerp) {
+  absl::string_view directive = R"pbrt(Texture "name" "float" "bilerp")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         float_texture {
+                                           name: "name"
+                                           bilerp {}
+                                         }
+                                       })pb"));
+}
+
+TEST(FloatTexture, CheckerboardDefault) {
+  absl::string_view directive =
+      R"pbrt(Texture "name" "float" "checkerboard")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         float_texture {
+                                           name: "name"
+                                           checkerboard2d {}
+                                         }
+                                       })pb"));
+}
+
+TEST(FloatTexture, Checkerboard2D) {
+  absl::string_view directive =
+      R"pbrt(Texture "name" "float" "checkerboard" "integer dimension" 2)pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         float_texture {
+                                           name: "name"
+                                           checkerboard2d {}
+                                         }
+                                       })pb"));
+}
+
+TEST(FloatTexture, Checkerboard3D) {
+  absl::string_view directive =
+      R"pbrt(Texture "name" "float" "checkerboard" "integer dimension" 3)pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         float_texture {
+                                           name: "name"
+                                           checkerboard3d {}
+                                         }
+                                       })pb"));
+}
+
+TEST(FloatTexture, Checkerboard4D) {
+  absl::string_view directive =
+      R"pbrt(Texture "name" "float" "checkerboard" "integer dimension" 4)pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         float_texture {
+                                           name: "name"
+                                           checkerboard3d {}
+                                         }
+                                       })pb"));
+}
+
+TEST(FloatTexture, Constant) {
+  absl::string_view directive = R"pbrt(Texture "name" "float" "constant")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         float_texture {
+                                           name: "name"
+                                           constant {}
+                                         }
+                                       })pb"));
+}
+
+TEST(FloatTexture, Dots) {
+  absl::string_view directive = R"pbrt(Texture "name" "float" "dots")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         float_texture {
+                                           name: "name"
+                                           dots {}
+                                         }
+                                       })pb"));
+}
+
+TEST(FloatTexture, FBm) {
+  absl::string_view directive = R"pbrt(Texture "name" "float" "fbm")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         float_texture {
+                                           name: "name"
+                                           fbm {}
+                                         }
+                                       })pb"));
+}
+
+TEST(FloatTexture, ImageMap) {
+  absl::string_view directive = R"pbrt(Texture "name" "float" "imagemap")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         float_texture {
+                                           name: "name"
+                                           imagemap {}
+                                         }
+                                       })pb"));
+}
+
+TEST(FloatTexture, Marble) {
+  absl::string_view directive = R"pbrt(Texture "name" "float" "marble")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         float_texture { name: "name" }
+                                       })pb"));
+}
+
+TEST(FloatTexture, Mix) {
+  absl::string_view directive = R"pbrt(Texture "name" "float" "mix")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         float_texture {
+                                           name: "name"
+                                           mix {}
+                                         }
+                                       })pb"));
+}
+
+TEST(FloatTexture, Ptex) {
+  absl::string_view directive = R"pbrt(Texture "name" "float" "ptex")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         float_texture {
+                                           name: "name"
+                                           ptex {}
+                                         }
+                                       })pb"));
+}
+
+TEST(FloatTexture, Scale) {
+  absl::string_view directive = R"pbrt(Texture "name" "float" "scale")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         float_texture {
+                                           name: "name"
+                                           scale {}
+                                         }
+                                       })pb"));
+}
+
+TEST(FloatTexture, Windy) {
+  absl::string_view directive = R"pbrt(Texture "name" "float" "windy")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         float_texture {
+                                           name: "name"
+                                           windy {}
+                                         }
+                                       })pb"));
+}
+
+TEST(FloatTexture, Wrinkled) {
+  absl::string_view directive = R"pbrt(Texture "name" "float" "wrinkled")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         float_texture {
+                                           name: "name"
+                                           wrinkled {}
+                                         }
+                                       })pb"));
+}
+
+TEST(Integrator, AmbientOcclusion) {
+  absl::string_view directive = R"pbrt(Integrator "ambientocclusion")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         integrator { ambientocclusion {} }
+                                       })pb"));
+}
+
+TEST(Integrator, Bdpt) {
+  absl::string_view directive = R"pbrt(Integrator "bdpt")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives { integrator { bdpt {} } })pb"));
+}
+
+TEST(Integrator, DirectLighting) {
+  absl::string_view directive = R"pbrt(Integrator "directlighting")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         integrator { directlighting {} }
+                                       })pb"));
+}
+
+TEST(Integrator, Mlt) {
+  absl::string_view directive = R"pbrt(Integrator "mlt")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives { integrator { mlt {} } })pb"));
+}
+
+TEST(Integrator, Path) {
+  absl::string_view directive = R"pbrt(Integrator "path")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives { integrator { path {} } })pb"));
+}
+
+TEST(Integrator, Sppm) {
+  absl::string_view directive = R"pbrt(Integrator "sppm")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives { integrator { sppm {} } })pb"));
+}
+
+TEST(Integrator, VolPath) {
+  absl::string_view directive = R"pbrt(Integrator "volpath")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives { integrator { volpath {} } })pb"));
+}
+
+TEST(Integrator, Whitted) {
+  absl::string_view directive = R"pbrt(Integrator "whitted")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives { integrator { whitted {} } })pb"));
+}
+
+TEST(LightSource, Wrinkled) {
+  absl::string_view directive = R"pbrt(LightSource "distant")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives { light_source { distant {} } })pb"));
+}
+
+TEST(LightSource, Goniometric) {
+  absl::string_view directive = R"pbrt(LightSource "goniometric")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         light_source { goniometric {} }
+                                       })pb"));
+}
+
+TEST(LightSource, Infinite) {
+  absl::string_view directive = R"pbrt(LightSource "infinite")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         light_source { infinite {} }
+                                       })pb"));
+}
+
+TEST(LightSource, Point) {
+  absl::string_view directive = R"pbrt(LightSource "point")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives { light_source { point {} } })pb"));
+}
+
+TEST(LightSource, Projection) {
+  absl::string_view directive = R"pbrt(LightSource "projection")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         light_source { projection {} }
+                                       })pb"));
+}
+
+TEST(LightSource, Spot) {
+  absl::string_view directive = R"pbrt(LightSource "spot")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives { light_source { spot {} } })pb"));
+}
+
+TEST(MakeNamedMedium, Heterogeneous) {
+  absl::string_view directive =
+      R"pbrt(MakeNamedMedium "name" "string type" "heterogeneous")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         make_named_medium {
+                                           name: "name"
+                                           heterogeneous {}
+                                         }
+                                       })pb"));
+}
+
+TEST(MakeNamedMedium, Homogeneous) {
+  absl::string_view directive =
+      R"pbrt(MakeNamedMedium "name" "string type" "homogeneous")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         make_named_medium {
+                                           name: "name"
+                                           homogeneous {}
+                                         }
+                                       })pb"));
+}
+
+TEST(Material, Disney) {
+  absl::string_view directive = R"pbrt(Material "disney")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives { material { disney {} } })pb"));
+}
+
+TEST(Material, Fourier) {
+  absl::string_view directive = R"pbrt(Material "fourier")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives { material { fourier {} } })pb"));
+}
+
+TEST(Material, Glass) {
+  absl::string_view directive = R"pbrt(Material "glass")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives { material { glass {} } })pb"));
+}
+
+TEST(Material, KdSubsurface) {
+  absl::string_view directive = R"pbrt(Material "kdsubsurface")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         material { kdsubsurface {} }
+                                       })pb"));
+}
+
+TEST(Material, Matte) {
+  absl::string_view directive = R"pbrt(Material "matte")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives { material { matte {} } })pb"));
+}
+
+TEST(Material, None) {
+  absl::string_view directive = R"pbrt(Material "none")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives { material {} })pb"));
+}
+
+TEST(Material, Mirror) {
+  absl::string_view directive = R"pbrt(Material "mirror")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives { material { mirror {} } })pb"));
+}
+
+TEST(Material, Mix) {
+  absl::string_view directive = R"pbrt(Material "mix")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives { material { mix {} } })pb"));
+}
+
+TEST(Material, Plastic) {
+  absl::string_view directive = R"pbrt(Material "plastic")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives { material { plastic {} } })pb"));
+}
+
+TEST(Material, Substrate) {
+  absl::string_view directive = R"pbrt(Material "substrate")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives { material { substrate {} } })pb"));
+}
+
+TEST(Material, Subsurface) {
+  absl::string_view directive = R"pbrt(Material "subsurface")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives { material { subsurface {} } })pb"));
+}
+
+TEST(Material, Translucent) {
+  absl::string_view directive = R"pbrt(Material "translucent")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives { material { translucent {} } })pb"));
+}
+
+TEST(Material, Uber) {
+  absl::string_view directive = R"pbrt(Material "uber")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives { material { uber {} } })pb"));
+}
+
+TEST(Material, Empty) {
+  absl::string_view directive = R"pbrt(Material "")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives { material {} })pb"));
+}
+
+TEST(PixelFilter, Box) {
+  absl::string_view directive = R"pbrt(PixelFilter "box")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives { pixel_filter { box {} } })pb"));
+}
+
+TEST(PixelFilter, Gaussian) {
+  absl::string_view directive = R"pbrt(PixelFilter "gaussian")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         pixel_filter { gaussian {} }
+                                       })pb"));
+}
+
+TEST(PixelFilter, Mitchell) {
+  absl::string_view directive = R"pbrt(PixelFilter "mitchell")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         pixel_filter { mitchell {} }
+                                       })pb"));
+}
+
+TEST(PixelFilter, Sinc) {
+  absl::string_view directive = R"pbrt(PixelFilter "sinc")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives { pixel_filter { sinc {} } })pb"));
+}
+
+TEST(PixelFilter, Triangle) {
+  absl::string_view directive = R"pbrt(PixelFilter "triangle")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         pixel_filter { triangle {} }
+                                       })pb"));
+}
+
+TEST(Sampler, Halton) {
+  absl::string_view directive = R"pbrt(Sampler "halton")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives { sampler { halton {} } })pb"));
+}
+
+TEST(Sampler, LowDiscrepancy) {
+  absl::string_view directive = R"pbrt(Sampler "lowdiscrepancy")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         sampler { zerotwosequence {} }
+                                       })pb"));
+}
+
+TEST(Sampler, MaxMinDist) {
+  absl::string_view directive = R"pbrt(Sampler "maxmindist")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives { sampler { maxmindist {} } })pb"));
+}
+
+TEST(Sampler, Random) {
+  absl::string_view directive = R"pbrt(Sampler "random")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives { sampler { random {} } })pb"));
+}
+
+TEST(Sampler, Stratified) {
+  absl::string_view directive = R"pbrt(Sampler "stratified")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives { sampler { stratified {} } })pb"));
+}
+
+TEST(Sampler, ZeroTwoSequence) {
+  absl::string_view directive = R"pbrt(Sampler "02sequence")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         sampler { zerotwosequence {} }
+                                       })pb"));
+}
+
+TEST(Shape, Cone) {
+  absl::string_view directive = R"pbrt(Shape "cone")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives { shape { cone {} } })pb"));
+}
+
+TEST(Shape, Curve) {
+  absl::string_view directive = R"pbrt(Shape "curve")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives { shape { curve {} } })pb"));
+}
+
+TEST(Shape, Cylinder) {
+  absl::string_view directive = R"pbrt(Shape "cylinder")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives { shape { cylinder {} } })pb"));
+}
+
+TEST(Shape, Disk) {
+  absl::string_view directive = R"pbrt(Shape "disk")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives { shape { disk {} } })pb"));
+}
+
+TEST(Shape, HeightField) {
+  absl::string_view directive = R"pbrt(Shape "heightfield")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives { shape { heightfield {} } })pb"));
+}
+
+TEST(Shape, Hyperboloid) {
+  absl::string_view directive = R"pbrt(Shape "hyperboloid")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives { shape { hyperboloid {} } })pb"));
+}
+
+TEST(Shape, LoopSubdiv) {
+  absl::string_view directive = R"pbrt(Shape "loopsubdiv")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives { shape { loopsubdiv {} } })pb"));
+}
+
+TEST(Shape, Nurbs) {
+  absl::string_view directive = R"pbrt(Shape "nurbs")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives { shape { nurbs {} } })pb"));
+}
+
+TEST(Shape, Paraboloid) {
+  absl::string_view directive = R"pbrt(Shape "paraboloid")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives { shape { paraboloid {} } })pb"));
+}
+
+TEST(Shape, PlyMesh) {
+  absl::string_view directive = R"pbrt(Shape "plymesh")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives { shape { plymesh {} } })pb"));
+}
+
+TEST(Shape, Sphere) {
+  absl::string_view directive = R"pbrt(Shape "sphere")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives { shape { sphere {} } })pb"));
+}
+
+TEST(Shape, TriangleMesh) {
+  absl::string_view directive = R"pbrt(Shape "trianglemesh")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives { shape { trianglemesh {} } })pb"));
+}
+
+TEST(Shape, Overrides) {
+  absl::string_view directive = R"pbrt(
+    Shape "sphere"
+        "texture bumpmap" "a"
+        "texture roughness" "c"
+        "texture sigma" "d"
+        "texture uroughness" "e"
+        "texture vroughness" "f"
+        "texture Kd" "g"
+        "texture Kr" "h"
+        "texture Ks" "i"
+        "texture Kt" "j"
+        "texture opacity" "k"
+        "texture reflect" "l"
+        "texture transmit" "m"
+        "string name" "Apple"
+        "texture amount" "n"
+        "texture k" "o"
+        "texture sigma_a" "p"
+        "texture sigma_s" "q"
+        "string bsdffile" "file"
+        "string namedmaterial1" "mat1"
+        "string namedmaterial2" "mat2"
+        "texture color" "r"
+        "texture mfp" "s"
+        "texture scatterdistance" "t"
+        "texture alpha" "u"
+        "texture anisotropic" "v"
+        "texture beta_m" "w"
+        "texture beta_n" "x"
+        "texture clearcoat" "y"
+        "texture clearcoatgloss" "z"
+        "texture difftrans" "aa"
+        "texture eumelanin" "ab"
+        "texture flatness" "ac"
+        "texture metallic" "ad"
+        "texture pheomelanin" "ae"
+        "texture spectrans" "af"
+        "texture speculartint" "ag"
+        "texture sheen" "ah"
+        "texture sheentint" "ai"
+        "float g" 1.0
+        "float scale" 2.0
+        "bool remaproughness" "true"
+        "bool thin" "false"
+    )pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
   EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(
-          R"pb(directives {
-                 accelerator { bvh { maxnodeprims: 5 splitmethod: HLBVH } }
-               })pb")));
-}
-
-TEST(Convert, AcceleratorKdTreeEmpty) {
-  std::stringstream stream("Accelerator \"kdtree\"");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives {
-                                              accelerator { kdtree {} }
-                                            })pb")));
-}
-
-TEST(Convert, ActiveTransformAll) {
-  std::stringstream stream("ActiveTransform All");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(
-                  "directives { active_transform { active: ALL } }")));
-}
-
-TEST(Convert, ActiveTransformStart) {
-  std::stringstream stream("ActiveTransform StartTime");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(R"pb(directives {
-                                      active_transform { active: START_TIME }
-                                    })pb")));
-}
-
-TEST(Convert, ActiveTransformEnd) {
-  std::stringstream stream("ActiveTransform EndTime");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(R"pb(directives {
-                                      active_transform { active: END_TIME }
-                                    })pb")));
-}
-
-TEST(Convert, AreaLightSourceUnknown) {
-  std::stringstream stream("AreaLightSource \"unknown\"");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(R"pb(directives { area_light_source {} })pb")));
-}
-
-TEST(Convert, AreaLightSourceDiffuse) {
-  std::stringstream stream(
-      "AreaLightSource \"diffuse\" \"blackbody L\" [1.0 2.0] \"bool twosided\" "
-      "\"true\" \"integer samples\" 2 \"blackbody scale\" [11.0 12.0]");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(
-          R"pb(directives {
-                 area_light_source {
-                   diffuse {
-                     L { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
-                     twosided: true
-                     samples: 2
-                     scale {
-                       blackbody_spectrum { temperature: 11.0 scale: 12.0 }
-                     }
-                   }
-                 }
-               })pb")));
-}
-
-TEST(Convert, AttributeBegin) {
-  std::stringstream stream("AttributeBegin");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(R"pb(directives { attribute_begin {} })pb")));
-}
-
-TEST(Convert, AttributeEnd) {
-  std::stringstream stream("AttributeEnd");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(R"pb(directives {
-                                                               attribute_end {}
-                                                             })pb")));
-}
-
-TEST(Convert, CameraUnknown) {
-  std::stringstream stream("Camera \"unknown\"");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives { camera {} })pb")));
-}
-
-TEST(Convert, CameraEnvironment) {
-  std::stringstream stream(
-      "Camera \"environment\" \"float lensradius\" 3.0 \"float "
-      "frameaspectratio\" 4.0 \"float screenwindow\" [1.0 2.0 3.0 4.0]  "
-      "\"float shutteropen\" 1.0 \"float shutterclose\" 2.0");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives {
-                                              camera {
-                                                environment {
-                                                  lensradius: 3.0
-                                                  frameaspectratio: 4.0
-                                                  screenwindow {
-                                                    x_min: 1.0
-                                                    x_max: 2.0
-                                                    y_min: 3.0
-                                                    y_max: 4.0
-                                                  }
-                                                  shutteropen: 1.0
-                                                  shutterclose: 2.0
-                                                }
-                                              }
-                                            })pb")));
-}
-
-TEST(Convert, CameraOrthographic) {
-  std::stringstream stream(
-      "Camera \"orthographic\" \"float lensradius\" 3.0 \"float "
-      "frameaspectratio\" 4.0 \"float screenwindow\" [1.0 2.0 3.0 4.0]  "
-      "\"float shutteropen\" 1.0 \"float shutterclose\" 2.0");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives {
-                                              camera {
-                                                orthographic {
-                                                  lensradius: 3.0
-                                                  frameaspectratio: 4.0
-                                                  screenwindow {
-                                                    x_min: 1.0
-                                                    x_max: 2.0
-                                                    y_min: 3.0
-                                                    y_max: 4.0
-                                                  }
-                                                  shutteropen: 1.0
-                                                  shutterclose: 2.0
-                                                }
-                                              }
-                                            })pb")));
-}
-
-TEST(Convert, CameraPerspective) {
-  std::stringstream stream(
-      "Camera \"perspective\" \"float lensradius\" 3.0 \"float "
-      "frameaspectratio\" 4.0 \"float screenwindow\" [1.0 2.0 3.0 4.0] \"float "
-      "halffov\" 30.0 \"float shutteropen\" 1.0 \"float shutterclose\" 2.0");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives {
-                                              camera {
-                                                perspective {
-                                                  lensradius: 3.0
-                                                  frameaspectratio: 4.0
-                                                  screenwindow {
-                                                    x_min: 1.0
-                                                    x_max: 2.0
-                                                    y_min: 3.0
-                                                    y_max: 4.0
-                                                  }
-                                                  fov: 60
-                                                  shutteropen: 1.0
-                                                  shutterclose: 2.0
-                                                }
-                                              }
-                                            })pb")));
-}
-
-TEST(Convert, CameraRealistic) {
-  std::stringstream stream(
-      "Camera \"realistic\" \"string lensfile\" \"lens.file\" \"float "
-      "aperturediameter\" 4.0 \"float focusdistance\" 2.0 \"bool "
-      "simpleweighting\" \"false\" \"float shutteropen\" 1.0 \"float "
-      "shutterclose\" 2.0");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives {
-                                              camera {
-                                                realistic {
-                                                  lensfile: "lens.file"
-                                                  aperturediameter: 4.0
-                                                  focusdistance: 2.0
-                                                  simpleweighting: false
-                                                  shutteropen: 1.0
-                                                  shutterclose: 2.0
-                                                }
-                                              }
-                                            })pb")));
-}
-
-TEST(Convert, ConcatTransform) {
-  std::stringstream stream(
-      "ConcatTransform [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16]");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives {
-                                              concat_transform {
-                                                m00: 1
-                                                m01: 2
-                                                m02: 3
-                                                m03: 4
-                                                m10: 5
-                                                m11: 6
-                                                m12: 7
-                                                m13: 8
-                                                m20: 9
-                                                m21: 10
-                                                m22: 11
-                                                m23: 12
-                                                m30: 13
-                                                m31: 14
-                                                m32: 15
-                                                m33: 16
-                                              }
-                                            })pb")));
-}
-
-TEST(Convert, CoordinateSystem) {
-  std::stringstream stream("CoordinateSystem \"a\"");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives {
-                                              coordinate_system { name: "a" }
-                                            })pb")));
-}
-
-TEST(Convert, CoordSysTransform) {
-  std::stringstream stream("CoordSysTransform \"a\"");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives {
-                                              coord_sys_transform { name: "a" }
-                                            })pb")));
-}
-
-TEST(Convert, FilmUnknown) {
-  std::stringstream stream("Film \"unknown\"");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives { film {} })pb")));
-}
-
-TEST(Convert, FilmImage) {
-  std::stringstream stream(
-      "Film \"image\" \"integer xresolution\" 200 \"integer yresolution\" 300 "
-      "\"float cropwindow\" [1 2 3 4] \"float scale\" 2.0 \"float "
-      "maxsampleluminance\" 3.0 \"float diagonal\" 4.0 \"string filename\" "
-      "\"out.png\"");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(
-          R"pb(directives {
-                 film {
-                   image {
-                     xresolution: 200
-                     yresolution: 300
-                     cropwindow { x_min: 1.0 x_max: 2.0 y_min: 3.0 y_max: 4.0 }
-                     scale: 2.0
-                     maxsampleluminance: 3.0
-                     diagonal: 4.0
-                     filename: "out.png"
-                   }
-                 }
-               })pb")));
-}
-
-TEST(Convert, FloatTextureUnknown) {
-  std::stringstream stream("Texture \"name\" \"float\" \"unknown\"");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives {
-                                              float_texture { name: "name" }
-                                            })pb")));
-}
-
-TEST(Convert, FloatTextureBilerp) {
-  std::stringstream stream(
-      "Texture \"name\" \"float\" \"bilerp\" \"float v00\" 1.0 \"float v01\" "
-      "2.0 \"float v10\" 3.0 \"float v11\" 4.0 \"string mapping\" \"uv\" "
-      "\"float uscale\" 5.0 \"float vscale\" 6.0 \"float udelta\" 7.0 \"float "
-      "vdelta\" 8.0 \"vector v1\" [1.0 2 3.0] \"vector v2\" [4.0 5.0 6.0]");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives {
-                                          float_texture {
-                                            name: "name"
-                                            bilerp {
-                                              v00 { float_value: 1.0 }
-                                              v01 { float_value: 2.0 }
-                                              v10 { float_value: 3.0 }
-                                              v11 { float_value: 4.0 }
-                                              mapping: UV
-                                              uscale: 5.0
-                                              vscale: 6.0
-                                              udelta: 7.0
-                                              vdelta: 8.0
-                                              v1 { x: 1.0 y: 2.0 z: 3.0 }
-                                              v2 { x: 4.0 y: 5.0 z: 6.0 }
-                                            }
-                                          }
-                                        })pb")));
-}
-
-TEST(Convert, FloatTextureCheckerboard2DNone) {
-  std::stringstream stream(
-      "Texture \"name\" \"float\" \"checkerboard\" \"integer dimension\" 2 "
-      "\"float tex1\" 1.0 \"float tex2\" 2.0 \"string aamode\" \"none\" "
-      "\"string mapping\" \"uv\" \"float uscale\" 5.0 \"float vscale\" 6.0 "
-      "\"float udelta\" 7.0 \"float vdelta\" 8.0 \"vector v1\" [1.0 2 3.0] "
-      "\"vector v2\" [4.0 5.0 6.0]");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives {
-                                          float_texture {
-                                            name: "name"
-                                            checkerboard2d {
-                                              tex1 { float_value: 1.0 }
-                                              tex2 { float_value: 2.0 }
-                                              aamode: DISABLED
-                                              mapping: UV
-                                              uscale: 5.0
-                                              vscale: 6.0
-                                              udelta: 7.0
-                                              vdelta: 8.0
-                                              v1 { x: 1.0 y: 2.0 z: 3.0 }
-                                              v2 { x: 4.0 y: 5.0 z: 6.0 }
-                                            }
-                                          }
-                                        })pb")));
-}
-
-TEST(Convert, FloatTextureCheckerboard2DClosedForm) {
-  std::stringstream stream(
-      "Texture \"name\" \"float\" \"checkerboard\" \"integer dimension\" 2 "
-      "\"float tex1\" 1.0 \"float tex2\" 2.0 \"string aamode\" \"closedform\" "
-      "\"string mapping\" \"uv\" \"float uscale\" 5.0 \"float vscale\" 6.0 "
-      "\"float udelta\" 7.0 \"float vdelta\" 8.0 \"vector v1\" [1.0 2 3.0] "
-      "\"vector v2\" [4.0 5.0 6.0]");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives {
-                                          float_texture {
-                                            name: "name"
-                                            checkerboard2d {
-                                              tex1 { float_value: 1.0 }
-                                              tex2 { float_value: 2.0 }
-                                              aamode: CLOSEDFORM
-                                              mapping: UV
-                                              uscale: 5.0
-                                              vscale: 6.0
-                                              udelta: 7.0
-                                              vdelta: 8.0
-                                              v1 { x: 1.0 y: 2.0 z: 3.0 }
-                                              v2 { x: 4.0 y: 5.0 z: 6.0 }
-                                            }
-                                          }
-                                        })pb")));
-}
-
-TEST(Convert, FloatTextureCheckerboard3D) {
-  std::stringstream stream(
-      "Texture \"name\" \"float\" \"checkerboard\" \"integer dimension\" 3 "
-      "\"float tex1\" 1.0 \"float tex2\" 2.0");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives {
-                                          float_texture {
-                                            name: "name"
-                                            checkerboard3d {
-                                              tex1 { float_value: 1.0 }
-                                              tex2 { float_value: 2.0 }
-                                            }
-                                          }
-                                        })pb")));
-}
-
-TEST(Convert, FloatTextureCheckerboardDots) {
-  std::stringstream stream(
-      "Texture \"name\" \"float\" \"dots\" \"float inside\" 1.0 \"float "
-      "outside\" 2.0 \"string mapping\" \"uv\" \"float uscale\" 5.0 \"float "
-      "vscale\" 6.0 \"float udelta\" 7.0 \"float vdelta\" 8.0 \"vector v1\" "
-      "[1.0 2 3.0] \"vector v2\" [4.0 5.0 6.0]");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives {
-                                          float_texture {
-                                            name: "name"
-                                            dots {
-                                              inside { float_value: 1.0 }
-                                              outside { float_value: 2.0 }
-                                              mapping: UV
-                                              uscale: 5.0
-                                              vscale: 6.0
-                                              udelta: 7.0
-                                              vdelta: 8.0
-                                              v1 { x: 1.0 y: 2.0 z: 3.0 }
-                                              v2 { x: 4.0 y: 5.0 z: 6.0 }
-                                            }
-                                          }
-                                        })pb")));
-}
-
-TEST(Convert, FloatTextureFbm) {
-  std::stringstream stream(
-      "Texture \"name\" \"float\" \"fbm\" \"integer octaves\" 1 \"float "
-      "roughness\" 2.0");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives {
-                                          float_texture {
-                                            name: "name"
-                                            fbm { octaves: 1 roughness: 2.0 }
-                                          }
-                                        })pb")));
-}
-
-TEST(Convert, FloatTextureConstant) {
-  std::stringstream stream(
-      "Texture \"name\" \"float\" \"constant\" \"float value\" 1.0");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives {
-                                          float_texture {
-                                            name: "name"
-                                            constant { value: 1.0 }
-                                          }
-                                        })pb")));
-}
-
-TEST(Convert, FloatTextureImageMapBlack) {
-  std::stringstream stream(
-      "Texture \"name\" \"float\" \"imagemap\" \"string filename\" \"a\" "
-      "\"string wrap\" \"black\" \"float maxanisotropy\" 1.0 \"bool "
-      "trilinear\" \"true\" \"float scale\" 2.0 \"bool gamma\" \"true\" "
-      "\"string mapping\" \"uv\" \"float uscale\" 5.0 \"float vscale\" 6.0 "
-      "\"float udelta\" 7.0 \"float vdelta\" 8.0 \"vector v1\" [1.0 2 3.0] "
-      "\"vector v2\" [4.0 5.0 6.0]");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives {
-                                          float_texture {
-                                            name: "name"
-                                            imagemap {
-                                              filename: "a"
-                                              wrap: BLACK
-                                              maxanisotropy: 1.0
-                                              filter: TRILINEAR
-                                              scale: 2.0
-                                              encoding: GAMMA
-                                              mapping: UV
-                                              uscale: 5.0
-                                              vscale: 6.0
-                                              udelta: 7.0
-                                              vdelta: 8.0
-                                              v1 { x: 1.0 y: 2.0 z: 3.0 }
-                                              v2 { x: 4.0 y: 5.0 z: 6.0 }
-                                            }
-                                          }
-                                        })pb")));
-}
-
-TEST(Convert, FloatTextureImageMapClamp) {
-  std::stringstream stream(
-      "Texture \"name\" \"float\" \"imagemap\" \"string filename\" \"a\" "
-      "\"string wrap\" \"clamp\" \"float maxanisotropy\" 1.0 \"bool "
-      "trilinear\" \"true\" \"float scale\" 2.0 \"bool gamma\" \"true\" "
-      "\"string mapping\" \"uv\" \"float uscale\" 5.0 \"float vscale\" 6.0 "
-      "\"float udelta\" 7.0 \"float vdelta\" 8.0 \"vector v1\" [1.0 2 3.0] "
-      "\"vector v2\" [4.0 5.0 6.0]");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives {
-                                          float_texture {
-                                            name: "name"
-                                            imagemap {
-                                              filename: "a"
-                                              wrap: CLAMP
-                                              maxanisotropy: 1.0
-                                              filter: TRILINEAR
-                                              scale: 2.0
-                                              encoding: GAMMA
-                                              mapping: UV
-                                              uscale: 5.0
-                                              vscale: 6.0
-                                              udelta: 7.0
-                                              vdelta: 8.0
-                                              v1 { x: 1.0 y: 2.0 z: 3.0 }
-                                              v2 { x: 4.0 y: 5.0 z: 6.0 }
-                                            }
-                                          }
-                                        })pb")));
-}
-
-TEST(Convert, FloatTextureImageMapRepeat) {
-  std::stringstream stream(
-      "Texture \"name\" \"float\" \"imagemap\" \"string filename\" \"a\" "
-      "\"string wrap\" \"repeat\" \"float maxanisotropy\" 1.0 \"bool "
-      "trilinear\" \"true\" \"float scale\" 2.0 \"bool gamma\" \"true\" "
-      "\"string mapping\" \"uv\" \"float uscale\" 5.0 \"float vscale\" 6.0 "
-      "\"float udelta\" 7.0 \"float vdelta\" 8.0 \"vector v1\" [1.0 2 3.0] "
-      "\"vector v2\" [4.0 5.0 6.0]");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives {
-                                          float_texture {
-                                            name: "name"
-                                            imagemap {
-                                              filename: "a"
-                                              wrap: REPEAT
-                                              maxanisotropy: 1.0
-                                              filter: TRILINEAR
-                                              scale: 2.0
-                                              encoding: GAMMA
-                                              mapping: UV
-                                              uscale: 5.0
-                                              vscale: 6.0
-                                              udelta: 7.0
-                                              vdelta: 8.0
-                                              v1 { x: 1.0 y: 2.0 z: 3.0 }
-                                              v2 { x: 4.0 y: 5.0 z: 6.0 }
-                                            }
-                                          }
-                                        })pb")));
-}
-
-TEST(Convert, FloatTextureMarble) {
-  std::stringstream stream("Texture \"name\" \"float\" \"marble\"");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives {
-                                              float_texture { name: "name" }
-                                            })pb")));
-}
-
-TEST(Convert, FloatTextureMix) {
-  std::stringstream stream(
-      "Texture \"name\" \"float\" \"mix\" \"float tex1\" 1.0 \"float tex2\" "
-      "2.0 \"float amount\" 3.0");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives {
-                                          float_texture {
-                                            name: "name"
-                                            mix {
-                                              tex1 { float_value: 1.0 }
-                                              tex2 { float_value: 2.0 }
-                                              amount { float_value: 3.0 }
-                                            }
-                                          }
-                                        })pb")));
-}
-
-TEST(Convert, FloatTexturePtex) {
-  std::stringstream stream(
-      "Texture \"name\" \"float\" \"ptex\" \"string filename\" \"a\" \"float "
-      "gamma\" 2.0");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives {
-                                          float_texture {
-                                            name: "name"
-                                            ptex { filename: "a" gamma: 2.0 }
-                                          }
-                                        })pb")));
-}
-
-TEST(Convert, FloatTextureScale) {
-  std::stringstream stream(
-      "Texture \"name\" \"float\" \"scale\" \"float tex1\" 1.0 \"float tex2\" "
-      "2.0");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives {
-                                          float_texture {
-                                            name: "name"
-                                            scale {
-                                              tex1 { float_value: 1.0 }
-                                              tex2 { float_value: 2.0 }
-                                            }
-                                          }
-                                        })pb")));
-}
-
-TEST(Convert, FloatTextureWindy) {
-  std::stringstream stream("Texture \"name\" \"float\" \"windy\"");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives {
-                                          float_texture {
-                                            name: "name"
-                                            windy {}
-                                          }
-                                        })pb")));
-}
-
-TEST(Convert, FloatTextureWrinkled) {
-  std::stringstream stream(
-      "Texture \"name\" \"float\" \"wrinkled\" \"integer octaves\" 1 \"float "
-      "roughness\" 2.0");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(
-                  R"pb(directives {
-                         float_texture {
-                           name: "name"
-                           wrinkled { octaves: 1 roughness: 2.0 }
-                         }
-                       })pb")));
-}
-
-TEST(Convert, Identity) {
-  std::stringstream stream("Identity");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives { identity {} })pb")));
-}
-
-TEST(Convert, Include) {
-  std::stringstream stream("Include \"a\"");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(R"pb(directives { include { path: "a" } })pb")));
-}
-
-TEST(Convert, IntegratorUnknown) {
-  std::stringstream stream("Integrator \"unknown\"");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives { integrator {} })pb")));
-}
-
-TEST(Convert, IntegratorSpatialLighting) {
-  std::stringstream stream(
-      "Integrator \"path\" \"string lightsamplestrategy\" \"spatial\"");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(R"pb(directives {
-                                      integrator { path { lightsampler: BVH } }
-                                    })pb")));
-}
-
-TEST(Convert, IntegratorPowerLighting) {
-  std::stringstream stream(
-      "Integrator \"path\" \"string lightsamplestrategy\" \"power\"");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(
-                  R"pb(directives {
-                         integrator { path { lightsampler: POWER } }
-                       })pb")));
-}
-
-TEST(Convert, IntegratorUniformLighting) {
-  std::stringstream stream(
-      "Integrator \"path\" \"string lightsamplestrategy\" \"uniform\"");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(
-                  R"pb(directives {
-                         integrator { path { lightsampler: UNIFORM } }
-                       })pb")));
-}
-
-TEST(Convert, IntegratorUnknownLighting) {
-  std::stringstream stream(
-      "Integrator \"path\" \"string lightsamplestrategy\" \"unknown\"");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(R"pb(directives {
-                                      integrator { path { lightsampler: BVH } }
-                                    })pb")));
-}
-
-TEST(Convert, IntegratorAmbientOcclusion) {
-  std::stringstream stream(
-      "Integrator \"ambientocclusion\" \"bool cossample\" \"false\" \"integer "
-      "nsamples\" 2 \"integer pixelbounds\" [1 2 3 4]");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(
-                  R"pb(directives {
-                         integrator {
-                           ambientocclusion {
-                             cossample: false
-                             nsamples: 2
-                             pixelbounds { x_min: 1 x_max: 2 y_min: 3 y_max: 4 }
-                           }
-                         }
-                       })pb")));
-}
-
-TEST(Convert, IntegratorBdpt) {
-  std::stringstream stream(
-      "Integrator \"bdpt\" \"integer maxdepth\" 1 \"bool visualizestrategies\" "
-      "\"true\" \"bool visualizeweights\" \"true\" \"string "
-      "lightsamplestrategy\" \"uniform\" \"integer pixelbounds\" [1 2 3 4]");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(
-                  R"pb(directives {
-                         integrator {
-                           bdpt {
-                             maxdepth: 1
-                             visualizestrategies: true
-                             visualizeweights: true
-                             lightsampler: UNIFORM
-                             pixelbounds { x_min: 1 x_max: 2 y_min: 3 y_max: 4 }
-                           }
-                         }
-                       })pb")));
-}
-
-TEST(Convert, IntegratorBdptUnknown) {
-  std::stringstream stream(
-      "Integrator \"bdpt\" \"integer maxdepth\" 1 \"bool visualizestrategies\" "
-      "\"true\" \"bool visualizeweights\" \"true\" \"string "
-      "lightsamplestrategy\" \"xxx\" \"integer pixelbounds\" [1 2 3 4]");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(
-                  R"pb(directives {
-                         integrator {
-                           bdpt {
-                             maxdepth: 1
-                             visualizestrategies: true
-                             visualizeweights: true
-                             lightsampler: BVH
-                             pixelbounds { x_min: 1 x_max: 2 y_min: 3 y_max: 4 }
-                           }
-                         }
-                       })pb")));
-}
-
-TEST(Convert, IntegratorDirectLightingOne) {
-  std::stringstream stream(
-      "Integrator \"directlighting\" \"integer maxdepth\" 1 \"string "
-      "strategy\" \"one\" \"integer pixelbounds\" [1 2 3 4]");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(
-                  R"pb(directives {
-                         integrator {
-                           directlighting {
-                             maxdepth: 1
-                             strategy: ONE
-                             pixelbounds { x_min: 1 x_max: 2 y_min: 3 y_max: 4 }
-                           }
-                         }
-                       })pb")));
-}
-
-TEST(Convert, IntegratorDirectLightingAll) {
-  std::stringstream stream(
-      "Integrator \"directlighting\" \"integer maxdepth\" 1 \"string "
-      "strategy\" \"all\" \"integer pixelbounds\" [1 2 3 4]");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(
-                  R"pb(directives {
-                         integrator {
-                           directlighting {
-                             maxdepth: 1
-                             strategy: ALL
-                             pixelbounds { x_min: 1 x_max: 2 y_min: 3 y_max: 4 }
-                           }
-                         }
-                       })pb")));
-}
-
-TEST(Convert, IntegratorDirectLightingUnknown) {
-  std::stringstream stream(
-      "Integrator \"directlighting\" \"integer maxdepth\" 1 \"string "
-      "strategy\" \"xxx\" \"integer pixelbounds\" [1 2 3 4]");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(
-                  R"pb(directives {
-                         integrator {
-                           directlighting {
-                             maxdepth: 1
-                             strategy: ALL
-                             pixelbounds { x_min: 1 x_max: 2 y_min: 3 y_max: 4 }
-                           }
-                         }
-                       })pb")));
-}
-
-TEST(Convert, IntegratorDirectLightingBadPixelBounds) {
-  std::stringstream stream(
-      "Integrator \"directlighting\" \"integer maxdepth\" 1 \"string "
-      "strategy\" \"all\" \"integer pixelbounds\" [1 2 3]");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(
-          R"pb(directives {
-                 integrator { directlighting { maxdepth: 1 strategy: ALL } }
-               })pb")));
-}
-
-TEST(Convert, IntegratorMlt) {
-  std::stringstream stream(
-      "Integrator \"mlt\" \"integer maxdepth\" 1 \"integer bootstrapsamples\" "
-      "2 \"integer chains\" 3 \"integer mutationsperpixel\" 4 \"float "
-      "largestepprobability\" 5.0 \"float sigma\" 6.0");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives {
-                                              integrator {
-                                                mlt {
-                                                  maxdepth: 1
-                                                  bootstrapsamples: 2
-                                                  chains: 3
-                                                  mutationsperpixel: 4
-                                                  largestepprobability: 5.0
-                                                  sigma: 6.0
-                                                }
-                                              }
-                                            })pb")));
-}
-
-TEST(Convert, IntegratorPath) {
-  std::stringstream stream(
-      "Integrator \"path\" \"integer maxdepth\" 1 \"float rrthreshold\" 2.0 "
-      "\"string lightsamplestrategy\" \"uniform\" \"integer pixelbounds\" [1 2 "
-      "3 4]");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(
-                  R"pb(directives {
-                         integrator {
-                           path {
-                             maxdepth: 1
-                             rrthreshold: 2.0
-                             lightsampler: UNIFORM
-                             pixelbounds { x_min: 1 x_max: 2 y_min: 3 y_max: 4 }
-                           }
-                         }
-                       })pb")));
-}
-
-TEST(Convert, IntegratorPathBadPixelBounds) {
-  std::stringstream stream(
-      "Integrator \"path\" \"integer maxdepth\" 1 \"float rrthreshold\" 2.0 "
-      "\"string lightsamplestrategy\" \"uniform\" \"integer pixelbounds\" [1 2 "
-      "3]");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(
-          R"pb(directives {
-                 integrator {
-                   path { maxdepth: 1 rrthreshold: 2.0 lightsampler: UNIFORM }
-                 }
-               })pb")));
-}
-
-TEST(Convert, IntegratorPathUnknown) {
-  std::stringstream stream(
-      "Integrator \"path\" \"integer maxdepth\" 1 \"float rrthreshold\" 2.0 "
-      "\"string lightsamplestrategy\" \"xxx\" \"integer pixelbounds\" [1 2 "
-      "3 4]");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(
-                  R"pb(directives {
-                         integrator {
-                           path {
-                             maxdepth: 1
-                             rrthreshold: 2.0
-                             lightsampler: BVH
-                             pixelbounds { x_min: 1 x_max: 2 y_min: 3 y_max: 4 }
-                           }
-                         }
-                       })pb")));
-}
-
-TEST(Convert, IntegratorSppm) {
-  std::stringstream stream(
-      "Integrator \"sppm\" \"integer maxdepth\" 1 \"integer numiterations\" 2 "
-      "\"integer photonsperiteration\" 3 \"integer imagewritefrequency\" 4 "
-      "\"float radius\" 5.0");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives {
-                                              integrator {
-                                                sppm {
-                                                  maxdepth: 1
-                                                  numiterations: 2
-                                                  photonsperiteration: 3
-                                                  imagewritefrequency: 4
-                                                  radius: 5.0
-                                                }
-                                              }
-                                            })pb")));
-}
-
-TEST(Convert, IntegratorVolPath) {
-  std::stringstream stream(
-      "Integrator \"volpath\" \"integer maxdepth\" 1 \"float rrthreshold\" 2.0 "
-      "\"string lightsamplestrategy\" \"uniform\" \"integer pixelbounds\" [1 2 "
-      "3 4]");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(
-                  R"pb(directives {
-                         integrator {
-                           volpath {
-                             maxdepth: 1
-                             rrthreshold: 2.0
-                             lightsampler: UNIFORM
-                             pixelbounds { x_min: 1 x_max: 2 y_min: 3 y_max: 4 }
-                           }
-                         }
-                       })pb")));
-}
-
-TEST(Convert, IntegratorVolPathBadPixelBounds) {
-  std::stringstream stream(
-      "Integrator \"volpath\" \"integer maxdepth\" 1 \"float rrthreshold\" 2.0 "
-      "\"string lightsamplestrategy\" \"uniform\" \"integer pixelbounds\" [1 2 "
-      "3]");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives {
-                                          integrator {
-                                            volpath {
-                                              maxdepth: 1
-                                              rrthreshold: 2.0
-                                              lightsampler: UNIFORM
-                                            }
-                                          }
-                                        })pb")));
-}
-
-TEST(Convert, IntegratorVolPathUnknown) {
-  std::stringstream stream(
-      "Integrator \"volpath\" \"integer maxdepth\" 1 \"float rrthreshold\" 2.0 "
-      "\"string lightsamplestrategy\" \"xxx\" \"integer pixelbounds\" [1 2 "
-      "3 4]");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(
-                  R"pb(directives {
-                         integrator {
-                           volpath {
-                             maxdepth: 1
-                             rrthreshold: 2.0
-                             lightsampler: BVH
-                             pixelbounds { x_min: 1 x_max: 2 y_min: 3 y_max: 4 }
-                           }
-                         }
-                       })pb")));
-}
-
-TEST(Convert, IntegratorWhitted) {
-  std::stringstream stream(
-      "Integrator \"whitted\" \"integer maxdepth\" 1 \"integer pixelbounds\" "
-      "[1 2 3 4]");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(
-                  R"pb(directives {
-                         integrator {
-                           whitted {
-                             maxdepth: 1
-                             pixelbounds { x_min: 1 x_max: 2 y_min: 3 y_max: 4 }
-                           }
-                         }
-                       })pb")));
-}
-
-TEST(Convert, IntegratorWhittedBadPixelBounds) {
-  std::stringstream stream(
-      "Integrator \"whitted\" \"integer maxdepth\" 1 \"integer pixelbounds\" "
-      "[1 2 3]");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives {
-                                          integrator { whitted { maxdepth: 1 } }
-                                        })pb")));
-}
-
-TEST(Convert, Import) {
-  std::stringstream stream("Import \"a\"");
-  EXPECT_THAT(Convert(stream),
-              StatusIs(absl::StatusCode::kUnimplemented,
-                       "Directive 'Import' is not supported in pbrt-v3"));
-}
-
-TEST(Convert, LightSourceUnknown) {
-  std::stringstream stream("LightSource \"unknown\"");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(R"pb(directives {
-                                                               light_source {}
-                                                             })pb")));
-}
-
-TEST(Convert, LightSourceDistant) {
-  std::stringstream stream(
-      "LightSource \"distant\" \"blackbody L\" [1.0 2.0] \"point from\" [3.0 "
-      "4.0 5.0] \"point to\" [6.0 7.0 8.0] \"blackbody scale\" [9.0 10.0]");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(
-          R"pb(directives {
-                 light_source {
-                   distant {
-                     L { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
-                     from { x: 3.0 y: 4.0 z: 5.0 }
-                     to { x: 6.0 y: 7.0 z: 8.0 }
-                     scale {
-                       blackbody_spectrum { temperature: 9.0 scale: 10.0 }
-                     }
-                   }
-                 }
-               })pb")));
-}
-
-TEST(Convert, LightSourceGoniometric) {
-  std::stringstream stream(
-      "LightSource \"goniometric\" \"blackbody I\" [1.0 2.0] \"string "
-      "mapname\" \"a\" \"blackbody scale\" [9.0 10.0]");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(
-          R"pb(directives {
-                 light_source {
-                   goniometric {
-                     I { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
-                     filename: "a"
-                     scale {
-                       blackbody_spectrum { temperature: 9.0 scale: 10.0 }
-                     }
-                   }
-                 }
-               })pb")));
-}
-
-TEST(Convert, LightSourceInfinite) {
-  std::stringstream stream(
-      "LightSource \"infinite\" \"blackbody L\" [1.0 2.0] \"integer samples\" "
-      "3 \"string mapname\" \"a\" \"blackbody scale\" [9.0 10.0]");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(
-          R"pb(directives {
-                 light_source {
-                   infinite {
-                     L { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
-                     samples: 3
-                     filename: "a"
-                     scale {
-                       blackbody_spectrum { temperature: 9.0 scale: 10.0 }
-                     }
-                   }
-                 }
-               })pb")));
-}
-
-TEST(Convert, LightSourceInfiniteNSamples) {
-  std::stringstream stream(
-      "LightSource \"infinite\" \"blackbody L\" [1.0 2.0] \"integer nsamples\" "
-      "3 \"string mapname\" \"a\" \"blackbody scale\" [9.0 10.0]");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(
-          R"pb(directives {
-                 light_source {
-                   infinite {
-                     L { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
-                     samples: 3
-                     filename: "a"
-                     scale {
-                       blackbody_spectrum { temperature: 9.0 scale: 10.0 }
-                     }
-                   }
-                 }
-               })pb")));
-}
-
-TEST(Convert, LightSourcePoint) {
-  std::stringstream stream(
-      "LightSource \"point\" \"blackbody I\" [1.0 2.0] \"point from\" [3.0 4.0 "
-      "5.0] \"blackbody scale\" [9.0 10.0]");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(
-          R"pb(directives {
-                 light_source {
-                   point {
-                     I { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
-                     from { x: 3.0 y: 4.0 z: 5.0 }
-                     scale {
-                       blackbody_spectrum { temperature: 9.0 scale: 10.0 }
-                     }
-                   }
-                 }
-               })pb")));
-}
-
-TEST(Convert, LightSourceProjection) {
-  std::stringstream stream(
-      "LightSource \"projection\" \"blackbody I\" [1.0 2.0] \"float fov\" 3.0 "
-      "\"string mapname\" \"a\" \"blackbody scale\" [9.0 10.0]");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(
-          R"pb(directives {
-                 light_source {
-                   projection {
-                     I { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
-                     fov: 6.0
-                     filename: "a"
-                     scale {
-                       blackbody_spectrum { temperature: 9.0 scale: 10.0 }
-                     }
-                   }
-                 }
-               })pb")));
-}
-
-TEST(Convert, LightSourceSpot) {
-  std::stringstream stream(
-      "LightSource \"spot\" \"blackbody I\" [1.0 2.0] \"point from\" [3.0 4.0 "
-      "5.0] \"point to\" [6.0 7.0 8.0] \"float coneangle\" 9.0 \"float "
-      "conedeltaangle\" 10.0 \"blackbody scale\" [11.0 12.0]");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(
-          R"pb(directives {
-                 light_source {
-                   spot {
-                     I { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
-                     from { x: 3.0 y: 4.0 z: 5.0 }
-                     to { x: 6.0 y: 7.0 z: 8.0 }
-                     coneangle: 9.0
-                     conedeltaangle: 10.0
-                     scale {
-                       blackbody_spectrum { temperature: 11.0 scale: 12.0 }
-                     }
-                   }
-                 }
-               })pb")));
-}
-
-TEST(Convert, LookAt) {
-  std::stringstream stream("LookAt 1 2 3 4 5 6 7 8 9");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(R"pb(directives {
-                                                               look_at {
-                                                                 eye_x: 1
-                                                                 eye_y: 2
-                                                                 eye_z: 3
-                                                                 look_x: 4
-                                                                 look_y: 5
-                                                                 look_z: 6
-                                                                 up_x: 7
-                                                                 up_y: 8
-                                                                 up_z: 9
-                                                               }
-                                                             })pb")));
-}
-
-TEST(Convert, MakeNamedMaterialEmpty) {
-  std::stringstream stream("MakeNamedMaterial \"a\" \"string type\" \"\"");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives {
-                                              make_named_material {
-                                                name: "a"
-                                                material {}
-                                              }
-                                            })pb")));
-}
-
-TEST(Convert, MakeNamedMaterialNone) {
-  std::stringstream stream("MakeNamedMaterial \"a\" \"string type\" \"none\"");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives {
-                                              make_named_material {
-                                                name: "a"
-                                                material {}
-                                              }
-                                            })pb")));
-}
-
-TEST(Convert, MakeNamedMediumNone) {
-  std::stringstream stream("MakeNamedMedium \"a\" ");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives {
-                                              make_named_medium { name: "a" }
-                                            })pb")));
-}
-
-TEST(Convert, MakeNamedMediumHomogeneous) {
-  std::stringstream stream(
-      "MakeNamedMedium \"a\""
-      "\"string type\" \"homogeneous\" "
-      "\"string preset\" \"Apple\" "
-      "\"spectrum sigma_a\" \"a\" "
-      "\"spectrum sigma_s\" \"b\" "
-      "\"float g\" 1.0 "
-      "\"float scale\" 2.0 ");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(
-                  R"pb(directives {
-                         make_named_medium {
-                           name: "a"
-                           homogeneous {
-                             preset: APPLE
-                             sigma_a { sampled_spectrum_filename: "a" }
-                             sigma_s { sampled_spectrum_filename: "b" }
-                             g: 1.0
-                             scale: 2.0
-                           }
-                         }
-                       })pb")));
-}
-
-TEST(Convert, MakeNamedMediumHeterogeneous) {
-  std::stringstream stream(
-      "MakeNamedMedium \"a\""
-      "\"string type\" \"heterogeneous\" "
-      "\"string preset\" \"Apple\" "
-      "\"spectrum sigma_a\" \"a\" "
-      "\"spectrum sigma_s\" \"b\" "
-      "\"float g\" 1.0 "
-      "\"float scale\" 2.0 "
-      "\"point p0\" [3 4 5] "
-      "\"point p1\" [6 7 8] "
-      "\"integer nx\" 1 "
-      "\"integer ny\" 2 "
-      "\"integer nz\" 3 "
-      "\"float density\" [1 2 3 4 5 6] ");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(
-                  R"pb(directives {
-                         make_named_medium {
-                           name: "a"
-                           heterogeneous {
-                             preset: APPLE
-                             sigma_a { sampled_spectrum_filename: "a" }
-                             sigma_s { sampled_spectrum_filename: "b" }
-                             g: 1.0
-                             scale: 2.0
-                             p0 { x: 3.0 y: 4.0 z: 5.0 }
-                             p1 { x: 6.0 y: 7.0 z: 8.0 }
-                             nx: 1
-                             ny: 2
-                             nz: 3
-                             density: 1
-                             density: 2
-                             density: 3
-                             density: 4
-                             density: 5
-                             density: 6
-                           }
-                         }
-                       })pb")));
-}
-
-TEST(Convert, MaterialEmpty) {
-  std::stringstream stream("Material \"\"");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives { material {} })pb")));
-}
-
-TEST(Convert, MaterialEmptyNone) {
-  std::stringstream stream("Material \"none\"");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives { material {} })pb")));
-}
-
-TEST(Convert, MaterialInvalid) {
-  std::stringstream stream("Material \"abcdefg\"");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(R"pb(directives { material { matte {} } })pb")));
-}
-
-TEST(Convert, MaterialDisney) {
-  std::stringstream stream(
-      "Material \"disney\" "
-      "\"texture color\" \"a\" "
-      "\"float anisotropic\" 1.0 "
-      "\"float clearcoat\" 2.0 "
-      "\"float clearcoatgloss\" 3.0 "
-      "\"float eta\" 4.0 "
-      "\"float metallic\" 5.0 "
-      "\"float roughness\" 6.0 "
-      "\"texture scatterdistance\" \"b\" "
-      "\"float sheen\" 7.0 "
-      "\"float sheentint\" 8.0 "
-      "\"float spectrans\" 9.0 "
-      "\"float speculartint\" 10.0 "
-      "\"bool thin\" \"true\" "
-      "\"float difftrans\" 11.0 "
-      "\"float flatness\" 12.0 "
-      "\"float bumpmap\" 13.0 ");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(
-                  R"pb(directives {
-                         material {
-                           disney {
-                             color { spectrum_texture_name: "a" }
-                             scatterdistance { spectrum_texture_name: "b" }
-                             anisotropic { float_value: 1.0 }
-                             clearcoat { float_value: 2.0 }
-                             clearcoatgloss { float_value: 3.0 }
-                             eta { float_value: 4.0 }
-                             metallic { float_value: 5.0 }
-                             roughness { float_value: 6.0 }
-                             sheen { float_value: 7.0 }
-                             sheentint { float_value: 8.0 }
-                             spectrans { float_value: 9.0 }
-                             speculartint { float_value: 10.0 }
-                             difftrans { float_value: 11.0 }
-                             flatness { float_value: 12.0 }
-                             bumpmap { float_value: 13.0 }
-                             thin: true
-                           }
-                         }
-                       })pb")));
-}
-
-TEST(Convert, MaterialFourier) {
-  std::stringstream stream(
-      "Material \"fourier\" "
-      "\"string bsdffile\" \"a\" "
-      "\"float bumpmap\" 1.0 ");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives {
-                                          material {
-                                            fourier {
-                                              filename: "a"
-                                              bumpmap { float_value: 1.0 }
-                                            }
-                                          }
-                                        })pb")));
-}
-
-TEST(Convert, MaterialGlass) {
-  std::stringstream stream(
-      "Material \"glass\" "
-      "\"texture Kr\" \"a\" "
-      "\"texture Kt\" \"b\" "
-      "\"float eta\" 1.0 "
-      "\"float uroughness\" 2.0 "
-      "\"float vroughness\" 3.0 "
-      "\"bool remaproughness\" \"false\" "
-      "\"float bumpmap\" 4.0 ");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives {
-                                          material {
-                                            glass {
-                                              Kr { spectrum_texture_name: "a" }
-                                              Kt { spectrum_texture_name: "b" }
-                                              eta { float_value: 1.0 }
-                                              uroughness { float_value: 2.0 }
-                                              vroughness { float_value: 3.0 }
-                                              remaproughness: false
-                                              bumpmap { float_value: 4.0 }
-                                            }
-                                          }
-                                        })pb")));
-}
-
-TEST(Convert, MaterialGlassIndex) {
-  std::stringstream stream(
-      "Material \"glass\" "
-      "\"texture Kr\" \"a\" "
-      "\"texture Kt\" \"b\" "
-      "\"float index\" 1.0 "
-      "\"float uroughness\" 2.0 "
-      "\"float vroughness\" 3.0 "
-      "\"float bumpmap\" 4.0 ");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives {
-                                          material {
-                                            glass {
-                                              Kr { spectrum_texture_name: "a" }
-                                              Kt { spectrum_texture_name: "b" }
-                                              eta { float_value: 1.0 }
-                                              uroughness { float_value: 2.0 }
-                                              vroughness { float_value: 3.0 }
-                                              bumpmap { float_value: 4.0 }
-                                            }
-                                          }
-                                        })pb")));
-}
-
-TEST(Convert, MaterialHair) {
-  std::stringstream stream(
-      "Material \"hair\" "
-      "\"texture sigma_a\" \"a\" "
-      "\"texture color\" \"b\" "
-      "\"float eumelanin\" 1.0 "
-      "\"float pheomelanin\" 2.0 "
-      "\"float eta\" 3.0 "
-      "\"float beta_m\" 4.0 "
-      "\"float beta_n\" 5.0 "
-      "\"float alpha\" 6.0 ");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(
-                  R"pb(directives {
-                         material {
-                           hair {
-                             sigma_a { spectrum_texture_name: "a" }
-                             color { spectrum_texture_name: "b" }
-                             eumelanin { float_value: 1.0 }
-                             pheomelanin { float_value: 2.0 }
-                             eta { float_value: 3.0 }
-                             beta_m { float_value: 4.0 }
-                             beta_n { float_value: 5.0 }
-                             alpha { float_value: 6.0 }
-                           }
-                         }
-                       })pb")));
-}
-
-TEST(Convert, MaterialKdSubsurface) {
-  std::stringstream stream(
-      "Material \"kdsubsurface\" "
-      "\"texture Kd\" \"a\" "
-      "\"texture Kr\" \"b\" "
-      "\"texture Kt\" \"c\" "
-      "\"texture mfp\" \"d\" "
-      "\"float uroughness\" 2.0 "
-      "\"float vroughness\" 3.0 "
-      "\"float eta\" 4.0 "
-      "\"float scale\" 5.0 "
-      "\"float g\" 6.0 "
-      "\"bool remaproughness\" \"false\" "
-      "\"float bumpmap\" 7.0 ");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives {
-                                          material {
-                                            kdsubsurface {
-                                              Kd { spectrum_texture_name: "a" }
-                                              Kr { spectrum_texture_name: "b" }
-                                              Kt { spectrum_texture_name: "c" }
-                                              mfp { spectrum_texture_name: "d" }
-                                              uroughness { float_value: 2.0 }
-                                              vroughness { float_value: 3.0 }
-                                              eta { float_value: 4.0 }
-                                              scale: 5.0
-                                              g: 6.0
-                                              remaproughness: false
-                                              bumpmap { float_value: 7.0 }
-                                            }
-                                          }
-                                        })pb")));
-}
-
-TEST(Convert, MaterialMatte) {
-  std::stringstream stream(
-      "Material \"matte\" \"texture Kd\" \"a\" \"float sigma\" 1.0 \"float "
-      "bumpmap\" 2.0");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(R"pb(directives {
-                                      material {
-                                        matte {
-                                          Kd { spectrum_texture_name: "a" }
-                                          sigma { float_value: 1.0 }
-                                          bumpmap { float_value: 2.0 }
-                                        }
-                                      }
-                                    })pb")));
-}
-
-TEST(Convert, MaterialMetal) {
-  std::stringstream stream(
-      "Material \"metal\" "
-      "\"texture eta\" \"a\" "
-      "\"texture k\" \"b\" "
-      "\"float roughness\" 1.0 "
-      "\"float uroughness\" 2.0 "
-      "\"float vroughness\" 3.0 "
-      "\"bool remaproughness\" \"false\" "
-      "\"float bumpmap\" 4.0 ");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives {
-                                          material {
-                                            metal {
-                                              eta { spectrum_texture_name: "a" }
-                                              k { spectrum_texture_name: "b" }
-                                              roughness { float_value: 1.0 }
-                                              uroughness { float_value: 2.0 }
-                                              vroughness { float_value: 3.0 }
-                                              remaproughness: false
-                                              bumpmap { float_value: 4.0 }
-                                            }
-                                          }
-                                        })pb")));
-}
-
-TEST(Convert, MaterialMirror) {
-  std::stringstream stream(
-      "Material \"mirror\" \"texture Kr\" \"a\" \"float bumpmap\" 1.0");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(R"pb(directives {
-                                      material {
-                                        mirror {
-                                          Kr { spectrum_texture_name: "a" }
-                                          bumpmap { float_value: 1.0 }
-                                        }
-                                      }
-                                    })pb")));
-}
-
-TEST(Convert, MaterialMix) {
-  std::stringstream stream(
-      "Material \"mix\" "
-      "\"texture amount\" \"a\" "
-      "\"texture Kd\" \"b\" "
-      "\"float bumpmap\" 1.0 "
-      "\"float sigma\" 2.0 "
-      "\"string namedmaterial1\" \"a\" "
-      "\"string namedmaterial2\" \"b\" ");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(
-                  R"pb(directives {
-                         material {
-                           mix {
-                             bumpmap { float_value: 1.0 }
-                             sigma { float_value: 2.0 }
-                             amount { spectrum_texture_name: "a" }
-                             Kd { spectrum_texture_name: "b" }
-                             namedmaterial1: "a"
-                             namedmaterial2: "b"
-                           }
-                         }
-                       })pb")));
-}
-
-TEST(Convert, MaterialPlastic) {
-  std::stringstream stream(
-      "Material \"plastic\" "
-      "\"texture Kd\" \"a\" "
-      "\"texture Ks\" \"b\" "
-      "\"float roughness\" 1.0 "
-      "\"bool remaproughness\" \"false\" "
-      "\"float bumpmap\" 2.0 ");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives {
-                                          material {
-                                            plastic {
-                                              Kd { spectrum_texture_name: "a" }
-                                              Ks { spectrum_texture_name: "b" }
-                                              roughness { float_value: 1.0 }
-                                              remaproughness: false
-                                              bumpmap { float_value: 2.0 }
-                                            }
-                                          }
-                                        })pb")));
-}
-
-TEST(Convert, MaterialSubstrate) {
-  std::stringstream stream(
-      "Material \"substrate\" "
-      "\"texture Kd\" \"a\" "
-      "\"texture Ks\" \"b\" "
-      "\"float uroughness\" 1.0 "
-      "\"float vroughness\" 2.0 "
-      "\"bool remaproughness\" \"false\" "
-      "\"float bumpmap\" 3.0 ");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives {
-                                          material {
-                                            substrate {
-                                              Kd { spectrum_texture_name: "a" }
-                                              Ks { spectrum_texture_name: "b" }
-                                              uroughness { float_value: 1.0 }
-                                              vroughness { float_value: 2.0 }
-                                              remaproughness: false
-                                              bumpmap { float_value: 3.0 }
-                                            }
-                                          }
-                                        })pb")));
-}
-
-TEST(Convert, MaterialSubsurface) {
-  std::stringstream stream(
-      "Material \"subsurface\" "
-      "\"string name\" \"Coke\" "
-      "\"texture sigma_a\" \"a\" "
-      "\"texture sigma_s\" \"b\" "
-      "\"float g\" 1.0 "
-      "\"float scale\" 2.0 "
-      "\"float eta\" 3.0 "
-      "\"texture Kr\" \"c\" "
-      "\"texture Kt\" \"d\" "
-      "\"float uroughness\" 4.0 "
-      "\"float vroughness\" 5.0 "
-      "\"bool remaproughness\" \"false\" "
-      "\"float bumpmap\" 6.0 ");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(
-                  R"pb(directives {
-                         material {
-                           subsurface {
-                             name: COKE
-                             sigma_a { spectrum_texture_name: "a" }
-                             sigma_s { spectrum_texture_name: "b" }
-                             g: 1.0
-                             scale: 2.0
-                             eta: 3.0
-                             Kr { spectrum_texture_name: "c" }
-                             Kt { spectrum_texture_name: "d" }
-                             uroughness { float_value: 4.0 }
-                             vroughness { float_value: 5.0 }
-                             remaproughness: false
-                             bumpmap { float_value: 6.0 }
-                           }
-                         }
-                       })pb")));
-}
-
-TEST(Convert, MaterialTranslucent) {
-  std::stringstream stream(
-      "Material \"translucent\" "
-      "\"texture Kd\" \"a\" "
-      "\"texture Ks\" \"b\" "
-      "\"texture reflect\" \"c\" "
-      "\"texture transmit\" \"d\" "
-      "\"float roughness\" 1.0 "
-      "\"bool remaproughness\" \"false\" "
-      "\"float bumpmap\" 2.0 ");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(
-                  R"pb(directives {
-                         material {
-                           translucent {
-                             Kd { spectrum_texture_name: "a" }
-                             Ks { spectrum_texture_name: "b" }
-                             reflect { spectrum_texture_name: "c" }
-                             transmit { spectrum_texture_name: "d" }
-                             roughness { float_value: 1.0 }
-                             remaproughness: false
-                             bumpmap { float_value: 2.0 }
-                           }
-                         }
-                       })pb")));
-}
-
-TEST(Convert, MaterialUber) {
-  std::stringstream stream(
-      "Material \"uber\" "
-      "\"texture Kd\" \"a\" "
-      "\"texture Ks\" \"b\" "
-      "\"texture Kr\" \"c\" "
-      "\"texture Kt\" \"d\" "
-      "\"texture opacity\" \"e\" "
-      "\"float roughness\" 1.0 "
-      "\"float uroughness\" 2.0 "
-      "\"float vroughness\" 3.0 "
-      "\"float eta\" 4.0 "
-      "\"bool remaproughness\" \"false\" "
-      "\"float bumpmap\" 6.0 ");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(
-                  R"pb(directives {
-                         material {
-                           uber {
-                             Kd { spectrum_texture_name: "a" }
-                             Ks { spectrum_texture_name: "b" }
-                             Kr { spectrum_texture_name: "c" }
-                             Kt { spectrum_texture_name: "d" }
-                             opacity { spectrum_texture_name: "e" }
-                             roughness { float_value: 1.0 }
-                             uroughness { float_value: 2.0 }
-                             vroughness { float_value: 3.0 }
-                             eta { float_value: 4.0 }
-                             remaproughness: false
-                             bumpmap { float_value: 6.0 }
-                           }
-                         }
-                       })pb")));
-}
-
-TEST(Convert, MaterialUberIndex) {
-  std::stringstream stream(
-      "Material \"uber\" "
-      "\"texture Kd\" \"a\" "
-      "\"texture Ks\" \"b\" "
-      "\"texture Kr\" \"c\" "
-      "\"texture Kt\" \"d\" "
-      "\"texture opacity\" \"e\" "
-      "\"float roughness\" 1.0 "
-      "\"float uroughness\" 2.0 "
-      "\"float vroughness\" 3.0 "
-      "\"float index\" 4.0 "
-      "\"bool remaproughness\" \"false\" "
-      "\"float bumpmap\" 6.0 ");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(
-                  R"pb(directives {
-                         material {
-                           uber {
-                             Kd { spectrum_texture_name: "a" }
-                             Ks { spectrum_texture_name: "b" }
-                             Kr { spectrum_texture_name: "c" }
-                             Kt { spectrum_texture_name: "d" }
-                             opacity { spectrum_texture_name: "e" }
-                             roughness { float_value: 1.0 }
-                             uroughness { float_value: 2.0 }
-                             vroughness { float_value: 3.0 }
-                             eta { float_value: 4.0 }
-                             remaproughness: false
-                             bumpmap { float_value: 6.0 }
-                           }
-                         }
-                       })pb")));
-}
-
-TEST(Convert, MediumInterface) {
-  std::stringstream stream("MediumInterface \"a\" \"b\"");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(
-                  R"pb(directives {
-                         medium_interface { inside: "a" outside: "b" }
-                       })pb")));
-}
-
-TEST(Convert, NamedMaterial) {
-  std::stringstream stream("NamedMaterial \"a\"");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives {
-                                              named_material { name: "a" }
-                                            })pb")));
-}
-
-TEST(Convert, ObjectBegin) {
-  std::stringstream stream("ObjectBegin \"a\"");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives {
-                                              object_begin { name: "a" }
-                                            })pb")));
-}
-
-TEST(Convert, ObjectEnd) {
-  std::stringstream stream("ObjectEnd");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives { object_end {} })pb")));
-}
-
-TEST(Convert, ObjectInstance) {
-  std::stringstream stream("ObjectInstance \"a\"");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives {
-                                              object_instance { name: "a" }
-                                            })pb")));
-}
-
-TEST(Convert, PixelFilterUnknown) {
-  std::stringstream stream("PixelFilter \"unknown\"");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(R"pb(directives {
-                                                               pixel_filter {}
-                                                             })pb")));
-}
-
-TEST(Convert, PixelFilterBox) {
-  std::stringstream stream(
-      "PixelFilter \"box\" \"float xwidth\" 1.0 \"float ywidth\" 2.0");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(
-                  R"pb(directives {
-                         pixel_filter { box { xradius: 1.0 yradius: 2.0 } }
-                       })pb")));
-}
-
-TEST(Convert, PixelFilterGaussian) {
-  std::stringstream stream(
-      "PixelFilter \"gaussian\" \"float xwidth\" 1.0 \"float ywidth\" 2.0 "
-      "\"float "
-      "alpha\" 8.0");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(
-                  R"pb(directives {
-                         pixel_filter {
-                           gaussian { xradius: 1.0 yradius: 2.0 sigma: 0.25 }
-                         }
-                       })pb")));
-}
-
-TEST(Convert, PixelFilterMitchell) {
-  std::stringstream stream(
-      "PixelFilter \"mitchell\" \"float xwidth\" 1.0 \"float ywidth\" 2.0 "
-      "\"float "
-      "B\" 3.0 \"float C\" 4.0");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(
-                  R"pb(directives {
-                         pixel_filter {
-                           mitchell { xradius: 1.0 yradius: 2.0 B: 3.0 C: 4.0 }
-                         }
-                       })pb")));
-}
-
-TEST(Convert, PixelFilterSinc) {
-  std::stringstream stream(
-      "PixelFilter \"sinc\" \"float xwidth\" 1.0 \"float ywidth\" 2.0 \"float "
-      "tau\" "
-      "3.0");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(
-          R"pb(directives {
-                 pixel_filter { sinc { xradius: 1.0 yradius: 2.0 tau: 3.0 } }
-               })pb")));
-}
-
-TEST(Convert, PixelFilterTriangle) {
-  std::stringstream stream(
-      "PixelFilter \"triangle\" \"float xwidth\" 1.0 \"float ywidth\" 3.0");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(
-                  R"pb(directives {
-                         pixel_filter { triangle { xradius: 1.0 yradius: 3.0 } }
-                       })pb")));
-}
-
-TEST(Convert, ReverseOrientation) {
-  std::stringstream stream("ReverseOrientation");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(
-                  EqualsProto(R"pb(directives { reverse_orientation {} })pb")));
-}
-
-TEST(Convert, Rotate) {
-  std::stringstream stream("Rotate 1 2 3 4");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives {
-                                              rotate { angle: 1 x: 2 y: 3 z: 4 }
-                                            })pb")));
-}
-
-TEST(Convert, SearchPath) {
-  std::stringstream stream("SearchPath \"a\"");
-  EXPECT_THAT(Convert(stream),
-              StatusIs(absl::StatusCode::kUnimplemented,
-                       "Directive 'SearchPath' is not supported in pbrt-v3"));
-}
-
-TEST(Convert, SamplerUnknown) {
-  std::stringstream stream("Sampler \"unknown\"");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives { sampler {} })pb")));
-}
-
-TEST(Convert, SamplerHalton) {
-  std::stringstream stream(
-      "Sampler \"halton\" \"integer pixelsamples\" 2 \"bool "
-      "samplepixelcenter\" \"true\"");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(
-          R"pb(directives {
-                 sampler { halton { pixelsamples: 2 samplepixelcenter: true } }
-               })pb")));
-}
-
-TEST(Convert, SamplerMaxMinDist) {
-  std::stringstream stream(
-      "Sampler \"maxmindist\" \"integer pixelsamples\" 2 \"integer "
-      "dimensions\" 3");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(
-          R"pb(directives {
-                 sampler { maxmindist { pixelsamples: 2 dimensions: 3 } }
-               })pb")));
-}
-
-TEST(Convert, SamplerRandom) {
-  std::stringstream stream("Sampler \"random\" \"integer pixelsamples\" 2");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives {
-                                          sampler { random { pixelsamples: 2 } }
-                                        })pb")));
-}
-
-TEST(Convert, SamplerSobol) {
-  std::stringstream stream("Sampler \"sobol\" \"integer pixelsamples\" 2");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives {
-                                          sampler { sobol { pixelsamples: 2 } }
-                                        })pb")));
-}
-
-TEST(Convert, SamplerStratified) {
-  std::stringstream stream(
-      "Sampler \"stratified\" \"bool jitter\" \"false\" \"integer xsamples\" 3 "
-      "\"integer ysamples\" 5 \"integer dimensions\" 7");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives {
-                                          sampler {
-                                            stratified {
-                                              jitter: false
-                                              xsamples: 3
-                                              ysamples: 5
-                                              dimensions: 7
-                                            }
-                                          }
-                                        })pb")));
-}
-
-TEST(Convert, SamplerZeroTwoSequence) {
-  std::stringstream stream(
-      "Sampler \"02sequence\" \"integer pixelsamples\" 2 \"integer "
-      "dimensions\" 3");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(
-          R"pb(directives {
-                 sampler { zerotwosequence { pixelsamples: 2 dimensions: 3 } }
-               })pb")));
-}
-
-TEST(Convert, SamplerLowDiscrepancy) {
-  std::stringstream stream(
-      "Sampler \"lowdiscrepancy\" \"integer pixelsamples\" 2 \"integer "
-      "dimensions\" 3");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(
-          R"pb(directives {
-                 sampler { zerotwosequence { pixelsamples: 2 dimensions: 3 } }
-               })pb")));
-}
-
-TEST(Convert, Scale) {
-  std::stringstream stream("Scale 1 2 3");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives {
-                                              scale { x: 1 y: 2 z: 3 }
-                                            })pb")));
-}
-
-TEST(Convert, ShapeUnknown) {
-  std::stringstream stream("Shape \"unknown\"");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives { shape {} })pb")));
-}
-
-TEST(Convert, ShapeCone) {
-  std::stringstream stream(
-      "Shape \"cone\" "
-      "\"float radius\" 2.0 "
-      "\"float height\" 3.0 "
-      "\"float phimax\" 4.0");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(
-                  R"pb(directives {
-                         shape { cone { radius: 2.0 height: 3.0 phimax: 4.0 } }
-                       })pb")));
-}
-
-TEST(Convert, ShapeCurve) {
-  std::stringstream stream(
-      "Shape \"curve\" "
-      "\"point P\" [1 2 3] "
-      "\"string basis\" \"bspline\" "
-      "\"integer degree\" 3 "
-      "\"string type\" \"ribbon\" "
-      "\"normal N\" [5 6 7] "
-      "\"float width\" 8.0 "
-      "\"float width0\" 9.0 "
-      "\"float width1\" 10.0 "
-      "\"integer splitdepth\" 11 ");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives {
-                                          shape {
-                                            curve {
-                                              P { x: 1.0 y: 2.0 z: 3.0 }
-                                              basis: BSPLINE
-                                              degree: THREE
-                                              type: RIBBON
-                                              N { x: 5.0 y: 6.0 z: 7.0 }
-                                              width: 8.0
-                                              width0: 9.0
-                                              width1: 10.0
-                                              splitdepth: 11
-                                            }
-                                          }
-                                        })pb")));
-}
-
-TEST(Convert, ShapeCurveBadBasis) {
-  std::stringstream stream(
-      "Shape \"curve\" "
-      "\"string basis\" \"bad\" ");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives { shape {} })pb")));
-}
-
-TEST(Convert, ShapeCurveBezier) {
-  std::stringstream stream(
-      "Shape \"curve\" "
-      "\"string basis\" \"bezier\" ");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives {
-                                              shape { curve { basis: BEZIER } }
-                                            })pb")));
-}
-
-TEST(Convert, ShapeCurveCylinder) {
-  std::stringstream stream(
-      "Shape \"curve\" "
-      "\"string type\" \"cylinder\" ");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives {
-                                              shape { curve { type: CYLINDER } }
-                                            })pb")));
-}
-
-TEST(Convert, ShapeCurveFlat) {
-  std::stringstream stream(
-      "Shape \"curve\" "
-      "\"string type\" \"flat\" ");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives {
-                                              shape { curve { type: FLAT } }
-                                            })pb")));
-}
-
-TEST(Convert, ShapeCurveRibbon) {
-  std::stringstream stream(
-      "Shape \"curve\" "
-      "\"string type\" \"ribbon\" ");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives {
-                                              shape { curve { type: RIBBON } }
-                                            })pb")));
-}
-
-TEST(Convert, ShapeCurveUnknownType) {
-  std::stringstream stream(
-      "Shape \"curve\" "
-      "\"string type\" \"abc\" ");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives {
-                                              shape { curve { type: CYLINDER } }
-                                            })pb")));
-}
-
-TEST(Convert, ShapeCurveDegreeTwo) {
-  std::stringstream stream(
-      "Shape \"curve\" "
-      "\"integer degree\" 2 ");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives {
-                                              shape { curve { degree: TWO } }
-                                            })pb")));
-}
-
-TEST(Convert, ShapeCurveDegreeThree) {
-  std::stringstream stream(
-      "Shape \"curve\" "
-      "\"integer degree\" 3 ");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives {
-                                              shape { curve { degree: THREE } }
-                                            })pb")));
-}
-
-TEST(Convert, ShapeCurveDegreeBad) {
-  std::stringstream stream(
-      "Shape \"curve\" "
-      "\"integer degree\" 4 ");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives { shape {} })pb")));
-}
-
-TEST(Convert, ShapeCylinder) {
-  std::stringstream stream(
-      "Shape \"cylinder\" "
-      "\"float radius\" 2.0 "
-      "\"float zmin\" 3.0 "
-      "\"float zmax\" 4.0 "
-      "\"float phimax\" 5.0");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(
-          R"pb(directives {
-                 shape {
-                   cylinder { radius: 2.0 zmin: 3.0 zmax: 4.0 phimax: 5.0 }
-                 }
-               })pb")));
-}
-
-TEST(Convert, ShapeDisk) {
-  std::stringstream stream(
-      "Shape \"disk\" "
-      "\"float height\" 1.0 "
-      "\"float radius\" 2.0 "
-      "\"float innerradius\" 3.0 "
-      "\"float phimax\" 4.0");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(
-          R"pb(directives {
-                 shape {
-                   disk { height: 1.0 radius: 2.0 innerradius: 3.0 phimax: 4.0 }
-                 }
-               })pb")));
-}
-
-TEST(Convert, ShapeHeightfield) {
-  std::stringstream stream(
-      "Shape \"heightfield\" "
-      "\"integer nu\" 1 "
-      "\"integer nv\" 2 "
-      "\"float Pz\" [3.0 4.0] ");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(
-                  R"pb(directives {
-                         shape { heightfield { nu: 1 nv: 2 Pz: 3.0 Pz: 4.0 } }
-                       })pb")));
-}
-
-TEST(Convert, ShapeHeightfieldTooLarge) {
-  std::stringstream stream(
-      "Shape \"heightfield\" "
-      "\"integer nu\" 65535 "
-      "\"integer nv\" 65535 ");
-  EXPECT_THAT(
-      Convert(stream),
-      StatusIs(
-          absl::StatusCode::kResourceExhausted,
-          "Heighfield shape is too large to be stored in a 1D proto array"));
-}
-
-TEST(Convert, ShapeHyperboloid) {
-  std::stringstream stream(
-      "Shape \"hyperboloid\" "
-      "\"point p1\" [1.0 2.0 3.0] "
-      "\"point p2\" [4.0 5.0 6.0] "
-      "\"float phimax\" 7.0");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives {
-                                          shape {
-                                            hyperboloid {
-                                              p1 { x: 1.0 y: 2.0 z: 3.0 }
-                                              p2 { x: 4.0 y: 5.0 z: 6.0 }
-                                              phimax: 7.0
-                                            }
-                                          }
-                                        })pb")));
-}
-
-TEST(Convert, ShapeLoopsubdiv) {
-  std::stringstream stream(
-      "Shape \"loopsubdiv\" "
-      "\"integer indices\" [0 1 2 2 1 0] "
-      "\"point P\" [4.0 5.0 6.0 7.0 8.0 9.0 10.0 11.0 12.0] "
-      "\"integer levels\" 13 ");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives {
-                                          shape {
-                                            loopsubdiv {
-                                              indices { v0: 0 v1: 1 v2: 2 }
-                                              indices { v0: 2 v1: 1 v2: 0 }
-                                              P { x: 4.0 y: 5.0 z: 6.0 }
-                                              P { x: 7.0 y: 8.0 z: 9.0 }
-                                              P { x: 10.0 y: 11.0 z: 12.0 }
-                                              levels: 13
-                                            }
-                                          }
-                                        })pb")));
-}
-
-TEST(Convert, ShapeLoopsubdivNLevels) {
-  std::stringstream stream(
-      "Shape \"loopsubdiv\" "
-      "\"integer indices\" [0 1 2 2 1 0] "
-      "\"point P\" [4.0 5.0 6.0 7.0 8.0 9.0 10.0 11.0 12.0] "
-      "\"integer nlevels\" 13 ");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives {
-                                          shape {
-                                            loopsubdiv {
-                                              indices { v0: 0 v1: 1 v2: 2 }
-                                              indices { v0: 2 v1: 1 v2: 0 }
-                                              P { x: 4.0 y: 5.0 z: 6.0 }
-                                              P { x: 7.0 y: 8.0 z: 9.0 }
-                                              P { x: 10.0 y: 11.0 z: 12.0 }
-                                              levels: 13
-                                            }
-                                          }
-                                        })pb")));
-}
-
-TEST(Convert, ShapeLoopsubdivBoth) {
-  std::stringstream stream(
-      "Shape \"loopsubdiv\" "
-      "\"integer indices\" [0 1 2 2 1 0] "
-      "\"point P\" [4.0 5.0 6.0 7.0 8.0 9.0 10.0 11.0 12.0] "
-      "\"integer levels\" 13 "
-      "\"integer nlevels\" 12 ");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives {
-                                          shape {
-                                            loopsubdiv {
-                                              indices { v0: 0 v1: 1 v2: 2 }
-                                              indices { v0: 2 v1: 1 v2: 0 }
-                                              P { x: 4.0 y: 5.0 z: 6.0 }
-                                              P { x: 7.0 y: 8.0 z: 9.0 }
-                                              P { x: 10.0 y: 11.0 z: 12.0 }
-                                              levels: 13
-                                            }
-                                          }
-                                        })pb")));
-}
-
-TEST(Convert, ShapeNurbs) {
-  std::stringstream stream(
-      "Shape \"nurbs\" "
-      "\"integer nu\" 1 "
-      "\"integer nv\" 2 "
-      "\"integer uorder\" 3 "
-      "\"integer vorder\" 4 "
-      "\"float uknots\" [5.0 6.0 7.0 8.0] "
-      "\"float vknots\" [9.0 10.0 11.0 12.0 13.0 14.0] "
-      "\"float v0\" 15.0 "
-      "\"float v1\" 16.0 "
-      "\"float u0\" 17.0 "
-      "\"float u1\" 18.0 "
-      "\"point P\" [19.0 20.0 21.0 22.0 23.0 24.0] ");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives {
-                                          shape {
-                                            nurbs {
-                                              nu: 1
-                                              nv: 2
-                                              uorder: 3
-                                              vorder: 4
-                                              uknots: 5.0
-                                              uknots: 6.0
-                                              uknots: 7.0
-                                              uknots: 8.0
-                                              vknots: 9.0
-                                              vknots: 10.0
-                                              vknots: 11.0
-                                              vknots: 12.0
-                                              vknots: 13.0
-                                              vknots: 14.0
-                                              v0: 15.0
-                                              v1: 16.0
-                                              u0: 17.0
-                                              u1: 18.0
-                                              P { x: 19.0 y: 20.0 z: 21.0 }
-                                              P { x: 22.0 y: 23.0 z: 24.0 }
-                                            }
-                                          }
-                                        })pb")));
-}
-
-TEST(Convert, ShapeNurbsPw) {
-  std::stringstream stream(
-      "Shape \"nurbs\" "
-      "\"integer nu\" 1 "
-      "\"integer nv\" 2 "
-      "\"integer uorder\" 3 "
-      "\"integer vorder\" 4 "
-      "\"float uknots\" [5.0 6.0 7.0 8.0] "
-      "\"float vknots\" [9.0 10.0 11.0 12.0 13.0 14.0] "
-      "\"float v0\" 15.0 "
-      "\"float v1\" 16.0 "
-      "\"float u0\" 17.0 "
-      "\"float u1\" 18.0 "
-      "\"float Pw\" [19.0 20.0 21.0 22.0 23.0 24.0 25.0 26.0] ");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives {
-                                          shape {
-                                            nurbs {
-                                              nu: 1
-                                              nv: 2
-                                              uorder: 3
-                                              vorder: 4
-                                              uknots: 5.0
-                                              uknots: 6.0
-                                              uknots: 7.0
-                                              uknots: 8.0
-                                              vknots: 9.0
-                                              vknots: 10.0
-                                              vknots: 11.0
-                                              vknots: 12.0
-                                              vknots: 13.0
-                                              vknots: 14.0
-                                              v0: 15.0
-                                              v1: 16.0
-                                              u0: 17.0
-                                              u1: 18.0
-                                              Pw {
-                                                p { x: 19.0 y: 20.0 z: 21.0 }
-                                                weight: 22.0
-                                              }
-                                              Pw {
-                                                p { x: 23.0 y: 24.0 z: 25.0 }
-                                                weight: 26.0
-                                              }
-                                            }
-                                          }
-                                        })pb")));
-}
-
-TEST(Convert, ShapeParaboloid) {
-  std::stringstream stream(
-      "Shape \"paraboloid\" "
-      "\"float radius\" 1.0 "
-      "\"float zmin\" 2.0 "
-      "\"float zmax\" 3.0 "
-      "\"float phimax\" 4.0");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(
-          R"pb(directives {
-                 shape {
-                   paraboloid { radius: 1.0 zmin: 2.0 zmax: 3.0 phimax: 4.0 }
-                 }
-               })pb")));
-}
-
-TEST(Convert, ShapePlymesh) {
-  std::stringstream stream(
-      "Shape \"plymesh\" "
-      "\"string filename\" \"1.0\" "
-      "\"float alpha\" 2.0 "
-      "\"float shadowalpha\" 3.0 ");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives {
-                                          shape {
-                                            plymesh {
-                                              filename: "1.0"
-                                              alpha { float_value: 2.0 }
-                                              shadowalpha { float_value: 3.0 }
-                                            }
-                                          }
-                                        })pb")));
-}
-
-TEST(Convert, ShapeSphere) {
-  std::stringstream stream(
-      "Shape \"sphere\" "
-      "\"float radius\" 1.0 "
-      "\"float zmin\" 2.0 "
-      "\"float zmax\" 3.0 "
-      "\"float phimax\" 4.0");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(
-          R"pb(directives {
-                 shape {
-                   sphere { radius: 1.0 zmin: 2.0 zmax: 3.0 phimax: 4.0 }
-                 }
-               })pb")));
-}
-
-TEST(Convert, ShapeTriangleMesh) {
-  std::stringstream stream(
-      "Shape \"trianglemesh\" "
-      "\"integer indices\" [0 1 2] "
-      "\"point3 P\" [3 4 5 6 7 8 9 10 11] "
-      "\"normal N\" [12 13 14 15 16 17 18 19 20] "
-      "\"vector S\" [21 22 23 24 25 26 27 28 29] "
-      "\"point2 uv\" [30 31 32 33 34 35] "
-      "\"integer faceIndices\" [36] "
-      "\"float alpha\" 37.0 "
-      "\"float shadowalpha\" 38.0 ");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives {
-                                          shape {
-                                            trianglemesh {
-                                              indices { v0: 0 v1: 1 v2: 2 }
-                                              P { x: 3 y: 4 z: 5 }
-                                              P { x: 6 y: 7 z: 8 }
-                                              P { x: 9 y: 10 z: 11 }
-                                              N { x: 12 y: 13 z: 14 }
-                                              N { x: 15 y: 16 z: 17 }
-                                              N { x: 18 y: 19 z: 20 }
-                                              S { x: 21 y: 22 z: 23 }
-                                              S { x: 24 y: 25 z: 26 }
-                                              S { x: 27 y: 28 z: 29 }
-                                              uv { u: 30 v: 31 }
-                                              uv { u: 32 v: 33 }
-                                              uv { u: 34 v: 35 }
-                                              faceIndices: 36
-                                              alpha { float_value: 37 }
-                                              shadowalpha { float_value: 38 }
-                                            }
-                                          }
-                                        })pb")));
-}
-
-TEST(Convert, ShapeOverrides) {
-  std::stringstream stream(
-      "Shape \"sphere\" "
-      "\"bool remaproughness\" \"true\" "
-      "\"bool thin\" \"true\" "
-      "\"float g\" 1.0 "
-      "\"float scale\" 2.0 "
-      "\"float alpha\" 3.0 "
-      "\"float anisotropic\" 5.0 "
-      "\"float beta_m\" 6.0 "
-      "\"float beta_n\" 7.0 "
-      "\"float bumpmap\" 8.0 "
-      "\"float clearcoat\" 9.0 "
-      "\"float clearcoatgloss\" 10.0 "
-      "\"float difftrans\" 10.0 "
-      "\"float eumelanin\" 11.0 "
-      "\"float flatness\" 12.0 "
-      "\"float metallic\" 13.0 "
-      "\"float pheomelanin\" 16.0 "
-      "\"float roughness\" 17.0 "
-      "\"float sheen\" 18.0 "
-      "\"float sheentint\" 19.0 "
-      "\"float sigma\" 20.0 "
-      "\"float spectrans\" 21.0 "
-      "\"float speculartint\" 22.0 "
-      "\"float uroughness\" 23.0 "
-      "\"float vroughness\" 24.0 "
-      "\"string name\" \"Apple\" "
-      "\"texture amount\" \"a\" "
-      "\"texture color\" \"b\" "
-      "\"texture k\" \"c\" "
-      "\"texture Kd\" \"d\" "
-      "\"texture Kr\" \"e\" "
-      "\"texture Ks\" \"f\" "
-      "\"texture Kt\" \"g\" "
-      "\"texture mfp\" \"h\" "
-      "\"texture opacity\" \"i\" "
-      "\"texture reflect\" \"j\" "
-      "\"texture scatterdistance\" \"k\" "
-      "\"texture sigma_a\" \"l\" "
-      "\"texture sigma_s\" \"m\" "
-      "\"texture transmit\" \"n\" "
-      "\"string bsdffile\" \"o\" "
-      "\"string namedmaterial1\" \"p\" "
-      "\"string namedmaterial2\" \"q\" "
-      "\"float eta\" 25.0 ");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(
-                  R"pb(directives {
+      actual,
+      EqualsProto(R"pb(directives {
                          shape {
                            sphere {}
                            overrides {
-                             remaproughness: true
-                             thin: true
+                             bumpmap { float_texture_name: "a" }
+                             roughness { float_texture_name: "c" }
+                             sigma { float_texture_name: "d" }
+                             uroughness { float_texture_name: "e" }
+                             vroughness { float_texture_name: "f" }
+                             Kd { spectrum_texture_name: "g" }
+                             Kr { spectrum_texture_name: "h" }
+                             Ks { spectrum_texture_name: "i" }
+                             Kt { spectrum_texture_name: "j" }
+                             opacity { spectrum_texture_name: "k" }
+                             reflect { spectrum_texture_name: "l" }
+                             transmit { spectrum_texture_name: "m" }
+                             name: APPLE
+                             amount { spectrum_texture_name: "n" }
+                             k { spectrum_texture_name: "o" }
+                             sigma_a { spectrum_texture_name: "p" }
+                             sigma_s { spectrum_texture_name: "q" }
+                             filename: "file"
+                             namedmaterial1: "mat1"
+                             namedmaterial2: "mat2"
+                             color { spectrum_texture_name: "r" }
+                             mfp { spectrum_texture_name: "s" }
+                             scatterdistance { spectrum_texture_name: "t" }
+                             alpha { float_texture_name: "u" }
+                             anisotropic { float_texture_name: "v" }
+                             beta_m { float_texture_name: "w" }
+                             beta_n { float_texture_name: "x" }
+                             clearcoat { float_texture_name: "y" }
+                             clearcoatgloss { float_texture_name: "z" }
+                             difftrans { float_texture_name: "aa" }
+                             eumelanin { float_texture_name: "ab" }
+                             flatness { float_texture_name: "ac" }
+                             metallic { float_texture_name: "ad" }
+                             pheomelanin { float_texture_name: "ae" }
+                             spectrans { float_texture_name: "af" }
+                             speculartint { float_texture_name: "ag" }
+                             sheen { float_texture_name: "ah" }
+                             sheentint { float_texture_name: "ai" }
                              g: 1.0
                              scale: 2.0
-                             alpha { float_value: 3.0 }
-                             anisotropic { float_value: 5.0 }
-                             beta_m { float_value: 6.0 }
-                             beta_n { float_value: 7.0 }
-                             bumpmap { float_value: 8.0 }
-                             clearcoat { float_value: 9.0 }
-                             clearcoatgloss { float_value: 10.0 }
-                             difftrans { float_value: 10.0 }
-                             eumelanin { float_value: 11.0 }
-                             flatness { float_value: 12.0 }
-                             metallic { float_value: 13.0 }
-                             pheomelanin { float_value: 16.0 }
-                             roughness { float_value: 17.0 }
-                             sheen { float_value: 18.0 }
-                             sheentint { float_value: 19.0 }
-                             sigma { float_value: 20.0 }
-                             spectrans { float_value: 21.0 }
-                             speculartint { float_value: 22.0 }
-                             uroughness { float_value: 23.0 }
-                             vroughness { float_value: 24.0 }
-                             name: APPLE
-                             amount { spectrum_texture_name: "a" }
-                             color { spectrum_texture_name: "b" }
-                             k { spectrum_texture_name: "c" }
-                             Kd { spectrum_texture_name: "d" }
-                             Kr { spectrum_texture_name: "e" }
-                             Ks { spectrum_texture_name: "f" }
-                             Kt { spectrum_texture_name: "g" }
-                             mfp { spectrum_texture_name: "h" }
-                             opacity { spectrum_texture_name: "i" }
-                             reflect { spectrum_texture_name: "j" }
-                             scatterdistance { spectrum_texture_name: "k" }
-                             sigma_a { spectrum_texture_name: "l" }
-                             sigma_s { spectrum_texture_name: "m" }
-                             transmit { spectrum_texture_name: "n" }
-                             filename: "o"
-                             namedmaterial1: "p"
-                             namedmaterial2: "q"
-                             eta_as_value: 25.0
-                             eta { float_value: 25.0 }
+                             remaproughness: true
+                             thin: false
                            }
                          }
-                       })pb")));
+                       })pb"));
 }
 
-TEST(Convert, ShapeOverridesEtaTexture) {
-  std::stringstream stream(
-      "Shape \"sphere\" "
-      "\"texture eta\" \"a\" ");
+TEST(Shape, OverridesEtaFloat) {
+  absl::string_view directive = R"pbrt(Shape "sphere" "float eta" 1.0)pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         shape {
+                                           sphere {}
+                                           overrides {
+                                             eta { float_value: 1.0 }
+                                             eta_as_value: 1.0
+                                           }
+                                         }
+                                       })pb"));
+}
+
+TEST(Shape, OverridesEtaTexture) {
+  absl::string_view directive = R"pbrt(Shape "sphere" "texture eta" "a")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
   EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(
+      actual,
+      EqualsProto(
           R"pb(directives {
                  shape {
                    sphere {}
@@ -2506,486 +926,214 @@ TEST(Convert, ShapeOverridesEtaTexture) {
                      eta_as_spectrum_texture { spectrum_texture_name: "a" }
                    }
                  }
-               })pb")));
+               })pb"));
 }
 
-TEST(Convert, ShapeOverridesEtaSampled) {
-  std::stringstream stream(
-      "Shape \"sphere\" "
-      "\"spectrum eta\" \"a\" ");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(
-          R"pb(directives {
-                 shape {
-                   sphere {}
-                   overrides {
-                     eta_as_spectrum_texture { sampled_spectrum_filename: "a" }
-                   }
-                 }
-               })pb")));
+TEST(Shape, OverridesEtaSpectrum) {
+  absl::string_view directive = R"pbrt(Shape "sphere" "rgb eta" [1 1 1])pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives {
+                                 shape {
+                                   sphere {}
+                                   overrides {
+                                     eta_as_spectrum_texture {
+                                       rgb_spectrum { r: 1.0 g: 1.0 b: 1.0 }
+                                     }
+                                   }
+                                 }
+                               })pb"));
 }
 
-TEST(Convert, SurfaceIntegrator) {
-  std::stringstream stream("SurfaceIntegrator \"a\"");
-  EXPECT_THAT(
-      Convert(stream),
-      StatusIs(absl::StatusCode::kUnimplemented,
-               "Directive 'SurfaceIntegrator' is not supported in pbrt-v3"));
+TEST(SpectrumTexture, Bilerp) {
+  absl::string_view directive = R"pbrt(Texture "name" "spectrum" "bilerp")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         spectrum_texture {
+                                           name: "name"
+                                           bilerp {}
+                                         }
+                                       })pb"));
 }
 
-TEST(Convert, SpectrumTextureUnknown) {
-  std::stringstream stream("Texture \"name\" \"spectrum\" \"unknown\"");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives {
-                                              spectrum_texture { name: "name" }
-                                            })pb")));
+TEST(SpectrumTexture, CheckerboardDefault) {
+  absl::string_view directive =
+      R"pbrt(Texture "name" "spectrum" "checkerboard")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         spectrum_texture {
+                                           name: "name"
+                                           checkerboard2d {}
+                                         }
+                                       })pb"));
 }
 
-TEST(Convert, SpectrumTextureBilerp) {
-  std::stringstream stream(
-      "Texture \"name\" \"spectrum\" \"bilerp\" \"blackbody v00\" [1.0 2.0] "
-      "\"blackbody v01\" [3.0 4.0] \"blackbody v10\" [5.0 6.0] \"blackbody "
-      "v11\" [7.0 8.0] \"string mapping\" \"uv\" \"float uscale\" 5.0 \"float "
-      "vscale\" 6.0 \"float udelta\" 7.0 \"float vdelta\" 8.0 \"vector v1\" "
-      "[1.0 2 3.0] \"vector v2\" [4.0 5.0 6.0]");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(
-          R"pb(directives {
-                 spectrum_texture {
-                   name: "name"
-                   bilerp {
-                     v00 { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
-                     v01 { blackbody_spectrum { temperature: 3.0 scale: 4.0 } }
-                     v10 { blackbody_spectrum { temperature: 5.0 scale: 6.0 } }
-                     v11 { blackbody_spectrum { temperature: 7.0 scale: 8.0 } }
-                     mapping: UV
-                     uscale: 5.0
-                     vscale: 6.0
-                     udelta: 7.0
-                     vdelta: 8.0
-                     v1 { x: 1.0 y: 2.0 z: 3.0 }
-                     v2 { x: 4.0 y: 5.0 z: 6.0 }
-                   }
-                 }
-               })pb")));
+TEST(SpectrumTexture, Checkerboard2D) {
+  absl::string_view directive =
+      R"pbrt(Texture "name" "spectrum" "checkerboard" "integer dimension" 2)pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         spectrum_texture {
+                                           name: "name"
+                                           checkerboard2d {}
+                                         }
+                                       })pb"));
 }
 
-TEST(Convert, SpectrumTextureCheckerboard2DNone) {
-  std::stringstream stream(
-      "Texture \"name\" \"spectrum\" \"checkerboard\" \"integer dimension\" 2 "
-      "\"blackbody tex1\" [1.0 2.0] \"blackbody tex2\" [3.0 4.0] \"string "
-      "aamode\" \"none\" \"string mapping\" \"uv\" \"float uscale\" 5.0 "
-      "\"float vscale\" 6.0 \"float udelta\" 7.0 \"float vdelta\" 8.0 \"vector "
-      "v1\" [1.0 2 3.0] \"vector v2\" [4.0 5.0 6.0]");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(
-          R"pb(directives {
-                 spectrum_texture {
-                   name: "name"
-                   checkerboard2d {
-                     tex1 { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
-                     tex2 { blackbody_spectrum { temperature: 3.0 scale: 4.0 } }
-                     aamode: DISABLED
-                     mapping: UV
-                     uscale: 5.0
-                     vscale: 6.0
-                     udelta: 7.0
-                     vdelta: 8.0
-                     v1 { x: 1.0 y: 2.0 z: 3.0 }
-                     v2 { x: 4.0 y: 5.0 z: 6.0 }
-                   }
-                 }
-               })pb")));
+TEST(SpectrumTexture, Checkerboard3D) {
+  absl::string_view directive =
+      R"pbrt(Texture "name" "spectrum" "checkerboard" "integer dimension" 3)pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         spectrum_texture {
+                                           name: "name"
+                                           checkerboard3d {}
+                                         }
+                                       })pb"));
 }
 
-TEST(Convert, SpectrumTextureCheckerboard2DClosedForm) {
-  std::stringstream stream(
-      "Texture \"name\" \"spectrum\" \"checkerboard\" \"integer dimension\" 2 "
-      "\"blackbody tex1\" [1.0 2.0] \"blackbody tex2\" [3.0 4.0] \"string "
-      "aamode\" \"closedform\" \"string mapping\" \"uv\" \"float uscale\" 5.0 "
-      "\"float vscale\" 6.0 \"float udelta\" 7.0 \"float vdelta\" 8.0 \"vector "
-      "v1\" [1.0 2 3.0] \"vector v2\" [4.0 5.0 6.0]");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(
-          R"pb(directives {
-                 spectrum_texture {
-                   name: "name"
-                   checkerboard2d {
-                     tex1 { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
-                     tex2 { blackbody_spectrum { temperature: 3.0 scale: 4.0 } }
-                     aamode: CLOSEDFORM
-                     mapping: UV
-                     uscale: 5.0
-                     vscale: 6.0
-                     udelta: 7.0
-                     vdelta: 8.0
-                     v1 { x: 1.0 y: 2.0 z: 3.0 }
-                     v2 { x: 4.0 y: 5.0 z: 6.0 }
-                   }
-                 }
-               })pb")));
+TEST(SpectrumTexture, Checkerboard4D) {
+  absl::string_view directive =
+      R"pbrt(Texture "name" "spectrum" "checkerboard" "integer dimension" 4)pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         spectrum_texture {
+                                           name: "name"
+                                           checkerboard3d {}
+                                         }
+                                       })pb"));
 }
 
-TEST(Convert, SpectrumTextureCheckerboard3D) {
-  std::stringstream stream(
-      "Texture \"name\" \"spectrum\" \"checkerboard\" \"integer dimension\" 3 "
-      "\"blackbody tex1\" [1.0 2.0] \"blackbody tex2\" [3.0 4.0]");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(
-          R"pb(directives {
-                 spectrum_texture {
-                   name: "name"
-                   checkerboard3d {
-                     tex1 { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
-                     tex2 { blackbody_spectrum { temperature: 3.0 scale: 4.0 } }
-                   }
-                 }
-               })pb")));
+TEST(SpectrumTexture, Constant) {
+  absl::string_view directive =
+      R"pbrt(Texture "name" "spectrum" "constant")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         spectrum_texture {
+                                           name: "name"
+                                           constant {}
+                                         }
+                                       })pb"));
 }
 
-TEST(Convert, SpectrumTextureCheckerboardDots) {
-  std::stringstream stream(
-      "Texture \"name\" \"spectrum\" \"dots\" \"blackbody inside\" [1.0 2.0] "
-      "\"blackbody outside\" [3.0 4.0] \"string mapping\" \"uv\" \"float "
-      "uscale\" 5.0 \"float vscale\" 6.0 \"float udelta\" 7.0 \"float vdelta\" "
-      "8.0 \"vector v1\" [1.0 2 3.0] \"vector v2\" [4.0 5.0 6.0]");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(
-          R"pb(directives {
-                 spectrum_texture {
-                   name: "name"
-                   dots {
-                     inside {
-                       blackbody_spectrum { temperature: 1.0 scale: 2.0 }
-                     }
-                     outside {
-                       blackbody_spectrum { temperature: 3.0 scale: 4.0 }
-                     }
-                     mapping: UV
-                     uscale: 5.0
-                     vscale: 6.0
-                     udelta: 7.0
-                     vdelta: 8.0
-                     v1 { x: 1.0 y: 2.0 z: 3.0 }
-                     v2 { x: 4.0 y: 5.0 z: 6.0 }
-                   }
-                 }
-               })pb")));
+TEST(SpectrumTexture, Dots) {
+  absl::string_view directive = R"pbrt(Texture "name" "spectrum" "dots")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         spectrum_texture {
+                                           name: "name"
+                                           dots {}
+                                         }
+                                       })pb"));
 }
 
-TEST(Convert, SpectrumTextureFbm) {
-  std::stringstream stream(
-      "Texture \"name\" \"spectrum\" \"fbm\" \"integer octaves\" 1 \"float "
-      "roughness\" 2.0");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives {
-                                          spectrum_texture {
-                                            name: "name"
-                                            fbm { octaves: 1 roughness: 2.0 }
-                                          }
-                                        })pb")));
+TEST(SpectrumTexture, FBm) {
+  absl::string_view directive = R"pbrt(Texture "name" "spectrum" "fbm")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         spectrum_texture {
+                                           name: "name"
+                                           fbm {}
+                                         }
+                                       })pb"));
 }
 
-TEST(Convert, SpectrumTextureConstant) {
-  std::stringstream stream(
-      "Texture \"name\" \"spectrum\" \"constant\" \"blackbody value\" [1.0 "
-      "2.0]");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(
-          R"pb(directives {
-                 spectrum_texture {
-                   name: "name"
-                   constant {
-                     value {
-                       blackbody_spectrum { temperature: 1.0 scale: 2.0 }
-                     }
-                   }
-                 }
-               })pb")));
+TEST(SpectrumTexture, ImageMap) {
+  absl::string_view directive =
+      R"pbrt(Texture "name" "spectrum" "imagemap")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         spectrum_texture {
+                                           name: "name"
+                                           imagemap {}
+                                         }
+                                       })pb"));
 }
 
-TEST(Convert, SpectrumTextureMarble) {
-  std::stringstream stream(
-      "Texture \"name\" \"spectrum\" \"marble\" \"integer octaves\" 1 \"float "
-      "roughness\" 2.0 \"float scale\" 3.0 \"float variation\" 4.0");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives {
-                                          spectrum_texture {
-                                            name: "name"
-                                            marble {
-                                              octaves: 1
-                                              roughness: 2.0
-                                              scale: 3.0
-                                              variation: 4.0
-                                            }
-                                          }
-                                        })pb")));
+TEST(SpectrumTexture, Marble) {
+  absl::string_view directive = R"pbrt(Texture "name" "spectrum" "marble")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         spectrum_texture {
+                                           name: "name"
+                                           marble {}
+                                         }
+                                       })pb"));
 }
 
-TEST(Convert, SpectrumTextureImageMapBlack) {
-  std::stringstream stream(
-      "Texture \"name\" \"spectrum\" \"imagemap\" \"string filename\" \"a\" "
-      "\"string wrap\" \"black\" \"float maxanisotropy\" 1.0 \"bool "
-      "trilinear\" \"true\" \"float scale\" 2.0 \"bool gamma\" \"true\" "
-      "\"string mapping\" \"uv\" \"float uscale\" 5.0 \"float vscale\" 6.0 "
-      "\"float udelta\" 7.0 \"float vdelta\" 8.0 \"vector v1\" [1.0 2 3.0] "
-      "\"vector v2\" [4.0 5.0 6.0]");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives {
-                                          spectrum_texture {
-                                            name: "name"
-                                            imagemap {
-                                              filename: "a"
-                                              wrap: BLACK
-                                              maxanisotropy: 1.0
-                                              filter: TRILINEAR
-                                              scale: 2.0
-                                              encoding: GAMMA
-                                              mapping: UV
-                                              uscale: 5.0
-                                              vscale: 6.0
-                                              udelta: 7.0
-                                              vdelta: 8.0
-                                              v1 { x: 1.0 y: 2.0 z: 3.0 }
-                                              v2 { x: 4.0 y: 5.0 z: 6.0 }
-                                            }
-                                          }
-                                        })pb")));
+TEST(SpectrumTexture, Mix) {
+  absl::string_view directive = R"pbrt(Texture "name" "spectrum" "mix")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         spectrum_texture {
+                                           name: "name"
+                                           mix {}
+                                         }
+                                       })pb"));
 }
 
-TEST(Convert, SpectrumTextureImageMapClamp) {
-  std::stringstream stream(
-      "Texture \"name\" \"spectrum\" \"imagemap\" \"string filename\" \"a\" "
-      "\"string wrap\" \"clamp\" \"float maxanisotropy\" 1.0 \"bool "
-      "trilinear\" \"true\" \"float scale\" 2.0 \"bool gamma\" \"true\" "
-      "\"string mapping\" \"uv\" \"float uscale\" 5.0 \"float vscale\" 6.0 "
-      "\"float udelta\" 7.0 \"float vdelta\" 8.0 \"vector v1\" [1.0 2 3.0] "
-      "\"vector v2\" [4.0 5.0 6.0]");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives {
-                                          spectrum_texture {
-                                            name: "name"
-                                            imagemap {
-                                              filename: "a"
-                                              wrap: CLAMP
-                                              maxanisotropy: 1.0
-                                              filter: TRILINEAR
-                                              scale: 2.0
-                                              encoding: GAMMA
-                                              mapping: UV
-                                              uscale: 5.0
-                                              vscale: 6.0
-                                              udelta: 7.0
-                                              vdelta: 8.0
-                                              v1 { x: 1.0 y: 2.0 z: 3.0 }
-                                              v2 { x: 4.0 y: 5.0 z: 6.0 }
-                                            }
-                                          }
-                                        })pb")));
+TEST(SpectrumTexture, Scale) {
+  absl::string_view directive = R"pbrt(Texture "name" "spectrum" "scale")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         spectrum_texture {
+                                           name: "name"
+                                           scale {}
+                                         }
+                                       })pb"));
 }
 
-TEST(Convert, SpectrumTextureImageMapRepeat) {
-  std::stringstream stream(
-      "Texture \"name\" \"spectrum\" \"imagemap\" \"string filename\" \"a\" "
-      "\"string wrap\" \"repeat\" \"float maxanisotropy\" 1.0 \"bool "
-      "trilinear\" \"true\" \"float scale\" 2.0 \"bool gamma\" \"true\" "
-      "\"string mapping\" \"uv\" \"float uscale\" 5.0 \"float vscale\" 6.0 "
-      "\"float udelta\" 7.0 \"float vdelta\" 8.0 \"vector v1\" [1.0 2 3.0] "
-      "\"vector v2\" [4.0 5.0 6.0]");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives {
-                                          spectrum_texture {
-                                            name: "name"
-                                            imagemap {
-                                              filename: "a"
-                                              wrap: REPEAT
-                                              maxanisotropy: 1.0
-                                              filter: TRILINEAR
-                                              scale: 2.0
-                                              encoding: GAMMA
-                                              mapping: UV
-                                              uscale: 5.0
-                                              vscale: 6.0
-                                              udelta: 7.0
-                                              vdelta: 8.0
-                                              v1 { x: 1.0 y: 2.0 z: 3.0 }
-                                              v2 { x: 4.0 y: 5.0 z: 6.0 }
-                                            }
-                                          }
-                                        })pb")));
+TEST(SpectrumTexture, Windy) {
+  absl::string_view directive = R"pbrt(Texture "name" "spectrum" "windy")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         spectrum_texture {
+                                           name: "name"
+                                           windy {}
+                                         }
+                                       })pb"));
 }
 
-TEST(Convert, SpectrumTextureMix) {
-  std::stringstream stream(
-      "Texture \"name\" \"spectrum\" \"mix\" \"blackbody tex1\" [1.0 2.0] "
-      "\"blackbody tex2\" [3.0 4.0] \"float amount\" 5.0");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(
-          R"pb(directives {
-                 spectrum_texture {
-                   name: "name"
-                   mix {
-                     tex1 { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
-                     tex2 { blackbody_spectrum { temperature: 3.0 scale: 4.0 } }
-                     amount { float_value: 5.0 }
-                   }
-                 }
-               })pb")));
-}
+TEST(SpectrumTexture, Wrinkled) {
+  absl::string_view directive =
+      R"pbrt(Texture "name" "spectrum" "wrinkled")pbrt";
 
-TEST(Convert, SpectrumTexturePtex) {
-  std::stringstream stream(
-      "Texture \"name\" \"spectrum\" \"ptex\" \"string filename\" \"a\" "
-      "\"float gamma\" 2.0");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives {
-                                          spectrum_texture {
-                                            name: "name"
-                                            ptex { filename: "a" gamma: 2.0 }
-                                          }
-                                        })pb")));
-}
-
-TEST(Convert, SpectrumTextureScale) {
-  std::stringstream stream(
-      "Texture \"name\" \"spectrum\" \"scale\" \"blackbody tex1\" [1.0 2.0] "
-      "\"blackbody tex2\" [3.0 4.0]");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(
-          R"pb(directives {
-                 spectrum_texture {
-                   name: "name"
-                   scale {
-                     tex1 { blackbody_spectrum { temperature: 1.0 scale: 2.0 } }
-                     tex2 { blackbody_spectrum { temperature: 3.0 scale: 4.0 } }
-                   }
-                 }
-               })pb")));
-}
-
-TEST(Convert, SpectrumTextureWindy) {
-  std::stringstream stream("Texture \"name\" \"spectrum\" \"windy\"");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(
-                                   R"pb(directives {
-                                          spectrum_texture {
-                                            name: "name"
-                                            windy {}
-                                          }
-                                        })pb")));
-}
-
-TEST(Convert, SpectrumTextureWrinkled) {
-  std::stringstream stream(
-      "Texture \"name\" \"spectrum\" \"wrinkled\" \"integer octaves\" 1 "
-      "\"float roughness\" 2.0");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(
-                  R"pb(directives {
-                         spectrum_texture {
-                           name: "name"
-                           wrinkled { octaves: 1 roughness: 2.0 }
-                         }
-                       })pb")));
-}
-
-TEST(Convert, Transform) {
-  std::stringstream stream(
-      "Transform [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16]");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(R"pb(directives {
-                                                               transform {
-                                                                 m00: 1
-                                                                 m01: 2
-                                                                 m02: 3
-                                                                 m03: 4
-                                                                 m10: 5
-                                                                 m11: 6
-                                                                 m12: 7
-                                                                 m13: 8
-                                                                 m20: 9
-                                                                 m21: 10
-                                                                 m22: 11
-                                                                 m23: 12
-                                                                 m30: 13
-                                                                 m31: 14
-                                                                 m32: 15
-                                                                 m33: 16
-                                                               }
-                                                             })pb")));
-}
-
-TEST(Convert, TransformTimes) {
-  std::stringstream stream("TransformTimes 1 2");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(
-                  R"pb(directives {
-                         transform_times { start_time: 1 end_time: 2 }
-                       })pb")));
-}
-
-TEST(Convert, TransformBegin) {
-  std::stringstream stream("TransformBegin");
-  EXPECT_THAT(
-      Convert(stream),
-      IsOkAndHolds(EqualsProto(R"pb(directives { transform_begin {} })pb")));
-}
-
-TEST(Convert, TransformEnd) {
-  std::stringstream stream("TransformEnd");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(R"pb(directives {
-                                                               transform_end {}
-                                                             })pb")));
-}
-
-TEST(Convert, Translate) {
-  std::stringstream stream("Translate 1 2 3");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives {
-                                              translate { x: 1 y: 2 z: 3 }
-                                            })pb")));
-}
-
-TEST(Convert, Volume) {
-  std::stringstream stream("Volume \"a\"");
-  EXPECT_THAT(Convert(stream),
-              StatusIs(absl::StatusCode::kUnimplemented,
-                       "Directive 'Volume' is not supported in pbrt-v3"));
-}
-
-TEST(Convert, VolumeIntegrator) {
-  std::stringstream stream("VolumeIntegrator \"a\"");
-  EXPECT_THAT(
-      Convert(stream),
-      StatusIs(absl::StatusCode::kUnimplemented,
-               "Directive 'VolumeIntegrator' is not supported in pbrt-v3"));
-}
-
-TEST(Convert, WorldBegin) {
-  std::stringstream stream("WorldBegin");
-  EXPECT_THAT(Convert(stream), IsOkAndHolds(EqualsProto(R"pb(directives {
-                                                               world_begin {}
-                                                             })pb")));
-}
-
-TEST(Convert, WorldEnd) {
-  std::stringstream stream("WorldEnd");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives { world_end {} })pb")));
-}
-
-TEST(Convert, MultipleDirectives) {
-  std::stringstream stream("WorldBegin WorldEnd");
-  EXPECT_THAT(Convert(stream),
-              IsOkAndHolds(EqualsProto(R"pb(directives { world_begin {} }
-                                            directives { world_end {} })pb")));
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
+                                         spectrum_texture {
+                                           name: "name"
+                                           wrinkled {}
+                                         }
+                                       })pb"));
 }
 
 }  // namespace

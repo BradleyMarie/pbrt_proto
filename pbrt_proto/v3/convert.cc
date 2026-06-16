@@ -309,10 +309,10 @@ absl::Status ParserV3::MakeNamedMedium(
     absl::string_view medium_name,
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
   static const TypeMap<v3::MakeNamedMedium> kSupportedTypes = {
-      {"homogeneous",
-       CB<RemoveHomogeneousMedium, &MakeNamedMedium::mutable_homogeneous>()},
       {"heterogeneous",
        CB<RemoveUniformGridMedium, &MakeNamedMedium::mutable_heterogeneous>()},
+      {"homogeneous",
+       CB<RemoveHomogeneousMedium, &MakeNamedMedium::mutable_homogeneous>()},
   };
 
   absl::Status status = Parse<&Directive::mutable_make_named_medium>(
