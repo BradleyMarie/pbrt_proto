@@ -1204,13 +1204,13 @@ message DebugIntegrator {
   }
 
   // The value to use to populate the `r` channel of the output.
-  optional ChannelValue red = 26 [default = U];
+  optional ChannelValue red = 23 [default = U];
 
   // The value to use to populate the `g` channel of the output.
-  optional ChannelValue green = 27 [default = V];
+  optional ChannelValue green = 24 [default = V];
 
   // The value to use to populate the `b` channel of the output.
-  optional ChannelValue blue = 28 [default = ZERO];
+  optional ChannelValue blue = 25 [default = ZERO];
 }
 
 // An integrator which performs precomputed radiance transfer.
@@ -1221,7 +1221,7 @@ message DiffusePrtIntegrator {
 
   // The maximum spherical harmonic band l to use; the total number of SH
   // coefficients used at each point will be (lmax+1)*(lmax+1)
-  optional uint32 lmax = 29 [default = 4];
+  optional uint32 lmax = 26 [default = 4];
 }
 
 // An integrator which performs dipole subsurface scattering.
@@ -1237,13 +1237,13 @@ message DipoleSubsurfaceIntegrator {
   // Minimum distance between the point samples generated on translucent objects
   // at which to compute the incident irradiance. In general, this value should
   // be around half of the mean free path of light inside the scattering medium.
-  optional double minsampledistance = 30 [default = 0.25];
+  optional double minsampledistance = 27 [default = 0.25];
 
   // File from which to read precomputed sample points. If a file is provided,
   // the points to be used will be read from the file. Otherwise, the point
   // generation step will be performed using the provided "minsampledistance"
   // before rendering.
-  optional string pointsfile = 31;
+  optional string pointsfile = 28;
 }
 
 // An integrator which only integrates over the direct lighting.
@@ -1290,16 +1290,16 @@ message GlossyPrtIntegrator {
 
   // The maximum spherical harmonic band l to use; the total number of SH
   // coefficients used at each point will be (lmax+1)*(lmax+1)
-  optional uint32 lmax = 29 [default = 4];
+  optional uint32 lmax = 26 [default = 4];
 
   // The surface roughness, for use with the Blinn microfacet distributions.
-  optional double roughness = 32 [default = 0.01];
+  optional double roughness = 29 [default = 0.01];
 
   // The diffuse reflectance spectrum of surfaces.
-  optional Spectrum Kd = 33;
+  optional Spectrum Kd = 30;
 
   // The glossy reflectance of surfaces.
-  optional Spectrum Ks = 34;
+  optional Spectrum Ks = 31;
 }
 
 // An integrator which performs instant global illumination.
@@ -1343,7 +1343,7 @@ message IgiIntegrator {
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported before PBRTv2 and should be ignored when
   //       reading earlier input.
-  optional double glimit = 35 [default = 10.0];
+  optional double glimit = 32 [default = 10.0];
 
   // The number of "final gather" samples to take at points where the G limit
   // was applied.
@@ -1351,7 +1351,7 @@ message IgiIntegrator {
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported before PBRTv2 and should be ignored when
   //       reading earlier input.
-  optional uint32 gathersamples = 36 [default = 16];
+  optional uint32 gathersamples = 33 [default = 16];
 }
 
 // An integrator which does irradiance caching.
@@ -1382,16 +1382,28 @@ message IrradianceCacheIntegrator {
 
   // Minimum distance, in pixels, between irradiance samples. No samples nearer
   // this distance will be generated.
-  optional double minpixelspacing = 23 [default = 2.5];
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv2 and should be ignored when
+  //       reading earlier input.
+  optional double minpixelspacing = 34 [default = 2.5];
 
   // Maximum distance, in pixels, between irradiance samples. Even if the other
   // error terms indicate that a sample can be used at a point being shaded, if
   // it is more than this many pixels away on the image plane, it is ignored.
-  optional double maxpixelspacing = 24 [default = 15.0];
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv2 and should be ignored when
+  //       reading earlier input.
+  optional double maxpixelspacing = 35 [default = 15.0];
 
   // Maximum allowed difference in the angle between the surface normal at an
   // irradiance lookup point and the surface normal of an irradiance sample.
-  optional double maxangledifference = 25 [default = 10.0];
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv2 and should be ignored when
+  //       reading earlier input.
+  optional double maxangledifference = 36 [default = 10.0];
 }
 
 // An integrator which does Metropolis light transport.

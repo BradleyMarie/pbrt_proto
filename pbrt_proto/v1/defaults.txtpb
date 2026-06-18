@@ -1,0 +1,860 @@
+# proto-file: pbrt_proto/v1/defaults.proto
+# proto-message: pbrt_proto.v1.Defaults
+
+global_defaults {
+  directives {
+    accelerator {
+      kdtree {}
+    }
+  }
+  directives {
+    camera {
+      perspective {}
+    }
+  }
+  directives {
+    film {
+      image {}
+    }
+  }
+  directives {
+    pixel_filter {
+      mitchell {}
+    }
+  }
+  directives {
+    sampler {
+      bestcandidate {}
+    }
+  }
+  directives {
+    surface_integrator {
+      directlighting {}
+    }
+  }
+  directives {
+    volume_integrator {
+      emission {}
+    }
+  }
+}
+default_material {
+  matte {
+    Kd {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    sigma {
+      float_value: 0.0
+    }
+  }
+}
+accelerators {
+  grid {}
+  kdtree {}
+}
+area_light_sources {
+  area {
+    L {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    scale {
+      constant_spectrum: 1.0
+    }
+  }
+}
+cameras {
+  environment {
+    mapping: EQUIRECTANGULAR
+    focaldistance: 1e30
+    hither: 1e-3
+    yon: 1e30
+  }
+  orthographic {
+    focaldistance: 1e30
+    hither: 1e-3
+    yon: 1e30
+  }
+  perspective {
+    focaldistance: 1e30
+    hither: 1e-3
+    yon: 1e30
+  }
+}
+films {
+  image {
+    xresolution: 640
+    yresolution: 480
+  }
+}
+
+float_textures {
+  bilerp {
+    v00 {
+      float_value: 0.0
+    }
+    v01 {
+      float_value: 1.0
+    }
+    v10 {
+      float_value: 0.0
+    }
+    v11 {
+      float_value: 1.0
+    }
+    v1 {
+      x: 1.0
+      y: 0.0
+      z: 0.0
+    }
+    v2 {
+      x: 0.0
+      y: 1.0
+      z: 0.0
+    }
+  }
+  checkerboard2d {
+    tex1 {
+      float_value: 1.0
+    }
+    tex2 {
+      float_value: 0.0
+    }
+    v1 {
+      x: 1.0
+      y: 0.0
+      z: 0.0
+    }
+    v2 {
+      x: 0.0
+      y: 1.0
+      z: 0.0
+    }
+  }
+  checkerboard3d {
+    tex1 {
+      float_value: 1.0
+    }
+    tex2 {
+      float_value: 0.0
+    }
+  }
+  constant {}
+  dots {
+    inside {
+      float_value: 1.0
+    }
+    outside {
+      float_value: 0.0
+    }
+    v1 {
+      x: 1.0
+      y: 0.0
+      z: 0.0
+    }
+    v2 {
+      x: 0.0
+      y: 1.0
+      z: 0.0
+    }
+  }
+  fbm {}
+  imagemap {
+    v1 {
+      x: 1.0
+      y: 0.0
+      z: 0.0
+    }
+    v2 {
+      x: 0.0
+      y: 1.0
+      z: 0.0
+    }
+  }
+  mix {
+    tex1 {
+      float_value: 0.0
+    }
+    tex2 {
+      float_value: 1.0
+    }
+    amount {
+      float_value: 0.5
+    }
+  }
+  scale {
+    tex1 {
+      float_value: 1.0
+    }
+    tex2 {
+      float_value: 1.0
+    }
+  }
+  windy {}
+  wrinkled {}
+}
+light_sources {
+  distant {
+    L {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    scale {
+      constant_spectrum: 1.0
+    }
+    from {
+      x: 0.0
+      y: 0.0
+      z: 0.0
+    }
+    to {
+      x: 0.0
+      y: 0.0
+      z: 1.0
+    }
+  }
+  goniometric {
+    I {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    scale {
+      constant_spectrum: 1.0
+    }
+  }
+  infinite {
+    L {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    scale {
+      constant_spectrum: 1.0
+    }
+  }
+  infinitesample {
+    L {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    scale {
+      constant_spectrum: 1.0
+    }
+  }
+  point {
+    I {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    scale {
+      constant_spectrum: 1.0
+    }
+    from {
+      x: 0.0
+      y: 0.0
+      z: 0.0
+    }
+  }
+  projection {
+    I {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    scale {
+      constant_spectrum: 1.0
+    }
+  }
+  spot {
+    I {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    scale {
+      constant_spectrum: 1.0
+    }
+    from {
+      x: 0.0
+      y: 0.0
+      z: 0.0
+    }
+    to {
+      x: 0.0
+      y: 0.0
+      z: 1.0
+    }
+  }
+}
+materials {
+  bluepaint {}
+  brushedmetal {}
+  clay {}
+  felt {}
+  glass {
+    Kr {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    Kt {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    uroughness {
+      float_value: 0.0
+    }
+    vroughness {
+      float_value: 0.0
+    }
+    eta {
+      float_value: 1.5
+    }    
+  }
+  matte {
+    Kd {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    sigma {
+      float_value: 0.0
+    }
+  }
+  mirror {
+    Kr {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+  }
+  plastic {
+    Kd {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    Ks {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    roughness {
+      float_value: 0.1
+    }
+  }
+  primer {}
+  shinymetal {
+    Ks {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    Kr {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    roughness {
+      float_value: 0.1
+    }
+  }
+  skin {}
+  substrate {
+    Kd {
+      rgb_spectrum {
+        r: 0.5
+        g: 0.5
+        b: 0.5
+      }
+    }
+    Ks {
+      rgb_spectrum {
+        r: 0.5
+        g: 0.5
+        b: 0.5
+      }
+    }
+    uroughness {
+      float_value: 0.1
+    }
+    vroughness {
+      float_value: 0.1
+    }
+  }
+  translucent {
+    Kd {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    Ks {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    reflect {
+      rgb_spectrum {
+        r: 0.5
+        g: 0.5
+        b: 0.5
+      }
+    }
+    transmit {
+      rgb_spectrum {
+        r: 0.5
+        g: 0.5
+        b: 0.5
+      }
+    }
+    roughness {
+      float_value: 0.1
+    }
+  }
+  uber {
+    Kd {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    Ks {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    Kr {
+      rgb_spectrum {
+        r: 0.0
+        g: 0.0
+        b: 0.0
+      }
+    }
+    Kt {
+      rgb_spectrum {
+        r: 0.0
+        g: 0.0
+        b: 0.0
+      }
+    }
+    roughness {
+      float_value: 0.1
+    }
+    opacity {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    eta {
+      float_value: 1.5
+    }
+  }
+}
+pixel_filter {
+  box {}
+  gaussian {
+    xradius: 2.0
+    yradius: 2.0
+  }
+  mitchell {}
+  sinc {}
+  triangle {}
+}
+samplers {
+  bestcandidate {}
+  lowdiscrepancy {
+    pixelsamples: 4
+  }
+  random {}
+  stratified {
+    xsamples: 2
+    ysamples: 2
+  }
+}
+shapes {
+  cone {}
+  cylinder {}
+  disk {}
+  heightfield {}
+  hyperboloid {
+    p1 {
+      x: 0.0
+      y: 0.0
+      z: 0.0
+    }
+    p2 {
+      x: 1.0
+      y: 1.0
+      z: 1.0
+    }
+  }
+  loopsubdiv {}
+  nurbs {}
+  paraboloid {} 
+  sphere {}
+  trianglemesh {
+    alpha {
+      float_value: 1.0
+    }
+    shadowalpha {
+      float_value: 1.0
+    }
+  }
+}
+
+spectrum_textures {
+  bilerp {
+    v00 {
+      rgb_spectrum {
+        r: 0.0
+        g: 0.0
+        b: 0.0
+      }
+    }
+    v01 {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    v10 {
+      rgb_spectrum {
+        r: 0.0
+        g: 0.0
+        b: 0.0
+      }
+    }
+    v11 {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    v1 {
+      x: 1.0
+      y: 0.0
+      z: 0.0
+    }
+    v2 {
+      x: 0.0
+      y: 1.0
+      z: 0.0
+    }
+  }
+  checkerboard2d {
+    tex1 {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    tex2 {
+      rgb_spectrum {
+        r: 0.0
+        g: 0.0
+        b: 0.0
+      }
+    }
+    v1 {
+      x: 1.0
+      y: 0.0
+      z: 0.0
+    }
+    v2 {
+      x: 0.0
+      y: 1.0
+      z: 0.0
+    }
+  }
+  checkerboard3d {
+    tex1 {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    tex2 {
+      rgb_spectrum {
+        r: 0.0
+        g: 0.0
+        b: 0.0
+      }
+    }
+  }
+  constant {
+    value {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+  }
+  dots {
+    inside {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    outside {
+      rgb_spectrum {
+        r: 0.0
+        g: 0.0
+        b: 0.0
+      }
+    }
+    v1 {
+      x: 1.0
+      y: 0.0
+      z: 0.0
+    }
+    v2 {
+      x: 0.0
+      y: 1.0
+      z: 0.0
+    }
+  }
+  fbm {}
+  imagemap {
+    v1 {
+      x: 1.0
+      y: 0.0
+      z: 0.0
+    }
+    v2 {
+      x: 0.0
+      y: 1.0
+      z: 0.0
+    }
+  }
+  marble {}
+  mix {
+    tex1 {
+      rgb_spectrum {
+        r: 0.0
+        g: 0.0
+        b: 0.0
+      }
+    }
+    tex2 {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    amount {
+      float_value: 0.5
+    }
+  }
+  scale {
+    tex1 {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    tex2 {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+  }
+  uv {
+    v1 {
+      x: 1.0
+      y: 0.0
+      z: 0.0
+    }
+    v2 {
+      x: 0.0
+      y: 1.0
+      z: 0.0
+    }
+  }
+  windy {}
+  wrinkled {}
+}
+surface_integrators {
+  bidirectional {}
+  debug {}
+  directlighting {}
+  exphotonmap {}
+  igi {
+    rrthreshold: 0.05
+  }
+  irradiancecache {}
+  path {}
+  photonmap {}
+  whitted {}
+}
+volumes {
+  exponential {
+    sigma_a {
+      rgb_spectrum {
+        r: 0.0
+        g: 0.0
+        b: 0.0
+      }
+    }
+    sigma_s {
+      rgb_spectrum {
+        r: 0.0
+        g: 0.0
+        b: 0.0
+      }
+    }
+    Le {
+      rgb_spectrum {
+        r: 0.0
+        g: 0.0
+        b: 0.0
+      }
+    }
+    p0 {
+      x: 0.0
+      y: 0.0
+      z: 0.0
+    }
+    p1 {
+      x: 1.0
+      y: 1.0
+      z: 1.0
+    }
+    updir {
+      x: 0.0
+      y: 1.0
+      z: 0.0
+    }
+  }
+  homogeneous {
+    sigma_a {
+      rgb_spectrum {
+        r: 0.0
+        g: 0.0
+        b: 0.0
+      }
+    }
+    sigma_s {
+      rgb_spectrum {
+        r: 0.0
+        g: 0.0
+        b: 0.0
+      }
+    }
+    Le {
+      rgb_spectrum {
+        r: 0.0
+        g: 0.0
+        b: 0.0
+      }
+    }
+    p0 {
+      x: 0.0
+      y: 0.0
+      z: 0.0
+    }
+    p1 {
+      x: 1.0
+      y: 1.0
+      z: 1.0
+    }
+  }
+  volumegrid {
+    sigma_a {
+      rgb_spectrum {
+        r: 0.0
+        g: 0.0
+        b: 0.0
+      }
+    }
+    sigma_s {
+      rgb_spectrum {
+        r: 0.0
+        g: 0.0
+        b: 0.0
+      }
+    }
+    Le {
+      rgb_spectrum {
+        r: 0.0
+        g: 0.0
+        b: 0.0
+      }
+    }
+    p0 {
+      x: 0.0
+      y: 0.0
+      z: 0.0
+    }
+    p1 {
+      x: 1.0
+      y: 1.0
+      z: 1.0
+    }
+  }
+}
+volume_integrators {
+  emission {}
+  single {}
+}

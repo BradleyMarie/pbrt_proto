@@ -43,6 +43,10 @@ default_material {
     }
   }
 }
+accelerators {
+  bvh {}
+  kdtree {}
+}
 area_light_sources {
   diffuse {
     L {
@@ -140,7 +144,7 @@ float_textures {
       float_value: 0.0
     }
   }
-  constant { }
+  constant {}
   dots {
     inside {
       float_value: 1.0
@@ -159,7 +163,7 @@ float_textures {
       z: 0.0
     }
   }
-  fbm { }
+  fbm {}
   imagemap {
     v1 {
       x: 1.0
@@ -183,7 +187,7 @@ float_textures {
       float_value: 0.5
     }
   }
-  ptex { }
+  ptex {}
   scale {
     tex1 {
       float_value: 1.0
@@ -192,20 +196,143 @@ float_textures {
       float_value: 1.0
     }
   }
-  windy { }
-  wrinkled { }
+  windy {}
+  wrinkled {}
 }
 integrators {
   ambientocclusion {
     nsamples: 64
   }
-  bdpt { }
-  directlighting { }
-  mlt { }
-  path { }
-  sppm { }
-  volpath { }
-  whitted { }
+  bdpt {}
+  directlighting {}
+  mlt {}
+  path {}
+  sppm {}
+  volpath {}
+  whitted {}
+}
+light_sources {
+  distant {
+    L {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    scale {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    from {
+      x: 0.0
+      y: 0.0
+      z: 0.0
+    }
+    to {
+      x: 0.0
+      y: 0.0
+      z: 1.0
+    }
+  }
+  goniometric {
+    I {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    scale {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+  }
+  infinite {
+    L {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    scale {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+  }
+  point {
+    I {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    scale {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    from {
+      x: 0.0
+      y: 0.0
+      z: 0.0
+    }
+  }
+  projection {
+    I {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    scale {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+  }
+  spot {
+    I {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    scale {
+      rgb_spectrum {
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      }
+    }
+    from {
+      x: 0.0
+      y: 0.0
+      z: 0.0
+    }
+    to {
+      x: 0.0
+      y: 0.0
+      z: 1.0
+    }
+  }
 }
 materials {
   disney {
@@ -249,7 +376,7 @@ materials {
       float_value: 0.0
     }
   }
-  fourier { }
+  fourier {}
   glass {
     Kr {
       constant_spectrum: 1.0
@@ -2398,129 +2525,6 @@ materials {
     }
     eta {
       float_value: 1.5
-    }
-  }
-}
-light_sources {
-  distant {
-    L {
-      rgb_spectrum {
-        r: 1.0
-        g: 1.0
-        b: 1.0
-      }
-    }
-    scale {
-      rgb_spectrum {
-        r: 1.0
-        g: 1.0
-        b: 1.0
-      }
-    }
-    from {
-      x: 0.0
-      y: 0.0
-      z: 0.0
-    }
-    to {
-      x: 0.0
-      y: 0.0
-      z: 1.0
-    }
-  }
-  goniometric {
-    I {
-      rgb_spectrum {
-        r: 1.0
-        g: 1.0
-        b: 1.0
-      }
-    }
-    scale {
-      rgb_spectrum {
-        r: 1.0
-        g: 1.0
-        b: 1.0
-      }
-    }
-  }
-  infinite {
-    L {
-      rgb_spectrum {
-        r: 1.0
-        g: 1.0
-        b: 1.0
-      }
-    }
-    scale {
-      rgb_spectrum {
-        r: 1.0
-        g: 1.0
-        b: 1.0
-      }
-    }
-  }
-  point {
-    I {
-      rgb_spectrum {
-        r: 1.0
-        g: 1.0
-        b: 1.0
-      }
-    }
-    scale {
-      rgb_spectrum {
-        r: 1.0
-        g: 1.0
-        b: 1.0
-      }
-    }
-    from {
-      x: 0.0
-      y: 0.0
-      z: 0.0
-    }
-  }
-  projection {
-    I {
-      rgb_spectrum {
-        r: 1.0
-        g: 1.0
-        b: 1.0
-      }
-    }
-    scale {
-      rgb_spectrum {
-        r: 1.0
-        g: 1.0
-        b: 1.0
-      }
-    }
-  }
-  spot {
-    I {
-      rgb_spectrum {
-        r: 1.0
-        g: 1.0
-        b: 1.0
-      }
-    }
-    scale {
-      rgb_spectrum {
-        r: 1.0
-        g: 1.0
-        b: 1.0
-      }
-    }
-    from {
-      x: 0.0
-      y: 0.0
-      z: 0.0
-    }
-    to {
-      x: 0.0
-      y: 0.0
-      z: 1.0
     }
   }
 }
@@ -5695,22 +5699,22 @@ media {
   }
 }
 pixel_filter {
-  box { }
+  box {}
   gaussian {
     xradius: 2.0
     yradius: 2.0
   }
-  mitchell { }
-  sinc { }
-  triangle { }
+  mitchell {}
+  sinc {}
+  triangle {}
 }
 samplers {
   halton {
     pixelsamples: 16
   }
-  maxmindist { }
-  random { }
-  sobol { }
+  maxmindist {}
+  random {}
+  sobol {}
   stratified {
     xsamples: 4
     ysamples: 4
@@ -5720,11 +5724,11 @@ samplers {
   }
 }
 shapes {
-  cone { }
-  curve { }
-  cylinder { }
-  disk { }
-  heightfield { }
+  cone {}
+  curve {}
+  cylinder {}
+  disk {}
+  heightfield {}
   hyperboloid {
     p1 {
       x: 0.0
@@ -5737,9 +5741,9 @@ shapes {
       z: 1.0
     }
   }
-  loopsubdiv { }
-  nurbs { }
-  paraboloid { }
+  loopsubdiv {}
+  nurbs {}
+  paraboloid {}
   plymesh {
     alpha {
       float_value: 1.0
@@ -5748,7 +5752,7 @@ shapes {
       float_value: 1.0
     }
   }
-  sphere { }
+  sphere {}
   trianglemesh {
     alpha {
       float_value: 1.0
@@ -5832,7 +5836,7 @@ spectrum_textures {
       z: 0.0
     }
   }
-  fbm { }
+  fbm {}
   imagemap {
     v1 {
       x: 1.0
@@ -5845,7 +5849,7 @@ spectrum_textures {
       z: 0.0
     }
   }
-  marble { }
+  marble {}
   mix {
     tex1 {
       constant_spectrum: 0.0
@@ -5857,7 +5861,7 @@ spectrum_textures {
       float_value: 0.5
     }
   }
-  ptex { }
+  ptex {}
   scale {
     tex1 {
       constant_spectrum: 1.0
@@ -5878,6 +5882,6 @@ spectrum_textures {
       z: 0.0
     }
   }
-  windy { }
-  wrinkled { }
+  windy {}
+  wrinkled {}
 }
