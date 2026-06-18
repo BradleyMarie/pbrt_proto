@@ -119,8 +119,8 @@ const std::vector<TestInput> pbrt_v1_inputs = {
     {"pbrt-v1-scenes/spotfog.pbrt"},
     {"pbrt-v1-scenes/subdiv-example.pbrt", /*allow_warnings=*/true},
     {"pbrt-v1-scenes/subdiv-tetra.pbrt"},
-    // {"pbrt-v1-scenes/tt.pbrt"},
-    // {"pbrt-v1-scenes/tt-tire.pbrt"},
+    {"pbrt-v1-scenes/tt.pbrt", /*allow_warnings=*/true},
+    {"pbrt-v1-scenes/tt-tire.pbrt", /*allow_warnings=*/true},
 };
 
 const std::vector<TestInput> pbrt_v2_inputs = {

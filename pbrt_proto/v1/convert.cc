@@ -31,36 +31,15 @@ namespace {
 
 static const absl::flat_hash_map<absl::string_view, ParameterType>
     kParameterTypeNames = {
-        {
-            "bool",
-            ParameterType::BOOL,
-        },
-        {
-            "color",
-            ParameterType::RGB,
-        },
-        {
-            "float",
-            ParameterType::FLOAT,
-        },
-        {
-            "integer",
-            ParameterType::INTEGER,
-        },
-        {
-            "normal",
-            ParameterType::NORMAL3,
-        },
-        {
-            "point",
-            ParameterType::POINT3,
-        },
+        {"bool", ParameterType::BOOL_OR_TEXTURE},
+        {"color", ParameterType::RGB_OR_TEXTURE},
+        {"float", ParameterType::FLOAT_OR_TEXTURE},
+        {"integer", ParameterType::INTEGER_OR_TEXTURE},
+        {"normal", ParameterType::NORMAL3_OR_TEXTURE},
+        {"point", ParameterType::POINT3_OR_TEXTURE},
         {"string", ParameterType::STRING},
         {"texture", ParameterType::TEXTURE},
-        {
-            "vector",
-            ParameterType::VECTOR3,
-        },
+        {"vector", ParameterType::VECTOR3_OR_TEXTURE},
 };
 
 class ParserV1 final : public ProtoParser<PbrtProto, 1> {

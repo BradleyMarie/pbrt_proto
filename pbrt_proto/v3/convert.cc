@@ -30,72 +30,24 @@ namespace {
 
 static const absl::flat_hash_map<absl::string_view, ParameterType>
     kParameterTypeNames = {
-        {
-            "blackbody",
-            ParameterType::BLACKBODY_V1,
-        },
-        {
-            "bool",
-            ParameterType::BOOL,
-        },
-        {
-            "color",
-            ParameterType::RGB,
-        },
-        {
-            "float",
-            ParameterType::FLOAT,
-        },
-        {
-            "integer",
-            ParameterType::INTEGER,
-        },
-        {
-            "normal",
-            ParameterType::NORMAL3,
-        },
-        {
-            "normal3",
-            ParameterType::NORMAL3,
-        },
-        {
-            "point",
-            ParameterType::POINT3,
-        },
-        {
-            "point2",
-            ParameterType::POINT2,
-        },
-        {
-            "point3",
-            ParameterType::POINT3,
-        },
-        {
-            "rgb",
-            ParameterType::RGB,
-        },
-        {
-            "spectrum",
-            ParameterType::SPECTRUM,
-        },
+        {"blackbody", ParameterType::BLACKBODY_V1},
+        {"bool", ParameterType::BOOL},
+        {"color", ParameterType::RGB},
+        {"float", ParameterType::FLOAT},
+        {"integer", ParameterType::INTEGER},
+        {"normal", ParameterType::NORMAL3},
+        {"normal3", ParameterType::NORMAL3},
+        {"point", ParameterType::POINT3},
+        {"point2", ParameterType::POINT2},
+        {"point3", ParameterType::POINT3},
+        {"rgb", ParameterType::RGB},
+        {"spectrum", ParameterType::SPECTRUM},
         {"string", ParameterType::STRING},
         {"texture", ParameterType::TEXTURE},
-        {
-            "vector",
-            ParameterType::VECTOR3,
-        },
-        {
-            "vector2",
-            ParameterType::VECTOR2,
-        },
-        {
-            "vector3",
-            ParameterType::VECTOR3,
-        },
-        {
-            "xyz",
-            ParameterType::XYZ,
-        },
+        {"vector", ParameterType::VECTOR3},
+        {"vector2", ParameterType::VECTOR2},
+        {"vector3", ParameterType::VECTOR3},
+        {"xyz", ParameterType::XYZ},
 };
 
 class ParserV3 final : public ProtoParser<PbrtProto, 3> {

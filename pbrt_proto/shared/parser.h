@@ -15,22 +15,29 @@
 namespace pbrt_proto {
 
 enum class ParameterType {
-  BLACKBODY_V1,    // float2
-  BLACKBODY_V2,    // float
-  BOOL,            // bool
-  FLOAT,           // float
-  INTEGER,         // integer (truncates fractional values)
-  INTEGER_STRICT,  // integer (integral values only)
-  NORMAL3,         // float3
-  POINT2,          // float2
-  POINT3,          // float3
-  RGB,             // float3
-  SPECTRUM,        // float2 or string
-  STRING,          // string
-  TEXTURE,         // string
-  VECTOR2,         // float2
-  VECTOR3,         // float3
-  XYZ,             // float3
+  BLACKBODY_V1,        // float2
+  BLACKBODY_V2,        // float
+  BOOL,                // bool
+  BOOL_OR_TEXTURE,     // bool with texture fallback
+  FLOAT,               // float
+  FLOAT_OR_TEXTURE,    // float with texture fallback
+  INTEGER,             // integer (truncates fractional values)
+  INTEGER_STRICT,      // integer (integral values only)
+  INTEGER_OR_TEXTURE,  // integer with texture fallback
+  NORMAL3,             // float3
+  NORMAL3_OR_TEXTURE,  // float3 with texture fallback
+  POINT2,              // float2
+  POINT3,              // float3
+  POINT3_OR_TEXTURE,   // float3 with texture fallback
+  RGB,                 // float3
+  RGB_OR_TEXTURE,      // float3 with texture fallback
+  SPECTRUM,            // float2 or string
+  STRING,              // string
+  TEXTURE,             // string
+  VECTOR2,             // float2
+  VECTOR3,             // float3
+  VECTOR3_OR_TEXTURE,  // float3 with texture fallback
+  XYZ,                 // float3
 };
 
 using ParameterValues =

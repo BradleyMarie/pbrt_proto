@@ -443,6 +443,30 @@ absl::Status ParseParameterList(absl::string_view directive,
                                 tokenizer, output, loop);
 }
 
+absl::Status ParseSingleStringParameter(
+    absl::string_view directive, absl::string_view type, absl::string_view name,
+    ParameterType parameter_type, ParameterStorage& storage,
+    Tokenizer& tokenizer, absl::InlinedVector<absl::string_view, 16>& output) {
+  absl::StatusOr<const std::string*> next = tokenizer.Peek();
+  if (!next.ok()) {
+    return next.status();
+  }
+
+  if ((**next)[0] != '"') {
+    return absl::OkStatus();
+  }
+
+  std::cerr << "WARNING: Implicitly converted string value specified as type '"
+            << type << "' to type 'texture' for " << directive
+            << " parameter: '" << name << "'" << std::endl;
+
+  absl::string_view& out = output.emplace_back(storage.Add(**tokenizer.Next()));
+  out.remove_prefix(1);
+  out.remove_suffix(1);
+
+  return absl::OkStatus();
+}
+
 absl::Status ParseSpectrumParameter(
     absl::string_view directive, absl::string_view type, absl::string_view name,
     ParameterStorage& storage, Tokenizer& tokenizer, ParameterValues& output) {
@@ -694,6 +718,20 @@ absl::StatusOr<absl::string_view> ReadParameters(
         values = absl::MakeSpan(output);
         break;
       }
+      case ParameterType::BOOL_OR_TEXTURE: {
+        auto& output = storage.NextString();
+        status = ParseSingleStringParameter(directive, type, parameter_name,
+                                            parameter_type, storage, tokenizer,
+                                            output);
+        if (!status.ok() || !output.empty()) {
+          parameter_type = ParameterType::TEXTURE;
+          values = absl::MakeSpan(output);
+          break;
+        }
+
+        parameter_type = ParameterType::BOOL;
+        ABSL_FALLTHROUGH_INTENDED;
+      }
       case ParameterType::BOOL: {
         auto& output = storage.NextBool();
         status = ParseParameterList(directive, type, parameter_name,
@@ -702,6 +740,20 @@ absl::StatusOr<absl::string_view> ReadParameters(
         values = absl::MakeSpan(output);
         break;
       }
+      case ParameterType::FLOAT_OR_TEXTURE: {
+        auto& output = storage.NextString();
+        status = ParseSingleStringParameter(directive, type, parameter_name,
+                                            parameter_type, storage, tokenizer,
+                                            output);
+        if (!status.ok() || !output.empty()) {
+          parameter_type = ParameterType::TEXTURE;
+          values = absl::MakeSpan(output);
+          break;
+        }
+
+        parameter_type = ParameterType::FLOAT;
+        ABSL_FALLTHROUGH_INTENDED;
+      }
       case ParameterType::FLOAT: {
         auto& output = storage.NextFloat();
         status = ParseParameterList(directive, type, parameter_name,
@@ -709,6 +761,20 @@ absl::StatusOr<absl::string_view> ReadParameters(
                                     /*must_loop=*/false);
         values = absl::MakeSpan(output);
         break;
+      }
+      case ParameterType::INTEGER_OR_TEXTURE: {
+        auto& output = storage.NextString();
+        status = ParseSingleStringParameter(directive, type, parameter_name,
+                                            parameter_type, storage, tokenizer,
+                                            output);
+        if (!status.ok() || !output.empty()) {
+          parameter_type = ParameterType::TEXTURE;
+          values = absl::MakeSpan(output);
+          break;
+        }
+
+        parameter_type = ParameterType::INTEGER;
+        ABSL_FALLTHROUGH_INTENDED;
       }
       case ParameterType::INTEGER: {
         auto& output = storage.NextInt();
@@ -727,6 +793,20 @@ absl::StatusOr<absl::string_view> ReadParameters(
         parameter_type = ParameterType::INTEGER;
         break;
       }
+      case ParameterType::NORMAL3_OR_TEXTURE: {
+        auto& output = storage.NextString();
+        status = ParseSingleStringParameter(directive, type, parameter_name,
+                                            parameter_type, storage, tokenizer,
+                                            output);
+        if (!status.ok() || !output.empty()) {
+          parameter_type = ParameterType::TEXTURE;
+          values = absl::MakeSpan(output);
+          break;
+        }
+
+        parameter_type = ParameterType::NORMAL3;
+        ABSL_FALLTHROUGH_INTENDED;
+      }
       case ParameterType::NORMAL3: {
         auto& output = storage.NextFloat3();
         status = ParseParameterList(directive, type, parameter_name,
@@ -743,6 +823,20 @@ absl::StatusOr<absl::string_view> ReadParameters(
         values = absl::MakeSpan(output);
         break;
       }
+      case ParameterType::POINT3_OR_TEXTURE: {
+        auto& output = storage.NextString();
+        status = ParseSingleStringParameter(directive, type, parameter_name,
+                                            parameter_type, storage, tokenizer,
+                                            output);
+        if (!status.ok() || !output.empty()) {
+          parameter_type = ParameterType::TEXTURE;
+          values = absl::MakeSpan(output);
+          break;
+        }
+
+        parameter_type = ParameterType::POINT3;
+        ABSL_FALLTHROUGH_INTENDED;
+      }
       case ParameterType::POINT3: {
         auto& output = storage.NextFloat3();
         status = ParseParameterList(directive, type, parameter_name,
@@ -750,6 +844,20 @@ absl::StatusOr<absl::string_view> ReadParameters(
                                     /*must_loop=*/true);
         values = absl::MakeSpan(output);
         break;
+      }
+      case ParameterType::RGB_OR_TEXTURE: {
+        auto& output = storage.NextString();
+        status = ParseSingleStringParameter(directive, type, parameter_name,
+                                            parameter_type, storage, tokenizer,
+                                            output);
+        if (!status.ok() || !output.empty()) {
+          parameter_type = ParameterType::TEXTURE;
+          values = absl::MakeSpan(output);
+          break;
+        }
+
+        parameter_type = ParameterType::RGB;
+        ABSL_FALLTHROUGH_INTENDED;
       }
       case ParameterType::RGB: {
         auto& output = storage.NextFloat3();
@@ -787,6 +895,20 @@ absl::StatusOr<absl::string_view> ReadParameters(
                                     /*must_loop=*/true);
         values = absl::MakeSpan(output);
         break;
+      }
+      case ParameterType::VECTOR3_OR_TEXTURE: {
+        auto& output = storage.NextString();
+        status = ParseSingleStringParameter(directive, type, parameter_name,
+                                            parameter_type, storage, tokenizer,
+                                            output);
+        if (!status.ok() || !output.empty()) {
+          parameter_type = ParameterType::TEXTURE;
+          values = absl::MakeSpan(output);
+          break;
+        }
+
+        parameter_type = ParameterType::VECTOR3;
+        ABSL_FALLTHROUGH_INTENDED;
       }
       case ParameterType::VECTOR3: {
         auto& output = storage.NextFloat3();

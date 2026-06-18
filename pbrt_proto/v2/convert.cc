@@ -33,41 +33,17 @@ namespace {
 static const absl::flat_hash_map<absl::string_view, ParameterType>
     kParameterTypeNames = {
         {"blackbody", ParameterType::BLACKBODY_V1},
-        {
-            "bool",
-            ParameterType::BOOL,
-        },
-        {
-            "color",
-            ParameterType::RGB,
-        },
-        {
-            "float",
-            ParameterType::FLOAT,
-        },
-        {
-            "integer",
-            ParameterType::INTEGER,
-        },
-        {
-            "normal",
-            ParameterType::NORMAL3,
-        },
-        {
-            "point",
-            ParameterType::POINT3,
-        },
-        {
-            "rgb",
-            ParameterType::RGB,
-        },
+        {"bool", ParameterType::BOOL},
+        {"color", ParameterType::RGB},
+        {"float", ParameterType::FLOAT},
+        {"integer", ParameterType::INTEGER},
+        {"normal", ParameterType::NORMAL3},
+        {"point", ParameterType::POINT3},
+        {"rgb", ParameterType::RGB},
         {"spectrum", ParameterType::SPECTRUM},
         {"string", ParameterType::STRING},
         {"texture", ParameterType::TEXTURE},
-        {
-            "vector",
-            ParameterType::VECTOR3,
-        },
+        {"vector", ParameterType::VECTOR3},
         {"xyz", ParameterType::XYZ},
 };
 
