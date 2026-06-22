@@ -314,10 +314,10 @@ message Defaults {
     // The default "debug" SurfaceIntegator
     required DebugIntegrator debug = 2;
 
-    // The default "exphotonmap" SurfaceIntegator
+    // The default "directlighting" SurfaceIntegator
     required DirectLightingIntegrator directlighting = 3;
 
-    // The default "" SurfaceIntegator
+    // The default "exphotonmap" SurfaceIntegator
     required PhotonMapIntegrator exphotonmap = 4;
 
     // The default "igi" SurfaceIntegator
