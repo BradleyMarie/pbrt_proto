@@ -1,0 +1,402 @@
+syntax = "proto2";
+
+import "pbrt_proto/pbrt.proto";
+import "pbrt_proto/v2/v2.proto";
+
+package pbrt_proto.v2;
+
+// This protocol buffer represents the structure of the static data that is
+// needed for parsing PBRT Proto v2 inputs.
+//
+// For each directive with provided defaults, the expected usage is that the
+// renderer will first read its own input then merge the values from these
+// defaults into that proto.
+message Defaults {
+  // This field contains the set of scene defaults that PBRT defines for scenes
+  // such as the default accelerator, the default camera, etc. When parsing a
+  // PBRT Proto model, these defaults can be fed into the parser ahead of the
+  // model being renderered to configure these bits of global state. Then the
+  // model is free to override them if required.
+  //
+  // This field is guaranteed to provide an Accelerator, a Camera, a Film, a
+  // Filter, a Renderer, a Sampler, a SurfaceIntegrator, and a VolumeIntegrator;
+  // however, their order and type (while static) are not defined as part of
+  // this interface.
+  required PbrtProto global_defaults = 1;
+
+  // This field contains the default material to use if none is specified. This
+  // cannot be part of global_defaults because materials cannot be specified
+  // before the WorldBegin directive.
+  required Material default_material = 2;
+
+  // A container for the default values for every type of Accelerator
+  message DefaultAccelerators {
+    // The default "bvh" Accelerator
+    required BvhAccelerator bvh = 1;
+
+    // The default "grid" Accelerator
+    required GridAccelerator grid = 2;
+
+    // The default "kdtree" Accelerator
+    required KdTreeAccelerator kdtree = 3;
+  }
+
+  // The default values for every type of Accelerator
+  required DefaultAccelerators accelerators = 3;
+
+  // A container for the default values for every type of AreaLightSource
+  message DefaultAreaLightSources {
+    // The default "diffuse" AreaLightSource
+    required DiffuseAreaLightSource diffuse = 1;
+  }
+
+  // The default values for every type of AreaLightSource
+  required DefaultAreaLightSources area_light_sources = 4;
+
+  message DefaultCameras {
+    // The default "environment" Camera
+    required SphericalCamera environment = 1;
+
+    // The default "orthographic" Camera
+    required OrthographicCamera orthographic = 2;
+
+    // The default "perspective" Camera
+    required PerspectiveCamera perspective = 3;
+  }
+
+  required DefaultCameras cameras = 5;
+
+  // A container for the default values for every type of Film
+  message DefaultFilms {
+    // The default "image" Film
+    required RgbFilm image = 1;
+  }
+
+  // The default values for every type of Film
+  required DefaultFilms films = 6;
+
+  // A container for the default values for every type of FloatTexture
+  message DefaultFloatTextures {
+    // The default "bilerp" FloatTexture
+    required BilerpFloatTexture bilerp = 1;
+
+    // The default 2D "checkerboard" FloatTexture
+    required Checkerboard2DFloatTexture checkerboard2d = 2;
+
+    // The default 3D "checkerboard" FloatTexture
+    required Checkerboard2DFloatTexture checkerboard3d = 3;
+
+    // The default "constant" FloatTexture
+    required ConstantFloatTexture constant = 4;
+
+    // The default "dots" FloatTexture
+    required DotsFloatTexture dots = 5;
+
+    // The default "fbm" FloatTexture
+    required FBmFloatTexture fbm = 6;
+
+    // The default "imagemap" FloatTexture
+    required ImageMapFloatTexture imagemap = 7;
+
+    // The default "mix" FloatTexture
+    required MixFloatTexture mix = 8;
+
+    // The default "scale" FloatTexture
+    required ScaleFloatTexture scale = 9;
+
+    // The default "windy" FloatTexture
+    required WindyFloatTexture windy = 10;
+
+    // The default "wrinkled" FloatTexture
+    required WrinkledFloatTexture wrinkled = 11;
+  }
+
+  // The default values for every type of FloatTexture
+  required DefaultFloatTextures float_textures = 7;
+
+  // A container for the default values for every type of LightSource
+  message DefaultLightSources {
+    // The default "distant" LightSource
+    required DistantLightSource distant = 1;
+
+    // The default "goniometric" LightSource
+    required GoniometricLightSource goniometric = 2;
+
+    // The default "infinite" LightSource
+    required InfiniteLightSource infinite = 3;
+
+    // The default "point" LightSource
+    required PointLightSource point = 4;
+
+    // The default "projection" LightSource
+    required ProjectionLightSource projection = 5;
+
+    // The default "spot" LightSource
+    required SpotLightSource spot = 6;
+  }
+
+  // The default values for every type of LightSource
+  required DefaultLightSources light_sources = 8;
+
+  // A container for the default values for every type of Material
+  message DefaultMaterials {
+    // The default "glass" Material
+    required GlassMaterial glass = 1;
+
+    // The default "kdsubsurface" Material
+    required KdSubsurfaceMaterial kdsubsurface = 2;
+
+    // The default "matte" Material
+    required MatteMaterial matte = 3;
+
+    // The default "measured" Material
+    required MeasuredMerlMaterial measured = 4;
+
+    // The default "metal" Material
+    required MetalMaterial metal = 5;
+
+    // The default "mirror" Material
+    required MirrorMaterial mirror = 6;
+
+    // The default "mix" Material
+    required MixMaterial mix = 7;
+
+    // The default "plastic" Material
+    required PlasticMaterial plastic = 8;
+
+    // The default "shinymetal" Material
+    required ShinyMetalMaterial shinymetal = 9;
+
+    // The default "substrate" Material
+    required SubstrateMaterial substrate = 10;
+
+    // The default "subsurface" Material for every MeasuredSubsurfacePreset
+    //
+    // NOTE: Protocol Buffers do not allow enums to be used directly as map
+    //       keys, so int32 is used here as the key type instead. Every value in
+    //       MeasuredSubsurfacePreset is guaranteed to be present in this map.
+    map<int32, SubsurfaceMaterial> subsurfaces = 11;
+
+    // The default "translucent" Material
+    required TranslucentMaterial translucent = 12;
+
+    // The default "uber" Material
+    required UberMaterial uber = 13;
+  }
+
+  // The default values for every type of Material
+  required DefaultMaterials materials = 9;
+
+  // A container for the default values for every type of PixelFilter
+  message DefaultPixelFilter {
+    // The default "box" PixelFilter
+    required BoxPixelFilter box = 1;
+
+    // The default "gaussian" PixelFilter
+    required GaussianPixelFilter gaussian = 2;
+
+    // The default "mitchell" PixelFilter
+    required MitchellPixelFilter mitchell = 3;
+
+    // The default "sinc" PixelFilter
+    required LanczosPixelFilter sinc = 4;
+
+    // The default "triangle" PixelFilter
+    required TrianglePixelFilter triangle = 5;
+  }
+
+  // The default values for every type of PixelFilter
+  required DefaultPixelFilter pixel_filter = 10;
+
+  // A container for the default values for every type of Renderer
+  message DefaultRenderers {
+    // The default "aggregatetest" Renderer
+    required AggregateTestRenderer aggregatetest = 1;
+
+    // The default "createprobes" Renderer
+    required CreateProbesRenderer createprobes = 2;
+
+    // The default "metropolis" Renderer
+    required MetropolisRenderer metropolis = 3;
+
+    // The default "sampler" Renderer
+    required SamplerRenderer sampler = 4;
+
+    // The default "surfacepoints" Renderer
+    required SurfacePointsRenderer surfacepoints = 5;
+  }
+
+  // The default values for every type of Renderer
+  required DefaultRenderers renderers = 11;
+
+  // A container for the default values for every type of Sampler
+  message DefaultSamplers {
+    // The deafault "adaptive" Sampler
+    required AdaptiveSampler adaptive = 1;
+
+    // The deafault "bestcandidate" Sampler
+    required BestCandidateSampler bestcandidate = 2;
+
+    // The deafault "halton" Sampler
+    required HaltonSampler halton = 3;
+
+    // The deafault "lowdiscrepancy" Sampler
+    required ZeroTwoSequenceSampler lowdiscrepancy = 4;
+
+    // The deafault "random" Sampler
+    required IndependentSampler random = 5;
+
+    // The deafault "stratified" Sampler
+    required StratifiedSampler stratified = 6;
+  }
+
+  // The default values for every type of Sampler
+  required DefaultSamplers samplers = 12;
+
+  // A container for the default values for every type of Shape
+  message DefaultShapes {
+    // The default "cone" Shape
+    required ConeShape cone = 1;
+
+    // The default "cylinder" Shape
+    required CylinderShape cylinder = 2;
+
+    // The default "disk" Shape
+    required DiskShape disk = 3;
+
+    // The default "heightfield" Shape
+    required HeightFieldShape heightfield = 4;
+
+    // The default "heightfield" Shape
+    required HyperboloidShape hyperboloid = 5;
+
+    // The default "loopsubdiv" Shape
+    required LoopSubdivShape loopsubdiv = 6;
+
+    // The default "nurbs" Shape
+    required NurbsShape nurbs = 7;
+
+    // The default "paraboloid" Shape
+    required ParaboloidShape paraboloid = 8;
+
+    // The default "sphere" Shape
+    required SphereShape sphere = 9;
+
+    // The default "trianglemesh" Shape
+    required TriangleMeshShape trianglemesh = 10;
+  }
+
+  // The default values for every type of Shape
+  required DefaultShapes shapes = 13;
+
+  // A container for the default values for every type of SpectrumTexture
+  message DefaultSpectrumTextures {
+    // The default "bilerp" SpectrumTexture
+    required BilerpSpectrumTexture bilerp = 1;
+
+    // The default 2D "checkerboard" SpectrumTexture
+    required Checkerboard2DSpectrumTexture checkerboard2d = 2;
+
+    // The default 3D "checkerboard" SpectrumTexture
+    required Checkerboard2DSpectrumTexture checkerboard3d = 3;
+
+    // The default "constant" SpectrumTexture
+    required ConstantSpectrumTexture constant = 4;
+
+    // The default "dots" SpectrumTexture
+    required DotsSpectrumTexture dots = 5;
+
+    // The default "fbm" SpectrumTexture
+    required FBmSpectrumTexture fbm = 6;
+
+    // The default "imagemap" SpectrumTexture
+    required ImageMapSpectrumTexture imagemap = 7;
+
+    // The default "marble" SpectrumTexture
+    required MarbleSpectrumTexture marble = 8;
+
+    // The default "mix" SpectrumTexture
+    required MixSpectrumTexture mix = 9;
+
+    // The default "scale" SpectrumTexture
+    required ScaleSpectrumTexture scale = 10;
+
+    // The default "uv" SpectrumTexture
+    required UvSpectrumTexture uv = 11;
+
+    // The default "windy" SpectrumTexture
+    required WindySpectrumTexture windy = 12;
+
+    // The default "wrinkled" SpectrumTexture
+    required WrinkledSpectrumTexture wrinkled = 13;
+  }
+
+  // The default values for every type of SpectrumTexture
+  required DefaultSpectrumTextures spectrum_textures = 14;
+
+  // A container for the default values for every type of SurfaceIntegrator
+  message DefaultSurfaceIntegrators {
+    // The default "ambientocclusion" SurfaceIntegator
+    required AmbientOcclusionIntegrator ambientocclusion = 1;
+
+    // The default "diffuseprt" SurfaceIntegator
+    required DiffusePrtIntegrator diffuseprt = 2;
+
+    // The default "dipolesubsurface" SurfaceIntegator
+    required DipoleSubsurfaceIntegrator dipolesubsurface = 3;
+
+    // The default "directlighting" SurfaceIntegator
+    required DirectLightingIntegrator directlighting = 4;
+
+    // The default "glossyprt" SurfaceIntegator
+    required GlossyPrtIntegrator glossyprt = 5;
+
+    // The default "igi" SurfaceIntegator
+    required IgiIntegrator igi = 6;
+
+    // The default "irradiancecache" SurfaceIntegator
+    required IrradianceCacheIntegrator irradiancecache = 7;
+
+    // The default "path" SurfaceIntegator
+    required PathIntegrator path = 8;
+
+    // The default "photonmap" SurfaceIntegator
+    required PhotonMapIntegrator photonmap = 9;
+
+    // The default "useprobes" SurfaceIntegator
+    required UseProbesIntegrator useprobes = 10;
+
+    // The default "whitted" SurfaceIntegator
+    required WhittedIntegrator whitted = 11;
+  }
+
+  // The default values for every type of Integrator
+  required DefaultSurfaceIntegrators surface_integrators = 15;
+
+  // A container for the default values for every type of Volume
+  message DefaultVolumes {
+    // The default "exponential" Volume
+    required ExponentialMedium exponential = 1;
+
+    // The default "homogeneous" Volume
+    required HomogeneousMedium homogeneous = 2;
+
+    // The default "single" Volume
+    required UniformGridMedium volumegrid = 3;
+  }
+
+  // The default values for every type of Volume
+  required DefaultVolumes volumes = 16;
+
+  // A container for the default values for every type of VolumeIntegrator
+  message DefaultVolumeIntegrators {
+    // The default "emission" VolumeIntegrator
+    required EmissionVolumeIntegrator emission = 1;
+
+    // The default "single" VolumeIntegrator
+    required SingleVolumeIntegrator single = 2;
+  }
+
+  // The default values for every type of Volume
+  required DefaultVolumeIntegrators volume_integrators = 17;
+}

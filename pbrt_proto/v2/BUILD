@@ -56,6 +56,20 @@ cc_test(
 )
 
 proto_library(
+    name = "defaults_proto",
+    srcs = ["defaults.proto"],
+    deps = [
+        ":v2_proto",
+        "//pbrt_proto",
+    ],
+)
+
+cc_proto_library(
+    name = "defaults_cc_proto",
+    deps = [":defaults_proto"],
+)
+
+proto_library(
     name = "v2_proto",
     srcs = ["v2.proto"],
     deps = [
