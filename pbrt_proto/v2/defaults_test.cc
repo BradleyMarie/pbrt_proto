@@ -153,6 +153,23 @@ void CheckAllFields(const Descriptor* descriptor0,
 
     CheckField(*descriptor1, *field_descriptor);
   }
+
+  for (int f = 0; f < descriptor1->field_count(); f++) {
+    const FieldDescriptor* field_descriptor = descriptor1->field(f);
+    if (!field_descriptor) {
+      continue;
+    }
+
+    bool found = false;
+    for (int ff = 0; ff < descriptor0->field_count(); ff++) {
+      if (field_descriptor->name() == descriptor0->field(ff)->name()) {
+        found = true;
+        break;
+      }
+    }
+
+    EXPECT_TRUE(found);
+  }
 }
 
 TEST(Defaults, Accelerator) {
