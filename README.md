@@ -29,12 +29,9 @@ the serialized data as well as their CPU and memory cost at runtime).
 
 # Current Status
 
-PBRT Proto has full support for the PBRT v3 inputs. Some work has been done to
-support v1, v2, and v4; however, there is no immediate plan to complete their
-implementation.
-
-Additionally, while PBRT Proto fully supports PBRT v3 inputs, their actual
-Protocol Buffer projection is still a work in progress and is not stable.
+PBRT Proto has full support for the PBRT v1, PBRT v2, and PBRT v3 inputs. Some
+work has been done to support v4; however, there is no immediate plan to
+complete its implementation.
 
 # File Extension
 
