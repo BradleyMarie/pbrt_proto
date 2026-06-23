@@ -67,13 +67,13 @@ message Defaults {
   required DefaultCameras cameras = 5;
 
   // A container for the default values for every type of Film
-  message DefaultFilm {
+  message DefaultFilms {
     // The default "image" Film
     required RgbFilm image = 1;
   }
 
   // The default values for every type of Film
-  required DefaultFilm film = 6;
+  required DefaultFilms films = 6;
 
   // A container for the default values for every type of FloatTexture
   message DefaultFloatTextures {

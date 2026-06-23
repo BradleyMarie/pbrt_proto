@@ -88,7 +88,7 @@ cameras {
     yon: 1e30
   }
 }
-film {
+films {
   image {
     xresolution: 640
     yresolution: 480

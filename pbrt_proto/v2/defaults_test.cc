@@ -166,7 +166,8 @@ TEST(Defaults, AreaLightSource) {
 }
 
 TEST(Defaults, Film) {
-  CheckAllFields(Film::GetDescriptor(), Defaults::DefaultFilm::GetDescriptor());
+  CheckAllFields(Film::GetDescriptor(),
+                 Defaults::DefaultFilms::GetDescriptor());
 }
 
 TEST(Defaults, FloatTexture) {

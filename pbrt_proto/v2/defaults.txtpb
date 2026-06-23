@@ -86,7 +86,7 @@ cameras {
     yon: inf
   }
 }
-film {
+films {
   image {
     xresolution: 640
     yresolution: 480

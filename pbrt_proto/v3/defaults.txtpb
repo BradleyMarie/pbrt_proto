@@ -87,7 +87,7 @@ cameras {
     simpleweighting: true
   }
 }
-film {
+films {
   image {
     xresolution: 1280
     yresolution: 720
