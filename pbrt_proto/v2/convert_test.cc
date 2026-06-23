@@ -759,15 +759,13 @@ TEST(Shape, OverridesEtaFloat) {
 
   PbrtProto actual;
   EXPECT_TRUE(Convert(directive, actual).ok());
-  EXPECT_THAT(actual, EqualsProto(R"pb(directives {
-                                         shape {
-                                           sphere {}
-                                           overrides {
-                                             eta { float_value: 1.0 }
-                                             eta_as_value: 1.0
-                                           }
-                                         }
-                                       })pb"));
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives {
+                                 shape {
+                                   sphere {}
+                                   overrides { eta { float_value: 1.0 } }
+                                 }
+                               })pb"));
 }
 
 TEST(Shape, OverridesEtaTexture) {

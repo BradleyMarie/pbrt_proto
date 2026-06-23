@@ -182,7 +182,6 @@ message Shape {
     optional string filename = 21;
     optional string namedmaterial1 = 22;
     optional string namedmaterial2 = 23;
-    optional double eta_as_value = 24;
   }
 
   // The overrides for the materials applied to the shape.

@@ -606,7 +606,6 @@ absl::Status ParserV3::Shape(
 
   if (std::optional<double> eta = TryRemoveFloat(parameters, "eta");
       eta.has_value()) {
-    shape.mutable_overrides()->set_eta_as_value(*eta);
     shape.mutable_overrides()->mutable_eta()->set_float_value(*eta);
   } else if (std::optional<absl::string_view> eta =
                  TryRemoveTexture(parameters, "eta");

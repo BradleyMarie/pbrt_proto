@@ -473,16 +473,13 @@ absl::Status RemoveSubsurfaceMaterial(
   }
 
   if (pbrt_version <= 2) {
+    RemoveIndex(parameters, output);
+
     if (absl::Status status = TryRemoveSpectrumTexture(
             parameters, "sigma_prime_s",
             std::bind(&SubsurfaceMaterial::mutable_sigma_s, &output));
         !status.ok()) {
       return status;
-    }
-
-    if (std::optional<double> index = TryRemoveFloat(parameters, "index");
-        index) {
-      output.set_eta(*index);
     }
   }
 
@@ -496,7 +493,7 @@ absl::Status RemoveSubsurfaceMaterial(
     }
 
     if (std::optional<double> eta = TryRemoveFloat(parameters, "eta"); eta) {
-      output.set_eta(*eta);
+      output.mutable_eta()->set_float_value(*eta);
     }
 
     if (absl::Status status = RemoveKt(parameters, pbrt_version, output);

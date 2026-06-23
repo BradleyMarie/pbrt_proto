@@ -1439,9 +1439,9 @@ TEST(RemoveSubsurfaceMaterialV2, WithData) {
                               /*type_name=*/"",
                               /*values=*/absl::MakeSpan(bumpmap)};
 
-  std::vector<double> index = {2.0};
+  std::vector<std::string_view> index = {"index"};
   Parameter index_parameter{/*directive=*/"",
-                            /*type=*/ParameterType::FLOAT,
+                            /*type=*/ParameterType::TEXTURE,
                             /*type_name=*/"",
                             /*values=*/absl::MakeSpan(index)};
 
@@ -1478,7 +1478,7 @@ TEST(RemoveSubsurfaceMaterialV2, WithData) {
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 Kr { spectrum_texture_name: "kr" }
                 bumpmap { float_texture_name: "bump" }
-                eta: 2.0
+                eta { float_texture_name: "index" }
                 sigma_a { spectrum_texture_name: "sigma_a" }
                 sigma_s { spectrum_texture_name: "sigma_s" }
                 name: APPLE
@@ -1594,7 +1594,7 @@ TEST(RemoveSubsurfaceMaterialV3, WithData) {
                 bumpmap { float_texture_name: "bump" }
                 g: 1.0
                 scale: 0.0
-                eta: 2.0
+                eta { float_value: 2.0 }
                 sigma_a { spectrum_texture_name: "sigma_a" }
                 sigma_s { spectrum_texture_name: "sigma_s" }
                 name: APPLE

@@ -580,10 +580,10 @@ message DiffuseAreaLightSource {
 
   // A scale applied to the spectrum provided in `L`.
   //
-  // NOTE: Starting with PBRTv4 inputs, this field will only ever a Spectrum
-  //       with the `constant_spectrum` field filled out. This is because the
-  //       type of this field changed from a `spectrum` to a `float` starting
-  //       with PBRTv4.
+  // NOTE: Starting with PBRTv4 inputs, this field will only ever contain a
+  //       Spectrum with the `constant_spectrum` field filled out. This is
+  //       because the type of this field changed from a `spectrum` to a `float`
+  //       starting with PBRTv4.
   //
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported in PBRTv1 and should be ignored when
@@ -1877,44 +1877,44 @@ message DisneyMaterial {
   optional FloatTextureParameter bumpmap = 13;
 
   // The base color of the surface.
-  optional SpectrumTextureParameter color = 25;
+  optional SpectrumTextureParameter color = 24;
 
   // The path length light travels inside the material before exiting.
-  optional SpectrumTextureParameter scatterdistance = 27;
+  optional SpectrumTextureParameter scatterdistance = 26;
 
   // Adjusts the asapect ratio of the specular highlights.
-  optional FloatTextureParameter anisotropic = 29;
+  optional FloatTextureParameter anisotropic = 28;
 
   // Adds a clearcoat over the base material.
-  optional FloatTextureParameter clearcoat = 32;
+  optional FloatTextureParameter clearcoat = 31;
 
   // Controls the roughness of the clearcoat.
-  optional FloatTextureParameter clearcoatgloss = 33;
+  optional FloatTextureParameter clearcoatgloss = 32;
 
   // Controls how much light is diffusely transmitted through the surface.
-  optional FloatTextureParameter difftrans = 34;
+  optional FloatTextureParameter difftrans = 33;
 
   // Softens the diffuse transition making the surface more like fabric.
-  optional FloatTextureParameter flatness = 36;
+  optional FloatTextureParameter flatness = 35;
 
   // Controls how metallic the surface appears.
-  optional FloatTextureParameter metallic = 37;
+  optional FloatTextureParameter metallic = 36;
 
   // Controls how much light is specularly transmitted through the surface.
-  optional FloatTextureParameter spectrans = 39;
+  optional FloatTextureParameter spectrans = 38;
 
   // Adjusts the color of the specular highlights tinting them towards the
   // base color.
-  optional FloatTextureParameter speculartint = 40;
+  optional FloatTextureParameter speculartint = 39;
 
   // Adds a fabric-like backscatter.
-  optional FloatTextureParameter sheen = 41;
+  optional FloatTextureParameter sheen = 40;
 
   // Adjust the color of the sheen reflection towards the base color.
-  optional FloatTextureParameter sheentint = 42;
+  optional FloatTextureParameter sheentint = 41;
 
   // If true, the material is attached to a thin object like paper.
-  optional bool thin = 46 [default = false];
+  optional bool thin = 45 [default = false];
 }
 
 // A material that approximates glass.
@@ -1964,7 +1964,7 @@ message GlassMaterial {
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported before PBRTv3 and should be ignored when
   //       reading earlier input.
-  optional bool remaproughness = 45 [default = true];
+  optional bool remaproughness = 44 [default = true];
 }
 
 // A material that approximates hair.
@@ -1972,30 +1972,30 @@ message HairMaterial {
   // The index of refraction of the scattering volume.
   optional FloatTextureParameter eta = 11;
 
-  // If specified, a value of the absorption coefficient is computed using an
-  // approximation that leads to the hair having roughly this color, after
-  // multiple scattering in the hair during rendering.
-  optional SpectrumTextureParameter color = 25;
-
   // The absorption coefficient of the volume.
   optional SpectrumTextureParameter sigma_a = 18;
 
+  // If specified, a value of the absorption coefficient is computed using an
+  // approximation that leads to the hair having roughly this color, after
+  // multiple scattering in the hair during rendering.
+  optional SpectrumTextureParameter color = 24;
+
   // This represents the tilt angle of the cuticle scales on the hair surface.
-  optional FloatTextureParameter alpha = 28;
+  optional FloatTextureParameter alpha = 27;
 
   // The longitudinal roughness of the hair surface.
-  optional FloatTextureParameter beta_m = 30;
+  optional FloatTextureParameter beta_m = 29;
 
   // The azimuthal roughness of the hair surface.
-  optional FloatTextureParameter beta_n = 31;
+  optional FloatTextureParameter beta_n = 30;
 
   // Concentration of the eumelanin pigment in the hair. Blonde hair has
   // concentrations around 0.3, brown around 1.3, and black around 8.0.
-  optional FloatTextureParameter eumelanin = 35;
+  optional FloatTextureParameter eumelanin = 34;
 
   // Concentration of the pheomelanin pigment in the hair. Pheomelanin makes
   // red hair red.
-  optional FloatTextureParameter pheomelanin = 38;
+  optional FloatTextureParameter pheomelanin = 37;
 }
 
 // A material with subsurface scattering where Kd is main parameter.
@@ -2054,7 +2054,7 @@ message KdSubsurfaceMaterial {
     // NOTE: For simplicity, this field is shared between all PBRT versions;
     //       however, it is only supported in PBRTv3 and should be ignored when
     //       reading all other input.
-    SpectrumTextureParameter mfp = 26;
+    SpectrumTextureParameter mfp = 25;
   }
 
   // The asymmetry factor of the material's phase function. A value of zero
@@ -2065,14 +2065,14 @@ message KdSubsurfaceMaterial {
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported before PBRTv3 and should be ignored when
   //       reading earlier input.
-  optional double g = 43 [default = 0.0];
+  optional double g = 42 [default = 0.0];
 
   // A scale factor applied to the mean free path.
   //
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported before PBRTv3 and should be ignored when
   //       reading earlier input.
-  optional double scale = 44 [default = 1.0];
+  optional double scale = 43 [default = 1.0];
 
   // If true, roughness values are expected to be in the range [0,1], and are
   // remapped to microfacet distribution function parameter values that range
@@ -2083,7 +2083,7 @@ message KdSubsurfaceMaterial {
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported before PBRTv3 and should be ignored when
   //       reading earlier input.
-  optional bool remaproughness = 45 [default = true];
+  optional bool remaproughness = 44 [default = true];
 }
 
 // A material with simple Lambertian scattering.
@@ -2158,7 +2158,7 @@ message MetalMaterial {
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported before PBRTv3 and should be ignored when
   //       reading earlier input.
-  optional bool remaproughness = 45 [default = true];
+  optional bool remaproughness = 44 [default = true];
 }
 
 // A material which mixes two different materials.
@@ -2193,7 +2193,7 @@ message PlasticMaterial {
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported before PBRTv3 and should be ignored when
   //       reading earlier input.
-  optional bool remaproughness = 45 [default = true];
+  optional bool remaproughness = 44 [default = true];
 }
 
 // A material which mixes between two named materials.
@@ -2267,7 +2267,7 @@ message SubstrateMaterial {
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported before PBRTv3 and should be ignored when
   //       reading earlier input.
-  optional bool remaproughness = 45 [default = true];
+  optional bool remaproughness = 44 [default = true];
 }
 
 // A material with subsurface scattering.
@@ -2298,6 +2298,20 @@ message SubsurfaceMaterial {
   //       reading earlier input.
   optional FloatTextureParameter vroughness = 10;
 
+  // The index of refraction of the scattering volume.
+  //
+  // NOTE: Prior to PBRTv3 this field was named "index".
+  //
+  // NOTE: Starting with PBRTv3 inputs, this field will only ever a
+  //       FloatTextureParameter with the `float_value` field filled out. This
+  //       is because the type of this field changed from a `Texture` to a
+  //       `float` starting with PBRTv3.
+  //
+  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
+  //       however, it is not supported before PBRTv2 and should be ignored when
+  //       reading earlier input.
+  optional FloatTextureParameter eta = 11;
+
   // The floating-point texture to be used as a bump map.
   optional FloatTextureParameter bumpmap = 13;
 
@@ -2314,9 +2328,6 @@ message SubsurfaceMaterial {
   //       parameter used in PBRTv3 and later.
   optional SpectrumTextureParameter sigma_s = 19;
 
-  // The index of refraction of the scattering volume.
-  optional double eta = 24 [default = 1.33];
-
   // The asymmetry factor of the material's phase function. A value of zero
   // represents isotropic scattering, a value less than zero represents
   // backwards scattering, and a value greater than one represents forward
@@ -2325,14 +2336,14 @@ message SubsurfaceMaterial {
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported before PBRTv3 and should be ignored when
   //       reading earlier input.
-  optional double g = 43 [default = 0.0];
+  optional double g = 42 [default = 0.0];
 
   // A scale factor applied to the mean free path.
   //
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported before PBRTv3 and should be ignored when
   //       reading earlier input.
-  optional double scale = 44 [default = 1.0];
+  optional double scale = 43 [default = 1.0];
 
   // If true, roughness values are expected to be in the range [0,1], and are
   // remapped to microfacet distribution function parameter values that range
@@ -2343,7 +2354,7 @@ message SubsurfaceMaterial {
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported before PBRTv3 and should be ignored when
   //       reading earlier input.
-  optional bool remaproughness = 45 [default = true];
+  optional bool remaproughness = 44 [default = true];
 }
 
 // A simple translucent material with diffuse and specular compoents.
@@ -2375,7 +2386,7 @@ message TranslucentMaterial {
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported before PBRTv3 and should be ignored when
   //       reading earlier input.
-  optional bool remaproughness = 45 [default = true];
+  optional bool remaproughness = 44 [default = true];
 }
 
 // The "kitchen sink" material available in PBRTv1, PBRTv2, and PBRT v3.
@@ -2442,7 +2453,7 @@ message UberMaterial {
   // NOTE: For simplicity, this field is shared across multiple PBRT versions;
   //       however, it is not supported before PBRTv3 and should be ignored when
   //       reading earlier input.
-  optional bool remaproughness = 45 [default = true];
+  optional bool remaproughness = 44 [default = true];
 }
 
 //
