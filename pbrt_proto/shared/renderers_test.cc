@@ -53,7 +53,7 @@ TEST(RemoveCreateProbesRenderer, Empty) {
 }
 
 TEST(RemoveCreateProbesRenderer, TooFewBounds) {
-  std::vector<double> bounds = {{1.0}};
+  std::vector<double> bounds = {1.0};
   Parameter bounds_parameter{/*directive=*/"",
                              /*type=*/ParameterType::FLOAT,
                              /*type_name=*/"",

@@ -146,13 +146,12 @@ TEST_P(CommonTypes, AreBinaryCompatible) {
   }
 }
 
-INSTANTIATE_TEST_CASE_P(AllTypes, CommonTypes,
-                        testing::Values("Accelerator", "AreaLightSource",
-                                        "Camera", "Film", "FloatTexture",
-                                        "Integrator", "LightSource", "Material",
-                                        "Medium", "PixelFilter", "Renderer",
-                                        "Sampler", "Shape", "SpectrumTexture",
-                                        "VolumeIntegrator"));
+INSTANTIATE_TEST_SUITE_P(
+    AllTypes, CommonTypes,
+    testing::Values("Accelerator", "AreaLightSource", "Camera", "Film",
+                    "FloatTexture", "Integrator", "LightSource", "Material",
+                    "Medium", "PixelFilter", "Renderer", "Sampler", "Shape",
+                    "SpectrumTexture", "VolumeIntegrator"));
 
 std::vector<std::pair<int, int>> GenerateVersionPairs(int max) {
   std::vector<std::pair<int, int>> result;
@@ -213,8 +212,8 @@ TEST_P(Directives, ForwardCompatible) {
   }
 }
 
-INSTANTIATE_TEST_CASE_P(AllDirectives, Directives,
-                        testing::ValuesIn(GenerateVersionPairs(4)));
+INSTANTIATE_TEST_SUITE_P(AllDirectives, Directives,
+                         testing::ValuesIn(GenerateVersionPairs(4)));
 
 TEST(MaterialOverrides, AreBinaryCompatible) {
   const FileDescriptor* file_descriptor =
