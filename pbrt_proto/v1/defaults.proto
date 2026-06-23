@@ -64,13 +64,13 @@ message Defaults {
   required DefaultCameras cameras = 5;
 
   // A container for the default values for every type of Film
-  message DefaultFilms {
+  message DefaultFilm {
     // The default "image" Film
     required RgbFilm image = 1;
   }
 
   // The default values for every type of Film
-  required DefaultFilms films = 6;
+  required DefaultFilm film = 6;
 
   // A container for the default values for every type of FloatTexture
   message DefaultFloatTextures {
@@ -81,7 +81,7 @@ message Defaults {
     required Checkerboard2DFloatTexture checkerboard2d = 2;
 
     // The default 3D "checkerboard" FloatTexture
-    required Checkerboard2DFloatTexture checkerboard3d = 3;
+    required Checkerboard3DFloatTexture checkerboard3d = 3;
 
     // The default "constant" FloatTexture
     required ConstantFloatTexture constant = 4;
@@ -187,7 +187,7 @@ message Defaults {
   required DefaultMaterials materials = 9;
 
   // A container for the default values for every type of PixelFilter
-  message DefaultPixelFilter {
+  message DefaultPixelFilters {
     // The default "box" PixelFilter
     required BoxPixelFilter box = 1;
 
@@ -205,7 +205,7 @@ message Defaults {
   }
 
   // The default values for every type of PixelFilter
-  required DefaultPixelFilter pixel_filter = 10;
+  required DefaultPixelFilters pixel_filters = 10;
 
   // A container for the default values for every type of Sampler
   message DefaultSamplers {
@@ -270,7 +270,7 @@ message Defaults {
     required Checkerboard2DSpectrumTexture checkerboard2d = 2;
 
     // The default 3D "checkerboard" SpectrumTexture
-    required Checkerboard2DSpectrumTexture checkerboard3d = 3;
+    required Checkerboard3DSpectrumTexture checkerboard3d = 3;
 
     // The default "constant" SpectrumTexture
     required ConstantSpectrumTexture constant = 4;

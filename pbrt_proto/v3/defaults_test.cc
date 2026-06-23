@@ -4,6 +4,7 @@
 #include "absl/status/status_matchers.h"
 #include "absl/strings/string_view.h"
 #include "gmock/gmock.h"
+#include "google/protobuf/descriptor.pb.h"
 #include "gtest/gtest.h"
 #include "pbrt_proto/testing/proto_matchers.h"
 #include "pbrt_proto/v3/defaults.pb.h"
@@ -16,7 +17,9 @@ namespace {
 using ::absl_testing::IsOkAndHolds;
 using ::absl_testing::StatusIs;
 using ::bazel::tools::cpp::runfiles::Runfiles;
+using ::google::protobuf::Descriptor;
 using ::google::protobuf::EqualsProto;
+using ::google::protobuf::FieldDescriptor;
 using ::google::protobuf::ParseTextOrDie;
 
 class DefaultsTest : public testing::Test {
@@ -79,9 +82,122 @@ TEST_F(DefaultsTest, Global) {
   EXPECT_TRUE(found_sampler);
 }
 
-TEST_F(DefaultsTest, Material) {
+TEST_F(DefaultsTest, DefaultMaterial) {
   EXPECT_NE(defaults_.default_material().material_type_case(),
             Material::MATERIAL_TYPE_NOT_SET);
+}
+
+void CheckField(const Descriptor& descriptor, const FieldDescriptor& field) {
+  SCOPED_TRACE(field.name());
+
+  bool found_something = false;
+  for (int f = 0; f < descriptor.field_count(); f++) {
+    const FieldDescriptor* field_descriptor = descriptor.field(f);
+    if (!field_descriptor) {
+      continue;
+    }
+
+    if (field_descriptor->name() != field.name()) {
+      continue;
+    }
+
+    if (field_descriptor->is_map()) {
+      for (int ff = 0; ff < field_descriptor->message_type()->field_count();
+           ff++) {
+        if (field_descriptor->message_type()->field(ff)->name() == "value") {
+          field_descriptor = field_descriptor->message_type()->field(ff);
+          break;
+        }
+      }
+    }
+
+    EXPECT_EQ(!!field_descriptor->message_type(), !!field.message_type());
+
+    if (field_descriptor->message_type() && field.message_type()) {
+      EXPECT_EQ(field_descriptor->message_type()->full_name(),
+                field.message_type()->full_name());
+    }
+
+    found_something = true;
+  }
+
+  EXPECT_TRUE(found_something);
+}
+
+void CheckAllFields(const Descriptor* descriptor0,
+                    const Descriptor* descriptor1) {
+  for (int f = 0; f < descriptor0->field_count(); f++) {
+    const FieldDescriptor* field_descriptor = descriptor0->field(f);
+    if (!field_descriptor) {
+      continue;
+    }
+
+    if (field_descriptor->name() == "name" ||
+        field_descriptor->name() == "overrides") {
+      continue;
+    }
+
+    CheckField(*descriptor1, *field_descriptor);
+  }
+}
+
+TEST(Defaults, Accelerator) {
+  CheckAllFields(Accelerator::GetDescriptor(),
+                 Defaults::DefaultAccelerators::GetDescriptor());
+}
+
+TEST(Defaults, AreaLightSource) {
+  CheckAllFields(AreaLightSource::GetDescriptor(),
+                 Defaults::DefaultAreaLightSources::GetDescriptor());
+}
+
+TEST(Defaults, Film) {
+  CheckAllFields(Film::GetDescriptor(), Defaults::DefaultFilm::GetDescriptor());
+}
+
+TEST(Defaults, FloatTexture) {
+  CheckAllFields(FloatTexture::GetDescriptor(),
+                 Defaults::DefaultFloatTextures::GetDescriptor());
+}
+
+TEST(Defaults, Integrator) {
+  CheckAllFields(Integrator::GetDescriptor(),
+                 Defaults::DefaultIntegrators::GetDescriptor());
+}
+
+TEST(Defaults, LightSource) {
+  CheckAllFields(LightSource::GetDescriptor(),
+                 Defaults::DefaultLightSources::GetDescriptor());
+}
+
+TEST(Defaults, Material) {
+  CheckAllFields(Material::GetDescriptor(),
+                 Defaults::DefaultMaterials::GetDescriptor());
+}
+
+TEST(Defaults, MakeNamedMedium) {
+  CheckAllFields(MakeNamedMedium::GetDescriptor(),
+                 Defaults::DefaultMedia::GetDescriptor());
+}
+
+TEST(Defaults, PixelFilter) {
+  CheckAllFields(PixelFilter::GetDescriptor(),
+                 Defaults::DefaultPixelFilters::GetDescriptor());
+}
+
+TEST(Defaults, Sampler) {
+  CheckAllFields(Sampler::GetDescriptor(),
+                 Defaults::DefaultSamplers::GetDescriptor());
+}
+
+TEST(Defaults, Shape) {
+  CheckAllFields(Shape::GetDescriptor(),
+                 Defaults::DefaultShapes::GetDescriptor());
+}
+
+TEST(Defaults, SpectrumTexture) {
+  CheckAllFields(SpectrumTexture::GetDescriptor(),
+                 Defaults::DefaultSpectrumTextures::GetDescriptor());
 }
 
 }  // namespace

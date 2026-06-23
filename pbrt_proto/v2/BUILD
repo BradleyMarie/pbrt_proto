@@ -123,5 +123,6 @@ cc_test(
         "@bazel_tools//tools/cpp/runfiles",
         "@googletest//:gtest",
         "@googletest//:gtest_main",
+        "@protobuf",
     ],
 )

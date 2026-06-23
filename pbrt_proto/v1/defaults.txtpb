@@ -88,7 +88,7 @@ cameras {
     yon: 1e30
   }
 }
-films {
+film {
   image {
     xresolution: 640
     yresolution: 480
@@ -500,7 +500,7 @@ materials {
     }
   }
 }
-pixel_filter {
+pixel_filters {
   box {}
   gaussian {
     xradius: 2.0
