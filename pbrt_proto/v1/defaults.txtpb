@@ -94,7 +94,6 @@ films {
     yresolution: 480
   }
 }
-
 float_textures {
   bilerp {
     v00 {
@@ -552,7 +551,6 @@ shapes {
     }
   }
 }
-
 spectrum_textures {
   bilerp {
     v00 {
