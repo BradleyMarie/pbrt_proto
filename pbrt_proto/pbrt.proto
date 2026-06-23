@@ -722,18 +722,18 @@ message PerspectiveCamera {
 message SphericalCamera {
   // The mappping used from 2D points on the image to directions in 3D.
   enum Mapping {
+    // A mapping which each pixel in the output image covers an equal number of
+    // degrees of longitude and latitude on the sphere of 3D directions.
+    //
+    // This is the default mapping in PBRTv1, PBRTv2, and PBRTv3.
+    EQUIRECTANGULAR = 0;
+
     // A mapping in which each pixel in the output image covers an equal amount
     // of solid angle on the sphere of 3D directions based on an octrahedral
     // encoding.
     //
     // This is the default mapping in PBRTv4 and later.
-    EQUALAREA = 0;
-
-    // A mapping which each pixel in the output image covers an equal number of
-    // degrees of longitude and latitude on the sphere of 3D directions.
-    //
-    // This is the default mapping in PBRTv1, PBRTv2, and PBRTv3.
-    EQUIRECTANGULAR = 1;
+    EQUALAREA = 1;
   }
 
   // The time at which the shutter opens.
@@ -1293,7 +1293,7 @@ message GlossyPrtIntegrator {
   optional uint32 lmax = 26 [default = 4];
 
   // The surface roughness, for use with the Blinn microfacet distributions.
-  optional double roughness = 29 [default = 0.01];
+  optional double roughness = 29 [default = 0.1];
 
   // The diffuse reflectance spectrum of surfaces.
   optional Spectrum Kd = 30;

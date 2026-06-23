@@ -81,3 +81,47 @@ cc_proto_library(
     name = "v2_cc_proto",
     deps = [":v2_proto"],
 )
+
+genrule(
+    name = "defaults_binpb",
+    srcs = [
+        ":defaults.txtpb",
+    ],
+    outs = ["defaults.binpb"],
+    cmd = "$(execpath @protobuf//:protoc) " +
+          "--encode=pbrt_proto.v2.Defaults " +
+          "--deterministic_output " +
+          "--descriptor_set_in=$(execpath :defaults_proto):$(execpath :v2_proto):$(execpath //pbrt_proto) " +
+          "< $(execpath :defaults.txtpb) > $@",
+    cmd_bat = "$(execpath @protobuf//:protoc) " +
+              "--encode=pbrt_proto.v2.Defaults " +
+              "--deterministic_output " +
+              "--descriptor_set_in=$(execpath :defaults_proto);$(execpath :v2_proto);$(execpath //pbrt_proto) " +
+              "< $(execpath :defaults.txtpb) > $@",
+    tools = [
+        ":defaults_proto",
+        ":v2_proto",
+        "//pbrt_proto",
+        "@protobuf//:protoc",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_test(
+    name = "defaults_test",
+    srcs = ["defaults_test.cc"],
+    data = [
+        ":defaults.binpb",
+    ],
+    deps = [
+        ":defaults_cc_proto",
+        ":v2_cc_proto",
+        "//pbrt_proto/testing:proto_matchers",
+        "@abseil-cpp//absl/log:check",
+        "@abseil-cpp//absl/status:status_matchers",
+        "@abseil-cpp//absl/strings:string_view",
+        "@bazel_tools//tools/cpp/runfiles",
+        "@googletest//:gtest",
+        "@googletest//:gtest_main",
+    ],
+)
