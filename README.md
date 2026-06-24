@@ -95,5 +95,5 @@ following roughly ordered set of principles was used to guide the process.
 1) In PBRT Proto, the `Include` directive works like the `Import` directive in
    that it cannot be used in the middle of a different directive and that the
    included files must start and end with complete directives. This means that
-   some of the the volumetric example scenes from PBRTv1, PBRTv2, and PBRTv3 are
-   incompatible with PBRT Proto without modification.
+   some of the the volumetric example scenes from PBRT v1, PBRT v2, and PBRT v3
+   are incompatible with PBRT Proto without modification.
