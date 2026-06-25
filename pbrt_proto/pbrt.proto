@@ -2203,6 +2203,8 @@ message MixMaterial {
 }
 
 // A material that approximates a shiny metal surface.
+//
+// @supported_versions {PBRTv1, PBRTv2}
 message ShinyMetalMaterial {
   // The coefficient of glossy reflection.
   optional SpectrumTextureParameter Ks = 2;
