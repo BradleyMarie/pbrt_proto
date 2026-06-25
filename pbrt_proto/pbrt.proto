@@ -1099,9 +1099,22 @@ message SpectralFilm {
 
 // The strategy used to sample direct lighting.
 enum LightSampler {
-  UNIFORM = 0;  // Sample the lights uniformly
-  POWER = 1;    // Sample based on the lights' power
-  BVH = 2;      // Sample spatially using a BVH, called SPATIAL prior to PBRTv4
+  // Sample the lights uniformly.
+  UNIFORM = 0;
+
+  // Sample based on the lights' power.
+  POWER = 1;
+
+  // Sample spatially.
+  //
+  // @max_version PBRTv3
+  SPATIAL = 2;
+
+  // Sample spatially using a BVH.
+  BVH = 2;
+
+  // Allow aliasing
+  option allow_alias = true;
 }
 
 // An integrator which computes the amount of ambient occlusion at a pixel.

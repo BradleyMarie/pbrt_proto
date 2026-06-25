@@ -1,6 +1,7 @@
 #include "pbrt_proto/shared/renderers.h"
 
 #include <algorithm>
+#include <cassert>
 #include <iostream>
 #include <optional>
 
@@ -8,12 +9,15 @@
 #include "absl/strings/string_view.h"
 #include "pbrt_proto/pbrt.pb.h"
 #include "pbrt_proto/shared/parser.h"
+#include "pbrt_proto/shared/version.h"
 
 namespace pbrt_proto {
 
 absl::Status RemoveAggregateTestRenderer(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, AggregateTestRenderer& output) {
+  assert(IsSupported(pbrt_version, output));
+
   if (std::optional<int32_t> niters = TryRemoveInteger(parameters, "niters");
       niters.has_value()) {
     output.set_niters(std::max(0, *niters));
@@ -25,6 +29,8 @@ absl::Status RemoveAggregateTestRenderer(
 absl::Status RemoveCreateProbesRenderer(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, CreateProbesRenderer& output) {
+  assert(IsSupported(pbrt_version, output));
+
   std::optional<absl::Span<double>> bounds;
   if (absl::Status status = TryRemoveFloats(parameters, "bounds", 6, bounds);
       !status.ok()) {
@@ -87,6 +93,8 @@ absl::Status RemoveCreateProbesRenderer(
 absl::Status RemoveMetropolisRenderer(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, MetropolisRenderer& output) {
+  assert(IsSupported(pbrt_version, output));
+
   if (std::optional<double> largestepprobability =
           TryRemoveFloat(parameters, "largestepprobability");
       largestepprobability.has_value()) {
@@ -141,6 +149,8 @@ absl::Status RemoveMetropolisRenderer(
 absl::Status RemoveSamplerRenderer(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, SamplerRenderer& output) {
+  assert(IsSupported(pbrt_version, output));
+
   if (std::optional<bool> visualizeobjectids =
           TryRemoveBool(parameters, "visualizeobjectids");
       visualizeobjectids.has_value()) {
@@ -153,6 +163,8 @@ absl::Status RemoveSamplerRenderer(
 absl::Status RemoveSurfacePointsRenderer(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, SurfacePointsRenderer& output) {
+  assert(IsSupported(pbrt_version, output));
+
   if (std::optional<double> minsampledistance =
           TryRemoveFloat(parameters, "minsampledistance");
       minsampledistance.has_value()) {

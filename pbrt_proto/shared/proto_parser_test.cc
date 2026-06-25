@@ -26,14 +26,16 @@ static const absl::flat_hash_map<absl::string_view, ParameterType>
 
 absl::Status CallbackSucceeds(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    int pbrt_version, SpectrumTexture::Nested& nested) {
-  nested.set_name("name");
+    int pbrt_version, Translate& nested) {
+  nested.set_x(1.0);
+  nested.set_y(1.0);
+  nested.set_z(1.0);
   return absl::OkStatus();
 }
 
 absl::Status CallbackFails(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    int pbrt_version, SpectrumTexture::Nested& nested) {
+    int pbrt_version, Translate& nested) {
   return absl::InternalError("internal");
 }
 
@@ -113,7 +115,7 @@ class TestProtoParser final : public ProtoParser<PbrtProto, PbrtVersion> {
         pbrt_proto::SpectrumTexture>
         kSupportedTypes = {
             {"empty", this->template EmptyCallback<
-                          &pbrt_proto::SpectrumTexture::mutable_nested>()},
+                          &pbrt_proto::SpectrumTexture::mutable_nested2>()},
             {"fails",
              this->template CB<CallbackFails,
                                &pbrt_proto::SpectrumTexture::mutable_nested>()},
@@ -633,10 +635,11 @@ TEST(CallbackSuccess, V1) {
 
   PbrtProto actual;
   EXPECT_TRUE(Convert<1>(directive, actual).ok());
-  EXPECT_THAT(actual,
-              EqualsProto(R"pb(directives {
-                                 spectrum_texture { nested { name: "name" } }
-                               })pb"));
+  EXPECT_THAT(
+      actual,
+      EqualsProto(R"pb(directives {
+                         spectrum_texture { nested { x: 1.0 y: 1.0 z: 1.0 } }
+                       })pb"));
 }
 
 TEST(CallbackFails, V1) {
@@ -653,7 +656,7 @@ TEST(EmptyCallback, V4) {
   PbrtProto actual;
   EXPECT_TRUE(Convert<4>(directive, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(directives {
-                                         spectrum_texture { nested {} }
+                                         spectrum_texture { nested2 {} }
                                        })pb"));
 }
 

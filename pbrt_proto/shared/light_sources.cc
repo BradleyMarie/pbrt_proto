@@ -1,6 +1,7 @@
 #include "pbrt_proto/shared/light_sources.h"
 
 #include <algorithm>
+#include <cassert>
 #include <functional>
 
 #include "absl/container/flat_hash_map.h"
@@ -8,6 +9,7 @@
 #include "pbrt_proto/pbrt.pb.h"
 #include "pbrt_proto/shared/common.h"
 #include "pbrt_proto/shared/parser.h"
+#include "pbrt_proto/shared/version.h"
 
 namespace pbrt_proto {
 namespace {
@@ -102,6 +104,8 @@ void RemoveTo(absl::flat_hash_map<absl::string_view, Parameter>& parameters,
 absl::Status RemoveDistantLightSource(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, DistantLightSource& output) {
+  assert(IsSupported(pbrt_version, output));
+
   RemoveFrom(parameters, output);
   RemoveTo(parameters, output);
 
@@ -122,6 +126,8 @@ absl::Status RemoveDistantLightSource(
 absl::Status RemoveGoniometricLightSource(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, GoniometricLightSource& output) {
+  assert(IsSupported(pbrt_version, output));
+
   RemoveFilename(parameters, pbrt_version, output);
 
   if (pbrt_version >= 2) {
@@ -141,6 +147,8 @@ absl::Status RemoveGoniometricLightSource(
 absl::Status RemoveInfiniteLightSource(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, InfiniteLightSource& output) {
+  assert(IsSupported(pbrt_version, output));
+
   RemoveFilename(parameters, pbrt_version, output);
 
   if (pbrt_version <= 3) {
@@ -176,6 +184,8 @@ absl::Status RemoveInfiniteLightSource(
 absl::Status RemovePointLightSource(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, PointLightSource& output) {
+  assert(IsSupported(pbrt_version, output));
+
   RemoveFrom(parameters, output);
 
   if (pbrt_version >= 2) {
@@ -195,6 +205,8 @@ absl::Status RemovePointLightSource(
 absl::Status RemoveProjectionLightSource(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, ProjectionLightSource& output) {
+  assert(IsSupported(pbrt_version, output));
+
   RemoveFilename(parameters, pbrt_version, output);
 
   if (std::optional<double> fov = TryRemoveFloat(parameters, "fov"); fov) {
@@ -222,6 +234,8 @@ absl::Status RemoveProjectionLightSource(
 absl::Status RemoveSpotLightSource(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, SpotLightSource& output) {
+  assert(IsSupported(pbrt_version, output));
+
   RemoveFrom(parameters, output);
   RemoveTo(parameters, output);
 

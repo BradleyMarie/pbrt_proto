@@ -1,9 +1,12 @@
 #include "pbrt_proto/shared/films.h"
 
+#include <cassert>
+
 #include "absl/container/flat_hash_map.h"
 #include "absl/strings/string_view.h"
 #include "pbrt_proto/pbrt.pb.h"
 #include "pbrt_proto/shared/parser.h"
+#include "pbrt_proto/shared/version.h"
 
 namespace pbrt_proto {
 namespace {
@@ -133,6 +136,8 @@ absl::Status RemoveCommonV4(
 absl::Status RemoveRgbFilm(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, RgbFilm& output) {
+  assert(IsSupported(pbrt_version, output));
+
   if (pbrt_version == 1) {
     if (std::optional<bool> premultiplyalpha =
             TryRemoveBool(parameters, "premultiplyalpha");
@@ -183,6 +188,8 @@ absl::Status RemoveRgbFilm(
 absl::Status RemoveGBufferFilm(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, GBufferFilm& output) {
+  assert(IsSupported(pbrt_version, output));
+
   if (absl::Status status = RemoveCommonV4(parameters, output); !status.ok()) {
     return status;
   }
@@ -209,6 +216,8 @@ absl::Status RemoveGBufferFilm(
 absl::Status RemoveSpectralFilm(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, SpectralFilm& output) {
+  assert(IsSupported(pbrt_version, output));
+
   if (absl::Status status = RemoveCommonV4(parameters, output); !status.ok()) {
     return status;
   }

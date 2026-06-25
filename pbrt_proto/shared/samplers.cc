@@ -1,10 +1,13 @@
 #include "pbrt_proto/shared/samplers.h"
 
+#include <cassert>
+
 #include "absl/container/flat_hash_map.h"
 #include "absl/status/status.h"
 #include "absl/strings/string_view.h"
 #include "pbrt_proto/pbrt.pb.h"
 #include "pbrt_proto/shared/parser.h"
+#include "pbrt_proto/shared/version.h"
 
 namespace pbrt_proto {
 namespace {
@@ -95,6 +98,8 @@ void RemoveSeed(absl::flat_hash_map<absl::string_view, Parameter>& parameters,
 absl::Status RemoveAdaptiveSampler(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, AdaptiveSampler& output) {
+  assert(IsSupported(pbrt_version, output));
+
   if (std::optional<int32_t> minsamples =
           TryRemoveInteger(parameters, "minsamples");
       minsamples.has_value()) {
@@ -128,6 +133,8 @@ absl::Status RemoveAdaptiveSampler(
 absl::Status RemoveBestCandidateSampler(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, BestCandidateSampler& output) {
+  assert(IsSupported(pbrt_version, output));
+
   RemovePixelSamples(parameters, output);
   return absl::OkStatus();
 }
@@ -135,6 +142,8 @@ absl::Status RemoveBestCandidateSampler(
 absl::Status RemoveHaltonSampler(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, HaltonSampler& output) {
+  assert(IsSupported(pbrt_version, output));
+
   RemovePixelSamples(parameters, output);
 
   if (pbrt_version == 3) {
@@ -160,6 +169,8 @@ absl::Status RemoveHaltonSampler(
 absl::Status RemoveIndependentSampler(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, IndependentSampler& output) {
+  assert(IsSupported(pbrt_version, output));
+
   RemovePixelSamples(parameters, output);
 
   if (pbrt_version >= 4) {
@@ -172,6 +183,8 @@ absl::Status RemoveIndependentSampler(
 absl::Status RemoveMaxMinDistSampler(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, MaxMinDistSampler& output) {
+  assert(IsSupported(pbrt_version, output));
+
   RemovePixelSamples(parameters, output);
   RemoveDimension(parameters, output);
   return absl::OkStatus();
@@ -180,6 +193,8 @@ absl::Status RemoveMaxMinDistSampler(
 absl::Status RemovePaddedSobolSampler(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, PaddedSobolSampler& output) {
+  assert(IsSupported(pbrt_version, output));
+
   RemovePixelSamples(parameters, output);
   RemoveSeed(parameters, output);
   return RemoveRandomization(parameters, output);
@@ -188,6 +203,8 @@ absl::Status RemovePaddedSobolSampler(
 absl::Status RemovePMJ02BNSampler(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, PMJ02BNSampler& output) {
+  assert(IsSupported(pbrt_version, output));
+
   RemovePixelSamples(parameters, output);
   RemoveSeed(parameters, output);
   return absl::OkStatus();
@@ -196,6 +213,8 @@ absl::Status RemovePMJ02BNSampler(
 absl::Status RemoveRandomSampler(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, RandomSampler& output) {
+  assert(IsSupported(pbrt_version, output));
+
   RemoveXSamples(parameters, output);
   RemoveYSamples(parameters, output);
   return absl::OkStatus();
@@ -204,6 +223,8 @@ absl::Status RemoveRandomSampler(
 absl::Status RemoveSobolSampler(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, SobolSampler& output) {
+  assert(IsSupported(pbrt_version, output));
+
   RemovePixelSamples(parameters, output);
 
   if (pbrt_version >= 4) {
@@ -221,6 +242,8 @@ absl::Status RemoveSobolSampler(
 absl::Status RemoveStratifiedSampler(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, StratifiedSampler& output) {
+  assert(IsSupported(pbrt_version, output));
+
   RemoveJitter(parameters, output);
   RemoveXSamples(parameters, output);
   RemoveYSamples(parameters, output);
@@ -239,6 +262,8 @@ absl::Status RemoveStratifiedSampler(
 absl::Status RemoveZeroTwoSequenceSampler(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, ZeroTwoSequenceSampler& output) {
+  assert(IsSupported(pbrt_version, output));
+
   RemovePixelSamples(parameters, output);
 
   if (pbrt_version >= 3) {
@@ -251,6 +276,8 @@ absl::Status RemoveZeroTwoSequenceSampler(
 absl::Status RemoveZSobolSampler(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, ZSobolSampler& output) {
+  assert(IsSupported(pbrt_version, output));
+
   RemovePixelSamples(parameters, output);
   RemoveSeed(parameters, output);
   return RemoveRandomization(parameters, output);

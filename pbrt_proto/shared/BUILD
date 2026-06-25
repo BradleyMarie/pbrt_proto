@@ -16,6 +16,7 @@ cc_library(
     hdrs = ["accelerators.h"],
     deps = [
         ":parser",
+        ":version",
         "//pbrt_proto:pbrt_cc_proto",
         "@abseil-cpp//absl/container:flat_hash_map",
         "@abseil-cpp//absl/status:status",
@@ -45,6 +46,7 @@ cc_library(
     deps = [
         ":common",
         ":parser",
+        ":version",
         "//pbrt_proto:pbrt_cc_proto",
         "@abseil-cpp//absl/container:flat_hash_map",
         "@abseil-cpp//absl/status:status",
@@ -75,6 +77,7 @@ cc_library(
     deps = [
         ":common",
         ":parser",
+        ":version",
         "//pbrt_proto:pbrt_cc_proto",
         "@abseil-cpp//absl/container:flat_hash_map",
         "@abseil-cpp//absl/functional:function_ref",
@@ -148,6 +151,7 @@ cc_library(
     hdrs = ["films.h"],
     deps = [
         ":parser",
+        ":version",
         "//pbrt_proto:pbrt_cc_proto",
         "@abseil-cpp//absl/container:flat_hash_map",
         "@abseil-cpp//absl/status:status",
@@ -178,6 +182,7 @@ cc_library(
     deps = [
         ":common",
         ":parser",
+        ":version",
         "//pbrt_proto:pbrt_cc_proto",
         "@abseil-cpp//absl/container:flat_hash_map",
         "@abseil-cpp//absl/status:status",
@@ -207,6 +212,7 @@ cc_library(
     deps = [
         ":common",
         ":parser",
+        ":version",
         "//pbrt_proto:pbrt_cc_proto",
         "@abseil-cpp//absl/container:flat_hash_map",
         "@abseil-cpp//absl/status:status",
@@ -237,6 +243,7 @@ cc_library(
     deps = [
         ":common",
         ":parser",
+        ":version",
         "//pbrt_proto:pbrt_cc_proto",
         "@abseil-cpp//absl/container:flat_hash_map",
         "@abseil-cpp//absl/status:status",
@@ -267,6 +274,7 @@ cc_library(
     deps = [
         ":common",
         ":parser",
+        ":version",
         "//pbrt_proto:pbrt_cc_proto",
         "@abseil-cpp//absl/container:flat_hash_map",
         "@abseil-cpp//absl/status:status",
@@ -323,6 +331,7 @@ cc_library(
     hdrs = ["pixel_filters.h"],
     deps = [
         ":parser",
+        ":version",
         "//pbrt_proto:pbrt_cc_proto",
         "@abseil-cpp//absl/container:flat_hash_map",
         "@abseil-cpp//absl/status:status",
@@ -350,6 +359,7 @@ cc_library(
     hdrs = ["proto_parser.h"],
     deps = [
         ":parser",
+        ":version",
         "//pbrt_proto:pbrt_cc_proto",
         "@abseil-cpp//absl/container:flat_hash_map",
         "@abseil-cpp//absl/status:status",
@@ -395,6 +405,7 @@ cc_library(
     hdrs = ["renderers.h"],
     deps = [
         ":parser",
+        ":version",
         "//pbrt_proto:pbrt_cc_proto",
         "@abseil-cpp//absl/container:flat_hash_map",
         "@abseil-cpp//absl/status:status",
@@ -423,6 +434,7 @@ cc_library(
     hdrs = ["samplers.h"],
     deps = [
         ":parser",
+        ":version",
         "//pbrt_proto:pbrt_cc_proto",
         "@abseil-cpp//absl/container:flat_hash_map",
         "@abseil-cpp//absl/status:status",
@@ -452,6 +464,7 @@ cc_library(
     deps = [
         ":common",
         ":parser",
+        ":version",
         "//pbrt_proto:pbrt_cc_proto",
         "@abseil-cpp//absl/container:flat_hash_map",
         "@abseil-cpp//absl/functional:function_ref",
@@ -484,6 +497,7 @@ cc_library(
     deps = [
         ":common",
         ":parser",
+        ":version",
         "//pbrt_proto:pbrt_cc_proto",
         "@abseil-cpp//absl/container:flat_hash_map",
         "@abseil-cpp//absl/status:status",

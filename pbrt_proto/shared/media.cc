@@ -1,10 +1,13 @@
 #include "pbrt_proto/shared/media.h"
 
+#include <cassert>
+
 #include "absl/container/flat_hash_map.h"
 #include "absl/strings/string_view.h"
 #include "pbrt_proto/pbrt.pb.h"
 #include "pbrt_proto/shared/common.h"
 #include "pbrt_proto/shared/parser.h"
+#include "pbrt_proto/shared/version.h"
 
 namespace pbrt_proto {
 namespace {
@@ -48,6 +51,8 @@ void RemoveBounds(absl::flat_hash_map<absl::string_view, Parameter>& parameters,
 absl::Status RemoveCloudMedium(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, CloudMedium& output) {
+  assert(IsSupported(pbrt_version, output));
+
   if (std::optional<double> g = TryRemoveFloat(parameters, "g");
       g.has_value()) {
     output.set_g(*g);
@@ -90,6 +95,8 @@ absl::Status RemoveCloudMedium(
 absl::Status RemoveExponentialMedium(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, ExponentialMedium& output) {
+  assert(IsSupported(pbrt_version, output));
+
   RemoveBounds(parameters, output);
 
   if (absl::Status status = RemoveSigma(parameters, pbrt_version, output);
@@ -127,6 +134,8 @@ absl::Status RemoveExponentialMedium(
 absl::Status RemoveHomogeneousMedium(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, HomogeneousMedium& output) {
+  assert(IsSupported(pbrt_version, output));
+
   if (absl::Status status = TryRemoveSpectrum(
           parameters, "Le", std::bind(&HomogeneousMedium::mutable_le, &output));
       !status.ok()) {
@@ -171,6 +180,8 @@ absl::Status RemoveHomogeneousMedium(
 absl::Status RemoveNanoVdbMedium(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, NanoVdbMedium& output) {
+  assert(IsSupported(pbrt_version, output));
+
   if (std::optional<double> g = TryRemoveFloat(parameters, "g");
       g.has_value()) {
     output.set_g(*g);
@@ -210,6 +221,8 @@ absl::Status RemoveNanoVdbMedium(
 absl::Status RemoveRgbGridMedium(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, RgbGridMedium& output) {
+  assert(IsSupported(pbrt_version, output));
+
   if (std::optional<std::array<double, 3>> sigma_a =
           TryRemoveRgb(parameters, "sigma_a");
       sigma_a.has_value()) {
@@ -294,6 +307,8 @@ absl::Status RemoveRgbGridMedium(
 absl::Status RemoveUniformGridMedium(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, UniformGridMedium& output) {
+  assert(IsSupported(pbrt_version, output));
+
   RemoveBounds(parameters, output);
 
   if (absl::Status status = TryRemoveSpectrum(

@@ -1,17 +1,21 @@
 #include "pbrt_proto/shared/accelerators.h"
 
+#include <cassert>
 #include <iostream>
 
 #include "absl/container/flat_hash_map.h"
 #include "absl/strings/string_view.h"
 #include "pbrt_proto/pbrt.pb.h"
 #include "pbrt_proto/shared/parser.h"
+#include "pbrt_proto/shared/version.h"
 
 namespace pbrt_proto {
 
 absl::Status RemoveGridAccelerator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, GridAccelerator& output) {
+  assert(IsSupported(pbrt_version, output));
+
   if (std::optional<bool> refineimmediately =
           TryRemoveBool(parameters, "refineimmediately");
       refineimmediately.has_value()) {
@@ -24,6 +28,8 @@ absl::Status RemoveGridAccelerator(
 absl::Status RemoveKdTreeAccelerator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, KdTreeAccelerator& output) {
+  assert(IsSupported(pbrt_version, output));
+
   if (std::optional<double> emptybonus =
           TryRemoveFloat(parameters, "emptybonus");
       emptybonus.has_value()) {
@@ -60,6 +66,8 @@ absl::Status RemoveKdTreeAccelerator(
 absl::Status RemoveBvhAccelerator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, BvhAccelerator& output) {
+  assert(IsSupported(pbrt_version, output));
+
   if (std::optional<int32_t> maxnodeprims =
           TryRemoveInteger(parameters, "maxnodeprims");
       maxnodeprims.has_value()) {

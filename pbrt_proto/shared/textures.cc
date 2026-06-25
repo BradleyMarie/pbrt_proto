@@ -1,5 +1,6 @@
 #include "pbrt_proto/shared/textures.h"
 
+#include <cassert>
 #include <cmath>
 #include <functional>
 #include <optional>
@@ -12,6 +13,7 @@
 #include "pbrt_proto/pbrt.pb.h"
 #include "pbrt_proto/shared/common.h"
 #include "pbrt_proto/shared/parser.h"
+#include "pbrt_proto/shared/version.h"
 
 namespace pbrt_proto {
 namespace {
@@ -227,6 +229,8 @@ void RemoveImageMapBase(
 absl::Status RemoveBilerpFloatTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, BilerpFloatTexture& output) {
+  assert(IsSupported(pbrt_version, output));
+
   TryRemoveUVParameters(parameters, "bilerp", output);
   TryRemoveFloatTexture(parameters, "v00",
                         std::bind(&BilerpFloatTexture::mutable_v00, &output));
@@ -242,6 +246,8 @@ absl::Status RemoveBilerpFloatTexture(
 absl::Status RemoveBilerpSpectrumTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, BilerpSpectrumTexture& output) {
+  assert(IsSupported(pbrt_version, output));
+
   TryRemoveUVParameters(parameters, "bilerp", output);
 
   if (absl::Status status = TryRemoveSpectrumTexture(
@@ -278,6 +284,8 @@ absl::Status RemoveBilerpSpectrumTexture(
 absl::Status RemoveCheckerboard2DFloatTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, Checkerboard2DFloatTexture& output) {
+  assert(IsSupported(pbrt_version, output));
+
   TryRemoveUVParameters(parameters, "checkerboard", output);
   TryRemoveFloatTexture(
       parameters, "tex1",
@@ -300,6 +308,8 @@ absl::Status RemoveCheckerboard2DFloatTexture(
 absl::Status RemoveCheckerboard2DSpectrumTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, Checkerboard2DSpectrumTexture& output) {
+  assert(IsSupported(pbrt_version, output));
+
   TryRemoveUVParameters(parameters, "checkerboard", output);
 
   if (absl::Status status = TryRemoveSpectrumTexture(
@@ -330,6 +340,8 @@ absl::Status RemoveCheckerboard2DSpectrumTexture(
 absl::Status RemoveCheckerboard3DFloatTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, Checkerboard3DFloatTexture& output) {
+  assert(IsSupported(pbrt_version, output));
+
   TryRemoveFloatTexture(
       parameters, "tex1",
       std::bind(&Checkerboard3DFloatTexture::mutable_tex1, &output));
@@ -342,6 +354,8 @@ absl::Status RemoveCheckerboard3DFloatTexture(
 absl::Status RemoveCheckerboard3DSpectrumTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, Checkerboard3DSpectrumTexture& output) {
+  assert(IsSupported(pbrt_version, output));
+
   if (absl::Status status = TryRemoveSpectrumTexture(
           parameters, "tex1",
           std::bind(&Checkerboard3DSpectrumTexture::mutable_tex1, &output));
@@ -362,6 +376,8 @@ absl::Status RemoveCheckerboard3DSpectrumTexture(
 absl::Status RemoveConstantFloatTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, ConstantFloatTexture& output) {
+  assert(IsSupported(pbrt_version, output));
+
   if (std::optional<double> value = TryRemoveFloat(parameters, "value");
       value) {
     output.set_value(*value);
@@ -373,6 +389,8 @@ absl::Status RemoveConstantFloatTexture(
 absl::Status RemoveConstantSpectrumTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, ConstantSpectrumTexture& output) {
+  assert(IsSupported(pbrt_version, output));
+
   return TryRemoveSpectrum(
       parameters, "value",
       std::bind(&ConstantSpectrumTexture::mutable_value, &output));
@@ -381,6 +399,8 @@ absl::Status RemoveConstantSpectrumTexture(
 absl::Status RemoveDirectionMixFloatTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, DirectionMixFloatTexture& output) {
+  assert(IsSupported(pbrt_version, output));
+
   RemoveDir(parameters, output);
   TryRemoveFloatTexture(
       parameters, "tex1",
@@ -394,6 +414,8 @@ absl::Status RemoveDirectionMixFloatTexture(
 absl::Status RemoveDirectionMixSpectrumTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, DirectionMixSpectrumTexture& output) {
+  assert(IsSupported(pbrt_version, output));
+
   RemoveDir(parameters, output);
 
   if (absl::Status status = TryRemoveSpectrumTexture(
@@ -416,6 +438,8 @@ absl::Status RemoveDirectionMixSpectrumTexture(
 absl::Status RemoveDotsFloatTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, DotsFloatTexture& output) {
+  assert(IsSupported(pbrt_version, output));
+
   TryRemoveUVParameters(parameters, "dots", output);
   TryRemoveFloatTexture(parameters, "inside",
                         std::bind(&DotsFloatTexture::mutable_inside, &output));
@@ -427,6 +451,8 @@ absl::Status RemoveDotsFloatTexture(
 absl::Status RemoveDotsSpectrumTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, DotsSpectrumTexture& output) {
+  assert(IsSupported(pbrt_version, output));
+
   TryRemoveUVParameters(parameters, "dots", output);
 
   if (absl::Status status = TryRemoveSpectrumTexture(
@@ -449,6 +475,8 @@ absl::Status RemoveDotsSpectrumTexture(
 absl::Status RemoveFBmFloatTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, FBmFloatTexture& output) {
+  assert(IsSupported(pbrt_version, output));
+
   if (std::optional<int32_t> octaves = TryRemoveInteger(parameters, "octaves");
       octaves) {
     output.set_octaves(std::max(0, *octaves));
@@ -465,6 +493,8 @@ absl::Status RemoveFBmFloatTexture(
 absl::Status RemoveFBmSpectrumTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, FBmSpectrumTexture& output) {
+  assert(IsSupported(pbrt_version, output));
+
   if (std::optional<int32_t> octaves = TryRemoveInteger(parameters, "octaves");
       octaves) {
     output.set_octaves(std::max(0, *octaves));
@@ -481,6 +511,8 @@ absl::Status RemoveFBmSpectrumTexture(
 absl::Status RemoveImageMapFloatTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, ImageMapFloatTexture& output) {
+  assert(IsSupported(pbrt_version, output));
+
   if (std::optional<absl::string_view> filename =
           TryRemoveString(parameters, "filename");
       filename) {
@@ -547,6 +579,8 @@ absl::Status RemoveImageMapFloatTexture(
 absl::Status RemoveImageMapSpectrumTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, ImageMapSpectrumTexture& output) {
+  assert(IsSupported(pbrt_version, output));
+
   if (std::optional<absl::string_view> filename =
           TryRemoveString(parameters, "filename");
       filename) {
@@ -613,6 +647,8 @@ absl::Status RemoveImageMapSpectrumTexture(
 absl::Status RemoveMarbleSpectrumTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, MarbleSpectrumTexture& output) {
+  assert(IsSupported(pbrt_version, output));
+
   if (std::optional<int32_t> octaves = TryRemoveInteger(parameters, "octaves");
       octaves) {
     output.set_octaves(std::max(0, *octaves));
@@ -639,6 +675,8 @@ absl::Status RemoveMarbleSpectrumTexture(
 absl::Status RemoveMixFloatTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, MixFloatTexture& output) {
+  assert(IsSupported(pbrt_version, output));
+
   TryRemoveFloatTexture(parameters, "amount",
                         std::bind(&MixFloatTexture::mutable_amount, &output));
   TryRemoveFloatTexture(parameters, "tex1",
@@ -651,6 +689,8 @@ absl::Status RemoveMixFloatTexture(
 absl::Status RemoveMixSpectrumTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, MixSpectrumTexture& output) {
+  assert(IsSupported(pbrt_version, output));
+
   TryRemoveFloatTexture(
       parameters, "amount",
       std::bind(&MixSpectrumTexture::mutable_amount, &output));
@@ -675,6 +715,8 @@ absl::Status RemoveMixSpectrumTexture(
 absl::Status RemovePtexFloatTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, PtexFloatTexture& output) {
+  assert(IsSupported(pbrt_version, output));
+
   if (std::optional<absl::string_view> filename =
           TryRemoveString(parameters, "filename");
       filename) {
@@ -707,6 +749,8 @@ absl::Status RemovePtexFloatTexture(
 absl::Status RemovePtexSpectrumTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, PtexSpectrumTexture& output) {
+  assert(IsSupported(pbrt_version, output));
+
   if (std::optional<absl::string_view> filename =
           TryRemoveString(parameters, "filename");
       filename) {
@@ -739,6 +783,8 @@ absl::Status RemovePtexSpectrumTexture(
 absl::Status RemoveScaleFloatTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, ScaleFloatTexture& output) {
+  assert(IsSupported(pbrt_version, output));
+
   TryRemoveFloatTexture(parameters, "tex1",
                         std::bind(&ScaleFloatTexture::mutable_tex1, &output));
   TryRemoveFloatTexture(parameters, "tex2",
@@ -749,6 +795,8 @@ absl::Status RemoveScaleFloatTexture(
 absl::Status RemoveScaleSpectrumTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, ScaleSpectrumTexture& output) {
+  assert(IsSupported(pbrt_version, output));
+
   if (absl::Status status = TryRemoveSpectrumTexture(
           parameters, "tex1",
           std::bind(&ScaleSpectrumTexture::mutable_tex1, &output));
@@ -769,6 +817,8 @@ absl::Status RemoveScaleSpectrumTexture(
 absl::Status RemoveWrinkledFloatTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, WrinkledFloatTexture& output) {
+  assert(IsSupported(pbrt_version, output));
+
   if (std::optional<int32_t> octaves = TryRemoveInteger(parameters, "octaves");
       octaves) {
     output.set_octaves(std::max(0, *octaves));
@@ -785,6 +835,8 @@ absl::Status RemoveWrinkledFloatTexture(
 absl::Status RemoveWrinkledSpectrumTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, WrinkledSpectrumTexture& output) {
+  assert(IsSupported(pbrt_version, output));
+
   if (std::optional<int32_t> octaves = TryRemoveInteger(parameters, "octaves");
       octaves) {
     output.set_octaves(std::max(0, *octaves));
@@ -801,6 +853,8 @@ absl::Status RemoveWrinkledSpectrumTexture(
 absl::Status RemoveUvSpectrumTexture(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, UvSpectrumTexture& output) {
+  assert(IsSupported(pbrt_version, output));
+
   TryRemoveUVParameters(parameters, "uv", output);
   return absl::OkStatus();
 }
