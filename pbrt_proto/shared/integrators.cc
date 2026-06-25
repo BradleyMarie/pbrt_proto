@@ -30,7 +30,7 @@ void RemovePixelBounds(
 }
 
 template <typename T>
-void RemoveLightSampleStrategy(
+std::optional<LightSampler> TryRemoveLightSampleStrategy(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, absl::string_view type, absl::string_view parameter,
     T& output) {
@@ -38,20 +38,22 @@ void RemoveLightSampleStrategy(
           TryRemoveString(parameters, parameter);
       lightsamplestrategy.has_value()) {
     if (*lightsamplestrategy == "power") {
-      output.set_lightsampler(LightSampler::POWER);
+      return LightSampler::POWER;
     } else if (*lightsamplestrategy == "uniform") {
-      output.set_lightsampler(LightSampler::UNIFORM);
+      return LightSampler::UNIFORM;
     } else if (pbrt_version <= 3 && *lightsamplestrategy == "spatial") {
-      output.set_lightsampler(LightSampler::BVH);
+      return LightSampler::BVH;
     } else if (pbrt_version >= 4 && *lightsamplestrategy == "bvh") {
-      output.set_lightsampler(LightSampler::BVH);
+      return LightSampler::BVH;
     } else {
       std::cerr << "WARNING: Unsupported value for '" << type
                 << "' Integrator parameter '" << parameter << "': \""
                 << *lightsamplestrategy << "\"" << std::endl;
-      output.set_lightsampler(LightSampler::BVH);
+      return LightSampler::BVH;
     }
   }
+
+  return std::nullopt;
 }
 
 }  // namespace
@@ -65,12 +67,20 @@ absl::Status RemoveAmbientOcclusionIntegrator(
     output.set_nsamples(std::max(0, *nsamples));
   }
 
-  if (pbrt_version <= 2) {
+  if (pbrt_version == 2) {
     if (std::optional<double> maxdist = TryRemoveFloat(parameters, "maxdist");
         maxdist.has_value()) {
       output.set_maxdistance(*maxdist);
     }
-  } else {
+  } else if (pbrt_version >= 4) {
+    if (std::optional<double> maxdist =
+            TryRemoveFloat(parameters, "maxdistance");
+        maxdist.has_value()) {
+      output.set_maxdistance(*maxdist);
+    }
+  }
+
+  if (pbrt_version >= 3) {
     if (std::optional<bool> cossample = TryRemoveBool(parameters, "cossample");
         cossample.has_value()) {
       output.set_cossample(*cossample);
@@ -104,8 +114,12 @@ absl::Status RemoveBdptIntegrator(
       output.set_visualizeweights(*visualizeweights);
     }
 
-    RemoveLightSampleStrategy(parameters, pbrt_version, "bdpt",
-                              "lightsamplestrategy", output);
+    if (std::optional<LightSampler> lightsamplestrategy =
+            TryRemoveLightSampleStrategy(parameters, pbrt_version, "bdpt",
+                                         "lightsamplestrategy", output);
+        lightsamplestrategy.has_value()) {
+      output.set_lightsamplestrategy(*lightsamplestrategy);
+    }
   }
 
   if (pbrt_version == 3) {
@@ -441,8 +455,12 @@ absl::Status RemovePathIntegrator(
   }
 
   if (pbrt_version >= 3) {
-    RemoveLightSampleStrategy(parameters, pbrt_version, "path",
-                              "lightsamplestrategy", output);
+    if (std::optional<LightSampler> lightsamplestrategy =
+            TryRemoveLightSampleStrategy(parameters, pbrt_version, "bdpt",
+                                         "lightsamplestrategy", output);
+        lightsamplestrategy.has_value()) {
+      output.set_lightsampler(*lightsamplestrategy);
+    }
   }
 
   if (pbrt_version == 3) {
@@ -618,8 +636,12 @@ absl::Status RemoveVolPathIntegrator(
     output.set_rrthreshold(*rrthreshold);
   }
 
-  RemoveLightSampleStrategy(parameters, pbrt_version, "volpath",
-                            "lightsamplestrategy", output);
+  if (std::optional<LightSampler> lightsamplestrategy =
+          TryRemoveLightSampleStrategy(parameters, pbrt_version, "bdpt",
+                                       "lightsamplestrategy", output);
+      lightsamplestrategy.has_value()) {
+    output.set_lightsampler(*lightsamplestrategy);
+  }
 
   if (pbrt_version == 3) {
     RemovePixelBounds(parameters, output);

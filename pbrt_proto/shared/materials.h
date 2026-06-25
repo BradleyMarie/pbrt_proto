@@ -9,13 +9,25 @@
 
 namespace pbrt_proto {
 
-absl::Status RemoveBuiltInMaterial(
+absl::Status RemoveBluePaintMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    int pbrt_version, BuiltInMaterial& output);
+    int pbrt_version, BluePaintMaterial& output);
+
+absl::Status RemoveBrushedMetalMaterial(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    int pbrt_version, BrushedMetalMaterial& output);
+
+absl::Status RemoveClayMaterial(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    int pbrt_version, ClayMaterial& output);
 
 absl::Status RemoveDisneyMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, DisneyMaterial& output);
+
+absl::Status RemoveFeltMaterial(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    int pbrt_version, FeltMaterial& output);
 
 absl::Status RemoveGlassMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
@@ -57,9 +69,17 @@ absl::Status RemovePlasticMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, PlasticMaterial& output);
 
+absl::Status RemovePrimerMaterial(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    int pbrt_version, PrimerMaterial& output);
+
 absl::Status RemoveShinyMetalMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, ShinyMetalMaterial& output);
+
+absl::Status RemoveSkinMaterial(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    int pbrt_version, SkinMaterial& output);
 
 absl::Status RemoveSubstrateMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,

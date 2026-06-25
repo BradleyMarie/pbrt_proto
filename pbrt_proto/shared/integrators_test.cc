@@ -165,7 +165,7 @@ TEST(RemoveBdptIntegratorV3, WithData) {
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 maxdepth: 1
                 pixelbounds { x_min: 2 x_max: 3 y_min: 4 y_max: 5 }
-                lightsampler: BVH
+                lightsamplestrategy: BVH
                 visualizestrategies: true
                 visualizeweights: true
               )pb"));
@@ -187,7 +187,7 @@ TEST(RemoveBdptIntegratorV3, Uniform) {
   EXPECT_TRUE(
       RemoveBdptIntegrator(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
-                lightsampler: UNIFORM
+                lightsamplestrategy: UNIFORM
               )pb"));
 }
 
@@ -207,7 +207,7 @@ TEST(RemoveBdptIntegratorV3, Power) {
   EXPECT_TRUE(
       RemoveBdptIntegrator(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
-                lightsampler: POWER
+                lightsamplestrategy: POWER
               )pb"));
 }
 
@@ -227,7 +227,7 @@ TEST(RemoveBdptIntegratorV3, Spatial) {
   EXPECT_TRUE(
       RemoveBdptIntegrator(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
-                lightsampler: BVH
+                lightsamplestrategy: BVH
               )pb"));
 }
 

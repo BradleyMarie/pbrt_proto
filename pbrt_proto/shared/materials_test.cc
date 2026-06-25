@@ -17,16 +17,16 @@ namespace {
 using ::absl_testing::StatusIs;
 using ::google::protobuf::EqualsProto;
 
-TEST(RemoveBuiltInMaterial, Empty) {
+TEST(RemoveBluePaintMaterial, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
-  BuiltInMaterial actual;
+  BluePaintMaterial actual;
   EXPECT_TRUE(
-      RemoveBuiltInMaterial(parameters, /*pbrt_version=*/1, actual).ok());
+      RemoveBluePaintMaterial(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveBuiltInMaterial, WithData) {
+TEST(RemoveBluePaintMaterial, WithData) {
   std::vector<std::string_view> bumpmap = {"bump"};
   Parameter bumpmap_parameter{/*directive=*/"",
                               /*type=*/ParameterType::TEXTURE,
@@ -37,9 +37,9 @@ TEST(RemoveBuiltInMaterial, WithData) {
       {"bumpmap", bumpmap_parameter},
   };
 
-  BuiltInMaterial actual;
+  BluePaintMaterial actual;
   EXPECT_TRUE(
-      RemoveBuiltInMaterial(parameters, /*pbrt_version=*/1, actual).ok());
+      RemoveBluePaintMaterial(parameters, /*pbrt_version=*/1, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 bumpmap { float_texture_name: "bump" }
               )pb"));

@@ -183,6 +183,8 @@ message SpectrumTextureParameter {
 //
 
 // A directive that selects the current transformation matrix
+//
+// @supported_versions {PBRTv2, PBRTv3, PBRTv4}
 message ActiveTransform {
   // The available transformation matrices.
   enum ActiveTransformation {
@@ -198,14 +200,20 @@ message ActiveTransform {
 // A directive which pushes the current graphics state including the current
 // transformation matrix and the reverse-orientation setting to the attribute
 // stack.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message AttributeBegin {}
 
 // A directive which pops the attribute stack and restores the saved graphics
 // state. If the stack is empty, the program should exit with an error.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message AttributeEnd {}
 
 // A directive which multiplies the current transformation matrix by the matrix
 // specified.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message ConcatTransform {
   // The m[0][0] component of the matrix with column-major order.
   required double m00 = 1;
@@ -258,6 +266,8 @@ message ConcatTransform {
 
 // A directive which saves the current transformation matrix using the
 // specified name.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message CoordinateSystem {
   // The name to give the saved transformation.
   required string name = 1;
@@ -266,6 +276,8 @@ message CoordinateSystem {
 // A directive which sets the current transformation matrix to a previously
 // saved matrix. If no matrix matches the provided name the directive has no
 // effect.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message CoordSysTransform {
   // The name of the saved transformation to restore.
   required string name = 1;
@@ -273,6 +285,8 @@ message CoordSysTransform {
 
 // A directive which sets the current transformation matrix to the identity
 // matrix.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message Identity {}
 
 // A directive which opens a file and continues parsing from the start of it.
@@ -281,6 +295,8 @@ message Identity {}
 // NOTE: This directive cannot fully capture the semantics of the PBRT Include
 //       directive since it must be a standalone directive and cannot be used
 //       as part of a separate directive.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message Include {
   // The relative path to the file to include.
   required string path = 1;
@@ -288,6 +304,8 @@ message Include {
 
 // A directive which opens a file and parses it in a separate parsing context
 // that inherits the scene-wide state of the renderer.
+//
+// @supported_versions {PBRTv4}
 message Import {
   // The relative path to the file to import.
   required string path = 1;
@@ -295,6 +313,8 @@ message Import {
 
 // A directive which sets the current material to a previously saved material.
 // If no material matches the provided name the directive has no effect.
+//
+// @supported_versions {PBRTv2, PBRTv3, PBRTv4}
 message NamedMaterial {
   // The name of the saved material to restore.
   required string name = 1;
@@ -302,6 +322,8 @@ message NamedMaterial {
 
 // A directive which multiplies the current transformation matrix by the inverse
 // of the specified camera matrix.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message LookAt {
   // The `x` component of the camera location.
   required double eye_x = 1;
@@ -333,6 +355,8 @@ message LookAt {
 
 // A directive which specifies the current interior and exterior participating
 // media.
+//
+// @supported_versions {PBRTv3, PBRTv4}
 message MediumInterface {
   // The interior medium. If empty, there is no medium.
   required string inside = 1;
@@ -343,26 +367,36 @@ message MediumInterface {
 
 // A directive which begins creating an instanced object with the specified
 // name.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message ObjectBegin {
   // The name to give the indexed object.
   required string name = 1;
 }
 
 // A directive finalizes the creation of an instanced object.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message ObjectEnd {}
 
 // A directive which adds a previously instanced object to the scene. If no
 // object matching the name is found, this directive is ignored.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message ObjectInstance {
   // The name of the instanced object to draw.
   required string name = 1;
 }
 
 // A directive which reverses the front and back faces of geometry.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message ReverseOrientation {}
 
 // A directive which multiplies the current transformation matrix by the
 // specified rotation matrix.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message Rotate {
   // The angle of the rotation in degrees.
   required double angle = 1;
@@ -379,6 +413,8 @@ message Rotate {
 
 // A directive which multiplies the current transformation matrix by the
 // specified scalar matrix.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message Scale {
   // The `x` component of the magnitude of the scale.
   required double x = 1;
@@ -391,6 +427,8 @@ message Scale {
 }
 
 // A directive which modifies where the renderer searches for plugins.
+//
+// @supported_versions {PBRTv1}
 message SearchPath {
   // The path to search.
   required string path = 1;
@@ -398,6 +436,8 @@ message SearchPath {
 
 // A directive which multiplies the current transformation matrix by the
 // specified matrix.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message Transform {
   // The m[0][0] component of the matrix with column-major order.
   required double m00 = 1;
@@ -450,15 +490,21 @@ message Transform {
 
 // A directive which pushes the current transformation matrix to the
 // transformation stack.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3}
 message TransformBegin {}
 
 // A directive which pops the transformation stack and sets the current
 // transformation matrix to its contents. If the stack is empty, the program
 // should exit with an error.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3}
 message TransformEnd {}
 
 // A directive which sets the start and end times for animations in the rendered
 // scene.
+//
+// @supported_versions {PBRTv2, PBRTv3, PBRTv4}
 message TransformTimes {
   // The time at which rendering begins.
   required double start_time = 1;
@@ -469,6 +515,8 @@ message TransformTimes {
 
 // A directive which multiplies the current transformation matrix by the
 // specified translation matrix.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message Translate {
   // The `x` component of the magnitude of the translation.
   required double x = 1;
@@ -481,9 +529,13 @@ message Translate {
 }
 
 // A directive which marks the beginning of the scene geometry.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message WorldBegin {}
 
 // A directive which triggers rendering then resets the state of the renderer.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3}
 message WorldEnd {}
 
 //
@@ -491,6 +543,8 @@ message WorldEnd {}
 //
 
 // A bounding volume heirarchy (BVH) accelerator.
+//
+// @supported_versions {PBRTv2, PBRTv3, PBRTv4}
 message BvhAccelerator {
   enum SplitMethod {
     // Split each node using the surface area heuristic.
@@ -504,9 +558,7 @@ message BvhAccelerator {
 
     // Split each node using the HLBVH construction mechanism.
     //
-    // NOTE: For simplicity, this value is shared between all PBRT versions that
-    //       support BVH; however, it is not supported in PBRTv2 and should be
-    //       ignored when reading PBRTv2 input.
+    // @min_version PBRTv3
     HLBVH = 3;
   }
 
@@ -519,6 +571,8 @@ message BvhAccelerator {
 }
 
 // A voxel-based accelerator.
+//
+// @supported_versions {PBRTv1, PBRTv2}
 message GridAccelerator {
   // If true, primitives are refined as soon as they are added to the grid.
   // Otherwise, they are refined when a ray enters the voxel that contains the
@@ -527,6 +581,8 @@ message GridAccelerator {
 }
 
 // A KD-tree based accelerator.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message KdTreeAccelerator {
   // The cost estimate for each intersection.
   optional double intersectcost = 2 [default = 80.0];
@@ -550,6 +606,8 @@ message KdTreeAccelerator {
 //
 
 // A diffuse area light source.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message DiffuseAreaLightSource {
   // The spectral representation for the emitter. If neither is present, the
   // the default illuminant of the current color space should be used.
@@ -560,9 +618,7 @@ message DiffuseAreaLightSource {
     // The path to an image file describing the spatially-varying emissions
     // over the surface of the light.
     //
-    // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-    //       however, it is not supported before PBRTv4 and should be ignored
-    //       when reading earlier input.
+    // @min_version PBRTv4
     string filename = 5;
   }
 
@@ -573,9 +629,7 @@ message DiffuseAreaLightSource {
   //       `nsamples`; however, it is referred to here as `samples` which is the
   //       name of the parameter used in PBRTv3.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported after PBRTv3 and should be ignored when
-  //       reading later input.
+  // @max_version PBRTv3
   optional uint32 samples = 2 [default = 1];
 
   // A scale applied to the spectrum provided in `L`.
@@ -585,23 +639,17 @@ message DiffuseAreaLightSource {
   //       because the type of this field changed from a `spectrum` to a `float`
   //       starting with PBRTv4.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported in PBRTv1 and should be ignored when
-  //       reading PBRTv1 input.
+  // @min_version PBRTv1
   optional Spectrum scale = 3;
 
   // If true, light should emit from both sides both side of geometry.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is only supported in PBRTv3 and should be ignored when
-  //       reading input from other versions.
+  // @min_version PBRTv3
   optional bool twosided = 4 [default = false];
 
   // If positive, the desired power of the light.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv4 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv4
   optional double power = 6 [default = -1.0];
 }
 
@@ -610,6 +658,8 @@ message DiffuseAreaLightSource {
 //
 
 // The bounds of the film plane in screen space.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message CameraScreenWindow {
   // The lower x bound of the film plane.
   required double x_min = 1;
@@ -625,6 +675,8 @@ message CameraScreenWindow {
 }
 
 // A camera that projects an orthographic image onto the film plane.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message OrthographicCamera {
   // The time at which the shutter opens.
   optional double shutteropen = 1 [default = 0.0];
@@ -636,10 +688,6 @@ message OrthographicCamera {
   optional double lensradius = 3 [default = 0.0];
 
   // The focal distance of the camera.
-  //
-  // NOTE: The default value for this value varies by PBRT version. In PBRTv1
-  //       and PBRTv2 this value defaults to `1e30`. In PBRTv3 and later the
-  //       default value is `1e6`.
   optional double focaldistance = 4;
 
   // The aspect ratio of the film. If unspecified, this value should default to
@@ -653,20 +701,18 @@ message OrthographicCamera {
 
   // The near clipping plane.
   //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is not supported after PBRTv1 and should be ignored when
-  //       reading later input.
+  // @max_version PBRTv1
   optional double hither = 7;
 
   // The far clipping plane.
   //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is not supported after PBRTv1 and should be ignored when
-  //       reading later input.
+  // @max_version PBRTv1
   optional double yon = 8;
 }
 
 // A camera that projects an perspective image onto the film plane.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message PerspectiveCamera {
   // The time at which the shutter opens.
   optional double shutteropen = 1 [default = 0.0];
@@ -678,10 +724,6 @@ message PerspectiveCamera {
   optional double lensradius = 3 [default = 0.0];
 
   // The focal distance of the camera.
-  //
-  // NOTE: The default value for this value varies by PBRT version. In PBRTv1
-  //       and PBRTv2 this value defaults to `1e30`. In PBRTv3 and later the
-  //       default value is `1e6`.
   optional double focaldistance = 4;
 
   // The aspect ratio of the film. If unspecified, this value should default to
@@ -695,23 +737,19 @@ message PerspectiveCamera {
 
   // The near clipping plane.
   //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is not supported after PBRTv1 and should be ignored when
-  //       reading later input.
+  // @max_version PBRTv1
   optional double hither = 7;
 
   // The far clipping plane.
   //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is not supported after PBRTv1 and should be ignored when
-  //       reading later input.
+  // @max_version PBRTv1
   optional double yon = 8;
 
   // The field of view of the camera in degrees.
   //
   // NOTE: In PBRTv2 and PBRTv3 there are two parameters that map into this
   //       field: `fov` and `halffov`. If `halffov` is specified in either of
-  //       these versions the value of `fov` if presnent should be set to half
+  //       these versions the value of `fov` if present should be set to half
   //       the value of `halffov`.
   optional double fov = 9 [default = 90.0];
 }
@@ -719,6 +757,8 @@ message PerspectiveCamera {
 // A camera which captures the light arriving at a point from all directions.
 // In PBRT versions prior to PBRTv4 this type of camera was referred to as an
 // environmental camera.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message SphericalCamera {
   // The mappping used from 2D points on the image to directions in 3D.
   enum Mapping {
@@ -733,6 +773,8 @@ message SphericalCamera {
     // encoding.
     //
     // This is the default mapping in PBRTv4 and later.
+    //
+    // @min_version PBRTv4
     EQUALAREA = 1;
   }
 
@@ -746,10 +788,6 @@ message SphericalCamera {
   optional double lensradius = 3 [default = 0.0];
 
   // The focal distance of the camera.
-  //
-  // NOTE: This value has a default value of `1e30` in all PBRT versions;
-  //       however, for consistency with the other cameras that default value is
-  //       not specified here.
   optional double focaldistance = 4;
 
   // The aspect ratio of the film. If unspecified, this value should default to
@@ -763,27 +801,23 @@ message SphericalCamera {
 
   // The near clipping plane.
   //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is not supported after PBRTv1 and should be ignored when
-  //       reading later input.
+  // @max_version PBRTv1
   optional double hither = 7;
 
   // The far clipping plane.
   //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is not supported after PBRTv1 and should be ignored when
-  //       reading later input.
+  // @max_version PBRTv1
   optional double yon = 8;
 
   // The 2D to 3D direction mapping to use for the image.
   //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is only supported in PBRTv4 and later. In earlier
-  //       versions an equirectantular mapping is the only supported mapping.
+  // @min_version PBRTv4
   optional Mapping mapping = 14;
 }
 
 // A camera that simulates a ray passing through a complex lens system.
+//
+// @supported_versions {PBRTv3, PBRTv4}
 message RealisticCamera {
   // The time at which the shutter opens.
   optional double shutteropen = 1 [default = 0.0];
@@ -798,17 +832,11 @@ message RealisticCamera {
   optional double aperturediameter = 11 [default = 1.0];
 
   // The distance to which the lens system is focused in meters.
-  //
-  // NOTE: This value has a default value of `10.0` in all PBRT versions;
-  //       however, for consistency with the other cameras that default value is
-  //       not specified here.
   optional double focusdistance = 12;
 
   // If true, the samples are only weighted by the "cosine-to-the-4th" term.
   //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is only supported in PBRTv3 and should be ignored when
-  //       reading later input.
+  // @max_version PBRTv3
   optional bool simpleweighting = 13;
 
   // The shape of the aperture. If missing, the aperture has a circular shape.
@@ -818,9 +846,7 @@ message RealisticCamera {
   // image file that describes the aperture's shape. If this file is not found
   // then the renderer should exit with an error.
   //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is only supported starting with PBRTv4 and should be
-  //       ignored when reading earlier input.
+  // @min_version PBRTv4
   optional string aperture = 15;
 }
 
@@ -867,6 +893,8 @@ enum FilmSensor {
 
 // A film which stores the rendered output as an RGB image as well as additional
 // channels that can be used for denoising and ML training.
+//
+// @supported_versions {PBRTv4}
 message GBufferFilm {
   // The output filename.
   optional string filename = 1 [default = "pbrt.exr"];
@@ -920,20 +948,16 @@ message GBufferFilm {
 }
 
 // A film which stores the rendered output as an RGB image.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message RgbFilm {
   // The output filename.
   optional string filename = 1 [default = "pbrt.exr"];
 
   // The size of the image in the `x` direction.
-  //
-  // This field has a default value of 640 in PBRTv1 and PBRTv2 and a default
-  // value of 1280 in PBRTv3 and PBRTv4.
   optional uint32 xresolution = 2;
 
   // The size of the image in the `y` direction.
-  //
-  // This field has a default value of 480 in PBRTv1 and PBRTv2 and a default
-  // value of 720 in PBRTv3 and PBRTv4.
   optional uint32 yresolution = 3;
 
   // The bounds of the crop to apply to the image. If none are specified, the
@@ -944,47 +968,35 @@ message RgbFilm {
 
     // The sub-region of the image to render in pixels.
     //
-    // NOTE: For simplicity, this field is shared between all PBRT versions;
-    //       however, it is only supported in PBRTv4 and should be ignored when
-    //       reading earlier input.
+    // @min_version PBRTv4
     PixelBounds pixelbounds = 12;
   }
 
   // Whether or not the alpha channel of the rendered image should be
   // pre-multiplied with the RGB channels.
   //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is only supported in PBRTv1 and should be ignored when
-  //       reading later input.
+  // @max_version PBRTv1
   optional bool premultiplyalpha = 5 [default = true];
 
   // The rate at which to write pixels to the output image.
   //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is only supported in PBRTv1 and should be ignored when
-  //       reading later input.
+  // @max_version PBRTv1
   optional uint32 writefrequency = 6 [default = 4294967295];
 
   // If true, display the rendered image in a a window when rendering completes.
   //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is only supported in PBRTv2 and should be ignored when
-  //       reading all other input.
+  // @supported_versions {PBRTv2}
   optional bool display = 7 [default = false];
 
   // A scalar output applied to the RGB output after clamping.
   //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is only supported in PBRTv3 and should be ignored when
-  //       reading all other input.
+  // @supported_versions {PBRTv3}
   optional double scale = 8 [default = 1.0];
 
   // The diagonal of the film in millimeters. Only applies if the image is
   // rendered using a realistic camera.
   //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is not supported before PBRTv3 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv3
   optional double diagonal = 9 [default = 35.0];
 
   // The method for using clamping the pixel values in the rendered output. If
@@ -992,53 +1004,43 @@ message RgbFilm {
   oneof clamping_method {
     // Clamp pixels with luminance higher than the maximum provided.
     //
-    // NOTE: For simplicity, this field is shared between all PBRT versions;
-    //       however, it is only supported in PBRTv3 and should be ignored when
-    //       reading all other input.
+    // @supported_versions {PBRTv3}
     double maxsampleluminance = 10 [default = inf];
 
     // Clamp pixels with RGB components higher than the maximum provided.
     //
-    // NOTE: For simplicity, this field is shared between all PBRT versions;
-    //       however, it is only supported starting with PBRTv4 and should be
-    //       ignored when reading earlier input.
+    // @min_version PBRTv4
     double maxcomponentvalue = 11 [default = inf];
   }
 
   // The type of sensor to simulate for the film.
   //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is only supported starting with PBRTv4 and should be
-  //       ignored when reading earlier input.
+  // @min_version PBRTv4
   optional FilmSensor sensor = 13 [default = CIE_1931];
 
   // The film's sensitivity to light normalized to 100. This scaling is applied
   // before clamping.
   //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is only supported starting with PBRTv4 and should be
-  //       ignored when reading earlier input.
+  // @min_version PBRTv4
   optional double iso = 14 [default = 100.0];
 
   // If non-zero, this provides the temperature in kelvin that is used as the
   // reference color temperature used for white.
   //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is only supported starting with PBRTv4 and should be
-  //       ignored when reading earlier input.
+  // @min_version PBRTv4
   optional double whitebalance = 15 [default = 0.0];
 
   // If true, output 16-bit floating point value when supported by the output
   // file format.
   //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is only supported starting with PBRTv4 and should be
-  //       ignored when reading earlier input.
+  // @min_version PBRTv4
   optional bool savefp16 = 16 [default = true];
 }
 
 // A film which stores the rendered output as an RGB image as well as a
 // discretized spectral distribution for each pixel.
+//
+// @supported_versions {PBRTv4}
 message SpectralFilm {
   // The output filename.
   optional string filename = 1 [default = "pbrt.exr"];
@@ -1103,17 +1105,17 @@ enum LightSampler {
 }
 
 // An integrator which computes the amount of ambient occlusion at a pixel.
+//
+// @supported_versions {PBRTv2, PBRTv3, PBRTv4}
 message AmbientOcclusionIntegrator {
   // The maximum distance between a point being shaded and an occluding
   // surface.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported after PBRTv2 and should be ignored
-  //       when reading later input.
+  // NOTE: In PBRT v2 this field is referred to by the name `maxdist`; however,
+  //       it is referred to here as `maxdistance` which is the name of the
+  //       parameter used in PBRTv4.
   //
-  // NOTE: In PBRTv 2 and PBRTv3 this field is referred to by the name
-  //       `maxdist`; however, it is referred to here as `maxdistance` which is
-  //       the name of the parameter used in PBRTv4.
+  // @supported_versions {PBRTv2, PBRTv4}
   optional double maxdistance = 8 [default = inf];
 
   // How many rays are used to estimate the occlusion value at a point.
@@ -1123,56 +1125,42 @@ message AmbientOcclusionIntegrator {
   // the starting and ending x coordinates and then starting and ending y
   // coordinates.
   //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is only supported in PBRTv3 and should be ignored when
-  //       reading all other input.
+  // @supported_versions {PBRTv3}
   optional PixelBounds pixelbounds = 39;
 
   // If true, the samples are taken using a cosine-weighted distribution.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv3 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv3
   optional bool cossample = 40 [default = true];
 }
 
 // An integrator which performs bidirectional path tracing.
+//
+// @supported_versions {PBRTv1, PBRTv3, PBRTv4}
 message BdptIntegrator {
   // The maximum length of a light-carrying path sampled by the integrator.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv3 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv3
   optional uint32 maxdepth = 1 [default = 5];
 
   // Subset of image to sample during rendering; in order, values given specify
   // the starting and ending x coordinates and then starting and ending y
   // coordinates.
   //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is only supported in PBRTv3 and should be ignored when
-  //       reading all other input.
+  // @supported_versions {PBRTv3}
   optional PixelBounds pixelbounds = 39;
 
   // The technique used for sampling light sources.
   //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is only supported in PBRTv3 and should be ignored when
-  //       reading all other input.
-  //
-  // NOTE: In PBRTv3 this field is referred to by the name
-  //       `lightsamplestrategy`; however, it is referred to here as
-  //       `lightsampler` which is the name of the parameter used in PBRTv4.
-  optional LightSampler lightsampler = 41 [default = POWER];
+  // @supported_versions {PBRTv3}
+  optional LightSampler lightsamplestrategy = 41 [default = POWER];
 
   // If true, an image is saved for each (s,t) bidirectional path generation
   // strategy used by the integrator. These images can be helpful for
   // understanding which sampling strategies are effective for sampling various
   // types of light transport paths.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv3 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv3
   optional bool visualizestrategies = 42 [default = false];
 
   // If true, an image is saved for each (s,t) bidirectional path generation
@@ -1180,13 +1168,13 @@ message BdptIntegrator {
   // understanding which sampling strategies are effective for sampling various
   // types of light transport paths.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv3 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv3
   optional bool visualizeweights = 43 [default = false];
 }
 
-// An integrator used for debugging in PBRTv1.
+// An integrator used for debugging.
+//
+// @supported_versions {PBRTv1}
 message DebugIntegrator {
   // The value to use to populate a color channel.
   enum ChannelValue {
@@ -1214,6 +1202,8 @@ message DebugIntegrator {
 }
 
 // An integrator which performs precomputed radiance transfer.
+//
+// @supported_versions {PBRTv2}
 message DiffusePrtIntegrator {
   // The number of Monte Carlo samples to use when computing the projection of
   // the transfer function T.
@@ -1225,6 +1215,8 @@ message DiffusePrtIntegrator {
 }
 
 // An integrator which performs dipole subsurface scattering.
+//
+// @supported_versions {PBRTv2}
 message DipoleSubsurfaceIntegrator {
   // The maximum length of a light-carrying path sampled by the integrator.
   optional uint32 maxdepth = 1 [default = 5];
@@ -1247,6 +1239,8 @@ message DipoleSubsurfaceIntegrator {
 }
 
 // An integrator which only integrates over the direct lighting.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3}
 message DirectLightingIntegrator {
   // The maximum length of a light-carrying path sampled by the integrator.
   optional uint32 maxdepth = 1 [default = 5];
@@ -1263,9 +1257,7 @@ message DirectLightingIntegrator {
     // Sample a single, randomly-selected light at each intersection. The light
     // is selected using a weighted distribution.
     //
-    // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-    //       however, it is not supported after PBRTv1 and should be ignored
-    //       when reading later input.
+    // @max_version PBRTv1
     WEIGHTED = 2;
   }
 
@@ -1276,13 +1268,13 @@ message DirectLightingIntegrator {
   // the starting and ending x coordinates and then starting and ending y
   // coordinates.
   //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is only supported in PBRTv3 and should be ignored when
-  //       reading all other input.
+  // @supported_versions {PBRTv3}
   optional PixelBounds pixelbounds = 39;
 }
 
 // An integrator which performs precomputed radiance transfer.
+//
+// @supported_versions {PBRTv2}
 message GlossyPrtIntegrator {
   // The number of Monte Carlo samples to use when computing the projection of
   // the transfer function T.
@@ -1303,12 +1295,12 @@ message GlossyPrtIntegrator {
 }
 
 // An integrator which performs instant global illumination.
+//
+// @supported_versions {PBRTv1, PBRTv2}
 message IgiIntegrator {
   // The maximum length of a light-carrying path sampled by the integrator.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv2 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv2
   optional uint32 maxdepth = 1 [default = 5];
 
   // Russian roulette threshold for terminating shadow rays that connect the
@@ -1323,46 +1315,38 @@ message IgiIntegrator {
 
   // A scalar applied to indirect lighting.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported after PBRTv1 and should be ignored
-  //       when reading later input.
+  // @max_version PBRTv1
   optional double indirectscale = 16 [default = 1.0];
 
   // The minimum distance cutoff between the shading point and the virtual
   // point lights.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported after PBRTv1 and should be ignored
-  //       when reading later input.
+  // @max_version PBRTv1
   optional double mindist = 17 [default = 0.1];
 
   // Maximum allowed value of the geometric coupling term G. If images have
   // unexpected bright regions, reducing this value should cause them to
   // disappear.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv2 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv2
   optional double glimit = 32 [default = 10.0];
 
   // The number of "final gather" samples to take at points where the G limit
   // was applied.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv2 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv2
   optional uint32 gathersamples = 33 [default = 16];
 }
 
 // An integrator which does irradiance caching.
+//
+// @supported_versions {PBRTv1, PBRTv2}
 message IrradianceCacheIntegrator {
   // Maximum value of the error term used to determine whether to traverse
   // deeper into the irradiance sample octree or to use the current node for
   // illumination.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported after PBRTv1 and should be ignored when
-  //       reading later input.
+  // @max_version PBRTv1
   optional double maxerror = 18 [default = 0.2];
 
   // Maximum recursion depth for tracing specular reflection and refraction
@@ -1383,30 +1367,26 @@ message IrradianceCacheIntegrator {
   // Minimum distance, in pixels, between irradiance samples. No samples nearer
   // this distance will be generated.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv2 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv2
   optional double minpixelspacing = 34 [default = 2.5];
 
   // Maximum distance, in pixels, between irradiance samples. Even if the other
   // error terms indicate that a sample can be used at a point being shaded, if
   // it is more than this many pixels away on the image plane, it is ignored.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv2 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv2
   optional double maxpixelspacing = 35 [default = 15.0];
 
   // Maximum allowed difference in the angle between the surface normal at an
   // irradiance lookup point and the surface normal of an irradiance sample.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv2 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv2
   optional double maxangledifference = 36 [default = 10.0];
 }
 
 // An integrator which does Metropolis light transport.
+//
+// @supported_versions {PBRTv3, PBRTv4}
 message MltIntegrator {
   // The maximum length of a light-carrying path sampled by the integrator.
   optional uint32 maxdepth = 1 [default = 5];
@@ -1433,6 +1413,8 @@ message MltIntegrator {
 }
 
 // An integrator which performs path tracing.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message PathIntegrator {
   // The maximum length of a light-carrying path sampled by the integrator.
   optional uint32 maxdepth = 1 [default = 5];
@@ -1440,39 +1422,33 @@ message PathIntegrator {
   // Russian roulette threshold for terminating shadow rays that connect the
   // point being shaded to a virtual light source.
   //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is only supported in PBRTv3 and should be ignored when
-  //       reading all other input.
+  // @supported_versions {PBRTv3}
   optional double rrthreshold = 9 [default = 1.0];
 
   // Subset of image to sample during rendering; in order, values given specify
   // the starting and ending x coordinates and then starting and ending y
   // coordinates.
   //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is only supported in PBRTv3 and should be ignored when
-  //       reading all other input.
+  // @supported_versions {PBRTv3}
   optional PixelBounds pixelbounds = 39;
 
   // The technique used for sampling light sources.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv3 and should be ignored when
-  //       reading earlier input.
-  //
   // NOTE: In PBRTv3 this field is referred to by the name
   //       `lightsamplestrategy`; however, it is referred to here as
   //       `lightsampler` which is the name of the parameter used in PBRTv4.
+  //
+  // @min_version PBRTv3
   optional LightSampler lightsampler = 41 [default = BVH];
 }
 
 // An integrator which performs photon mapping.
+//
+// @supported_versions {PBRTv1, PBRTv2}
 message PhotonMapIntegrator {
   // The maximum length of a light-carrying path sampled by the integrator.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported after PBRTv1 and should be ignored
-  //       when reading later input.
+  // @max_version PBRTv1
   optional uint32 maxdepth = 1 [default = 5];
 
   // The number of photons required to build the caustic photon map. The more
@@ -1509,58 +1485,48 @@ message PhotonMapIntegrator {
 
   // If true, the direct illumination is also done with photon mapping.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported after PBRTv1 and should be ignored
-  //       when reading later input.
+  // @max_version PBRTv1
   optional bool directwithphotons = 11 [default = false];
 
   // The number of photons required to build the direct illumination map. As
   // with caustic photons, increasing the number of photons improves the result
   // at the cost of more memory.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported after PBRTv1 and should be ignored
-  //       when reading later input.
+  // @max_version PBRTv1
   optional uint32 directphotons = 12 [default = 100000];
 
   // The maximum allowable angle between the surface normal of the surface being
   // shaded and the surface normal of the surface where the photon was
   // deposited.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported after PBRTv1 and should be ignored
-  //       when reading later input.
-  //
   // NOTE: In PBRTv1, this parameter is only used by the "exphotonmap"
   //       implementation and should be ignored by other implementations.
+  //
+  // @max_version PBRTv1
   optional double gatherangle = 13 [default = 10.0];
 
   // The maximum number of levels of specular reflection and refraction.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv2 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv2
   optional uint32 maxspeculardepth = 19 [default = 5];
 
   // The maximum number of levels of scattering to follow when tracing photon
   // paths from light sources.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv2 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv2
   optional uint32 maxphotondepth = 37 [default = 5];
 }
 
 // An integrator which implements stochastic progressive photon mapping.
+//
+// @supported_versions {PBRTv3, PBRTv4}
 message SppmIntegrator {
   // The maximum length of a light-carrying path sampled by the integrator.
   optional uint32 maxdepth = 1 [default = 5];
 
   // The total number of iterations of photon shooting from light sources.
   //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is only supported in PBRTv3 and should be ignored when
-  //       reading all other input.
+  // @max_version PBRTv3
   optional uint32 numiterations = 49 [default = 64];
 
   // The number of photons to shoot from light sources in each iteration. With
@@ -1576,9 +1542,7 @@ message SppmIntegrator {
   // The frequency at which to write out the current image, in photon shooting
   // iterations.
   //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is only supported in PBRTv3 and should be ignored when
-  //       reading all other input.
+  // @max_version PBRTv3
   optional uint32 imagewritefrequency = 51 [default = 2147483648];
 
   // The initial photon search radius.
@@ -1586,12 +1550,16 @@ message SppmIntegrator {
 }
 
 // An integrator which uses radiance probes encoded in spherical harmonics.
+//
+// @supported_versions {PBRTv2}
 message UseProbesIntegrator {
   // The output filename.
   optional string filename = 38 [default = "probes.out"];
 }
 
 // An integrator which integrates volumes as well as surfaces.
+//
+// @supported_versions {PBRTv3, PBRTv4}
 message VolPathIntegrator {
   // The maximum length of a light-carrying path sampled by the integrator.
   optional uint32 maxdepth = 1 [default = 5];
@@ -1599,18 +1567,14 @@ message VolPathIntegrator {
   // Russian roulette threshold for terminating shadow rays that connect the
   // point being shaded to a virtual light source.
   //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is only supported in PBRTv3 and should be ignored when
-  //       reading all other input.
+  // @max_version PBRTv3
   optional double rrthreshold = 9 [default = 1.0];
 
   // Subset of image to sample during rendering; in order, values given specify
   // the starting and ending x coordinates and then starting and ending y
   // coordinates.
   //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is only supported in PBRTv3 and should be ignored when
-  //       reading all other input.
+  // @supported_versions {PBRTv3}
   optional PixelBounds pixelbounds = 39;
 
   // The technique used for sampling light sources.
@@ -1622,6 +1586,8 @@ message VolPathIntegrator {
 }
 
 // An integrator which performs Whitted-style tracing.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3}
 message WhittedIntegrator {
   // The maximum length of a light-carrying path sampled by the integrator.
   optional uint32 maxdepth = 1 [default = 5];
@@ -1630,9 +1596,7 @@ message WhittedIntegrator {
   // the starting and ending x coordinates and then starting and ending y
   // coordinates.
   //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is only supported in PBRTv3 and should be ignored when
-  //       reading all other input.
+  // @supported_versions {PBRTv3}
   optional PixelBounds pixelbounds = 39;
 }
 
@@ -1641,6 +1605,8 @@ message WhittedIntegrator {
 //
 
 // An infinitely distant directional light source.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message DistantLightSource {
   // A spectral power distribution describing the light.
   optional Spectrum L = 1;
@@ -1653,25 +1619,23 @@ message DistantLightSource {
 
   // A scale applied to the spectrum provided in `L`.
   //
-  // NOTE: Starting with PBRTv4 inputs, this field will only ever a Spectrum
+  // NOTE: Starting with PBRTv4 inputs, this field should only ever a Spectrum
   //       with the `constant_spectrum` field filled out. This is because the
   //       type of this field changed from a `spectrum` to a `float` starting
   //       with PBRTv4.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported in PBRTv1 and should be ignored when
-  //       reading PBRTv1 input.
+  // @min_version PBRTv2
   optional Spectrum scale = 10;
 
   // If positive, the desired illuminance of the light.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv4 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv4
   optional double illuminance = 11 [default = -1.0];
 }
 
 // A local point light source with varying directional intensity.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message GoniometricLightSource {
   // A spectral power distribution describing the light.
   optional Spectrum I = 4;
@@ -1686,25 +1650,23 @@ message GoniometricLightSource {
 
   // A scale applied to the spectrum provided in `I`.
   //
-  // NOTE: Starting with PBRTv4 inputs, this field will only ever a Spectrum
+  // NOTE: Starting with PBRTv4 inputs, this field should only ever a Spectrum
   //       with the `constant_spectrum` field filled out. This is because the
   //       type of this field changed from a `spectrum` to a `float` starting
   //       with PBRTv4.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported in PBRTv1 and should be ignored when
-  //       reading PBRTv1 input.
+  // @min_version PBRTv2
   optional Spectrum scale = 10;
 
   // If positive, the desired power of the light.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv4 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv4
   optional double power = 12 [default = -1.0];
 }
 
 // An infinitely distant spherical light source.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message InfiniteLightSource {
   // A spectral power distribution describing the light.
   optional Spectrum L = 1;
@@ -1724,32 +1686,28 @@ message InfiniteLightSource {
   //       `nsamples`; however, it is referred to here as `samples` which is the
   //       name of the parameter used in PBRTv3.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported after PBRTv3 and should be ignored when
-  //       reading later input.
+  // @max_version PBRTv3
   optional uint32 samples = 6 [default = 1];
 
   // A scale applied to the spectrum provided in `L`.
   //
-  // NOTE: Starting with PBRTv4 inputs, this field will only ever a Spectrum
+  // NOTE: Starting with PBRTv4 inputs, this field should only ever a Spectrum
   //       with the `constant_spectrum` field filled out. This is because the
   //       type of this field changed from a `spectrum` to a `float` starting
   //       with PBRTv4.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported in PBRTv1 and should be ignored when
-  //       reading PBRTv1 input.
+  // @min_version PBRTv2
   optional Spectrum scale = 10;
 
   // If positive, the desired illuminance of the light.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv4 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv4
   optional double illuminance = 11 [default = -1.0];
 }
 
 // A local point light source.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message PointLightSource {
   // A spectral power distribution describing the light.
   optional Spectrum I = 4;
@@ -1759,25 +1717,23 @@ message PointLightSource {
 
   // A scale applied to the spectrum provided in `I`.
   //
-  // NOTE: Starting with PBRTv4 inputs, this field will only ever a Spectrum
+  // NOTE: Starting with PBRTv4 inputs, this field should only ever a Spectrum
   //       with the `constant_spectrum` field filled out. This is because the
   //       type of this field changed from a `spectrum` to a `float` starting
   //       with PBRTv4.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported in PBRTv1 and should be ignored when
-  //       reading PBRTv1 input.
+  // @min_version PBRTv2
   optional Spectrum scale = 10;
 
   // If positive, the desired power of the light.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv4 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv4
   optional double power = 12 [default = -1.0];
 }
 
 // A local projected light source.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message ProjectionLightSource {
   // A spectral power distribution describing the light.
   optional Spectrum I = 4;
@@ -1799,25 +1755,23 @@ message ProjectionLightSource {
 
   // A scale applied to the spectrum provided in `I`.
   //
-  // NOTE: Starting with PBRTv4 inputs, this field will only ever a Spectrum
+  // NOTE: Starting with PBRTv4 inputs, this field should only ever a Spectrum
   //       with the `constant_spectrum` field filled out. This is because the
   //       type of this field changed from a `spectrum` to a `float` starting
   //       with PBRTv4.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported in PBRTv1 and should be ignored when
-  //       reading PBRTv1 input.
+  // @min_version PBRTv2
   optional Spectrum scale = 10;
 
   // If positive, the desired power of the light.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv4 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv4
   optional double power = 12 [default = -1.0];
 }
 
 // A local spotlight source.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message SpotLightSource {
   // A spectral power distribution describing the light.
   optional Spectrum I = 4;
@@ -1836,21 +1790,17 @@ message SpotLightSource {
 
   // A scale applied to the spectrum provided in `I`.
   //
-  // NOTE: Starting with PBRTv4 inputs, this field will only ever a Spectrum
+  // NOTE: Starting with PBRTv4 inputs, this field should only ever a Spectrum
   //       with the `constant_spectrum` field filled out. This is because the
   //       type of this field changed from a `spectrum` to a `float` starting
   //       with PBRTv4.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported in PBRTv1 and should be ignored when
-  //       reading PBRTv1 input.
+  // @min_version PBRTv2
   optional Spectrum scale = 10;
 
   // If positive, the desired power of the light.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv4 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv4
   optional double power = 12 [default = -1.0];
 }
 
@@ -1858,14 +1808,33 @@ message SpotLightSource {
 // Materials
 //
 
-// A built-in material with no parameters other than a bump map. Used to
-// represent multiple materials that were present in PBRTv1.
-message BuiltInMaterial {
+// A material that approximates blue paint.
+//
+// @supported_versions {PBRTv1}
+message BluePaintMaterial {
+  // The floating-point texture to be used as a bump map.
+  optional FloatTextureParameter bumpmap = 13;
+}
+
+// A material that approximates brushed metal.
+//
+// @supported_versions {PBRTv1}
+message BrushedMetalMaterial {
+  // The floating-point texture to be used as a bump map.
+  optional FloatTextureParameter bumpmap = 13;
+}
+
+// A material that approximates clay.
+//
+// @supported_versions {PBRTv1}
+message ClayMaterial {
   // The floating-point texture to be used as a bump map.
   optional FloatTextureParameter bumpmap = 13;
 }
 
 // A material that replicates Disney's Principled BRDF.
+//
+// @supported_versions {PBRTv3}
 message DisneyMaterial {
   // The roughness of the surface.
   optional FloatTextureParameter roughness = 8;
@@ -1917,32 +1886,36 @@ message DisneyMaterial {
   optional bool thin = 45 [default = false];
 }
 
+// A material that approximates felt.
+//
+// @supported_versions {PBRTv1}
+message FeltMaterial {
+  // The floating-point texture to be used as a bump map.
+  optional FloatTextureParameter bumpmap = 13;
+}
+
 // A material that approximates glass.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3}
 message GlassMaterial {
   // The coefficient of specular reflection.
   optional SpectrumTextureParameter Kr = 3;
 
   // The coefficient of specular transmission.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv2 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv2
   optional SpectrumTextureParameter Kt = 4;
 
   // Microfacet roughness in the u direction. If zero, perfect specular
   // reflection is modeled.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv3 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv3
   optional FloatTextureParameter uroughness = 9;
 
   // Microfacet roughness in the v direction. If zero, perfect specular
   // reflection is modeled.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv3 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv3
   optional FloatTextureParameter vroughness = 10;
 
   // Index of refraction of the surface. This value is used in both the
@@ -1961,13 +1934,13 @@ message GlassMaterial {
   // parameters are used directly for the alpha parameters of the microfacet
   // distribution function.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv3 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv3
   optional bool remaproughness = 44 [default = true];
 }
 
 // A material that approximates hair.
+//
+// @supported_versions {PBRTv3}
 message HairMaterial {
   // The index of refraction of the scattering volume.
   optional FloatTextureParameter eta = 11;
@@ -1999,6 +1972,8 @@ message HairMaterial {
 }
 
 // A material with subsurface scattering where Kd is main parameter.
+//
+// @supported_versions {PBRTv2, PBRTv3}
 message KdSubsurfaceMaterial {
   // The coefficient of diffuse reflection.
   optional SpectrumTextureParameter Kd = 1;
@@ -2008,25 +1983,19 @@ message KdSubsurfaceMaterial {
 
   // The coefficient of specular transmission.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv3 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv3
   optional SpectrumTextureParameter Kt = 4;
 
   // Microfacet roughness in the u direction. If zero, perfect specular
   // reflection is modeled.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv3 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv3
   optional FloatTextureParameter uroughness = 9;
 
   // Microfacet roughness in the v direction. If zero, perfect specular
   // reflection is modeled.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv3 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv3
   optional FloatTextureParameter vroughness = 10;
 
   // The index of refraction of the scattering volume.
@@ -2044,16 +2013,10 @@ message KdSubsurfaceMaterial {
   oneof mfp_type {
     // The average distance light travels in the medium before scattering.
     //
-    // NOTE: For simplicity, this field is shared between all PBRT versions;
-    //       however, it is only supported in PBRTv2 and should be ignored when
-    //       reading all other input.
+    // @max_version PBRTv2
     FloatTextureParameter meanfreepath = 20;
-
-    // The average distance light travels in the medium before scattering.
     //
-    // NOTE: For simplicity, this field is shared between all PBRT versions;
-    //       however, it is only supported in PBRTv3 and should be ignored when
-    //       reading all other input.
+    // @min_version PBRTv3
     SpectrumTextureParameter mfp = 25;
   }
 
@@ -2062,16 +2025,12 @@ message KdSubsurfaceMaterial {
   // backwards scattering, and a value greater than one represents forward
   // scattering.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv3 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv3
   optional double g = 42 [default = 0.0];
 
   // A scale factor applied to the mean free path.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv3 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv3
   optional double scale = 43 [default = 1.0];
 
   // If true, roughness values are expected to be in the range [0,1], and are
@@ -2080,13 +2039,13 @@ message KdSubsurfaceMaterial {
   // parameters are used directly for the alpha parameters of the microfacet
   // distribution function.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv3 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv3
   optional bool remaproughness = 44 [default = true];
 }
 
 // A material with simple Lambertian scattering.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3}
 message MatteMaterial {
   // The coefficient of diffuse reflection.
   optional SpectrumTextureParameter Kd = 1;
@@ -2100,6 +2059,8 @@ message MatteMaterial {
 }
 
 // A material with a measured BRDF using the Fourier representation.
+//
+// @supported_versions {PBRTv3}
 message MeasuredFourierMaterial {
   // The floating-point texture to be used as a bump map.
   optional FloatTextureParameter bumpmap = 13;
@@ -2112,6 +2073,8 @@ message MeasuredFourierMaterial {
 }
 
 // A material with a measured BRDF using the MERL representation.
+//
+// @supported_versions {PBRTv2}
 message MeasuredMerlMaterial {
   // The floating-point texture to be used as a bump map.
   optional FloatTextureParameter bumpmap = 13;
@@ -2120,6 +2083,9 @@ message MeasuredMerlMaterial {
   optional string filename = 21;
 }
 
+// A material that approximates a metalic surface.
+//
+// @supported_versions {PBRTv2, PBRTv3}
 message MetalMaterial {
   // The roughness of the surface.
   optional FloatTextureParameter roughness = 8;
@@ -2127,17 +2093,13 @@ message MetalMaterial {
   // Microfacet roughness in the u direction. If zero, perfect specular
   // reflection is modeled. If unset, falls back to the value from `roughness`.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv3 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv3
   optional FloatTextureParameter uroughness = 9;
 
   // Microfacet roughness in the v direction. If zero, perfect specular
   // reflection is modeled. If unset, falls back to the value from `roughness`.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv3 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv3
   optional FloatTextureParameter vroughness = 10;
 
   // The floating-point texture to be used as a bump map.
@@ -2155,13 +2117,13 @@ message MetalMaterial {
   // parameters are used directly for the alpha parameters of the microfacet
   // distribution function.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv3 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv3
   optional bool remaproughness = 44 [default = true];
 }
 
 // A material which mixes two different materials.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3}
 message MirrorMaterial {
   // The coefficient of specular reflection.
   optional SpectrumTextureParameter Kr = 3;
@@ -2171,6 +2133,8 @@ message MirrorMaterial {
 }
 
 // A material that approximates plastic.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3}
 message PlasticMaterial {
   // The coefficient of diffuse reflection.
   optional SpectrumTextureParameter Kd = 1;
@@ -2190,24 +2154,38 @@ message PlasticMaterial {
   // parameters are used directly for the alpha parameters of the microfacet
   // distribution function.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv3 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv3
   optional bool remaproughness = 44 [default = true];
 }
 
+// A material that approximates primer.
+//
+// @supported_versions {PBRTv1}
+message PrimerMaterial {
+  // The floating-point texture to be used as a bump map.
+  optional FloatTextureParameter bumpmap = 13;
+}
+
 // A material which mixes between two named materials.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message MixMaterial {
   // The `Kd` parameter used to create the fallback matte material if a lookup
   // fails.
+  //
+  // @max_version PBRTv4
   optional SpectrumTextureParameter Kd = 1;
 
   // The `sigma` parameter used to create the fallback matte material if a
   // lookup fails.
+  //
+  // @max_version PBRTv4
   optional FloatTextureParameter sigma = 12;
 
   // The `bumpmap` parameter used to create the fallback matte material if a
   // lookup fails.
+  //
+  // @max_version PBRTv4
   optional FloatTextureParameter bumpmap = 13;
 
   // Weighting factor for the blend between materials. A value of one
@@ -2239,7 +2217,17 @@ message ShinyMetalMaterial {
   optional FloatTextureParameter bumpmap = 13;
 }
 
+// A material that approximates skin.
+//
+// @supported_versions {PBRTv1}
+message SkinMaterial {
+  // The floating-point texture to be used as a bump map.
+  optional FloatTextureParameter bumpmap = 13;
+}
+
 // A material that approximates a glossy coat on top of a diffuse surface.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3}
 message SubstrateMaterial {
   // The coefficient of diffuse reflection.
   optional SpectrumTextureParameter Kd = 1;
@@ -2264,38 +2252,32 @@ message SubstrateMaterial {
   // parameters are used directly for the alpha parameters of the microfacet
   // distribution function.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv3 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv3
   optional bool remaproughness = 44 [default = true];
 }
 
 // A material with subsurface scattering.
+//
+// @supported_versions {PBRTv2, PBRTv3, PBRTv4}
 message SubsurfaceMaterial {
   // The coefficient of specular reflection.
   optional SpectrumTextureParameter Kr = 3;
 
   // The coefficient of specular transmission.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv3 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv3
   optional SpectrumTextureParameter Kt = 4;
 
   // Microfacet roughness in the u direction. If zero, perfect specular
   // reflection is modeled.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv3 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv3
   optional FloatTextureParameter uroughness = 9;
 
   // Microfacet roughness in the v direction. If zero, perfect specular
   // reflection is modeled.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv3 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv3
   optional FloatTextureParameter vroughness = 10;
 
   // The index of refraction of the scattering volume.
@@ -2306,10 +2288,6 @@ message SubsurfaceMaterial {
   //       FloatTextureParameter with the `float_value` field filled out. This
   //       is because the type of this field changed from a `Texture` to a
   //       `float` starting with PBRTv3.
-  //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv2 and should be ignored when
-  //       reading earlier input.
   optional FloatTextureParameter eta = 11;
 
   // The floating-point texture to be used as a bump map.
@@ -2333,16 +2311,12 @@ message SubsurfaceMaterial {
   // backwards scattering, and a value greater than one represents forward
   // scattering.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv3 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv3
   optional double g = 42 [default = 0.0];
 
   // A scale factor applied to the mean free path.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv3 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv3
   optional double scale = 43 [default = 1.0];
 
   // If true, roughness values are expected to be in the range [0,1], and are
@@ -2351,13 +2325,13 @@ message SubsurfaceMaterial {
   // parameters are used directly for the alpha parameters of the microfacet
   // distribution function.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv3 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv3
   optional bool remaproughness = 44 [default = true];
 }
 
 // A simple translucent material with diffuse and specular compoents.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3}
 message TranslucentMaterial {
   // The coefficient of diffuse reflection.
   optional SpectrumTextureParameter Kd = 1;
@@ -2383,13 +2357,13 @@ message TranslucentMaterial {
   // parameters are used directly for the alpha parameters of the microfacet
   // distribution function.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv3 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv3
   optional bool remaproughness = 44 [default = true];
 }
 
-// The "kitchen sink" material available in PBRTv1, PBRTv2, and PBRT v3.
+// A "kitchen sink" material.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv}
 message UberMaterial {
   // The coefficient of diffuse reflection.
   optional SpectrumTextureParameter Kd = 1;
@@ -2402,9 +2376,7 @@ message UberMaterial {
 
   // The coefficient of specular transmission.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv2 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv2
   optional SpectrumTextureParameter Kt = 4;
 
   // The opacity of the surface. If less than one, the surface transmits light
@@ -2417,17 +2389,13 @@ message UberMaterial {
   // Microfacet roughness in the u direction. If zero, perfect specular
   // reflection is modeled. If unset, falls back to the value from `roughness`.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv3 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv3
   optional FloatTextureParameter uroughness = 9;
 
   // Microfacet roughness in the v direction. If zero, perfect specular
   // reflection is modeled. If unset, falls back to the value from `roughness`.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv3 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv3
   optional FloatTextureParameter vroughness = 10;
 
   // Index of refraction of the surface. This value is used in both the
@@ -2436,9 +2404,7 @@ message UberMaterial {
   //
   // NOTE: Prior to PBRTv3 this field was named "index".
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv2 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv2
   optional FloatTextureParameter eta = 11;
 
   // The floating-point texture to be used as a bump map.
@@ -2450,9 +2416,7 @@ message UberMaterial {
   // parameters are used directly for the alpha parameters of the microfacet
   // distribution function.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv3 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv3
   optional bool remaproughness = 44 [default = true];
 }
 
@@ -2513,6 +2477,8 @@ enum MeasuredScatteringPreset {
 }
 
 // A participating medium that uses Perlin noise to create cloud-like density.
+//
+// @supported_versions {PBRTv4}
 message CloudMedium {
   // The absorption cross section.
   optional Spectrum sigma_a = 1;
@@ -2540,6 +2506,8 @@ message CloudMedium {
 }
 
 // A participating medium that is uniform throughout its volume.
+//
+// @supported_versions {PBRTv1, PBRTv2}
 message ExponentialMedium {
   // The absorption cross section.
   optional Spectrum sigma_a = 1;
@@ -2570,6 +2538,8 @@ message ExponentialMedium {
 }
 
 // A participating medium that is uniform throughout its volume.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message HomogeneousMedium {
   // The absorption cross section.
   optional Spectrum sigma_a = 1;
@@ -2582,48 +2552,38 @@ message HomogeneousMedium {
 
   // The spectral distribution of the medium's emitted radiance.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported in PBRTv3 and should be ignored when
-  //       reading those input.
+  // @supported_versions {PBRTv2, PBRTv4}
   optional Spectrum Le = 4;
 
   // The first corner of the bounding box defining the extents of the medium.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported after PBRTv2 and should be ignored when
-  //       reading later input.
+  // @max_version PBRTv2
   optional Point p0 = 5;
 
   // The second corner of the bounding box defining the extents of the medium.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported after PBRTv2 and should be ignored when
-  //       reading later input.
+  // @max_version PBRTv2
   optional Point p1 = 6;
 
   // The named measured scattering medium properties to use.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv3 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv3
   optional MeasuredScatteringPreset preset = 14 [default = DEFAULT];
 
   // Scale factor applied to the absorption and scattering cross sections.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv3 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv3
   optional double scale = 15 [default = 1.0];
 
   // The scale factor applied to the medium's emitted radiance.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv4 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv4
   optional double Lescale = 18 [default = 1.0];
 }
 
 // A participating medium defined by a NanoVDB input.
+//
+// @supported_versions {PBRTv4}
 message NanoVdbMedium {
   // The absorption cross section.
   optional Spectrum sigma_a = 1;
@@ -2653,6 +2613,8 @@ message NanoVdbMedium {
 
 // A participating medium defined by a uniform grid of points with non-uniform
 // properties defined by RGB color values.
+//
+// @supported_versions {PBRTv4}
 message RgbGridMedium {
   // The phase function asymmetry.
   optional double g = 3 [default = 0.0];
@@ -2691,6 +2653,8 @@ message RgbGridMedium {
 
 // A participating medium defined by a uniform grid of points with non-uniform
 // density.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message UniformGridMedium {
   // The absorption cross section.
   optional Spectrum sigma_a = 1;
@@ -2703,9 +2667,7 @@ message UniformGridMedium {
 
   // The spectral distribution of the medium's emitted radiance.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported in PBRTv3 and should be ignored when
-  //       reading those input.
+  // @supported_versions {PBRTv1, PBRTv2, PBRTv4}
   optional Spectrum Le = 4;
 
   // The first corner of the bounding box defining the extents of the medium.
@@ -2728,46 +2690,34 @@ message UniformGridMedium {
 
   // The named measured scattering medium properties to use.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv3 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv3
   optional MeasuredScatteringPreset preset = 14 [default = DEFAULT];
 
   // Scale factor applied to the absorption and scattering cross sections.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv3 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv3
   optional double scale = 15 [default = 1.0];
 
   // The scale factor applied to the medium's emitted radiance.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv4 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv4
   optional double Lescale = 18 [default = 1.0];
 
   // The offset value that is added to the emission temperature.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv4 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv4
   optional double temperatureoffset = 20 [default = 0.0];
 
   // The scale factor applied to the ofsetted emission temperature to get a
   // temperature in kelvin before the blackbody emission is determined.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv4 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv4
   optional double temperaturescale = 21 [default = 1.0];
 
   // The blackbody temperature values for each voxel in kelvin in row-major
   // order.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv4 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv4
   repeated double temperature = 25;
 }
 
@@ -2776,6 +2726,8 @@ message UniformGridMedium {
 //
 
 // A pixel filter that performs a box filter.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message BoxPixelFilter {
   // The width of the filter in the x direction in pixels.
   //
@@ -2789,15 +2741,15 @@ message BoxPixelFilter {
 }
 
 // A pixel filter that performs a Gaussian filter.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message GaussianPixelFilter {
-  // The width of the filter in the x direction in pixels. The default value of
-  // this value changed from 2.0 to 1.5 starting with PBRTv4.
+  // The width of the filter in the x direction in pixels.
   //
   // NOTE: Prior to PBRTv4 this field was named "xwidth".
   optional double xradius = 1;
 
-  // The width of the filter in the x direction in pixels. The default value of
-  // this value changed from 2.0 to 1.5 starting with PBRTv4.
+  // The width of the filter in the x direction in pixels.
   //
   // NOTE: Prior to PBRTv4 this field was named "ywidth".
   optional double yradius = 2;
@@ -2811,6 +2763,8 @@ message GaussianPixelFilter {
 }
 
 // A pixel filter that performs a Lanczos filter.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message LanczosPixelFilter {
   // The width of the filter in the x direction in pixels.
   //
@@ -2827,6 +2781,8 @@ message LanczosPixelFilter {
 }
 
 // A pixel filter that performs a Mitchell-Netravali filter.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message MitchellPixelFilter {
   // The width of the filter in the x direction in pixels.
   //
@@ -2846,6 +2802,8 @@ message MitchellPixelFilter {
 }
 
 // A pixel filter that performs a triangle filter.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message TrianglePixelFilter {
   // The width of the filter in the x direction in pixels.
   //
@@ -2863,12 +2821,16 @@ message TrianglePixelFilter {
 //
 
 // A renderer which can be used for testing Accelerator implementations.
+//
+// @supported_versions {PBRTv2}
 message AggregateTestRenderer {
   // The number of random rays to generate to use for testing the aggregate.
   optional uint32 niters = 1 [default = 100000];
 }
 
 // A renderer which computes a series of spherical harmonic radiance probes.
+//
+// @supported_versions {PBRTv2}
 message CreateProbesRenderer {
   // A bounding box.
   message Bounds {
@@ -2910,6 +2872,8 @@ message CreateProbesRenderer {
 }
 
 // A renderer which implements Metropolis light transport.
+//
+// @supported_versions {PBRTv2}
 message MetropolisRenderer {
   // The probability of the mutation strategy proposing a mutation where all of
   // the sample values are replaced with completely new samples
@@ -2944,6 +2908,8 @@ message MetropolisRenderer {
 
 // A renderer which uses the sampler to generate rays and then render the scene
 // using the provided Surface/Volume Integrators.
+//
+// @supported_versions {PBRTv2}
 message SamplerRenderer {
   // If true, the renderer ignores surface and volume integration and instead
   // randomly shades based on the intersected geometry's primitive ID values.
@@ -2952,6 +2918,8 @@ message SamplerRenderer {
 
 // A renderer which computes a set of sample points on the surfaces of objects
 // in the scene that have BSSRDF materials.
+//
+// @supported_versions {PBRTv2}
 message SurfacePointsRenderer {
   // The filename where generated points are saved.
   optional string filename = 4;
@@ -2973,6 +2941,8 @@ enum SamplerRandomizationMethod {
 }
 
 // A sampler which adaptively varies the number of samples per pixels.
+//
+// @supported_versions {PBRTv2}
 message AdaptiveSampler {
   // The maximum number of samples per pixel.
   optional uint32 maxsamples = 1 [default = 32];
@@ -2991,53 +2961,51 @@ message AdaptiveSampler {
 }
 
 // A sampler which uses the best canididate algorithm.
+//
+// @supported_versions {PBRTv1, PBRTv2}
 message BestCandidateSampler {
   // The number of samples to do per pixel.
   optional uint32 pixelsamples = 1 [default = 4];
 }
 
 // A low discrepancy sampler which uses a Halton sequence as its basis.
+//
+// @supported_versions {PBRTv2, PBRTv3, PBRTv4}
 message HaltonSampler {
   // The number of samples to do per pixel.
   optional uint32 pixelsamples = 1;
 
   // If true, samples are placed at the center of each pixel.
   //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is only supported in PBRTv3 and should be ignored when
-  //       reading all other input.
+  // @supported_versions {PBRTv3}
   optional bool samplepixelcenter = 8 [default = false];
 
   // The seed used to scramble the distribution as part of the randomization.
   //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is only supported starting with PBRTv4 and should be
-  //       ignored when reading earlier input.
+  // @min_version PBRTv4
   optional int32 seed = 9;
 
   // The method used to scramble the sequence to reduce the appearance of
   // visual artifacts from poor sample selection.
   //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is only supported starting with PBRTv4 and should be
-  //       ignored when reading earlier input.
+  // @min_version PBRTv4
   optional SamplerRandomizationMethod randomization = 10;
 }
 
 // A sampler which uses an RNG and samples all dimensions independently.
+//
+// @supported_versions {PBRTv2, PBRTv3, PBRTv4}
 message IndependentSampler {
   // The number of samples to do per pixel.
   optional uint32 pixelsamples = 1 [default = 4];
-
-  // The seed used to initiate the RNG.
   //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is only supported starting with PBRTv4 and should be
-  //       ignored when reading earlier input.
+  // @min_version PBRTv4
   optional int32 seed = 9;
 }
 
 // A sampler which uses the Grunschloss maximized-minimized algorithm.
+//
+// @supported_versions {PBRTv3}
 message MaxMinDistSampler {
   // The number of samples to do per pixel.
   optional uint32 pixelsamples = 1 [default = 16];
@@ -3048,6 +3016,8 @@ message MaxMinDistSampler {
 
 // A low discrepancy sampler which uses a stratified Sobol sequence as its
 // basis.
+//
+// @supported_versions {PBRTv4}
 message PaddedSobolSampler {
   // The number of samples to do per pixel.
   optional uint32 pixelsamples = 1 [default = 16];
@@ -3062,6 +3032,8 @@ message PaddedSobolSampler {
 
 // A low discrepancy sampler which uses Pixar's progressive multi-jittered
 // (0,2) sequence with blue noise properties as its basis
+//
+// @supported_versions {PBRTv4}
 message PMJ02BNSampler {
   // The number of samples to do per pixel.
   optional uint32 pixelsamples = 1 [default = 16];
@@ -3071,6 +3043,8 @@ message PMJ02BNSampler {
 }
 
 // A sampler which stratifies samples in the plane of the image.
+//
+// @supported_versions {PBRTv1}
 message RandomSampler {
   // The number of samples in the image `x` axis.
   optional uint32 xsamples = 2 [default = 2];
@@ -3080,27 +3054,27 @@ message RandomSampler {
 }
 
 // A low discrepancy sampler which uses a Sobol sequence as its basis.
+//
+// @supported_versions {PBRTv3, PBRTv4}
 message SobolSampler {
   // The number of samples to do per pixel.
   optional uint32 pixelsamples = 1 [default = 16];
 
   // The seed used to scramble the distribution as part of the randomization.
   //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is only supported starting with PBRTv4 and should be
-  //       ignored when reading earlier input.
+  // @min_version PBRTv4
   optional int32 seed = 9;
 
   // The method used to scramble the sequence to reduce the appearance of
   // visual artifacts from poor sample selection.
   //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is only supported starting with PBRTv4 and should be
-  //       ignored when reading earlier input.
+  // @min_version PBRTv4
   optional SamplerRandomizationMethod randomization = 10;
 }
 
 // A sampler which stratifies samples generated by an RNG.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message StratifiedSampler {
   // The number of samples in the image `x` axis.
   optional uint32 xsamples = 2;
@@ -3113,21 +3087,19 @@ message StratifiedSampler {
 
   // The maximum number of sampled dimensions before falling back to an RNG.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is only supported in PBRTv3 and should be ignored when
-  //       reading input from other versions.
+  // @min_version PBRTv3
   optional uint32 dimensions = 7 [default = 4];
 
   // The seed used to initiate the RNG.
   //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is only supported starting with PBRTv4 and should be
-  //       ignored when reading earlier input.
+  // @min_version PBRTv4
   optional int32 seed = 9;
 }
 
 // A low discrepancy sampler which uses a Sobol sequence with blue noise as its
 // basis.
+//
+// @supported_versions {PBRTv4}
 message ZSobolSampler {
   // The number of samples to do per pixel.
   optional uint32 pixelsamples = 1 [default = 16];
@@ -3141,15 +3113,15 @@ message ZSobolSampler {
 }
 
 // A low discrepancy sampler which uses a (0, 2) sequence as its basis.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3}
 message ZeroTwoSequenceSampler {
   // The number of samples to do per pixel.
   optional uint32 pixelsamples = 1;
 
   // The maximum number of sampled dimensions before falling back to an RNG.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is only supported in PBRTv3 and should be ignored when
-  //       reading input from other versions.
+  // @supported_versions {PBRTv3}
   optional uint32 dimensions = 7 [default = 4];
 }
 
@@ -3170,6 +3142,8 @@ message VertexIndices {
 }
 
 // Creates a cone
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3}
 message ConeShape {
   // The cone's radius.
   optional double radius = 1 [default = 1.0];
@@ -3182,6 +3156,8 @@ message ConeShape {
 }
 
 // Creates a curve
+//
+// @supported_versions {PBRTv3, PBRTv4}
 message CurveShape {
   // The type of curve.
   enum Basis {
@@ -3240,6 +3216,8 @@ message CurveShape {
 }
 
 // Creates a cylinder
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message CylinderShape {
   // The cylinder's radius.
   optional double radius = 1 [default = 1.0];
@@ -3255,6 +3233,8 @@ message CylinderShape {
 }
 
 // Creates a disk
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message DiskShape {
   // The outer radius of the disk.
   optional double radius = 1 [default = 1.0];
@@ -3270,6 +3250,8 @@ message DiskShape {
 }
 
 // Creates a heightfield
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3}
 message HeightFieldShape {
   // The number of sample values in the u direction.
   optional uint32 nu = 7;
@@ -3282,6 +3264,8 @@ message HeightFieldShape {
 }
 
 // Creates a hyperboloid
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3}
 message HyperboloidShape {
   // The maximum extent of the hyperboloid in phi in spherical coordinates.
   optional double phimax = 3 [default = 360.0];
@@ -3294,6 +3278,8 @@ message HyperboloidShape {
 }
 
 // Creates a Loop subdivision surface.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3}
 message LoopSubdivShape {
   // The vertex positions for the base mesh.
   repeated Point P = 12;
@@ -3308,6 +3294,8 @@ message LoopSubdivShape {
 }
 
 // Creates a NURBS patch.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3}
 message NurbsShape {
   // A point with a weight.
   message PointWithWeight {
@@ -3355,6 +3343,8 @@ message NurbsShape {
 }
 
 // Creates a paraboloid
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3}
 message ParaboloidShape {
   // The paraboloid's radius.
   optional double radius = 1 [default = 1.0];
@@ -3370,6 +3360,8 @@ message ParaboloidShape {
 }
 
 // Creates a triangle mesh from a PLY file
+//
+// @supported_versions {PBRTv3, PBRTv4}
 message PlyMeshShape {
   // When provided, at any point on the triangle where the alpha texture
   // evaluates to have the value zero, the triangle is cut away and any ray
@@ -3379,9 +3371,7 @@ message PlyMeshShape {
   // When provided, intersections at any points on the triangle where the alpha
   // texture evaluates to zero are ignored.
   //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is only supported in PBRTv3 and should be ignored when
-  //       reading all other input.
+  // @supported_versions {PBRTv3}
   optional FloatTextureParameter shadowalpha = 29;
 
   // File from which the PLY-format mesh is loaded.
@@ -3389,6 +3379,8 @@ message PlyMeshShape {
 }
 
 // Creates a sphere
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message SphereShape {
   // The sphere's radius.
   optional double radius = 1 [default = 1.0];
@@ -3408,6 +3400,8 @@ message SphereShape {
 }
 
 // Creates a triangle mesh
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message TriangleMeshShape {
   // A pair of UV coordinates.
   message UVCoordinate {
@@ -3433,33 +3427,25 @@ message TriangleMeshShape {
 
   // If true, degenerate UV values are ignored.
   //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is only supported in PBRTv2 and should be ignored when
-  //       reading all other input.
+  // @supported_versions {PBRTv2}
   optional bool discarddegenerateUVs = 27 [default = false];
 
   // When provided, at any point on the triangle where the alpha texture
   // evaluates to have the value zero, the triangle is cut away and any ray
   // intersection is ignored.
   //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is not supported before PBRTv2 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv2
   optional FloatTextureParameter alpha = 28;
 
   // When provided, intersections at any points on the triangle where the alpha
   // texture evaluates to zero are ignored.
   //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is only supported in PBRTv3 and should be ignored when
-  //       reading all other input.
+  // @supported_versions {PBRTv3}
   optional FloatTextureParameter shadowalpha = 29;
 
   // Provides a list of numeric identifiers for each face.
   //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is not supported before PBRTv3 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv3
   repeated int32 faceIndices = 30;
 }
 
@@ -3471,7 +3457,7 @@ message TriangleMeshShape {
 enum CheckerboardAntialiasing {
   CLOSEDFORM = 0;
   DISABLED = 1;     // Maps to "none" since none is already in use
-  SUPERSAMPLE = 2;  // Only supported in PRTv1.
+  SUPERSAMPLE = 2;  // @max_version PBRTv1
 }
 
 // The method used for converting 8-bit color values to floating point values.
@@ -3492,8 +3478,8 @@ enum ImageWrap {
 enum TextureFilter {
   EWA = 0;
   TRILINEAR = 1;
-  BILINEAR = 2;  // Only supported in PBRTv4 and later.
-  POINT = 3;     // Only supported in PBRTv4 and later.
+  BILINEAR = 2;  // @min_version PBRTv4
+  POINT = 3;     // @min_version PBRTv4
 }
 
 // The type of texture mapping to apply to 2D textures.
@@ -3505,6 +3491,8 @@ enum TextureMapping {
 }
 
 // A texture which bilinearly interpolates between four textures.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message BilerpFloatTexture {
   // The first texture to interpolate.
   optional FloatTextureParameter v00 = 4;
@@ -3541,6 +3529,8 @@ message BilerpFloatTexture {
 }
 
 // A texture which bilinearly interpolates between four textures.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message BilerpSpectrumTexture {
   // The first texture to interpolate.
   optional SpectrumTextureParameter v00 = 4;
@@ -3577,6 +3567,8 @@ message BilerpSpectrumTexture {
 }
 
 // A texture which alternates between two textures in a 2D checkerboard pattern.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message Checkerboard2DFloatTexture {
   // The texture to use for even checks.
   optional FloatTextureParameter tex1 = 1;
@@ -3586,9 +3578,7 @@ message Checkerboard2DFloatTexture {
 
   // The antialiasing mode to use for the texture lookups.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported after PBRTv3 and should be ignored when
-  //       reading later input.
+  // @max_version PBRTv3
   optional CheckerboardAntialiasing aamode = 8 [default = CLOSEDFORM];
 
   // The type of texture coordinate mapping to use.
@@ -3614,6 +3604,8 @@ message Checkerboard2DFloatTexture {
 }
 
 // A texture which alternates between two textures in a 2D checkerboard pattern.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message Checkerboard2DSpectrumTexture {
   // The texture to use for even checks.
   optional SpectrumTextureParameter tex1 = 1;
@@ -3623,9 +3615,7 @@ message Checkerboard2DSpectrumTexture {
 
   // The antialiasing mode to use for the texture lookups.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported after PBRTv3 and should be ignored when
-  //       reading later input.
+  // @max_version PBRTv3
   optional CheckerboardAntialiasing aamode = 8 [default = CLOSEDFORM];
 
   // The type of texture coordinate mapping to use.
@@ -3651,6 +3641,8 @@ message Checkerboard2DSpectrumTexture {
 }
 
 // A texture which alternates between two textures in a 3D checkerboard pattern.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message Checkerboard3DFloatTexture {
   // The texture to use for even checks.
   optional FloatTextureParameter tex1 = 1;
@@ -3660,6 +3652,8 @@ message Checkerboard3DFloatTexture {
 }
 
 // A texture which alternates between two textures in a 3D checkerboard pattern.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message Checkerboard3DSpectrumTexture {
   // The texture to use for even checks.
   optional SpectrumTextureParameter tex1 = 1;
@@ -3669,12 +3663,16 @@ message Checkerboard3DSpectrumTexture {
 }
 
 // A texture which has a constant value.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message ConstantFloatTexture {
   // The value of the texture.
   optional double value = 3 [default = 1.0];
 }
 
 // A texture which has a constant value.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message ConstantSpectrumTexture {
   // The value of the texture.
   optional Spectrum value = 3;
@@ -3683,6 +3681,8 @@ message ConstantSpectrumTexture {
 // A texture which linearly interpolates between two textures using an
 // an interpolant based on the absolute value of the dot product of the surface
 // normal at the texture evaluation point with a specified vector.
+//
+// @supported_versions {PBRTv4}
 message DirectionMixFloatTexture {
   // The first texture to interpolate.
   optional FloatTextureParameter tex1 = 1;
@@ -3697,6 +3697,8 @@ message DirectionMixFloatTexture {
 // A texture which linearly interpolates between two textures using an
 // an interpolant based on the absolute value of the dot product of the surface
 // normal at the texture evaluation point with a specified vector.
+//
+// @supported_versions {PBRTv4}
 message DirectionMixSpectrumTexture {
   // The first texture to interpolate.
   optional SpectrumTextureParameter tex1 = 1;
@@ -3709,6 +3711,8 @@ message DirectionMixSpectrumTexture {
 }
 
 // A texture which alternates between two textures in a dots pattern.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message DotsFloatTexture {
   // The texture used for the dots.
   optional FloatTextureParameter inside = 9;
@@ -3739,6 +3743,8 @@ message DotsFloatTexture {
 }
 
 // A texture which alternates between two textures in a dots pattern.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message DotsSpectrumTexture {
   // The texture used for the dots.
   optional SpectrumTextureParameter inside = 9;
@@ -3769,6 +3775,8 @@ message DotsSpectrumTexture {
 }
 
 // A texture based on fractional Brownian motion.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message FBmFloatTexture {
   // The maximum number of octaves of noise to use.
   optional uint32 octaves = 11 [default = 8];
@@ -3778,6 +3786,8 @@ message FBmFloatTexture {
 }
 
 // A texture based on fractional Brownian motion.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3}
 message FBmSpectrumTexture {
   // The maximum number of octaves of noise to use.
   optional uint32 octaves = 11 [default = 8];
@@ -3787,6 +3797,8 @@ message FBmSpectrumTexture {
 }
 
 // A texture based on a specified image file.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message ImageMapFloatTexture {
   // The filename of the image to load.
   optional string filename = 13 [default = ""];
@@ -3806,9 +3818,7 @@ message ImageMapFloatTexture {
 
   // The scale factor applied to texture values.
   //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is not supported before PBRTv3 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv3
   optional double scale = 17 [default = 1.0];
 
   // The type of texture coordinate mapping to use.
@@ -3834,9 +3844,7 @@ message ImageMapFloatTexture {
 
   // The gamma exponent to use if the image is gamma encoded.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is only valid in PBRTv2 and in PBRv4 and later and can be
-  //       ignored when reading any other input.
+  // @supported_versions {PBRTv2, PBRTv4}
   optional double gamma = 27 [default = 1.0];
 
   // The function used to convert 8-bit color values to floating point values.
@@ -3845,20 +3853,18 @@ message ImageMapFloatTexture {
   //
   // NOTE: For PBRTv3 inputs, this value maps to the gamma boolean parameter.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv3 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv3
   optional ImageEncoding encoding = 28;
 
   // If true, the returned texture values are inverted.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv4 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv4
   optional bool invert = 30 [default = false];
 }
 
 // A texture based on a specified image file.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message ImageMapSpectrumTexture {
   // The filename of the image to load.
   optional string filename = 13 [default = ""];
@@ -3878,9 +3884,7 @@ message ImageMapSpectrumTexture {
 
   // The scale factor applied to texture values.
   //
-  // NOTE: For simplicity, this field is shared between all PBRT versions;
-  //       however, it is not supported before PBRTv3 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv3
   optional double scale = 17 [default = 1.0];
 
   // The type of texture coordinate mapping to use.
@@ -3906,9 +3910,7 @@ message ImageMapSpectrumTexture {
 
   // The gamma exponent to use if the image is gamma encoded.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is only valid in PBRTv2 and in PBRv4 and later and can be
-  //       ignored when reading any other input.
+  // @supported_versions {PBRTv2, PBRTv4}
   optional double gamma = 27;
 
   // The function used to convert 8-bit color values to floating point values.
@@ -3917,20 +3919,18 @@ message ImageMapSpectrumTexture {
   //
   // NOTE: For PBRTv3 inputs, this value maps to the gamma boolean parameter.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv3 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv3
   optional ImageEncoding encoding = 28;
 
   // If true, the returned texture values are inverted.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv4 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv4
   optional bool invert = 30 [default = false];
 }
 
 // A texture which uses Perlin noise to replicate marble.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message MarbleSpectrumTexture {
   // The maximum number of octaves of noise to use.
   optional uint32 octaves = 11 [default = 8];
@@ -3947,6 +3947,8 @@ message MarbleSpectrumTexture {
 
 // A texture which linearly interpolates between two textures based on a third
 // texture.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message MixFloatTexture {
   // The first texture to interpolate.
   optional FloatTextureParameter tex1 = 1;
@@ -3960,6 +3962,8 @@ message MixFloatTexture {
 
 // A texture which linearly interpolates between two textures based on a third
 // texture.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message MixSpectrumTexture {
   // The first texture to interpolate.
   optional SpectrumTextureParameter tex1 = 1;
@@ -3972,15 +3976,15 @@ message MixSpectrumTexture {
 }
 
 // A texture based on a Ptex image.
+//
+// @supported_versions {PBRTv3, PBRTv4}
 message PtexFloatTexture {
   // The filename of the image to load.
   optional string filename = 13 [default = ""];
 
   // The scale factor applied to texture values.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv4 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv4
   optional double scale = 17 [default = 1.0];
 
   // The gamma exponent to use if the image is gamma encoded.
@@ -3992,22 +3996,20 @@ message PtexFloatTexture {
 
   // The function used to convert 8-bit color values to floating point values.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv4 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv4
   optional ImageEncoding encoding = 28 [default = GAMMA];
 }
 
 // A texture based on a Ptex image.
+//
+// @supported_versions {PBRTv3, PBRTv4}
 message PtexSpectrumTexture {
   // The filename of the image to load.
   optional string filename = 13 [default = ""];
 
   // The scale factor applied to texture values.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv4 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv4
   optional double scale = 17 [default = 1.0];
 
   // The gamma exponent to use if the image is gamma encoded.
@@ -4019,13 +4021,13 @@ message PtexSpectrumTexture {
 
   // The function used to convert 8-bit color values to floating point values.
   //
-  // NOTE: For simplicity, this field is shared across multiple PBRT versions;
-  //       however, it is not supported before PBRTv4 and should be ignored when
-  //       reading earlier input.
+  // @min_version PBRTv4
   optional ImageEncoding encoding = 28 [default = GAMMA];
 }
 
 // A texture which multiples two textures together and returns the product.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message ScaleFloatTexture {
   // The first texture to multiply.
   optional FloatTextureParameter tex1 = 1;
@@ -4035,6 +4037,8 @@ message ScaleFloatTexture {
 }
 
 // A texture which multiples two textures together and returns the product.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message ScaleSpectrumTexture {
   // The first texture to multiply.
   optional SpectrumTextureParameter tex1 = 1;
@@ -4044,6 +4048,8 @@ message ScaleSpectrumTexture {
 }
 
 // A texture which uses Perlin noise to create a wrinkled appearance.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message WrinkledFloatTexture {
   // The maximum number of octaves of noise to use.
   optional uint32 octaves = 11 [default = 8];
@@ -4053,6 +4059,8 @@ message WrinkledFloatTexture {
 }
 
 // A texture which uses Perlin noise to create a wrinkled appearance.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3}
 message WrinkledSpectrumTexture {
   // The maximum number of octaves of noise to use.
   optional uint32 octaves = 11 [default = 8];
@@ -4062,6 +4070,8 @@ message WrinkledSpectrumTexture {
 }
 
 // A texture which visualizes the UV texture of a surface.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3}
 message UvSpectrumTexture {
   // The type of texture coordinate mapping to use.
   optional TextureMapping mapping = 20 [default = UV];
@@ -4086,11 +4096,15 @@ message UvSpectrumTexture {
 }
 
 // A texture which uses Perlin noise to create a windy appearance.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message WindyFloatTexture {
   // Empty Message
 }
 
 // A texture which uses Perlin noise to create a windy appearance.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3}
 message WindySpectrumTexture {
   // Empty Message
 }
@@ -4100,12 +4114,16 @@ message WindySpectrumTexture {
 //
 
 // A volume integrator which only accounts for attenutation and emission.
+//
+// @supported_versions {PBRTv1, PBRTv2}
 message EmissionVolumeIntegrator {
   // The stepping distance along a ray when doing ray marching.
   optional double stepsize = 1 [default = 1.0];
 }
 
 // A volume integrator which only accounts for single scattering.
+//
+// @supported_versions {PBRTv1, PBRTv2}
 message SingleVolumeIntegrator {
   // The stepping distance along a ray when doing ray marching.
   optional double stepsize = 1 [default = 1.0];

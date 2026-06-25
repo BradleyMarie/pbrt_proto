@@ -50,7 +50,9 @@ void AddAllFieldsByNameAndNumber(
 
     if (absl::EndsWith(descriptor.name(), "Integrator") &&
         (field_descriptor->name() == "maxdist" ||
-         field_descriptor->name() == "maxdistance")) {
+         field_descriptor->name() == "maxdistance" ||
+         field_descriptor->name() == "lightsampler" ||
+         field_descriptor->name() == "lightsamplestrategy")) {
       continue;
     }
 

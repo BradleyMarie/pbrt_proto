@@ -134,9 +134,23 @@ void RemoveRemapRoughness(
 
 }  // namespace
 
-absl::Status RemoveBuiltInMaterial(
+absl::Status RemoveBluePaintMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    int pbrt_version, BuiltInMaterial& output) {
+    int pbrt_version, BluePaintMaterial& output) {
+  RemoveBumpmap(parameters, output);
+  return absl::OkStatus();
+}
+
+absl::Status RemoveBrushedMetalMaterial(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    int pbrt_version, BrushedMetalMaterial& output) {
+  RemoveBumpmap(parameters, output);
+  return absl::OkStatus();
+}
+
+absl::Status RemoveClayMaterial(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    int pbrt_version, ClayMaterial& output) {
   RemoveBumpmap(parameters, output);
   return absl::OkStatus();
 }
@@ -184,6 +198,13 @@ absl::Status RemoveDisneyMaterial(
   return TryRemoveSpectrumTexture(
       parameters, "scatterdistance",
       std::bind(&DisneyMaterial::mutable_scatterdistance, &output));
+}
+
+absl::Status RemoveFeltMaterial(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    int pbrt_version, FeltMaterial& output) {
+  RemoveBumpmap(parameters, output);
+  return absl::OkStatus();
 }
 
 absl::Status RemoveGlassMaterial(
@@ -406,6 +427,13 @@ absl::Status RemovePlasticMaterial(
   return absl::OkStatus();
 }
 
+absl::Status RemovePrimerMaterial(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    int pbrt_version, PrimerMaterial& output) {
+  RemoveBumpmap(parameters, output);
+  return absl::OkStatus();
+}
+
 absl::Status RemoveShinyMetalMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, ShinyMetalMaterial& output) {
@@ -422,6 +450,13 @@ absl::Status RemoveShinyMetalMaterial(
     return status;
   }
 
+  return absl::OkStatus();
+}
+
+absl::Status RemoveSkinMaterial(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    int pbrt_version, SkinMaterial& output) {
+  RemoveBumpmap(parameters, output);
   return absl::OkStatus();
 }
 
