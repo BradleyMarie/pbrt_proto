@@ -1,6 +1,6 @@
 load("@protobuf//bazel:cc_proto_library.bzl", "cc_proto_library")
 load("@protobuf//bazel:proto_library.bzl", "proto_library")
-load("@rules_cc//cc:defs.bzl", "cc_library", "cc_test")
+load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library", "cc_test")
 
 package(
     default_visibility = ["//pbrt_proto:__subpackages__"],
@@ -525,5 +525,42 @@ cc_test(
         ":tokenizer",
         "@googletest//:gtest",
         "@googletest//:gtest_main",
+    ],
+)
+
+genrule(
+    name = "version_cc",
+    srcs = ["//pbrt_proto:pbrt.proto"],
+    outs = ["version.cc"],
+    cmd = "$(location @protobuf//:protoc) " +
+          "--plugin=protoc-gen-version=$(location :version_generator) " +
+          "--version_out=$(@D) " +
+          "$(location //pbrt_proto:pbrt.proto)",
+    cmd_bat = "$(location @protobuf//:protoc) " +
+              "--plugin=protoc-gen-version=$(location :version_generator) " +
+              "--version_out=$(@D) " +
+              "$(location //pbrt_proto:pbrt.proto)",
+    tools = [
+        ":version_generator",
+        "@protobuf//:protoc",
+    ],
+)
+
+cc_binary(
+    name = "version_generator",
+    srcs = ["version_generator.cc"],
+    deps = [
+        "@protobuf",
+        "@protobuf//:protoc_lib",
+    ],
+)
+
+cc_library(
+    name = "version",
+    srcs = [":version.cc"],
+    hdrs = ["version.h"],
+    deps = [
+        "@abseil-cpp//absl/container:flat_hash_map",
+        "@abseil-cpp//absl/strings:string_view",
     ],
 )

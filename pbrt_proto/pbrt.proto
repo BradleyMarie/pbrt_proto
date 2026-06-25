@@ -2363,7 +2363,7 @@ message TranslucentMaterial {
 
 // A "kitchen sink" material.
 //
-// @supported_versions {PBRTv1, PBRTv2, PBRTv}
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3}
 message UberMaterial {
   // The coefficient of diffuse reflection.
   optional SpectrumTextureParameter Kd = 1;
