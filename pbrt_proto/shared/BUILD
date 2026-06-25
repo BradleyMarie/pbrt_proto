@@ -565,7 +565,9 @@ cc_binary(
     srcs = ["version_generator.cc"],
     deps = [
         "@protobuf",
-        "@protobuf//:protoc_lib",
+        "@protobuf//src/google/protobuf/compiler:code_generator",
+        "@protobuf//src/google/protobuf/io",
+        "@protobuf//src/google/protobuf/io:printer",
     ],
 )
 
