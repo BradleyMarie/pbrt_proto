@@ -5,18 +5,20 @@
 
 #include "absl/container/flat_hash_map.h"
 #include "absl/strings/string_view.h"
+#include "pbrt_proto/shared/version_set.h"
 
 namespace pbrt_proto {
 
-bool IsMessageSupported(absl::string_view full_path, int pbrt_version);
-bool IsFieldSupported(absl::string_view full_path, int pbrt_version);
-bool IsEnumValueSupported(absl::string_view full_path, int pbrt_version);
+VersionSet GetMessageSupportedVersions(absl::string_view full_path);
+VersionSet GetFieldSupportedVersions(absl::string_view full_path);
+VersionSet GetEnumSupportedVersions(absl::string_view full_path);
 
 #ifndef NDEBUG
 
 template <typename T>
 bool IsSupported(int pbrt_version, const T& output) {
-  return IsMessageSupported(output.GetDescriptor()->full_name(), pbrt_version);
+  return GetMessageSupportedVersions(output.GetDescriptor()->full_name())
+      .Supported(pbrt_version);
 }
 
 #endif  // NDEBUG

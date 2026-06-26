@@ -572,10 +572,26 @@ cc_binary(
 )
 
 cc_library(
+    name = "version_set",
+    hdrs = ["version_set.h"],
+)
+
+cc_test(
+    name = "version_set_test",
+    srcs = ["version_set_test.cc"],
+    deps = [
+        ":version_set",
+        "@googletest//:gtest",
+        "@googletest//:gtest_main",
+    ],
+)
+
+cc_library(
     name = "version",
     srcs = [":version.cc"],
     hdrs = ["version.h"],
     deps = [
+        ":version_set",
         "@abseil-cpp//absl/container:flat_hash_map",
         "@abseil-cpp//absl/strings:string_view",
     ],

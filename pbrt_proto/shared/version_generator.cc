@@ -22,11 +22,9 @@ using ::google::protobuf::io::Printer;
 using ::google::protobuf::io::ZeroCopyOutputStream;
 
 static const char* kHeader = R"(
-#include <bitset>
-#include <initializer_list>
-
 #include "absl/container/flat_hash_map.h"
 #include "absl/strings/string_view.h"
+#include "pbrt_proto/shared/version_set.h"
 
 namespace pbrt_proto {
 namespace {
@@ -38,60 +36,20 @@ enum PbrtVersion {
   PBRTv4 = 4,
 };
 
-static constexpr int kHighestPbrtVersion = PBRTv4;
-static constexpr int kBits = kHighestPbrtVersion + 1;
-
-constexpr std::bitset<kBits> AllVersions() {
-  unsigned long long result = 0;
-  for (int i = 1; i <= kHighestPbrtVersion; i++) {
-    result |= (1u << i);
-  }
-  return std::bitset<kBits>(result);
-}
-
-constexpr std::bitset<kBits> SupportedVersions(
-    std::initializer_list<PbrtVersion> versions) {
-  unsigned long long result = 0;
-  for (PbrtVersion version : versions) {
-    result |= (1u << version);
-  }
-  return std::bitset<kBits>(result);
-}
-
-constexpr std::bitset<kBits> MinVersion(PbrtVersion min_ver) {
-  unsigned long long result = 0;
-  for (int i = 1; i <= kHighestPbrtVersion; i++) {
-    if (i >= min_ver) {
-      result |= (1u << i);
-    }
-  }
-  return std::bitset<kBits>(result);
-}
-
-constexpr std::bitset<kBits> MaxVersion(PbrtVersion max_ver) {
-  unsigned long long result = 0;
-  for (int i = 1; i <= kHighestPbrtVersion; i++) {
-    if (i <= max_ver) {
-      result |= (1u << i);
-    }
-  }
-  return std::bitset<kBits>(result);
-}
-
 )";
 
 static const char* kMessageMapStart =
-    R"(static const absl::flat_hash_map<std::string_view, std::bitset<kBits>>
+    R"(static const absl::flat_hash_map<std::string_view, VersionSet>
     kMessageMap = {
 )";
 
 static const char* kFieldMapStart =
-    R"(static const absl::flat_hash_map<std::string_view, std::bitset<kBits>>
+    R"(static const absl::flat_hash_map<std::string_view, VersionSet>
     kFieldMap = {
 )";
 
 static const char* kEnumMapStart =
-    R"(static const absl::flat_hash_map<std::string_view, std::bitset<kBits>>
+    R"(static const absl::flat_hash_map<std::string_view, VersionSet>
     kEnumMap = {
 )";
 
@@ -100,40 +58,28 @@ static const char* kMapEnd = "};\n\n";
 static const char* kFooter = R"(
 }  // namespace
 
-bool IsMessageSupported(absl::string_view full_path, int pbrt_version) {
-  if (pbrt_version < 0 || pbrt_version > kHighestPbrtVersion) {
-    return false;
-  }
-
+VersionSet GetMessageSupportedVersions(absl::string_view full_path) {
   if (auto iter = kMessageMap.find(full_path); iter != kEnumMap.end()) {
-    return iter->second[pbrt_version];
+    return iter->second;
   }
 
-  return false;
+  return NoVersions();
 }
 
-bool IsFieldSupported(absl::string_view full_path, int pbrt_version) {
-  if (pbrt_version < 0 || pbrt_version > kHighestPbrtVersion) {
-    return false;
-  }
-
+VersionSet IsFieldSupported(absl::string_view full_path, int pbrt_version) {
   if (auto iter = kFieldMap.find(full_path); iter != kEnumMap.end()) {
-    return iter->second[pbrt_version];
+    return iter->second;
   }
 
-  return false;
+  return AllVersions();
 }
 
-bool IsEnumValueSupported(absl::string_view full_path, int pbrt_version) {
-  if (pbrt_version < 0 || pbrt_version > kHighestPbrtVersion) {
-    return false;
-  }
-
+VersionSet IsEnumValueSupported(absl::string_view full_path, int pbrt_version) {
   if (auto iter = kEnumMap.find(full_path); iter != kEnumMap.end()) {
-    return iter->second[pbrt_version];
+    return iter->second;
   }
 
-  return false;
+  return AllVersions();
 }
 
 }  // namespace pbrt_proto
