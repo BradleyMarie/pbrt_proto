@@ -11,7 +11,7 @@ message TestParameterProto {
 }
 
 message TestUVTexture {
-  optional pbrt_proto.TextureMapping mapping = 1 [default = UV];
+  optional pbrt_proto.TextureMapping.Type mapping = 1 [default = UV];
   optional double uscale = 2 [default = 1.0];
   optional double vscale = 3 [default = 1.0];
   optional double udelta = 4 [default = 0.0];

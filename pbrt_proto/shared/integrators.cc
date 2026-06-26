@@ -32,7 +32,7 @@ void RemovePixelBounds(
 }
 
 template <typename T>
-std::optional<LightSampler> TryRemoveLightSampleStrategy(
+std::optional<LightSampler::Type> TryRemoveLightSampleStrategy(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, absl::string_view type, absl::string_view parameter,
     T& output) {
@@ -120,7 +120,7 @@ absl::Status RemoveBdptIntegrator(
       output.set_visualizeweights(*visualizeweights);
     }
 
-    if (std::optional<LightSampler> lightsamplestrategy =
+    if (std::optional<LightSampler::Type> lightsamplestrategy =
             TryRemoveLightSampleStrategy(parameters, pbrt_version, "bdpt",
                                          "lightsamplestrategy", output);
         lightsamplestrategy.has_value()) {
@@ -479,7 +479,7 @@ absl::Status RemovePathIntegrator(
   }
 
   if (pbrt_version >= 3) {
-    if (std::optional<LightSampler> lightsamplestrategy =
+    if (std::optional<LightSampler::Type> lightsamplestrategy =
             TryRemoveLightSampleStrategy(parameters, pbrt_version, "bdpt",
                                          "lightsamplestrategy", output);
         lightsamplestrategy.has_value()) {
@@ -670,7 +670,7 @@ absl::Status RemoveVolPathIntegrator(
     output.set_rrthreshold(*rrthreshold);
   }
 
-  if (std::optional<LightSampler> lightsamplestrategy =
+  if (std::optional<LightSampler::Type> lightsamplestrategy =
           TryRemoveLightSampleStrategy(parameters, pbrt_version, "bdpt",
                                        "lightsamplestrategy", output);
       lightsamplestrategy.has_value()) {

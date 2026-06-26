@@ -155,8 +155,8 @@ absl::Status RemoveHomogeneousMedium(
     if (std::optional<absl::string_view> preset =
             TryRemoveString(parameters, "preset");
         preset.has_value()) {
-      auto iter = kNamedMeasuredScatteringPresets.find(*preset);
-      if (iter != kNamedMeasuredScatteringPresets.end()) {
+      auto iter = kNamedScatteringPresets.find(*preset);
+      if (iter != kNamedScatteringPresets.end()) {
         output.set_preset(iter->second);
       }
     }
@@ -352,8 +352,8 @@ absl::Status RemoveUniformGridMedium(
     if (std::optional<absl::string_view> preset =
             TryRemoveString(parameters, "preset");
         preset.has_value()) {
-      auto iter = kNamedMeasuredScatteringPresets.find(*preset);
-      if (iter != kNamedMeasuredScatteringPresets.end()) {
+      auto iter = kNamedScatteringPresets.find(*preset);
+      if (iter != kNamedScatteringPresets.end()) {
         output.set_preset(iter->second);
       }
     }

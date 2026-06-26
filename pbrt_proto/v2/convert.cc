@@ -460,8 +460,8 @@ absl::Status ParserV2::Shape(
   if (std::optional<absl::string_view> name =
           TryRemoveString(parameters, "name");
       name.has_value()) {
-    auto iter = kNamedMeasuredScatteringPresets.find(*name);
-    if (iter != kNamedMeasuredScatteringPresets.end()) {
+    auto iter = kNamedScatteringPresets.find(*name);
+    if (iter != kNamedScatteringPresets.end()) {
       shape.mutable_overrides()->set_name(iter->second);
     }
   }

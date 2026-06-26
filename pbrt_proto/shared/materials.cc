@@ -541,8 +541,8 @@ absl::Status RemoveSubsurfaceMaterial(
   if (std::optional<absl::string_view> name =
           TryRemoveString(parameters, "name");
       name.has_value()) {
-    auto iter = kNamedMeasuredScatteringPresets.find(*name);
-    if (iter != kNamedMeasuredScatteringPresets.end()) {
+    auto iter = kNamedScatteringPresets.find(*name);
+    if (iter != kNamedScatteringPresets.end()) {
       output.set_name(iter->second);
     }
   }

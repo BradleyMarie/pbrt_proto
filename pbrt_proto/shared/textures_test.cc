@@ -72,7 +72,7 @@ TEST(AaMode, None) {
       RemoveCheckerboard2DFloatTexture(parameters, /*pbrt_version=*/1, actual)
           .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
-                aamode: DISABLED
+                aamode: NONE
               )pb"));
 }
 

@@ -172,7 +172,7 @@ message Shape {
     optional FloatTextureParameter eta = 11;
     optional FloatTextureParameter sigma = 12;
     optional FloatTextureParameter bumpmap = 13;
-    optional MeasuredScatteringPreset name = 14;
+    optional ScatteringPreset.Type name = 14;
     optional SpectrumTextureParameter amount = 15;
     optional SpectrumTextureParameter eta_as_spectrum_texture = 16;
     optional SpectrumTextureParameter k = 17;

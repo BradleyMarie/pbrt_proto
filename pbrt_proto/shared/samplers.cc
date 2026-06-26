@@ -62,19 +62,19 @@ void RemoveJitter(absl::flat_hash_map<absl::string_view, Parameter>& parameters,
 }
 
 template <typename T>
-absl::Status RemoveRandomization(
+absl::Status RemoveSamplerRandomization(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters, T& output) {
   if (std::optional<absl::string_view> randomization =
           TryRemoveString(parameters, "randomization");
       randomization.has_value()) {
     if (*randomization == "none") {
-      output.set_randomization(NONE);
+      output.set_randomization(SamplerRandomization::NONE);
     } else if (*randomization == "permutedigits") {
-      output.set_randomization(PERMUTEDIGITS);
+      output.set_randomization(SamplerRandomization::PERMUTEDIGITS);
     } else if (*randomization == "owen") {
-      output.set_randomization(OWEN);
+      output.set_randomization(SamplerRandomization::OWEN);
     } else if (*randomization == "fastowen") {
-      output.set_randomization(FASTOWEN);
+      output.set_randomization(SamplerRandomization::FASTOWEN);
     } else {
       return absl::InvalidArgumentError(
           "A Sampler specified an invalid 'randomization'");
@@ -157,7 +157,7 @@ absl::Status RemoveHaltonSampler(
   if (pbrt_version >= 4) {
     RemoveSeed(parameters, output);
 
-    if (absl::Status status = RemoveRandomization(parameters, output);
+    if (absl::Status status = RemoveSamplerRandomization(parameters, output);
         !status.ok()) {
       return status;
     }
@@ -197,7 +197,7 @@ absl::Status RemovePaddedSobolSampler(
 
   RemovePixelSamples(parameters, output);
   RemoveSeed(parameters, output);
-  return RemoveRandomization(parameters, output);
+  return RemoveSamplerRandomization(parameters, output);
 }
 
 absl::Status RemovePMJ02BNSampler(
@@ -230,7 +230,7 @@ absl::Status RemoveSobolSampler(
   if (pbrt_version >= 4) {
     RemoveSeed(parameters, output);
 
-    if (absl::Status status = RemoveRandomization(parameters, output);
+    if (absl::Status status = RemoveSamplerRandomization(parameters, output);
         !status.ok()) {
       return status;
     }
@@ -280,7 +280,7 @@ absl::Status RemoveZSobolSampler(
 
   RemovePixelSamples(parameters, output);
   RemoveSeed(parameters, output);
-  return RemoveRandomization(parameters, output);
+  return RemoveSamplerRandomization(parameters, output);
 }
 
 }  // namespace pbrt_proto

@@ -18,24 +18,24 @@
 namespace pbrt_proto {
 namespace {
 
-std::optional<CheckerboardAntialiasing> TryRemoveAaMode(
+std::optional<CheckerboardAaMode::Type> TryRemoveAaMode(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version) {
   if (std::optional<absl::string_view> aamode =
           TryRemoveString(parameters, "aamode");
       aamode) {
     if (*aamode == "closedform") {
-      return CheckerboardAntialiasing::CLOSEDFORM;
+      return CheckerboardAaMode::CLOSEDFORM;
     } else if (*aamode == "none") {
-      return CheckerboardAntialiasing::DISABLED;
+      return CheckerboardAaMode::NONE;
     } else if (pbrt_version == 1 && *aamode == "supersample") {
-      return CheckerboardAntialiasing::SUPERSAMPLE;
+      return CheckerboardAaMode::SUPERSAMPLE;
     } else {
       std::cerr
           << "WARNING: Unsupported value for 'checkerboard' Texture parameter "
              "'aamode': \""
           << *aamode << "\"" << std::endl;
-      return CheckerboardAntialiasing::CLOSEDFORM;
+      return CheckerboardAaMode::CLOSEDFORM;
     }
   }
 
@@ -108,7 +108,7 @@ void RemoveFilter(absl::flat_hash_map<absl::string_view, Parameter>& parameters,
   }
 }
 
-std::optional<TextureMapping> TryRemoveMapping(
+std::optional<TextureMapping::Type> TryRemoveMapping(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     absl::string_view type) {
   if (std::optional<absl::string_view> mapping =
@@ -133,7 +133,7 @@ std::optional<TextureMapping> TryRemoveMapping(
   return std::nullopt;
 }
 
-std::optional<ImageWrap> TryRemoveWrap(
+std::optional<ImageWrap::Type> TryRemoveWrap(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
   if (std::optional<absl::string_view> wrap =
           TryRemoveString(parameters, "wrap");
@@ -159,7 +159,7 @@ template <typename T>
 void TryRemoveUVParameters(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     absl::string_view type, T& output) {
-  if (std::optional<TextureMapping> mapping =
+  if (std::optional<TextureMapping::Type> mapping =
           TryRemoveMapping(parameters, type);
       mapping) {
     output.set_mapping(*mapping);
@@ -295,7 +295,7 @@ absl::Status RemoveCheckerboard2DFloatTexture(
       std::bind(&Checkerboard2DFloatTexture::mutable_tex2, &output));
 
   if (pbrt_version <= 3) {
-    if (std::optional<CheckerboardAntialiasing> aamode =
+    if (std::optional<CheckerboardAaMode::Type> aamode =
             TryRemoveAaMode(parameters, pbrt_version);
         aamode) {
       output.set_aamode(*aamode);
@@ -327,7 +327,7 @@ absl::Status RemoveCheckerboard2DSpectrumTexture(
   }
 
   if (pbrt_version <= 3) {
-    if (std::optional<CheckerboardAntialiasing> aamode =
+    if (std::optional<CheckerboardAaMode::Type> aamode =
             TryRemoveAaMode(parameters, pbrt_version);
         aamode) {
       output.set_aamode(*aamode);
@@ -525,7 +525,7 @@ absl::Status RemoveImageMapFloatTexture(
     output.set_maxanisotropy(*maxanisotropy);
   }
 
-  if (std::optional<ImageWrap> wrap = TryRemoveWrap(parameters); wrap) {
+  if (std::optional<ImageWrap::Type> wrap = TryRemoveWrap(parameters); wrap) {
     output.set_wrap(*wrap);
   }
 
@@ -593,7 +593,7 @@ absl::Status RemoveImageMapSpectrumTexture(
     output.set_maxanisotropy(*maxanisotropy);
   }
 
-  if (std::optional<ImageWrap> wrap = TryRemoveWrap(parameters); wrap) {
+  if (std::optional<ImageWrap::Type> wrap = TryRemoveWrap(parameters); wrap) {
     output.set_wrap(*wrap);
   }
 

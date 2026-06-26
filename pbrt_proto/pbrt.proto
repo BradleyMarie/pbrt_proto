@@ -870,26 +870,28 @@ message FilmCropWindow {
 }
 
 // The type of sensor in the virtual camera.
-enum FilmSensor {
-  CIE_1931 = 0;
-  CANON_EOS_100D = 1;
-  CANON_EOS_1DX_MKII = 2;
-  CANON_EOS_200D_MKII = 3;
-  CANON_EOS_200D = 4;
-  CANON_EOS_5D_MKII = 5;
-  CANON_EOS_5D_MKIII = 6;
-  CANON_EOS_5D_MKIV = 7;
-  CANON_EOS_5D = 8;
-  CANON_EOS_5DS = 9;
-  CANON_EOS_M = 10;
-  HASSELBLAD_L1D_20C = 11;
-  NIKON_D810 = 12;
-  NIKON_D850 = 13;
-  SONY_ILCE_6400 = 14;
-  SONY_ILCE_7M3 = 15;
-  SONY_ILCE_7RM3 = 16;
-  SONY_ILCE_9 = 17;
-};
+message FilmSensor {
+  enum Type {
+    CIE_1931 = 0;
+    CANON_EOS_100D = 1;
+    CANON_EOS_1DX_MKII = 2;
+    CANON_EOS_200D_MKII = 3;
+    CANON_EOS_200D = 4;
+    CANON_EOS_5D_MKII = 5;
+    CANON_EOS_5D_MKIII = 6;
+    CANON_EOS_5D_MKIV = 7;
+    CANON_EOS_5D = 8;
+    CANON_EOS_5DS = 9;
+    CANON_EOS_M = 10;
+    HASSELBLAD_L1D_20C = 11;
+    NIKON_D810 = 12;
+    NIKON_D850 = 13;
+    SONY_ILCE_6400 = 14;
+    SONY_ILCE_7M3 = 15;
+    SONY_ILCE_7RM3 = 16;
+    SONY_ILCE_9 = 17;
+  }
+}
 
 // A film which stores the rendered output as an RGB image as well as additional
 // channels that can be used for denoising and ML training.
@@ -923,7 +925,7 @@ message GBufferFilm {
   optional double maxcomponentvalue = 11 [default = inf];
 
   // The type of sensor to simulate for the film.
-  optional FilmSensor sensor = 13 [default = CIE_1931];
+  optional FilmSensor.Type sensor = 13 [default = CIE_1931];
 
   // The film's sensitivity to light normalized to 100. This scaling is applied
   // before clamping.
@@ -1016,7 +1018,7 @@ message RgbFilm {
   // The type of sensor to simulate for the film.
   //
   // @min_version PBRTv4
-  optional FilmSensor sensor = 13 [default = CIE_1931];
+  optional FilmSensor.Type sensor = 13 [default = CIE_1931];
 
   // The film's sensitivity to light normalized to 100. This scaling is applied
   // before clamping.
@@ -1069,7 +1071,7 @@ message SpectralFilm {
   optional double maxcomponentvalue = 11 [default = inf];
 
   // The type of sensor to simulate for the film.
-  optional FilmSensor sensor = 13 [default = CIE_1931];
+  optional FilmSensor.Type sensor = 13 [default = CIE_1931];
 
   // The film's sensitivity to light normalized to 100. This scaling is applied
   // before clamping.
@@ -1098,23 +1100,25 @@ message SpectralFilm {
 //
 
 // The strategy used to sample direct lighting.
-enum LightSampler {
-  // Sample the lights uniformly.
-  UNIFORM = 0;
+message LightSampler {
+  enum Type {
+    // Sample the lights uniformly.
+    UNIFORM = 0;
 
-  // Sample based on the lights' power.
-  POWER = 1;
+    // Sample based on the lights' power.
+    POWER = 1;
 
-  // Sample spatially.
-  //
-  // @max_version PBRTv3
-  SPATIAL = 2;
+    // Sample spatially.
+    //
+    // @max_version PBRTv3
+    SPATIAL = 2;
 
-  // Sample spatially using a BVH.
-  BVH = 2;
+    // Sample spatially using a BVH.
+    BVH = 2;
 
-  // Allow aliasing
-  option allow_alias = true;
+    // Allow aliasing
+    option allow_alias = true;
+  }
 }
 
 // An integrator which computes the amount of ambient occlusion at a pixel.
@@ -1166,7 +1170,7 @@ message BdptIntegrator {
   // The technique used for sampling light sources.
   //
   // @supported_versions {PBRTv3}
-  optional LightSampler lightsamplestrategy = 41 [default = POWER];
+  optional LightSampler.Type lightsamplestrategy = 41 [default = POWER];
 
   // If true, an image is saved for each (s,t) bidirectional path generation
   // strategy used by the integrator. These images can be helpful for
@@ -1452,7 +1456,7 @@ message PathIntegrator {
   //       `lightsampler` which is the name of the parameter used in PBRTv4.
   //
   // @min_version PBRTv3
-  optional LightSampler lightsampler = 41 [default = BVH];
+  optional LightSampler.Type lightsampler = 41 [default = BVH];
 }
 
 // An integrator which performs photon mapping.
@@ -1595,7 +1599,7 @@ message VolPathIntegrator {
   // NOTE: In PBRTv3 this field is referred to by the name
   //       `lightsamplestrategy`; however, it is referred to here as
   //       `lightsampler` which is the name of the parameter used in PBRTv4.
-  optional LightSampler lightsampler = 41 [default = BVH];
+  optional LightSampler.Type lightsampler = 41 [default = BVH];
 }
 
 // An integrator which performs Whitted-style tracing.
@@ -2309,7 +2313,7 @@ message SubsurfaceMaterial {
   optional FloatTextureParameter bumpmap = 13;
 
   // The name of measured subsurface scattering coefficients.
-  optional MeasuredScatteringPreset name = 14 [default = DEFAULT];
+  optional ScatteringPreset.Type name = 14 [default = DEFAULT];
 
   // The absorption coefficient of the volume.
   optional SpectrumTextureParameter sigma_a = 18;
@@ -2440,55 +2444,57 @@ message UberMaterial {
 //
 
 // A predefined scattering medium known by PBRT.
-enum MeasuredScatteringPreset {
-  DEFAULT = 0;
-  APPLE = 1;
-  CHICKEN1 = 2;
-  CHICKEN2 = 3;
-  CREAM = 4;
-  KETCHUP = 5;
-  MARBLE = 6;
-  POTATO = 7;
-  SKIMMILK = 8;
-  SKIN1 = 9;
-  SKIN2 = 10;
-  SPECTRALON = 11;
-  WHOLEMILK = 12;
-  LOWFAT_MILK = 13;
-  REDUCED_MILK = 14;
-  REGULAR_MILK = 15;
-  ESPRESSO = 16;
-  MINT_MOCHA_COFFEE = 17;
-  LOWFAT_SOY_MILK = 18;
-  REGULAR_SOY_MILK = 19;
-  LOWFAT_CHOCOLATE_MILK = 20;
-  REGULAR_CHOCOLATE_MILK = 21;
-  COKE = 22;
-  PEPSI = 23;
-  SPRITE = 24;
-  GATORADE = 25;
-  CHARDONNAY = 26;
-  WHITE_ZINFANDEL = 27;
-  MERLOT = 28;
-  BUDWEISER_BEER = 29;
-  COORS_LIGHT_BEER = 30;
-  CLOROX = 31;
-  APPLE_JUICE = 32;
-  CRANBERRY_JUICE = 33;
-  GRAPE_JUICE = 34;
-  RUBY_GRAPEFRUIT_JUICE = 35;
-  WHITE_GRAPEFRUIT_JUICE = 36;
-  SHAMPOO = 37;
-  STRAWBERRY_SHAMPOO = 38;
-  HEAD_AND_SHOULDERS_SHAMPOO = 39;
-  LEMON_TEA_POWDER = 40;
-  ORANGE_POWDER = 41;
-  PINK_LEMONADE_POWDER = 42;
-  CAPPUCCINO_POWDER = 43;
-  SALT_POWDER = 44;
-  SUGAR_POWDER = 45;
-  SUISSE_MOCHA_POWDER = 46;
-  PACIFIC_OCEAN_SURFACE_WATER = 47;
+message ScatteringPreset {
+  enum Type {
+    DEFAULT = 0;  // @supported_versions {}
+    APPLE = 1;
+    CHICKEN1 = 2;
+    CHICKEN2 = 3;
+    CREAM = 4;
+    KETCHUP = 5;
+    MARBLE = 6;
+    POTATO = 7;
+    SKIMMILK = 8;
+    SKIN1 = 9;
+    SKIN2 = 10;
+    SPECTRALON = 11;
+    WHOLEMILK = 12;
+    LOWFAT_MILK = 13;
+    REDUCED_MILK = 14;
+    REGULAR_MILK = 15;
+    ESPRESSO = 16;
+    MINT_MOCHA_COFFEE = 17;
+    LOWFAT_SOY_MILK = 18;
+    REGULAR_SOY_MILK = 19;
+    LOWFAT_CHOCOLATE_MILK = 20;
+    REGULAR_CHOCOLATE_MILK = 21;
+    COKE = 22;
+    PEPSI = 23;
+    SPRITE = 24;
+    GATORADE = 25;
+    CHARDONNAY = 26;
+    WHITE_ZINFANDEL = 27;
+    MERLOT = 28;
+    BUDWEISER_BEER = 29;
+    COORS_LIGHT_BEER = 30;
+    CLOROX = 31;
+    APPLE_JUICE = 32;
+    CRANBERRY_JUICE = 33;
+    GRAPE_JUICE = 34;
+    RUBY_GRAPEFRUIT_JUICE = 35;
+    WHITE_GRAPEFRUIT_JUICE = 36;
+    SHAMPOO = 37;
+    STRAWBERRY_SHAMPOO = 38;
+    HEAD_AND_SHOULDERS_SHAMPOO = 39;
+    LEMON_TEA_POWDER = 40;
+    ORANGE_POWDER = 41;
+    PINK_LEMONADE_POWDER = 42;
+    CAPPUCCINO_POWDER = 43;
+    SALT_POWDER = 44;
+    SUGAR_POWDER = 45;
+    SUISSE_MOCHA_POWDER = 46;
+    PACIFIC_OCEAN_SURFACE_WATER = 47;
+  }
 }
 
 // A participating medium that uses Perlin noise to create cloud-like density.
@@ -2583,7 +2589,7 @@ message HomogeneousMedium {
   // The named measured scattering medium properties to use.
   //
   // @min_version PBRTv3
-  optional MeasuredScatteringPreset preset = 14 [default = DEFAULT];
+  optional ScatteringPreset.Type preset = 14 [default = DEFAULT];
 
   // Scale factor applied to the absorption and scattering cross sections.
   //
@@ -2706,7 +2712,7 @@ message UniformGridMedium {
   // The named measured scattering medium properties to use.
   //
   // @min_version PBRTv3
-  optional MeasuredScatteringPreset preset = 14 [default = DEFAULT];
+  optional ScatteringPreset.Type preset = 14 [default = DEFAULT];
 
   // Scale factor applied to the absorption and scattering cross sections.
   //
@@ -2948,11 +2954,13 @@ message SurfacePointsRenderer {
 //
 
 // The supported randomization methods for low discrepancy samplers.
-enum SamplerRandomizationMethod {
-  NONE = 0;
-  PERMUTEDIGITS = 1;
-  OWEN = 2;
-  FASTOWEN = 3;
+message SamplerRandomization {
+  enum Type {
+    NONE = 0;
+    PERMUTEDIGITS = 1;
+    OWEN = 2;
+    FASTOWEN = 3;
+  }
 }
 
 // A sampler which adaptively varies the number of samples per pixels.
@@ -3004,7 +3012,7 @@ message HaltonSampler {
   // visual artifacts from poor sample selection.
   //
   // @min_version PBRTv4
-  optional SamplerRandomizationMethod randomization = 10;
+  optional SamplerRandomization.Type randomization = 10;
 }
 
 // A sampler which uses an RNG and samples all dimensions independently.
@@ -3042,7 +3050,7 @@ message PaddedSobolSampler {
 
   // The method used to scramble the sequence to reduce the appearance of
   // visual artifacts from poor sample selection.
-  optional SamplerRandomizationMethod randomization = 10;
+  optional SamplerRandomization.Type randomization = 10;
 }
 
 // A low discrepancy sampler which uses Pixar's progressive multi-jittered
@@ -3084,7 +3092,7 @@ message SobolSampler {
   // visual artifacts from poor sample selection.
   //
   // @min_version PBRTv4
-  optional SamplerRandomizationMethod randomization = 10;
+  optional SamplerRandomization.Type randomization = 10;
 }
 
 // A sampler which stratifies samples generated by an RNG.
@@ -3124,7 +3132,7 @@ message ZSobolSampler {
 
   // The method used to scramble the sequence to reduce the appearance of
   // visual artifacts from poor sample selection.
-  optional SamplerRandomizationMethod randomization = 10;
+  optional SamplerRandomization.Type randomization = 10;
 }
 
 // A low discrepancy sampler which uses a (0, 2) sequence as its basis.
@@ -3469,40 +3477,50 @@ message TriangleMeshShape {
 //
 
 // The type of antialiasing to apply to 2D checkerboard textures.
-enum CheckerboardAntialiasing {
-  CLOSEDFORM = 0;
-  DISABLED = 1;     // Maps to "none" since none is already in use
-  SUPERSAMPLE = 2;  // @max_version PBRTv1
+message CheckerboardAaMode {
+  enum Type {
+    CLOSEDFORM = 0;
+    NONE = 1;
+    SUPERSAMPLE = 2;  // @max_version PBRTv1
+  }
 }
 
 // The method used for converting 8-bit color values to floating point values.
-enum ImageEncoding {
-  SRGB = 0;
-  LINEAR = 1;
-  GAMMA = 2;
+message ImageEncoding {
+  enum Type {
+    SRGB = 0;
+    LINEAR = 1;
+    GAMMA = 2;
+  }
 }
 
 // The type of texture wrapping to apply to 2D image textures
-enum ImageWrap {
-  REPEAT = 0;
-  BLACK = 1;
-  CLAMP = 2;
+message ImageWrap {
+  enum Type {
+    REPEAT = 0;
+    BLACK = 1;
+    CLAMP = 2;
+  }
 }
 
 // The filtering function to apply to texture lookups.
-enum TextureFilter {
-  EWA = 0;
-  TRILINEAR = 1;
-  BILINEAR = 2;  // @min_version PBRTv4
-  POINT = 3;     // @min_version PBRTv4
+message TextureFilter {
+  enum Type {
+    EWA = 0;
+    TRILINEAR = 1;
+    BILINEAR = 2;  // @min_version PBRTv4
+    POINT = 3;     // @min_version PBRTv4
+  }
 }
 
 // The type of texture mapping to apply to 2D textures.
-enum TextureMapping {
-  UV = 0;
-  SPHERICAL = 1;
-  CYLINDRICAL = 2;
-  PLANAR = 3;
+message TextureMapping {
+  enum Type {
+    UV = 0;
+    SPHERICAL = 1;
+    CYLINDRICAL = 2;
+    PLANAR = 3;
+  }
 }
 
 // A texture which bilinearly interpolates between four textures.
@@ -3522,7 +3540,7 @@ message BilerpFloatTexture {
   optional FloatTextureParameter v11 = 7;
 
   // The type of texture coordinate mapping to use.
-  optional TextureMapping mapping = 20 [default = UV];
+  optional TextureMapping.Type mapping = 20 [default = UV];
 
   // The scale factor applied to the u texture coordinate.
   optional double uscale = 21 [default = 1.0];
@@ -3560,7 +3578,7 @@ message BilerpSpectrumTexture {
   optional SpectrumTextureParameter v11 = 7;
 
   // The type of texture coordinate mapping to use.
-  optional TextureMapping mapping = 20 [default = UV];
+  optional TextureMapping.Type mapping = 20 [default = UV];
 
   // The scale factor applied to the u texture coordinate.
   optional double uscale = 21 [default = 1.0];
@@ -3594,10 +3612,10 @@ message Checkerboard2DFloatTexture {
   // The antialiasing mode to use for the texture lookups.
   //
   // @max_version PBRTv3
-  optional CheckerboardAntialiasing aamode = 8 [default = CLOSEDFORM];
+  optional CheckerboardAaMode.Type aamode = 8 [default = CLOSEDFORM];
 
   // The type of texture coordinate mapping to use.
-  optional TextureMapping mapping = 20 [default = UV];
+  optional TextureMapping.Type mapping = 20 [default = UV];
 
   // The scale factor applied to the u texture coordinate.
   optional double uscale = 21 [default = 1.0];
@@ -3631,10 +3649,10 @@ message Checkerboard2DSpectrumTexture {
   // The antialiasing mode to use for the texture lookups.
   //
   // @max_version PBRTv3
-  optional CheckerboardAntialiasing aamode = 8 [default = CLOSEDFORM];
+  optional CheckerboardAaMode.Type aamode = 8 [default = CLOSEDFORM];
 
   // The type of texture coordinate mapping to use.
-  optional TextureMapping mapping = 20 [default = UV];
+  optional TextureMapping.Type mapping = 20 [default = UV];
 
   // The scale factor applied to the u texture coordinate.
   optional double uscale = 21 [default = 1.0];
@@ -3736,7 +3754,7 @@ message DotsFloatTexture {
   optional FloatTextureParameter outside = 10;
 
   // The type of texture coordinate mapping to use.
-  optional TextureMapping mapping = 20 [default = UV];
+  optional TextureMapping.Type mapping = 20 [default = UV];
 
   // The scale factor applied to the u texture coordinate.
   optional double uscale = 21 [default = 1.0];
@@ -3768,7 +3786,7 @@ message DotsSpectrumTexture {
   optional SpectrumTextureParameter outside = 10;
 
   // The type of texture coordinate mapping to use.
-  optional TextureMapping mapping = 20 [default = UV];
+  optional TextureMapping.Type mapping = 20 [default = UV];
 
   // The scale factor applied to the u texture coordinate.
   optional double uscale = 21 [default = 1.0];
@@ -3820,13 +3838,13 @@ message ImageMapFloatTexture {
 
   // The wrapping method to use for texture coordinates that are outside of the
   // zero to one range.
-  optional ImageWrap wrap = 14 [default = REPEAT];
+  optional ImageWrap.Type wrap = 14 [default = REPEAT];
 
   // The filter applied to texture lookups.
   //
   // NOTE: This parameter maps to the trilinear parameter for PBRTv1, PBRTv2,
   //       and PBRTv3 inputs.
-  optional TextureFilter filter = 15;
+  optional TextureFilter.Type filter = 15;
 
   // The maximum elliptical eccentricity for the EWA texture filter.
   optional double maxanisotropy = 16 [default = 8.0];
@@ -3837,7 +3855,7 @@ message ImageMapFloatTexture {
   optional double scale = 17 [default = 1.0];
 
   // The type of texture coordinate mapping to use.
-  optional TextureMapping mapping = 20 [default = UV];
+  optional TextureMapping.Type mapping = 20 [default = UV];
 
   // The scale factor applied to the u texture coordinate.
   optional double uscale = 21 [default = 1.0];
@@ -3869,7 +3887,7 @@ message ImageMapFloatTexture {
   // NOTE: For PBRTv3 inputs, this value maps to the gamma boolean parameter.
   //
   // @min_version PBRTv3
-  optional ImageEncoding encoding = 28;
+  optional ImageEncoding.Type encoding = 28;
 
   // If true, the returned texture values are inverted.
   //
@@ -3886,13 +3904,13 @@ message ImageMapSpectrumTexture {
 
   // The wrapping method to use for texture coordinates that are outside of the
   // zero to one range.
-  optional ImageWrap wrap = 14 [default = REPEAT];
+  optional ImageWrap.Type wrap = 14 [default = REPEAT];
 
   // The filter applied to texture lookups.
   //
   // NOTE: This parameter maps to the trilinear parameter for PBRTv1, PBRTv2,
   //       and PBRTv3 inputs.
-  optional TextureFilter filter = 15 [default = BILINEAR];
+  optional TextureFilter.Type filter = 15 [default = BILINEAR];
 
   // The maximum elliptical eccentricity for the EWA texture filter.
   optional double maxanisotropy = 16 [default = 8.0];
@@ -3903,7 +3921,7 @@ message ImageMapSpectrumTexture {
   optional double scale = 17 [default = 1.0];
 
   // The type of texture coordinate mapping to use.
-  optional TextureMapping mapping = 20 [default = UV];
+  optional TextureMapping.Type mapping = 20 [default = UV];
 
   // The scale factor applied to the u texture coordinate.
   optional double uscale = 21 [default = 1.0];
@@ -3935,7 +3953,7 @@ message ImageMapSpectrumTexture {
   // NOTE: For PBRTv3 inputs, this value maps to the gamma boolean parameter.
   //
   // @min_version PBRTv3
-  optional ImageEncoding encoding = 28;
+  optional ImageEncoding.Type encoding = 28;
 
   // If true, the returned texture values are inverted.
   //
@@ -4012,7 +4030,7 @@ message PtexFloatTexture {
   // The function used to convert 8-bit color values to floating point values.
   //
   // @min_version PBRTv4
-  optional ImageEncoding encoding = 28 [default = GAMMA];
+  optional ImageEncoding.Type encoding = 28 [default = GAMMA];
 }
 
 // A texture based on a Ptex image.
@@ -4037,7 +4055,7 @@ message PtexSpectrumTexture {
   // The function used to convert 8-bit color values to floating point values.
   //
   // @min_version PBRTv4
-  optional ImageEncoding encoding = 28 [default = GAMMA];
+  optional ImageEncoding.Type encoding = 28 [default = GAMMA];
 }
 
 // A texture which multiples two textures together and returns the product.
@@ -4089,7 +4107,7 @@ message WrinkledSpectrumTexture {
 // @supported_versions {PBRTv1, PBRTv2, PBRTv3}
 message UvSpectrumTexture {
   // The type of texture coordinate mapping to use.
-  optional TextureMapping mapping = 20 [default = UV];
+  optional TextureMapping.Type mapping = 20 [default = UV];
 
   // The scale factor applied to the u texture coordinate.
   optional double uscale = 21 [default = 1.0];
