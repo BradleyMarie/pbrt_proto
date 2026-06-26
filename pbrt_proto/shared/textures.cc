@@ -217,7 +217,7 @@ void RemoveImageMapBase(
     output.set_maxanisotropy(*maxanisotropy);
   }
 
-  if (std::optional<ImageWrap> wrap = TryRemoveWrap(parameters); wrap) {
+  if (std::optional<ImageWrap::Type> wrap = TryRemoveWrap(parameters); wrap) {
     output.set_wrap(*wrap);
   }
 
