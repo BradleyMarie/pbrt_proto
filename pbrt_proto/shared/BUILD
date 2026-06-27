@@ -173,6 +173,7 @@ cc_library(
         "@abseil-cpp//absl/container:flat_hash_map",
         "@abseil-cpp//absl/functional:function_ref",
         "@abseil-cpp//absl/status:status",
+        "@abseil-cpp//absl/strings",
         "@abseil-cpp//absl/strings:string_view",
     ],
 )
