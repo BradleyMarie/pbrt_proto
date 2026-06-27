@@ -10,11 +10,7 @@
 #include "gmock/gmock.h"
 #include "google/protobuf/descriptor.pb.h"
 #include "gtest/gtest.h"
-#include "pbrt_proto/pbrt.pb.h"
-#include "pbrt_proto/v1/v1.pb.h"
-#include "pbrt_proto/v2/v2.pb.h"
-#include "pbrt_proto/v3/v3.pb.h"
-#include "pbrt_proto/v4/v4.pb.h"
+#include "pbrt_proto/testing/descriptors.h"
 
 namespace pbrt_proto {
 namespace {
@@ -111,49 +107,17 @@ void AddAllFieldsByNumber(
   }
 }
 
-class CommonTypes : public testing::TestWithParam<std::string> {};
-
-TEST_P(CommonTypes, AreBinaryCompatible) {
-  const FileDescriptor* file_descriptor =
-      BlackbodySpectrum::descriptor()->file();
-  ASSERT_TRUE(file_descriptor);
-
-  std::map<absl::string_view, const FieldDescriptor*> field_descriptors_by_name;
-  std::set<int> claimed_field_numbers;
-  for (int m = 0; m < file_descriptor->message_type_count(); m++) {
-    const Descriptor* message_descriptor = file_descriptor->message_type(m);
-    ASSERT_NE(message_descriptor, nullptr);
-
-    if (!absl::EndsWith(message_descriptor->full_name(), GetParam())) {
-      continue;
+TEST(CommonTypes, AreBinaryCompatible) {
+  for (auto& [directive, descriptors] : AllMessageGroups()) {
+    std::map<absl::string_view, const FieldDescriptor*>
+        field_descriptors_by_name;
+    std::set<int> claimed_field_numbers;
+    for (const Descriptor* descriptor : descriptors) {
+      AddAllFieldsByNameAndNumber(*descriptor, field_descriptors_by_name,
+                                  claimed_field_numbers);
     }
-
-    if (GetParam() == "Integrator" &&
-        absl::EndsWith(message_descriptor->full_name(), "VolumeIntegrator")) {
-      continue;
-    }
-
-    if (GetParam() == "LightSource" &&
-        absl::EndsWith(message_descriptor->full_name(), "AreaLightSource")) {
-      continue;
-    }
-
-    if (GetParam() == "Material" &&
-        absl::EndsWith(message_descriptor->full_name(), "NamedMaterial")) {
-      continue;
-    }
-
-    AddAllFieldsByNameAndNumber(*message_descriptor, field_descriptors_by_name,
-                                claimed_field_numbers);
   }
 }
-
-INSTANTIATE_TEST_SUITE_P(
-    AllTypes, CommonTypes,
-    testing::Values("Accelerator", "AreaLightSource", "Camera", "Film",
-                    "FloatTexture", "Integrator", "LightSource", "Material",
-                    "Medium", "PixelFilter", "Renderer", "Sampler", "Shape",
-                    "SpectrumTexture", "VolumeIntegrator"));
 
 std::vector<std::pair<int, int>> GenerateVersionPairs(int max) {
   std::vector<std::pair<int, int>> result;
@@ -165,37 +129,22 @@ std::vector<std::pair<int, int>> GenerateVersionPairs(int max) {
   return result;
 }
 
-std::map<std::string, const Descriptor*> GetMessageDescriptors(int version) {
-  static std::vector<const FileDescriptor*> file_descriptors = {
-      v1::Accelerator::GetDescriptor()->file(),
-      v2::Accelerator::GetDescriptor()->file(),
-      v3::Accelerator::GetDescriptor()->file(),
-      v4::Accelerator::GetDescriptor()->file(),
-  };
-
-  const FileDescriptor* file_descriptor = file_descriptors.at(version - 1);
-
-  std::map<std::string, const Descriptor*> result;
-  for (int m = 0; m < file_descriptor->message_type_count(); m++) {
-    const Descriptor* message_descriptor = file_descriptor->message_type(m);
-    result.emplace(message_descriptor->name(), message_descriptor);
-  }
-
-  return result;
-}
-
 class Directives : public testing::TestWithParam<std::pair<int, int>> {};
 
 TEST_P(Directives, ForwardCompatible) {
   auto [base, next] = GetParam();
-  std::map<std::string, const Descriptor*> base_descriptors =
-      GetMessageDescriptors(base);
-  std::map<std::string, const Descriptor*> next_descriptors =
-      GetMessageDescriptors(next);
+  std::vector<std::vector<const Descriptor*>> all_descriptors =
+      AllPbrtVersions();
+  std::vector<const Descriptor*> base_descriptors = all_descriptors.at(base);
 
-  for (const auto& [name, base_descriptor] : base_descriptors) {
-    std::string next_name = name;
-    if (name == "SurfaceIntegrator" && next >= 3) {
+  std::map<absl::string_view, const Descriptor*> next_descriptors;
+  for (const Descriptor* descriptor : all_descriptors.at(next)) {
+    next_descriptors[descriptor->name()] = descriptor;
+  }
+
+  for (const Descriptor* base_descriptor : base_descriptors) {
+    absl::string_view next_name = base_descriptor->name();
+    if (next_name == "SurfaceIntegrator" && next >= 3) {
       next_name = "Integrator";
     }
 
@@ -218,29 +167,17 @@ INSTANTIATE_TEST_SUITE_P(AllDirectives, Directives,
                          testing::ValuesIn(GenerateVersionPairs(4)));
 
 TEST(MaterialOverrides, AreBinaryCompatible) {
-  const FileDescriptor* file_descriptor =
-      BlackbodySpectrum::descriptor()->file();
-  ASSERT_TRUE(file_descriptor);
-
   std::map<absl::string_view, const FieldDescriptor*> field_descriptors_by_name;
   std::set<int> claimed_field_numbers;
-  AddAllFieldsByNameAndNumber(*v1::Shape::MaterialOverrides::GetDescriptor(),
-                              field_descriptors_by_name, claimed_field_numbers);
-  AddAllFieldsByNameAndNumber(*v2::Shape::MaterialOverrides::GetDescriptor(),
-                              field_descriptors_by_name, claimed_field_numbers);
-  AddAllFieldsByNameAndNumber(*v3::Shape::MaterialOverrides::GetDescriptor(),
-                              field_descriptors_by_name, claimed_field_numbers);
+  AddAllFieldsByNameAndNumber(MaterialOverridesV1(), field_descriptors_by_name,
+                              claimed_field_numbers);
+  AddAllFieldsByNameAndNumber(MaterialOverridesV2(), field_descriptors_by_name,
+                              claimed_field_numbers);
+  AddAllFieldsByNameAndNumber(MaterialOverridesV3(), field_descriptors_by_name,
+                              claimed_field_numbers);
 
-  for (int m = 0; m < file_descriptor->message_type_count(); m++) {
-    const Descriptor* message_descriptor = file_descriptor->message_type(m);
-    ASSERT_NE(message_descriptor, nullptr);
-
-    if (!absl::EndsWith(message_descriptor->full_name(), "Material") ||
-        absl::EndsWith(message_descriptor->full_name(), "NamedMaterial")) {
-      continue;
-    }
-
-    AddAllFieldsByNameAndNumber(*message_descriptor, field_descriptors_by_name,
+  for (const Descriptor* descriptor : Materials()) {
+    AddAllFieldsByNameAndNumber(*descriptor, field_descriptors_by_name,
                                 claimed_field_numbers);
   }
 }
