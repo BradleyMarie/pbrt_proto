@@ -639,7 +639,7 @@ message DiffuseAreaLightSource {
   //       because the type of this field changed from a `spectrum` to a `float`
   //       starting with PBRTv4.
   //
-  // @min_version PBRTv1
+  // @min_version PBRTv2
   optional Spectrum scale = 3;
 
   // If true, light should emit from both sides both side of geometry.
