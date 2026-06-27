@@ -14,6 +14,12 @@ TEST(VersionSet, TestAllBits) {
   EXPECT_TRUE(versions.Supported(3));
   EXPECT_TRUE(versions.Supported(4));
   EXPECT_FALSE(versions.Supported(5));
+  EXPECT_FALSE(versions.Empty());
+}
+
+TEST(VersionSet, Empty) {
+  VersionSet versions(0ull);
+  EXPECT_TRUE(versions.Empty());
 }
 
 TEST(VersionSet, AsCpp) {

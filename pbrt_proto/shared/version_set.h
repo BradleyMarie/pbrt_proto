@@ -28,6 +28,8 @@ class VersionSet {
     return state_[version];
   }
 
+  bool Empty() const { return state_.none(); }
+
  private:
   std::bitset<kNumBits> state_;
 };

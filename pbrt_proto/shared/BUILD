@@ -129,6 +129,52 @@ cc_proto_library(
     deps = [":common_test_proto"],
 )
 
+genrule(
+    name = "enums_cc",
+    srcs = ["//pbrt_proto:pbrt.proto"],
+    outs = ["enums.cc"],
+    cmd = "$(location @protobuf//:protoc) " +
+          "--plugin=protoc-gen-enums=$(location :enums_generator) " +
+          "--enums_out=$(@D) " +
+          "$(location //pbrt_proto:pbrt.proto)",
+    cmd_bat = "$(location @protobuf//:protoc) " +
+              "--plugin=protoc-gen-enums=$(location :enums_generator) " +
+              "--enums_out=$(@D) " +
+              "$(location //pbrt_proto:pbrt.proto)",
+    tools = [
+        ":enums_generator",
+        "@protobuf//:protoc",
+    ],
+)
+
+cc_binary(
+    name = "enums_generator",
+    srcs = ["enums_generator.cc"],
+    deps = [
+        ":version",
+        "@protobuf",
+        "@protobuf//src/google/protobuf/compiler:code_generator",
+        "@protobuf//src/google/protobuf/io",
+        "@protobuf//src/google/protobuf/io:printer",
+        "@abseil-cpp//absl/strings"
+    ],
+)
+
+cc_library(
+    name = "enums",
+    #srcs = ["enums.cc"],
+    hdrs = ["enums.h"],
+    deps = [
+        ":parser",
+        ":version_set",
+        "//pbrt_proto:pbrt_cc_proto",
+        "@abseil-cpp//absl/container:flat_hash_map",
+        "@abseil-cpp//absl/functional:function_ref",
+        "@abseil-cpp//absl/status:status",
+        "@abseil-cpp//absl/strings:string_view",
+    ],
+)
+
 cc_test(
     name = "common_test",
     srcs = ["common_test.cc"],

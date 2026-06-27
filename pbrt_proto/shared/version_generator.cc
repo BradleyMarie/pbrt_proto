@@ -66,7 +66,7 @@ VersionSet GetMessageSupportedVersions(absl::string_view full_path) {
   return NoVersions();
 }
 
-VersionSet IsFieldSupported(absl::string_view full_path, int pbrt_version) {
+VersionSet GetFieldSupportedVersions(absl::string_view full_path) {
   if (auto iter = kFieldMap.find(full_path); iter != kEnumMap.end()) {
     return iter->second;
   }
@@ -74,7 +74,7 @@ VersionSet IsFieldSupported(absl::string_view full_path, int pbrt_version) {
   return AllVersions();
 }
 
-VersionSet IsEnumValueSupported(absl::string_view full_path, int pbrt_version) {
+VersionSet GetEnumSupportedVersions(absl::string_view full_path) {
   if (auto iter = kEnumMap.find(full_path); iter != kEnumMap.end()) {
     return iter->second;
   }
@@ -261,39 +261,6 @@ class VersionGenerator : public CodeGenerator {
 
     // Enum Values
     printer.Print(kEnumMapStart);
-
-    for (int e = 0; e < file->enum_type_count(); ++e) {
-      const EnumDescriptor* enum_descriptor = file->enum_type(e);
-      if (!enum_descriptor) {
-        return false;
-      }
-
-      for (int v = 0; v < enum_descriptor->value_count(); v++) {
-        const EnumValueDescriptor* value_descriptor = enum_descriptor->value(v);
-
-        SourceLocation loc;
-        if (!value_descriptor->GetSourceLocation(&loc)) {
-          continue;
-        }
-
-        if (!ValidateComment(loc)) {
-          return false;
-        }
-
-        if (std::optional<std::string> versions = GetVersions(loc)) {
-          printer.Print(R"(        {")");
-          printer.Print(value_descriptor->full_name());
-          printer.Print(R"(", )");
-          printer.Print(*versions);
-          printer.Print("},\n");
-        } else {
-          printer.Print(R"(        {")");
-          printer.Print(value_descriptor->full_name());
-          printer.Print(R"(", AllVersions()},)");
-          printer.Print("\n");
-        }
-      }
-    }
 
     for (int m = 0; m < file->message_type_count(); ++m) {
       const Descriptor* message_descriptor = file->message_type(m);
