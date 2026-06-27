@@ -29,38 +29,38 @@ TEST(RemoveRgbFilmV1, Empty) {
 
 TEST(RemoveRgbFilmV1, WithData) {
   std::vector<absl::string_view> filename = {"file"};
-  Parameter filename_parameter{/*directive=*/"",
+  Parameter filename_parameter{/*directive=*/"Film",
                                /*type=*/ParameterType::STRING,
                                /*type_name=*/"",
                                /*values=*/absl::MakeSpan(filename)};
 
   std::vector<int32_t> xresolution = {1};
-  Parameter xresolution_parameter{/*directive=*/"",
+  Parameter xresolution_parameter{/*directive=*/"Film",
                                   /*type=*/ParameterType::INTEGER,
                                   /*type_name=*/"",
                                   /*values=*/absl::MakeSpan(xresolution)};
 
   std::vector<int32_t> yresolution = {2};
-  Parameter yresolution_parameter{/*directive=*/"",
+  Parameter yresolution_parameter{/*directive=*/"Film",
                                   /*type=*/ParameterType::INTEGER,
                                   /*type_name=*/"",
                                   /*values=*/absl::MakeSpan(yresolution)};
 
   std::vector<double> cropwindow = {3.0, 4.0, 5.0, 6.0};
-  Parameter cropwindow_parameter{/*directive=*/"",
+  Parameter cropwindow_parameter{/*directive=*/"Film",
                                  /*type=*/ParameterType::FLOAT,
                                  /*type_name=*/"",
                                  /*values=*/absl::MakeSpan(cropwindow)};
 
   bool premultiplyalpha[] = {true};
   Parameter premultiplyalpha_parameter{
-      /*directive=*/"",
+      /*directive=*/"Film",
       /*type=*/ParameterType::BOOL,
       /*type_name=*/"",
       /*values=*/absl::MakeSpan(premultiplyalpha)};
 
   std::vector<int32_t> writefrequency = {7};
-  Parameter writefrequency_parameter{/*directive=*/"",
+  Parameter writefrequency_parameter{/*directive=*/"Film",
                                      /*type=*/ParameterType::INTEGER,
                                      /*type_name=*/"",
                                      /*values=*/absl::MakeSpan(writefrequency)};
@@ -95,31 +95,31 @@ TEST(RemoveRgbFilmV2, Empty) {
 
 TEST(RemoveRgbFilmV2, WithData) {
   std::vector<absl::string_view> filename = {"file"};
-  Parameter filename_parameter{/*directive=*/"",
+  Parameter filename_parameter{/*directive=*/"Film",
                                /*type=*/ParameterType::STRING,
                                /*type_name=*/"",
                                /*values=*/absl::MakeSpan(filename)};
 
   std::vector<int32_t> xresolution = {1};
-  Parameter xresolution_parameter{/*directive=*/"",
+  Parameter xresolution_parameter{/*directive=*/"Film",
                                   /*type=*/ParameterType::INTEGER,
                                   /*type_name=*/"",
                                   /*values=*/absl::MakeSpan(xresolution)};
 
   std::vector<int32_t> yresolution = {2};
-  Parameter yresolution_parameter{/*directive=*/"",
+  Parameter yresolution_parameter{/*directive=*/"Film",
                                   /*type=*/ParameterType::INTEGER,
                                   /*type_name=*/"",
                                   /*values=*/absl::MakeSpan(yresolution)};
 
   std::vector<double> cropwindow = {3.0, 4.0, 5.0, 6.0};
-  Parameter cropwindow_parameter{/*directive=*/"",
+  Parameter cropwindow_parameter{/*directive=*/"Film",
                                  /*type=*/ParameterType::FLOAT,
                                  /*type_name=*/"",
                                  /*values=*/absl::MakeSpan(cropwindow)};
 
   bool display[] = {true};
-  Parameter display_parameter{/*directive=*/"",
+  Parameter display_parameter{/*directive=*/"Film",
                               /*type=*/ParameterType::BOOL,
                               /*type_name=*/"",
                               /*values=*/absl::MakeSpan(display)};
@@ -152,44 +152,44 @@ TEST(RemoveRgbFilmV3, Empty) {
 
 TEST(RemoveRgbFilmV3, WithData) {
   std::vector<absl::string_view> filename = {"file"};
-  Parameter filename_parameter{/*directive=*/"",
+  Parameter filename_parameter{/*directive=*/"Film",
                                /*type=*/ParameterType::STRING,
                                /*type_name=*/"",
                                /*values=*/absl::MakeSpan(filename)};
 
   std::vector<int32_t> xresolution = {1};
-  Parameter xresolution_parameter{/*directive=*/"",
+  Parameter xresolution_parameter{/*directive=*/"Film",
                                   /*type=*/ParameterType::INTEGER,
                                   /*type_name=*/"",
                                   /*values=*/absl::MakeSpan(xresolution)};
 
   std::vector<int32_t> yresolution = {2};
-  Parameter yresolution_parameter{/*directive=*/"",
+  Parameter yresolution_parameter{/*directive=*/"Film",
                                   /*type=*/ParameterType::INTEGER,
                                   /*type_name=*/"",
                                   /*values=*/absl::MakeSpan(yresolution)};
 
   std::vector<double> cropwindow = {3.0, 4.0, 5.0, 6.0};
-  Parameter cropwindow_parameter{/*directive=*/"",
+  Parameter cropwindow_parameter{/*directive=*/"Film",
                                  /*type=*/ParameterType::FLOAT,
                                  /*type_name=*/"",
                                  /*values=*/absl::MakeSpan(cropwindow)};
 
   std::vector<double> diagonal = {7.0};
-  Parameter diagonal_parameter{/*directive=*/"",
+  Parameter diagonal_parameter{/*directive=*/"Film",
                                /*type=*/ParameterType::FLOAT,
                                /*type_name=*/"",
                                /*values=*/absl::MakeSpan(diagonal)};
 
   std::vector<double> scale = {8.0};
-  Parameter scale_parameter{/*directive=*/"",
+  Parameter scale_parameter{/*directive=*/"Film",
                             /*type=*/ParameterType::FLOAT,
                             /*type_name=*/"",
                             /*values=*/absl::MakeSpan(scale)};
 
   std::vector<double> maxsampleluminance = {9.0};
   Parameter maxsampleluminance_parameter{
-      /*directive=*/"",
+      /*directive=*/"Film",
       /*type=*/ParameterType::FLOAT,
       /*type_name=*/"",
       /*values=*/absl::MakeSpan(maxsampleluminance)};
@@ -226,13 +226,13 @@ TEST(RemoveRgbFilmV4, Empty) {
 
 TEST(RemoveRgbFilmV4, CropwindowOverrides) {
   std::vector<int32_t> pixelbounds = {1, 2, 7, 8};
-  Parameter pixelbounds_parameter{/*directive=*/"",
+  Parameter pixelbounds_parameter{/*directive=*/"Film",
                                   /*type=*/ParameterType::INTEGER,
                                   /*type_name=*/"",
                                   /*values=*/absl::MakeSpan(pixelbounds)};
 
   std::vector<double> cropwindow = {3.0, 4.0, 5.0, 6.0};
-  Parameter cropwindow_parameter{/*directive=*/"",
+  Parameter cropwindow_parameter{/*directive=*/"Film",
                                  /*type=*/ParameterType::FLOAT,
                                  /*type_name=*/"",
                                  /*values=*/absl::MakeSpan(cropwindow)};
@@ -250,7 +250,7 @@ TEST(RemoveRgbFilmV4, CropwindowOverrides) {
 
 TEST(RemoveRgbFilmV4, BadSensor) {
   std::vector<absl::string_view> filename = {"invalid"};
-  Parameter filename_parameter{/*directive=*/"",
+  Parameter filename_parameter{/*directive=*/"Film",
                                /*type=*/ParameterType::STRING,
                                /*type_name=*/"",
                                /*values=*/absl::MakeSpan(filename)};
@@ -267,62 +267,62 @@ TEST(RemoveRgbFilmV4, BadSensor) {
 
 TEST(RemoveRgbFilmV4, WithData) {
   std::vector<absl::string_view> filename = {"file"};
-  Parameter filename_parameter{/*directive=*/"",
+  Parameter filename_parameter{/*directive=*/"Film",
                                /*type=*/ParameterType::STRING,
                                /*type_name=*/"",
                                /*values=*/absl::MakeSpan(filename)};
 
   std::vector<int32_t> xresolution = {1};
-  Parameter xresolution_parameter{/*directive=*/"",
+  Parameter xresolution_parameter{/*directive=*/"Film",
                                   /*type=*/ParameterType::INTEGER,
                                   /*type_name=*/"",
                                   /*values=*/absl::MakeSpan(xresolution)};
 
   std::vector<int32_t> yresolution = {2};
-  Parameter yresolution_parameter{/*directive=*/"",
+  Parameter yresolution_parameter{/*directive=*/"Film",
                                   /*type=*/ParameterType::INTEGER,
                                   /*type_name=*/"",
                                   /*values=*/absl::MakeSpan(yresolution)};
 
   std::vector<int32_t> pixelbounds = {3, 4, 5, 6};
-  Parameter pixelbounds_parameter{/*directive=*/"",
+  Parameter pixelbounds_parameter{/*directive=*/"Film",
                                   /*type=*/ParameterType::INTEGER,
                                   /*type_name=*/"",
                                   /*values=*/absl::MakeSpan(pixelbounds)};
 
   std::vector<double> diagonal = {7.0};
-  Parameter diagonal_parameter{/*directive=*/"",
+  Parameter diagonal_parameter{/*directive=*/"Film",
                                /*type=*/ParameterType::FLOAT,
                                /*type_name=*/"",
                                /*values=*/absl::MakeSpan(diagonal)};
 
   std::vector<double> iso = {8.0};
-  Parameter iso_parameter{/*directive=*/"",
+  Parameter iso_parameter{/*directive=*/"Film",
                           /*type=*/ParameterType::FLOAT,
                           /*type_name=*/"",
                           /*values=*/absl::MakeSpan(iso)};
 
   std::vector<double> whitebalance = {9.0};
-  Parameter whitebalance_parameter{/*directive=*/"",
+  Parameter whitebalance_parameter{/*directive=*/"Film",
                                    /*type=*/ParameterType::FLOAT,
                                    /*type_name=*/"",
                                    /*values=*/absl::MakeSpan(whitebalance)};
 
   std::vector<double> maxcomponentvalue = {10.0};
   Parameter maxcomponentvalue_parameter{
-      /*directive=*/"",
+      /*directive=*/"Film",
       /*type=*/ParameterType::FLOAT,
       /*type_name=*/"",
       /*values=*/absl::MakeSpan(maxcomponentvalue)};
 
   std::vector<absl::string_view> sensor = {"cie_1931"};
-  Parameter sensor_parameter{/*directive=*/"",
+  Parameter sensor_parameter{/*directive=*/"Film",
                              /*type=*/ParameterType::STRING,
                              /*type_name=*/"",
                              /*values=*/absl::MakeSpan(sensor)};
 
   bool savefp16[] = {true};
-  Parameter savefp16_parameter{/*directive=*/"",
+  Parameter savefp16_parameter{/*directive=*/"Film",
                                /*type=*/ParameterType::BOOL,
                                /*type_name=*/"",
                                /*values=*/absl::MakeSpan(savefp16)};
@@ -365,13 +365,13 @@ TEST(RemoveGBufferFilmV4, Empty) {
 
 TEST(RemoveGBufferFilmV4, CropwindowOverrides) {
   std::vector<int32_t> pixelbounds = {1, 2, 7, 8};
-  Parameter pixelbounds_parameter{/*directive=*/"",
+  Parameter pixelbounds_parameter{/*directive=*/"Film",
                                   /*type=*/ParameterType::INTEGER,
                                   /*type_name=*/"",
                                   /*values=*/absl::MakeSpan(pixelbounds)};
 
   std::vector<double> cropwindow = {3.0, 4.0, 5.0, 6.0};
-  Parameter cropwindow_parameter{/*directive=*/"",
+  Parameter cropwindow_parameter{/*directive=*/"Film",
                                  /*type=*/ParameterType::FLOAT,
                                  /*type_name=*/"",
                                  /*values=*/absl::MakeSpan(cropwindow)};
@@ -389,7 +389,7 @@ TEST(RemoveGBufferFilmV4, CropwindowOverrides) {
 
 TEST(RemoveGBufferFilmV4, BadSensor) {
   std::vector<absl::string_view> filename = {"invalid"};
-  Parameter filename_parameter{/*directive=*/"",
+  Parameter filename_parameter{/*directive=*/"Film",
                                /*type=*/ParameterType::STRING,
                                /*type_name=*/"",
                                /*values=*/absl::MakeSpan(filename)};
@@ -406,7 +406,7 @@ TEST(RemoveGBufferFilmV4, BadSensor) {
 
 TEST(RemoveGBufferFilmV4, BadCoordinateSystem) {
   std::vector<absl::string_view> filename = {"invalid"};
-  Parameter filename_parameter{/*directive=*/"",
+  Parameter filename_parameter{/*directive=*/"Film",
                                /*type=*/ParameterType::STRING,
                                /*type_name=*/"",
                                /*values=*/absl::MakeSpan(filename)};
@@ -423,69 +423,69 @@ TEST(RemoveGBufferFilmV4, BadCoordinateSystem) {
 
 TEST(RemoveGBufferFilmV4, WithData) {
   std::vector<absl::string_view> filename = {"file"};
-  Parameter filename_parameter{/*directive=*/"",
+  Parameter filename_parameter{/*directive=*/"Film",
                                /*type=*/ParameterType::STRING,
                                /*type_name=*/"",
                                /*values=*/absl::MakeSpan(filename)};
 
   std::vector<int32_t> xresolution = {1};
-  Parameter xresolution_parameter{/*directive=*/"",
+  Parameter xresolution_parameter{/*directive=*/"Film",
                                   /*type=*/ParameterType::INTEGER,
                                   /*type_name=*/"",
                                   /*values=*/absl::MakeSpan(xresolution)};
 
   std::vector<int32_t> yresolution = {2};
-  Parameter yresolution_parameter{/*directive=*/"",
+  Parameter yresolution_parameter{/*directive=*/"Film",
                                   /*type=*/ParameterType::INTEGER,
                                   /*type_name=*/"",
                                   /*values=*/absl::MakeSpan(yresolution)};
 
   std::vector<int32_t> pixelbounds = {3, 4, 5, 6};
-  Parameter pixelbounds_parameter{/*directive=*/"",
+  Parameter pixelbounds_parameter{/*directive=*/"Film",
                                   /*type=*/ParameterType::INTEGER,
                                   /*type_name=*/"",
                                   /*values=*/absl::MakeSpan(pixelbounds)};
 
   std::vector<double> diagonal = {7.0};
-  Parameter diagonal_parameter{/*directive=*/"",
+  Parameter diagonal_parameter{/*directive=*/"Film",
                                /*type=*/ParameterType::FLOAT,
                                /*type_name=*/"",
                                /*values=*/absl::MakeSpan(diagonal)};
 
   std::vector<double> iso = {8.0};
-  Parameter iso_parameter{/*directive=*/"",
+  Parameter iso_parameter{/*directive=*/"Film",
                           /*type=*/ParameterType::FLOAT,
                           /*type_name=*/"",
                           /*values=*/absl::MakeSpan(iso)};
 
   std::vector<double> whitebalance = {9.0};
-  Parameter whitebalance_parameter{/*directive=*/"",
+  Parameter whitebalance_parameter{/*directive=*/"Film",
                                    /*type=*/ParameterType::FLOAT,
                                    /*type_name=*/"",
                                    /*values=*/absl::MakeSpan(whitebalance)};
 
   std::vector<double> maxcomponentvalue = {10.0};
   Parameter maxcomponentvalue_parameter{
-      /*directive=*/"",
+      /*directive=*/"Film",
       /*type=*/ParameterType::FLOAT,
       /*type_name=*/"",
       /*values=*/absl::MakeSpan(maxcomponentvalue)};
 
   std::vector<absl::string_view> sensor = {"cie_1931"};
-  Parameter sensor_parameter{/*directive=*/"",
+  Parameter sensor_parameter{/*directive=*/"Film",
                              /*type=*/ParameterType::STRING,
                              /*type_name=*/"",
                              /*values=*/absl::MakeSpan(sensor)};
 
   bool savefp16[] = {true};
-  Parameter savefp16_parameter{/*directive=*/"",
+  Parameter savefp16_parameter{/*directive=*/"Film",
                                /*type=*/ParameterType::BOOL,
                                /*type_name=*/"",
                                /*values=*/absl::MakeSpan(savefp16)};
 
   std::vector<absl::string_view> coordinatesystem = {"camera"};
   Parameter coordinatesystem_parameter{
-      /*directive=*/"",
+      /*directive=*/"Film",
       /*type=*/ParameterType::STRING,
       /*type_name=*/"",
       /*values=*/absl::MakeSpan(coordinatesystem)};
@@ -530,13 +530,13 @@ TEST(RemoveSpectralFilmV4, Empty) {
 
 TEST(RemoveSpectralFilmV4, CropwindowOverrides) {
   std::vector<int32_t> pixelbounds = {1, 2, 7, 8};
-  Parameter pixelbounds_parameter{/*directive=*/"",
+  Parameter pixelbounds_parameter{/*directive=*/"Film",
                                   /*type=*/ParameterType::INTEGER,
                                   /*type_name=*/"",
                                   /*values=*/absl::MakeSpan(pixelbounds)};
 
   std::vector<double> cropwindow = {3.0, 4.0, 5.0, 6.0};
-  Parameter cropwindow_parameter{/*directive=*/"",
+  Parameter cropwindow_parameter{/*directive=*/"Film",
                                  /*type=*/ParameterType::FLOAT,
                                  /*type_name=*/"",
                                  /*values=*/absl::MakeSpan(cropwindow)};
@@ -554,7 +554,7 @@ TEST(RemoveSpectralFilmV4, CropwindowOverrides) {
 
 TEST(RemoveSpectralFilmV4, BadSensor) {
   std::vector<absl::string_view> filename = {"invalid"};
-  Parameter filename_parameter{/*directive=*/"",
+  Parameter filename_parameter{/*directive=*/"Film",
                                /*type=*/ParameterType::STRING,
                                /*type_name=*/"",
                                /*values=*/absl::MakeSpan(filename)};
@@ -571,80 +571,80 @@ TEST(RemoveSpectralFilmV4, BadSensor) {
 
 TEST(RemoveSpectralFilmV4, WithData) {
   std::vector<absl::string_view> filename = {"file"};
-  Parameter filename_parameter{/*directive=*/"",
+  Parameter filename_parameter{/*directive=*/"Film",
                                /*type=*/ParameterType::STRING,
                                /*type_name=*/"",
                                /*values=*/absl::MakeSpan(filename)};
 
   std::vector<int32_t> xresolution = {1};
-  Parameter xresolution_parameter{/*directive=*/"",
+  Parameter xresolution_parameter{/*directive=*/"Film",
                                   /*type=*/ParameterType::INTEGER,
                                   /*type_name=*/"",
                                   /*values=*/absl::MakeSpan(xresolution)};
 
   std::vector<int32_t> yresolution = {2};
-  Parameter yresolution_parameter{/*directive=*/"",
+  Parameter yresolution_parameter{/*directive=*/"Film",
                                   /*type=*/ParameterType::INTEGER,
                                   /*type_name=*/"",
                                   /*values=*/absl::MakeSpan(yresolution)};
 
   std::vector<int32_t> pixelbounds = {3, 4, 5, 6};
-  Parameter pixelbounds_parameter{/*directive=*/"",
+  Parameter pixelbounds_parameter{/*directive=*/"Film",
                                   /*type=*/ParameterType::INTEGER,
                                   /*type_name=*/"",
                                   /*values=*/absl::MakeSpan(pixelbounds)};
 
   std::vector<double> diagonal = {7.0};
-  Parameter diagonal_parameter{/*directive=*/"",
+  Parameter diagonal_parameter{/*directive=*/"Film",
                                /*type=*/ParameterType::FLOAT,
                                /*type_name=*/"",
                                /*values=*/absl::MakeSpan(diagonal)};
 
   std::vector<double> iso = {8.0};
-  Parameter iso_parameter{/*directive=*/"",
+  Parameter iso_parameter{/*directive=*/"Film",
                           /*type=*/ParameterType::FLOAT,
                           /*type_name=*/"",
                           /*values=*/absl::MakeSpan(iso)};
 
   std::vector<double> whitebalance = {9.0};
-  Parameter whitebalance_parameter{/*directive=*/"",
+  Parameter whitebalance_parameter{/*directive=*/"Film",
                                    /*type=*/ParameterType::FLOAT,
                                    /*type_name=*/"",
                                    /*values=*/absl::MakeSpan(whitebalance)};
 
   std::vector<double> maxcomponentvalue = {10.0};
   Parameter maxcomponentvalue_parameter{
-      /*directive=*/"",
+      /*directive=*/"Film",
       /*type=*/ParameterType::FLOAT,
       /*type_name=*/"",
       /*values=*/absl::MakeSpan(maxcomponentvalue)};
 
   std::vector<absl::string_view> sensor = {"cie_1931"};
-  Parameter sensor_parameter{/*directive=*/"",
+  Parameter sensor_parameter{/*directive=*/"Film",
                              /*type=*/ParameterType::STRING,
                              /*type_name=*/"",
                              /*values=*/absl::MakeSpan(sensor)};
 
   bool savefp16[] = {true};
-  Parameter savefp16_parameter{/*directive=*/"",
+  Parameter savefp16_parameter{/*directive=*/"Film",
                                /*type=*/ParameterType::BOOL,
                                /*type_name=*/"",
                                /*values=*/absl::MakeSpan(savefp16)};
 
   std::vector<int32_t> nbuckets = {11};
-  Parameter nbuckets_parameter{/*directive=*/"",
+  Parameter nbuckets_parameter{/*directive=*/"Film",
                                /*type=*/ParameterType::INTEGER,
                                /*type_name=*/"",
                                /*values=*/absl::MakeSpan(nbuckets)};
 
   std::vector<double> lambdamin = {12.0};
-  Parameter lambdamin_parameter{/*directive=*/"",
+  Parameter lambdamin_parameter{/*directive=*/"Film",
                                 /*type=*/ParameterType::FLOAT,
                                 /*type_name=*/"",
                                 /*values=*/absl::MakeSpan(lambdamin)};
 
   std::vector<double> lambdamax = {13.0};
-  Parameter lambdamax_parameter{/*directive=*/"",
+  Parameter lambdamax_parameter{/*directive=*/"Film",
                                 /*type=*/ParameterType::FLOAT,
                                 /*type_name=*/"",
                                 /*values=*/absl::MakeSpan(lambdamax)};

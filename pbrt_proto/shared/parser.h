@@ -279,7 +279,7 @@ std::optional<absl::Span<std::array<double, 2>>> TryRemoveSpectralSamples(
 
 std::optional<absl::string_view> TryRemoveString(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    absl::string_view parameter_name);
+    absl::string_view parameter_name, absl::string_view* directive = nullptr);
 
 std::optional<absl::string_view> TryRemoveSpectrumFilename(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,

@@ -57,19 +57,6 @@ absl::Status InvalidEnumError(absl::string_view message, int pbrt_version) {
   return absl::OkStatus();
 }
 
-absl::string_view ScatteringDirective(absl::string_view type_name) {
-  if (type_name == "subsurface") {
-    return "Material";
-  }
-
-  if (type_name == "homogeneous" || type_name == "heterogeneous" ||
-      type_name == "uniformgrid") {
-    return "Medium";
-  }
-
-  return "Shape";
-}
-
 }  // namespace
 )";
 
@@ -106,32 +93,6 @@ std::string ToStringValue(absl::string_view enum_literal,
   }
 
   return result;
-}
-
-absl::string_view GetDirective(absl::string_view type_name) {
-  const static absl::flat_hash_map<absl::string_view, absl::string_view>
-      kTypes = {
-          {"pbrt_proto.BvhAccelerator.SplitMethod", R"("Accelerator")"},
-          {"pbrt_proto.SphericalCamera.Mapping", R"("Camera")"},
-          {"pbrt_proto.FilmSensor.Type", R"("Film")"},
-          {"pbrt_proto.GBufferFilm.CoordinateSystem", R"("Film")"},
-          {"pbrt_proto.LightSampler.Type", R"("LightSource")"},
-          {"pbrt_proto.DebugIntegrator.ChannelValue", R"("SurfaceIntegrator")"},
-          {"pbrt_proto.DirectLightingIntegrator.Strategy",
-           R"((pbrt_version <= 2) ? "SurfaceIntegrator" : "Integrator")"},
-          {"pbrt_proto.ScatteringPreset.Type",
-           "ScatteringDirective(type_name)"},
-          {"pbrt_proto.SamplerRandomization.Type", R"("Sampler")"},
-          {"pbrt_proto.AdaptiveSampler.Method", R"("Sampler")"},
-          {"pbrt_proto.CurveShape.Basis", R"("Shape")"},
-          {"pbrt_proto.CurveShape.Degree", R"("Shape")"},
-          {"pbrt_proto.CurveShape.Type", R"("Shape")"},
-          {"pbrt_proto.CheckerboardAaMode.Type", R"("Texture")"},
-          {"pbrt_proto.ImageWrap.Type", R"("Texture")"},
-          {"pbrt_proto.TextureFilter.Type", R"("Texture")"},
-          {"pbrt_proto.TextureMapping.Type", R"("Texture")"},
-      };
-  return kTypes.at(type_name);
 }
 
 bool GenerateRemoveEnum(const EnumDescriptor& enum_descriptor,
@@ -182,8 +143,9 @@ absl::Status RemoveEnum(
   printer.Print(
       R"(      };
 
+  absl::string_view directive;
   std::optional<absl::string_view> value =
-      TryRemoveString(parameters, parameter_name);
+      TryRemoveString(parameters, parameter_name, &directive);
   if (!value.has_value()) {
     return absl::OkStatus();
   }
@@ -197,9 +159,7 @@ absl::Status RemoveEnum(
   }
 
   std::string message =
-      MakeMessage(pbrt_version, )");
-  printer.Print(GetDirective(enum_descriptor.full_name()));
-  printer.Print(R"(, type_name, parameter_name, *value);
+      MakeMessage(pbrt_version, directive, type_name, parameter_name, *value);
 
   if ()");
   printer.Print(type_name);

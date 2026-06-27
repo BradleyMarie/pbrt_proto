@@ -30,44 +30,44 @@ TEST(OrthographicCameraV1, Empty) {
 
 TEST(OrthographicCameraV1, WithData) {
   std::vector<double> shutteropen = {1.0};
-  Parameter shutteropen_parameter{/*directive=*/"",
+  Parameter shutteropen_parameter{/*directive=*/"Camera",
                                   /*type=*/ParameterType::FLOAT,
                                   /*type_name=*/"",
                                   /*values=*/absl::MakeSpan(shutteropen)};
 
   std::vector<double> shutterclose = {2.0};
-  Parameter shutterclose_parameter{/*directive=*/"",
+  Parameter shutterclose_parameter{/*directive=*/"Camera",
                                    /*type=*/ParameterType::FLOAT,
                                    /*type_name=*/"",
                                    /*values=*/absl::MakeSpan(shutterclose)};
 
   std::vector<double> focaldistance = {3.0};
-  Parameter focaldistance_parameter{/*directive=*/"",
+  Parameter focaldistance_parameter{/*directive=*/"Camera",
                                     /*type=*/ParameterType::FLOAT,
                                     /*type_name=*/"",
                                     /*values=*/absl::MakeSpan(focaldistance)};
 
   std::vector<double> frameaspectratio = {4.0};
   Parameter frameaspectratio_parameter{
-      /*directive=*/"",
+      /*directive=*/"Camera",
       /*type=*/ParameterType::FLOAT,
       /*type_name=*/"",
       /*values=*/absl::MakeSpan(frameaspectratio)};
 
   std::vector<double> screenwindow = {5.0, 6.0, 7.0, 8.0};
-  Parameter screenwindow_parameter{/*directive=*/"",
+  Parameter screenwindow_parameter{/*directive=*/"Camera",
                                    /*type=*/ParameterType::FLOAT,
                                    /*type_name=*/"",
                                    /*values=*/absl::MakeSpan(screenwindow)};
 
   std::vector<double> hither = {9.0};
-  Parameter hither_parameter{/*directive=*/"",
+  Parameter hither_parameter{/*directive=*/"Camera",
                              /*type=*/ParameterType::FLOAT,
                              /*type_name=*/"",
                              /*values=*/absl::MakeSpan(hither)};
 
   std::vector<double> yon = {10.0};
-  Parameter yon_parameter{/*directive=*/"",
+  Parameter yon_parameter{/*directive=*/"Camera",
                           /*type=*/ParameterType::FLOAT,
                           /*type_name=*/"",
                           /*values=*/absl::MakeSpan(yon)};
@@ -106,44 +106,44 @@ TEST(OrthographicCameraV2, Empty) {
 
 TEST(OrthographicCameraV2, WithData) {
   std::vector<double> shutteropen = {1.0};
-  Parameter shutteropen_parameter{/*directive=*/"",
+  Parameter shutteropen_parameter{/*directive=*/"Camera",
                                   /*type=*/ParameterType::FLOAT,
                                   /*type_name=*/"",
                                   /*values=*/absl::MakeSpan(shutteropen)};
 
   std::vector<double> shutterclose = {2.0};
-  Parameter shutterclose_parameter{/*directive=*/"",
+  Parameter shutterclose_parameter{/*directive=*/"Camera",
                                    /*type=*/ParameterType::FLOAT,
                                    /*type_name=*/"",
                                    /*values=*/absl::MakeSpan(shutterclose)};
 
   std::vector<double> focaldistance = {3.0};
-  Parameter focaldistance_parameter{/*directive=*/"",
+  Parameter focaldistance_parameter{/*directive=*/"Camera",
                                     /*type=*/ParameterType::FLOAT,
                                     /*type_name=*/"",
                                     /*values=*/absl::MakeSpan(focaldistance)};
 
   std::vector<double> frameaspectratio = {4.0};
   Parameter frameaspectratio_parameter{
-      /*directive=*/"",
+      /*directive=*/"Camera",
       /*type=*/ParameterType::FLOAT,
       /*type_name=*/"",
       /*values=*/absl::MakeSpan(frameaspectratio)};
 
   std::vector<double> screenwindow = {5.0, 6.0, 7.0, 8.0};
-  Parameter screenwindow_parameter{/*directive=*/"",
+  Parameter screenwindow_parameter{/*directive=*/"Camera",
                                    /*type=*/ParameterType::FLOAT,
                                    /*type_name=*/"",
                                    /*values=*/absl::MakeSpan(screenwindow)};
 
   std::vector<double> hither = {9.0};
-  Parameter hither_parameter{/*directive=*/"",
+  Parameter hither_parameter{/*directive=*/"Camera",
                              /*type=*/ParameterType::FLOAT,
                              /*type_name=*/"",
                              /*values=*/absl::MakeSpan(hither)};
 
   std::vector<double> yon = {10.0};
-  Parameter yon_parameter{/*directive=*/"",
+  Parameter yon_parameter{/*directive=*/"Camera",
                           /*type=*/ParameterType::FLOAT,
                           /*type_name=*/"",
                           /*values=*/absl::MakeSpan(yon)};
@@ -180,44 +180,44 @@ TEST(OrthographicCameraV3, Empty) {
 
 TEST(OrthographicCameraV3, WithData) {
   std::vector<double> shutteropen = {1.0};
-  Parameter shutteropen_parameter{/*directive=*/"",
+  Parameter shutteropen_parameter{/*directive=*/"Camera",
                                   /*type=*/ParameterType::FLOAT,
                                   /*type_name=*/"",
                                   /*values=*/absl::MakeSpan(shutteropen)};
 
   std::vector<double> shutterclose = {2.0};
-  Parameter shutterclose_parameter{/*directive=*/"",
+  Parameter shutterclose_parameter{/*directive=*/"Camera",
                                    /*type=*/ParameterType::FLOAT,
                                    /*type_name=*/"",
                                    /*values=*/absl::MakeSpan(shutterclose)};
 
   std::vector<double> focaldistance = {3.0};
-  Parameter focaldistance_parameter{/*directive=*/"",
+  Parameter focaldistance_parameter{/*directive=*/"Camera",
                                     /*type=*/ParameterType::FLOAT,
                                     /*type_name=*/"",
                                     /*values=*/absl::MakeSpan(focaldistance)};
 
   std::vector<double> frameaspectratio = {4.0};
   Parameter frameaspectratio_parameter{
-      /*directive=*/"",
+      /*directive=*/"Camera",
       /*type=*/ParameterType::FLOAT,
       /*type_name=*/"",
       /*values=*/absl::MakeSpan(frameaspectratio)};
 
   std::vector<double> screenwindow = {5.0, 6.0, 7.0, 8.0};
-  Parameter screenwindow_parameter{/*directive=*/"",
+  Parameter screenwindow_parameter{/*directive=*/"Camera",
                                    /*type=*/ParameterType::FLOAT,
                                    /*type_name=*/"",
                                    /*values=*/absl::MakeSpan(screenwindow)};
 
   std::vector<double> hither = {9.0};
-  Parameter hither_parameter{/*directive=*/"",
+  Parameter hither_parameter{/*directive=*/"Camera",
                              /*type=*/ParameterType::FLOAT,
                              /*type_name=*/"",
                              /*values=*/absl::MakeSpan(hither)};
 
   std::vector<double> yon = {10.0};
-  Parameter yon_parameter{/*directive=*/"",
+  Parameter yon_parameter{/*directive=*/"Camera",
                           /*type=*/ParameterType::FLOAT,
                           /*type_name=*/"",
                           /*values=*/absl::MakeSpan(yon)};
@@ -254,44 +254,44 @@ TEST(OrthographicCameraV4, Empty) {
 
 TEST(OrthographicCameraV4, WithData) {
   std::vector<double> shutteropen = {1.0};
-  Parameter shutteropen_parameter{/*directive=*/"",
+  Parameter shutteropen_parameter{/*directive=*/"Camera",
                                   /*type=*/ParameterType::FLOAT,
                                   /*type_name=*/"",
                                   /*values=*/absl::MakeSpan(shutteropen)};
 
   std::vector<double> shutterclose = {2.0};
-  Parameter shutterclose_parameter{/*directive=*/"",
+  Parameter shutterclose_parameter{/*directive=*/"Camera",
                                    /*type=*/ParameterType::FLOAT,
                                    /*type_name=*/"",
                                    /*values=*/absl::MakeSpan(shutterclose)};
 
   std::vector<double> focaldistance = {3.0};
-  Parameter focaldistance_parameter{/*directive=*/"",
+  Parameter focaldistance_parameter{/*directive=*/"Camera",
                                     /*type=*/ParameterType::FLOAT,
                                     /*type_name=*/"",
                                     /*values=*/absl::MakeSpan(focaldistance)};
 
   std::vector<double> frameaspectratio = {4.0};
   Parameter frameaspectratio_parameter{
-      /*directive=*/"",
+      /*directive=*/"Camera",
       /*type=*/ParameterType::FLOAT,
       /*type_name=*/"",
       /*values=*/absl::MakeSpan(frameaspectratio)};
 
   std::vector<double> screenwindow = {5.0, 6.0, 7.0, 8.0};
-  Parameter screenwindow_parameter{/*directive=*/"",
+  Parameter screenwindow_parameter{/*directive=*/"Camera",
                                    /*type=*/ParameterType::FLOAT,
                                    /*type_name=*/"",
                                    /*values=*/absl::MakeSpan(screenwindow)};
 
   std::vector<double> hither = {9.0};
-  Parameter hither_parameter{/*directive=*/"",
+  Parameter hither_parameter{/*directive=*/"Camera",
                              /*type=*/ParameterType::FLOAT,
                              /*type_name=*/"",
                              /*values=*/absl::MakeSpan(hither)};
 
   std::vector<double> yon = {10.0};
-  Parameter yon_parameter{/*directive=*/"",
+  Parameter yon_parameter{/*directive=*/"Camera",
                           /*type=*/ParameterType::FLOAT,
                           /*type_name=*/"",
                           /*values=*/absl::MakeSpan(yon)};
@@ -328,56 +328,56 @@ TEST(RemovePerspectiveCameraV1, Empty) {
 
 TEST(RemovePerspectiveCameraV1, WithData) {
   std::vector<double> shutteropen = {1.0};
-  Parameter shutteropen_parameter{/*directive=*/"",
+  Parameter shutteropen_parameter{/*directive=*/"Camera",
                                   /*type=*/ParameterType::FLOAT,
                                   /*type_name=*/"",
                                   /*values=*/absl::MakeSpan(shutteropen)};
 
   std::vector<double> shutterclose = {2.0};
-  Parameter shutterclose_parameter{/*directive=*/"",
+  Parameter shutterclose_parameter{/*directive=*/"Camera",
                                    /*type=*/ParameterType::FLOAT,
                                    /*type_name=*/"",
                                    /*values=*/absl::MakeSpan(shutterclose)};
 
   std::vector<double> fov = {3.0};
-  Parameter fov_parameter{/*directive=*/"",
+  Parameter fov_parameter{/*directive=*/"Camera",
                           /*type=*/ParameterType::FLOAT,
                           /*type_name=*/"",
                           /*values=*/absl::MakeSpan(fov)};
 
   std::vector<double> focaldistance = {4.0};
-  Parameter focaldistance_parameter{/*directive=*/"",
+  Parameter focaldistance_parameter{/*directive=*/"Camera",
                                     /*type=*/ParameterType::FLOAT,
                                     /*type_name=*/"",
                                     /*values=*/absl::MakeSpan(focaldistance)};
 
   std::vector<double> frameaspectratio = {5.0};
   Parameter frameaspectratio_parameter{
-      /*directive=*/"",
+      /*directive=*/"Camera",
       /*type=*/ParameterType::FLOAT,
       /*type_name=*/"",
       /*values=*/absl::MakeSpan(frameaspectratio)};
 
   std::vector<double> screenwindow = {6.0, 7.0, 8.0, 9.0};
-  Parameter screenwindow_parameter{/*directive=*/"",
+  Parameter screenwindow_parameter{/*directive=*/"Camera",
                                    /*type=*/ParameterType::FLOAT,
                                    /*type_name=*/"",
                                    /*values=*/absl::MakeSpan(screenwindow)};
 
   std::vector<double> hither = {10.0};
-  Parameter hither_parameter{/*directive=*/"",
+  Parameter hither_parameter{/*directive=*/"Camera",
                              /*type=*/ParameterType::FLOAT,
                              /*type_name=*/"",
                              /*values=*/absl::MakeSpan(hither)};
 
   std::vector<double> yon = {11.0};
-  Parameter yon_parameter{/*directive=*/"",
+  Parameter yon_parameter{/*directive=*/"Camera",
                           /*type=*/ParameterType::FLOAT,
                           /*type_name=*/"",
                           /*values=*/absl::MakeSpan(yon)};
 
   std::vector<double> halffov = {6.0};
-  Parameter halffov_parameter{/*directive=*/"",
+  Parameter halffov_parameter{/*directive=*/"Camera",
                               /*type=*/ParameterType::FLOAT,
                               /*type_name=*/"",
                               /*values=*/absl::MakeSpan(halffov)};
@@ -419,56 +419,56 @@ TEST(RemovePerspectiveCameraV2, Empty) {
 
 TEST(RemovePerspectiveCameraV2, WithData) {
   std::vector<double> shutteropen = {1.0};
-  Parameter shutteropen_parameter{/*directive=*/"",
+  Parameter shutteropen_parameter{/*directive=*/"Camera",
                                   /*type=*/ParameterType::FLOAT,
                                   /*type_name=*/"",
                                   /*values=*/absl::MakeSpan(shutteropen)};
 
   std::vector<double> shutterclose = {2.0};
-  Parameter shutterclose_parameter{/*directive=*/"",
+  Parameter shutterclose_parameter{/*directive=*/"Camera",
                                    /*type=*/ParameterType::FLOAT,
                                    /*type_name=*/"",
                                    /*values=*/absl::MakeSpan(shutterclose)};
 
   std::vector<double> fov = {3.0};
-  Parameter fov_parameter{/*directive=*/"",
+  Parameter fov_parameter{/*directive=*/"Camera",
                           /*type=*/ParameterType::FLOAT,
                           /*type_name=*/"",
                           /*values=*/absl::MakeSpan(fov)};
 
   std::vector<double> focaldistance = {4.0};
-  Parameter focaldistance_parameter{/*directive=*/"",
+  Parameter focaldistance_parameter{/*directive=*/"Camera",
                                     /*type=*/ParameterType::FLOAT,
                                     /*type_name=*/"",
                                     /*values=*/absl::MakeSpan(focaldistance)};
 
   std::vector<double> frameaspectratio = {5.0};
   Parameter frameaspectratio_parameter{
-      /*directive=*/"",
+      /*directive=*/"Camera",
       /*type=*/ParameterType::FLOAT,
       /*type_name=*/"",
       /*values=*/absl::MakeSpan(frameaspectratio)};
 
   std::vector<double> screenwindow = {6.0, 7.0, 8.0, 9.0};
-  Parameter screenwindow_parameter{/*directive=*/"",
+  Parameter screenwindow_parameter{/*directive=*/"Camera",
                                    /*type=*/ParameterType::FLOAT,
                                    /*type_name=*/"",
                                    /*values=*/absl::MakeSpan(screenwindow)};
 
   std::vector<double> hither = {10.0};
-  Parameter hither_parameter{/*directive=*/"",
+  Parameter hither_parameter{/*directive=*/"Camera",
                              /*type=*/ParameterType::FLOAT,
                              /*type_name=*/"",
                              /*values=*/absl::MakeSpan(hither)};
 
   std::vector<double> yon = {11.0};
-  Parameter yon_parameter{/*directive=*/"",
+  Parameter yon_parameter{/*directive=*/"Camera",
                           /*type=*/ParameterType::FLOAT,
                           /*type_name=*/"",
                           /*values=*/absl::MakeSpan(yon)};
 
   std::vector<double> halffov = {6.0};
-  Parameter halffov_parameter{/*directive=*/"",
+  Parameter halffov_parameter{/*directive=*/"Camera",
                               /*type=*/ParameterType::FLOAT,
                               /*type_name=*/"",
                               /*values=*/absl::MakeSpan(halffov)};
@@ -499,7 +499,7 @@ TEST(RemovePerspectiveCameraV2, WithData) {
 
 TEST(RemovePerspectiveCameraV2, ZeroHalfFov) {
   std::vector<double> halffov = {0.0};
-  Parameter halffov_parameter{/*directive=*/"",
+  Parameter halffov_parameter{/*directive=*/"Camera",
                               /*type=*/ParameterType::FLOAT,
                               /*type_name=*/"",
                               /*values=*/absl::MakeSpan(halffov)};
@@ -524,56 +524,56 @@ TEST(RemovePerspectiveCameraV3, Empty) {
 
 TEST(RemovePerspectiveCameraV3, WithData) {
   std::vector<double> shutteropen = {1.0};
-  Parameter shutteropen_parameter{/*directive=*/"",
+  Parameter shutteropen_parameter{/*directive=*/"Camera",
                                   /*type=*/ParameterType::FLOAT,
                                   /*type_name=*/"",
                                   /*values=*/absl::MakeSpan(shutteropen)};
 
   std::vector<double> shutterclose = {2.0};
-  Parameter shutterclose_parameter{/*directive=*/"",
+  Parameter shutterclose_parameter{/*directive=*/"Camera",
                                    /*type=*/ParameterType::FLOAT,
                                    /*type_name=*/"",
                                    /*values=*/absl::MakeSpan(shutterclose)};
 
   std::vector<double> fov = {3.0};
-  Parameter fov_parameter{/*directive=*/"",
+  Parameter fov_parameter{/*directive=*/"Camera",
                           /*type=*/ParameterType::FLOAT,
                           /*type_name=*/"",
                           /*values=*/absl::MakeSpan(fov)};
 
   std::vector<double> focaldistance = {4.0};
-  Parameter focaldistance_parameter{/*directive=*/"",
+  Parameter focaldistance_parameter{/*directive=*/"Camera",
                                     /*type=*/ParameterType::FLOAT,
                                     /*type_name=*/"",
                                     /*values=*/absl::MakeSpan(focaldistance)};
 
   std::vector<double> frameaspectratio = {5.0};
   Parameter frameaspectratio_parameter{
-      /*directive=*/"",
+      /*directive=*/"Camera",
       /*type=*/ParameterType::FLOAT,
       /*type_name=*/"",
       /*values=*/absl::MakeSpan(frameaspectratio)};
 
   std::vector<double> screenwindow = {6.0, 7.0, 8.0, 9.0};
-  Parameter screenwindow_parameter{/*directive=*/"",
+  Parameter screenwindow_parameter{/*directive=*/"Camera",
                                    /*type=*/ParameterType::FLOAT,
                                    /*type_name=*/"",
                                    /*values=*/absl::MakeSpan(screenwindow)};
 
   std::vector<double> hither = {10.0};
-  Parameter hither_parameter{/*directive=*/"",
+  Parameter hither_parameter{/*directive=*/"Camera",
                              /*type=*/ParameterType::FLOAT,
                              /*type_name=*/"",
                              /*values=*/absl::MakeSpan(hither)};
 
   std::vector<double> yon = {11.0};
-  Parameter yon_parameter{/*directive=*/"",
+  Parameter yon_parameter{/*directive=*/"Camera",
                           /*type=*/ParameterType::FLOAT,
                           /*type_name=*/"",
                           /*values=*/absl::MakeSpan(yon)};
 
   std::vector<double> halffov = {6.0};
-  Parameter halffov_parameter{/*directive=*/"",
+  Parameter halffov_parameter{/*directive=*/"Camera",
                               /*type=*/ParameterType::FLOAT,
                               /*type_name=*/"",
                               /*values=*/absl::MakeSpan(halffov)};
@@ -604,7 +604,7 @@ TEST(RemovePerspectiveCameraV3, WithData) {
 
 TEST(RemovePerspectiveCameraV3, ZeroHalfFov) {
   std::vector<double> halffov = {0.0};
-  Parameter halffov_parameter{/*directive=*/"",
+  Parameter halffov_parameter{/*directive=*/"Camera",
                               /*type=*/ParameterType::FLOAT,
                               /*type_name=*/"",
                               /*values=*/absl::MakeSpan(halffov)};
@@ -629,56 +629,56 @@ TEST(RemovePerspectiveCameraV4, Empty) {
 
 TEST(RemovePerspectiveCameraV4, WithData) {
   std::vector<double> shutteropen = {1.0};
-  Parameter shutteropen_parameter{/*directive=*/"",
+  Parameter shutteropen_parameter{/*directive=*/"Camera",
                                   /*type=*/ParameterType::FLOAT,
                                   /*type_name=*/"",
                                   /*values=*/absl::MakeSpan(shutteropen)};
 
   std::vector<double> shutterclose = {2.0};
-  Parameter shutterclose_parameter{/*directive=*/"",
+  Parameter shutterclose_parameter{/*directive=*/"Camera",
                                    /*type=*/ParameterType::FLOAT,
                                    /*type_name=*/"",
                                    /*values=*/absl::MakeSpan(shutterclose)};
 
   std::vector<double> fov = {3.0};
-  Parameter fov_parameter{/*directive=*/"",
+  Parameter fov_parameter{/*directive=*/"Camera",
                           /*type=*/ParameterType::FLOAT,
                           /*type_name=*/"",
                           /*values=*/absl::MakeSpan(fov)};
 
   std::vector<double> focaldistance = {4.0};
-  Parameter focaldistance_parameter{/*directive=*/"",
+  Parameter focaldistance_parameter{/*directive=*/"Camera",
                                     /*type=*/ParameterType::FLOAT,
                                     /*type_name=*/"",
                                     /*values=*/absl::MakeSpan(focaldistance)};
 
   std::vector<double> frameaspectratio = {5.0};
   Parameter frameaspectratio_parameter{
-      /*directive=*/"",
+      /*directive=*/"Camera",
       /*type=*/ParameterType::FLOAT,
       /*type_name=*/"",
       /*values=*/absl::MakeSpan(frameaspectratio)};
 
   std::vector<double> screenwindow = {6.0, 7.0, 8.0, 9.0};
-  Parameter screenwindow_parameter{/*directive=*/"",
+  Parameter screenwindow_parameter{/*directive=*/"Camera",
                                    /*type=*/ParameterType::FLOAT,
                                    /*type_name=*/"",
                                    /*values=*/absl::MakeSpan(screenwindow)};
 
   std::vector<double> hither = {10.0};
-  Parameter hither_parameter{/*directive=*/"",
+  Parameter hither_parameter{/*directive=*/"Camera",
                              /*type=*/ParameterType::FLOAT,
                              /*type_name=*/"",
                              /*values=*/absl::MakeSpan(hither)};
 
   std::vector<double> yon = {11.0};
-  Parameter yon_parameter{/*directive=*/"",
+  Parameter yon_parameter{/*directive=*/"Camera",
                           /*type=*/ParameterType::FLOAT,
                           /*type_name=*/"",
                           /*values=*/absl::MakeSpan(yon)};
 
   std::vector<double> halffov = {6.0};
-  Parameter halffov_parameter{/*directive=*/"",
+  Parameter halffov_parameter{/*directive=*/"Camera",
                               /*type=*/ParameterType::FLOAT,
                               /*type_name=*/"",
                               /*values=*/absl::MakeSpan(halffov)};
@@ -718,56 +718,56 @@ TEST(RemoveSphericalCameraV1, Empty) {
 
 TEST(RemoveSphericalCameraV1, WithData) {
   std::vector<double> shutteropen = {1.0};
-  Parameter shutteropen_parameter{/*directive=*/"",
+  Parameter shutteropen_parameter{/*directive=*/"Camera",
                                   /*type=*/ParameterType::FLOAT,
                                   /*type_name=*/"",
                                   /*values=*/absl::MakeSpan(shutteropen)};
 
   std::vector<double> shutterclose = {2.0};
-  Parameter shutterclose_parameter{/*directive=*/"",
+  Parameter shutterclose_parameter{/*directive=*/"Camera",
                                    /*type=*/ParameterType::FLOAT,
                                    /*type_name=*/"",
                                    /*values=*/absl::MakeSpan(shutterclose)};
 
   std::vector<double> lensradius = {3.0};
-  Parameter lensradius_parameter{/*directive=*/"",
+  Parameter lensradius_parameter{/*directive=*/"Camera",
                                  /*type=*/ParameterType::FLOAT,
                                  /*type_name=*/"",
                                  /*values=*/absl::MakeSpan(lensradius)};
 
   std::vector<double> focaldistance = {4.0};
-  Parameter focaldistance_parameter{/*directive=*/"",
+  Parameter focaldistance_parameter{/*directive=*/"Camera",
                                     /*type=*/ParameterType::FLOAT,
                                     /*type_name=*/"",
                                     /*values=*/absl::MakeSpan(focaldistance)};
 
   std::vector<double> frameaspectratio = {5.0};
   Parameter frameaspectratio_parameter{
-      /*directive=*/"",
+      /*directive=*/"Camera",
       /*type=*/ParameterType::FLOAT,
       /*type_name=*/"",
       /*values=*/absl::MakeSpan(frameaspectratio)};
 
   std::vector<double> screenwindow = {6.0, 7.0, 8.0, 9.0};
-  Parameter screenwindow_parameter{/*directive=*/"",
+  Parameter screenwindow_parameter{/*directive=*/"Camera",
                                    /*type=*/ParameterType::FLOAT,
                                    /*type_name=*/"",
                                    /*values=*/absl::MakeSpan(screenwindow)};
 
   std::vector<double> hither = {10.0};
-  Parameter hither_parameter{/*directive=*/"",
+  Parameter hither_parameter{/*directive=*/"Camera",
                              /*type=*/ParameterType::FLOAT,
                              /*type_name=*/"",
                              /*values=*/absl::MakeSpan(hither)};
 
   std::vector<double> yon = {11.0};
-  Parameter yon_parameter{/*directive=*/"",
+  Parameter yon_parameter{/*directive=*/"Camera",
                           /*type=*/ParameterType::FLOAT,
                           /*type_name=*/"",
                           /*values=*/absl::MakeSpan(yon)};
 
   std::vector<absl::string_view> mapping = {"equalarea"};
-  Parameter mapping_parameter{/*directive=*/"",
+  Parameter mapping_parameter{/*directive=*/"Camera",
                               /*type=*/ParameterType::FLOAT,
                               /*type_name=*/"",
                               /*values=*/absl::MakeSpan(mapping)};
@@ -809,56 +809,56 @@ TEST(RemoveSphericalCameraV2, Empty) {
 
 TEST(RemoveSphericalCameraV2, WithData) {
   std::vector<double> shutteropen = {1.0};
-  Parameter shutteropen_parameter{/*directive=*/"",
+  Parameter shutteropen_parameter{/*directive=*/"Camera",
                                   /*type=*/ParameterType::FLOAT,
                                   /*type_name=*/"",
                                   /*values=*/absl::MakeSpan(shutteropen)};
 
   std::vector<double> shutterclose = {2.0};
-  Parameter shutterclose_parameter{/*directive=*/"",
+  Parameter shutterclose_parameter{/*directive=*/"Camera",
                                    /*type=*/ParameterType::FLOAT,
                                    /*type_name=*/"",
                                    /*values=*/absl::MakeSpan(shutterclose)};
 
   std::vector<double> lensradius = {3.0};
-  Parameter lensradius_parameter{/*directive=*/"",
+  Parameter lensradius_parameter{/*directive=*/"Camera",
                                  /*type=*/ParameterType::FLOAT,
                                  /*type_name=*/"",
                                  /*values=*/absl::MakeSpan(lensradius)};
 
   std::vector<double> focaldistance = {4.0};
-  Parameter focaldistance_parameter{/*directive=*/"",
+  Parameter focaldistance_parameter{/*directive=*/"Camera",
                                     /*type=*/ParameterType::FLOAT,
                                     /*type_name=*/"",
                                     /*values=*/absl::MakeSpan(focaldistance)};
 
   std::vector<double> frameaspectratio = {5.0};
   Parameter frameaspectratio_parameter{
-      /*directive=*/"",
+      /*directive=*/"Camera",
       /*type=*/ParameterType::FLOAT,
       /*type_name=*/"",
       /*values=*/absl::MakeSpan(frameaspectratio)};
 
   std::vector<double> screenwindow = {6.0, 7.0, 8.0, 9.0};
-  Parameter screenwindow_parameter{/*directive=*/"",
+  Parameter screenwindow_parameter{/*directive=*/"Camera",
                                    /*type=*/ParameterType::FLOAT,
                                    /*type_name=*/"",
                                    /*values=*/absl::MakeSpan(screenwindow)};
 
   std::vector<double> hither = {10.0};
-  Parameter hither_parameter{/*directive=*/"",
+  Parameter hither_parameter{/*directive=*/"Camera",
                              /*type=*/ParameterType::FLOAT,
                              /*type_name=*/"",
                              /*values=*/absl::MakeSpan(hither)};
 
   std::vector<double> yon = {11.0};
-  Parameter yon_parameter{/*directive=*/"",
+  Parameter yon_parameter{/*directive=*/"Camera",
                           /*type=*/ParameterType::FLOAT,
                           /*type_name=*/"",
                           /*values=*/absl::MakeSpan(yon)};
 
   std::vector<absl::string_view> mapping = {"equalarea"};
-  Parameter mapping_parameter{/*directive=*/"",
+  Parameter mapping_parameter{/*directive=*/"Camera",
                               /*type=*/ParameterType::FLOAT,
                               /*type_name=*/"",
                               /*values=*/absl::MakeSpan(mapping)};
@@ -898,56 +898,56 @@ TEST(RemoveSphericalCameraV3, Empty) {
 
 TEST(RemoveSphericalCameraV3, WithData) {
   std::vector<double> shutteropen = {1.0};
-  Parameter shutteropen_parameter{/*directive=*/"",
+  Parameter shutteropen_parameter{/*directive=*/"Camera",
                                   /*type=*/ParameterType::FLOAT,
                                   /*type_name=*/"",
                                   /*values=*/absl::MakeSpan(shutteropen)};
 
   std::vector<double> shutterclose = {2.0};
-  Parameter shutterclose_parameter{/*directive=*/"",
+  Parameter shutterclose_parameter{/*directive=*/"Camera",
                                    /*type=*/ParameterType::FLOAT,
                                    /*type_name=*/"",
                                    /*values=*/absl::MakeSpan(shutterclose)};
 
   std::vector<double> lensradius = {3.0};
-  Parameter lensradius_parameter{/*directive=*/"",
+  Parameter lensradius_parameter{/*directive=*/"Camera",
                                  /*type=*/ParameterType::FLOAT,
                                  /*type_name=*/"",
                                  /*values=*/absl::MakeSpan(lensradius)};
 
   std::vector<double> focaldistance = {4.0};
-  Parameter focaldistance_parameter{/*directive=*/"",
+  Parameter focaldistance_parameter{/*directive=*/"Camera",
                                     /*type=*/ParameterType::FLOAT,
                                     /*type_name=*/"",
                                     /*values=*/absl::MakeSpan(focaldistance)};
 
   std::vector<double> frameaspectratio = {5.0};
   Parameter frameaspectratio_parameter{
-      /*directive=*/"",
+      /*directive=*/"Camera",
       /*type=*/ParameterType::FLOAT,
       /*type_name=*/"",
       /*values=*/absl::MakeSpan(frameaspectratio)};
 
   std::vector<double> screenwindow = {6.0, 7.0, 8.0, 9.0};
-  Parameter screenwindow_parameter{/*directive=*/"",
+  Parameter screenwindow_parameter{/*directive=*/"Camera",
                                    /*type=*/ParameterType::FLOAT,
                                    /*type_name=*/"",
                                    /*values=*/absl::MakeSpan(screenwindow)};
 
   std::vector<double> hither = {10.0};
-  Parameter hither_parameter{/*directive=*/"",
+  Parameter hither_parameter{/*directive=*/"Camera",
                              /*type=*/ParameterType::FLOAT,
                              /*type_name=*/"",
                              /*values=*/absl::MakeSpan(hither)};
 
   std::vector<double> yon = {11.0};
-  Parameter yon_parameter{/*directive=*/"",
+  Parameter yon_parameter{/*directive=*/"Camera",
                           /*type=*/ParameterType::FLOAT,
                           /*type_name=*/"",
                           /*values=*/absl::MakeSpan(yon)};
 
   std::vector<absl::string_view> mapping = {"equalarea"};
-  Parameter mapping_parameter{/*directive=*/"",
+  Parameter mapping_parameter{/*directive=*/"Camera",
                               /*type=*/ParameterType::FLOAT,
                               /*type_name=*/"",
                               /*values=*/absl::MakeSpan(mapping)};
@@ -987,56 +987,56 @@ TEST(RemoveSphericalCameraV4, Empty) {
 
 TEST(RemoveSphericalCameraV4, WithData) {
   std::vector<double> shutteropen = {1.0};
-  Parameter shutteropen_parameter{/*directive=*/"",
+  Parameter shutteropen_parameter{/*directive=*/"Camera",
                                   /*type=*/ParameterType::FLOAT,
                                   /*type_name=*/"",
                                   /*values=*/absl::MakeSpan(shutteropen)};
 
   std::vector<double> shutterclose = {2.0};
-  Parameter shutterclose_parameter{/*directive=*/"",
+  Parameter shutterclose_parameter{/*directive=*/"Camera",
                                    /*type=*/ParameterType::FLOAT,
                                    /*type_name=*/"",
                                    /*values=*/absl::MakeSpan(shutterclose)};
 
   std::vector<double> lensradius = {3.0};
-  Parameter lensradius_parameter{/*directive=*/"",
+  Parameter lensradius_parameter{/*directive=*/"Camera",
                                  /*type=*/ParameterType::FLOAT,
                                  /*type_name=*/"",
                                  /*values=*/absl::MakeSpan(lensradius)};
 
   std::vector<double> focaldistance = {4.0};
-  Parameter focaldistance_parameter{/*directive=*/"",
+  Parameter focaldistance_parameter{/*directive=*/"Camera",
                                     /*type=*/ParameterType::FLOAT,
                                     /*type_name=*/"",
                                     /*values=*/absl::MakeSpan(focaldistance)};
 
   std::vector<double> frameaspectratio = {5.0};
   Parameter frameaspectratio_parameter{
-      /*directive=*/"",
+      /*directive=*/"Camera",
       /*type=*/ParameterType::FLOAT,
       /*type_name=*/"",
       /*values=*/absl::MakeSpan(frameaspectratio)};
 
   std::vector<double> screenwindow = {6.0, 7.0, 8.0, 9.0};
-  Parameter screenwindow_parameter{/*directive=*/"",
+  Parameter screenwindow_parameter{/*directive=*/"Camera",
                                    /*type=*/ParameterType::FLOAT,
                                    /*type_name=*/"",
                                    /*values=*/absl::MakeSpan(screenwindow)};
 
   std::vector<double> hither = {10.0};
-  Parameter hither_parameter{/*directive=*/"",
+  Parameter hither_parameter{/*directive=*/"Camera",
                              /*type=*/ParameterType::FLOAT,
                              /*type_name=*/"",
                              /*values=*/absl::MakeSpan(hither)};
 
   std::vector<double> yon = {11.0};
-  Parameter yon_parameter{/*directive=*/"",
+  Parameter yon_parameter{/*directive=*/"Camera",
                           /*type=*/ParameterType::FLOAT,
                           /*type_name=*/"",
                           /*values=*/absl::MakeSpan(yon)};
 
   std::vector<absl::string_view> mapping = {"equalarea"};
-  Parameter mapping_parameter{/*directive=*/"",
+  Parameter mapping_parameter{/*directive=*/"Camera",
                               /*type=*/ParameterType::STRING,
                               /*type_name=*/"",
                               /*values=*/absl::MakeSpan(mapping)};
@@ -1068,7 +1068,7 @@ TEST(RemoveSphericalCameraV4, WithData) {
 
 TEST(RemoveSphericalCameraV4, Equirectangular) {
   std::vector<absl::string_view> mapping = {"equirectangular"};
-  Parameter mapping_parameter{/*directive=*/"",
+  Parameter mapping_parameter{/*directive=*/"Camera",
                               /*type=*/ParameterType::STRING,
                               /*type_name=*/"",
                               /*values=*/absl::MakeSpan(mapping)};
@@ -1086,7 +1086,7 @@ TEST(RemoveSphericalCameraV4, Equirectangular) {
 
 TEST(RemoveSphericalCameraV4, InvalidMapping) {
   std::vector<absl::string_view> mapping = {"bad"};
-  Parameter mapping_parameter{/*directive=*/"",
+  Parameter mapping_parameter{/*directive=*/"Camera",
                               /*type=*/ParameterType::STRING,
                               /*type_name=*/"",
                               /*values=*/absl::MakeSpan(mapping)};
@@ -1112,45 +1112,45 @@ TEST(RemoveRealisticCameraV3, Empty) {
 
 TEST(RemoveRealisticCameraV3, WithData) {
   std::vector<double> shutteropen = {1.0};
-  Parameter shutteropen_parameter{/*directive=*/"",
+  Parameter shutteropen_parameter{/*directive=*/"Camera",
                                   /*type=*/ParameterType::FLOAT,
                                   /*type_name=*/"",
                                   /*values=*/absl::MakeSpan(shutteropen)};
 
   std::vector<double> shutterclose = {2.0};
-  Parameter shutterclose_parameter{/*directive=*/"",
+  Parameter shutterclose_parameter{/*directive=*/"Camera",
                                    /*type=*/ParameterType::FLOAT,
                                    /*type_name=*/"",
                                    /*values=*/absl::MakeSpan(shutterclose)};
 
   std::vector<absl::string_view> lensfile = {"abc"};
-  Parameter lensfile_parameter{/*directive=*/"",
+  Parameter lensfile_parameter{/*directive=*/"Camera",
                                /*type=*/ParameterType::STRING,
                                /*type_name=*/"",
                                /*values=*/absl::MakeSpan(lensfile)};
 
   std::vector<double> aperturediameter = {3.0};
   Parameter aperturediameter_parameter{
-      /*directive=*/"",
+      /*directive=*/"Camera",
       /*type=*/ParameterType::FLOAT,
       /*type_name=*/"",
       /*values=*/absl::MakeSpan(aperturediameter)};
 
   std::vector<absl::string_view> aperture = {"def"};
-  Parameter aperture_parameter{/*directive=*/"",
+  Parameter aperture_parameter{/*directive=*/"Camera",
                                /*type=*/ParameterType::STRING,
                                /*type_name=*/"",
                                /*values=*/absl::MakeSpan(aperture)};
 
   std::vector<double> focusdistance = {4.0};
-  Parameter focusdistance_parameter{/*directive=*/"",
+  Parameter focusdistance_parameter{/*directive=*/"Camera",
                                     /*type=*/ParameterType::FLOAT,
                                     /*type_name=*/"",
                                     /*values=*/absl::MakeSpan(focusdistance)};
 
   bool simpleweighting[] = {true};
   Parameter simpleweighting_parameter{
-      /*directive=*/"",
+      /*directive=*/"Camera",
       /*type=*/ParameterType::BOOL,
       /*type_name=*/"",
       /*values=*/absl::MakeSpan(simpleweighting)};
@@ -1188,45 +1188,45 @@ TEST(RemoveRealisticCameraV4, Empty) {
 
 TEST(RemoveRealisticCameraV4, WithData) {
   std::vector<double> shutteropen = {1.0};
-  Parameter shutteropen_parameter{/*directive=*/"",
+  Parameter shutteropen_parameter{/*directive=*/"Camera",
                                   /*type=*/ParameterType::FLOAT,
                                   /*type_name=*/"",
                                   /*values=*/absl::MakeSpan(shutteropen)};
 
   std::vector<double> shutterclose = {2.0};
-  Parameter shutterclose_parameter{/*directive=*/"",
+  Parameter shutterclose_parameter{/*directive=*/"Camera",
                                    /*type=*/ParameterType::FLOAT,
                                    /*type_name=*/"",
                                    /*values=*/absl::MakeSpan(shutterclose)};
 
   std::vector<absl::string_view> lensfile = {"abc"};
-  Parameter lensfile_parameter{/*directive=*/"",
+  Parameter lensfile_parameter{/*directive=*/"Camera",
                                /*type=*/ParameterType::STRING,
                                /*type_name=*/"",
                                /*values=*/absl::MakeSpan(lensfile)};
 
   std::vector<double> aperturediameter = {3.0};
   Parameter aperturediameter_parameter{
-      /*directive=*/"",
+      /*directive=*/"Camera",
       /*type=*/ParameterType::FLOAT,
       /*type_name=*/"",
       /*values=*/absl::MakeSpan(aperturediameter)};
 
   std::vector<absl::string_view> aperture = {"def"};
-  Parameter aperture_parameter{/*directive=*/"",
+  Parameter aperture_parameter{/*directive=*/"Camera",
                                /*type=*/ParameterType::STRING,
                                /*type_name=*/"",
                                /*values=*/absl::MakeSpan(aperture)};
 
   std::vector<double> focusdistance = {4.0};
-  Parameter focusdistance_parameter{/*directive=*/"",
+  Parameter focusdistance_parameter{/*directive=*/"Camera",
                                     /*type=*/ParameterType::FLOAT,
                                     /*type_name=*/"",
                                     /*values=*/absl::MakeSpan(focusdistance)};
 
   bool simpleweighting[] = {true};
   Parameter simpleweighting_parameter{
-      /*directive=*/"",
+      /*directive=*/"Camera",
       /*type=*/ParameterType::BOOL,
       /*type_name=*/"",
       /*values=*/absl::MakeSpan(simpleweighting)};

@@ -980,7 +980,8 @@ absl::Status TryRemoveValues(
 template <ParameterType type, typename T>
 absl::Status TryRemoveValue(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    absl::string_view parameter_name, std::optional<T>& value) {
+    absl::string_view parameter_name, std::optional<T>& value,
+    absl::string_view* directive = nullptr) {
   if (parameters.empty()) {
     return absl::OkStatus();
   }
@@ -1006,6 +1007,10 @@ absl::Status TryRemoveValue(
   }
 
   value = (*values)[0];
+  if (directive) {
+    *directive = iter->second.directive;
+  }
+
   parameters.erase(iter);
 
   return absl::OkStatus();
@@ -1631,9 +1636,10 @@ std::optional<absl::Span<std::array<double, 2>>> TryRemoveSpectralSamples(
 
 std::optional<absl::string_view> TryRemoveString(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    absl::string_view parameter_name) {
+    absl::string_view parameter_name, absl::string_view* directive) {
   std::optional<absl::string_view> result;
-  TryRemoveValue<ParameterType::STRING>(parameters, parameter_name, result)
+  TryRemoveValue<ParameterType::STRING>(parameters, parameter_name, result,
+                                        directive)
       .IgnoreError();
   return result;
 }

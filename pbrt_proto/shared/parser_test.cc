@@ -4230,6 +4230,23 @@ TEST(TryRemoveString, Found) {
   EXPECT_THAT(parameters, Not(Contains(Key("name1"))));
 }
 
+TEST(TryRemoveString, FoundWithDir) {
+  std::vector<absl::string_view> values = {"abc"};
+  Parameter parameter{/*directive=*/"dir",
+                      /*type=*/ParameterType::STRING,
+                      /*type_name=*/"aaa",
+                      /*values=*/absl::MakeSpan(values)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"name", parameter}};
+
+  absl::string_view directive;
+  EXPECT_THAT(TryRemoveString(parameters, "name", &directive),
+              Optional(Eq("abc")));
+  EXPECT_THAT(parameters, Not(Contains(Key("name1"))));
+  EXPECT_EQ("dir", directive);
+}
+
 TEST(TryRemoveSpectrumFilename, WrongType) {
   std::vector<absl::string_view> values;
   Parameter parameter{/*directive=*/"",
