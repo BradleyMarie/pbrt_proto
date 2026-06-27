@@ -54,9 +54,17 @@ std::vector<const google::protobuf::Descriptor*> AllMaterialOverrides();
 //
 
 std::vector<const google::protobuf::Descriptor* absl_nonnull> AllPbrtV1();
+const google::protobuf::Descriptor& TopLevelPbrtV1();
+
 std::vector<const google::protobuf::Descriptor* absl_nonnull> AllPbrtV2();
+const google::protobuf::Descriptor& TopLevelPbrtV2();
+
 std::vector<const google::protobuf::Descriptor* absl_nonnull> AllPbrtV3();
+const google::protobuf::Descriptor& TopLevelPbrtV3();
+
 std::vector<const google::protobuf::Descriptor* absl_nonnull> AllPbrtV4();
+const google::protobuf::Descriptor& TopLevelPbrtV4();
+
 std::vector<std::vector<const google::protobuf::Descriptor* absl_nonnull>>
 AllPbrtVersions();
 

@@ -128,6 +128,7 @@ cc_test(
         "//pbrt_proto/shared:version",
         "//pbrt_proto/shared:version_set",
         "//pbrt_proto/testing:descriptors",
+        "@abseil-cpp//absl/strings",
         "@googletest//:gtest",
         "@googletest//:gtest_main",
         "@protobuf",

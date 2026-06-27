@@ -1,10 +1,10 @@
 #include <cstdint>
-#include <map>
-#include <set>
 #include <string>
 #include <utility>
 #include <vector>
 
+#include "absl/container/flat_hash_map.h"
+#include "absl/container/flat_hash_set.h"
 #include "absl/strings/match.h"
 #include "absl/strings/string_view.h"
 #include "gmock/gmock.h"
@@ -23,9 +23,9 @@ using ::testing::Not;
 
 void AddAllFieldsByNameAndNumber(
     const Descriptor& descriptor,
-    std::map<absl::string_view, const FieldDescriptor*>&
+    absl::flat_hash_map<absl::string_view, const FieldDescriptor*>&
         field_descriptors_by_name,
-    std::set<int>& claimed_field_numbers) {
+    absl::flat_hash_set<int>& claimed_field_numbers) {
   for (int f = 0; f < descriptor.field_count(); f++) {
     const FieldDescriptor* field_descriptor = descriptor.field(f);
     if (!field_descriptor) {
@@ -73,9 +73,9 @@ void AddAllFieldsByNameAndNumber(
   }
 }
 
-void AddAllFieldsByNumber(
-    const Descriptor& descriptor,
-    std::map<int, const FieldDescriptor*>& field_descriptors_by_number) {
+void AddAllFieldsByNumber(const Descriptor& descriptor,
+                          absl::flat_hash_map<int, const FieldDescriptor*>&
+                              field_descriptors_by_number) {
   for (int f = 0; f < descriptor.field_count(); f++) {
     const FieldDescriptor* field_descriptor = descriptor.field(f);
     if (!field_descriptor) {
@@ -109,9 +109,9 @@ void AddAllFieldsByNumber(
 
 TEST(CommonTypes, AreBinaryCompatible) {
   for (auto& [directive, descriptors] : AllMessageGroups()) {
-    std::map<absl::string_view, const FieldDescriptor*>
+    absl::flat_hash_map<absl::string_view, const FieldDescriptor*>
         field_descriptors_by_name;
-    std::set<int> claimed_field_numbers;
+    absl::flat_hash_set<int> claimed_field_numbers;
     for (const Descriptor* descriptor : descriptors) {
       AddAllFieldsByNameAndNumber(*descriptor, field_descriptors_by_name,
                                   claimed_field_numbers);
@@ -137,7 +137,7 @@ TEST_P(Directives, ForwardCompatible) {
       AllPbrtVersions();
   std::vector<const Descriptor*> base_descriptors = all_descriptors.at(base);
 
-  std::map<absl::string_view, const Descriptor*> next_descriptors;
+  absl::flat_hash_map<absl::string_view, const Descriptor*> next_descriptors;
   for (const Descriptor* descriptor : all_descriptors.at(next)) {
     next_descriptors[descriptor->name()] = descriptor;
   }
@@ -157,7 +157,8 @@ TEST_P(Directives, ForwardCompatible) {
     ASSERT_TRUE(base_descriptor);
     ASSERT_TRUE(next_descriptor);
 
-    std::map<int, const FieldDescriptor*> field_descriptors_by_number;
+    absl::flat_hash_map<int, const FieldDescriptor*>
+        field_descriptors_by_number;
     AddAllFieldsByNumber(*base_descriptor, field_descriptors_by_number);
     AddAllFieldsByNumber(*next_descriptor, field_descriptors_by_number);
   }
@@ -167,8 +168,9 @@ INSTANTIATE_TEST_SUITE_P(AllDirectives, Directives,
                          testing::ValuesIn(GenerateVersionPairs(4)));
 
 TEST(MaterialOverrides, AreBinaryCompatible) {
-  std::map<absl::string_view, const FieldDescriptor*> field_descriptors_by_name;
-  std::set<int> claimed_field_numbers;
+  absl::flat_hash_map<absl::string_view, const FieldDescriptor*>
+      field_descriptors_by_name;
+  absl::flat_hash_set<int> claimed_field_numbers;
   AddAllFieldsByNameAndNumber(MaterialOverridesV1(), field_descriptors_by_name,
                               claimed_field_numbers);
   AddAllFieldsByNameAndNumber(MaterialOverridesV2(), field_descriptors_by_name,

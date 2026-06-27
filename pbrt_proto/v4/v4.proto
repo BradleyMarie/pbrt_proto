@@ -149,3 +149,49 @@ message SpectrumTexture {
     DirectionMixSpectrumTexture directionmix = 16;  // Create a dir mix texture
   }
 }
+
+// A PBRTv4 directive.
+message Directive {
+  oneof directive_type {
+    Accelerator accelerator = 1;
+    AreaLightSource area_light_source = 2;
+    AttributeBegin attribute_begin = 3;
+    AttributeEnd attribute_end = 4;
+    Camera camera = 5;
+    ConcatTransform concat_transform = 6;
+    CoordinateSystem coordinate_system = 7;
+    CoordSysTransform coord_sys_transform = 8;
+    Film film = 9;
+    FloatTexture float_texture = 10;
+    Identity identity = 11;
+    Include include = 12;
+    LightSource light_source = 13;
+    LookAt look_at = 14;
+    // Material material = 15;
+    ObjectBegin object_begin = 16;
+    ObjectEnd object_end = 17;
+    ObjectInstance object_instance = 18;
+    PixelFilter pixel_filter = 19;
+    ReverseOrientation reverse_orientation = 20;
+    Rotate rotate = 21;
+    Sampler sampler = 22;
+    Scale scale = 24;
+    // Shape shape = 25;
+    // Integrator integrator = 26;
+    SpectrumTexture spectrum_texture = 27;
+    Transform transform = 30;
+    Translate translate = 31;
+    WorldBegin world_begin = 34;
+    ActiveTransform active_transform = 36;
+    // MakeNamedMaterial make_named_material = 37;
+    NamedMaterial named_material = 38;
+    TransformTimes transform_times = 40;
+    MakeNamedMedium make_named_medium = 41;
+    MediumInterface medium_interface = 42;
+  }
+}
+
+// A list of PBRTv4 directives.
+message PbrtProto {
+  repeated Directive directives = 1;
+}

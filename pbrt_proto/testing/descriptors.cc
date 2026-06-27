@@ -5,6 +5,7 @@
 #include "absl/base/nullability.h"
 #include "absl/functional/function_ref.h"
 #include "absl/log/absl_check.h"
+#include "absl/strings/match.h"
 #include "google/protobuf/descriptor.pb.h"
 #include "pbrt_proto/pbrt.pb.h"
 #include "pbrt_proto/v1/v1.pb.h"
@@ -186,16 +187,40 @@ std::vector<const google::protobuf::Descriptor* absl_nonnull> AllPbrtV1() {
   return GetAllMessages(v1::Accelerator::GetDescriptor()->file());
 }
 
+const google::protobuf::Descriptor& TopLevelPbrtV1() {
+  const Descriptor* descriptor = v1::PbrtProto::GetDescriptor();
+  ABSL_CHECK(descriptor);
+  return *descriptor;
+}
+
 std::vector<const google::protobuf::Descriptor* absl_nonnull> AllPbrtV2() {
   return GetAllMessages(v2::Accelerator::GetDescriptor()->file());
+}
+
+const google::protobuf::Descriptor& TopLevelPbrtV2() {
+  const Descriptor* descriptor = v2::PbrtProto::GetDescriptor();
+  ABSL_CHECK(descriptor);
+  return *descriptor;
 }
 
 std::vector<const google::protobuf::Descriptor* absl_nonnull> AllPbrtV3() {
   return GetAllMessages(v3::Accelerator::GetDescriptor()->file());
 }
 
+const google::protobuf::Descriptor& TopLevelPbrtV3() {
+  const Descriptor* descriptor = v3::PbrtProto::GetDescriptor();
+  ABSL_CHECK(descriptor);
+  return *descriptor;
+}
+
 std::vector<const google::protobuf::Descriptor* absl_nonnull> AllPbrtV4() {
   return GetAllMessages(v4::Accelerator::GetDescriptor()->file());
+}
+
+const google::protobuf::Descriptor& TopLevelPbrtV4() {
+  const Descriptor* descriptor = v4::PbrtProto::GetDescriptor();
+  ABSL_CHECK(descriptor);
+  return *descriptor;
 }
 
 std::vector<std::vector<const google::protobuf::Descriptor* absl_nonnull>>
