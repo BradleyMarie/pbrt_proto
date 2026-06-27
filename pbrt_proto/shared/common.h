@@ -13,13 +13,6 @@
 namespace pbrt_proto {
 
 //
-// Common Data
-//
-
-extern const absl::flat_hash_map<absl::string_view, ScatteringPreset::Type>
-    kNamedScatteringPresets;
-
-//
 // Common Variant Data Types
 //
 

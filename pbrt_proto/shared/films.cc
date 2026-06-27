@@ -5,6 +5,7 @@
 #include "absl/container/flat_hash_map.h"
 #include "absl/strings/string_view.h"
 #include "pbrt_proto/pbrt.pb.h"
+#include "pbrt_proto/shared/enums.h"
 #include "pbrt_proto/shared/parser.h"
 #include "pbrt_proto/shared/version.h"
 
@@ -45,7 +46,8 @@ void RemoveUniversal(
 
 template <typename T>
 absl::Status RemoveCommonV4(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters, T& output) {
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    absl::string_view type_name, T& output) {
   // Parse `pixelbounds` first since `cropwindow` should override it.
   std::optional<absl::Span<int32_t>> pixelbounds;
   if (absl::Status status =
@@ -78,48 +80,11 @@ absl::Status RemoveCommonV4(
     output.set_whitebalance(*whitebalance);
   }
 
-  if (std::optional<absl::string_view> sensor =
-          TryRemoveString(parameters, "sensor");
-      sensor.has_value()) {
-    if (*sensor == "cie_1931") {
-      output.set_sensor(FilmSensor::CIE_1931);
-    } else if (*sensor == "canon_eos_100d") {
-      output.set_sensor(FilmSensor::CANON_EOS_100D);
-    } else if (*sensor == "canon_eos_1dx_mkii") {
-      output.set_sensor(FilmSensor::CANON_EOS_1DX_MKII);
-    } else if (*sensor == "canon_eos_200d_mkii") {
-      output.set_sensor(FilmSensor::CANON_EOS_200D_MKII);
-    } else if (*sensor == "canon_eos_200d") {
-      output.set_sensor(FilmSensor::CANON_EOS_200D);
-    } else if (*sensor == "canon_eos_5d_mkii") {
-      output.set_sensor(FilmSensor::CANON_EOS_5D_MKII);
-    } else if (*sensor == "canon_eos_5d_mkiii") {
-      output.set_sensor(FilmSensor::CANON_EOS_5D_MKIII);
-    } else if (*sensor == "canon_eos_5d_mkiv") {
-      output.set_sensor(FilmSensor::CANON_EOS_5D_MKIV);
-    } else if (*sensor == "canon_eos_5d") {
-      output.set_sensor(FilmSensor::CANON_EOS_5D);
-    } else if (*sensor == "canon_eos_5ds") {
-      output.set_sensor(FilmSensor::CANON_EOS_5DS);
-    } else if (*sensor == "canon_eos_m") {
-      output.set_sensor(FilmSensor::CANON_EOS_M);
-    } else if (*sensor == "hasselblad_l1d_20c") {
-      output.set_sensor(FilmSensor::HASSELBLAD_L1D_20C);
-    } else if (*sensor == "nikon_d810") {
-      output.set_sensor(FilmSensor::NIKON_D810);
-    } else if (*sensor == "nikon_d850") {
-      output.set_sensor(FilmSensor::NIKON_D850);
-    } else if (*sensor == "sony_ilce_6400") {
-      output.set_sensor(FilmSensor::SONY_ILCE_6400);
-    } else if (*sensor == "sony_ilce_7m3") {
-      output.set_sensor(FilmSensor::SONY_ILCE_7M3);
-    } else if (*sensor == "sony_ilce_7rm3") {
-      output.set_sensor(FilmSensor::SONY_ILCE_7RM3);
-    } else if (*sensor == "sony_ilce_9") {
-      output.set_sensor(FilmSensor::SONY_ILCE_9);
-    } else {
-      return absl::InvalidArgumentError("A Film specified an invalid 'sensor'");
-    }
+  if (absl::Status status =
+          RemoveEnum(parameters, /*pbrt_version=*/4, type_name, "sensor",
+                     std::bind(&T::set_sensor, &output, std::placeholders::_1));
+      !status.ok()) {
+    return status;
   }
 
   if (std::optional<double> maxcomponentvalue =
@@ -173,7 +138,7 @@ absl::Status RemoveRgbFilm(
       output.set_diagonal(*diagonal);
     }
   } else if (pbrt_version >= 4) {
-    if (absl::Status status = RemoveCommonV4(parameters, output);
+    if (absl::Status status = RemoveCommonV4(parameters, "rgb", output);
         !status.ok()) {
       return status;
     }
@@ -190,21 +155,17 @@ absl::Status RemoveGBufferFilm(
     int pbrt_version, GBufferFilm& output) {
   assert(IsSupported(pbrt_version, output));
 
-  if (absl::Status status = RemoveCommonV4(parameters, output); !status.ok()) {
+  if (absl::Status status = RemoveCommonV4(parameters, "gbuffer", output);
+      !status.ok()) {
     return status;
   }
 
-  if (std::optional<absl::string_view> coordinatesystem =
-          TryRemoveString(parameters, "coordinatesystem");
-      coordinatesystem.has_value()) {
-    if (*coordinatesystem == "camera") {
-      output.set_coordinatesystem(GBufferFilm::CAMERA);
-    } else if (*coordinatesystem == "world") {
-      output.set_coordinatesystem(GBufferFilm::WORLD);
-    } else {
-      return absl::InvalidArgumentError(
-          "A gbuffer Film specified an invalid 'coordinatesystem'");
-    }
+  if (absl::Status status =
+          RemoveEnum(parameters, pbrt_version, "gbuffer", "coordinatesystem",
+                     std::bind(&GBufferFilm::set_coordinatesystem, &output,
+                               std::placeholders::_1));
+      !status.ok()) {
+    return status;
   }
 
   // Must be done after RemoveCommonV4
@@ -218,7 +179,8 @@ absl::Status RemoveSpectralFilm(
     int pbrt_version, SpectralFilm& output) {
   assert(IsSupported(pbrt_version, output));
 
-  if (absl::Status status = RemoveCommonV4(parameters, output); !status.ok()) {
+  if (absl::Status status = RemoveCommonV4(parameters, "spectral", output);
+      !status.ok()) {
     return status;
   }
 

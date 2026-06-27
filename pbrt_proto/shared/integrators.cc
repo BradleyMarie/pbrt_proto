@@ -11,6 +11,7 @@
 #include "absl/strings/string_view.h"
 #include "pbrt_proto/pbrt.pb.h"
 #include "pbrt_proto/shared/common.h"
+#include "pbrt_proto/shared/enums.h"
 #include "pbrt_proto/shared/parser.h"
 #include "pbrt_proto/shared/version.h"
 
@@ -29,33 +30,6 @@ void RemovePixelBounds(
     output.mutable_pixelbounds()->set_y_min((std::max(0, (*pixelbounds)[2])));
     output.mutable_pixelbounds()->set_y_max((std::max(0, (*pixelbounds)[3])));
   }
-}
-
-template <typename T>
-std::optional<LightSampler::Type> TryRemoveLightSampleStrategy(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    int pbrt_version, absl::string_view type, absl::string_view parameter,
-    T& output) {
-  if (std::optional<absl::string_view> lightsamplestrategy =
-          TryRemoveString(parameters, parameter);
-      lightsamplestrategy.has_value()) {
-    if (*lightsamplestrategy == "power") {
-      return LightSampler::POWER;
-    } else if (*lightsamplestrategy == "uniform") {
-      return LightSampler::UNIFORM;
-    } else if (pbrt_version <= 3 && *lightsamplestrategy == "spatial") {
-      return LightSampler::BVH;
-    } else if (pbrt_version >= 4 && *lightsamplestrategy == "bvh") {
-      return LightSampler::BVH;
-    } else {
-      std::cerr << "WARNING: Unsupported value for '" << type
-                << "' Integrator parameter '" << parameter << "': \""
-                << *lightsamplestrategy << "\"" << std::endl;
-      return LightSampler::BVH;
-    }
-  }
-
-  return std::nullopt;
 }
 
 }  // namespace
@@ -120,11 +94,13 @@ absl::Status RemoveBdptIntegrator(
       output.set_visualizeweights(*visualizeweights);
     }
 
-    if (std::optional<LightSampler::Type> lightsamplestrategy =
-            TryRemoveLightSampleStrategy(parameters, pbrt_version, "bdpt",
-                                         "lightsamplestrategy", output);
-        lightsamplestrategy.has_value()) {
-      output.set_lightsamplestrategy(*lightsamplestrategy);
+    if (absl::Status status =
+            RemoveEnum(parameters, pbrt_version, "bdpt", "lightsamplestrategy",
+                       std::bind(&BdptIntegrator::set_lightsamplestrategy,
+                                 &output, std::placeholders::_1),
+                       LightSampler::BVH);
+        !status.ok()) {
+      return status;
     }
   }
 
@@ -140,53 +116,29 @@ absl::Status RemoveDebugIntegrator(
     int pbrt_version, DebugIntegrator& output) {
   assert(IsSupported(pbrt_version, output));
 
-  static const absl::flat_hash_map<absl::string_view,
-                                   DebugIntegrator::ChannelValue>
-      values = {
-          {"zero", DebugIntegrator::ZERO}, {"one", DebugIntegrator::ONE},
-          {"hit", DebugIntegrator::HIT},   {"nx", DebugIntegrator::NX},
-          {"ny", DebugIntegrator::NY},     {"nz", DebugIntegrator::NZ},
-          {"snx", DebugIntegrator::SNX},   {"sny", DebugIntegrator::SNY},
-          {"snz", DebugIntegrator::SNZ},   {"u", DebugIntegrator::U},
-          {"v", DebugIntegrator::V},
-      };
-
-  if (std::optional<absl::string_view> red = TryRemoveString(parameters, "red");
-      red.has_value()) {
-    if (auto iter = values.find(*red); iter != values.end()) {
-      output.set_red(iter->second);
-    } else {
-      std::cerr << "WARNING: Unsupported value for 'debug' Integrator "
-                   "parameter 'red': \""
-                << *red << "\"" << std::endl;
-      output.set_red(DebugIntegrator::ZERO);
-    }
+  if (absl::Status status = RemoveEnum(
+          parameters, pbrt_version, "debug", "red",
+          std::bind(&DebugIntegrator::set_red, &output, std::placeholders::_1),
+          DebugIntegrator::ZERO);
+      !status.ok()) {
+    return status;
   }
 
-  if (std::optional<absl::string_view> green =
-          TryRemoveString(parameters, "green");
-      green.has_value()) {
-    if (auto iter = values.find(*green); iter != values.end()) {
-      output.set_green(iter->second);
-    } else {
-      std::cerr << "WARNING: Unsupported value for 'debug' Integrator "
-                   "parameter 'green': \""
-                << *green << "\"" << std::endl;
-      output.set_green(DebugIntegrator::ZERO);
-    }
+  if (absl::Status status =
+          RemoveEnum(parameters, pbrt_version, "debug", "green",
+                     std::bind(&DebugIntegrator::set_green, &output,
+                               std::placeholders::_1),
+                     DebugIntegrator::ZERO);
+      !status.ok()) {
+    return status;
   }
 
-  if (std::optional<absl::string_view> blue =
-          TryRemoveString(parameters, "blue");
-      blue.has_value()) {
-    if (auto iter = values.find(*blue); iter != values.end()) {
-      output.set_blue(iter->second);
-    } else {
-      std::cerr << "WARNING: Unsupported value for 'debug' Integrator "
-                   "parameter 'blue': \""
-                << *blue << "\"" << std::endl;
-      output.set_blue(DebugIntegrator::ZERO);
-    }
+  if (absl::Status status = RemoveEnum(
+          parameters, pbrt_version, "debug", "blue",
+          std::bind(&DebugIntegrator::set_blue, &output, std::placeholders::_1),
+          DebugIntegrator::ZERO);
+      !status.ok()) {
+    return status;
   }
 
   return absl::OkStatus();
@@ -253,21 +205,13 @@ absl::Status RemoveDirectLightingIntegrator(
     output.set_maxdepth(std::max(0, *maxdepth));
   }
 
-  if (std::optional<absl::string_view> strategy =
-          TryRemoveString(parameters, "strategy");
-      strategy.has_value()) {
-    if (*strategy == "all") {
-      output.set_strategy(DirectLightingIntegrator::ALL);
-    } else if (*strategy == "one") {
-      output.set_strategy(DirectLightingIntegrator::ONE);
-    } else if (pbrt_version == 1 && *strategy == "weighted") {
-      output.set_strategy(DirectLightingIntegrator::WEIGHTED);
-    } else {
-      std::cerr << "WARNING: Unsupported value for 'directlighting' Integrator "
-                   "parameter 'strategy': \""
-                << *strategy << "\"" << std::endl;
-      output.set_strategy(DirectLightingIntegrator::ALL);
-    }
+  if (absl::Status status =
+          RemoveEnum(parameters, pbrt_version, "directlighting", "strategy",
+                     std::bind(&DirectLightingIntegrator::set_strategy, &output,
+                               std::placeholders::_1),
+                     DirectLightingIntegrator::ALL);
+      !status.ok()) {
+    return status;
   }
 
   if (pbrt_version == 3) {
@@ -479,11 +423,13 @@ absl::Status RemovePathIntegrator(
   }
 
   if (pbrt_version >= 3) {
-    if (std::optional<LightSampler::Type> lightsamplestrategy =
-            TryRemoveLightSampleStrategy(parameters, pbrt_version, "bdpt",
-                                         "lightsamplestrategy", output);
-        lightsamplestrategy.has_value()) {
-      output.set_lightsampler(*lightsamplestrategy);
+    if (absl::Status status =
+            RemoveEnum(parameters, pbrt_version, "path", "lightsamplestrategy",
+                       std::bind(&PathIntegrator::set_lightsampler, &output,
+                                 std::placeholders::_1),
+                       LightSampler::BVH);
+        !status.ok()) {
+      return status;
     }
   }
 
@@ -670,11 +616,13 @@ absl::Status RemoveVolPathIntegrator(
     output.set_rrthreshold(*rrthreshold);
   }
 
-  if (std::optional<LightSampler::Type> lightsamplestrategy =
-          TryRemoveLightSampleStrategy(parameters, pbrt_version, "bdpt",
-                                       "lightsamplestrategy", output);
-      lightsamplestrategy.has_value()) {
-    output.set_lightsampler(*lightsamplestrategy);
+  if (absl::Status status =
+          RemoveEnum(parameters, pbrt_version, "volpath", "lightsamplestrategy",
+                     std::bind(&VolPathIntegrator::set_lightsampler, &output,
+                               std::placeholders::_1),
+                     LightSampler::BVH);
+      !status.ok()) {
+    return status;
   }
 
   if (pbrt_version == 3) {

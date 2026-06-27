@@ -261,7 +261,8 @@ TEST(RemoveRgbFilmV4, BadSensor) {
   RgbFilm actual;
   EXPECT_THAT(RemoveRgbFilm(parameters, /*pbrt_version=*/4, actual),
               StatusIs(absl::StatusCode::kInvalidArgument,
-                       "A Film specified an invalid 'sensor'"));
+                       "Unsupported value for 'rgb' Film parameter 'sensor' in "
+                       "PBRTv4: \"invalid\""));
 }
 
 TEST(RemoveRgbFilmV4, WithData) {
@@ -399,7 +400,8 @@ TEST(RemoveGBufferFilmV4, BadSensor) {
   GBufferFilm actual;
   EXPECT_THAT(RemoveGBufferFilm(parameters, /*pbrt_version=*/4, actual),
               StatusIs(absl::StatusCode::kInvalidArgument,
-                       "A Film specified an invalid 'sensor'"));
+                       "Unsupported value for 'gbuffer' Film parameter "
+                       "'sensor' in PBRTv4: \"invalid\""));
 }
 
 TEST(RemoveGBufferFilmV4, BadCoordinateSystem) {
@@ -413,10 +415,10 @@ TEST(RemoveGBufferFilmV4, BadCoordinateSystem) {
       {"coordinatesystem", filename_parameter}};
 
   GBufferFilm actual;
-  EXPECT_THAT(
-      RemoveGBufferFilm(parameters, /*pbrt_version=*/4, actual),
-      StatusIs(absl::StatusCode::kInvalidArgument,
-               "A gbuffer Film specified an invalid 'coordinatesystem'"));
+  EXPECT_THAT(RemoveGBufferFilm(parameters, /*pbrt_version=*/4, actual),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       "Unsupported value for 'gbuffer' Film parameter "
+                       "'coordinatesystem' in PBRTv4: \"invalid\""));
 }
 
 TEST(RemoveGBufferFilmV4, WithData) {
@@ -563,7 +565,8 @@ TEST(RemoveSpectralFilmV4, BadSensor) {
   SpectralFilm actual;
   EXPECT_THAT(RemoveSpectralFilm(parameters, /*pbrt_version=*/4, actual),
               StatusIs(absl::StatusCode::kInvalidArgument,
-                       "A Film specified an invalid 'sensor'"));
+                       "Unsupported value for 'spectral' Film parameter "
+                       "'sensor' in PBRTv4: \"invalid\""));
 }
 
 TEST(RemoveSpectralFilmV4, WithData) {

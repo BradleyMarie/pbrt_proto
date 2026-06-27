@@ -7,6 +7,7 @@
 #include "absl/strings/string_view.h"
 #include "pbrt_proto/pbrt.pb.h"
 #include "pbrt_proto/shared/common.h"
+#include "pbrt_proto/shared/enums.h"
 #include "pbrt_proto/shared/parser.h"
 #include "pbrt_proto/shared/version.h"
 
@@ -538,13 +539,12 @@ absl::Status RemoveSubsurfaceMaterial(
     return status;
   }
 
-  if (std::optional<absl::string_view> name =
-          TryRemoveString(parameters, "name");
-      name.has_value()) {
-    auto iter = kNamedScatteringPresets.find(*name);
-    if (iter != kNamedScatteringPresets.end()) {
-      output.set_name(iter->second);
-    }
+  if (absl::Status status =
+          RemoveEnum(parameters, pbrt_version, "subsurface", "name",
+                     std::bind(&SubsurfaceMaterial::set_name, &output,
+                               std::placeholders::_1));
+      !status.ok()) {
+    return status;
   }
 
   if (pbrt_version <= 2) {

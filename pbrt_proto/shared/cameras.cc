@@ -9,6 +9,7 @@
 #include "absl/strings/string_view.h"
 #include "pbrt_proto/pbrt.pb.h"
 #include "pbrt_proto/shared/common.h"
+#include "pbrt_proto/shared/enums.h"
 #include "pbrt_proto/shared/parser.h"
 #include "pbrt_proto/shared/version.h"
 
@@ -202,17 +203,12 @@ absl::Status RemoveSphericalCamera(
   }
 
   if (pbrt_version >= 4) {
-    if (std::optional<absl::string_view> mapping =
-            TryRemoveString(parameters, "mapping");
-        mapping.has_value()) {
-      if (*mapping == "equalarea") {
-        output.set_mapping(SphericalCamera::EQUALAREA);
-      } else if (*mapping == "equirectangular") {
-        output.set_mapping(SphericalCamera::EQUIRECTANGULAR);
-      } else {
-        return absl::InvalidArgumentError(
-            "A spherical Camera specified an invalid 'mapping'");
-      }
+    if (absl::Status status =
+            RemoveEnum(parameters, pbrt_version, "spherical", "mapping",
+                       std::bind(&SphericalCamera::set_mapping, &output,
+                                 std::placeholders::_1));
+        !status.ok()) {
+      return status;
     }
   }
 

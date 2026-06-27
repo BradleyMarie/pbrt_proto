@@ -10,6 +10,7 @@
 #include "absl/strings/string_view.h"
 #include "pbrt_proto/pbrt.pb.h"
 #include "pbrt_proto/shared/common.h"
+#include "pbrt_proto/shared/enums.h"
 #include "pbrt_proto/shared/parser.h"
 #include "pbrt_proto/shared/version.h"
 
@@ -44,7 +45,7 @@ absl::Status TryRemoveCurveShape(
   CurveShape output;
   assert(IsSupported(pbrt_version, output));
 
-  bool write_output = true;
+  bool unmatched_value = false;
   if (std::optional<int32_t> degree = TryRemoveInteger(parameters, "degree");
       degree.has_value()) {
     if (*degree == 3) {
@@ -55,39 +56,24 @@ absl::Status TryRemoveCurveShape(
       std::cerr << "WARNING: Unsupported value for 'curve' Shape parameter "
                    "'degree': \""
                 << *degree << "\"" << std::endl;
-      write_output = false;
+      unmatched_value = true;
     }
   }
 
-  if (std::optional<absl::string_view> basis =
-          TryRemoveString(parameters, "basis");
-      basis.has_value()) {
-    if (*basis == "bezier") {
-      output.set_basis(CurveShape::BEZIER);
-    } else if (*basis == "bspline") {
-      output.set_basis(CurveShape::BSPLINE);
-    } else {
-      std::cerr << "WARNING: Unrecognized value for 'curve' Shape parameter "
-                   "'basis': \""
-                << *basis << "\"" << std::endl;
-      write_output = false;
-    }
+  if (absl::Status status = RemoveEnum(
+          parameters, pbrt_version, "curve", "basis",
+          std::bind(&CurveShape::set_basis, &output, std::placeholders::_1),
+          &unmatched_value);
+      !status.ok()) {
+    return status;
   }
 
-  if (std::optional<absl::string_view> type =
-          TryRemoveString(parameters, "type");
-      type.has_value()) {
-    if (*type == "cylinder") {
-      output.set_type(CurveShape::CYLINDER);
-    } else if (*type == "flat") {
-      output.set_type(CurveShape::FLAT);
-    } else if (*type == "ribbon") {
-      output.set_type(CurveShape::RIBBON);
-    } else {
-      std::cerr << "Unrecognized value for 'curve' Shape parameter 'type': \""
-                << *type << "\"" << std::endl;
-      output.set_type(CurveShape::CYLINDER);
-    }
+  if (absl::Status status = RemoveEnum(
+          parameters, pbrt_version, "curve", "type",
+          std::bind(&CurveShape::set_type, &output, std::placeholders::_1),
+          CurveShape::CYLINDER);
+      !status.ok()) {
+    return status;
   }
 
   if (std::optional<double> width = TryRemoveFloat(parameters, "width");
@@ -143,7 +129,7 @@ absl::Status TryRemoveCurveShape(
     output.set_splitdepth(std::max(0, *splitdepth));
   }
 
-  if (write_output) {
+  if (!unmatched_value) {
     *get_output() = std::move(output);
   }
 

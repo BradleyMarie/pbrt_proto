@@ -6,6 +6,7 @@
 #include "absl/strings/string_view.h"
 #include "pbrt_proto/pbrt.pb.h"
 #include "pbrt_proto/shared/common.h"
+#include "pbrt_proto/shared/enums.h"
 #include "pbrt_proto/shared/parser.h"
 #include "pbrt_proto/shared/version.h"
 
@@ -152,13 +153,12 @@ absl::Status RemoveHomogeneousMedium(
   }
 
   if (pbrt_version >= 3) {
-    if (std::optional<absl::string_view> preset =
-            TryRemoveString(parameters, "preset");
-        preset.has_value()) {
-      auto iter = kNamedScatteringPresets.find(*preset);
-      if (iter != kNamedScatteringPresets.end()) {
-        output.set_preset(iter->second);
-      }
+    if (absl::Status status =
+            RemoveEnum(parameters, pbrt_version, "homogeneous", "preset",
+                       std::bind(&HomogeneousMedium::set_preset, &output,
+                                 std::placeholders::_1));
+        !status.ok()) {
+      return status;
     }
 
     if (std::optional<double> scale = TryRemoveFloat(parameters, "scale");
@@ -349,13 +349,13 @@ absl::Status RemoveUniformGridMedium(
   }
 
   if (pbrt_version >= 3) {
-    if (std::optional<absl::string_view> preset =
-            TryRemoveString(parameters, "preset");
-        preset.has_value()) {
-      auto iter = kNamedScatteringPresets.find(*preset);
-      if (iter != kNamedScatteringPresets.end()) {
-        output.set_preset(iter->second);
-      }
+    if (absl::Status status = RemoveEnum(
+            parameters, pbrt_version,
+            (pbrt_version >= 4) ? "uniformgrid" : "heterogeneous", "preset",
+            std::bind(&UniformGridMedium::set_preset, &output,
+                      std::placeholders::_1));
+        !status.ok()) {
+      return status;
     }
 
     if (std::optional<double> scale = TryRemoveFloat(parameters, "scale");

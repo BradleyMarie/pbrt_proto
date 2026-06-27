@@ -45,7 +45,7 @@ std::string MakeMessage(int pbrt_version, absl::string_view directive,
                         absl::string_view value) {
   return absl::StrCat("Unsupported value for '", directive_type, "' ",
                       directive, " parameter ", "'", parameter_name,
-                      "' in PBRTv", pbrt_version, ": \"", value);
+                      "' in PBRTv", pbrt_version, ": \"", value, "\"");
 }
 
 absl::Status InvalidEnumError(absl::string_view message, int pbrt_version) {
@@ -55,6 +55,19 @@ absl::Status InvalidEnumError(absl::string_view message, int pbrt_version) {
 
   std::cerr << "WARNING: " << message << std::endl;
   return absl::OkStatus();
+}
+
+absl::string_view ScatteringDirective(absl::string_view type_name) {
+  if (type_name == "subsurface") {
+    return "Material";
+  }
+
+  if (type_name == "homogeneous" || type_name == "heterogeneous" ||
+      type_name == "uniformgrid") {
+    return "Medium";
+  }
+
+  return "Shape";
 }
 
 }  // namespace
@@ -107,14 +120,13 @@ absl::string_view GetDirective(absl::string_view type_name) {
           {"pbrt_proto.DirectLightingIntegrator.Strategy",
            R"((pbrt_version <= 2) ? "SurfaceIntegrator" : "Integrator")"},
           {"pbrt_proto.ScatteringPreset.Type",
-           R"((type_name == "subsurface") ? "Material" : "Medium")"},
+           "ScatteringDirective(type_name)"},
           {"pbrt_proto.SamplerRandomization.Type", R"("Sampler")"},
           {"pbrt_proto.AdaptiveSampler.Method", R"("Sampler")"},
           {"pbrt_proto.CurveShape.Basis", R"("Shape")"},
           {"pbrt_proto.CurveShape.Degree", R"("Shape")"},
           {"pbrt_proto.CurveShape.Type", R"("Shape")"},
           {"pbrt_proto.CheckerboardAaMode.Type", R"("Texture")"},
-          {"pbrt_proto.ImageEncoding.Type", R"("Texture")"},
           {"pbrt_proto.ImageWrap.Type", R"("Texture")"},
           {"pbrt_proto.TextureFilter.Type", R"("Texture")"},
           {"pbrt_proto.TextureMapping.Type", R"("Texture")"},
@@ -245,6 +257,10 @@ class VersionGenerator : public CodeGenerator {
         }
 
         if (enum_descriptor->full_name() == "pbrt_proto.Curve.Type") {
+          continue;
+        }
+
+        if (enum_descriptor->full_name() == "pbrt_proto.ImageEncoding.Type") {
           continue;
         }
 

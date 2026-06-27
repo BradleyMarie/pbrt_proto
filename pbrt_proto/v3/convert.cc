@@ -12,6 +12,7 @@
 #include "pbrt_proto/shared/area_light_sources.h"
 #include "pbrt_proto/shared/cameras.h"
 #include "pbrt_proto/shared/common.h"
+#include "pbrt_proto/shared/enums.h"
 #include "pbrt_proto/shared/films.h"
 #include "pbrt_proto/shared/integrators.h"
 #include "pbrt_proto/shared/light_sources.h"
@@ -556,13 +557,13 @@ absl::Status ParserV3::Shape(
     return status;
   }
 
-  if (std::optional<absl::string_view> name =
-          TryRemoveString(parameters, "name");
-      name.has_value()) {
-    auto iter = kNamedScatteringPresets.find(*name);
-    if (iter != kNamedScatteringPresets.end()) {
-      shape.mutable_overrides()->set_name(iter->second);
-    }
+  if (absl::Status status =
+          RemoveEnum(parameters, /*pbrt_version=*/3, shape_type, "name",
+                     std::bind(&Shape::MaterialOverrides::set_name, overrides,
+                               std::placeholders::_1),
+                     ScatteringPreset::DEFAULT);
+      !status.ok()) {
+    return status;
   }
 
   if (std::optional<bool> remaproughness =

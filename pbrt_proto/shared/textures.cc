@@ -12,35 +12,12 @@
 #include "absl/strings/string_view.h"
 #include "pbrt_proto/pbrt.pb.h"
 #include "pbrt_proto/shared/common.h"
+#include "pbrt_proto/shared/enums.h"
 #include "pbrt_proto/shared/parser.h"
 #include "pbrt_proto/shared/version.h"
 
 namespace pbrt_proto {
 namespace {
-
-std::optional<CheckerboardAaMode::Type> TryRemoveAaMode(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    int pbrt_version) {
-  if (std::optional<absl::string_view> aamode =
-          TryRemoveString(parameters, "aamode");
-      aamode) {
-    if (*aamode == "closedform") {
-      return CheckerboardAaMode::CLOSEDFORM;
-    } else if (*aamode == "none") {
-      return CheckerboardAaMode::NONE;
-    } else if (pbrt_version == 1 && *aamode == "supersample") {
-      return CheckerboardAaMode::SUPERSAMPLE;
-    } else {
-      std::cerr
-          << "WARNING: Unsupported value for 'checkerboard' Texture parameter "
-             "'aamode': \""
-          << *aamode << "\"" << std::endl;
-      return CheckerboardAaMode::CLOSEDFORM;
-    }
-  }
-
-  return std::nullopt;
-}
 
 template <typename T>
 void RemoveDir(absl::flat_hash_map<absl::string_view, Parameter>& parameters,
@@ -85,84 +62,15 @@ absl::Status RemoveEncoding(
 }
 
 template <typename T>
-void RemoveFilter(absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-                  T& output) {
-  if (std::optional<absl::string_view> filter =
-          TryRemoveString(parameters, "filter");
-      filter) {
-    if (*filter == "bilinear") {
-      output.set_filter(TextureFilter::BILINEAR);
-    } else if (*filter == "trilinear") {
-      output.set_filter(TextureFilter::TRILINEAR);
-    } else if (*filter == "ewa" || *filter == "EWA") {
-      output.set_filter(TextureFilter::EWA);
-    } else if (*filter == "point") {
-      output.set_filter(TextureFilter::POINT);
-    } else {
-      std::cerr
-          << "WARNING: Unsupported value for 'imagemap' Texture parameter "
-             "'filter': \""
-          << *filter << "\"" << std::endl;
-      output.set_filter(TextureFilter::EWA);
-    }
-  }
-}
-
-std::optional<TextureMapping::Type> TryRemoveMapping(
+absl::Status TryRemoveUVParameters(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    absl::string_view type) {
-  if (std::optional<absl::string_view> mapping =
-          TryRemoveString(parameters, "mapping");
-      mapping) {
-    if (*mapping == "uv") {
-      return TextureMapping::UV;
-    } else if (*mapping == "spherical") {
-      return TextureMapping::SPHERICAL;
-    } else if (*mapping == "cylindrical") {
-      return TextureMapping::CYLINDRICAL;
-    } else if (*mapping == "planar") {
-      return TextureMapping::PLANAR;
-    } else {
-      std::cerr << "WARNING: Unsupported value for '" << type
-                << "' Texture parameter 'mapping': \"" << *mapping << "\""
-                << std::endl;
-      return TextureMapping::UV;
-    }
-  }
-
-  return std::nullopt;
-}
-
-std::optional<ImageWrap::Type> TryRemoveWrap(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters) {
-  if (std::optional<absl::string_view> wrap =
-          TryRemoveString(parameters, "wrap");
-      wrap) {
-    if (*wrap == "black") {
-      return ImageWrap::BLACK;
-    } else if (*wrap == "clamp") {
-      return ImageWrap::CLAMP;
-    } else if (*wrap == "repeat") {
-      return ImageWrap::REPEAT;
-    } else {
-      std::cerr << "WARNING: Unsupported value for 'imagemap' Texture "
-                   "parameter 'wrap': \""
-                << *wrap << "\"" << std::endl;
-      return ImageWrap::REPEAT;
-    }
-  }
-
-  return std::nullopt;
-}
-
-template <typename T>
-void TryRemoveUVParameters(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    absl::string_view type, T& output) {
-  if (std::optional<TextureMapping::Type> mapping =
-          TryRemoveMapping(parameters, type);
-      mapping) {
-    output.set_mapping(*mapping);
+    int pbrt_version, absl::string_view type, T& output) {
+  if (absl::Status status =
+          RemoveEnum(parameters, pbrt_version, type, "mapping",
+                     std::bind(&T::set_mapping, &output, std::placeholders::_1),
+                     TextureMapping::UV);
+      !status.ok()) {
+    return status;
   }
 
   if (std::optional<double> uscale = TryRemoveFloat(parameters, "uscale");
@@ -200,28 +108,8 @@ void TryRemoveUVParameters(
     output.mutable_v2()->set_y((*v2)[1]);
     output.mutable_v2()->set_z((*v2)[2]);
   }
-}
 
-template <typename T>
-void RemoveImageMapBase(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters, T& output) {
-  if (std::optional<absl::string_view> filename =
-          TryRemoveString(parameters, "filename");
-      filename) {
-    output.set_filename(*filename);
-  }
-
-  if (std::optional<double> maxanisotropy =
-          TryRemoveFloat(parameters, "maxanisotropy");
-      maxanisotropy) {
-    output.set_maxanisotropy(*maxanisotropy);
-  }
-
-  if (std::optional<ImageWrap::Type> wrap = TryRemoveWrap(parameters); wrap) {
-    output.set_wrap(*wrap);
-  }
-
-  TryRemoveUVParameters(parameters, "imagemap", output);
+  return absl::OkStatus();
 }
 
 }  // namespace
@@ -231,7 +119,12 @@ absl::Status RemoveBilerpFloatTexture(
     int pbrt_version, BilerpFloatTexture& output) {
   assert(IsSupported(pbrt_version, output));
 
-  TryRemoveUVParameters(parameters, "bilerp", output);
+  if (absl::Status status =
+          TryRemoveUVParameters(parameters, pbrt_version, "bilerp", output);
+      !status.ok()) {
+    return status;
+  }
+
   TryRemoveFloatTexture(parameters, "v00",
                         std::bind(&BilerpFloatTexture::mutable_v00, &output));
   TryRemoveFloatTexture(parameters, "v01",
@@ -248,7 +141,11 @@ absl::Status RemoveBilerpSpectrumTexture(
     int pbrt_version, BilerpSpectrumTexture& output) {
   assert(IsSupported(pbrt_version, output));
 
-  TryRemoveUVParameters(parameters, "bilerp", output);
+  if (absl::Status status =
+          TryRemoveUVParameters(parameters, pbrt_version, "bilerp", output);
+      !status.ok()) {
+    return status;
+  }
 
   if (absl::Status status = TryRemoveSpectrumTexture(
           parameters, "v00",
@@ -286,7 +183,12 @@ absl::Status RemoveCheckerboard2DFloatTexture(
     int pbrt_version, Checkerboard2DFloatTexture& output) {
   assert(IsSupported(pbrt_version, output));
 
-  TryRemoveUVParameters(parameters, "checkerboard", output);
+  if (absl::Status status = TryRemoveUVParameters(parameters, pbrt_version,
+                                                  "checkerboard", output);
+      !status.ok()) {
+    return status;
+  }
+
   TryRemoveFloatTexture(
       parameters, "tex1",
       std::bind(&Checkerboard2DFloatTexture::mutable_tex1, &output));
@@ -295,10 +197,13 @@ absl::Status RemoveCheckerboard2DFloatTexture(
       std::bind(&Checkerboard2DFloatTexture::mutable_tex2, &output));
 
   if (pbrt_version <= 3) {
-    if (std::optional<CheckerboardAaMode::Type> aamode =
-            TryRemoveAaMode(parameters, pbrt_version);
-        aamode) {
-      output.set_aamode(*aamode);
+    if (absl::Status status =
+            RemoveEnum(parameters, pbrt_version, "checkerboard", "aamode",
+                       std::bind(&Checkerboard2DFloatTexture::set_aamode,
+                                 &output, std::placeholders::_1),
+                       CheckerboardAaMode::CLOSEDFORM);
+        !status.ok()) {
+      return status;
     }
   }
 
@@ -310,7 +215,11 @@ absl::Status RemoveCheckerboard2DSpectrumTexture(
     int pbrt_version, Checkerboard2DSpectrumTexture& output) {
   assert(IsSupported(pbrt_version, output));
 
-  TryRemoveUVParameters(parameters, "checkerboard", output);
+  if (absl::Status status = TryRemoveUVParameters(parameters, pbrt_version,
+                                                  "checkerboard", output);
+      !status.ok()) {
+    return status;
+  }
 
   if (absl::Status status = TryRemoveSpectrumTexture(
           parameters, "tex1",
@@ -327,10 +236,13 @@ absl::Status RemoveCheckerboard2DSpectrumTexture(
   }
 
   if (pbrt_version <= 3) {
-    if (std::optional<CheckerboardAaMode::Type> aamode =
-            TryRemoveAaMode(parameters, pbrt_version);
-        aamode) {
-      output.set_aamode(*aamode);
+    if (absl::Status status =
+            RemoveEnum(parameters, pbrt_version, "checkerboard", "aamode",
+                       std::bind(&Checkerboard2DSpectrumTexture::set_aamode,
+                                 &output, std::placeholders::_1),
+                       CheckerboardAaMode::CLOSEDFORM);
+        !status.ok()) {
+      return status;
     }
   }
 
@@ -440,7 +352,12 @@ absl::Status RemoveDotsFloatTexture(
     int pbrt_version, DotsFloatTexture& output) {
   assert(IsSupported(pbrt_version, output));
 
-  TryRemoveUVParameters(parameters, "dots", output);
+  if (absl::Status status =
+          TryRemoveUVParameters(parameters, pbrt_version, "dots", output);
+      !status.ok()) {
+    return status;
+  }
+
   TryRemoveFloatTexture(parameters, "inside",
                         std::bind(&DotsFloatTexture::mutable_inside, &output));
   TryRemoveFloatTexture(parameters, "outside",
@@ -453,7 +370,11 @@ absl::Status RemoveDotsSpectrumTexture(
     int pbrt_version, DotsSpectrumTexture& output) {
   assert(IsSupported(pbrt_version, output));
 
-  TryRemoveUVParameters(parameters, "dots", output);
+  if (absl::Status status =
+          TryRemoveUVParameters(parameters, pbrt_version, "dots", output);
+      !status.ok()) {
+    return status;
+  }
 
   if (absl::Status status = TryRemoveSpectrumTexture(
           parameters, "inside",
@@ -525,11 +446,20 @@ absl::Status RemoveImageMapFloatTexture(
     output.set_maxanisotropy(*maxanisotropy);
   }
 
-  if (std::optional<ImageWrap::Type> wrap = TryRemoveWrap(parameters); wrap) {
-    output.set_wrap(*wrap);
+  if (absl::Status status =
+          RemoveEnum(parameters, pbrt_version, "imagemap", "wrap",
+                     std::bind(&ImageMapFloatTexture::set_wrap, &output,
+                               std::placeholders::_1),
+                     ImageWrap::REPEAT);
+      !status.ok()) {
+    return status;
   }
 
-  TryRemoveUVParameters(parameters, "imagemap", output);
+  if (absl::Status status =
+          TryRemoveUVParameters(parameters, pbrt_version, "imagemap", output);
+      !status.ok()) {
+    return status;
+  }
 
   if (pbrt_version <= 3) {
     if (std::optional<bool> trilinear = TryRemoveBool(parameters, "trilinear");
@@ -559,7 +489,14 @@ absl::Status RemoveImageMapFloatTexture(
   }
 
   if (pbrt_version >= 4) {
-    RemoveFilter(parameters, output);
+    if (absl::Status status =
+            RemoveEnum(parameters, pbrt_version, "imagemap", "filter",
+                       std::bind(&ImageMapFloatTexture::set_filter, &output,
+                                 std::placeholders::_1),
+                       TextureFilter::EWA);
+        !status.ok()) {
+      return status;
+    }
 
     if (std::optional<bool> invert = TryRemoveBool(parameters, "invert");
         invert) {
@@ -593,11 +530,20 @@ absl::Status RemoveImageMapSpectrumTexture(
     output.set_maxanisotropy(*maxanisotropy);
   }
 
-  if (std::optional<ImageWrap::Type> wrap = TryRemoveWrap(parameters); wrap) {
-    output.set_wrap(*wrap);
+  if (absl::Status status =
+          RemoveEnum(parameters, pbrt_version, "imagemap", "wrap",
+                     std::bind(&ImageMapSpectrumTexture::set_wrap, &output,
+                               std::placeholders::_1),
+                     ImageWrap::REPEAT);
+      !status.ok()) {
+    return status;
   }
 
-  TryRemoveUVParameters(parameters, "imagemap", output);
+  if (absl::Status status =
+          TryRemoveUVParameters(parameters, pbrt_version, "imagemap", output);
+      !status.ok()) {
+    return status;
+  }
 
   if (pbrt_version <= 3) {
     if (std::optional<bool> trilinear = TryRemoveBool(parameters, "trilinear");
@@ -627,7 +573,14 @@ absl::Status RemoveImageMapSpectrumTexture(
   }
 
   if (pbrt_version >= 4) {
-    RemoveFilter(parameters, output);
+    if (absl::Status status =
+            RemoveEnum(parameters, pbrt_version, "imagemap", "filter",
+                       std::bind(&ImageMapSpectrumTexture::set_filter, &output,
+                                 std::placeholders::_1),
+                       TextureFilter::EWA);
+        !status.ok()) {
+      return status;
+    }
 
     if (std::optional<bool> invert = TryRemoveBool(parameters, "invert");
         invert) {
@@ -855,7 +808,12 @@ absl::Status RemoveUvSpectrumTexture(
     int pbrt_version, UvSpectrumTexture& output) {
   assert(IsSupported(pbrt_version, output));
 
-  TryRemoveUVParameters(parameters, "uv", output);
+  if (absl::Status status =
+          TryRemoveUVParameters(parameters, pbrt_version, "uv", output);
+      !status.ok()) {
+    return status;
+  }
+
   return absl::OkStatus();
 }
 

@@ -1097,7 +1097,8 @@ TEST(RemoveSphericalCameraV4, InvalidMapping) {
   SphericalCamera actual;
   EXPECT_THAT(RemoveSphericalCamera(parameters, /*pbrt_version=*/4, actual),
               StatusIs(absl::StatusCode::kInvalidArgument,
-                       "A spherical Camera specified an invalid 'mapping'"));
+                       "Unsupported value for 'spherical' Camera parameter "
+                       "'mapping' in PBRTv4: \"bad\""));
 }
 
 TEST(RemoveRealisticCameraV3, Empty) {

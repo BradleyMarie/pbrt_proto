@@ -114,13 +114,6 @@ absl::Status RemoveEnum(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, absl::string_view type_name,
     absl::string_view parameter_name,
-    absl::FunctionRef<void(ImageEncoding::Type)> set_output,
-    std::variant<bool*, ImageEncoding::Type> mismatch = nullptr);
-
-absl::Status RemoveEnum(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    int pbrt_version, absl::string_view type_name,
-    absl::string_view parameter_name,
     absl::FunctionRef<void(ImageWrap::Type)> set_output,
     std::variant<bool*, ImageWrap::Type> mismatch = nullptr);
 

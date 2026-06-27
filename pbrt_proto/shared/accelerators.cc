@@ -1,11 +1,13 @@
 #include "pbrt_proto/shared/accelerators.h"
 
 #include <cassert>
+#include <functional>
 #include <iostream>
 
 #include "absl/container/flat_hash_map.h"
 #include "absl/strings/string_view.h"
 #include "pbrt_proto/pbrt.pb.h"
+#include "pbrt_proto/shared/enums.h"
 #include "pbrt_proto/shared/parser.h"
 #include "pbrt_proto/shared/version.h"
 
@@ -74,23 +76,13 @@ absl::Status RemoveBvhAccelerator(
     output.set_maxnodeprims(std::max(0, *maxnodeprims));
   }
 
-  if (std::optional<absl::string_view> splitmethod =
-          TryRemoveString(parameters, "splitmethod");
-      splitmethod.has_value()) {
-    if (*splitmethod == "sah") {
-      output.set_splitmethod(BvhAccelerator::SAH);
-    } else if (*splitmethod == "middle") {
-      output.set_splitmethod(BvhAccelerator::MIDDLE);
-    } else if (*splitmethod == "equal") {
-      output.set_splitmethod(BvhAccelerator::EQUAL);
-    } else if (pbrt_version >= 3 && *splitmethod == "hlbvh") {
-      output.set_splitmethod(BvhAccelerator::HLBVH);
-    } else {
-      std::cerr << "WARNING: Unsupported value for 'bvh' Accelerator parameter "
-                   "'splitmethod': \""
-                << *splitmethod << "\"" << std::endl;
-      output.set_splitmethod(BvhAccelerator::SAH);
-    }
+  if (absl::Status status =
+          RemoveEnum(parameters, pbrt_version, "bvh", "splitmethod",
+                     std::bind(&BvhAccelerator::set_splitmethod, &output,
+                               std::placeholders::_1),
+                     BvhAccelerator::SAH);
+      !status.ok()) {
+    return status;
   }
 
   return absl::OkStatus();

@@ -15,6 +15,7 @@ cc_library(
     srcs = ["accelerators.cc"],
     hdrs = ["accelerators.h"],
     deps = [
+        ":enums",
         ":parser",
         ":version",
         "//pbrt_proto:pbrt_cc_proto",
@@ -76,6 +77,7 @@ cc_library(
     hdrs = ["cameras.h"],
     deps = [
         ":common",
+        ":enums",
         ":parser",
         ":version",
         "//pbrt_proto:pbrt_cc_proto",
@@ -152,17 +154,17 @@ cc_binary(
     srcs = ["enums_generator.cc"],
     deps = [
         ":version",
+        "@abseil-cpp//absl/strings",
         "@protobuf",
         "@protobuf//src/google/protobuf/compiler:code_generator",
         "@protobuf//src/google/protobuf/io",
         "@protobuf//src/google/protobuf/io:printer",
-        "@abseil-cpp//absl/strings"
     ],
 )
 
 cc_library(
     name = "enums",
-    #srcs = ["enums.cc"],
+    srcs = ["enums.cc"],
     hdrs = ["enums.h"],
     deps = [
         ":parser",
@@ -196,6 +198,7 @@ cc_library(
     srcs = ["films.cc"],
     hdrs = ["films.h"],
     deps = [
+        ":enums",
         ":parser",
         ":version",
         "//pbrt_proto:pbrt_cc_proto",
@@ -227,6 +230,7 @@ cc_library(
     hdrs = ["integrators.h"],
     deps = [
         ":common",
+        ":enums",
         ":parser",
         ":version",
         "//pbrt_proto:pbrt_cc_proto",
@@ -257,6 +261,7 @@ cc_library(
     hdrs = ["light_sources.h"],
     deps = [
         ":common",
+        ":enums",
         ":parser",
         ":version",
         "//pbrt_proto:pbrt_cc_proto",
@@ -288,6 +293,7 @@ cc_library(
     hdrs = ["materials.h"],
     deps = [
         ":common",
+        ":enums",
         ":parser",
         ":version",
         "//pbrt_proto:pbrt_cc_proto",
@@ -319,6 +325,7 @@ cc_library(
     hdrs = ["media.h"],
     deps = [
         ":common",
+        ":enums",
         ":parser",
         ":version",
         "//pbrt_proto:pbrt_cc_proto",
@@ -479,6 +486,7 @@ cc_library(
     srcs = ["samplers.cc"],
     hdrs = ["samplers.h"],
     deps = [
+        ":enums",
         ":parser",
         ":version",
         "//pbrt_proto:pbrt_cc_proto",
@@ -509,6 +517,7 @@ cc_library(
     hdrs = ["shapes.h"],
     deps = [
         ":common",
+        ":enums",
         ":parser",
         ":version",
         "//pbrt_proto:pbrt_cc_proto",
@@ -542,6 +551,7 @@ cc_library(
     hdrs = ["textures.h"],
     deps = [
         ":common",
+        ":enums",
         ":parser",
         ":version",
         "//pbrt_proto:pbrt_cc_proto",
