@@ -70,6 +70,19 @@ cc_proto_library(
     deps = [":defaults_proto"],
 )
 
+cc_test(
+    name = "schema_test",
+    srcs = ["schema_test.cc"],
+    deps = [
+        "//pbrt_proto/shared:version",
+        "//pbrt_proto/shared:version_set",
+        "//pbrt_proto/testing:descriptors",
+        "@googletest//:gtest",
+        "@googletest//:gtest_main",
+        "@protobuf",
+    ],
+)
+
 proto_library(
     name = "v2_proto",
     srcs = ["v2.proto"],
