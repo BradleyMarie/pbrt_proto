@@ -754,6 +754,41 @@ message PerspectiveCamera {
   optional double fov = 9 [default = 90.0];
 }
 
+// A camera that simulates a ray passing through a complex lens system.
+//
+// @supported_versions {PBRTv3, PBRTv4}
+message RealisticCamera {
+  // The time at which the shutter opens.
+  optional double shutteropen = 1 [default = 0.0];
+
+  // The time at which the shutter closes.
+  optional double shutterclose = 2 [default = 1.0];
+
+  // The path to a lens description file.
+  optional string lensfile = 10 [default = ""];
+
+  // The diameter of the aperture of the lens system in millimeters.
+  optional double aperturediameter = 11 [default = 1.0];
+
+  // The distance to which the lens system is focused in meters.
+  optional double focusdistance = 12;
+
+  // If true, the samples are only weighted by the "cosine-to-the-4th" term.
+  //
+  // @max_version PBRTv3
+  optional bool simpleweighting = 13;
+
+  // The shape of the aperture. If missing, the aperture has a circular shape.
+  //
+  // If the value is one of "gaussian", "square", "pentagon", or "star" it
+  // refers to a built-in aperture shape. Otherwise, the string references an
+  // image file that describes the aperture's shape. If this file is not found
+  // then the renderer should exit with an error.
+  //
+  // @min_version PBRTv4
+  optional string aperture = 15;
+}
+
 // A camera which captures the light arriving at a point from all directions.
 // In PBRT versions prior to PBRTv4 this type of camera was referred to as an
 // environmental camera.
@@ -813,41 +848,6 @@ message SphericalCamera {
   //
   // @min_version PBRTv4
   optional Mapping mapping = 14;
-}
-
-// A camera that simulates a ray passing through a complex lens system.
-//
-// @supported_versions {PBRTv3, PBRTv4}
-message RealisticCamera {
-  // The time at which the shutter opens.
-  optional double shutteropen = 1 [default = 0.0];
-
-  // The time at which the shutter closes.
-  optional double shutterclose = 2 [default = 1.0];
-
-  // The path to a lens description file.
-  optional string lensfile = 10 [default = ""];
-
-  // The diameter of the aperture of the lens system in millimeters.
-  optional double aperturediameter = 11 [default = 1.0];
-
-  // The distance to which the lens system is focused in meters.
-  optional double focusdistance = 12;
-
-  // If true, the samples are only weighted by the "cosine-to-the-4th" term.
-  //
-  // @max_version PBRTv3
-  optional bool simpleweighting = 13;
-
-  // The shape of the aperture. If missing, the aperture has a circular shape.
-  //
-  // If the value is one of "gaussian", "square", "pentagon", or "star" it
-  // refers to a built-in aperture shape. Otherwise, the string references an
-  // image file that describes the aperture's shape. If this file is not found
-  // then the renderer should exit with an error.
-  //
-  // @min_version PBRTv4
-  optional string aperture = 15;
 }
 
 //
