@@ -100,6 +100,13 @@ static const DisjointSet kEquivalentTypes =
 
 static const DisjointSet kAllowedNameChanges =
     DisjointSet::Builder()
+        .AddSet({"pbrt_proto.AmbientOcclusionIntegrator.maxdistance",
+                 "pbrt_proto.PhotonMapIntegrator.maxdist"})
+        .AddSet({
+            "pbrt_proto.BdptIntegrator.lightsamplestrategy",
+            "pbrt_proto.PathIntegrator.lightsampler",
+            "pbrt_proto.VolPathIntegrator.lightsampler",
+        })
         .AddSet({"pbrt_proto.v1.AreaLightSource.area",
                  "pbrt_proto.v2.AreaLightSource.diffuse",
                  "pbrt_proto.v3.AreaLightSource.diffuse",
@@ -123,6 +130,18 @@ static const DisjointSet kAllowedNameChanges =
         .AddSet({"pbrt_proto.v1.SurfaceIntegrator.bidirectional",
                  "pbrt_proto.v3.Integrator.bdpt",
                  "pbrt_proto.v4.Integrator.bdpt"})
+        .AddSet({
+            "pbrt_proto.AdaptiveSampler.maxsamples",
+            "pbrt_proto.BestCandidateSampler.pixelsamples",
+            "pbrt_proto.HaltonSampler.pixelsamples",
+            "pbrt_proto.IndependentSampler.pixelsamples",
+            "pbrt_proto.MaxMinDistSampler.pixelsamples",
+            "pbrt_proto.PaddedSobolSampler.pixelsamples",
+            "pbrt_proto.PMJ02BNSampler.pixelsamples",
+            "pbrt_proto.SobolSampler.pixelsamples",
+            "pbrt_proto.ZSobolSampler.pixelsamples",
+            "pbrt_proto.ZeroTwoSequenceSampler.pixelsamples",
+        })
         .AddSet({"pbrt_proto.v1.Sampler.lowdiscrepancy",
                  "pbrt_proto.v2.Sampler.lowdiscrepancy",
                  "pbrt_proto.v3.Sampler.zerotwosequence"})
@@ -132,7 +151,28 @@ static const DisjointSet kAllowedNameChanges =
 
 static const DisjointSet kAllowedNameCollisions =
     DisjointSet::Builder()
-        .AddSet({"pbrt_proto.MetalMaterial.eta",
+        .AddSet({"pbrt_proto.CloudMedium.sigma_a",
+                 "pbrt_proto.ExponentialMedium.sigma_a",
+                 "pbrt_proto.HomogeneousMedium.sigma_a",
+                 "pbrt_proto.NanoVdbMedium.sigma_a",
+                 "pbrt_proto.RgbGridMedium.sigma_a",
+                 "pbrt_proto.UniformGridMedium.sigma_a"})
+        .AddSet({"pbrt_proto.CloudMedium.sigma_s",
+                 "pbrt_proto.ExponentialMedium.sigma_s",
+                 "pbrt_proto.HomogeneousMedium.sigma_s",
+                 "pbrt_proto.NanoVdbMedium.sigma_s",
+                 "pbrt_proto.RgbGridMedium.sigma_s",
+                 "pbrt_proto.UniformGridMedium.sigma_s"})
+        .AddSet({"pbrt_proto.ExponentialMedium.Le",
+                 "pbrt_proto.HomogeneousMedium.Le",
+                 "pbrt_proto.RgbGridMedium.Le",
+                 "pbrt_proto.UniformGridMedium.Le"})
+        .AddSet({"pbrt_proto.DisneyMaterial.eta",
+                 "pbrt_proto.GlassMaterial.eta", "pbrt_proto.HairMaterial.eta",
+                 "pbrt_proto.KdSubsurfaceMaterial.eta",
+                 "pbrt_proto.MetalMaterial.eta",
+                 "pbrt_proto.SubsurfaceMaterial.eta",
+                 "pbrt_proto.UberMaterial.eta",
                  "pbrt_proto.v2.Shape.MaterialOverrides.eta",
                  "pbrt_proto.v3.Shape.MaterialOverrides.eta"})
         .AddSet({"pbrt_proto.v1.Sampler.random", "pbrt_proto.v2.Sampler.random",

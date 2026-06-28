@@ -25,9 +25,7 @@ cc_test(
     srcs = ["schema_test.cc"],
     deps = [
         "//pbrt_proto/testing:descriptors",
-        "@abseil-cpp//absl/container:flat_hash_map",
-        "@abseil-cpp//absl/container:flat_hash_set",
-        "@abseil-cpp//absl/strings",
+        "//pbrt_proto/testing:message_compatibility",
         "@googletest//:gtest",
         "@googletest//:gtest_main",
         "@protobuf",
