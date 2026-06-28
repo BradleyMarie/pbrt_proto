@@ -1,7 +1,6 @@
 #include "pbrt_proto/shared/shapes.h"
 
 #include <algorithm>
-#include <cassert>
 #include <utility>
 
 #include "absl/container/flat_hash_map.h"
@@ -12,15 +11,12 @@
 #include "pbrt_proto/shared/common.h"
 #include "pbrt_proto/shared/enums.h"
 #include "pbrt_proto/shared/parser.h"
-#include "pbrt_proto/shared/version.h"
 
 namespace pbrt_proto {
 
 absl::Status RemoveConeShape(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, ConeShape& output) {
-  assert(IsSupported(pbrt_version, output));
-
   if (std::optional<double> radius = TryRemoveFloat(parameters, "radius");
       radius.has_value()) {
     output.set_radius(*radius);
@@ -43,8 +39,6 @@ absl::Status TryRemoveCurveShape(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, absl::FunctionRef<CurveShape*()> get_output) {
   CurveShape output;
-  assert(IsSupported(pbrt_version, output));
-
   bool unmatched_value = false;
   if (std::optional<int32_t> degree = TryRemoveInteger(parameters, "degree");
       degree.has_value()) {
@@ -139,8 +133,6 @@ absl::Status TryRemoveCurveShape(
 absl::Status RemoveCylinderShape(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, CylinderShape& output) {
-  assert(IsSupported(pbrt_version, output));
-
   if (std::optional<double> radius = TryRemoveFloat(parameters, "radius");
       radius.has_value()) {
     output.set_radius(*radius);
@@ -167,8 +159,6 @@ absl::Status RemoveCylinderShape(
 absl::Status RemoveDiskShape(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, DiskShape& output) {
-  assert(IsSupported(pbrt_version, output));
-
   if (std::optional<double> height = TryRemoveFloat(parameters, "height");
       height.has_value()) {
     output.set_height(*height);
@@ -196,8 +186,6 @@ absl::Status RemoveDiskShape(
 absl::Status RemoveHeightFieldShape(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, HeightFieldShape& output) {
-  assert(IsSupported(pbrt_version, output));
-
   if (std::optional<int32_t> nu = TryRemoveInteger(parameters, "nu");
       nu.has_value()) {
     output.set_nu(std::max(0, *nu));
@@ -228,8 +216,6 @@ absl::Status RemoveHeightFieldShape(
 absl::Status RemoveHyperboloidShape(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, HyperboloidShape& output) {
-  assert(IsSupported(pbrt_version, output));
-
   if (std::optional<std::array<double, 3>> p1 =
           TryRemovePoint3(parameters, "p1");
       p1.has_value()) {
@@ -257,8 +243,6 @@ absl::Status RemoveHyperboloidShape(
 absl::Status RemoveLoopSubdivShape(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, LoopSubdivShape& output) {
-  assert(IsSupported(pbrt_version, output));
-
   if (std::optional<int32_t> nlevels = TryRemoveInteger(parameters, "nlevels");
       nlevels.has_value()) {
     output.set_levels(std::max(0, *nlevels));
@@ -313,8 +297,6 @@ absl::Status RemoveLoopSubdivShape(
 absl::Status RemoveNurbsShape(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, NurbsShape& output) {
-  assert(IsSupported(pbrt_version, output));
-
   if (std::optional<int32_t> nu = TryRemoveInteger(parameters, "nu");
       nu.has_value()) {
     output.set_nu(std::max(0, *nu));
@@ -427,8 +409,6 @@ absl::Status RemoveNurbsShape(
 absl::Status RemoveParaboloidShape(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, ParaboloidShape& output) {
-  assert(IsSupported(pbrt_version, output));
-
   if (std::optional<double> radius = TryRemoveFloat(parameters, "radius");
       radius.has_value()) {
     output.set_radius(*radius);
@@ -455,8 +435,6 @@ absl::Status RemoveParaboloidShape(
 absl::Status RemovePlyMeshShape(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, PlyMeshShape& output) {
-  assert(IsSupported(pbrt_version, output));
-
   if (std::optional<absl::string_view> filename =
           TryRemoveString(parameters, "filename");
       filename) {
@@ -475,8 +453,6 @@ absl::Status RemovePlyMeshShape(
 absl::Status RemoveSphereShape(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, SphereShape& output) {
-  assert(IsSupported(pbrt_version, output));
-
   if (std::optional<double> radius = TryRemoveFloat(parameters, "radius");
       radius.has_value()) {
     output.set_radius(*radius);
@@ -503,8 +479,6 @@ absl::Status RemoveSphereShape(
 absl::Status RemoveTriangleMeshShape(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, TriangleMeshShape& output) {
-  assert(IsSupported(pbrt_version, output));
-
   if (std::optional<absl::Span<std::array<double, 3>>> p =
           TryRemovePoint3s(parameters, "P");
       p.has_value()) {

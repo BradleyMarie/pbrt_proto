@@ -1,7 +1,6 @@
 #include "pbrt_proto/shared/area_light_sources.h"
 
 #include <algorithm>
-#include <cassert>
 #include <functional>
 
 #include "absl/container/flat_hash_map.h"
@@ -10,15 +9,12 @@
 #include "pbrt_proto/pbrt.pb.h"
 #include "pbrt_proto/shared/common.h"
 #include "pbrt_proto/shared/parser.h"
-#include "pbrt_proto/shared/version.h"
 
 namespace pbrt_proto {
 
 absl::Status RemoveDiffuseAreaLightSource(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, DiffuseAreaLightSource& output) {
-  assert(IsSupported(pbrt_version, output));
-
   if (absl::Status status = TryRemoveSpectrum(
           parameters, "L",
           std::bind(&DiffuseAreaLightSource::mutable_l, &output));

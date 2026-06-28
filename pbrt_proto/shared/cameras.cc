@@ -1,7 +1,6 @@
 #include "pbrt_proto/shared/cameras.h"
 
 #include <algorithm>
-#include <cassert>
 #include <functional>
 
 #include "absl/container/flat_hash_map.h"
@@ -11,7 +10,6 @@
 #include "pbrt_proto/shared/common.h"
 #include "pbrt_proto/shared/enums.h"
 #include "pbrt_proto/shared/parser.h"
-#include "pbrt_proto/shared/version.h"
 
 namespace pbrt_proto {
 namespace {
@@ -36,8 +34,6 @@ void MaybeRemoveCameraScreenWindow(
 absl::Status RemoveOrthographicCamera(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, OrthographicCamera& output) {
-  assert(IsSupported(pbrt_version, output));
-
   if (std::optional<double> shutteropen =
           TryRemoveFloat(parameters, "shutteropen");
       shutteropen.has_value()) {
@@ -90,8 +86,6 @@ absl::Status RemoveOrthographicCamera(
 absl::Status RemovePerspectiveCamera(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, PerspectiveCamera& output) {
-  assert(IsSupported(pbrt_version, output));
-
   if (std::optional<double> shutteropen =
           TryRemoveFloat(parameters, "shutteropen");
       shutteropen.has_value()) {
@@ -155,8 +149,6 @@ absl::Status RemovePerspectiveCamera(
 absl::Status RemoveSphericalCamera(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, SphericalCamera& output) {
-  assert(IsSupported(pbrt_version, output));
-
   if (std::optional<double> shutteropen =
           TryRemoveFloat(parameters, "shutteropen");
       shutteropen.has_value()) {
@@ -218,8 +210,6 @@ absl::Status RemoveSphericalCamera(
 absl::Status RemoveRealisticCamera(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, RealisticCamera& output) {
-  assert(IsSupported(pbrt_version, output));
-
   if (std::optional<double> shutteropen =
           TryRemoveFloat(parameters, "shutteropen");
       shutteropen.has_value()) {

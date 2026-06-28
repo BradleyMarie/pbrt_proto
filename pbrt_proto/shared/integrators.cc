@@ -1,7 +1,6 @@
 #include "pbrt_proto/shared/integrators.h"
 
 #include <algorithm>
-#include <cassert>
 #include <functional>
 #include <iostream>
 #include <optional>
@@ -13,7 +12,6 @@
 #include "pbrt_proto/shared/common.h"
 #include "pbrt_proto/shared/enums.h"
 #include "pbrt_proto/shared/parser.h"
-#include "pbrt_proto/shared/version.h"
 
 namespace pbrt_proto {
 namespace {
@@ -37,8 +35,6 @@ void RemovePixelBounds(
 absl::Status RemoveAmbientOcclusionIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, AmbientOcclusionIntegrator& output) {
-  assert(IsSupported(pbrt_version, output));
-
   if (std::optional<int32_t> nsamples =
           TryRemoveInteger(parameters, "nsamples");
       nsamples.has_value()) {
@@ -73,8 +69,6 @@ absl::Status RemoveAmbientOcclusionIntegrator(
 absl::Status RemoveBdptIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, BdptIntegrator& output) {
-  assert(IsSupported(pbrt_version, output));
-
   if (pbrt_version >= 3) {
     if (std::optional<int32_t> maxdepth =
             TryRemoveInteger(parameters, "maxdepth");
@@ -114,8 +108,6 @@ absl::Status RemoveBdptIntegrator(
 absl::Status RemoveDebugIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, DebugIntegrator& output) {
-  assert(IsSupported(pbrt_version, output));
-
   if (absl::Status status = RemoveEnum(
           parameters, pbrt_version, "debug", "red",
           std::bind(&DebugIntegrator::set_red, &output, std::placeholders::_1),
@@ -147,8 +139,6 @@ absl::Status RemoveDebugIntegrator(
 absl::Status RemoveDiffusePrtIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, DiffusePrtIntegrator& output) {
-  assert(IsSupported(pbrt_version, output));
-
   if (std::optional<int32_t> nsamples =
           TryRemoveInteger(parameters, "nsamples");
       nsamples.has_value()) {
@@ -166,8 +156,6 @@ absl::Status RemoveDiffusePrtIntegrator(
 absl::Status RemoveDipoleSubsurfaceIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, DipoleSubsurfaceIntegrator& output) {
-  assert(IsSupported(pbrt_version, output));
-
   if (std::optional<int32_t> maxdepth =
           TryRemoveInteger(parameters, "maxdepth");
       maxdepth.has_value()) {
@@ -197,8 +185,6 @@ absl::Status RemoveDipoleSubsurfaceIntegrator(
 absl::Status RemoveDirectLightingIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, DirectLightingIntegrator& output) {
-  assert(IsSupported(pbrt_version, output));
-
   if (std::optional<int32_t> maxdepth =
           TryRemoveInteger(parameters, "maxdepth");
       maxdepth.has_value()) {
@@ -224,8 +210,6 @@ absl::Status RemoveDirectLightingIntegrator(
 absl::Status RemoveGlossyPrtIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, GlossyPrtIntegrator& output) {
-  assert(IsSupported(pbrt_version, output));
-
   if (std::optional<int32_t> nsamples =
           TryRemoveInteger(parameters, "nsamples");
       nsamples.has_value()) {
@@ -262,8 +246,6 @@ absl::Status RemoveGlossyPrtIntegrator(
 absl::Status RemoveIgiIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, IgiIntegrator& output) {
-  assert(IsSupported(pbrt_version, output));
-
   if (std::optional<int32_t> nlights = TryRemoveInteger(parameters, "nlights");
       nlights.has_value()) {
     output.set_nlights(std::max(0, *nlights));
@@ -318,8 +300,6 @@ absl::Status RemoveIgiIntegrator(
 absl::Status RemoveIrradianceCacheIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, IrradianceCacheIntegrator& output) {
-  assert(IsSupported(pbrt_version, output));
-
   if (std::optional<double> maxerror = TryRemoveFloat(parameters, "maxerror");
       maxerror.has_value()) {
     output.set_maxerror(*maxerror);
@@ -372,8 +352,6 @@ absl::Status RemoveIrradianceCacheIntegrator(
 absl::Status RemoveMltIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, MltIntegrator& output) {
-  assert(IsSupported(pbrt_version, output));
-
   if (std::optional<int32_t> maxdepth =
           TryRemoveInteger(parameters, "maxdepth");
       maxdepth.has_value()) {
@@ -414,8 +392,6 @@ absl::Status RemoveMltIntegrator(
 absl::Status RemovePathIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, PathIntegrator& output) {
-  assert(IsSupported(pbrt_version, output));
-
   if (std::optional<int32_t> maxdepth =
           TryRemoveInteger(parameters, "maxdepth");
       maxdepth.has_value()) {
@@ -449,8 +425,6 @@ absl::Status RemovePathIntegrator(
 absl::Status RemovePhotonMapIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, PhotonMapIntegrator& output) {
-  assert(IsSupported(pbrt_version, output));
-
   if (std::optional<int32_t> causticphotons =
           TryRemoveInteger(parameters, "causticphotons");
       causticphotons.has_value()) {
@@ -537,8 +511,6 @@ absl::Status RemovePhotonMapIntegrator(
 absl::Status RemoveExPhotonMapIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, PhotonMapIntegrator& output) {
-  assert(IsSupported(pbrt_version, output));
-
   if (std::optional<double> gatherangle =
           TryRemoveFloat(parameters, "gatherangle");
       gatherangle.has_value()) {
@@ -551,8 +523,6 @@ absl::Status RemoveExPhotonMapIntegrator(
 absl::Status RemoveSppmIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, SppmIntegrator& output) {
-  assert(IsSupported(pbrt_version, output));
-
   if (std::optional<int32_t> maxdepth =
           TryRemoveInteger(parameters, "maxdepth");
       maxdepth.has_value()) {
@@ -588,8 +558,6 @@ absl::Status RemoveSppmIntegrator(
 absl::Status RemoveUseProbesIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, UseProbesIntegrator& output) {
-  assert(IsSupported(pbrt_version, output));
-
   if (std::optional<absl::string_view> filename =
           TryRemoveString(parameters, "filename");
       filename.has_value()) {
@@ -602,8 +570,6 @@ absl::Status RemoveUseProbesIntegrator(
 absl::Status RemoveVolPathIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, VolPathIntegrator& output) {
-  assert(IsSupported(pbrt_version, output));
-
   if (std::optional<int32_t> maxdepth =
           TryRemoveInteger(parameters, "maxdepth");
       maxdepth.has_value()) {
@@ -635,8 +601,6 @@ absl::Status RemoveVolPathIntegrator(
 absl::Status RemoveWhittedIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, WhittedIntegrator& output) {
-  assert(IsSupported(pbrt_version, output));
-
   if (std::optional<int32_t> maxdepth =
           TryRemoveInteger(parameters, "maxdepth");
       maxdepth.has_value()) {
@@ -653,8 +617,6 @@ absl::Status RemoveWhittedIntegrator(
 absl::Status RemoveEmissionVolumeIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, EmissionVolumeIntegrator& output) {
-  assert(IsSupported(pbrt_version, output));
-
   if (std::optional<double> stepsize = TryRemoveFloat(parameters, "stepsize");
       stepsize.has_value()) {
     output.set_stepsize(*stepsize);
@@ -666,8 +628,6 @@ absl::Status RemoveEmissionVolumeIntegrator(
 absl::Status RemoveSingleVolumeIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, SingleVolumeIntegrator& output) {
-  assert(IsSupported(pbrt_version, output));
-
   if (std::optional<double> stepsize = TryRemoveFloat(parameters, "stepsize");
       stepsize.has_value()) {
     output.set_stepsize(*stepsize);

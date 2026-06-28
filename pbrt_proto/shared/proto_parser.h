@@ -1,6 +1,5 @@
 #ifndef _PBRT_PROTO_SHARED_PROTO_PARSER_
 
-#include <cassert>
 #include <string>
 #include <utility>
 
@@ -11,7 +10,6 @@
 #include "absl/strings/string_view.h"
 #include "pbrt_proto/pbrt.pb.h"
 #include "pbrt_proto/shared/parser.h"
-#include "pbrt_proto/shared/version.h"
 
 namespace pbrt_proto {
 
@@ -34,8 +32,6 @@ class ProtoParser : public Parser {
     return [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
               auto& output) {
       auto& field = *(output.*Getter)();
-      assert(IsSupported(PbrtVersion, field));
-
       return Func(parameters, PbrtVersion, field);
     };
   }
@@ -44,9 +40,7 @@ class ProtoParser : public Parser {
   auto EmptyCallback() {
     return [](absl::flat_hash_map<absl::string_view, Parameter>& parameters,
               auto& output) {
-      auto& field = *(output.*Getter)();
-      assert(IsSupported(PbrtVersion, field));
-
+      (output.*Getter)();
       return absl::OkStatus();
     };
   }
@@ -209,7 +203,6 @@ absl::Status ProtoParser<T, PbrtVersion>::ActiveTransform(
   if constexpr (PbrtVersion >= 2) {
     auto& active_transform =
         *output_.add_directives()->mutable_active_transform();
-    assert(IsSupported(PbrtVersion, active_transform));
 
     switch (active) {
       case ActiveTransformation::ALL:
@@ -231,17 +224,13 @@ absl::Status ProtoParser<T, PbrtVersion>::ActiveTransform(
 
 template <typename T, int PbrtVersion>
 absl::Status ProtoParser<T, PbrtVersion>::AttributeBegin() {
-  auto& attribute_begin = *output_.add_directives()->mutable_attribute_begin();
-  assert(IsSupported(PbrtVersion, attribute_begin));
-
+  output_.add_directives()->mutable_attribute_begin();
   return absl::OkStatus();
 }
 
 template <typename T, int PbrtVersion>
 absl::Status ProtoParser<T, PbrtVersion>::AttributeEnd() {
-  auto& attribute_end = *output_.add_directives()->mutable_attribute_end();
-  assert(IsSupported(PbrtVersion, attribute_end));
-
+  output_.add_directives()->mutable_attribute_end();
   return absl::OkStatus();
 }
 
@@ -252,8 +241,6 @@ absl::Status ProtoParser<T, PbrtVersion>::ConcatTransform(
     double m30, double m31, double m32, double m33) {
   auto& concat_transform =
       *output_.add_directives()->mutable_concat_transform();
-  assert(IsSupported(PbrtVersion, concat_transform));
-
   concat_transform.set_m00(m00);
   concat_transform.set_m01(m01);
   concat_transform.set_m02(m02);
@@ -278,8 +265,6 @@ absl::Status ProtoParser<T, PbrtVersion>::CoordinateSystem(
     absl::string_view name) {
   auto& coordinate_system =
       *output_.add_directives()->mutable_coordinate_system();
-  assert(IsSupported(PbrtVersion, coordinate_system));
-
   coordinate_system.set_name(name);
   return absl::OkStatus();
 }
@@ -289,25 +274,19 @@ absl::Status ProtoParser<T, PbrtVersion>::CoordSysTransform(
     absl::string_view name) {
   auto& coord_sys_transform =
       *output_.add_directives()->mutable_coord_sys_transform();
-  assert(IsSupported(PbrtVersion, coord_sys_transform));
-
   coord_sys_transform.set_name(name);
   return absl::OkStatus();
 }
 
 template <typename T, int PbrtVersion>
 absl::Status ProtoParser<T, PbrtVersion>::Identity() {
-  auto& identity = *output_.add_directives()->mutable_identity();
-  assert(IsSupported(PbrtVersion, identity));
-
+  output_.add_directives()->mutable_identity();
   return absl::OkStatus();
 }
 
 template <typename T, int PbrtVersion>
 absl::Status ProtoParser<T, PbrtVersion>::Include(absl::string_view path) {
   auto& include = *output_.add_directives()->mutable_include();
-  assert(IsSupported(PbrtVersion, include));
-
   include.set_path(path);
   return absl::OkStatus();
 }
@@ -323,8 +302,6 @@ template <typename T, int PbrtVersion>
 absl::Status ProtoParser<T, PbrtVersion>::Import(absl::string_view path) {
   if constexpr (PbrtVersion >= 4) {
     auto& import = *output_.add_directives()->mutable_import();
-    assert(IsSupported(PbrtVersion, import));
-
     import.set_path(path);
     return absl::OkStatus();
   }
@@ -339,8 +316,6 @@ absl::Status ProtoParser<T, PbrtVersion>::LookAt(double eye_x, double eye_y,
                                                  double up_x, double up_y,
                                                  double up_z) {
   auto& look_at = *output_.add_directives()->mutable_look_at();
-  assert(IsSupported(PbrtVersion, look_at));
-
   look_at.set_eye_x(eye_x);
   look_at.set_eye_y(eye_y);
   look_at.set_eye_z(eye_z);
@@ -389,8 +364,6 @@ absl::Status ProtoParser<T, PbrtVersion>::MediumInterface(
   if constexpr (PbrtVersion == 3) {
     auto& material_interface =
         *output_.add_directives()->mutable_medium_interface();
-    assert(IsSupported(PbrtVersion, material_interface));
-
     material_interface.set_inside(inside);
     material_interface.set_outside(outside);
     return absl::OkStatus();
@@ -404,8 +377,6 @@ absl::Status ProtoParser<T, PbrtVersion>::NamedMaterial(
     absl::string_view material) {
   if constexpr (PbrtVersion >= 2) {
     auto& named_material = *output_.add_directives()->mutable_named_material();
-    assert(IsSupported(PbrtVersion, named_material));
-
     named_material.set_name(material);
     return absl::OkStatus();
   }
@@ -416,17 +387,13 @@ absl::Status ProtoParser<T, PbrtVersion>::NamedMaterial(
 template <typename T, int PbrtVersion>
 absl::Status ProtoParser<T, PbrtVersion>::ObjectBegin(absl::string_view name) {
   auto& object_begin = *output_.add_directives()->mutable_object_begin();
-  assert(IsSupported(PbrtVersion, object_begin));
-
   object_begin.set_name(name);
   return absl::OkStatus();
 }
 
 template <typename T, int PbrtVersion>
 absl::Status ProtoParser<T, PbrtVersion>::ObjectEnd() {
-  auto& object_end = *output_.add_directives()->mutable_object_end();
-  assert(IsSupported(PbrtVersion, object_end));
-
+  output_.add_directives()->mutable_object_end();
   return absl::OkStatus();
 }
 
@@ -434,8 +401,6 @@ template <typename T, int PbrtVersion>
 absl::Status ProtoParser<T, PbrtVersion>::ObjectInstance(
     absl::string_view name) {
   auto& object_instance = *output_.add_directives()->mutable_object_instance();
-  assert(IsSupported(PbrtVersion, object_instance));
-
   object_instance.set_name(name);
   return absl::OkStatus();
 }
@@ -449,10 +414,7 @@ absl::Status ProtoParser<T, PbrtVersion>::Renderer(
 
 template <typename T, int PbrtVersion>
 absl::Status ProtoParser<T, PbrtVersion>::ReverseOrientation() {
-  auto& reverse_orientation =
-      *output_.add_directives()->mutable_reverse_orientation();
-  assert(IsSupported(PbrtVersion, reverse_orientation));
-
+  output_.add_directives()->mutable_reverse_orientation();
   return absl::OkStatus();
 }
 
@@ -460,8 +422,6 @@ template <typename T, int PbrtVersion>
 absl::Status ProtoParser<T, PbrtVersion>::Rotate(double angle, double x,
                                                  double y, double z) {
   auto& rotate = *output_.add_directives()->mutable_rotate();
-  assert(IsSupported(PbrtVersion, rotate));
-
   rotate.set_angle(angle);
   rotate.set_x(x);
   rotate.set_y(y);
@@ -472,8 +432,6 @@ absl::Status ProtoParser<T, PbrtVersion>::Rotate(double angle, double x,
 template <typename T, int PbrtVersion>
 absl::Status ProtoParser<T, PbrtVersion>::Scale(double x, double y, double z) {
   auto& scale = *output_.add_directives()->mutable_scale();
-  assert(IsSupported(PbrtVersion, scale));
-
   scale.set_x(x);
   scale.set_y(y);
   scale.set_z(z);
@@ -484,8 +442,6 @@ template <typename T, int PbrtVersion>
 absl::Status ProtoParser<T, PbrtVersion>::SearchPath(absl::string_view path) {
   if constexpr (PbrtVersion == 1) {
     auto& search_path = *output_.add_directives()->mutable_search_path();
-    assert(IsSupported(PbrtVersion, search_path));
-
     search_path.set_path(path);
     return absl::OkStatus();
   }
@@ -506,8 +462,6 @@ absl::Status ProtoParser<T, PbrtVersion>::Transform(
     double m12, double m13, double m20, double m21, double m22, double m23,
     double m30, double m31, double m32, double m33) {
   auto& transform = *output_.add_directives()->mutable_transform();
-  assert(IsSupported(PbrtVersion, transform));
-
   transform.set_m00(m00);
   transform.set_m01(m01);
   transform.set_m02(m02);
@@ -530,10 +484,7 @@ absl::Status ProtoParser<T, PbrtVersion>::Transform(
 template <typename T, int PbrtVersion>
 absl::Status ProtoParser<T, PbrtVersion>::TransformBegin() {
   if (PbrtVersion <= 3) {
-    auto& transform_begin =
-        *output_.add_directives()->mutable_transform_begin();
-    assert(IsSupported(PbrtVersion, transform_begin));
-
+    output_.add_directives()->mutable_transform_begin();
     return absl::OkStatus();
   }
 
@@ -543,9 +494,7 @@ absl::Status ProtoParser<T, PbrtVersion>::TransformBegin() {
 template <typename T, int PbrtVersion>
 absl::Status ProtoParser<T, PbrtVersion>::TransformEnd() {
   if (PbrtVersion <= 3) {
-    auto& transform_end = *output_.add_directives()->mutable_transform_end();
-    assert(IsSupported(PbrtVersion, transform_end));
-
+    output_.add_directives()->mutable_transform_end();
     return absl::OkStatus();
   }
 
@@ -558,8 +507,6 @@ absl::Status ProtoParser<T, PbrtVersion>::TransformTimes(double start_time,
   if constexpr (PbrtVersion >= 2) {
     auto& transform_times =
         *output_.add_directives()->mutable_transform_times();
-    assert(IsSupported(PbrtVersion, transform_times));
-
     transform_times.set_start_time(start_time);
     transform_times.set_end_time(end_time);
     return absl::OkStatus();
@@ -572,8 +519,6 @@ template <typename T, int PbrtVersion>
 absl::Status ProtoParser<T, PbrtVersion>::Translate(double x, double y,
                                                     double z) {
   auto& translate = *output_.add_directives()->mutable_translate();
-  assert(IsSupported(PbrtVersion, translate));
-
   translate.set_x(x);
   translate.set_y(y);
   translate.set_z(z);
@@ -596,18 +541,14 @@ absl::Status ProtoParser<T, PbrtVersion>::VolumeIntegrator(
 
 template <typename T, int PbrtVersion>
 absl::Status ProtoParser<T, PbrtVersion>::WorldBegin() {
-  auto& world_begin = *output_.add_directives()->mutable_world_begin();
-  assert(IsSupported(PbrtVersion, world_begin));
-
+  output_.add_directives()->mutable_world_begin();
   return absl::OkStatus();
 }
 
 template <typename T, int PbrtVersion>
 absl::Status ProtoParser<T, PbrtVersion>::WorldEnd() {
   if constexpr (PbrtVersion <= 3) {
-    auto& world_end = *output_.add_directives()->mutable_world_end();
-    assert(IsSupported(PbrtVersion, world_end));
-
+    output_.add_directives()->mutable_world_end();
     return absl::OkStatus();
   }
 

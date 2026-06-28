@@ -1,6 +1,5 @@
 #include "pbrt_proto/shared/materials.h"
 
-#include <cassert>
 #include <functional>
 
 #include "absl/container/flat_hash_map.h"
@@ -9,7 +8,6 @@
 #include "pbrt_proto/shared/common.h"
 #include "pbrt_proto/shared/enums.h"
 #include "pbrt_proto/shared/parser.h"
-#include "pbrt_proto/shared/version.h"
 
 namespace pbrt_proto {
 namespace {
@@ -140,8 +138,6 @@ void RemoveRemapRoughness(
 absl::Status RemoveBluePaintMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, BluePaintMaterial& output) {
-  assert(IsSupported(pbrt_version, output));
-
   RemoveBumpmap(parameters, output);
   return absl::OkStatus();
 }
@@ -149,8 +145,6 @@ absl::Status RemoveBluePaintMaterial(
 absl::Status RemoveBrushedMetalMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, BrushedMetalMaterial& output) {
-  assert(IsSupported(pbrt_version, output));
-
   RemoveBumpmap(parameters, output);
   return absl::OkStatus();
 }
@@ -158,8 +152,6 @@ absl::Status RemoveBrushedMetalMaterial(
 absl::Status RemoveClayMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, ClayMaterial& output) {
-  assert(IsSupported(pbrt_version, output));
-
   RemoveBumpmap(parameters, output);
   return absl::OkStatus();
 }
@@ -167,8 +159,6 @@ absl::Status RemoveClayMaterial(
 absl::Status RemoveDisneyMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, DisneyMaterial& output) {
-  assert(IsSupported(pbrt_version, output));
-
   RemoveRoughness(parameters, output);
   RemoveEta(parameters, output);
   RemoveBumpmap(parameters, output);
@@ -214,8 +204,6 @@ absl::Status RemoveDisneyMaterial(
 absl::Status RemoveFeltMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, FeltMaterial& output) {
-  assert(IsSupported(pbrt_version, output));
-
   RemoveBumpmap(parameters, output);
   return absl::OkStatus();
 }
@@ -223,8 +211,6 @@ absl::Status RemoveFeltMaterial(
 absl::Status RemoveGlassMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, GlassMaterial& output) {
-  assert(IsSupported(pbrt_version, output));
-
   RemoveEta(parameters, pbrt_version, output);
   RemoveBumpmap(parameters, output);
 
@@ -249,8 +235,6 @@ absl::Status RemoveGlassMaterial(
 absl::Status RemoveHairMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, HairMaterial& output) {
-  assert(IsSupported(pbrt_version, output));
-
   RemoveEta(parameters, output);
 
   TryRemoveFloatTexture(parameters, "eumelanin",
@@ -275,8 +259,6 @@ absl::Status RemoveHairMaterial(
 absl::Status RemoveKdSubsurfaceMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, KdSubsurfaceMaterial& output) {
-  assert(IsSupported(pbrt_version, output));
-
   RemoveBumpmap(parameters, output);
 
   TryRemoveFloatTexture(
@@ -330,8 +312,6 @@ absl::Status RemoveKdSubsurfaceMaterial(
 absl::Status RemoveMatteMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, MatteMaterial& output) {
-  assert(IsSupported(pbrt_version, output));
-
   RemoveSigma(parameters, output);
   RemoveBumpmap(parameters, output);
   return RemoveKd(parameters, pbrt_version, output);
@@ -340,8 +320,6 @@ absl::Status RemoveMatteMaterial(
 absl::Status RemoveMeasuredFourierMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, MeasuredFourierMaterial& output) {
-  assert(IsSupported(pbrt_version, output));
-
   RemoveBumpmap(parameters, output);
 
   if (std::optional<absl::string_view> filename =
@@ -356,8 +334,6 @@ absl::Status RemoveMeasuredFourierMaterial(
 absl::Status RemoveMeasuredMerlMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, MeasuredMerlMaterial& output) {
-  assert(IsSupported(pbrt_version, output));
-
   RemoveBumpmap(parameters, output);
 
   if (std::optional<absl::string_view> filename =
@@ -372,8 +348,6 @@ absl::Status RemoveMeasuredMerlMaterial(
 absl::Status RemoveMetalMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, MetalMaterial& output) {
-  assert(IsSupported(pbrt_version, output));
-
   RemoveRoughness(parameters, output);
   RemoveBumpmap(parameters, output);
 
@@ -400,8 +374,6 @@ absl::Status RemoveMetalMaterial(
 absl::Status RemoveMirrorMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, MirrorMaterial& output) {
-  assert(IsSupported(pbrt_version, output));
-
   RemoveBumpmap(parameters, output);
   return RemoveKr(parameters, pbrt_version, output);
 }
@@ -409,8 +381,6 @@ absl::Status RemoveMirrorMaterial(
 absl::Status RemoveMixMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, MixMaterial& output) {
-  assert(IsSupported(pbrt_version, output));
-
   RemoveSigma(parameters, output);
   RemoveBumpmap(parameters, output);
 
@@ -438,8 +408,6 @@ absl::Status RemoveMixMaterial(
 absl::Status RemovePlasticMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, PlasticMaterial& output) {
-  assert(IsSupported(pbrt_version, output));
-
   RemoveRoughness(parameters, output);
   RemoveBumpmap(parameters, output);
 
@@ -463,8 +431,6 @@ absl::Status RemovePlasticMaterial(
 absl::Status RemovePrimerMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, PrimerMaterial& output) {
-  assert(IsSupported(pbrt_version, output));
-
   RemoveBumpmap(parameters, output);
   return absl::OkStatus();
 }
@@ -491,8 +457,6 @@ absl::Status RemoveShinyMetalMaterial(
 absl::Status RemoveSkinMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, SkinMaterial& output) {
-  assert(IsSupported(pbrt_version, output));
-
   RemoveBumpmap(parameters, output);
   return absl::OkStatus();
 }
@@ -500,8 +464,6 @@ absl::Status RemoveSkinMaterial(
 absl::Status RemoveSubstrateMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, SubstrateMaterial& output) {
-  assert(IsSupported(pbrt_version, output));
-
   RemoveUVRoughness(parameters, output);
   RemoveBumpmap(parameters, output);
 
@@ -525,8 +487,6 @@ absl::Status RemoveSubstrateMaterial(
 absl::Status RemoveSubsurfaceMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, SubsurfaceMaterial& output) {
-  assert(IsSupported(pbrt_version, output));
-
   RemoveBumpmap(parameters, output);
 
   if (absl::Status status = RemoveSigmaA(parameters, pbrt_version, output);
@@ -592,8 +552,6 @@ absl::Status RemoveSubsurfaceMaterial(
 absl::Status RemoveTranslucentMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, TranslucentMaterial& output) {
-  assert(IsSupported(pbrt_version, output));
-
   RemoveRoughness(parameters, output);
   RemoveBumpmap(parameters, output);
 
@@ -631,8 +589,6 @@ absl::Status RemoveTranslucentMaterial(
 absl::Status RemoveUberMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, UberMaterial& output) {
-  assert(IsSupported(pbrt_version, output));
-
   RemoveRoughness(parameters, output);
   RemoveBumpmap(parameters, output);
 

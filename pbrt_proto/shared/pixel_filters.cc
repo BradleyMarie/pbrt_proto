@@ -1,13 +1,11 @@
 #include "pbrt_proto/shared/pixel_filters.h"
 
-#include <cassert>
 #include <cmath>
 
 #include "absl/container/flat_hash_map.h"
 #include "absl/strings/string_view.h"
 #include "pbrt_proto/pbrt.pb.h"
 #include "pbrt_proto/shared/parser.h"
-#include "pbrt_proto/shared/version.h"
 
 namespace pbrt_proto {
 namespace {
@@ -68,8 +66,6 @@ void RemoveTau(absl::flat_hash_map<absl::string_view, Parameter>& parameters,
 absl::Status RemoveBoxPixelFilter(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, BoxPixelFilter& output) {
-  assert(IsSupported(pbrt_version, output));
-
   if (pbrt_version <= 3) {
     RemoveWidth(parameters, output);
   } else {
@@ -82,8 +78,6 @@ absl::Status RemoveBoxPixelFilter(
 absl::Status RemoveGaussianPixelFilter(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, GaussianPixelFilter& output) {
-  assert(IsSupported(pbrt_version, output));
-
   if (pbrt_version <= 3) {
     RemoveWidth(parameters, output);
 
@@ -106,8 +100,6 @@ absl::Status RemoveGaussianPixelFilter(
 absl::Status RemoveLanczosPixelFilter(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, LanczosPixelFilter& output) {
-  assert(IsSupported(pbrt_version, output));
-
   if (pbrt_version <= 3) {
     RemoveWidth(parameters, output);
     RemoveTau(parameters, output);
@@ -122,8 +114,6 @@ absl::Status RemoveLanczosPixelFilter(
 absl::Status RemoveMitchellPixelFilter(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, MitchellPixelFilter& output) {
-  assert(IsSupported(pbrt_version, output));
-
   if (pbrt_version <= 3) {
     RemoveWidth(parameters, output);
     RemoveBC(parameters, output);
@@ -138,8 +128,6 @@ absl::Status RemoveMitchellPixelFilter(
 absl::Status RemoveTrianglePixelFilter(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, TrianglePixelFilter& output) {
-  assert(IsSupported(pbrt_version, output));
-
   if (pbrt_version <= 3) {
     RemoveWidth(parameters, output);
   } else {
