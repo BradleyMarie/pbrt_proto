@@ -116,6 +116,10 @@ static const DisjointSet kAllowedNameChanges =
                  "pbrt_proto.v3.Film.image", "pbrt_proto.v4.Film.rgb"})
         .AddSet({"pbrt_proto.v3.MakeNamedMedium.heterogeneous",
                  "pbrt_proto.v4.MakeNamedMedium.uniformgrid"})
+        .AddSet(
+            {"pbrt_proto.MetalMaterial.eta",
+             "pbrt_proto.v2.Shape.MaterialOverrides.eta_as_spectrum_texture",
+             "pbrt_proto.v3.Shape.MaterialOverrides.eta_as_spectrum_texture"})
         .AddSet({"pbrt_proto.v1.SurfaceIntegrator.bidirectional",
                  "pbrt_proto.v3.Integrator.bdpt",
                  "pbrt_proto.v4.Integrator.bdpt"})
@@ -128,6 +132,9 @@ static const DisjointSet kAllowedNameChanges =
 
 static const DisjointSet kAllowedNameCollisions =
     DisjointSet::Builder()
+        .AddSet({"pbrt_proto.MetalMaterial.eta",
+                 "pbrt_proto.v2.Shape.MaterialOverrides.eta",
+                 "pbrt_proto.v3.Shape.MaterialOverrides.eta"})
         .AddSet({"pbrt_proto.v1.Sampler.random", "pbrt_proto.v2.Sampler.random",
                  "pbrt_proto.v3.Sampler.random",
                  "pbrt_proto.v4.Sampler.random"})

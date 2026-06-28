@@ -160,8 +160,20 @@ AllMessageGroups() {
   };
 }
 
+const google::protobuf::Descriptor& MaterialV1() {
+  const Descriptor* result = v1::Material::GetDescriptor();
+  ABSL_CHECK(result);
+  return *result;
+}
+
 const google::protobuf::Descriptor& MaterialOverridesV1() {
   const Descriptor* result = v1::Shape::MaterialOverrides::GetDescriptor();
+  ABSL_CHECK(result);
+  return *result;
+}
+
+const google::protobuf::Descriptor& MaterialV2() {
+  const Descriptor* result = v2::Material::GetDescriptor();
   ABSL_CHECK(result);
   return *result;
 }
@@ -172,15 +184,16 @@ const google::protobuf::Descriptor& MaterialOverridesV2() {
   return *result;
 }
 
-const google::protobuf::Descriptor& MaterialOverridesV3() {
-  const Descriptor* result = v3::Shape::MaterialOverrides::GetDescriptor();
+const google::protobuf::Descriptor& MaterialV3() {
+  const Descriptor* result = v3::Material::GetDescriptor();
   ABSL_CHECK(result);
   return *result;
 }
 
-std::vector<const google::protobuf::Descriptor*> AllMaterialOverrides() {
-  return {nullptr, &MaterialOverridesV1(), &MaterialOverridesV2(),
-          &MaterialOverridesV3()};
+const google::protobuf::Descriptor& MaterialOverridesV3() {
+  const Descriptor* result = v3::Shape::MaterialOverrides::GetDescriptor();
+  ABSL_CHECK(result);
+  return *result;
 }
 
 std::vector<const google::protobuf::Descriptor* absl_nonnull> AllPbrtV1() {
@@ -221,11 +234,6 @@ const google::protobuf::Descriptor& TopLevelPbrtV4() {
   const Descriptor* descriptor = v4::PbrtProto::GetDescriptor();
   ABSL_CHECK(descriptor);
   return *descriptor;
-}
-
-std::vector<std::vector<const google::protobuf::Descriptor* absl_nonnull>>
-AllPbrtVersions() {
-  return {{}, AllPbrtV1(), AllPbrtV2(), AllPbrtV3(), AllPbrtV4()};
 }
 
 }  // namespace pbrt_proto

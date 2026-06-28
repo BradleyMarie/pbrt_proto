@@ -41,13 +41,15 @@ absl::flat_hash_map<
 AllMessageGroups();
 
 //
-// Material Overrides Overrides
+// Material and Material Overrides
 //
 
+const google::protobuf::Descriptor& MaterialV1();
 const google::protobuf::Descriptor& MaterialOverridesV1();
+const google::protobuf::Descriptor& MaterialV2();
 const google::protobuf::Descriptor& MaterialOverridesV2();
+const google::protobuf::Descriptor& MaterialV3();
 const google::protobuf::Descriptor& MaterialOverridesV3();
-std::vector<const google::protobuf::Descriptor*> AllMaterialOverrides();
 
 //
 // Unshared Descriptors
@@ -64,9 +66,6 @@ const google::protobuf::Descriptor& TopLevelPbrtV3();
 
 std::vector<const google::protobuf::Descriptor* absl_nonnull> AllPbrtV4();
 const google::protobuf::Descriptor& TopLevelPbrtV4();
-
-std::vector<std::vector<const google::protobuf::Descriptor* absl_nonnull>>
-AllPbrtVersions();
 
 }  // namespace pbrt_proto
 

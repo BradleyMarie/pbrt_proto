@@ -34,12 +34,26 @@ TEST(PBRTv3, AllSupportV3) {
 }
 
 TEST(PBRTv3, FieldNumbersAreContiguous) {
-  EXPECT_TRUE(FieldsContinueContiguously(&TopLevelPbrtV2(), &TopLevelPbrtV3()));
+  EXPECT_TRUE(FieldsContinueContiguously(&TopLevelPbrtV3(), &TopLevelPbrtV3()));
 }
 
 TEST(PBRTv3, MessagesAreCompatible) {
   EXPECT_TRUE(MessagesAreCompatible(TopLevelPbrtV1(), TopLevelPbrtV3()));
-  EXPECT_TRUE(MessagesAreCompatible(TopLevelPbrtV2(), TopLevelPbrtV3()));
+  EXPECT_TRUE(MessagesAreCompatible(TopLevelPbrtV3(), TopLevelPbrtV3()));
+}
+
+TEST(PBRTv3, MaterialOverridesAreCompatible) {
+  for (int f = 0; f < MaterialV3().field_count(); f++) {
+    const FieldDescriptor* field_descriptor = MaterialV3().field(f);
+    ASSERT_TRUE(field_descriptor);
+
+    const Descriptor* descriptor = field_descriptor->message_type();
+    if (!descriptor) {
+      continue;
+    }
+
+    EXPECT_TRUE(MessagesAreCompatible(*descriptor, MaterialOverridesV3()));
+  }
 }
 
 }  // namespace

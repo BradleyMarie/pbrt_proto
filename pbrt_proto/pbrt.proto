@@ -2123,7 +2123,7 @@ message MetalMaterial {
   optional FloatTextureParameter bumpmap = 13;
 
   // The index of refraction to use in computing the material's reflectance.
-  optional SpectrumTextureParameter eta = 15;
+  optional SpectrumTextureParameter eta = 16;
 
   // The absorption coefficient to use in computing the material's reflectance.
   optional SpectrumTextureParameter k = 17;

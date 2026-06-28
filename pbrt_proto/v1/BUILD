@@ -129,6 +129,7 @@ cc_test(
         "//pbrt_proto/shared:version_set",
         "//pbrt_proto/testing:descriptors",
         "//pbrt_proto/testing:field_numbering",
+        "//pbrt_proto/testing:message_compatibility",
         "@abseil-cpp//absl/strings",
         "@googletest//:gtest",
         "@googletest//:gtest_main",

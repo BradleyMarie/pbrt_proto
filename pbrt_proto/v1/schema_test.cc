@@ -8,6 +8,7 @@
 #include "pbrt_proto/shared/version_set.h"
 #include "pbrt_proto/testing/descriptors.h"
 #include "pbrt_proto/testing/field_numbering.h"
+#include "pbrt_proto/testing/message_compatibility.h"
 
 namespace pbrt_proto::v1 {
 namespace {
@@ -37,6 +38,20 @@ TEST(PBRTv1, AllSupportV1) {
 
 TEST(PBRTv1, FieldNumbersAreContiguous) {
   EXPECT_TRUE(FieldsContinueContiguously(nullptr, &TopLevelPbrtV1()));
+}
+
+TEST(PBRTv1, MaterialOverridesAreCompatible) {
+  for (int f = 0; f < MaterialV1().field_count(); f++) {
+    const FieldDescriptor* field_descriptor = MaterialV1().field(f);
+    ASSERT_TRUE(field_descriptor);
+
+    const Descriptor* descriptor = field_descriptor->message_type();
+    if (!descriptor) {
+      continue;
+    }
+
+    EXPECT_TRUE(MessagesAreCompatible(*descriptor, MaterialOverridesV1()));
+  }
 }
 
 }  // namespace
