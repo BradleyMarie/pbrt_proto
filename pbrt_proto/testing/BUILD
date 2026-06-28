@@ -37,6 +37,17 @@ cc_library(
 )
 
 cc_library(
+    name = "field_numbering",
+    testonly = 1,
+    srcs = ["field_numbering.cc"],
+    hdrs = ["field_numbering.h"],
+    deps = [
+        "@abseil-cpp//absl/log:check",
+        "@protobuf",
+    ],
+)
+
+cc_library(
     name = "message_compatibility",
     testonly = 1,
     srcs = ["message_compatibility.cc"],

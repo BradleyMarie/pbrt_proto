@@ -4,6 +4,7 @@
 #include "pbrt_proto/shared/version.h"
 #include "pbrt_proto/shared/version_set.h"
 #include "pbrt_proto/testing/descriptors.h"
+#include "pbrt_proto/testing/field_numbering.h"
 #include "pbrt_proto/testing/message_compatibility.h"
 
 namespace pbrt_proto::v2 {
@@ -32,8 +33,12 @@ TEST(PBRTv2, AllSupportV2) {
   }
 }
 
-TEST(PBRTv1, MessagesAreCompatible) {
-  EXPECT_TRUE(MessagesAreCompatible(TopLevelPbrtV2(), TopLevelPbrtV1()));
+TEST(PBRTv2, FieldNumbersAreContiguous) {
+  EXPECT_TRUE(FieldsContinueContiguously(&TopLevelPbrtV1(), &TopLevelPbrtV2()));
+}
+
+TEST(PBRTv2, MessagesAreCompatible) {
+  EXPECT_TRUE(MessagesAreCompatible(TopLevelPbrtV1(), TopLevelPbrtV2()));
 }
 
 }  // namespace
