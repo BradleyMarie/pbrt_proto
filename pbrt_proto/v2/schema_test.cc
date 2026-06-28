@@ -4,6 +4,7 @@
 #include "pbrt_proto/shared/version.h"
 #include "pbrt_proto/shared/version_set.h"
 #include "pbrt_proto/testing/descriptors.h"
+#include "pbrt_proto/testing/message_compatibility.h"
 
 namespace pbrt_proto::v2 {
 namespace {
@@ -29,6 +30,10 @@ TEST(PBRTv2, AllSupportV2) {
       EXPECT_TRUE(versions.Supported(2));
     }
   }
+}
+
+TEST(PBRTv1, MessagesAreCompatible) {
+  EXPECT_TRUE(MessagesAreCompatible(TopLevelPbrtV2(), TopLevelPbrtV1()));
 }
 
 }  // namespace

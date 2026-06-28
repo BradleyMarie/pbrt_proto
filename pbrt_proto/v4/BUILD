@@ -17,6 +17,7 @@ cc_test(
         "//pbrt_proto/shared:version",
         "//pbrt_proto/shared:version_set",
         "//pbrt_proto/testing:descriptors",
+        "//pbrt_proto/testing:message_compatibility",
         "@googletest//:gtest",
         "@googletest//:gtest_main",
         "@protobuf",

@@ -18,7 +18,32 @@ cc_library(
         "@abseil-cpp//absl/functional:function_ref",
         "@abseil-cpp//absl/log:check",
         "@abseil-cpp//absl/strings",
-        "@googletest//:gtest",
+        "@protobuf",
+    ],
+)
+
+cc_library(
+    name = "field_compatibility",
+    testonly = 1,
+    srcs = ["field_compatibility.cc"],
+    hdrs = ["field_compatibility.h"],
+    deps = [
+        "@abseil-cpp//absl/container:flat_hash_map",
+        "@abseil-cpp//absl/container:flat_hash_set",
+        "@abseil-cpp//absl/strings",
+        "@abseil-cpp//absl/strings:string_view",
+        "@protobuf",
+    ],
+)
+
+cc_library(
+    name = "message_compatibility",
+    testonly = 1,
+    srcs = ["message_compatibility.cc"],
+    hdrs = ["message_compatibility.h"],
+    deps = [
+        ":field_compatibility",
+        "@abseil-cpp//absl/log:check",
         "@protobuf",
     ],
 )
