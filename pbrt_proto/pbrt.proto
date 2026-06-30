@@ -3613,6 +3613,7 @@ message ImageWrap {
     REPEAT = 0;
     BLACK = 1;
     CLAMP = 2;
+    OCTAHEDRALSPHERE = 3;  // @min_version PBRTv4
   }
 }
 
