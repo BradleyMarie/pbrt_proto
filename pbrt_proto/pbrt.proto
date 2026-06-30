@@ -20,6 +20,100 @@ message BlackbodySpectrum {
   optional double scale = 2 [default = 1.0];
 }
 
+// A named spectrum with a predefined spectral power distribution.
+message NamedSpectrum {
+  enum Type {
+    CANON_EOS_100D_R = 0;
+    CANON_EOS_100D_G = 1;
+    CANON_EOS_100D_B = 2;
+    CANON_EOS_1DX_MKII_R = 3;
+    CANON_EOS_1DX_MKII_G = 4;
+    CANON_EOS_1DX_MKII_B = 5;
+    CANON_EOS_200D_R = 6;
+    CANON_EOS_200D_G = 7;
+    CANON_EOS_200D_B = 8;
+    CANON_EOS_200D_MKII_R = 9;
+    CANON_EOS_200D_MKII_G = 10;
+    CANON_EOS_200D_MKII_B = 11;
+    CANON_EOS_5D_R = 12;
+    CANON_EOS_5D_G = 13;
+    CANON_EOS_5D_B = 14;
+    CANON_EOS_5D_MKII_R = 15;
+    CANON_EOS_5D_MKII_G = 16;
+    CANON_EOS_5D_MKII_B = 17;
+    CANON_EOS_5D_MKIII_R = 18;
+    CANON_EOS_5D_MKIII_G = 19;
+    CANON_EOS_5D_MKIII_B = 20;
+    CANON_EOS_5D_MKIV_R = 21;
+    CANON_EOS_5D_MKIV_G = 22;
+    CANON_EOS_5D_MKIV_B = 23;
+    CANON_EOS_5DS_R = 24;
+    CANON_EOS_5DS_G = 25;
+    CANON_EOS_5DS_B = 26;
+    CANON_EOS_M_R = 27;
+    CANON_EOS_M_G = 28;
+    CANON_EOS_M_B = 29;
+    GLASS_BAF10 = 30;
+    GLASS_BK7 = 31;
+    GLASS_FK51A = 32;
+    GLASS_F5 = 33;
+    GLASS_F10 = 34;
+    GLASS_F11 = 35;
+    GLASS_LASF9 = 36;
+    HASSELBLAD_L1D_20C_R = 37;
+    HASSELBLAD_L1D_20C_G = 38;
+    HASSELBLAD_L1D_20C_B = 39;
+    ILLUM_ACESD60 = 40;
+    METAL_AG_ETA = 41;
+    METAL_AG_K = 42;
+    METAL_AL_ETA = 43;
+    METAL_AL_K = 44;
+    METAL_AU_ETA = 45;
+    METAL_AU_K = 46;
+    METAL_CU_ETA = 47;
+    METAL_CU_K = 48;
+    METAL_CUZN_ETA = 49;
+    METAL_CUZN_K = 50;
+    METAL_MGO_ETA = 51;
+    METAL_MGO_K = 52;
+    METAL_TIO2_ETA = 53;
+    METAL_TIO2_K = 54;
+    NIKON_D810_R = 55;
+    NIKON_D810_G = 56;
+    NIKON_D810_B = 57;
+    NIKON_D850_R = 58;
+    NIKON_D850_G = 59;
+    NIKON_D850_B = 60;
+    SONY_ILCE_6400_R = 61;
+    SONY_ILCE_6400_G = 62;
+    SONY_ILCE_6400_B = 63;
+    SONY_ILCE_7M3_R = 64;
+    SONY_ILCE_7M3_G = 65;
+    SONY_ILCE_7M3_B = 66;
+    SONY_ILCE_7RM3_R = 67;
+    SONY_ILCE_7RM3_G = 68;
+    SONY_ILCE_7RM3_B = 69;
+    SONY_ILCE_9_R = 70;
+    SONY_ILCE_9_G = 71;
+    SONY_ILCE_9_B = 72;
+    STDILLUM_A = 73;
+    STDILLUM_D50 = 74;
+    STDILLUM_D65 = 75;
+    STDILLUM_F1 = 76;
+    STDILLUM_F2 = 77;
+    STDILLUM_F3 = 78;
+    STDILLUM_F4 = 79;
+    STDILLUM_F5 = 80;
+    STDILLUM_F6 = 81;
+    STDILLUM_F7 = 82;
+    STDILLUM_F8 = 83;
+    STDILLUM_F9 = 84;
+    STDILLUM_F10 = 85;
+    STDILLUM_F11 = 86;
+    STDILLUM_F12 = 87;
+  }
+}
+
 // A sub-region of the image to render in pixel coordinates.
 message PixelBounds {
   // The lower `x` bound of the region.
@@ -130,6 +224,9 @@ message Spectrum {
     // A spectral power distribution formed from individual spectral samples
     // that are specified in the referenced file.
     string sampled_spectrum_filename = 6;
+
+    // A named spectral power distribution that is built in to the renderer.
+    NamedSpectrum.Type named_spectrum = 7;
   }
 }
 
@@ -175,6 +272,9 @@ message SpectrumTextureParameter {
     // A spectral power distribution formed from individual spectral samples
     // that are specified in the referenced file.
     string sampled_spectrum_filename = 7;
+
+    // A named spectral power distribution that is built in to the renderer.
+    NamedSpectrum.Type named_spectrum = 8;
   }
 }
 
