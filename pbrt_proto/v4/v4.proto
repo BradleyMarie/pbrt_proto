@@ -23,6 +23,11 @@ message AreaLightSource {
   }
 }
 
+// A directive which changes the default values of other directives.
+message Attribute {
+  // TODO
+}
+
 // A directive which sets the Camera to use for rendering.
 message Camera {
   // The type of camera to use. If none are set the renderer should exit with an
@@ -97,6 +102,23 @@ message MakeNamedMedium {
     CloudMedium cloud = 4;              // Create a cloud medium
     NanoVdbMedium nanovdb = 5;          // Create a NanoVDB medium
     RgbGridMedium rgbgrid = 6;          // Create an RGB grid medium.
+  }
+}
+
+// A directive which sets global options that control rendering.
+message Option {
+  oneof option_type {
+    bool disablepixeljitter = 1;
+    bool disabletexturefiltering = 2;
+    bool disablewavelengthjitter = 3;
+    bool forcediffuse = 4;
+    bool pixelstats = 5;
+    bool wavefront = 6;
+    double displacementedgescale = 7;
+    string msereferenceimage = 8;
+    string msereferenceout = 9;
+    string rendercoordsys = 10;  // TODO: Make this an enum
+    int32 seed = 11;
   }
 }
 
@@ -188,6 +210,9 @@ message Directive {
     TransformTimes transform_times = 40;
     MakeNamedMedium make_named_medium = 41;
     MediumInterface medium_interface = 42;
+    Attribute attribute = 43;
+    ColorSpace color_space = 44;
+    Option option = 45;
   }
 }
 
