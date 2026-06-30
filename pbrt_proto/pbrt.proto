@@ -294,7 +294,7 @@ message ActiveTransform {
   };
 
   // The selected transformation matrix.
-  required ActiveTransformation active = 1 [default = ALL];
+  required ActiveTransformation active = 1;
 }
 
 // A directive which pushes the current graphics state including the current
@@ -309,6 +309,21 @@ message AttributeBegin {}
 //
 // @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message AttributeEnd {}
+
+// A directive which sets the color space to used to interpret RGB values.
+//
+// @supported_versions {PBRTv4}
+message ColorSpace {
+  enum Space {
+    SRGB = 0;
+    ACES2065_1 = 1;
+    DCI_P3 = 2;
+    REC2020 = 3;
+  }
+
+  // The color space to use.
+  required Space space = 1;
+}
 
 // A directive which multiplies the current transformation matrix by the matrix
 // specified.
