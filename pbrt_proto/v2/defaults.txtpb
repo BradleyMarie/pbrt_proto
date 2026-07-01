@@ -45,7 +45,7 @@ global_defaults {
 }
 default_material {
   matte {
-    Kd {
+    reflectance {
       constant_spectrum: 0.5
     }
     sigma {
@@ -322,7 +322,7 @@ materials {
     }
   }
   matte {
-    Kd {
+    reflectance {
       constant_spectrum: 0.5
     }
     sigma {
@@ -861,7 +861,7 @@ materials {
           b: 0.014
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {
@@ -896,7 +896,7 @@ materials {
           b: 0.046
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {
@@ -931,7 +931,7 @@ materials {
           b: 0.19
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {
@@ -966,7 +966,7 @@ materials {
           b: 0.20
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {
@@ -1001,7 +1001,7 @@ materials {
           b: 0.0163
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {
@@ -1036,7 +1036,7 @@ materials {
           b: 1.45
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {
@@ -1071,7 +1071,7 @@ materials {
           b: 0.0071
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {
@@ -1106,7 +1106,7 @@ materials {
           b: 0.12
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {
@@ -1141,7 +1141,7 @@ materials {
           b: 0.0142
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {
@@ -1176,7 +1176,7 @@ materials {
           b: 0.48
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {
@@ -1211,7 +1211,7 @@ materials {
           b: 0.145
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {
@@ -1246,7 +1246,7 @@ materials {
           b: 0.00
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {
@@ -1281,7 +1281,7 @@ materials {
           b: 0.014
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {
@@ -1316,7 +1316,7 @@ materials {
           b: 0.0115
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {
@@ -1351,7 +1351,7 @@ materials {
           b: 0.012778
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {
@@ -1386,7 +1386,7 @@ materials {
           b: 0.019933
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {
@@ -1421,7 +1421,7 @@ materials {
           b: 8.8493
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {
@@ -1456,7 +1456,7 @@ materials {
           b: 7.82
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {
@@ -1491,7 +1491,7 @@ materials {
           b: 0.035937
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {
@@ -1526,7 +1526,7 @@ materials {
           b: 0.065167
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {
@@ -1561,7 +1561,7 @@ materials {
           b: 0.1564
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {
@@ -1596,7 +1596,7 @@ materials {
           b: 0.14375
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {
@@ -1631,7 +1631,7 @@ materials {
           b: 0.2468
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {
@@ -1666,7 +1666,7 @@ materials {
           b: 0.20729
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {
@@ -1701,7 +1701,7 @@ materials {
           b: 0.0020025
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {
@@ -1736,7 +1736,7 @@ materials {
           b: 0.008878
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {
@@ -1771,7 +1771,7 @@ materials {
           b: 0.023997
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {
@@ -1806,7 +1806,7 @@ materials {
           b: 0.019843
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {
@@ -1841,7 +1841,7 @@ materials {
           b: 0.29434
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {
@@ -1876,7 +1876,7 @@ materials {
           b: 0.057786
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {
@@ -1911,7 +1911,7 @@ materials {
           b: 0.034983
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {
@@ -1946,7 +1946,7 @@ materials {
           b: 0.026297
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {
@@ -1981,7 +1981,7 @@ materials {
           b: 0.052184
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {
@@ -2016,7 +2016,7 @@ materials {
           b: 0.12426
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {
@@ -2051,7 +2051,7 @@ materials {
           b: 0.29325
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {
@@ -2086,7 +2086,7 @@ materials {
           b: 0.25262
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {
@@ -2121,7 +2121,7 @@ materials {
           b: 0.056781
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {
@@ -2156,7 +2156,7 @@ materials {
           b: 0.061717
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {
@@ -2191,7 +2191,7 @@ materials {
           b: 0.075823
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {
@@ -2226,7 +2226,7 @@ materials {
           b: 0.20365
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {
@@ -2261,7 +2261,7 @@ materials {
           b: 7.2127
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {
@@ -2296,7 +2296,7 @@ materials {
           b: 0.007863
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {
@@ -2331,7 +2331,7 @@ materials {
           b: 0.003195
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {
@@ -2366,7 +2366,7 @@ materials {
           b: 61.084
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {
@@ -2401,7 +2401,7 @@ materials {
           b: 0.34148
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {
@@ -2436,7 +2436,7 @@ materials {
           b: 0.050124
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {
@@ -2471,7 +2471,7 @@ materials {
           b: 35.433
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {
@@ -2506,7 +2506,7 @@ materials {
           b: 0.030147
         }
       }
-      Kr {
+      reflectance {
         constant_spectrum: 1.0
       }
       Kt {

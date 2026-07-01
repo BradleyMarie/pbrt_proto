@@ -862,7 +862,7 @@ TEST(Shape, Overrides) {
                              k { spectrum_texture_name: "o" }
                              sigma_a { spectrum_texture_name: "p" }
                              sigma_s { spectrum_texture_name: "q" }
-                             filename: "file"
+                             bsdffile: "file"
                              namedmaterial1: "mat1"
                              namedmaterial2: "mat2"
                              color { spectrum_texture_name: "r" }

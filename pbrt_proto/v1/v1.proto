@@ -92,7 +92,7 @@ message Material {
     ClayMaterial clay = 3;                  // Create a clay material
     FeltMaterial felt = 4;                  // Create a felt material
     GlassMaterial glass = 5;                // Create a glass material
-    MatteMaterial matte = 6;                // Create a mirror material
+    DiffuseMaterial matte = 6;              // Create a mirror material
     MirrorMaterial mirror = 7;              // Create a mirror material
     PlasticMaterial plastic = 8;            // Create a plastic material
     PrimerMaterial primer = 9;              // Create a primer material

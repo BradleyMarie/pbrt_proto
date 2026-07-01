@@ -45,6 +45,209 @@ TEST(RemoveBluePaintMaterial, WithData) {
               )pb"));
 }
 
+TEST(RemoveConductorMaterialV2, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  ConductorMaterial actual;
+  EXPECT_TRUE(
+      RemoveConductorMaterial(parameters, /*pbrt_version=*/2, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveConductorMaterialV2, WithData) {
+  std::vector<std::string_view> k = {"k"};
+  Parameter k_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::TEXTURE,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(k)};
+
+  std::vector<std::string_view> eta = {"eta"};
+  Parameter eta_parameter{/*directive=*/"",
+                          /*type=*/ParameterType::TEXTURE,
+                          /*type_name=*/"",
+                          /*values=*/absl::MakeSpan(eta)};
+
+  std::vector<std::string_view> roughness = {"roughness"};
+  Parameter roughness_parameter{/*directive=*/"",
+                                /*type=*/ParameterType::TEXTURE,
+                                /*type_name=*/"",
+                                /*values=*/absl::MakeSpan(roughness)};
+
+  std::vector<std::string_view> bumpmap = {"bump"};
+  Parameter bumpmap_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(bumpmap)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"k", k_parameter},
+      {"eta", eta_parameter},
+      {"roughness", roughness_parameter},
+      {"bumpmap", bumpmap_parameter},
+  };
+
+  ConductorMaterial actual;
+  EXPECT_TRUE(
+      RemoveConductorMaterial(parameters, /*pbrt_version=*/2, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                k { spectrum_texture_name: "k" }
+                eta { spectrum_texture_name: "eta" }
+                roughness { float_texture_name: "roughness" }
+                displacement { float_texture_name: "bump" }
+              )pb"));
+}
+
+TEST(RemoveConductorMaterialV3, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  ConductorMaterial actual;
+  EXPECT_TRUE(
+      RemoveConductorMaterial(parameters, /*pbrt_version=*/3, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveConductorMaterialV3, WithData) {
+  std::vector<std::string_view> k = {"k"};
+  Parameter k_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::TEXTURE,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(k)};
+
+  std::vector<std::string_view> eta = {"eta"};
+  Parameter eta_parameter{/*directive=*/"",
+                          /*type=*/ParameterType::TEXTURE,
+                          /*type_name=*/"",
+                          /*values=*/absl::MakeSpan(eta)};
+
+  std::vector<std::string_view> roughness = {"roughness"};
+  Parameter roughness_parameter{/*directive=*/"",
+                                /*type=*/ParameterType::TEXTURE,
+                                /*type_name=*/"",
+                                /*values=*/absl::MakeSpan(roughness)};
+
+  std::vector<std::string_view> bumpmap = {"bump"};
+  Parameter bumpmap_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(bumpmap)};
+
+  std::vector<std::string_view> uroughness = {"uroughness"};
+  Parameter uroughness_parameter{/*directive=*/"",
+                                 /*type=*/ParameterType::TEXTURE,
+                                 /*type_name=*/"",
+                                 /*values=*/absl::MakeSpan(uroughness)};
+
+  std::vector<std::string_view> vroughness = {"vroughness"};
+  Parameter vroughness_parameter{/*directive=*/"",
+                                 /*type=*/ParameterType::TEXTURE,
+                                 /*type_name=*/"",
+                                 /*values=*/absl::MakeSpan(vroughness)};
+
+  bool remaproughness[] = {false};
+  Parameter remaproughness_parameter{/*directive=*/"",
+                                     /*type=*/ParameterType::BOOL,
+                                     /*type_name=*/"",
+                                     /*values=*/absl::MakeSpan(remaproughness)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"k", k_parameter},
+      {"eta", eta_parameter},
+      {"roughness", roughness_parameter},
+      {"bumpmap", bumpmap_parameter},
+      {"uroughness", uroughness_parameter},
+      {"vroughness", vroughness_parameter},
+      {"remaproughness", remaproughness_parameter},
+  };
+
+  ConductorMaterial actual;
+  EXPECT_TRUE(
+      RemoveConductorMaterial(parameters, /*pbrt_version=*/3, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                k { spectrum_texture_name: "k" }
+                eta { spectrum_texture_name: "eta" }
+                roughness { float_texture_name: "roughness" }
+                displacement { float_texture_name: "bump" }
+                uroughness { float_texture_name: "uroughness" }
+                vroughness { float_texture_name: "vroughness" }
+                remaproughness: false
+              )pb"));
+}
+TEST(RemoveConductorMaterialV4, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  ConductorMaterial actual;
+  EXPECT_TRUE(
+      RemoveConductorMaterial(parameters, /*pbrt_version=*/3, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveConductorMaterialV4, WithData) {
+  std::vector<std::string_view> k = {"k"};
+  Parameter k_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::TEXTURE,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(k)};
+
+  std::vector<std::string_view> eta = {"eta"};
+  Parameter eta_parameter{/*directive=*/"",
+                          /*type=*/ParameterType::TEXTURE,
+                          /*type_name=*/"",
+                          /*values=*/absl::MakeSpan(eta)};
+
+  std::vector<std::string_view> roughness = {"roughness"};
+  Parameter roughness_parameter{/*directive=*/"",
+                                /*type=*/ParameterType::TEXTURE,
+                                /*type_name=*/"",
+                                /*values=*/absl::MakeSpan(roughness)};
+
+  std::vector<std::string_view> bumpmap = {"bump"};
+  Parameter bumpmap_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(bumpmap)};
+
+  std::vector<std::string_view> uroughness = {"uroughness"};
+  Parameter uroughness_parameter{/*directive=*/"",
+                                 /*type=*/ParameterType::TEXTURE,
+                                 /*type_name=*/"",
+                                 /*values=*/absl::MakeSpan(uroughness)};
+
+  std::vector<std::string_view> vroughness = {"vroughness"};
+  Parameter vroughness_parameter{/*directive=*/"",
+                                 /*type=*/ParameterType::TEXTURE,
+                                 /*type_name=*/"",
+                                 /*values=*/absl::MakeSpan(vroughness)};
+
+  bool remaproughness[] = {false};
+  Parameter remaproughness_parameter{/*directive=*/"",
+                                     /*type=*/ParameterType::BOOL,
+                                     /*type_name=*/"",
+                                     /*values=*/absl::MakeSpan(remaproughness)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"k", k_parameter},
+      {"eta", eta_parameter},
+      {"roughness", roughness_parameter},
+      {"displacement", bumpmap_parameter},
+      {"uroughness", uroughness_parameter},
+      {"vroughness", vroughness_parameter},
+      {"remaproughness", remaproughness_parameter},
+  };
+
+  ConductorMaterial actual;
+  EXPECT_TRUE(
+      RemoveConductorMaterial(parameters, /*pbrt_version=*/4, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                k { spectrum_texture_name: "k" }
+                eta { spectrum_texture_name: "eta" }
+                roughness { float_texture_name: "roughness" }
+                displacement { float_texture_name: "bump" }
+                uroughness { float_texture_name: "uroughness" }
+                vroughness { float_texture_name: "vroughness" }
+                remaproughness: false
+              )pb"));
+}
+
 TEST(RemoveDisneyMaterial, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
@@ -191,6 +394,86 @@ TEST(RemoveDisneyMaterial, WithData) {
                 sheen { float_texture_name: "sheen" }
                 sheentint { float_texture_name: "sheentint" }
                 thin: true
+              )pb"));
+}
+
+TEST(RemoveDiffuseMaterialV1, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  DiffuseMaterial actual;
+  EXPECT_TRUE(
+      RemoveDiffuseMaterial(parameters, /*pbrt_version=*/1, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveDiffuseMaterialV1, WithData) {
+  std::vector<std::string_view> kd = {"kd"};
+  Parameter kd_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(kd)};
+
+  std::vector<std::string_view> sigma = {"sigma"};
+  Parameter sigma_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::TEXTURE,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(sigma)};
+
+  std::vector<std::string_view> bumpmap = {"bump"};
+  Parameter bumpmap_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(bumpmap)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"Kd", kd_parameter},
+      {"sigma", sigma_parameter},
+      {"bumpmap", bumpmap_parameter},
+  };
+
+  DiffuseMaterial actual;
+  EXPECT_TRUE(
+      RemoveDiffuseMaterial(parameters, /*pbrt_version=*/1, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                reflectance { spectrum_texture_name: "kd" }
+                sigma { float_texture_name: "sigma" }
+                displacement { float_texture_name: "bump" }
+              )pb"));
+}
+
+TEST(RemoveDiffuseMaterialV4, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  DiffuseMaterial actual;
+  EXPECT_TRUE(
+      RemoveDiffuseMaterial(parameters, /*pbrt_version=*/4, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveDiffuseMaterialV4, WithData) {
+  std::vector<std::string_view> kd = {"kd"};
+  Parameter kd_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(kd)};
+
+  std::vector<std::string_view> bumpmap = {"bump"};
+  Parameter bumpmap_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(bumpmap)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"reflectance", kd_parameter},
+      {"displacement", bumpmap_parameter},
+  };
+
+  DiffuseMaterial actual;
+  EXPECT_TRUE(
+      RemoveDiffuseMaterial(parameters, /*pbrt_version=*/4, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                reflectance { spectrum_texture_name: "kd" }
+                displacement { float_texture_name: "bump" }
               )pb"));
 }
 
@@ -681,48 +964,6 @@ TEST(RemoveKdSubsurfaceMaterialV3, WithData) {
               )pb"));
 }
 
-TEST(RemoveMatteMaterial, Empty) {
-  absl::flat_hash_map<absl::string_view, Parameter> parameters;
-
-  MatteMaterial actual;
-  EXPECT_TRUE(RemoveMatteMaterial(parameters, /*pbrt_version=*/1, actual).ok());
-  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
-}
-
-TEST(RemoveMatteMaterial, WithData) {
-  std::vector<std::string_view> kd = {"kd"};
-  Parameter kd_parameter{/*directive=*/"",
-                         /*type=*/ParameterType::TEXTURE,
-                         /*type_name=*/"",
-                         /*values=*/absl::MakeSpan(kd)};
-
-  std::vector<std::string_view> sigma = {"sigma"};
-  Parameter sigma_parameter{/*directive=*/"",
-                            /*type=*/ParameterType::TEXTURE,
-                            /*type_name=*/"",
-                            /*values=*/absl::MakeSpan(sigma)};
-
-  std::vector<std::string_view> bumpmap = {"bump"};
-  Parameter bumpmap_parameter{/*directive=*/"",
-                              /*type=*/ParameterType::TEXTURE,
-                              /*type_name=*/"",
-                              /*values=*/absl::MakeSpan(bumpmap)};
-
-  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
-      {"Kd", kd_parameter},
-      {"sigma", sigma_parameter},
-      {"bumpmap", bumpmap_parameter},
-  };
-
-  MatteMaterial actual;
-  EXPECT_TRUE(RemoveMatteMaterial(parameters, /*pbrt_version=*/1, actual).ok());
-  EXPECT_THAT(actual, EqualsProto(R"pb(
-                Kd { spectrum_texture_name: "kd" }
-                sigma { float_texture_name: "sigma" }
-                bumpmap { float_texture_name: "bump" }
-              )pb"));
-}
-
 TEST(RemoveMeasuredFourierMaterial, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
@@ -756,7 +997,7 @@ TEST(RemoveMeasuredFourierMaterial, WithData) {
       RemoveMeasuredFourierMaterial(parameters, /*pbrt_version=*/3, actual)
           .ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
-                filename: "filename"
+                bsdffile: "filename"
                 bumpmap { float_texture_name: "bump" }
               )pb"));
 }
@@ -794,130 +1035,6 @@ TEST(RemoveMeasuredMerlMaterial, WithData) {
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 filename: "filename"
                 bumpmap { float_texture_name: "bump" }
-              )pb"));
-}
-
-TEST(RemoveMetalMaterialV2, Empty) {
-  absl::flat_hash_map<absl::string_view, Parameter> parameters;
-
-  MetalMaterial actual;
-  EXPECT_TRUE(RemoveMetalMaterial(parameters, /*pbrt_version=*/2, actual).ok());
-  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
-}
-
-TEST(RemoveMetalMaterialV2, WithData) {
-  std::vector<std::string_view> k = {"k"};
-  Parameter k_parameter{/*directive=*/"",
-                        /*type=*/ParameterType::TEXTURE,
-                        /*type_name=*/"",
-                        /*values=*/absl::MakeSpan(k)};
-
-  std::vector<std::string_view> eta = {"eta"};
-  Parameter eta_parameter{/*directive=*/"",
-                          /*type=*/ParameterType::TEXTURE,
-                          /*type_name=*/"",
-                          /*values=*/absl::MakeSpan(eta)};
-
-  std::vector<std::string_view> roughness = {"roughness"};
-  Parameter roughness_parameter{/*directive=*/"",
-                                /*type=*/ParameterType::TEXTURE,
-                                /*type_name=*/"",
-                                /*values=*/absl::MakeSpan(roughness)};
-
-  std::vector<std::string_view> bumpmap = {"bump"};
-  Parameter bumpmap_parameter{/*directive=*/"",
-                              /*type=*/ParameterType::TEXTURE,
-                              /*type_name=*/"",
-                              /*values=*/absl::MakeSpan(bumpmap)};
-
-  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
-      {"k", k_parameter},
-      {"eta", eta_parameter},
-      {"roughness", roughness_parameter},
-      {"bumpmap", bumpmap_parameter},
-  };
-
-  MetalMaterial actual;
-  EXPECT_TRUE(RemoveMetalMaterial(parameters, /*pbrt_version=*/2, actual).ok());
-  EXPECT_THAT(actual, EqualsProto(R"pb(
-                k { spectrum_texture_name: "k" }
-                eta { spectrum_texture_name: "eta" }
-                roughness { float_texture_name: "roughness" }
-                bumpmap { float_texture_name: "bump" }
-              )pb"));
-}
-
-TEST(RemoveMetalMaterialV3, Empty) {
-  absl::flat_hash_map<absl::string_view, Parameter> parameters;
-
-  MetalMaterial actual;
-  EXPECT_TRUE(RemoveMetalMaterial(parameters, /*pbrt_version=*/3, actual).ok());
-  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
-}
-
-TEST(RemoveMetalMaterialV3, WithData) {
-  std::vector<std::string_view> k = {"k"};
-  Parameter k_parameter{/*directive=*/"",
-                        /*type=*/ParameterType::TEXTURE,
-                        /*type_name=*/"",
-                        /*values=*/absl::MakeSpan(k)};
-
-  std::vector<std::string_view> eta = {"eta"};
-  Parameter eta_parameter{/*directive=*/"",
-                          /*type=*/ParameterType::TEXTURE,
-                          /*type_name=*/"",
-                          /*values=*/absl::MakeSpan(eta)};
-
-  std::vector<std::string_view> roughness = {"roughness"};
-  Parameter roughness_parameter{/*directive=*/"",
-                                /*type=*/ParameterType::TEXTURE,
-                                /*type_name=*/"",
-                                /*values=*/absl::MakeSpan(roughness)};
-
-  std::vector<std::string_view> bumpmap = {"bump"};
-  Parameter bumpmap_parameter{/*directive=*/"",
-                              /*type=*/ParameterType::TEXTURE,
-                              /*type_name=*/"",
-                              /*values=*/absl::MakeSpan(bumpmap)};
-
-  std::vector<std::string_view> uroughness = {"uroughness"};
-  Parameter uroughness_parameter{/*directive=*/"",
-                                 /*type=*/ParameterType::TEXTURE,
-                                 /*type_name=*/"",
-                                 /*values=*/absl::MakeSpan(uroughness)};
-
-  std::vector<std::string_view> vroughness = {"vroughness"};
-  Parameter vroughness_parameter{/*directive=*/"",
-                                 /*type=*/ParameterType::TEXTURE,
-                                 /*type_name=*/"",
-                                 /*values=*/absl::MakeSpan(vroughness)};
-
-  bool remaproughness[] = {false};
-  Parameter remaproughness_parameter{/*directive=*/"",
-                                     /*type=*/ParameterType::BOOL,
-                                     /*type_name=*/"",
-                                     /*values=*/absl::MakeSpan(remaproughness)};
-
-  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
-      {"k", k_parameter},
-      {"eta", eta_parameter},
-      {"roughness", roughness_parameter},
-      {"bumpmap", bumpmap_parameter},
-      {"uroughness", uroughness_parameter},
-      {"vroughness", vroughness_parameter},
-      {"remaproughness", remaproughness_parameter},
-  };
-
-  MetalMaterial actual;
-  EXPECT_TRUE(RemoveMetalMaterial(parameters, /*pbrt_version=*/3, actual).ok());
-  EXPECT_THAT(actual, EqualsProto(R"pb(
-                k { spectrum_texture_name: "k" }
-                eta { spectrum_texture_name: "eta" }
-                roughness { float_texture_name: "roughness" }
-                bumpmap { float_texture_name: "bump" }
-                uroughness { float_texture_name: "uroughness" }
-                vroughness { float_texture_name: "vroughness" }
-                remaproughness: false
               )pb"));
 }
 
@@ -1476,8 +1593,8 @@ TEST(RemoveSubsurfaceMaterialV2, WithData) {
   EXPECT_TRUE(
       RemoveSubsurfaceMaterial(parameters, /*pbrt_version=*/2, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
-                Kr { spectrum_texture_name: "kr" }
-                bumpmap { float_texture_name: "bump" }
+                reflectance { spectrum_texture_name: "kr" }
+                displacement { float_texture_name: "bump" }
                 eta { float_texture_name: "index" }
                 sigma_a { spectrum_texture_name: "sigma_a" }
                 sigma_s { spectrum_texture_name: "sigma_s" }
@@ -1586,12 +1703,128 @@ TEST(RemoveSubsurfaceMaterialV3, WithData) {
   EXPECT_TRUE(
       RemoveSubsurfaceMaterial(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
-                Kr { spectrum_texture_name: "kr" }
+                reflectance { spectrum_texture_name: "kr" }
                 Kt { spectrum_texture_name: "kt" }
                 uroughness { float_texture_name: "uroughness" }
                 vroughness { float_texture_name: "vroughness" }
                 remaproughness: false
-                bumpmap { float_texture_name: "bump" }
+                displacement { float_texture_name: "bump" }
+                g: 1.0
+                scale: 0.0
+                eta { float_value: 2.0 }
+                sigma_a { spectrum_texture_name: "sigma_a" }
+                sigma_s { spectrum_texture_name: "sigma_s" }
+                name: APPLE
+              )pb"));
+}
+
+TEST(RemoveSubsurfaceMaterialV4, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  SubsurfaceMaterial actual;
+  EXPECT_TRUE(
+      RemoveSubsurfaceMaterial(parameters, /*pbrt_version=*/3, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveSubsurfaceMaterialV4, WithData) {
+  std::vector<std::string_view> kr = {"kr"};
+  Parameter kr_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(kr)};
+
+  std::vector<std::string_view> roughness = {"roughness"};
+  Parameter roughness_parameter{/*directive=*/"",
+                                /*type=*/ParameterType::TEXTURE,
+                                /*type_name=*/"",
+                                /*values=*/absl::MakeSpan(roughness)};
+
+  std::vector<std::string_view> uroughness = {"uroughness"};
+  Parameter uroughness_parameter{/*directive=*/"",
+                                 /*type=*/ParameterType::TEXTURE,
+                                 /*type_name=*/"",
+                                 /*values=*/absl::MakeSpan(uroughness)};
+
+  std::vector<std::string_view> vroughness = {"vroughness"};
+  Parameter vroughness_parameter{/*directive=*/"",
+                                 /*type=*/ParameterType::TEXTURE,
+                                 /*type_name=*/"",
+                                 /*values=*/absl::MakeSpan(vroughness)};
+
+  std::vector<std::string_view> bumpmap = {"bump"};
+  Parameter bumpmap_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(bumpmap)};
+
+  bool remaproughness[] = {false};
+  Parameter remaproughness_parameter{/*directive=*/"",
+                                     /*type=*/ParameterType::BOOL,
+                                     /*type_name=*/"",
+                                     /*values=*/absl::MakeSpan(remaproughness)};
+
+  std::vector<double> g = {1.0};
+  Parameter g_parameter{/*directive=*/"",
+                        /*type=*/ParameterType::FLOAT,
+                        /*type_name=*/"",
+                        /*values=*/absl::MakeSpan(g)};
+
+  std::vector<double> scale = {0.0};
+  Parameter scale_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(scale)};
+
+  std::vector<double> eta = {2.0};
+  Parameter eta_parameter{/*directive=*/"",
+                          /*type=*/ParameterType::FLOAT,
+                          /*type_name=*/"",
+                          /*values=*/absl::MakeSpan(eta)};
+
+  std::vector<std::string_view> sigma_a = {"sigma_a"};
+  Parameter sigma_a_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(sigma_a)};
+
+  std::vector<std::string_view> sigma_s = {"sigma_s"};
+  Parameter sigma_s_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(sigma_s)};
+
+  std::vector<std::string_view> name = {"Apple"};
+  Parameter name_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::STRING,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(name)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"reflectance", kr_parameter},
+      {"roughness", roughness_parameter},
+      {"uroughness", uroughness_parameter},
+      {"vroughness", vroughness_parameter},
+      {"remaproughness", remaproughness_parameter},
+      {"displacement", bumpmap_parameter},
+      {"g", g_parameter},
+      {"scale", scale_parameter},
+      {"eta", eta_parameter},
+      {"sigma_a", sigma_a_parameter},
+      {"sigma_s", sigma_s_parameter},
+      {"name", name_parameter},
+  };
+
+  SubsurfaceMaterial actual;
+  EXPECT_TRUE(
+      RemoveSubsurfaceMaterial(parameters, /*pbrt_version=*/4, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                reflectance { spectrum_texture_name: "kr" }
+                roughness { float_texture_name: "roughness" }
+                uroughness { float_texture_name: "uroughness" }
+                vroughness { float_texture_name: "vroughness" }
+                remaproughness: false
+                displacement { float_texture_name: "bump" }
                 g: 1.0
                 scale: 0.0
                 eta { float_value: 2.0 }

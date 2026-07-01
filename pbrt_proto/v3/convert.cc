@@ -292,8 +292,8 @@ absl::Status ParserV3::Material(
       {"hair", CB<RemoveHairMaterial, &Material::mutable_hair>()},
       {"kdsubsurface",
        CB<RemoveKdSubsurfaceMaterial, &Material::mutable_kdsubsurface>()},
-      {"matte", CB<RemoveMatteMaterial, &Material::mutable_matte>()},
-      {"metal", CB<RemoveMetalMaterial, &Material::mutable_metal>()},
+      {"matte", CB<RemoveDiffuseMaterial, &Material::mutable_matte>()},
+      {"metal", CB<RemoveConductorMaterial, &Material::mutable_metal>()},
       {"mirror", CB<RemoveMirrorMaterial, &Material::mutable_mirror>()},
       {"mix", CB<RemoveMixMaterial, &Material::mutable_mix>()},
       {"none", &Ignored<v3::Material>},
@@ -312,7 +312,7 @@ absl::Status ParserV3::Material(
 
   if (material.material_type_case() == Material::MATERIAL_TYPE_NOT_SET &&
       !kSupportedTypes.contains(material_type)) {
-    if (absl::Status fallback_status = RemoveMatteMaterial(
+    if (absl::Status fallback_status = RemoveDiffuseMaterial(
             parameters, kPbrtVersion, *material.mutable_matte());
         !fallback_status.ok()) {
       return fallback_status;
@@ -590,7 +590,7 @@ absl::Status ParserV3::Shape(
   if (std::optional<absl::string_view> bsdffile =
           TryRemoveString(parameters, "bsdffile");
       bsdffile.has_value()) {
-    shape.mutable_overrides()->set_filename(*bsdffile);
+    shape.mutable_overrides()->set_bsdffile(*bsdffile);
   }
 
   if (std::optional<absl::string_view> namedmaterial1 =

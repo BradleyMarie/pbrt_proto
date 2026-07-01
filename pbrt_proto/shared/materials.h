@@ -21,6 +21,14 @@ absl::Status RemoveClayMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, ClayMaterial& output);
 
+absl::Status RemoveConductorMaterial(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    int pbrt_version, ConductorMaterial& output);
+
+absl::Status RemoveDiffuseMaterial(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    int pbrt_version, DiffuseMaterial& output);
+
 absl::Status RemoveDisneyMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, DisneyMaterial& output);
@@ -41,10 +49,6 @@ absl::Status RemoveKdSubsurfaceMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, KdSubsurfaceMaterial& output);
 
-absl::Status RemoveMatteMaterial(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    int pbrt_version, MatteMaterial& output);
-
 absl::Status RemoveMeasuredFourierMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, MeasuredFourierMaterial& output);
@@ -52,10 +56,6 @@ absl::Status RemoveMeasuredFourierMaterial(
 absl::Status RemoveMeasuredMerlMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, MeasuredMerlMaterial& output);
-
-absl::Status RemoveMetalMaterial(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    int pbrt_version, MetalMaterial& output);
 
 absl::Status RemoveMirrorMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,

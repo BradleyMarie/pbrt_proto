@@ -4,6 +4,7 @@
 
 #include "absl/container/flat_hash_map.h"
 #include "absl/container/flat_hash_set.h"
+#include "absl/log/absl_check.h"
 #include "google/protobuf/descriptor.pb.h"
 
 namespace pbrt_proto {
@@ -17,10 +18,14 @@ class DisjointSet {
    public:
     // This implementation is not correct for the general case, but as long as
     // all of the sets added are mutually disjoint it will work as intended.
+    // The assertions ensure that the behavior is always correct.
     Builder& AddSet(std::initializer_list<absl::string_view> strings) {
       for (const absl::string_view& str0 : strings) {
+        absl::flat_hash_set<absl::string_view>& set = map_[str0];
+        ABSL_CHECK(set.empty());
+
         for (const absl::string_view& str1 : strings) {
-          map_[str0].insert(str1);
+          ABSL_CHECK(set.insert(str1).second);
         }
       }
 
@@ -123,8 +128,54 @@ static const DisjointSet kAllowedNameChanges =
                  "pbrt_proto.v3.Film.image", "pbrt_proto.v4.Film.rgb"})
         .AddSet({"pbrt_proto.v3.MakeNamedMedium.heterogeneous",
                  "pbrt_proto.v4.MakeNamedMedium.uniformgrid"})
+        .AddSet({"pbrt_proto.BluePaintMaterial.bumpmap",
+                 "pbrt_proto.BrushedMetalMaterial.bumpmap",
+                 "pbrt_proto.ConductorMaterial.displacement",
+                 "pbrt_proto.ClayMaterial.bumpmap",
+                 "pbrt_proto.DiffuseMaterial.displacement",
+                 "pbrt_proto.DisneyMaterial.bumpmap",
+                 "pbrt_proto.GlassMaterial.bumpmap",
+                 "pbrt_proto.FeltMaterial.bumpmap",
+                 "pbrt_proto.KdSubsurfaceMaterial.bumpmap",
+                 "pbrt_proto.MeasuredFourierMaterial.bumpmap",
+                 "pbrt_proto.MeasuredMerlMaterial.bumpmap",
+                 "pbrt_proto.MirrorMaterial.bumpmap",
+                 "pbrt_proto.PlasticMaterial.bumpmap",
+                 "pbrt_proto.PrimerMaterial.bumpmap",
+                 "pbrt_proto.MixMaterial.bumpmap",
+                 "pbrt_proto.ShinyMetalMaterial.bumpmap",
+                 "pbrt_proto.SkinMaterial.bumpmap",
+                 "pbrt_proto.SubstrateMaterial.bumpmap",
+                 "pbrt_proto.SubsurfaceMaterial.displacement",
+                 "pbrt_proto.TranslucentMaterial.bumpmap",
+                 "pbrt_proto.UberMaterial.bumpmap",
+                 "pbrt_proto.v1.Shape.MaterialOverrides.bumpmap",
+                 "pbrt_proto.v2.Shape.MaterialOverrides.bumpmap",
+                 "pbrt_proto.v3.Shape.MaterialOverrides.bumpmap"})
+        .AddSet({"pbrt_proto.DiffuseMaterial.reflectance",
+                 "pbrt_proto.KdSubsurfaceMaterial.Kd",
+                 "pbrt_proto.PlasticMaterial.Kd", "pbrt_proto.MixMaterial.Kd",
+                 "pbrt_proto.SubstrateMaterial.Kd",
+                 "pbrt_proto.TranslucentMaterial.Kd",
+                 "pbrt_proto.UberMaterial.Kd",
+                 "pbrt_proto.v1.Shape.MaterialOverrides.Kd",
+                 "pbrt_proto.v2.Shape.MaterialOverrides.Kd",
+                 "pbrt_proto.v3.Shape.MaterialOverrides.Kd"})
+        .AddSet({"pbrt_proto.GlassMaterial.Kr",
+                 "pbrt_proto.KdSubsurfaceMaterial.Kr",
+                 "pbrt_proto.MirrorMaterial.Kr",
+                 "pbrt_proto.ShinyMetalMaterial.Kr",
+                 "pbrt_proto.SubsurfaceMaterial.reflectance",
+                 "pbrt_proto.UberMaterial.Kr",
+                 "pbrt_proto.v1.Shape.MaterialOverrides.Kr",
+                 "pbrt_proto.v2.Shape.MaterialOverrides.Kr",
+                 "pbrt_proto.v3.Shape.MaterialOverrides.Kr"})
+        .AddSet({"pbrt_proto.MeasuredFourierMaterial.bsdffile",
+                 "pbrt_proto.MeasuredMerlMaterial.filename",
+                 "pbrt_proto.v2.Shape.MaterialOverrides.filename",
+                 "pbrt_proto.v3.Shape.MaterialOverrides.bsdffile"})
         .AddSet(
-            {"pbrt_proto.MetalMaterial.eta",
+            {"pbrt_proto.ConductorMaterial.eta",
              "pbrt_proto.v2.Shape.MaterialOverrides.eta_as_spectrum_texture",
              "pbrt_proto.v3.Shape.MaterialOverrides.eta_as_spectrum_texture"})
         .AddSet({"pbrt_proto.v1.SurfaceIntegrator.bidirectional",
@@ -167,14 +218,16 @@ static const DisjointSet kAllowedNameCollisions =
                  "pbrt_proto.HomogeneousMedium.Le",
                  "pbrt_proto.RgbGridMedium.Le",
                  "pbrt_proto.UniformGridMedium.Le"})
-        .AddSet({"pbrt_proto.DisneyMaterial.eta",
+        .AddSet({"pbrt_proto.ConductorMaterial.eta",
+                 "pbrt_proto.DisneyMaterial.eta",
                  "pbrt_proto.GlassMaterial.eta", "pbrt_proto.HairMaterial.eta",
                  "pbrt_proto.KdSubsurfaceMaterial.eta",
-                 "pbrt_proto.MetalMaterial.eta",
                  "pbrt_proto.SubsurfaceMaterial.eta",
                  "pbrt_proto.UberMaterial.eta",
                  "pbrt_proto.v2.Shape.MaterialOverrides.eta",
                  "pbrt_proto.v3.Shape.MaterialOverrides.eta"})
+        .AddSet({"pbrt_proto.DiffuseMaterial.reflectance",
+                 "pbrt_proto.SubsurfaceMaterial.reflectance"})
         .AddSet({"pbrt_proto.v1.Sampler.random", "pbrt_proto.v2.Sampler.random",
                  "pbrt_proto.v3.Sampler.random",
                  "pbrt_proto.v4.Sampler.random"})

@@ -156,7 +156,7 @@ message Defaults {
     required GlassMaterial glass = 5;
 
     // The default "matte" Material
-    required MatteMaterial matte = 6;
+    required DiffuseMaterial matte = 6;
 
     // The default "mirror" Material
     required MirrorMaterial mirror = 7;

@@ -28,6 +28,13 @@ absl::Status RemoveColor(
 }
 
 template <typename T>
+void RemoveDisplacement(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters, T& output) {
+  TryRemoveFloatTexture(parameters, "displacement",
+                        std::bind(&T::mutable_displacement, &output));
+}
+
+template <typename T>
 void RemoveEta(absl::flat_hash_map<absl::string_view, Parameter>& parameters,
                T& output) {
   TryRemoveFloatTexture(parameters, "eta", std::bind(&T::mutable_eta, &output));
@@ -82,6 +89,14 @@ absl::Status RemoveKt(
     int pbrt_version, T& output) {
   return TryRemoveSpectrumTexture(parameters, "Kt",
                                   std::bind(&T::mutable_kt, &output));
+}
+
+template <typename T>
+absl::Status RemoveReflectance(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    int pbrt_version, T& output) {
+  return TryRemoveSpectrumTexture(parameters, "reflectance",
+                                  std::bind(&T::mutable_kd, &output));
 }
 
 template <typename T>
@@ -154,6 +169,52 @@ absl::Status RemoveClayMaterial(
     int pbrt_version, ClayMaterial& output) {
   RemoveBumpmap(parameters, output);
   return absl::OkStatus();
+}
+
+absl::Status RemoveConductorMaterial(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    int pbrt_version, ConductorMaterial& output) {
+  RemoveRoughness(parameters, output);
+
+  TryRemoveFloatTexture(
+      parameters, (pbrt_version <= 3) ? "bumpmap" : "displacement",
+      std::bind(&ConductorMaterial::mutable_displacement, &output));
+
+  if (absl::Status status = TryRemoveSpectrumTexture(
+          parameters, "eta",
+          std::bind(&ConductorMaterial::mutable_eta, &output));
+      !status.ok()) {
+    return status;
+  }
+
+  if (absl::Status status = TryRemoveSpectrumTexture(
+          parameters, "k", std::bind(&ConductorMaterial::mutable_k, &output));
+      !status.ok()) {
+    return status;
+  }
+
+  if (pbrt_version >= 3) {
+    RemoveUVRoughness(parameters, output);
+    RemoveRemapRoughness(parameters, output);
+  }
+
+  return absl::OkStatus();
+}
+
+absl::Status RemoveDiffuseMaterial(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    int pbrt_version, DiffuseMaterial& output) {
+  if (pbrt_version <= 3) {
+    RemoveSigma(parameters, output);
+  }
+
+  TryRemoveFloatTexture(
+      parameters, (pbrt_version <= 3) ? "bumpmap" : "displacement",
+      std::bind(&DiffuseMaterial::mutable_displacement, &output));
+
+  return TryRemoveSpectrumTexture(
+      parameters, (pbrt_version <= 3) ? "Kd" : "reflectance",
+      std::bind(&DiffuseMaterial::mutable_reflectance, &output));
 }
 
 absl::Status RemoveDisneyMaterial(
@@ -309,23 +370,15 @@ absl::Status RemoveKdSubsurfaceMaterial(
   return absl::OkStatus();
 }
 
-absl::Status RemoveMatteMaterial(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    int pbrt_version, MatteMaterial& output) {
-  RemoveSigma(parameters, output);
-  RemoveBumpmap(parameters, output);
-  return RemoveKd(parameters, pbrt_version, output);
-}
-
 absl::Status RemoveMeasuredFourierMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, MeasuredFourierMaterial& output) {
   RemoveBumpmap(parameters, output);
 
-  if (std::optional<absl::string_view> filename =
+  if (std::optional<absl::string_view> bsdffile =
           TryRemoveString(parameters, "bsdffile");
-      filename) {
-    output.set_filename(*filename);
+      bsdffile) {
+    output.set_bsdffile(*bsdffile);
   }
 
   return absl::OkStatus();
@@ -340,32 +393,6 @@ absl::Status RemoveMeasuredMerlMaterial(
           TryRemoveString(parameters, "filename");
       filename) {
     output.set_filename(*filename);
-  }
-
-  return absl::OkStatus();
-}
-
-absl::Status RemoveMetalMaterial(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    int pbrt_version, MetalMaterial& output) {
-  RemoveRoughness(parameters, output);
-  RemoveBumpmap(parameters, output);
-
-  if (absl::Status status = TryRemoveSpectrumTexture(
-          parameters, "eta", std::bind(&MetalMaterial::mutable_eta, &output));
-      !status.ok()) {
-    return status;
-  }
-
-  if (absl::Status status = TryRemoveSpectrumTexture(
-          parameters, "k", std::bind(&MetalMaterial::mutable_k, &output));
-      !status.ok()) {
-    return status;
-  }
-
-  if (pbrt_version >= 3) {
-    RemoveUVRoughness(parameters, output);
-    RemoveRemapRoughness(parameters, output);
   }
 
   return absl::OkStatus();
@@ -487,14 +514,18 @@ absl::Status RemoveSubstrateMaterial(
 absl::Status RemoveSubsurfaceMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, SubsurfaceMaterial& output) {
-  RemoveBumpmap(parameters, output);
+  TryRemoveFloatTexture(
+      parameters, (pbrt_version <= 3) ? "bumpmap" : "displacement",
+      std::bind(&SubsurfaceMaterial::mutable_displacement, &output));
 
   if (absl::Status status = RemoveSigmaA(parameters, pbrt_version, output);
       !status.ok()) {
     return status;
   }
 
-  if (absl::Status status = RemoveKr(parameters, pbrt_version, output);
+  if (absl::Status status = TryRemoveSpectrumTexture(
+          parameters, (pbrt_version <= 3) ? "Kr" : "reflectance",
+          std::bind(&SubsurfaceMaterial::mutable_reflectance, &output));
       !status.ok()) {
     return status;
   }
@@ -518,6 +549,13 @@ absl::Status RemoveSubsurfaceMaterial(
     }
   }
 
+  if (pbrt_version == 3) {
+    if (absl::Status status = RemoveKt(parameters, pbrt_version, output);
+        !status.ok()) {
+      return status;
+    }
+  }
+
   if (pbrt_version >= 3) {
     RemoveUVRoughness(parameters, output);
     RemoveRemapRoughness(parameters, output);
@@ -531,11 +569,6 @@ absl::Status RemoveSubsurfaceMaterial(
       output.mutable_eta()->set_float_value(*eta);
     }
 
-    if (absl::Status status = RemoveKt(parameters, pbrt_version, output);
-        !status.ok()) {
-      return status;
-    }
-
     if (std::optional<double> g = TryRemoveFloat(parameters, "g"); g) {
       output.set_g(*g);
     }
@@ -544,6 +577,10 @@ absl::Status RemoveSubsurfaceMaterial(
         scale) {
       output.set_scale(*scale);
     }
+  }
+
+  if (pbrt_version >= 4) {
+    RemoveRoughness(parameters, output);
   }
 
   return absl::OkStatus();

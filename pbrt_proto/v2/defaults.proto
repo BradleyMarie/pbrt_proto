@@ -147,13 +147,13 @@ message Defaults {
     required KdSubsurfaceMaterial kdsubsurface = 2;
 
     // The default "matte" Material
-    required MatteMaterial matte = 3;
+    required DiffuseMaterial matte = 3;
 
     // The default "measured" Material
     required MeasuredMerlMaterial measured = 4;
 
     // The default "metal" Material
-    required MetalMaterial metal = 5;
+    required ConductorMaterial metal = 5;
 
     // The default "mirror" Material
     required MirrorMaterial mirror = 6;

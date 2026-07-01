@@ -246,7 +246,7 @@ absl::Status ParserV1::Material(
       {"clay", CB<RemoveClayMaterial, &Material::mutable_clay>()},
       {"felt", CB<RemoveFeltMaterial, &Material::mutable_felt>()},
       {"glass", CB<RemoveGlassMaterial, &Material::mutable_glass>()},
-      {"matte", CB<RemoveMatteMaterial, &Material::mutable_matte>()},
+      {"matte", CB<RemoveDiffuseMaterial, &Material::mutable_matte>()},
       {"mirror", CB<RemoveMirrorMaterial, &Material::mutable_mirror>()},
       {"plastic", CB<RemovePlasticMaterial, &Material::mutable_plastic>()},
       {"primer", CB<RemovePrimerMaterial, &Material::mutable_primer>()},
@@ -265,7 +265,7 @@ absl::Status ParserV1::Material(
 
   if (material.material_type_case() == Material::MATERIAL_TYPE_NOT_SET &&
       !kSupportedTypes.contains(material_type)) {
-    if (absl::Status fallback_status = RemoveMatteMaterial(
+    if (absl::Status fallback_status = RemoveDiffuseMaterial(
             parameters, kPbrtVersion, *material.mutable_matte());
         !fallback_status.ok()) {
       return fallback_status;

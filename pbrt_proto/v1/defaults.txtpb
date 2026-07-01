@@ -40,7 +40,7 @@ global_defaults {
 }
 default_material {
   matte {
-    Kd {
+    reflectance {
       rgb_spectrum {
         r: 1.0
         g: 1.0
@@ -341,7 +341,7 @@ materials {
     }    
   }
   matte {
-    Kd {
+    reflectance {
       rgb_spectrum {
         r: 1.0
         g: 1.0

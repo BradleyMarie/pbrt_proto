@@ -189,10 +189,10 @@ message Defaults {
     required KdSubsurfaceMaterial kdsubsurface = 5;
 
     // The default "matte" Material
-    required MatteMaterial matte = 6;
+    required DiffuseMaterial matte = 6;
 
     // The default "metal" Material
-    required MetalMaterial metal = 7;
+    required ConductorMaterial metal = 7;
 
     // The default "mirror" Material
     required MirrorMaterial mirror = 8;
