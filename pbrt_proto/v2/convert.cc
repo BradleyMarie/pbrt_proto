@@ -250,7 +250,7 @@ absl::Status ParserV2::Material(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     v2::Material& material) {
   static const TypeMap<v2::Material> kSupportedTypes = {
-      {"glass", CB<RemoveGlassMaterial, &Material::mutable_glass>()},
+      {"glass", CB<RemoveDielectricMaterial, &Material::mutable_glass>()},
       {"kdsubsurface",
        CB<RemoveKdSubsurfaceMaterial, &Material::mutable_kdsubsurface>()},
       {"matte", CB<RemoveDiffuseMaterial, &Material::mutable_matte>()},

@@ -96,7 +96,7 @@ message Material {
   // The type of material to create. If none of these fields are set, program
   // the behavior is undefined and the renderer may crash.
   oneof material_type {
-    GlassMaterial glass = 5;                 // Create a glass material
+    DielectricMaterial glass = 5;                 // Create a glass material
     DiffuseMaterial matte = 6;               // Create a mirror material
     MirrorMaterial mirror = 7;               // Create a mirror material
     PlasticMaterial plastic = 8;             // Create a plastic material

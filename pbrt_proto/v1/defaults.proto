@@ -153,7 +153,7 @@ message Defaults {
     required FeltMaterial felt = 4;
 
     // The default "glass" Material
-    required GlassMaterial glass = 5;
+    required DielectricMaterial glass = 5;
 
     // The default "matte" Material
     required DiffuseMaterial matte = 6;

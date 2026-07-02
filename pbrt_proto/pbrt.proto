@@ -1966,7 +1966,7 @@ message ClayMaterial {
 
 // A material that approximates a Fresnel conductor.
 //
-// @supported_versions {PBRTv2, PBRTv3, PBRTv3, PBRTv4}
+// @supported_versions {PBRTv2, PBRTv3, PBRTv4}
 message ConductorMaterial {
   // The roughness of the surface.
   optional FloatTextureParameter roughness = 8;
@@ -1995,6 +1995,48 @@ message ConductorMaterial {
 
   // The absorption coefficient to use in computing the material's reflectance.
   optional SpectrumTextureParameter k = 17;
+
+  // If true, roughness values are expected to be in the range [0,1], and are
+  // remapped to microfacet distribution function parameter values that range
+  // from near-perfect-specular at 0 to very rough at 1. Otherwise the roughness
+  // parameters are used directly for the alpha parameters of the microfacet
+  // distribution function.
+  //
+  // @min_version PBRTv3
+  optional bool remaproughness = 44 [default = true];
+}
+
+// A material that approximates a Fresnel dielectric.
+//
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3}
+message DielectricMaterial {
+  // The coefficient of specular reflection.
+  optional SpectrumTextureParameter Kr = 3;
+
+  // The coefficient of specular transmission.
+  optional SpectrumTextureParameter Kt = 4;
+
+  // Microfacet roughness in the u direction. If zero, perfect specular
+  // reflection is modeled.
+  //
+  // @min_version PBRTv3
+  optional FloatTextureParameter uroughness = 9;
+
+  // Microfacet roughness in the v direction. If zero, perfect specular
+  // reflection is modeled.
+  //
+  // @min_version PBRTv3
+  optional FloatTextureParameter vroughness = 10;
+
+  // Index of refraction of the surface. This value is used in both the
+  // microfacet model for specular reflection as well as for computing a Fresnel
+  // reflection term for perfect specular reflection.
+  //
+  // NOTE: Prior to PBRTv3 this field was named "index".
+  optional FloatTextureParameter eta = 11;
+
+  // The floating-point texture to be used as a bump map.
+  optional FloatTextureParameter bumpmap = 13;
 
   // If true, roughness values are expected to be in the range [0,1], and are
   // remapped to microfacet distribution function parameter values that range
@@ -2091,48 +2133,6 @@ message DisneyMaterial {
 message FeltMaterial {
   // The floating-point texture to be used as a bump map.
   optional FloatTextureParameter bumpmap = 13;
-}
-
-// A material that approximates glass.
-//
-// @supported_versions {PBRTv1, PBRTv2, PBRTv3}
-message GlassMaterial {
-  // The coefficient of specular reflection.
-  optional SpectrumTextureParameter Kr = 3;
-
-  // The coefficient of specular transmission.
-  optional SpectrumTextureParameter Kt = 4;
-
-  // Microfacet roughness in the u direction. If zero, perfect specular
-  // reflection is modeled.
-  //
-  // @min_version PBRTv3
-  optional FloatTextureParameter uroughness = 9;
-
-  // Microfacet roughness in the v direction. If zero, perfect specular
-  // reflection is modeled.
-  //
-  // @min_version PBRTv3
-  optional FloatTextureParameter vroughness = 10;
-
-  // Index of refraction of the surface. This value is used in both the
-  // microfacet model for specular reflection as well as for computing a Fresnel
-  // reflection term for perfect specular reflection.
-  //
-  // NOTE: Prior to PBRTv3 this field was named "index".
-  optional FloatTextureParameter eta = 11;
-
-  // The floating-point texture to be used as a bump map.
-  optional FloatTextureParameter bumpmap = 13;
-
-  // If true, roughness values are expected to be in the range [0,1], and are
-  // remapped to microfacet distribution function parameter values that range
-  // from near-perfect-specular at 0 to very rough at 1. Otherwise the roughness
-  // parameters are used directly for the alpha parameters of the microfacet
-  // distribution function.
-  //
-  // @min_version PBRTv3
-  optional bool remaproughness = 44 [default = true];
 }
 
 // A material that approximates hair.

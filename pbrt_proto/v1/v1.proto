@@ -91,7 +91,7 @@ message Material {
     BrushedMetalMaterial brushedmetal = 2;  // Create a brushed paint material
     ClayMaterial clay = 3;                  // Create a clay material
     FeltMaterial felt = 4;                  // Create a felt material
-    GlassMaterial glass = 5;                // Create a glass material
+    DielectricMaterial glass = 5;           // Create a glass material
     DiffuseMaterial matte = 6;              // Create a mirror material
     MirrorMaterial mirror = 7;              // Create a mirror material
     PlasticMaterial plastic = 8;            // Create a plastic material

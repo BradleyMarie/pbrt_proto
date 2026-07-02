@@ -245,7 +245,7 @@ absl::Status ParserV1::Material(
        CB<RemoveBrushedMetalMaterial, &Material::mutable_brushedmetal>()},
       {"clay", CB<RemoveClayMaterial, &Material::mutable_clay>()},
       {"felt", CB<RemoveFeltMaterial, &Material::mutable_felt>()},
-      {"glass", CB<RemoveGlassMaterial, &Material::mutable_glass>()},
+      {"glass", CB<RemoveDielectricMaterial, &Material::mutable_glass>()},
       {"matte", CB<RemoveDiffuseMaterial, &Material::mutable_matte>()},
       {"mirror", CB<RemoveMirrorMaterial, &Material::mutable_mirror>()},
       {"plastic", CB<RemovePlasticMaterial, &Material::mutable_plastic>()},

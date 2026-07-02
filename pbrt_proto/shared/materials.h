@@ -25,6 +25,10 @@ absl::Status RemoveConductorMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, ConductorMaterial& output);
 
+absl::Status RemoveDielectricMaterial(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    int pbrt_version, DielectricMaterial& output);
+
 absl::Status RemoveDiffuseMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, DiffuseMaterial& output);
@@ -36,10 +40,6 @@ absl::Status RemoveDisneyMaterial(
 absl::Status RemoveFeltMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, FeltMaterial& output);
-
-absl::Status RemoveGlassMaterial(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    int pbrt_version, GlassMaterial& output);
 
 absl::Status RemoveHairMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,

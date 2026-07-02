@@ -180,7 +180,7 @@ message Defaults {
     required MeasuredFourierMaterial fourier = 2;
 
     // The default "glass" Material
-    required GlassMaterial glass = 3;
+    required DielectricMaterial glass = 3;
 
     // The default "hair" Material
     required HairMaterial hair = 4;

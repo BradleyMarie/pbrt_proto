@@ -201,6 +201,30 @@ absl::Status RemoveConductorMaterial(
   return absl::OkStatus();
 }
 
+absl::Status RemoveDielectricMaterial(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    int pbrt_version, DielectricMaterial& output) {
+  RemoveEta(parameters, pbrt_version, output);
+  RemoveBumpmap(parameters, output);
+
+  if (absl::Status status = RemoveKr(parameters, pbrt_version, output);
+      !status.ok()) {
+    return status;
+  }
+
+  if (absl::Status status = RemoveKt(parameters, pbrt_version, output);
+      !status.ok()) {
+    return status;
+  }
+
+  if (pbrt_version >= 3) {
+    RemoveUVRoughness(parameters, output);
+    RemoveRemapRoughness(parameters, output);
+  }
+
+  return absl::OkStatus();
+}
+
 absl::Status RemoveDiffuseMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, DiffuseMaterial& output) {
@@ -266,30 +290,6 @@ absl::Status RemoveFeltMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, FeltMaterial& output) {
   RemoveBumpmap(parameters, output);
-  return absl::OkStatus();
-}
-
-absl::Status RemoveGlassMaterial(
-    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
-    int pbrt_version, GlassMaterial& output) {
-  RemoveEta(parameters, pbrt_version, output);
-  RemoveBumpmap(parameters, output);
-
-  if (absl::Status status = RemoveKr(parameters, pbrt_version, output);
-      !status.ok()) {
-    return status;
-  }
-
-  if (absl::Status status = RemoveKt(parameters, pbrt_version, output);
-      !status.ok()) {
-    return status;
-  }
-
-  if (pbrt_version >= 3) {
-    RemoveUVRoughness(parameters, output);
-    RemoveRemapRoughness(parameters, output);
-  }
-
   return absl::OkStatus();
 }
 

@@ -288,7 +288,7 @@ absl::Status ParserV3::Material(
       {"disney", CB<RemoveDisneyMaterial, &Material::mutable_disney>()},
       {"fourier",
        CB<RemoveMeasuredFourierMaterial, &Material::mutable_fourier>()},
-      {"glass", CB<RemoveGlassMaterial, &Material::mutable_glass>()},
+      {"glass", CB<RemoveDielectricMaterial, &Material::mutable_glass>()},
       {"hair", CB<RemoveHairMaterial, &Material::mutable_hair>()},
       {"kdsubsurface",
        CB<RemoveKdSubsurfaceMaterial, &Material::mutable_kdsubsurface>()},
