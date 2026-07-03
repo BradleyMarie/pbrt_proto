@@ -485,22 +485,26 @@ absl::Status ParserV2::Shape(
     shape.mutable_overrides()->set_namedmaterial2(*namedmaterial2);
   }
 
-  if (std::optional<double> eta = TryRemoveFloat(parameters, "eta");
+  if (std::optional<double> eta = TryRemoveFloat(parameters, "index");
       eta.has_value()) {
-    shape.mutable_overrides()->mutable_eta()->set_float_value(*eta);
+    shape.mutable_overrides()->mutable_eta()->set_constant_spectrum(*eta);
+    shape.mutable_overrides()->mutable_eta_float_texture()->set_float_value(
+        *eta);
   } else if (std::optional<absl::string_view> eta =
-                 TryRemoveTexture(parameters, "eta");
+                 TryRemoveTexture(parameters, "index");
              eta.has_value()) {
-    shape.mutable_overrides()->mutable_eta()->set_float_texture_name(*eta);
+    shape.mutable_overrides()->set_eta_float_texture_name(*eta);
     shape.mutable_overrides()
-        ->mutable_eta_as_spectrum_texture()
+        ->mutable_eta_float_texture()
+        ->set_float_texture_name(*eta);
+    shape.mutable_overrides()
+        ->mutable_eta_spectrum_texture()
         ->set_spectrum_texture_name(*eta);
   } else {
     if (absl::Status status = TryRemoveSpectrumTexture(
-            parameters, "eta",
-            std::bind(
-                &Shape::MaterialOverrides::mutable_eta_as_spectrum_texture,
-                overrides));
+            parameters, "index",
+            std::bind(&Shape::MaterialOverrides::mutable_eta_spectrum_texture,
+                      overrides));
         !status.ok()) {
       return status;
     }

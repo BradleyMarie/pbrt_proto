@@ -892,7 +892,61 @@ TEST(Shape, Overrides) {
                        })pb"));
 }
 
-TEST(Shape, OverridesEtaFloat) {
+TEST(Shape, OverridesIndexFloat) {
+  absl::string_view directive = R"pbrt(Shape "sphere" "float index" 1.0)pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives {
+                                 shape {
+                                   sphere {}
+                                   overrides {
+                                     eta { constant_spectrum: 1.0 }
+                                     eta_float_texture { float_value: 1.0 }
+                                   }
+                                 }
+                               })pb"));
+}
+
+TEST(Shape, OverridesIndexTexture) {
+  absl::string_view directive = R"pbrt(Shape "sphere" "texture index" "a")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(
+                  R"pb(directives {
+                         shape {
+                           sphere {}
+                           overrides {
+                             eta_float_texture_name: "a"
+                             eta_spectrum_texture { spectrum_texture_name: "a" }
+                             eta_float_texture { float_texture_name: "a" }
+                           }
+                         }
+                       })pb"));
+}
+
+TEST(Shape, OverridesIndexSpectrum) {
+  absl::string_view directive = R"pbrt(Shape "sphere" "rgb index" [1 1 1])pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives {
+                                 shape {
+                                   sphere {}
+                                   overrides {
+                                     eta_spectrum_texture {
+                                       rgb_spectrum { r: 1.0 g: 1.0 b: 1.0 }
+                                     }
+                                   }
+                                 }
+                               })pb"));
+}
+
+TEST(Shape, OverridesFloat) {
   absl::string_view directive = R"pbrt(Shape "sphere" "float eta" 1.0)pbrt";
 
   PbrtProto actual;
@@ -901,7 +955,10 @@ TEST(Shape, OverridesEtaFloat) {
               EqualsProto(R"pb(directives {
                                  shape {
                                    sphere {}
-                                   overrides { eta { float_value: 1.0 } }
+                                   overrides {
+                                     eta { constant_spectrum: 1.0 }
+                                     eta_float_texture { float_value: 1.0 }
+                                   }
                                  }
                                })pb"));
 }
@@ -911,18 +968,18 @@ TEST(Shape, OverridesEtaTexture) {
 
   PbrtProto actual;
   EXPECT_TRUE(Convert(directive, actual).ok());
-  EXPECT_THAT(
-      actual,
-      EqualsProto(
-          R"pb(directives {
-                 shape {
-                   sphere {}
-                   overrides {
-                     eta { float_texture_name: "a" }
-                     eta_as_spectrum_texture { spectrum_texture_name: "a" }
-                   }
-                 }
-               })pb"));
+  EXPECT_THAT(actual,
+              EqualsProto(
+                  R"pb(directives {
+                         shape {
+                           sphere {}
+                           overrides {
+                             eta_float_texture_name: "a"
+                             eta_spectrum_texture { spectrum_texture_name: "a" }
+                             eta_float_texture { float_texture_name: "a" }
+                           }
+                         }
+                       })pb"));
 }
 
 TEST(Shape, OverridesEtaSpectrum) {
@@ -935,7 +992,7 @@ TEST(Shape, OverridesEtaSpectrum) {
                                  shape {
                                    sphere {}
                                    overrides {
-                                     eta_as_spectrum_texture {
+                                     eta_spectrum_texture {
                                        rgb_spectrum { r: 1.0 g: 1.0 b: 1.0 }
                                      }
                                    }

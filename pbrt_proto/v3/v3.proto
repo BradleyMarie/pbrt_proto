@@ -113,7 +113,7 @@ message Material {
   // If none of these fields are set, surfaces with this material applied should
   // be ignored during ray intersections.
   oneof material_type {
-    DielectricMaterial glass = 5;                 // Create a glass material
+    DielectricMaterial glass = 5;            // Create a glass material
     DiffuseMaterial matte = 6;               // Create a mirror material
     MirrorMaterial mirror = 7;               // Create a mirror material
     PlasticMaterial plastic = 8;             // Create a plastic material
@@ -187,41 +187,43 @@ message Shape {
     optional FloatTextureParameter roughness = 8;
     optional FloatTextureParameter uroughness = 9;
     optional FloatTextureParameter vroughness = 10;
-    optional FloatTextureParameter eta = 11;
-    optional FloatTextureParameter sigma = 12;
-    optional FloatTextureParameter bumpmap = 13;
-    optional ScatteringPreset.Type name = 14;
-    optional SpectrumTextureParameter amount = 15;
-    optional SpectrumTextureParameter eta_as_spectrum_texture = 16;
-    optional SpectrumTextureParameter k = 17;
-    optional SpectrumTextureParameter sigma_a = 18;
-    optional SpectrumTextureParameter sigma_s = 19;
-    reserved 20;
-    optional string bsdffile = 21;
-    optional string namedmaterial1 = 22;
-    optional string namedmaterial2 = 23;
-    optional SpectrumTextureParameter color = 24;
-    optional SpectrumTextureParameter mfp = 25;
-    optional SpectrumTextureParameter scatterdistance = 26;
-    optional FloatTextureParameter alpha = 27;
-    optional FloatTextureParameter anisotropic = 28;
-    optional FloatTextureParameter beta_m = 29;
-    optional FloatTextureParameter beta_n = 30;
-    optional FloatTextureParameter clearcoat = 31;
-    optional FloatTextureParameter clearcoatgloss = 32;
-    optional FloatTextureParameter difftrans = 33;
-    optional FloatTextureParameter eumelanin = 34;
-    optional FloatTextureParameter flatness = 35;
-    optional FloatTextureParameter metallic = 36;
-    optional FloatTextureParameter pheomelanin = 37;
-    optional FloatTextureParameter spectrans = 38;
-    optional FloatTextureParameter speculartint = 39;
-    optional FloatTextureParameter sheen = 40;
-    optional FloatTextureParameter sheentint = 41;
-    optional double g = 42;
-    optional double scale = 43;
-    optional bool remaproughness = 44;
-    optional bool thin = 45;
+    optional FloatTextureParameter sigma = 11;
+    optional FloatTextureParameter bumpmap = 12;
+    optional Spectrum eta = 13;
+    optional string eta_float_texture_name = 14;
+    optional ScatteringPreset.Type name = 15;
+    optional SpectrumTextureParameter amount = 16;
+    optional SpectrumTextureParameter eta_spectrum_texture = 17;
+    optional SpectrumTextureParameter k = 18;
+    optional SpectrumTextureParameter sigma_a = 19;
+    optional SpectrumTextureParameter sigma_s = 20;
+    optional FloatTextureParameter eta_float_texture = 21;
+    reserved 22;
+    optional string bsdffile = 23;
+    optional string namedmaterial1 = 24;
+    optional string namedmaterial2 = 25;
+    optional SpectrumTextureParameter color = 26;
+    optional SpectrumTextureParameter mfp = 27;
+    optional SpectrumTextureParameter scatterdistance = 28;
+    optional FloatTextureParameter alpha = 29;
+    optional FloatTextureParameter anisotropic = 30;
+    optional FloatTextureParameter beta_m = 31;
+    optional FloatTextureParameter beta_n = 32;
+    optional FloatTextureParameter clearcoat = 33;
+    optional FloatTextureParameter clearcoatgloss = 34;
+    optional FloatTextureParameter difftrans = 35;
+    optional FloatTextureParameter eumelanin = 36;
+    optional FloatTextureParameter flatness = 37;
+    optional FloatTextureParameter metallic = 38;
+    optional FloatTextureParameter pheomelanin = 39;
+    optional FloatTextureParameter spectrans = 40;
+    optional FloatTextureParameter speculartint = 41;
+    optional FloatTextureParameter sheen = 42;
+    optional FloatTextureParameter sheentint = 43;
+    optional double g = 44;
+    optional double scale = 45;
+    optional bool remaproughness = 46;
+    optional bool thin = 47;
   }
 
   optional MaterialOverrides overrides = 1;

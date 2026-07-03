@@ -295,8 +295,27 @@ TEST(RemoveDielectricMaterialV1, WithData) {
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 Kr { spectrum_texture_name: "kr" }
                 Kt { spectrum_texture_name: "kt" }
-                eta { float_texture_name: "index" }
-                bumpmap { float_texture_name: "bump" }
+                eta_float_texture_name: "index"
+                displacement { float_texture_name: "bump" }
+              )pb"));
+}
+
+TEST(RemoveDielectricMaterialV1, WithIndexValue) {
+  std::vector<double> index = {1.0};
+  Parameter index_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(index)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"index", index_parameter},
+  };
+
+  DielectricMaterial actual;
+  EXPECT_TRUE(
+      RemoveDielectricMaterial(parameters, /*pbrt_version=*/1, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                eta { constant_spectrum: 1.0 }
               )pb"));
 }
 
@@ -347,8 +366,27 @@ TEST(RemoveDielectricMaterialV2, WithData) {
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 Kr { spectrum_texture_name: "kr" }
                 Kt { spectrum_texture_name: "kt" }
-                eta { float_texture_name: "index" }
-                bumpmap { float_texture_name: "bump" }
+                eta_float_texture_name: "index"
+                displacement { float_texture_name: "bump" }
+              )pb"));
+}
+
+TEST(RemoveDielectricMaterialV2, WithIndexValue) {
+  std::vector<double> index = {1.0};
+  Parameter index_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(index)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"index", index_parameter},
+  };
+
+  DielectricMaterial actual;
+  EXPECT_TRUE(
+      RemoveDielectricMaterial(parameters, /*pbrt_version=*/2, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                eta { constant_spectrum: 1.0 }
               )pb"));
 }
 
@@ -420,11 +458,30 @@ TEST(RemoveDielectricMaterialV3, WithDataIndex) {
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 Kr { spectrum_texture_name: "kr" }
                 Kt { spectrum_texture_name: "kt" }
-                eta { float_texture_name: "index" }
-                bumpmap { float_texture_name: "bump" }
+                eta_float_texture_name: "index"
+                displacement { float_texture_name: "bump" }
                 uroughness { float_texture_name: "uroughness" }
                 vroughness { float_texture_name: "vroughness" }
                 remaproughness: false
+              )pb"));
+}
+
+TEST(RemoveDielectricMaterialV3, WithIndexValue) {
+  std::vector<double> index = {1.0};
+  Parameter index_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(index)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"index", index_parameter},
+  };
+
+  DielectricMaterial actual;
+  EXPECT_TRUE(
+      RemoveDielectricMaterial(parameters, /*pbrt_version=*/3, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                eta { constant_spectrum: 1.0 }
               )pb"));
 }
 
@@ -494,8 +551,102 @@ TEST(RemoveDielectricMaterialV3, WithDataEta) {
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 Kr { spectrum_texture_name: "kr" }
                 Kt { spectrum_texture_name: "kt" }
-                eta { float_texture_name: "eta" }
-                bumpmap { float_texture_name: "bump" }
+                eta_float_texture_name: "eta"
+                displacement { float_texture_name: "bump" }
+                uroughness { float_texture_name: "uroughness" }
+                vroughness { float_texture_name: "vroughness" }
+                remaproughness: false
+              )pb"));
+}
+
+TEST(RemoveDielectricMaterialV3, WithEtaValue) {
+  std::vector<double> index = {1.0};
+  Parameter index_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(index)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"eta", index_parameter},
+  };
+
+  DielectricMaterial actual;
+  EXPECT_TRUE(
+      RemoveDielectricMaterial(parameters, /*pbrt_version=*/3, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                eta { constant_spectrum: 1.0 }
+              )pb"));
+}
+
+TEST(RemoveDielectricMaterialV4, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  DielectricMaterial actual;
+  EXPECT_TRUE(
+      RemoveDielectricMaterial(parameters, /*pbrt_version=*/4, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveDielectricMaterialV4, WithData) {
+  std::vector<double> eta = {1.0};
+  Parameter eta_parameter{/*directive=*/"",
+                          /*type=*/ParameterType::BLACKBODY_V2,
+                          /*type_name=*/"",
+                          /*values=*/absl::MakeSpan(eta)};
+
+  std::vector<std::string_view> index = {"index"};
+  Parameter index_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::TEXTURE,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(index)};
+
+  std::vector<std::string_view> bumpmap = {"bump"};
+  Parameter bumpmap_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(bumpmap)};
+
+  std::vector<std::string_view> roughness = {"roughness"};
+  Parameter roughness_parameter{/*directive=*/"",
+                                /*type=*/ParameterType::TEXTURE,
+                                /*type_name=*/"",
+                                /*values=*/absl::MakeSpan(roughness)};
+
+  std::vector<std::string_view> uroughness = {"uroughness"};
+  Parameter uroughness_parameter{/*directive=*/"",
+                                 /*type=*/ParameterType::TEXTURE,
+                                 /*type_name=*/"",
+                                 /*values=*/absl::MakeSpan(uroughness)};
+
+  std::vector<std::string_view> vroughness = {"vroughness"};
+  Parameter vroughness_parameter{/*directive=*/"",
+                                 /*type=*/ParameterType::TEXTURE,
+                                 /*type_name=*/"",
+                                 /*values=*/absl::MakeSpan(vroughness)};
+
+  bool remaproughness[] = {false};
+  Parameter remaproughness_parameter{/*directive=*/"",
+                                     /*type=*/ParameterType::BOOL,
+                                     /*type_name=*/"",
+                                     /*values=*/absl::MakeSpan(remaproughness)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"eta", eta_parameter},
+      {"index", index_parameter},
+      {"displacement", bumpmap_parameter},
+      {"roughness", roughness_parameter},
+      {"uroughness", uroughness_parameter},
+      {"vroughness", vroughness_parameter},
+      {"remaproughness", remaproughness_parameter},
+  };
+
+  DielectricMaterial actual;
+  EXPECT_TRUE(
+      RemoveDielectricMaterial(parameters, /*pbrt_version=*/4, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                eta { blackbody_spectrum { temperature: 1 } }
+                displacement { float_texture_name: "bump" }
+                roughness { float_texture_name: "roughness" }
                 uroughness { float_texture_name: "uroughness" }
                 vroughness { float_texture_name: "vroughness" }
                 remaproughness: false

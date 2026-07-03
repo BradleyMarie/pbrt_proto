@@ -133,7 +133,7 @@ static const DisjointSet kAllowedNameChanges =
                  "pbrt_proto.ConductorMaterial.displacement",
                  "pbrt_proto.ClayMaterial.bumpmap",
                  "pbrt_proto.DiffuseMaterial.displacement",
-                 "pbrt_proto.DielectricMaterial.bumpmap",
+                 "pbrt_proto.DielectricMaterial.displacement",
                  "pbrt_proto.DisneyMaterial.bumpmap",
                  "pbrt_proto.FeltMaterial.bumpmap",
                  "pbrt_proto.KdSubsurfaceMaterial.bumpmap",
@@ -174,25 +174,28 @@ static const DisjointSet kAllowedNameChanges =
                  "pbrt_proto.MeasuredMerlMaterial.filename",
                  "pbrt_proto.v2.Shape.MaterialOverrides.filename",
                  "pbrt_proto.v3.Shape.MaterialOverrides.bsdffile"})
-        .AddSet(
-            {"pbrt_proto.ConductorMaterial.eta",
-             "pbrt_proto.v2.Shape.MaterialOverrides.eta_as_spectrum_texture",
-             "pbrt_proto.v3.Shape.MaterialOverrides.eta_as_spectrum_texture"})
+        .AddSet({"pbrt_proto.ConductorMaterial.eta",
+                 "pbrt_proto.v2.Shape.MaterialOverrides.eta_spectrum_texture",
+                 "pbrt_proto.v3.Shape.MaterialOverrides.eta_spectrum_texture"})
+        .AddSet({"pbrt_proto.DisneyMaterial.eta", "pbrt_proto.HairMaterial.eta",
+                 "pbrt_proto.KdSubsurfaceMaterial.eta",
+                 "pbrt_proto.SubsurfaceMaterial.eta",
+                 "pbrt_proto.UberMaterial.eta",
+                 "pbrt_proto.v2.Shape.MaterialOverrides.eta_float_texture",
+                 "pbrt_proto.v3.Shape.MaterialOverrides.eta_float_texture"})
         .AddSet({"pbrt_proto.v1.SurfaceIntegrator.bidirectional",
                  "pbrt_proto.v3.Integrator.bdpt",
                  "pbrt_proto.v4.Integrator.bdpt"})
-        .AddSet({
-            "pbrt_proto.AdaptiveSampler.maxsamples",
-            "pbrt_proto.BestCandidateSampler.pixelsamples",
-            "pbrt_proto.HaltonSampler.pixelsamples",
-            "pbrt_proto.IndependentSampler.pixelsamples",
-            "pbrt_proto.MaxMinDistSampler.pixelsamples",
-            "pbrt_proto.PaddedSobolSampler.pixelsamples",
-            "pbrt_proto.PMJ02BNSampler.pixelsamples",
-            "pbrt_proto.SobolSampler.pixelsamples",
-            "pbrt_proto.ZSobolSampler.pixelsamples",
-            "pbrt_proto.ZeroTwoSequenceSampler.pixelsamples",
-        })
+        .AddSet({"pbrt_proto.AdaptiveSampler.maxsamples",
+                 "pbrt_proto.BestCandidateSampler.pixelsamples",
+                 "pbrt_proto.HaltonSampler.pixelsamples",
+                 "pbrt_proto.IndependentSampler.pixelsamples",
+                 "pbrt_proto.MaxMinDistSampler.pixelsamples",
+                 "pbrt_proto.PaddedSobolSampler.pixelsamples",
+                 "pbrt_proto.PMJ02BNSampler.pixelsamples",
+                 "pbrt_proto.SobolSampler.pixelsamples",
+                 "pbrt_proto.ZSobolSampler.pixelsamples",
+                 "pbrt_proto.ZeroTwoSequenceSampler.pixelsamples"})
         .AddSet({"pbrt_proto.v1.Sampler.lowdiscrepancy",
                  "pbrt_proto.v2.Sampler.lowdiscrepancy",
                  "pbrt_proto.v3.Sampler.zerotwosequence"})
@@ -224,6 +227,7 @@ static const DisjointSet kAllowedNameCollisions =
                  "pbrt_proto.KdSubsurfaceMaterial.eta",
                  "pbrt_proto.SubsurfaceMaterial.eta",
                  "pbrt_proto.UberMaterial.eta",
+                 "pbrt_proto.v1.Shape.MaterialOverrides.eta",
                  "pbrt_proto.v2.Shape.MaterialOverrides.eta",
                  "pbrt_proto.v3.Shape.MaterialOverrides.eta"})
         .AddSet({"pbrt_proto.DiffuseMaterial.reflectance",

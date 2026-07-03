@@ -644,7 +644,7 @@ TEST(Shape, Overrides) {
   absl::string_view directive = R"pbrt(
     Shape "sphere"
         "texture bumpmap" "a"
-        "texture eta" "b"
+        "texture index" "b"
         "texture roughness" "c"
         "texture sigma" "d"
         "texture uroughness" "e"
@@ -666,7 +666,7 @@ TEST(Shape, Overrides) {
                                    sphere {}
                                    overrides {
                                      bumpmap { float_texture_name: "a" }
-                                     eta { float_texture_name: "b" }
+                                     eta_float_texture_name: "b"
                                      roughness { float_texture_name: "c" }
                                      sigma { float_texture_name: "d" }
                                      uroughness { float_texture_name: "e" }
@@ -679,6 +679,23 @@ TEST(Shape, Overrides) {
                                      reflect { spectrum_texture_name: "l" }
                                      transmit { spectrum_texture_name: "m" }
                                    }
+                                 }
+                               })pb"));
+}
+
+TEST(Shape, OverridesIndexValue) {
+  absl::string_view directive = R"pbrt(
+    Shape "sphere"
+        "float index" 1.0
+    )pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives {
+                                 shape {
+                                   sphere {}
+                                   overrides { eta { constant_spectrum: 1.0 } }
                                  }
                                })pb"));
 }

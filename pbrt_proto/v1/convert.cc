@@ -343,9 +343,6 @@ absl::Status ParserV1::Shape(
       parameters, "bumpmap",
       std::bind(&Shape::MaterialOverrides::mutable_bumpmap, overrides));
   TryRemoveFloatTexture(
-      parameters, "eta",
-      std::bind(&Shape::MaterialOverrides::mutable_eta, overrides));
-  TryRemoveFloatTexture(
       parameters, "roughness",
       std::bind(&Shape::MaterialOverrides::mutable_roughness, overrides));
   TryRemoveFloatTexture(
@@ -405,6 +402,15 @@ absl::Status ParserV1::Shape(
           std::bind(&Shape::MaterialOverrides::mutable_transmit, overrides));
       !status.ok()) {
     return status;
+  }
+
+  if (std::optional<double> eta = TryRemoveFloat(parameters, "index");
+      eta.has_value()) {
+    shape.mutable_overrides()->mutable_eta()->set_constant_spectrum(*eta);
+  } else if (std::optional<absl::string_view> eta =
+                 TryRemoveTexture(parameters, "index");
+             eta.has_value()) {
+    shape.mutable_overrides()->set_eta_float_texture_name(*eta);
   }
 
   return absl::OkStatus();

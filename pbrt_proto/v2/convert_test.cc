@@ -755,40 +755,7 @@ TEST(Shape, Overrides) {
 }
 
 TEST(Shape, OverridesEtaFloat) {
-  absl::string_view directive = R"pbrt(Shape "sphere" "float eta" 1.0)pbrt";
-
-  PbrtProto actual;
-  EXPECT_TRUE(Convert(directive, actual).ok());
-  EXPECT_THAT(actual,
-              EqualsProto(R"pb(directives {
-                                 shape {
-                                   sphere {}
-                                   overrides { eta { float_value: 1.0 } }
-                                 }
-                               })pb"));
-}
-
-TEST(Shape, OverridesEtaTexture) {
-  absl::string_view directive = R"pbrt(Shape "sphere" "texture eta" "a")pbrt";
-
-  PbrtProto actual;
-  EXPECT_TRUE(Convert(directive, actual).ok());
-  EXPECT_THAT(
-      actual,
-      EqualsProto(
-          R"pb(directives {
-                 shape {
-                   sphere {}
-                   overrides {
-                     eta { float_texture_name: "a" }
-                     eta_as_spectrum_texture { spectrum_texture_name: "a" }
-                   }
-                 }
-               })pb"));
-}
-
-TEST(Shape, OverridesEtaSpectrum) {
-  absl::string_view directive = R"pbrt(Shape "sphere" "rgb eta" [1 1 1])pbrt";
+  absl::string_view directive = R"pbrt(Shape "sphere" "float index" 1.0)pbrt";
 
   PbrtProto actual;
   EXPECT_TRUE(Convert(directive, actual).ok());
@@ -797,7 +764,43 @@ TEST(Shape, OverridesEtaSpectrum) {
                                  shape {
                                    sphere {}
                                    overrides {
-                                     eta_as_spectrum_texture {
+                                     eta { constant_spectrum: 1.0 }
+                                     eta_float_texture { float_value: 1.0 }
+                                   }
+                                 }
+                               })pb"));
+}
+
+TEST(Shape, OverridesEtaTexture) {
+  absl::string_view directive = R"pbrt(Shape "sphere" "texture index" "a")pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(
+                  R"pb(directives {
+                         shape {
+                           sphere {}
+                           overrides {
+                             eta_float_texture_name: "a"
+                             eta_spectrum_texture { spectrum_texture_name: "a" }
+                             eta_float_texture { float_texture_name: "a" }
+                           }
+                         }
+                       })pb"));
+}
+
+TEST(Shape, OverridesEtaSpectrum) {
+  absl::string_view directive = R"pbrt(Shape "sphere" "rgb index" [1 1 1])pbrt";
+
+  PbrtProto actual;
+  EXPECT_TRUE(Convert(directive, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(directives {
+                                 shape {
+                                   sphere {}
+                                   overrides {
+                                     eta_spectrum_texture {
                                        rgb_spectrum { r: 1.0 g: 1.0 b: 1.0 }
                                      }
                                    }

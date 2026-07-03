@@ -145,9 +145,10 @@ message Shape {
     optional FloatTextureParameter roughness = 8;
     optional FloatTextureParameter uroughness = 9;
     optional FloatTextureParameter vroughness = 10;
-    optional FloatTextureParameter eta = 11;
-    optional FloatTextureParameter sigma = 12;
-    optional FloatTextureParameter bumpmap = 13;
+    optional FloatTextureParameter sigma = 11;
+    optional FloatTextureParameter bumpmap = 12;
+    optional Spectrum eta = 13;
+    optional string eta_float_texture_name = 14;
   }
 
   // The overrides for the materials applied to the shape.

@@ -337,7 +337,7 @@ materials {
       float_value: 0.0
     }
     eta {
-      float_value: 1.5
+      constant_spectrum: 1.5
     }    
   }
   matte {

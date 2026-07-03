@@ -204,22 +204,58 @@ absl::Status RemoveConductorMaterial(
 absl::Status RemoveDielectricMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, DielectricMaterial& output) {
-  RemoveEta(parameters, pbrt_version, output);
-  RemoveBumpmap(parameters, output);
-
-  if (absl::Status status = RemoveKr(parameters, pbrt_version, output);
-      !status.ok()) {
-    return status;
+  if (pbrt_version <= 3) {
+    if (std::optional<double> value = TryRemoveFloat(parameters, "index");
+        value) {
+      output.mutable_eta()->set_constant_spectrum(*value);
+    } else if (std::optional<absl::string_view> texture_name =
+                   TryRemoveTexture(parameters, "index");
+               texture_name) {
+      output.set_eta_float_texture_name(*texture_name);
+    }
   }
 
-  if (absl::Status status = RemoveKt(parameters, pbrt_version, output);
-      !status.ok()) {
-    return status;
+  if (pbrt_version == 3) {
+    if (std::optional<double> value = TryRemoveFloat(parameters, "eta");
+        value) {
+      output.mutable_eta()->set_constant_spectrum(*value);
+    } else if (std::optional<absl::string_view> texture_name =
+                   TryRemoveTexture(parameters, "eta");
+               texture_name) {
+      output.set_eta_float_texture_name(*texture_name);
+    }
+  } else if (pbrt_version >= 4) {
+    if (absl::Status status = TryRemoveSpectrum(
+            parameters, "eta",
+            std::bind(&DielectricMaterial::mutable_eta, &output));
+        !status.ok()) {
+      return status;
+    }
+  }
+
+  TryRemoveFloatTexture(
+      parameters, (pbrt_version <= 3) ? "bumpmap" : "displacement",
+      std::bind(&DielectricMaterial::mutable_displacement, &output));
+
+  if (pbrt_version <= 3) {
+    if (absl::Status status = RemoveKr(parameters, pbrt_version, output);
+        !status.ok()) {
+      return status;
+    }
+
+    if (absl::Status status = RemoveKt(parameters, pbrt_version, output);
+        !status.ok()) {
+      return status;
+    }
   }
 
   if (pbrt_version >= 3) {
     RemoveUVRoughness(parameters, output);
     RemoveRemapRoughness(parameters, output);
+  }
+
+  if (pbrt_version >= 4) {
+    RemoveRoughness(parameters, output);
   }
 
   return absl::OkStatus();

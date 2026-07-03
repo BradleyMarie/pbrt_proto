@@ -1945,7 +1945,7 @@ message SpotLightSource {
 // @supported_versions {PBRTv1}
 message BluePaintMaterial {
   // The floating-point texture to be used as a bump map.
-  optional FloatTextureParameter bumpmap = 13;
+  optional FloatTextureParameter bumpmap = 12;
 }
 
 // A material that approximates brushed metal.
@@ -1953,7 +1953,7 @@ message BluePaintMaterial {
 // @supported_versions {PBRTv1}
 message BrushedMetalMaterial {
   // The floating-point texture to be used as a bump map.
-  optional FloatTextureParameter bumpmap = 13;
+  optional FloatTextureParameter bumpmap = 12;
 }
 
 // A material that approximates clay.
@@ -1961,7 +1961,7 @@ message BrushedMetalMaterial {
 // @supported_versions {PBRTv1}
 message ClayMaterial {
   // The floating-point texture to be used as a bump map.
-  optional FloatTextureParameter bumpmap = 13;
+  optional FloatTextureParameter bumpmap = 12;
 }
 
 // A material that approximates a Fresnel conductor.
@@ -1988,13 +1988,13 @@ message ConductorMaterial {
   // NOTE: In PBRTv1, PBRTv2, and PBRTv3 this field is referred to by the name
   //       `bumpmap`; however, it is referred to here as `displacement` which is
   //       the name of the parameter used in PBRTv4.
-  optional FloatTextureParameter displacement = 13;
+  optional FloatTextureParameter displacement = 12;
 
   // The index of refraction to use in computing the material's reflectance.
-  optional SpectrumTextureParameter eta = 16;
+  optional SpectrumTextureParameter eta = 17;
 
   // The absorption coefficient to use in computing the material's reflectance.
-  optional SpectrumTextureParameter k = 17;
+  optional SpectrumTextureParameter k = 18;
 
   // If true, roughness values are expected to be in the range [0,1], and are
   // remapped to microfacet distribution function parameter values that range
@@ -2003,18 +2003,27 @@ message ConductorMaterial {
   // distribution function.
   //
   // @min_version PBRTv3
-  optional bool remaproughness = 44 [default = true];
+  optional bool remaproughness = 46 [default = true];
 }
 
 // A material that approximates a Fresnel dielectric.
 //
-// @supported_versions {PBRTv1, PBRTv2, PBRTv3}
+// @supported_versions {PBRTv1, PBRTv2, PBRTv3, PBRTv4}
 message DielectricMaterial {
   // The coefficient of specular reflection.
+  //
+  // @max_version PBRTv3
   optional SpectrumTextureParameter Kr = 3;
 
   // The coefficient of specular transmission.
+  //
+  // @max_version PBRTv3
   optional SpectrumTextureParameter Kt = 4;
+
+  // The roughness of the surface.
+  //
+  // @min_version PBRTv4
+  optional FloatTextureParameter roughness = 8;
 
   // Microfacet roughness in the u direction. If zero, perfect specular
   // reflection is modeled.
@@ -2028,15 +2037,24 @@ message DielectricMaterial {
   // @min_version PBRTv3
   optional FloatTextureParameter vroughness = 10;
 
-  // Index of refraction of the surface. This value is used in both the
-  // microfacet model for specular reflection as well as for computing a Fresnel
-  // reflection term for perfect specular reflection.
-  //
-  // NOTE: Prior to PBRTv3 this field was named "index".
-  optional FloatTextureParameter eta = 11;
+  oneof eta_type {
+    // The wavelength-dependent index of refraction of the surface intersection.
+    //
+    // NOTE: In PBRTv1, PBRTv2, and PBRTv3 inputs this field will only ever
+    //       contain a Spectrum with the `constant_spectrum` field filled out.
+    //       This is because the type of this field changed from a `float
+    //       texture` to a `spectrum` starting with PBRTv4.
+    //
+    // NOTE: Prior to PBRTv3 this field was named "index".
+    Spectrum eta = 13;
+
+    // The name of the flot texture used to define the wavelength-independent
+    // index of refraction of the surface intersection.
+    string eta_float_texture_name = 14;
+  }
 
   // The floating-point texture to be used as a bump map.
-  optional FloatTextureParameter bumpmap = 13;
+  optional FloatTextureParameter displacement = 12;
 
   // If true, roughness values are expected to be in the range [0,1], and are
   // remapped to microfacet distribution function parameter values that range
@@ -2045,7 +2063,7 @@ message DielectricMaterial {
   // distribution function.
   //
   // @min_version PBRTv3
-  optional bool remaproughness = 44 [default = true];
+  optional bool remaproughness = 46 [default = true];
 }
 
 // A material with simple Lambertian scattering.
@@ -2063,14 +2081,14 @@ message DiffuseMaterial {
   // the surface exhibits pure Lambertian reflection.
   //
   // @max_version PBRTv3
-  optional FloatTextureParameter sigma = 12;
+  optional FloatTextureParameter sigma = 11;
 
   // The floating-point texture to be used as a displacement map.
   //
   // NOTE: In PBRTv1, PBRTv2, and PBRTv3 this field is referred to by the name
   //       `bumpmap`; however, it is referred to here as `displacement` which is
   //       the name of the parameter used in PBRTv4.
-  optional FloatTextureParameter displacement = 13;
+  optional FloatTextureParameter displacement = 12;
 }
 
 // A material that replicates Disney's Principled BRDF.
@@ -2080,51 +2098,51 @@ message DisneyMaterial {
   // The roughness of the surface.
   optional FloatTextureParameter roughness = 8;
 
-  // Index of refraction of the surface.
-  optional FloatTextureParameter eta = 11;
-
   // The floating-point texture to be used as a bump map.
-  optional FloatTextureParameter bumpmap = 13;
+  optional FloatTextureParameter bumpmap = 12;
+
+  // Index of refraction of the surface.
+  optional FloatTextureParameter eta = 21;
 
   // The base color of the surface.
-  optional SpectrumTextureParameter color = 24;
+  optional SpectrumTextureParameter color = 26;
 
   // The path length light travels inside the material before exiting.
-  optional SpectrumTextureParameter scatterdistance = 26;
+  optional SpectrumTextureParameter scatterdistance = 28;
 
   // Adjusts the asapect ratio of the specular highlights.
-  optional FloatTextureParameter anisotropic = 28;
+  optional FloatTextureParameter anisotropic = 30;
 
   // Adds a clearcoat over the base material.
-  optional FloatTextureParameter clearcoat = 31;
+  optional FloatTextureParameter clearcoat = 33;
 
   // Controls the roughness of the clearcoat.
-  optional FloatTextureParameter clearcoatgloss = 32;
+  optional FloatTextureParameter clearcoatgloss = 34;
 
   // Controls how much light is diffusely transmitted through the surface.
-  optional FloatTextureParameter difftrans = 33;
+  optional FloatTextureParameter difftrans = 35;
 
   // Softens the diffuse transition making the surface more like fabric.
-  optional FloatTextureParameter flatness = 35;
+  optional FloatTextureParameter flatness = 37;
 
   // Controls how metallic the surface appears.
-  optional FloatTextureParameter metallic = 36;
+  optional FloatTextureParameter metallic = 38;
 
   // Controls how much light is specularly transmitted through the surface.
-  optional FloatTextureParameter spectrans = 38;
+  optional FloatTextureParameter spectrans = 40;
 
   // Adjusts the color of the specular highlights tinting them towards the
   // base color.
-  optional FloatTextureParameter speculartint = 39;
+  optional FloatTextureParameter speculartint = 41;
 
   // Adds a fabric-like backscatter.
-  optional FloatTextureParameter sheen = 40;
+  optional FloatTextureParameter sheen = 42;
 
   // Adjust the color of the sheen reflection towards the base color.
-  optional FloatTextureParameter sheentint = 41;
+  optional FloatTextureParameter sheentint = 43;
 
   // If true, the material is attached to a thin object like paper.
-  optional bool thin = 45 [default = false];
+  optional bool thin = 47 [default = false];
 }
 
 // A material that approximates felt.
@@ -2132,40 +2150,40 @@ message DisneyMaterial {
 // @supported_versions {PBRTv1}
 message FeltMaterial {
   // The floating-point texture to be used as a bump map.
-  optional FloatTextureParameter bumpmap = 13;
+  optional FloatTextureParameter bumpmap = 12;
 }
 
 // A material that approximates hair.
 //
 // @supported_versions {PBRTv3}
 message HairMaterial {
-  // The index of refraction of the scattering volume.
-  optional FloatTextureParameter eta = 11;
-
   // The absorption coefficient of the volume.
-  optional SpectrumTextureParameter sigma_a = 18;
+  optional SpectrumTextureParameter sigma_a = 19;
+
+  // The index of refraction of the scattering volume.
+  optional FloatTextureParameter eta = 21;
 
   // If specified, a value of the absorption coefficient is computed using an
   // approximation that leads to the hair having roughly this color, after
   // multiple scattering in the hair during rendering.
-  optional SpectrumTextureParameter color = 24;
+  optional SpectrumTextureParameter color = 26;
 
   // This represents the tilt angle of the cuticle scales on the hair surface.
-  optional FloatTextureParameter alpha = 27;
+  optional FloatTextureParameter alpha = 29;
 
   // The longitudinal roughness of the hair surface.
-  optional FloatTextureParameter beta_m = 29;
+  optional FloatTextureParameter beta_m = 31;
 
   // The azimuthal roughness of the hair surface.
-  optional FloatTextureParameter beta_n = 30;
+  optional FloatTextureParameter beta_n = 32;
 
   // Concentration of the eumelanin pigment in the hair. Blonde hair has
   // concentrations around 0.3, brown around 1.3, and black around 8.0.
-  optional FloatTextureParameter eumelanin = 34;
+  optional FloatTextureParameter eumelanin = 36;
 
   // Concentration of the pheomelanin pigment in the hair. Pheomelanin makes
   // red hair red.
-  optional FloatTextureParameter pheomelanin = 37;
+  optional FloatTextureParameter pheomelanin = 39;
 }
 
 // A material with subsurface scattering where Kd is main parameter.
@@ -2195,6 +2213,9 @@ message KdSubsurfaceMaterial {
   // @min_version PBRTv3
   optional FloatTextureParameter vroughness = 10;
 
+  // The floating-point texture to be used as a bump map.
+  optional FloatTextureParameter bumpmap = 12;
+
   // The index of refraction of the scattering volume.
   //
   // NOTE: Prior to PBRTv3 this field was named "index".
@@ -2202,19 +2223,16 @@ message KdSubsurfaceMaterial {
   // NOTE: In PBRTv2 this field is a float texture while in PBRTv3 this field is
   //       a raw float. For consistency of representation, the float texture
   //       representation is used here for all PBRT versions.
-  optional FloatTextureParameter eta = 11;
-
-  // The floating-point texture to be used as a bump map.
-  optional FloatTextureParameter bumpmap = 13;
+  optional FloatTextureParameter eta = 21;
 
   oneof mfp_type {
     // The average distance light travels in the medium before scattering.
     //
     // @max_version PBRTv2
-    FloatTextureParameter meanfreepath = 20;
+    FloatTextureParameter meanfreepath = 22;
     //
     // @min_version PBRTv3
-    SpectrumTextureParameter mfp = 25;
+    SpectrumTextureParameter mfp = 27;
   }
 
   // The asymmetry factor of the material's phase function. A value of zero
@@ -2223,12 +2241,12 @@ message KdSubsurfaceMaterial {
   // scattering.
   //
   // @min_version PBRTv3
-  optional double g = 42 [default = 0.0];
+  optional double g = 44 [default = 0.0];
 
   // A scale factor applied to the mean free path.
   //
   // @min_version PBRTv3
-  optional double scale = 43 [default = 1.0];
+  optional double scale = 45 [default = 1.0];
 
   // If true, roughness values are expected to be in the range [0,1], and are
   // remapped to microfacet distribution function parameter values that range
@@ -2237,7 +2255,7 @@ message KdSubsurfaceMaterial {
   // distribution function.
   //
   // @min_version PBRTv3
-  optional bool remaproughness = 44 [default = true];
+  optional bool remaproughness = 46 [default = true];
 }
 
 // A material with a measured BRDF using the Fourier representation.
@@ -2245,10 +2263,10 @@ message KdSubsurfaceMaterial {
 // @supported_versions {PBRTv3}
 message MeasuredFourierMaterial {
   // The floating-point texture to be used as a bump map.
-  optional FloatTextureParameter bumpmap = 13;
+  optional FloatTextureParameter bumpmap = 12;
 
   // The file that stores the BRDF description.
-  optional string bsdffile = 21;
+  optional string bsdffile = 23;
 }
 
 // A material with a measured BRDF using the MERL representation.
@@ -2256,10 +2274,10 @@ message MeasuredFourierMaterial {
 // @supported_versions {PBRTv2}
 message MeasuredMerlMaterial {
   // The floating-point texture to be used as a bump map.
-  optional FloatTextureParameter bumpmap = 13;
+  optional FloatTextureParameter bumpmap = 12;
 
   // The file that stores the BRDF description.
-  optional string filename = 21;
+  optional string filename = 23;
 }
 
 // A material which mixes two different materials.
@@ -2270,7 +2288,7 @@ message MirrorMaterial {
   optional SpectrumTextureParameter Kr = 3;
 
   // The floating-point texture to be used as a bump map.
-  optional FloatTextureParameter bumpmap = 13;
+  optional FloatTextureParameter bumpmap = 12;
 }
 
 // A material that approximates plastic.
@@ -2287,7 +2305,7 @@ message PlasticMaterial {
   optional FloatTextureParameter roughness = 8;
 
   // The floating-point texture to be used as a bump map.
-  optional FloatTextureParameter bumpmap = 13;
+  optional FloatTextureParameter bumpmap = 12;
 
   // If true, roughness values are expected to be in the range [0,1], and are
   // remapped to microfacet distribution function parameter values that range
@@ -2296,7 +2314,7 @@ message PlasticMaterial {
   // distribution function.
   //
   // @min_version PBRTv3
-  optional bool remaproughness = 44 [default = true];
+  optional bool remaproughness = 46 [default = true];
 }
 
 // A material that approximates primer.
@@ -2304,7 +2322,7 @@ message PlasticMaterial {
 // @supported_versions {PBRTv1}
 message PrimerMaterial {
   // The floating-point texture to be used as a bump map.
-  optional FloatTextureParameter bumpmap = 13;
+  optional FloatTextureParameter bumpmap = 12;
 }
 
 // A material which mixes between two named materials.
@@ -2321,18 +2339,18 @@ message MixMaterial {
   // lookup fails.
   //
   // @max_version PBRTv4
-  optional FloatTextureParameter sigma = 12;
+  optional FloatTextureParameter sigma = 11;
 
   // The `bumpmap` parameter used to create the fallback matte material if a
   // lookup fails.
   //
   // @max_version PBRTv4
-  optional FloatTextureParameter bumpmap = 13;
+  optional FloatTextureParameter bumpmap = 12;
 
   // Weighting factor for the blend between materials. A value of one
   // corresponds to just `namedmaterial1`, a value of zero corresponds to just
   // `namedmaterial2`, and values in between interpolate linearly.
-  optional SpectrumTextureParameter amount = 15;
+  optional SpectrumTextureParameter amount = 16;
 
   // The name of the first texture to mix. If not found, create a matte material
   // using the parameters in place of this one.
@@ -2340,7 +2358,7 @@ message MixMaterial {
   // NOTE: In PBRTv4 this field is part of the `materials` array; however, it is
   //       referred to here as `namedmaterial1` which is the name of the
   //       parameter used in PBRTv4.
-  optional string namedmaterial1 = 22;
+  optional string namedmaterial1 = 24;
 
   // The name of the second texture to mix. If not found, create a matte
   // material using the parameters in place of this one.
@@ -2348,7 +2366,7 @@ message MixMaterial {
   // NOTE: In PBRTv4 this field is part of the `materials` array; however, it is
   //       referred to here as `namedmaterial2` which is the name of the
   //       parameter used in PBRTv4.
-  optional string namedmaterial2 = 23;
+  optional string namedmaterial2 = 25;
 }
 
 // A material that approximates a shiny metal surface.
@@ -2365,7 +2383,7 @@ message ShinyMetalMaterial {
   optional FloatTextureParameter roughness = 8;
 
   // The floating-point texture to be used as a bump map.
-  optional FloatTextureParameter bumpmap = 13;
+  optional FloatTextureParameter bumpmap = 12;
 }
 
 // A material that approximates skin.
@@ -2373,7 +2391,7 @@ message ShinyMetalMaterial {
 // @supported_versions {PBRTv1}
 message SkinMaterial {
   // The floating-point texture to be used as a bump map.
-  optional FloatTextureParameter bumpmap = 13;
+  optional FloatTextureParameter bumpmap = 12;
 }
 
 // A material that approximates a glossy coat on top of a diffuse surface.
@@ -2395,7 +2413,7 @@ message SubstrateMaterial {
   optional FloatTextureParameter vroughness = 10;
 
   // The floating-point texture to be used as a bump map.
-  optional FloatTextureParameter bumpmap = 13;
+  optional FloatTextureParameter bumpmap = 12;
 
   // If true, roughness values are expected to be in the range [0,1], and are
   // remapped to microfacet distribution function parameter values that range
@@ -2404,7 +2422,7 @@ message SubstrateMaterial {
   // distribution function.
   //
   // @min_version PBRTv3
-  optional bool remaproughness = 44 [default = true];
+  optional bool remaproughness = 46 [default = true];
 }
 
 // A material with subsurface scattering.
@@ -2440,6 +2458,26 @@ message SubsurfaceMaterial {
   // @min_version PBRTv3
   optional FloatTextureParameter vroughness = 10;
 
+  // The floating-point texture to be used as a displacement map.
+  //
+  // NOTE: In PBRTv1, PBRTv2, and PBRTv3 this field is referred to by the name
+  //       `bumpmap`; however, it is referred to here as `displacement` which is
+  //       the name of the parameter used in PBRTv4.
+  optional FloatTextureParameter displacement = 12;
+
+  // The name of measured subsurface scattering coefficients.
+  optional ScatteringPreset.Type name = 15 [default = DEFAULT];
+
+  // The absorption coefficient of the volume.
+  optional SpectrumTextureParameter sigma_a = 19;
+
+  // The reduced scattering coefficient of the volume.
+  //
+  // NOTE: In PBRTv2 this field is referred to by the name `sigma_prime_s`;
+  //       however, it is referred to here as `sigma_s` which is the name of the
+  //       parameter used in PBRTv3 and later.
+  optional SpectrumTextureParameter sigma_s = 20;
+
   // The index of refraction of the scattering volume.
   //
   // NOTE: Prior to PBRTv3 this field was named "index".
@@ -2448,27 +2486,7 @@ message SubsurfaceMaterial {
   //       FloatTextureParameter with the `float_value` field filled out. This
   //       is because the type of this field changed from a `Texture` to a
   //       `float` starting with PBRTv3.
-  optional FloatTextureParameter eta = 11;
-
-  // The floating-point texture to be used as a displacement map.
-  //
-  // NOTE: In PBRTv1, PBRTv2, and PBRTv3 this field is referred to by the name
-  //       `bumpmap`; however, it is referred to here as `displacement` which is
-  //       the name of the parameter used in PBRTv4.
-  optional FloatTextureParameter displacement = 13;
-
-  // The name of measured subsurface scattering coefficients.
-  optional ScatteringPreset.Type name = 14 [default = DEFAULT];
-
-  // The absorption coefficient of the volume.
-  optional SpectrumTextureParameter sigma_a = 18;
-
-  // The reduced scattering coefficient of the volume.
-  //
-  // NOTE: In PBRTv2 this field is referred to by the name `sigma_prime_s`;
-  //       however, it is referred to here as `sigma_s` which is the name of the
-  //       parameter used in PBRTv3 and later.
-  optional SpectrumTextureParameter sigma_s = 19;
+  optional FloatTextureParameter eta = 21;
 
   // The asymmetry factor of the material's phase function. A value of zero
   // represents isotropic scattering, a value less than zero represents
@@ -2476,12 +2494,12 @@ message SubsurfaceMaterial {
   // scattering.
   //
   // @min_version PBRTv3
-  optional double g = 42 [default = 0.0];
+  optional double g = 44 [default = 0.0];
 
   // A scale factor applied to the mean free path.
   //
   // @min_version PBRTv3
-  optional double scale = 43 [default = 1.0];
+  optional double scale = 45 [default = 1.0];
 
   // If true, roughness values are expected to be in the range [0,1], and are
   // remapped to microfacet distribution function parameter values that range
@@ -2490,7 +2508,7 @@ message SubsurfaceMaterial {
   // distribution function.
   //
   // @min_version PBRTv3
-  optional bool remaproughness = 44 [default = true];
+  optional bool remaproughness = 46 [default = true];
 }
 
 // A simple translucent material with diffuse and specular compoents.
@@ -2513,7 +2531,7 @@ message TranslucentMaterial {
   optional FloatTextureParameter roughness = 8;
 
   // The floating-point texture to be used as a bump map.
-  optional FloatTextureParameter bumpmap = 13;
+  optional FloatTextureParameter bumpmap = 12;
 
   // If true, roughness values are expected to be in the range [0,1], and are
   // remapped to microfacet distribution function parameter values that range
@@ -2522,7 +2540,7 @@ message TranslucentMaterial {
   // distribution function.
   //
   // @min_version PBRTv3
-  optional bool remaproughness = 44 [default = true];
+  optional bool remaproughness = 46 [default = true];
 }
 
 // A "kitchen sink" material.
@@ -2562,6 +2580,9 @@ message UberMaterial {
   // @min_version PBRTv3
   optional FloatTextureParameter vroughness = 10;
 
+  // The floating-point texture to be used as a bump map.
+  optional FloatTextureParameter bumpmap = 12;
+
   // Index of refraction of the surface. This value is used in both the
   // microfacet model for specular reflection as well as for computing a Fresnel
   // reflection term for perfect specular reflection.
@@ -2569,10 +2590,7 @@ message UberMaterial {
   // NOTE: Prior to PBRTv3 this field was named "index".
   //
   // @min_version PBRTv2
-  optional FloatTextureParameter eta = 11;
-
-  // The floating-point texture to be used as a bump map.
-  optional FloatTextureParameter bumpmap = 13;
+  optional FloatTextureParameter eta = 21;
 
   // If true, roughness values are expected to be in the range [0,1], and are
   // remapped to microfacet distribution function parameter values that range
@@ -2581,7 +2599,7 @@ message UberMaterial {
   // distribution function.
   //
   // @min_version PBRTv3
-  optional bool remaproughness = 44 [default = true];
+  optional bool remaproughness = 46 [default = true];
 }
 
 //

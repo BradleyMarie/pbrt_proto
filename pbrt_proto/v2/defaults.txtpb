@@ -285,7 +285,7 @@ materials {
       constant_spectrum: 1.0
     }
     eta {
-      float_value: 1.5
+      constant_spectrum: 1.5
     }
     uroughness {
       float_value: 0.0
