@@ -277,6 +277,37 @@ absl::Status RemoveDiffuseMaterial(
       std::bind(&DiffuseMaterial::mutable_reflectance, &output));
 }
 
+absl::Status RemoveDiffuseTransmissionMaterial(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    int pbrt_version, DiffuseTransmissionMaterial& output) {
+  if (absl::Status status = TryRemoveSpectrumTexture(
+          parameters, "reflectance",
+          std::bind(&DiffuseTransmissionMaterial::mutable_reflectance,
+                    &output));
+      !status.ok()) {
+    return status;
+  }
+
+  if (absl::Status status = TryRemoveSpectrumTexture(
+          parameters, "transmittance",
+          std::bind(&DiffuseTransmissionMaterial::mutable_transmittance,
+                    &output));
+      !status.ok()) {
+    return status;
+  }
+
+  TryRemoveFloatTexture(
+      parameters, "displacement",
+      std::bind(&DiffuseTransmissionMaterial::mutable_displacement, &output));
+
+  if (std::optional<double> scale = TryRemoveFloat(parameters, "scale");
+      scale) {
+    output.set_scale(*scale);
+  }
+
+  return absl::OkStatus();
+}
+
 absl::Status RemoveDisneyMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, DisneyMaterial& output) {
@@ -559,13 +590,6 @@ absl::Status RemoveSubsurfaceMaterial(
     return status;
   }
 
-  if (absl::Status status = TryRemoveSpectrumTexture(
-          parameters, (pbrt_version <= 3) ? "Kr" : "reflectance",
-          std::bind(&SubsurfaceMaterial::mutable_reflectance, &output));
-      !status.ok()) {
-    return status;
-  }
-
   if (absl::Status status =
           RemoveEnum(parameters, pbrt_version, "subsurface", "name",
                      std::bind(&SubsurfaceMaterial::set_name, &output,
@@ -580,6 +604,13 @@ absl::Status RemoveSubsurfaceMaterial(
     if (absl::Status status = TryRemoveSpectrumTexture(
             parameters, "sigma_prime_s",
             std::bind(&SubsurfaceMaterial::mutable_sigma_s, &output));
+        !status.ok()) {
+      return status;
+    }
+  }
+
+  if (pbrt_version >= 2 && pbrt_version <= 3) {
+    if (absl::Status status = RemoveKr(parameters, pbrt_version, output);
         !status.ok()) {
       return status;
     }
@@ -617,6 +648,13 @@ absl::Status RemoveSubsurfaceMaterial(
 
   if (pbrt_version >= 4) {
     RemoveRoughness(parameters, output);
+
+    if (absl::Status status = TryRemoveSpectrumTexture(
+            parameters, "reflectance",
+            std::bind(&SubsurfaceMaterial::mutable_reflectance, &output));
+        !status.ok()) {
+      return status;
+    }
   }
 
   return absl::OkStatus();

@@ -33,6 +33,10 @@ absl::Status RemoveDiffuseMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, DiffuseMaterial& output);
 
+absl::Status RemoveDiffuseTransmissionMaterial(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    int pbrt_version, DiffuseTransmissionMaterial& output);
+
 absl::Status RemoveDisneyMaterial(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, DisneyMaterial& output);

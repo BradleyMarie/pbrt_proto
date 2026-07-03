@@ -733,6 +733,52 @@ TEST(RemoveDiffuseMaterialV4, WithData) {
               )pb"));
 }
 
+TEST(RemoveDiffuseTransmissionMaterialV4, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  DiffuseTransmissionMaterial actual;
+  EXPECT_TRUE(
+      RemoveDiffuseTransmissionMaterial(parameters, /*pbrt_version=*/4, actual)
+          .ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveDiffuseTransmissionMaterialV4, WithData) {
+  std::vector<std::string_view> kd = {"kd"};
+  Parameter kd_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(kd)};
+
+  std::vector<std::string_view> kt = {"kt"};
+  Parameter kt_parameter{/*directive=*/"",
+                         /*type=*/ParameterType::TEXTURE,
+                         /*type_name=*/"",
+                         /*values=*/absl::MakeSpan(kt)};
+
+  std::vector<std::string_view> bumpmap = {"bump"};
+  Parameter bumpmap_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::TEXTURE,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(bumpmap)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"reflectance", kd_parameter},
+      {"transmittance", kt_parameter},
+      {"displacement", bumpmap_parameter},
+  };
+
+  DiffuseTransmissionMaterial actual;
+  EXPECT_TRUE(
+      RemoveDiffuseTransmissionMaterial(parameters, /*pbrt_version=*/4, actual)
+          .ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                reflectance { spectrum_texture_name: "kd" }
+                transmittance { spectrum_texture_name: "kt" }
+                displacement { float_texture_name: "bump" }
+              )pb"));
+}
+
 TEST(RemoveDisneyMaterial, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
@@ -1751,7 +1797,7 @@ TEST(RemoveSubsurfaceMaterialV2, WithData) {
   EXPECT_TRUE(
       RemoveSubsurfaceMaterial(parameters, /*pbrt_version=*/2, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
-                reflectance { spectrum_texture_name: "kr" }
+                Kr { spectrum_texture_name: "kr" }
                 displacement { float_texture_name: "bump" }
                 eta { float_texture_name: "index" }
                 sigma_a { spectrum_texture_name: "sigma_a" }
@@ -1861,7 +1907,7 @@ TEST(RemoveSubsurfaceMaterialV3, WithData) {
   EXPECT_TRUE(
       RemoveSubsurfaceMaterial(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
-                reflectance { spectrum_texture_name: "kr" }
+                Kr { spectrum_texture_name: "kr" }
                 Kt { spectrum_texture_name: "kt" }
                 uroughness { float_texture_name: "uroughness" }
                 vroughness { float_texture_name: "vroughness" }

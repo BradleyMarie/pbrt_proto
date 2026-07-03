@@ -2091,6 +2091,23 @@ message DiffuseMaterial {
   optional FloatTextureParameter displacement = 12;
 }
 
+// A material with simple Lambertian reflectance and transmittance.
+//
+// @supported_versions {PBRTv4}
+message DiffuseTransmissionMaterial {
+  // The reflectivity of the surface.
+  optional SpectrumTextureParameter reflectance = 1;
+
+  // The transmissivity of the surface.
+  optional SpectrumTextureParameter transmittance = 4;
+
+  // The floating-point texture to be used as a displacement map.
+  optional FloatTextureParameter displacement = 12;
+
+  // The scale factor applied to the reflectance and transmittance values.
+  optional double scale = 45 [default = 1.0];
+}
+
 // A material that replicates Disney's Principled BRDF.
 //
 // @supported_versions {PBRTv3}
@@ -2431,10 +2448,8 @@ message SubstrateMaterial {
 message SubsurfaceMaterial {
   // The coefficient of specular reflection.
   //
-  // NOTE: In PBRTv2 and PBRTv3 this field is referred to by the name `Kr`;
-  //       however, it is referred to here as `reflectance` which is the name of
-  //       the parameter used in PBRTv4.
-  optional SpectrumTextureParameter reflectance = 3;
+  // @supported_versions {PBRTv3}
+  optional SpectrumTextureParameter Kr = 3;
 
   // The coefficient of specular transmission.
   //
@@ -2509,6 +2524,13 @@ message SubsurfaceMaterial {
   //
   // @min_version PBRTv3
   optional bool remaproughness = 46 [default = true];
+
+  // The average reflectance of the volume. If specified, absorption and
+  // scattering coefficients are computed from this value and the specified mean
+  // free path.
+  //
+  // @min_version PBRTv4
+  optional SpectrumTextureParameter reflectance = 48;
 }
 
 // A simple translucent material with diffuse and specular compoents.

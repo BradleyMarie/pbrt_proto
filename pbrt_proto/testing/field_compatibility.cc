@@ -133,6 +133,7 @@ static const DisjointSet kAllowedNameChanges =
                  "pbrt_proto.ConductorMaterial.displacement",
                  "pbrt_proto.ClayMaterial.bumpmap",
                  "pbrt_proto.DiffuseMaterial.displacement",
+                 "pbrt_proto.DiffuseTransmissionMaterial.displacement",
                  "pbrt_proto.DielectricMaterial.displacement",
                  "pbrt_proto.DisneyMaterial.bumpmap",
                  "pbrt_proto.FeltMaterial.bumpmap",
@@ -153,6 +154,7 @@ static const DisjointSet kAllowedNameChanges =
                  "pbrt_proto.v2.Shape.MaterialOverrides.bumpmap",
                  "pbrt_proto.v3.Shape.MaterialOverrides.bumpmap"})
         .AddSet({"pbrt_proto.DiffuseMaterial.reflectance",
+                 "pbrt_proto.DiffuseTransmissionMaterial.reflectance",
                  "pbrt_proto.KdSubsurfaceMaterial.Kd",
                  "pbrt_proto.PlasticMaterial.Kd", "pbrt_proto.MixMaterial.Kd",
                  "pbrt_proto.SubstrateMaterial.Kd",
@@ -161,15 +163,11 @@ static const DisjointSet kAllowedNameChanges =
                  "pbrt_proto.v1.Shape.MaterialOverrides.Kd",
                  "pbrt_proto.v2.Shape.MaterialOverrides.Kd",
                  "pbrt_proto.v3.Shape.MaterialOverrides.Kd"})
-        .AddSet({"pbrt_proto.DielectricMaterial.Kr",
-                 "pbrt_proto.KdSubsurfaceMaterial.Kr",
-                 "pbrt_proto.MirrorMaterial.Kr",
-                 "pbrt_proto.ShinyMetalMaterial.Kr",
-                 "pbrt_proto.SubsurfaceMaterial.reflectance",
-                 "pbrt_proto.UberMaterial.Kr",
-                 "pbrt_proto.v1.Shape.MaterialOverrides.Kr",
-                 "pbrt_proto.v2.Shape.MaterialOverrides.Kr",
-                 "pbrt_proto.v3.Shape.MaterialOverrides.Kr"})
+        .AddSet({"pbrt_proto.DielectricMaterial.Kt",
+                 "pbrt_proto.DiffuseTransmissionMaterial.transmittance",
+                 "pbrt_proto.KdSubsurfaceMaterial.Kt",
+                 "pbrt_proto.SubsurfaceMaterial.Kt",
+                 "pbrt_proto.UberMaterial.Kt"})
         .AddSet({"pbrt_proto.MeasuredFourierMaterial.bsdffile",
                  "pbrt_proto.MeasuredMerlMaterial.filename",
                  "pbrt_proto.v2.Shape.MaterialOverrides.filename",
@@ -231,6 +229,7 @@ static const DisjointSet kAllowedNameCollisions =
                  "pbrt_proto.v2.Shape.MaterialOverrides.eta",
                  "pbrt_proto.v3.Shape.MaterialOverrides.eta"})
         .AddSet({"pbrt_proto.DiffuseMaterial.reflectance",
+                 "pbrt_proto.DiffuseTransmissionMaterial.reflectance",
                  "pbrt_proto.SubsurfaceMaterial.reflectance"})
         .AddSet({"pbrt_proto.v1.Sampler.random", "pbrt_proto.v2.Sampler.random",
                  "pbrt_proto.v3.Sampler.random",
