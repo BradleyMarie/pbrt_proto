@@ -35,10 +35,12 @@ void RemovePixelBounds(
 absl::Status RemoveAmbientOcclusionIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, AmbientOcclusionIntegrator& output) {
-  if (std::optional<int32_t> nsamples =
-          TryRemoveInteger(parameters, "nsamples");
-      nsamples.has_value()) {
-    output.set_nsamples(std::max(0, *nsamples));
+  if (pbrt_version <= 3) {
+    if (std::optional<int32_t> nsamples =
+            TryRemoveInteger(parameters, "nsamples");
+        nsamples.has_value()) {
+      output.set_nsamples(std::max(0, *nsamples));
+    }
   }
 
   if (pbrt_version == 2) {
@@ -87,6 +89,10 @@ absl::Status RemoveBdptIntegrator(
         visualizeweights.has_value()) {
       output.set_visualizeweights(*visualizeweights);
     }
+  }
+
+  if (pbrt_version == 3) {
+    RemovePixelBounds(parameters, output);
 
     if (absl::Status status =
             RemoveEnum(parameters, pbrt_version, "bdpt", "lightsamplestrategy",
@@ -98,8 +104,12 @@ absl::Status RemoveBdptIntegrator(
     }
   }
 
-  if (pbrt_version == 3) {
-    RemovePixelBounds(parameters, output);
+  if (pbrt_version >= 4) {
+    if (std::optional<bool> regularize =
+            TryRemoveBool(parameters, "regularize");
+        regularize.has_value()) {
+      output.set_regularize(*regularize);
+    }
   }
 
   return absl::OkStatus();
@@ -202,6 +212,37 @@ absl::Status RemoveDirectLightingIntegrator(
 
   if (pbrt_version == 3) {
     RemovePixelBounds(parameters, output);
+  }
+
+  return absl::OkStatus();
+}
+
+absl::Status RemoveFunctionIntegrator(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    int pbrt_version, FunctionIntegrator& output) {
+  if (std::optional<absl::string_view> filename =
+          TryRemoveString(parameters, "filename");
+      filename.has_value()) {
+    output.set_filename(*filename);
+  }
+
+  if (std::optional<absl::string_view> imagefilename =
+          TryRemoveString(parameters, "imagefilename");
+      imagefilename.has_value()) {
+    output.set_imagefilename(*imagefilename);
+  }
+
+  if (absl::Status status =
+          RemoveEnum(parameters, pbrt_version, "function", "function",
+                     std::bind(&FunctionIntegrator::set_function, &output,
+                               std::placeholders::_1));
+      !status.ok()) {
+    return status;
+  }
+
+  if (std::optional<bool> skipbad = TryRemoveBool(parameters, "skipbad");
+      skipbad.has_value()) {
+    output.set_skipbad(*skipbad);
   }
 
   return absl::OkStatus();
@@ -349,6 +390,18 @@ absl::Status RemoveIrradianceCacheIntegrator(
   return absl::OkStatus();
 }
 
+absl::Status RemoveLightPathIntegrator(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    int pbrt_version, LightPathIntegrator& output) {
+  if (std::optional<int32_t> maxdepth =
+          TryRemoveInteger(parameters, "maxdepth");
+      maxdepth.has_value()) {
+    output.set_maxdepth(std::max(0, *maxdepth));
+  }
+
+  return absl::OkStatus();
+}
+
 absl::Status RemoveMltIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, MltIntegrator& output) {
@@ -386,6 +439,14 @@ absl::Status RemoveMltIntegrator(
     output.set_sigma(*sigma);
   }
 
+  if (pbrt_version >= 4) {
+    if (std::optional<bool> regularize =
+            TryRemoveBool(parameters, "regularize");
+        regularize.has_value()) {
+      output.set_regularize(*regularize);
+    }
+  }
+
   return absl::OkStatus();
 }
 
@@ -399,11 +460,12 @@ absl::Status RemovePathIntegrator(
   }
 
   if (pbrt_version >= 3) {
-    if (absl::Status status =
-            RemoveEnum(parameters, pbrt_version, "path", "lightsamplestrategy",
-                       std::bind(&PathIntegrator::set_lightsampler, &output,
-                                 std::placeholders::_1),
-                       LightSampler::BVH);
+    if (absl::Status status = RemoveEnum(
+            parameters, pbrt_version, "path",
+            (pbrt_version == 3) ? "lightsamplestrategy" : "lightsampler",
+            std::bind(&PathIntegrator::set_lightsampler, &output,
+                      std::placeholders::_1),
+            LightSampler::BVH);
         !status.ok()) {
       return status;
     }
@@ -417,6 +479,14 @@ absl::Status RemovePathIntegrator(
     }
 
     RemovePixelBounds(parameters, output);
+  }
+
+  if (pbrt_version >= 4) {
+    if (std::optional<bool> regularize =
+            TryRemoveBool(parameters, "regularize");
+        regularize.has_value()) {
+      output.set_regularize(*regularize);
+    }
   }
 
   return absl::OkStatus();
@@ -520,6 +590,53 @@ absl::Status RemoveExPhotonMapIntegrator(
   return RemovePhotonMapIntegrator(parameters, pbrt_version, output);
 }
 
+absl::Status RemoveRandomWalkIntegrator(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    int pbrt_version, RandomWalkIntegrator& output) {
+  if (std::optional<int32_t> maxdepth =
+          TryRemoveInteger(parameters, "maxdepth");
+      maxdepth.has_value()) {
+    output.set_maxdepth(std::max(0, *maxdepth));
+  }
+
+  return absl::OkStatus();
+}
+
+absl::Status RemoveSimplePathIntegrator(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    int pbrt_version, SimplePathIntegrator& output) {
+  if (std::optional<int32_t> maxdepth =
+          TryRemoveInteger(parameters, "maxdepth");
+      maxdepth.has_value()) {
+    output.set_maxdepth(std::max(0, *maxdepth));
+  }
+
+  if (std::optional<bool> samplebsdf = TryRemoveBool(parameters, "samplebsdf");
+      samplebsdf.has_value()) {
+    output.set_samplebsdf(*samplebsdf);
+  }
+
+  if (std::optional<bool> samplelights =
+          TryRemoveBool(parameters, "samplelights");
+      samplelights.has_value()) {
+    output.set_samplelights(*samplelights);
+  }
+
+  return absl::OkStatus();
+}
+
+absl::Status RemoveSimpleVolPathIntegrator(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    int pbrt_version, SimpleVolPathIntegrator& output) {
+  if (std::optional<int32_t> maxdepth =
+          TryRemoveInteger(parameters, "maxdepth");
+      maxdepth.has_value()) {
+    output.set_maxdepth(std::max(0, *maxdepth));
+  }
+
+  return absl::OkStatus();
+}
+
 absl::Status RemoveSppmIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, SppmIntegrator& output) {
@@ -529,10 +646,18 @@ absl::Status RemoveSppmIntegrator(
     output.set_maxdepth(std::max(0, *maxdepth));
   }
 
-  if (std::optional<int32_t> numiterations =
-          TryRemoveInteger(parameters, "numiterations");
-      numiterations.has_value()) {
-    output.set_numiterations(std::max(0, *numiterations));
+  if (pbrt_version <= 3) {
+    if (std::optional<int32_t> numiterations =
+            TryRemoveInteger(parameters, "numiterations");
+        numiterations.has_value()) {
+      output.set_numiterations(std::max(0, *numiterations));
+    }
+
+    if (std::optional<int32_t> imagewritefrequency =
+            TryRemoveInteger(parameters, "imagewritefrequency");
+        imagewritefrequency.has_value()) {
+      output.set_imagewritefrequency(std::max(0, *imagewritefrequency));
+    }
   }
 
   if (std::optional<int32_t> photonsperiteration =
@@ -541,15 +666,14 @@ absl::Status RemoveSppmIntegrator(
     output.set_photonsperiteration(std::max(0, *photonsperiteration));
   }
 
-  if (std::optional<int32_t> imagewritefrequency =
-          TryRemoveInteger(parameters, "imagewritefrequency");
-      imagewritefrequency.has_value()) {
-    output.set_imagewritefrequency(std::max(0, *imagewritefrequency));
-  }
-
   if (std::optional<double> radius = TryRemoveFloat(parameters, "radius");
       radius.has_value()) {
     output.set_radius(*radius);
+  }
+
+  if (std::optional<int32_t> seed = TryRemoveInteger(parameters, "seed");
+      seed.has_value()) {
+    output.set_seed(*seed);
   }
 
   return absl::OkStatus();
@@ -576,23 +700,32 @@ absl::Status RemoveVolPathIntegrator(
     output.set_maxdepth(std::max(0, *maxdepth));
   }
 
-  if (std::optional<double> rrthreshold =
-          TryRemoveFloat(parameters, "rrthreshold");
-      rrthreshold.has_value()) {
-    output.set_rrthreshold(*rrthreshold);
+  if (pbrt_version == 3) {
+    if (std::optional<double> rrthreshold =
+            TryRemoveFloat(parameters, "rrthreshold");
+        rrthreshold.has_value()) {
+      output.set_rrthreshold(*rrthreshold);
+    }
+
+    RemovePixelBounds(parameters, output);
   }
 
-  if (absl::Status status =
-          RemoveEnum(parameters, pbrt_version, "volpath", "lightsamplestrategy",
-                     std::bind(&VolPathIntegrator::set_lightsampler, &output,
-                               std::placeholders::_1),
-                     LightSampler::BVH);
+  if (absl::Status status = RemoveEnum(
+          parameters, pbrt_version, "volpath",
+          (pbrt_version == 3) ? "lightsamplestrategy" : "lightsampler",
+          std::bind(&VolPathIntegrator::set_lightsampler, &output,
+                    std::placeholders::_1),
+          LightSampler::BVH);
       !status.ok()) {
     return status;
   }
 
-  if (pbrt_version == 3) {
-    RemovePixelBounds(parameters, output);
+  if (pbrt_version >= 4) {
+    if (std::optional<bool> regularize =
+            TryRemoveBool(parameters, "regularize");
+        regularize.has_value()) {
+      output.set_regularize(*regularize);
+    }
   }
 
   return absl::OkStatus();

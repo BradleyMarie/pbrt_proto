@@ -99,6 +99,43 @@ TEST(RemoveAmbientOcclusionIntegratorV3, WithData) {
               )pb"));
 }
 
+TEST(RemoveAmbientOcclusionIntegratorV4, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  AmbientOcclusionIntegrator actual;
+  EXPECT_TRUE(
+      RemoveAmbientOcclusionIntegrator(parameters, /*pbrt_version=*/4, actual)
+          .ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveAmbientOcclusionIntegratorV4, WithData) {
+  std::vector<double> maxdist = {0.25};
+  Parameter maxdist_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::FLOAT,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(maxdist)};
+
+  bool cossample[] = {true};
+  Parameter cossample_parameter{/*directive=*/"",
+                                /*type=*/ParameterType::BOOL,
+                                /*type_name=*/"",
+                                /*values=*/absl::MakeSpan(cossample)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"cossample", cossample_parameter},
+      {"maxdistance", maxdist_parameter},
+  };
+
+  AmbientOcclusionIntegrator actual;
+  EXPECT_TRUE(
+      RemoveAmbientOcclusionIntegrator(parameters, /*pbrt_version=*/4, actual)
+          .ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                cossample: true maxdistance: 0.25
+              )pb"));
+}
+
 TEST(RemoveBdptIntegratorV1, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
@@ -168,6 +205,60 @@ TEST(RemoveBdptIntegratorV3, WithData) {
                 lightsamplestrategy: BVH
                 visualizestrategies: true
                 visualizeweights: true
+              )pb"));
+}
+
+TEST(RemoveBdptIntegratorV4, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  BdptIntegrator actual;
+  EXPECT_TRUE(
+      RemoveBdptIntegrator(parameters, /*pbrt_version=*/4, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveBdptIntegratorV4, WithData) {
+  std::vector<int32_t> maxdepth = {1};
+  Parameter maxdepth_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::INTEGER,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(maxdepth)};
+
+  bool visualizestrategies[] = {true};
+  Parameter visualizestrategies_parameter{
+      /*directive=*/"",
+      /*type=*/ParameterType::BOOL,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(visualizestrategies)};
+
+  bool visualizeweights[] = {true};
+  Parameter visualizeweights_parameter{
+      /*directive=*/"",
+      /*type=*/ParameterType::BOOL,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(visualizeweights)};
+
+  bool regularize[] = {true};
+  Parameter regularize_parameter{/*directive=*/"",
+                                 /*type=*/ParameterType::BOOL,
+                                 /*type_name=*/"",
+                                 /*values=*/absl::MakeSpan(regularize)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"maxdepth", maxdepth_parameter},
+      {"visualizestrategies", visualizestrategies_parameter},
+      {"visualizeweights", visualizeweights_parameter},
+      {"regularize", regularize_parameter},
+  };
+
+  BdptIntegrator actual;
+  EXPECT_TRUE(
+      RemoveBdptIntegrator(parameters, /*pbrt_version=*/4, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                maxdepth: 1
+                visualizestrategies: true
+                visualizeweights: true
+                regularize: true
               )pb"));
 }
 
@@ -748,6 +839,58 @@ TEST(RemoveDirectLightingIntegratorV3, Weighted) {
               )pb"));
 }
 
+TEST(RemoveFunctionIntegrator, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  FunctionIntegrator actual;
+  EXPECT_TRUE(
+      RemoveFunctionIntegrator(parameters, /*pbrt_version=*/4, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveFunctionIntegrator, WithData) {
+  std::vector<absl::string_view> filename = {"filename"};
+  Parameter filename_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::STRING,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(filename)};
+
+  std::vector<absl::string_view> imagefilename = {"imagefilename"};
+  Parameter imagefilename_parameter{/*directive=*/"",
+                                    /*type=*/ParameterType::STRING,
+                                    /*type_name=*/"",
+                                    /*values=*/absl::MakeSpan(imagefilename)};
+
+  std::vector<absl::string_view> function = {"step"};
+  Parameter function_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::STRING,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(function)};
+
+  bool skipbad[] = {false};
+  Parameter skipbad_parameter{/*directive=*/"",
+                              /*type=*/ParameterType::BOOL,
+                              /*type_name=*/"",
+                              /*values=*/absl::MakeSpan(skipbad)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"filename", filename_parameter},
+      {"imagefilename", imagefilename_parameter},
+      {"function", function_parameter},
+      {"skipbad", skipbad_parameter},
+  };
+
+  FunctionIntegrator actual;
+  EXPECT_TRUE(
+      RemoveFunctionIntegrator(parameters, /*pbrt_version=*/4, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                filename: "filename"
+                imagefilename: "imagefilename"
+                function: STEP
+                skipbad: false
+              )pb"));
+}
+
 TEST(RemoveGlossyPrtIntegrator, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
@@ -1094,7 +1237,34 @@ TEST(RemoveIrradianceCacheIntegratorV2, WithData) {
               )pb"));
 }
 
-TEST(RemoveMltIntegrator, Empty) {
+TEST(RemoveLightPathIntegrator, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  LightPathIntegrator actual;
+  EXPECT_TRUE(
+      RemoveLightPathIntegrator(parameters, /*pbrt_version=*/4, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveLightPathIntegrator, WithData) {
+  std::vector<int32_t> maxdepth = {1};
+  Parameter maxdepth_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::INTEGER,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(maxdepth)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"maxdepth", maxdepth_parameter}};
+
+  LightPathIntegrator actual;
+  EXPECT_TRUE(
+      RemoveLightPathIntegrator(parameters, /*pbrt_version=*/4, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                maxdepth: 1
+              )pb"));
+}
+
+TEST(RemoveMltIntegratorV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   MltIntegrator actual;
@@ -1102,7 +1272,7 @@ TEST(RemoveMltIntegrator, Empty) {
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveMltIntegrator, WithData) {
+TEST(RemoveMltIntegratorV3, WithData) {
   std::vector<int32_t> maxdepth = {1};
   Parameter maxdepth_parameter{/*directive=*/"",
                                /*type=*/ParameterType::INTEGER,
@@ -1148,7 +1318,8 @@ TEST(RemoveMltIntegrator, WithData) {
       {"chains", chains_parameter},
       {"mutationsperpixel", mutationsperpixel_parameter},
       {"largestepprobability", largestepprobability_parameter},
-      {"sigma", sigma_parameter}};
+      {"sigma", sigma_parameter},
+  };
 
   MltIntegrator actual;
   EXPECT_TRUE(RemoveMltIntegrator(parameters, /*pbrt_version=*/3, actual).ok());
@@ -1159,6 +1330,83 @@ TEST(RemoveMltIntegrator, WithData) {
                 mutationsperpixel: 4
                 largestepprobability: 0.5
                 sigma: 0.6
+              )pb"));
+}
+
+TEST(RemoveMltIntegratorV4, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  MltIntegrator actual;
+  EXPECT_TRUE(RemoveMltIntegrator(parameters, /*pbrt_version=*/4, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveMltIntegratorV4, WithData) {
+  std::vector<int32_t> maxdepth = {1};
+  Parameter maxdepth_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::INTEGER,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(maxdepth)};
+
+  std::vector<int32_t> bootstrapsamples = {2};
+  Parameter bootstrapsamples_parameter{
+      /*directive=*/"",
+      /*type=*/ParameterType::INTEGER,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(bootstrapsamples)};
+
+  std::vector<int32_t> chains = {3};
+  Parameter chains_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::INTEGER,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(chains)};
+
+  std::vector<int32_t> mutationsperpixel = {4};
+  Parameter mutationsperpixel_parameter{
+      /*directive=*/"",
+      /*type=*/ParameterType::INTEGER,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(mutationsperpixel)};
+
+  std::vector<double> largestepprobability = {0.5};
+  Parameter largestepprobability_parameter{
+      /*directive=*/"",
+      /*type=*/ParameterType::FLOAT,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(largestepprobability)};
+
+  std::vector<double> sigma = {0.6};
+  Parameter sigma_parameter{/*directive=*/"",
+                            /*type=*/ParameterType::FLOAT,
+                            /*type_name=*/"",
+                            /*values=*/absl::MakeSpan(sigma)};
+
+  bool regularize[] = {true};
+  Parameter regularize_parameter{/*directive=*/"",
+                                 /*type=*/ParameterType::BOOL,
+                                 /*type_name=*/"",
+                                 /*values=*/absl::MakeSpan(regularize)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"maxdepth", maxdepth_parameter},
+      {"bootstrapsamples", bootstrapsamples_parameter},
+      {"chains", chains_parameter},
+      {"mutationsperpixel", mutationsperpixel_parameter},
+      {"largestepprobability", largestepprobability_parameter},
+      {"sigma", sigma_parameter},
+      {"regularize", regularize_parameter},
+  };
+
+  MltIntegrator actual;
+  EXPECT_TRUE(RemoveMltIntegrator(parameters, /*pbrt_version=*/4, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                maxdepth: 1
+                bootstrapsamples: 2
+                chains: 3
+                mutationsperpixel: 4
+                largestepprobability: 0.5
+                sigma: 0.6
+                regularize: true
               )pb"));
 }
 
@@ -1255,7 +1503,8 @@ TEST(RemovePathIntegratorV3, WithData) {
       {"maxdepth", maxdepth_parameter},
       {"rrthreshold", rrthreshold_parameter},
       {"pixelbounds", pixelbounds_parameter},
-      {"lightsamplestrategy", lightsamplestrategy_parameter}};
+      {"lightsamplestrategy", lightsamplestrategy_parameter},
+  };
 
   PathIntegrator actual;
   EXPECT_TRUE(
@@ -1325,6 +1574,50 @@ TEST(RemovePathIntegratorV3, Spatial) {
       RemovePathIntegrator(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 lightsampler: BVH
+              )pb"));
+}
+
+TEST(RemovePathIntegratorV4, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  PathIntegrator actual;
+  EXPECT_TRUE(
+      RemovePathIntegrator(parameters, /*pbrt_version=*/4, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemovePathIntegratorV4, WithData) {
+  std::vector<int32_t> maxdepth = {1};
+  Parameter maxdepth_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::INTEGER,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(maxdepth)};
+
+  std::vector<absl::string_view> lightsamplestrategy = {"unknown"};
+  Parameter lightsamplestrategy_parameter{
+      /*directive=*/"",
+      /*type=*/ParameterType::STRING,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(lightsamplestrategy)};
+
+  bool regularize[] = {true};
+  Parameter regularize_parameter{/*directive=*/"",
+                                 /*type=*/ParameterType::BOOL,
+                                 /*type_name=*/"",
+                                 /*values=*/absl::MakeSpan(regularize)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"maxdepth", maxdepth_parameter},
+      {"lightsampler", lightsamplestrategy_parameter},
+      {"regularize", regularize_parameter},
+  };
+
+  PathIntegrator actual;
+  EXPECT_TRUE(
+      RemovePathIntegrator(parameters, /*pbrt_version=*/4, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(
+                maxdepth: 1 lightsampler: BVH regularize: true
               )pb"));
 }
 
@@ -1618,7 +1911,106 @@ TEST(RemovePhotonMapIntegratorV2, WithData) {
               )pb"));
 }
 
-TEST(RemoveSppmIntegrator, Empty) {
+TEST(RemoveRandomWalkIntegrator, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  RandomWalkIntegrator actual;
+  EXPECT_TRUE(
+      RemoveRandomWalkIntegrator(parameters, /*pbrt_version=*/4, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveRandomWalkIntegrator, WithData) {
+  std::vector<int32_t> maxdepth = {1};
+  Parameter maxdepth_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::INTEGER,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(maxdepth)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"maxdepth", maxdepth_parameter}};
+
+  RandomWalkIntegrator actual;
+  EXPECT_TRUE(
+      RemoveRandomWalkIntegrator(parameters, /*pbrt_version=*/4, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                maxdepth: 1
+              )pb"));
+}
+
+TEST(RemoveSimplePathIntegrator, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  SimplePathIntegrator actual;
+  EXPECT_TRUE(
+      RemoveSimplePathIntegrator(parameters, /*pbrt_version=*/4, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveSimplePathIntegrator, WithData) {
+  std::vector<int32_t> maxdepth = {1};
+  Parameter maxdepth_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::INTEGER,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(maxdepth)};
+
+  bool samplebsdf[] = {false};
+  Parameter samplebsdf_parameter{/*directive=*/"",
+                                 /*type=*/ParameterType::BOOL,
+                                 /*type_name=*/"",
+                                 /*values=*/absl::MakeSpan(samplebsdf)};
+
+  bool samplelights[] = {false};
+  Parameter samplelights_parameter{/*directive=*/"",
+                                   /*type=*/ParameterType::BOOL,
+                                   /*type_name=*/"",
+                                   /*values=*/absl::MakeSpan(samplelights)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"maxdepth", maxdepth_parameter},
+      {"samplebsdf", samplebsdf_parameter},
+      {"samplelights", samplelights_parameter},
+  };
+
+  SimplePathIntegrator actual;
+  EXPECT_TRUE(
+      RemoveSimplePathIntegrator(parameters, /*pbrt_version=*/4, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(
+                maxdepth: 1 samplebsdf: false samplelights: false
+              )pb"));
+}
+
+TEST(RemoveSimpleVolPathIntegrator, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  SimpleVolPathIntegrator actual;
+  EXPECT_TRUE(
+      RemoveSimpleVolPathIntegrator(parameters, /*pbrt_version=*/4, actual)
+          .ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveSimpleVolPathIntegrator, WithData) {
+  std::vector<int32_t> maxdepth = {1};
+  Parameter maxdepth_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::INTEGER,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(maxdepth)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"maxdepth", maxdepth_parameter}};
+
+  SimpleVolPathIntegrator actual;
+  EXPECT_TRUE(
+      RemoveSimpleVolPathIntegrator(parameters, /*pbrt_version=*/4, actual)
+          .ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                maxdepth: 1
+              )pb"));
+}
+
+TEST(RemoveSppmIntegratorV3, Empty) {
   absl::flat_hash_map<absl::string_view, Parameter> parameters;
 
   SppmIntegrator actual;
@@ -1627,7 +2019,7 @@ TEST(RemoveSppmIntegrator, Empty) {
   EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
 }
 
-TEST(RemoveSppmIntegrator, WithData) {
+TEST(RemoveSppmIntegratorV3, WithData) {
   std::vector<int32_t> maxdepth = {1};
   Parameter maxdepth_parameter{/*directive=*/"",
                                /*type=*/ParameterType::INTEGER,
@@ -1665,7 +2057,8 @@ TEST(RemoveSppmIntegrator, WithData) {
       {"numiterations", numiterations_parameter},
       {"photonsperiteration", photonsperiteration_parameter},
       {"imagewritefrequency", imagewritefrequency_parameter},
-      {"radius", radius_parameter}};
+      {"radius", radius_parameter},
+  };
 
   SppmIntegrator actual;
   EXPECT_TRUE(
@@ -1676,6 +2069,58 @@ TEST(RemoveSppmIntegrator, WithData) {
                 photonsperiteration: 3
                 imagewritefrequency: 4
                 radius: 0.5
+              )pb"));
+}
+
+TEST(RemoveSppmIntegratorV4, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  SppmIntegrator actual;
+  EXPECT_TRUE(
+      RemoveSppmIntegrator(parameters, /*pbrt_version=*/4, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveSppmIntegratorV4, WithData) {
+  std::vector<int32_t> maxdepth = {1};
+  Parameter maxdepth_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::INTEGER,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(maxdepth)};
+  std::vector<int32_t> photonsperiteration = {3};
+  Parameter photonsperiteration_parameter{
+      /*directive=*/"",
+      /*type=*/ParameterType::INTEGER,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(photonsperiteration)};
+
+  std::vector<double> radius = {0.5};
+  Parameter radius_parameter{/*directive=*/"",
+                             /*type=*/ParameterType::FLOAT,
+                             /*type_name=*/"",
+                             /*values=*/absl::MakeSpan(radius)};
+
+  std::vector<int32_t> seed = {4};
+  Parameter seed_parameter{/*directive=*/"",
+                           /*type=*/ParameterType::INTEGER,
+                           /*type_name=*/"",
+                           /*values=*/absl::MakeSpan(seed)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"maxdepth", maxdepth_parameter},
+      {"photonsperiteration", photonsperiteration_parameter},
+      {"radius", radius_parameter},
+      {"seed", seed_parameter},
+  };
+
+  SppmIntegrator actual;
+  EXPECT_TRUE(
+      RemoveSppmIntegrator(parameters, /*pbrt_version=*/4, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb(
+                maxdepth: 1
+                photonsperiteration: 3
+                radius: 0.5
+                seed: 4
               )pb"));
 }
 
@@ -1815,6 +2260,50 @@ TEST(RemoveVolPathIntegratorV3, Spatial) {
       RemoveVolPathIntegrator(parameters, /*pbrt_version=*/3, actual).ok());
   EXPECT_THAT(actual, EqualsProto(R"pb(
                 lightsampler: BVH
+              )pb"));
+}
+
+TEST(RemoveVolPathIntegratorV4, Empty) {
+  absl::flat_hash_map<absl::string_view, Parameter> parameters;
+
+  VolPathIntegrator actual;
+  EXPECT_TRUE(
+      RemoveVolPathIntegrator(parameters, /*pbrt_version=*/4, actual).ok());
+  EXPECT_THAT(actual, EqualsProto(R"pb()pb"));
+}
+
+TEST(RemoveVolPathIntegratorV4, WithData) {
+  std::vector<int32_t> maxdepth = {1};
+  Parameter maxdepth_parameter{/*directive=*/"",
+                               /*type=*/ParameterType::INTEGER,
+                               /*type_name=*/"",
+                               /*values=*/absl::MakeSpan(maxdepth)};
+
+  std::vector<absl::string_view> lightsamplestrategy = {"unknown"};
+  Parameter lightsamplestrategy_parameter{
+      /*directive=*/"",
+      /*type=*/ParameterType::STRING,
+      /*type_name=*/"",
+      /*values=*/absl::MakeSpan(lightsamplestrategy)};
+
+  bool regularize[] = {true};
+  Parameter regularize_parameter{/*directive=*/"",
+                                 /*type=*/ParameterType::BOOL,
+                                 /*type_name=*/"",
+                                 /*values=*/absl::MakeSpan(regularize)};
+
+  absl::flat_hash_map<absl::string_view, Parameter> parameters = {
+      {"maxdepth", maxdepth_parameter},
+      {"lightsampler", lightsamplestrategy_parameter},
+      {"regularize", regularize_parameter},
+  };
+
+  VolPathIntegrator actual;
+  EXPECT_TRUE(
+      RemoveVolPathIntegrator(parameters, /*pbrt_version=*/4, actual).ok());
+  EXPECT_THAT(actual,
+              EqualsProto(R"pb(
+                maxdepth: 1 lightsampler: BVH regularize: true
               )pb"));
 }
 

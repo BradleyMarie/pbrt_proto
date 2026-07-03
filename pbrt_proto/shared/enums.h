@@ -58,6 +58,13 @@ absl::Status RemoveEnum(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, absl::string_view type_name,
     absl::string_view parameter_name,
+    absl::FunctionRef<void(FunctionIntegrator::Function)> set_output,
+    std::variant<bool*, FunctionIntegrator::Function> mismatch = nullptr);
+
+absl::Status RemoveEnum(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    int pbrt_version, absl::string_view type_name,
+    absl::string_view parameter_name,
     absl::FunctionRef<void(DirectLightingIntegrator::Strategy)> set_output,
     std::variant<bool*, DirectLightingIntegrator::Strategy> mismatch = nullptr);
 

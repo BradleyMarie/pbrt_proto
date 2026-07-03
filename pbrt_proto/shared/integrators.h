@@ -37,6 +37,10 @@ absl::Status RemoveDirectLightingIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, DirectLightingIntegrator& output);
 
+absl::Status RemoveFunctionIntegrator(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    int pbrt_version, FunctionIntegrator& output);
+
 absl::Status RemoveGlossyPrtIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, GlossyPrtIntegrator& output);
@@ -48,6 +52,10 @@ absl::Status RemoveIgiIntegrator(
 absl::Status RemoveIrradianceCacheIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, IrradianceCacheIntegrator& output);
+
+absl::Status RemoveLightPathIntegrator(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    int pbrt_version, LightPathIntegrator& output);
 
 absl::Status RemoveMltIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
@@ -64,6 +72,18 @@ absl::Status RemoveExPhotonMapIntegrator(
 absl::Status RemovePhotonMapIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,
     int pbrt_version, PhotonMapIntegrator& output);
+
+absl::Status RemoveRandomWalkIntegrator(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    int pbrt_version, RandomWalkIntegrator& output);
+
+absl::Status RemoveSimplePathIntegrator(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    int pbrt_version, SimplePathIntegrator& output);
+
+absl::Status RemoveSimpleVolPathIntegrator(
+    absl::flat_hash_map<absl::string_view, Parameter>& parameters,
+    int pbrt_version, SimpleVolPathIntegrator& output);
 
 absl::Status RemoveSppmIntegrator(
     absl::flat_hash_map<absl::string_view, Parameter>& parameters,

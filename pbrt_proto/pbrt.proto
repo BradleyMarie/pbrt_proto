@@ -1251,6 +1251,8 @@ message AmbientOcclusionIntegrator {
   optional double maxdistance = 7 [default = inf];
 
   // How many rays are used to estimate the occlusion value at a point.
+  //
+  // @max_version PBRTv3
   optional uint32 nsamples = 20;
 
   // Subset of image to sample during rendering; in order, values given specify
@@ -1302,6 +1304,11 @@ message BdptIntegrator {
   //
   // @min_version PBRTv3
   optional bool visualizeweights = 42 [default = false];
+
+  // If true, path regularization is performed.
+  //
+  // @min_version PBRTv4
+  optional bool regularize = 52 [default = false];
 }
 
 // An integrator used for debugging.
@@ -1402,6 +1409,33 @@ message DirectLightingIntegrator {
   //
   // @supported_versions {PBRTv3}
   optional PixelBounds pixelbounds = 38;
+}
+
+// An integrator which is used for debugging and testing.
+//
+// @supported_versions {PBRTv4}
+message FunctionIntegrator {
+  enum Function {
+    STEP = 0;
+    DIAGONAL = 1;
+    DISK = 2;
+    CHECKERBOARD = 3;
+    ROTATEDCHECKERBOARD = 4;
+    GAUSSIAN = 5;
+  }
+
+  // The path to the file where the mean squared error output will be written.
+  optional string filename = 37;
+
+  // If specified, the path to write a visual representation of the output.
+  optional string imagefilename = 53;
+
+  // The function which will be sampled and evaluated.
+  optional Function function = 54 [default = STEP];
+
+  // If true, skip writing results for samples if is a known numerically bad
+  // sample.
+  optional bool skipbad = 55 [default = true];
 }
 
 // An integrator which performs precomputed radiance transfer.
@@ -1516,6 +1550,14 @@ message IrradianceCacheIntegrator {
   optional double maxangledifference = 35 [default = 10.0];
 }
 
+// An integrator which starts tracing from the light sources.
+//
+// @supported_versions {PBRTv4}
+message LightPathIntegrator {
+  // The maximum length of a light-carrying path sampled by the integrator.
+  optional uint32 maxdepth = 1 [default = 5];
+}
+
 // An integrator which does Metropolis light transport.
 //
 // @supported_versions {PBRTv3, PBRTv4}
@@ -1542,6 +1584,11 @@ message MltIntegrator {
   // Standard deviation of the perturbation applied to random samples in [0,1]
   // used for small path mutations.
   optional double sigma = 47 [default = 0.01];
+
+  // If true, path regularization is performed.
+  //
+  // @min_version PBRTv4
+  optional bool regularize = 52 [default = false];
 }
 
 // An integrator which performs path tracing.
@@ -1572,6 +1619,11 @@ message PathIntegrator {
   //
   // @min_version PBRTv3
   optional LightSampler.Type lightsampler = 40 [default = BVH];
+
+  // If true, path regularization is performed.
+  //
+  // @min_version PBRTv4
+  optional bool regularize = 52 [default = false];
 }
 
 // An integrator which performs photon mapping.
@@ -1649,6 +1701,37 @@ message PhotonMapIntegrator {
   optional uint32 maxphotondepth = 36 [default = 5];
 }
 
+// An integrator which performs a random walk without any explicit sampling.
+//
+// @supported_versions {PBRTv4}
+message RandomWalkIntegrator {
+  // The maximum length of a light-carrying path sampled by the integrator.
+  optional uint32 maxdepth = 1 [default = 5];
+}
+
+// An integrator which performs path tracing using a simplified algorithm.
+//
+// @supported_versions {PBRTv4}
+message SimplePathIntegrator {
+  // The maximum length of a light-carrying path sampled by the integrator.
+  optional uint32 maxdepth = 1 [default = 5];
+
+  // If true, use the BSDF importance sampling routines to for ray directions.
+  optional bool samplebsdf = 56 [default = true];
+
+  // If true, use the light importance sampling routines to for ray directions.
+  optional bool samplelights = 57 [default = true];
+}
+
+// An integrator which performs volumetric path tracing using a simplified
+// algorithm.
+//
+// @supported_versions {PBRTv4}
+message SimpleVolPathIntegrator {
+  // The maximum length of a light-carrying path sampled by the integrator.
+  optional uint32 maxdepth = 1 [default = 5];
+}
+
 // An integrator which implements stochastic progressive photon mapping.
 //
 // @supported_versions {PBRTv3, PBRTv4}
@@ -1679,6 +1762,12 @@ message SppmIntegrator {
 
   // The initial photon search radius.
   optional double radius = 51 [default = 1.0];
+
+  // Seed for random number generator used to randomize sample generation for
+  // photon rays. If not set, the renderer should provide a random seed.
+  //
+  // @min_version PBRTv4
+  optional int32 seed = 58;
 }
 
 // An integrator which uses radiance probes encoded in spherical harmonics.
@@ -1715,6 +1804,11 @@ message VolPathIntegrator {
   //       `lightsamplestrategy`; however, it is referred to here as
   //       `lightsampler` which is the name of the parameter used in PBRTv4.
   optional LightSampler.Type lightsampler = 40 [default = BVH];
+
+  // If true, path regularization is performed.
+  //
+  // @min_version PBRTv4
+  optional bool regularize = 52 [default = false];
 }
 
 // An integrator which performs Whitted-style tracing.
