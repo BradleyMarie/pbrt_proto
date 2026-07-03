@@ -68,9 +68,9 @@ class NullOstream : public std::ostream, std::streambuf {
 
 std::string FileExtension() {
   if (absl::GetFlag(FLAGS_textproto)) {
-    return "." + std::to_string(*absl::GetFlag(FLAGS_pbrt_version)) + ".txtpb";
+    return ".v" + std::to_string(*absl::GetFlag(FLAGS_pbrt_version)) + ".txtpb";
   } else {
-    return "." + std::to_string(*absl::GetFlag(FLAGS_pbrt_version)) + ".binpb";
+    return ".v" + std::to_string(*absl::GetFlag(FLAGS_pbrt_version)) + ".binpb";
   }
 }
 
