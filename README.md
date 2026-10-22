@@ -44,9 +44,9 @@ published.
 
 # Current Status
 
-PBRT Proto has full support for the PBRT v1, PBRT v2, and PBRT v3 inputs. Some
-work has been done to support v4; however, there is no immediate plan to
-complete its implementation.
+PBRT Proto has full support for PBRT v1, PBRT v2, and PBRT v3 inputs. Some work
+has been done to support v4; however, there is no immediate plan to complete its
+implementation.
 
 # File Extension
 
