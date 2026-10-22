@@ -27,6 +27,21 @@ encodings and as a consequence of having been honed at Google for over a decade
 the serializations produced are highly efficient (both in terms of the size of
 the serialized data as well as their CPU and memory cost at runtime).
 
+## Getting Started
+
+PBRT Proto uses Bazel as its build system and is published into the
+[Bazel Central Registry](https://registry.bazel.build/modules/pbrt_proto). If
+you are using Bazel as well, you can import PBRT Proto into your workspace by
+adding a snippet like the following into your `MODULE.bazel` file.
+
+```
+bazel_dep(name = "pbrt_proto", version = "1.1.2")
+```
+
+Note: You should update `version` to reference the to the 
+[latest version](https://registry.bazel.build/modules/pbrt_proto) that has been
+published.
+
 # Current Status
 
 PBRT Proto has full support for the PBRT v1, PBRT v2, and PBRT v3 inputs. Some
