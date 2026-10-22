@@ -10,6 +10,8 @@ package(
     ],
 )
 
+exports_files(["pbrt.proto"])
+
 proto_library(
     name = "pbrt_proto",
     srcs = ["pbrt.proto"],
